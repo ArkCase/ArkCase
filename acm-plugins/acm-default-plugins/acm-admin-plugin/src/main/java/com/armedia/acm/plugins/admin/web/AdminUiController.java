@@ -19,14 +19,6 @@ public class AdminUiController
         return retval;
     }
 
-    @RequestMapping(value = "/access", method = RequestMethod.GET)
-    public ModelAndView showAccessPage()
-    {
-        ModelAndView retval = new ModelAndView();
-        retval.setViewName("adminAccess");
-        return retval;
-    }
-
     @RequestMapping(value = "/locks", method = RequestMethod.GET)
     public ModelAndView showLocksPage()
     {

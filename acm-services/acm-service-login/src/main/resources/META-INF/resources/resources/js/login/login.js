@@ -5,6 +5,7 @@
  */
 var Login = Login || {
     create: function() {
+        Acm.log("Login.create()");
         Application.initSessionData();
     }
 

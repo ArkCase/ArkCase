@@ -7,12 +7,12 @@
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <%@include file="/WEB-INF/tagf/global.tagf" %>
-    <title><spring:message code="login.page.title" text="ACM | Armedia Case Management" /></title>
+    <title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>
 </head>
 <body>
     <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
         <div class="container aside-xl ">
-            <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/logo.png" ></a>
+            <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/resources/vendors/${acm_theme}/images/logo.png'/>" /></a>
             <section class="m-b-lg">
                 <header class="wrapper text-center">
                     <strong><spring:message code="login.instruction" text="Enter your username and password." /></strong>
@@ -50,12 +50,12 @@
     <footer id="footer">
         <div class="text-center padder">
             <p>
-                <small><spring:message code="login.footer" text="Armedia Case Management 3.0 <br>&copy; 2014" /></small>
+                <small><spring:message code="login.footer" text="ArkCase <br>&copy; 2014, 2015" /></small>
             </p>
         </div>
     </footer>
 
-    <script src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {

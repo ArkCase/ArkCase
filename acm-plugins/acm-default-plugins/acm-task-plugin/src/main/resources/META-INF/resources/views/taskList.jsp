@@ -13,7 +13,14 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/task/taskOld.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
@@ -23,22 +30,22 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListJTable.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
 
     <!-- Summernote WYSIWYG -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_summernote}/summernote.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_summernote}/${js_summernote}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_summernote}/summernote.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_summernote}/${js_summernote}'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
     <!-- Fancy Tree -->
-    <link href="<c:url value='/'/>resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css" rel="stylesheet">
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_fancytree}/${js_fancytree_table}"></script>
-    <script src="<c:url value='/'/>resources/vendors/${vd_contextmenu}/${js_contextmenu}"></script>
+    <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
     <%--<script>--%>
 
     <%--var edit = function() {--%>
@@ -52,8 +59,8 @@
     <%--</script>--%>
 
     <!-- X-Editable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css" type="text/css"/>
-    <script src="<c:url value='/'/>resources/vendors/${vd_x_editable}/js/${js_x_editable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
+    <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
@@ -157,6 +164,7 @@
                         <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                         <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
 
+                        <button class="btn btn-info btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
                     </div>
                     
                 </div>
@@ -237,7 +245,7 @@
                                     </li>
                                     <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                 </ul>
-                                </span> <a href="#" class="font-bold">Waiver Details</a> </div>
+                                </span> <a href="#" class="font-bold">Rework Details</a> </div>
                             <div class="panel-body">
                                 <div class="taskReworkInstructions" data-field=""></div>
                             </div>

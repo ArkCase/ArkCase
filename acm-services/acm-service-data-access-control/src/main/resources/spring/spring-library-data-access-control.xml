@@ -1,81 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+    <context:property-placeholder
+            properties-ref="dacServicePluginProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="32837"/>
+
+    <bean id="dacServicePluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/dataAccessControl.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="dac.batchUpdateBasedOnLastModifiedEnabled">true</prop>
+                <prop key="dac.batchUpdateFrequencyInMilliseconds">3600000</prop>
+                <prop key="dac.batchUpdateBatchSize">50</prop>
+            </props>
+        </property>
+    </bean>
 
     <bean id="dataAccessPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Data Access Control Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="listDefaultAccessPrivilege"/>
-                <ref bean="updateDefaultAccessPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <ref bean="listDefaultAccessPrivilegeUrl"/>
-                <ref bean="updateDefaultAccessPrivilegeUrl"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="listDefaultAccessPrivilegeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-        <property name="httpMethod" value="GET"/>
-        <property name="url" value="/api/{version}/plugin/dataaccess/accessControlDefaults"/>
-        <property name="requiredPrivilege" ref="listDefaultAccessPrivilege"/>
-    </bean>
-
-    <bean id="updateDefaultAccessPrivilegeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-        <property name="httpMethod" value="POST"/>
-        <property name="url" value="/api/{version}/plugin/dataaccess/default/{defaultAccessId}"/>
-        <property name="requiredPrivilege" ref="updateDefaultAccessPrivilege"/>
-    </bean>
-
-    <bean id="listDefaultAccessPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="list-default-access"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="updateDefaultAccessPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="update-default-access"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="acmAccessControlDefaultDao" class="com.armedia.acm.services.dataaccess.dao.AcmAccessControlDefaultDao"/>
-
-    <bean id="acmAccessControlEntryDao" class="com.armedia.acm.services.dataaccess.dao.AcmAccessControlEntryDao"/>
-
-    <bean id="dataAccessDefaultGenerator" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultGeneratorImpl">
-        <property name="allUserAccessDiscretionaryUpdateAllowed" value="true"/>
-        <property name="allUsersAccess" value="DENY"/>
-        <property name="allUsersIndicator" value="*"/>
-        <property name="crudOperations">
-            <list>
-                <value>read</value>
-                <value>update</value>
-                <value>delete</value>
-            </list>
-        </property>
-        <property name="generatorUserName" value="ACL_SYSTEM_USER"/>
-        <property name="participantAccess" value="GRANT"/>
-        <property name="participantAccessDiscretionaryUpdateAllowed" value="true"/>
-    </bean>
-
-    <bean id="dataAccessDefaultService" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultServiceImpl">
-        <property name="accessControlDefaultDao" ref="acmAccessControlDefaultDao"/>
-        <property name="generator" ref="dataAccessDefaultGenerator"/>
-    </bean>
-
-    <bean id="dataAccessEntryService" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessEntryServiceImpl">
-        <property name="accessControlEntryDao" ref="acmAccessControlEntryDao"/>
     </bean>
 
     <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
@@ -92,5 +48,40 @@
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
+
+    <bean id="searchAccessControlFields" class="com.armedia.acm.services.dataaccess.service.SearchAccessControlFields">
+        <property name="participantAccessChecker" ref="participantAccessChecker"/>
+    </bean>
+
+    <bean id="arkPermissionEvaluator" class="com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="participantDao" ref="acmParticipantDao"/>
+    </bean>
+
+    <bean id="acmDataAccessBatchUpdater" class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
+        <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
+    </bean>
+
+    <task:scheduler id="dataAccessControlTaskScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="dataAccessControlTaskScheduler">
+        <task:scheduled
+                ref="acmDataAccessBatchPolicyUpdateService"
+                method="batchPolicyUpdate"
+                fixed-delay="${dac.batchUpdateFrequencyInMilliseconds}"/>
+    </task:scheduled-tasks>
+
+    <bean id="acmDataAccessBatchPolicyUpdateService"
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="dataAccessBatchUpdater" ref="acmDataAccessBatchUpdater"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="batchSize" value="${dac.batchUpdateBatchSize}"/>
+        <property name="batchUpdateBasedOnLastModifiedEnabled" value="${dac.batchUpdateBasedOnLastModifiedEnabled}"/>
+        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.acm/dataAccessPolicyLastBatchUpdate.properties"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+    </bean>
 
 </beans>

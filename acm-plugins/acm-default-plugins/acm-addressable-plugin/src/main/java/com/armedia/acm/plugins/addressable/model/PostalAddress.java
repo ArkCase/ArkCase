@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,21 +11,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlTransient;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "acm_postal_address")
 public class PostalAddress implements Serializable, AcmEntity
@@ -39,24 +35,10 @@ public class PostalAddress implements Serializable, AcmEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @XmlElements({
-		@XmlElement(name="created"),
-		@XmlElement(name="locationDate"),
-		@XmlElement(name="initiatorLocationDate"),
-		@XmlElement(name="peopleLocationDate")
-		
-	})
     @Column(name = "cm_address_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @XmlElements({
-		@XmlElement(name="creator"),
-		@XmlElement(name="locationAddedBy"),
-		@XmlElement(name="initiatorLocationAddedBy"),
-		@XmlElement(name="peopleLocationAddedBy")
-		
-	})
     @Column(name = "cm_address_creator", insertable = true, updatable = false)
     private String creator;
 
@@ -70,59 +52,24 @@ public class PostalAddress implements Serializable, AcmEntity
     @Column(name = "cm_address_status")
     private String status;
 
-    @XmlElements({
-		@XmlElement(name="type"),
-		@XmlElement(name="locationType"),
-		@XmlElement(name="initiatorLocationType"),
-		@XmlElement(name="peopleLocationType")
-		
-	})
     @Column(name = "cm_address_type")
     private String type;
     
     @Transient
     private List<String> types;
 
-    @XmlElements({
-		@XmlElement(name="streetAddress"),
-		@XmlElement(name="locationAddress"),
-		@XmlElement(name="initiatorLocationAddress"),
-		@XmlElement(name="peopleLocationAddress")
-		
-	})
     @Column(name = "cm_street_address")
     private String streetAddress;
 
     @Column(name = "cm_street_address_extra")
     private String streetAddress2;
 
-    @XmlElements({
-		@XmlElement(name="city"),
-		@XmlElement(name="locationCity"),
-		@XmlElement(name="initiatorLocationCity"),
-		@XmlElement(name="peopleLocationCity")
-		
-	})
     @Column(name = "cm_locality")
     private String city;
 
-    @XmlElements({
-		@XmlElement(name="state"),
-		@XmlElement(name="locationState"),
-		@XmlElement(name="initiatorLocationState"),
-		@XmlElement(name="peopleLocationState")
-		
-	})
     @Column(name = "cm_region")
     private String state;
 
-    @XmlElements({
-		@XmlElement(name="zip"),
-		@XmlElement(name="locationZip"),
-		@XmlElement(name="initiatorLocationZip"),
-		@XmlElement(name="peopleLocationZip")
-		
-	})
     @Column(name = "cm_postal_code")
     private String zip;
 
@@ -139,6 +86,7 @@ public class PostalAddress implements Serializable, AcmEntity
         }
     }
 
+    @XmlTransient
     public Long getId()
     {
         return id;
@@ -149,6 +97,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.id = id;
     }
 
+    @XmlTransient
     @Override
     public Date getCreated()
     {
@@ -161,6 +110,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.created = created;
     }
 
+    @XmlTransient
     @Override
     public String getCreator()
     {
@@ -173,6 +123,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.creator = creator;
     }
 
+    @XmlTransient
     @Override
     public Date getModified()
     {
@@ -185,6 +136,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.modified = modified;
     }
 
+    @XmlTransient
     @Override
     public String getModifier()
     {
@@ -197,6 +149,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
+    @XmlTransient
     public String getStatus()
     {
         return status;
@@ -207,6 +160,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.status = status;
     }
 
+    @XmlTransient
     public String getType()
     {
         return type;
@@ -217,6 +171,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.type = type;
     }
     
+    @XmlTransient
 	public List<String> getTypes() {
 		return types;
 	}
@@ -225,6 +180,7 @@ public class PostalAddress implements Serializable, AcmEntity
 		this.types = types;
 	}
 
+	@XmlTransient
 	public String getStreetAddress()
     {
         return streetAddress;
@@ -235,6 +191,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.streetAddress = streetAddress;
     }
 
+    @XmlTransient
     public String getStreetAddress2()
     {
         return streetAddress2;
@@ -245,6 +202,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.streetAddress2 = streetAddress2;
     }
 
+    @XmlTransient
     public String getCity()
     {
         return city;
@@ -255,6 +213,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.city = city;
     }
 
+    @XmlTransient
     public String getState()
     {
         return state;
@@ -265,6 +224,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.state = state;
     }
 
+    @XmlTransient
     public String getZip()
     {
         return zip;
@@ -275,6 +235,7 @@ public class PostalAddress implements Serializable, AcmEntity
         this.zip = zip;
     }
 
+    @XmlTransient
     public String getCountry()
     {
         return country;
@@ -283,5 +244,9 @@ public class PostalAddress implements Serializable, AcmEntity
     public void setCountry(String country)
     {
         this.country = country;
+    }
+    
+    public PostalAddress returnBase() {
+    	return this;
     }
 }

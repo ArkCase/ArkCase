@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.ecm.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,9 +25,10 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile implements AcmEntity, Serializable
+public class EcmFile implements AcmEntity, Serializable, AcmObject
 {
     private static final long serialVersionUID = -5177153023458655846L;
+    private static final String OBJECT_TYPE = "FILE";
 
     @Id
     @Column(name = "cm_file_id")
@@ -77,7 +80,7 @@ public class EcmFile implements AcmEntity, Serializable
         {
             parentObject.setTargetId(fileId);
             parentObject.setTargetName(fileName);
-            parentObject.setTargetType("FILE");
+            parentObject.setTargetType(OBJECT_TYPE);
         }
     }
 
@@ -198,7 +201,19 @@ public class EcmFile implements AcmEntity, Serializable
     {
         parentObjects.add(parentObject);
         parentObject.setTargetName(getFileName());
-        parentObject.setTargetType("FILE");
+        parentObject.setTargetType(OBJECT_TYPE);
         parentObject.setTargetId(getFileId());
+    }
+
+    @JsonIgnore
+    @Override
+    public String getObjectType() {
+        return OBJECT_TYPE;
+    }
+
+    @JsonIgnore
+    @Override
+    public Long getId() {
+        return fileId;
     }
 }

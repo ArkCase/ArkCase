@@ -5,11 +5,10 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <%--<title>${pageDescriptor.title}</title>--%>
-    <title><spring:message code="search.page.title" text="Search | ACM | Armedia Case Management" /></title>
+    <title><spring:message code="search.page.title" text="Search | ACM | ArkCase" /></title>
 
     <div id="searchData" itemscope="true" style="display: none">
-        <span itemprop="searchEx">${searchEx}</span>
+        <%--<span itemprop="objectTypes">${objectTypes}</span>--%>
     </div>
 </script>
 </jsp:attribute>
@@ -22,446 +21,278 @@
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchController.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/jquery.slimscroll.min.js'/>"></script>
 
     <!-- JTable -->
-    <link rel="stylesheet" href="<c:url value='/'/>resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css" type="text/css"/>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_jtable}/${js_jtable}"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"></link>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>
-<section id="content">
-    <div class="wrapper b-b header">Advanced Search</div>
+    <section id="content">
 
-    <section class="hbox stretch">
-        <aside class="aside-md bg-light dker b-r" id="subNav">
-            <section class="vbox">
-                <!--scroll bar -->
-                <section class="scrollable">
+        <header class="header bg-gradient b-b clearfix">
+            <div class="row m-t-sm">
+                <div class="col-md-12 m-b-sm">
+                    <div class="input-group">
+                        <input type="text" class="input-md form-control" id="searchQuery" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>
+                      <span class="input-group-btn">
+                      <button class="btn btn-md btn-default" type="button"><spring:message code="search.submit.text" text="Go!" /></button>
+                      </span> </div>
+                </div>
+            </div>
+        </header>
 
-                    <%--<div class="wrapper b-b header">Advanced Search</div>--%>
+        <section class="hbox stretchSearch">
+            <aside class="aside-md bg-light dker b-r" id="subNav">
+                <section class="vbox">
+                    <section class="scrollable">
 
-                        <div class="wrapper">
-                            <div class="form-group" id="divFacet">
-                                <%--<div name="facet_fields">--%>
-                                    <%--<div name="Object Type">--%>
-                                    <%--&lt;%&ndash;<div class="col-sm-12" id="complaintFields">&ndash;%&gt;--%>
-                                        <%--<label class="label">Object Type</label>--%>
-                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="USER">USER <span>(33)</span></input>--%>
-                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="CASE_FILE" checked>CASE_FILE <span>(20)</span></input>--%>
-                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="COMPLAINT">COMPLAINT <span>(40)</span></input>--%>
-                                        <%--</br><input type="checkbox" facetType='facet_fields' facetField='field' value="DOCUMENT">DOCUMENT <span>(5)</span></input>--%>
-                                    <%--</div>--%>
-                                    <%--<div name="Status">--%>
-                                        <%--<label class="label">Status</label>--%>
-                                        <%--</br><input type="checkbox"  value="valid">valid (33)</input>--%>
-                                        <%--</br><input type="checkbox"  value="active">active (20)</input>--%>
-                                        <%--</br><input type="checkbox"  value="draft">draft (40)</input>--%>
-                                    <%--</div>--%>
-                                <%--</div>--%>
-                                <%--<div name="facet_queries">--%>
-                                    <%--<div name="Incident Date">--%>
-                                        <%--<label class="label">Incident Date</label>--%>
-                                        <%--</br><input type="checkbox" facet='query' value="Previous Week">Previous Week (33)</input>--%>
-                                        <%--</br><input type="checkbox" facet='query' value="Previous Month">Previous Month (20)</input>--%>
-                                        <%--</br><input type="checkbox" facet='query' value="Previous Week">Previous Week (40)</input>--%>
-                                    <%--</div>--%>
-                                <%--</div>--%>
-                            </div>
 
-                            <%--<div class="input-group">--%>
-                                <%--<input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">--%>
-                                    <%--<span class="input-group-btn">--%>
-                                      <%--<button class="btn btn-sm btn-default" type="button">Go!</button>--%>
-                                    <%--</span>--%>
+
+                        <div class="wrapper facets" id="divFacets">
+
+                        <%--<div name="facet_fields">--%>
+
+
+
+                            <%--<h6>Create User</h6>--%>
+                            <%--<div class="list-group" name="Create User">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">5</span>--%>
+                                    <%--sally-acm--%>
+                                <%--</label>--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--ann-acm--%>
+                                <%--</label>--%>
 
                             <%--</div>--%>
 
-<!-- ================================================ -->
-                            <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="col-sm-6 control-label">Complaints</label>--%>
-                                <%--<div class="col-sm-4">--%>
-                                    <%--<label class="switch">--%>
-                                        <%--<input type="checkbox" id="chkComplaints">--%>
-                                        <%--<span></span>--%>
-                                    <%--</label>--%>
-                                <%--</div>--%>
 
-                                <%--<div class="col-sm-12" id="complaintFields">--%>
-                                    <%--<label class="label">Complaint Title</label>--%>
-                                    <%--<input type="text" id="edtComplaintTitle" class="form-control" placeholder="Enter Complaint Title">--%>
-                                    <%--<label class="label">Complaint ID</label>--%>
-                                    <%--<input type="text" id="edtComplaintID" class="form-control" placeholder="Enter Complaint ID">--%>
-                                    <%--<label class="label">Incident Date</label>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label class="label col-sm-3">From</label>--%>
-                                    <%--<div class="col-sm-9"><input class="datepicker-input form-control" id="edtComplaintDateStartRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<label class="label col-sm-3">To</label>--%>
-                                    <%--<div class="col-sm-9"> <input class="datepicker-input form-control " id="edtComplaintDateEndRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label for="priority"  class="label" >Priority</label>--%>
-                                    <%--<select name="priority" class="form-control" id="selComplaintPriority">--%>
-                                        <%--<option>Choose Priority</option>--%>
-                                        <%--<option selected>Low</option>--%>
-                                        <%--<option>Medium</option>--%>
-                                        <%--<option>High</option>--%>
-                                        <%--<option>Expedited</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label class="label" >Assigned To</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtComplaintAssignee" placeholder="Enter Assigned To">--%>
-                                    <%--<label for="subjectType"  class="label">Subject Type</label>--%>
-                                    <%--<select name="subjectType" class="form-control" id="selComplaintSubjectType" >--%>
-                                        <%--<option>Choose Subject Type</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label for="complaintStatus"  class="label">Status</label>--%>
-                                    <%--<select name="complaintStatus" class="form-control" id="selComplaintStatus" >--%>
-                                        <%--<option>Choose Status</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
 
-                            <%--</div>--%>
- <!-- ================================================ -->
-                            <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="col-sm-6 control-label">Cases</label>--%>
-                                <%--<div class="col-sm-4">--%>
-                                    <%--<label class="switch">--%>
-                                        <%--<input type="checkbox" id="chkCases">--%>
-                                        <%--<span></span>--%>
-                                    <%--</label>--%>
-                                <%--</div>--%>
+                            <%--<h6>Person, Organization Type</h6>--%>
+                            <%--<div class="list-group auto">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--initiator--%>
+                                <%--</label>--%>
 
-                                <%--<div class="col-sm-12" id="caseFields">--%>
-                                    <%--<label class="label">Case Title</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtCaseTitle" placeholder="Enter Case Title">--%>
-                                    <%--<label class="label">Case ID</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtCaseID" placeholder="Enter Case ID">--%>
-                                    <%--<label class="label">Incident Date</label>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label class="label col-sm-3">From</label>--%>
-                                    <%--<div class="col-sm-9"><input class="datepicker-input form-control" id="edtCaseDateStartRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<label class="label col-sm-3">To</label>--%>
-                                    <%--<div class="col-sm-9"> <input class="datepicker-input form-control " id="edtCaseDateEndRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label for="priority"  class="label">Priority</label>--%>
-                                    <%--<select name="priority" class="form-control" id="selCasePriority">--%>
-                                        <%--<option>Choose Priority</option>--%>
-                                        <%--<option selected>Low</option>--%>
-                                        <%--<option>Medium</option>--%>
-                                        <%--<option>High</option>--%>
-                                        <%--<option>Expedited</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label class="label">Assigned To</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtCaseAssignee" placeholder="Enter Assigned To">--%>
-                                    <%--<label for="subjectType"  class="label">Subject Type</label>--%>
-                                    <%--<select name="subjectType" class="form-control" id="selCaseSubjectType">--%>
-                                        <%--<option>Choose Subject Type</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label for="caseStatus"  class="label">Status</label>--%>
-                                    <%--<select name="caseStatus" class="form-control" id="selCaseStatus">--%>
-                                        <%--<option>Choose Status</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
 
                             <%--</div>--%>
 
-<!-- ================================================ -->
-                            <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="col-sm-6 control-label">Tasks</label>--%>
-                                <%--<div class="col-sm-4">--%>
-                                    <%--<label class="switch">--%>
-                                        <%--<input type="checkbox" id="chkTasks">--%>
-                                        <%--<span></span>--%>
-                                    <%--</label>--%>
-                                <%--</div>--%>
 
-                                <%--<div class="col-sm-12" id="taskFields">--%>
-                                    <%--<label class="label">Task Title</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtTaskTitle" placeholder="Enter Task Title">--%>
-                                    <%--<label class="label">Task ID</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtTaskID" placeholder="Enter Task ID">--%>
-                                    <%--<label class="label">Due Date</label>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label class="label col-sm-3">From</label>--%>
-                                    <%--<div class="col-sm-9"><input class="datepicker-input form-control" id="edtTaskDueDateStartRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<label class="label col-sm-3">To</label>--%>
-                                    <%--<div class="col-sm-9"> <input class="datepicker-input form-control " id="edtTaskDueDateEndRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label for="priority"  class="label">Priority</label>--%>
-                                    <%--<select name="priority" class="form-control" id="selTaskPriority">--%>
-                                        <%--<option>Choose Priority</option>--%>
-                                        <%--<option selected>Low</option>--%>
-                                        <%--<option>Medium</option>--%>
-                                        <%--<option>High</option>--%>
-                                        <%--<option>Expedited</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label class="label">Assigned To</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtTaskAssignee" placeholder="Enter Assigned To">--%>
-                                    <%--<label for="subjectType"  class="label">Subject Type</label>--%>
-                                    <%--<select name="subjectType" class="form-control" id="selTaskSubjectType">--%>
-                                        <%--<option>Choose Subject Type</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label for="taskStatus"  class="label">Status</label>--%>
-                                    <%--<select name="taskStatus" class="form-control" id="selTaskStatus">--%>
-                                        <%--<option>Choose Status</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
+
+                        <%--</div>--%>
+                            <%--<div name="facet_dates">--%>
+
+
+
+
+                            <%--<h6>Object Type</h6>--%>
+                            <%--<div class="list-group auto">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">6</span>--%>
+                                    <%--TASK--%>
+                                <%--</label>--%>
+
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--PERSON-ASSOCIATION--%>
+                                <%--</label>--%>
                             <%--</div>--%>
 
-<!-- ================================================ -->
-                            <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="col-sm-6 control-label">Documents</label>--%>
-                                <%--<div class="col-sm-4">--%>
-                                    <%--<label class="switch">--%>
-                                        <%--<input type="checkbox" id="chkDocuments">--%>
-                                        <%--<span></span>--%>
-                                    <%--</label>--%>
-                                <%--</div>--%>
 
-                                <%--<div class="col-sm-12" id="docFields">--%>
-                                    <%--<label class="label">Document Title</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtDocumentTitle" placeholder="Enter Document Title">--%>
-                                    <%--<label class="label">Document ID</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtDocumentID" placeholder="Enter Document ID">--%>
-                                    <%--<label class="label">Due Date</label>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label class="label col-sm-3">From</label>--%>
-                                    <%--<div class="col-sm-9"><input class="datepicker-input form-control" id="edtDocumentDateStartRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<label class="label col-sm-3">To</label>--%>
-                                    <%--<div class="col-sm-9"> <input class="datepicker-input form-control " id="edtDocumentDateEndRange" type="text" value="" data-date-format="dd-mm-yyyy" ></div>--%>
-                                    <%--<div class="clear"></div>--%>
-                                    <%--<label for="priority"  class="label">Priority</label>--%>
-                                    <%--<select name="priority" class="form-control" id="selDocumentPriority">--%>
-                                        <%--<option>Choose Priority</option>--%>
-                                        <%--<option selected>Low</option>--%>
-                                        <%--<option>Medium</option>--%>
-                                        <%--<option>High</option>--%>
-                                        <%--<option>Expedited</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label class="label">Assigned To</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtDocumentAssignee" placeholder="Enter Assigned To">--%>
-                                    <%--<label for="subjectType"  class="label">Document Type</label>--%>
-                                    <%--<select name="subjectType" class="form-control">--%>
-                                        <%--<option>Choose Document Type</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label for="formType"  class="label">Form Type</label>--%>
-                                    <%--<select name="formType" class="form-control" id="selDocumentFormType">--%>
-                                        <%--<option>Choose Form Type</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label for="documentStatus"  class="label">Status</label>--%>
-                                    <%--<select name="documentStatus" class="form-control" id="selDocumentStatus">--%>
-                                        <%--<option>Choose Status</option>--%>
-                                    <%--</select>--%>
-                                <%--</div>--%>
+
+                            <%--<h6>Assignee Full Name</h6>--%>
+                            <%--<div class="list-group auto">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">6</span>--%>
+                                    <%--sally supervisor--%>
+                                <%--</label>--%>
+
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--ann administrator--%>
+                                <%--</label>--%>
                             <%--</div>--%>
 
-<!-- ================================================ -->
-                            <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
-                            <%--<div class="line line-dashed b-b line-lg pull-in"></div>--%>
-                            <%--<div class="form-group">--%>
-                                <%--<label class="col-sm-6 control-label">People</label>--%>
-                                <%--<div class="col-sm-4">--%>
-                                    <%--<label class="switch">--%>
-                                        <%--<input type="checkbox" id="chkPeople">--%>
-                                        <%--<span></span>--%>
-                                    <%--</label>--%>
-                                <%--</div>--%>
 
 
-                                <%--<div class="col-sm-12" id="peopleFields">--%>
-                                    <%--<label class="label">Title</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleTitle" placeholder="Enter Title">--%>
-                                    <%--<label class="label">First Name</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleFirstName" placeholder="Enter First Name">--%>
-                                    <%--<label class="label">Last Name</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleLastName" placeholder="Enter Last Name">--%>
-                                    <%--<label for="priority"  class="label">Type</label>--%>
-                                    <%--<select name="priority" class="form-control" id="selPeopleType">--%>
-                                        <%--<option>Choose Type</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label class="label">Phone</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeoplePhoneNumber" data-type="phone" placeholder="(XXX) XXXX XXX" data-required="true">--%>
+                            <%--<h6>Priority</h6>--%>
+                            <%--<div class="list-group ">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">6</span>--%>
+                                    <%--medium--%>
+                                <%--</label>--%>
 
-                                    <%--<label class="label">Organization</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleOrganization" placeholder="Enter Organization">--%>
 
-                                    <%--<label class="label">Address</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleAddress" placeholder="Enter Address">--%>
-                                    <%--<label class="label">City</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleCity" placeholder="Enter City">--%>
-
-                                    <%--<label for="state"  class="label">State</label>--%>
-                                    <%--<select name="state" class="form-control" id="selPeopleState">--%>
-                                        <%--<option>Choose State</option>--%>
-                                    <%--</select>--%>
-                                    <%--<label class="label">ZIP</label>--%>
-                                    <%--<input type="text" class="form-control" id="edtPeopleZIPCode" placeholder="Enter ZIP">--%>
-
-                                <%--</div>--%>
                             <%--</div>--%>
-<!-- ============================================================================ -->
-                        </div>
-                </section>
-            </section>
-        </aside>
-        <aside>
-            <section class="vbox">
-                <header class="header bg-white b-b clearfix">
-                    <div class="row m-t-sm">
-                        <div class="col-sm-12 m-b-xs">
-                            <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default active"><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
-                            <%--<a href="#subNav" data-toggle="class:hide" class="btn btn-sm btn-default "><i class="fa fa-caret-right text fa-lg"></i><i class="fa fa-caret-left text-active fa-lg"></i></a>--%>
-                            <%--<div class="btn-group">--%>
-                                <%--<button type="button" class="btn btn-sm btn-default" title="Refresh"><i class="fa fa-refresh"></i></button>--%>
-                                <%--<button type="button" class="btn btn-sm btn-default" title="Filter" data-toggle="dropdown"><i class="fa fa-filter"></i> <span class="caret"></span></button>--%>
-                                <%--<ul class="dropdown-menu">--%>
-                                    <%--<li><a href="#">Filter 1</a></li>--%>
-                                    <%--<li><a href="#">Filter 2</a></li>--%>
-                                    <%--<li><a href="#">Filter 3</a></li>--%>
-                                <%--</ul>--%>
+                        <%--</div>--%>
+
+                        <%--<div>--%>
+
+
+                            <%--<h6>Create User</h6>--%>
+                            <%--<div class="list-group ">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">5</span>--%>
+                                    <%--sally-acm--%>
+                                <%--</label>--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--ann-acm--%>
+                                <%--</label>--%>
+
                             <%--</div>--%>
 
-                            <%--<form id="formSearch">--%>
-                                <div class="input-group">
-                                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Type in search query">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                    </span>
-                                </div>
-                            <%--</form>--%>
 
-                                <%--<form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">--%>
-                                    <%--<div class="form-group">--%>
-                                        <%--<div class="input-group"> <span class="input-group-btn">--%>
-                                              <%--<button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>--%>
-                                              <%--</span>--%>
-                                            <%--<input id="searchQuery" type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" placeholder="Type in search query">--%>
-                                            <%--<input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />--%>
-                                        <%--</div>--%>
-                                    <%--</div>--%>
-                                <%--</form>--%>
 
+
+
+
+                            <%--<h6>Person, Organization Type</h6>--%>
+                            <%--<div class="list-group auto">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--initiator--%>
+                                <%--</label>--%>
+
+
+                            <%--</div>--%>
+
+
+
+
+
+
+
+                            <%--<h6>Object Type</h6>--%>
+                            <%--<div class="list-group auto">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">6</span>--%>
+                                    <%--TASK--%>
+                                <%--</label>--%>
+
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--PERSON-ASSOCIATION--%>
+                                <%--</label>--%>
+                            <%--</div>--%>
+
+
+
+                            <%--<h6>Assignee Full Name</h6>--%>
+                            <%--<div class="list-group auto">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">6</span>--%>
+                                    <%--sally supervisor--%>
+                                <%--</label>--%>
+
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">2</span>--%>
+                                    <%--ann administrator--%>
+                                <%--</label>--%>
+                            <%--</div>--%>
+
+
+
+                            <%--<h6>Priority</h6>--%>
+                            <%--<div class="list-group ">--%>
+                                <%--<label class="list-group-item"><input type="checkbox" />--%>
+                                    <%--<span class="badge bg-info">6</span>--%>
+                                    <%--medium--%>
+                                <%--</label>--%>
+
+
+                            <%--</div>--%>
+                        <%--</div>--%>
 
                         </div>
 
-                    </div>
-                </header>
-                <section class="scrollable wrapper w-f">
-                    <section class="panel panel-default">
-                        <div id="divResults" style="width:100%"></div>
-                        <!--
-                        </br></br>
-                        <div class="table-responsive">
-                            <table class="table table-striped m-b-none">
-                                <thead>
-                                <tr>
-                                    <th width="20"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
-                                    <th width="20"></th>
-                                    <th width="20">ID</th>
-                                    <th class="th-sortable" data-toggle="class">Type
-                              <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span>
-                                    </th>
-                                    <th class="th-sortable" data-toggle="class">Title
-                              <span class="th-sort">
-                                <i class="fa fa-sort-down text"></i>
-                                <i class="fa fa-sort-up text-active"></i>
-                                <i class="fa fa-sort"></i>
-                              </span>
-                                    <th>Owner</th>
-                                    <th>Created</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
-                                    <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
-                                    <td>[ID]</td>
-                                    <td>[Type]</td>
-                                    <td>[Title]</td>
-                                    <td>[Owner]</td>
-                                    <td>[Date Created]</td>
-                                </tr>
-                                <tr class="bg-primary-ltest">
-                                    <td><label class="checkbox m-n i-checks"><input type="checkbox" name="ids[]"><i></i></label></td>
-                                    <td><a href="#modal" data-toggle="modal"><i class="fa fa-search-plus text-muted"></i></a></td>
-                                    <td>[ID]</td>
-                                    <td>[Type]</td>
-                                    <td>[Title]</td>
-                                    <td>[Owner]</td>
-                                    <td>[Date Created]</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        -->
+
+
+
                     </section>
                 </section>
-                <footer class="footer bg-white b-t">
-                    <!--
-                    <div class="row text-center-xs">
-                        <div class="col-md-6 hidden-sm">
-                            <p class="text-muted m-t">Showing 20-30 of 50</p>
-                        </div>
-                        <div class="col-md-6 col-sm-12 text-right text-center-xs">
-                            <ul class="pagination pagination-sm m-t-sm m-b-none">
-                                <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                                <li class="active"><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    -->
-                </footer>
-            </section>
-        </aside>
+            </aside>
+
+
+            <aside>
+                <section class="vbox">
+                    <section class="scrollable wrapper w-f">
+                        <section class="panel panel-default">
+                            <div id="divResults" style="width:100%"></div>
+                        </section>
+                    </section>
+                </section>
+            </aside>
+
+
+            <%--<aside>--%>
+                <%--<section class="vbox">--%>
+
+                    <%--<section class="scrollable wrapper w-f">--%>
+
+
+                        <%--<section class="panel panel-default">--%>
+                            <%--<div class="row wrapper">--%>
+                                <%--<div class="col-md-10">--%>
+                                    <%--<p>Showing 1-14 of 34,835 results for "Search Query"</p>--%>
+                                <%--</div>--%>
+
+                                <%--<div class="col-md-2 text-right">--%>
+                                    <%--<a href="#" class="btn btn-primary">Export</a>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                            <%--<div class="table-responsive">--%>
+                                <%--<table class="table table-striped b-t b-light">--%>
+                                    <%--<thead>--%>
+                                    <%--<tr>--%>
+                                        <%--<th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>--%>
+                                        <%--<th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>--%>
+                                        <%--<th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>--%>
+                                        <%--<th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>--%>
+                                        <%--<th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>--%>
+                                    <%--</tr>--%>
+                                    <%--</thead>--%>
+                                    <%--<tbody>--%>
+                                    <%--<tr>--%>
+                                        <%--<td>[Type]</td>--%>
+                                        <%--<td>[ID]</td>--%>
+                                        <%--<td>[Title]</td>--%>
+                                        <%--<td>[Created]</td>--%>
+                                        <%--<td>[Status]</td>--%>
+                                    <%--</tr>--%>
+
+                                    <%--</tbody>--%>
+                                <%--</table>--%>
+                            <%--</div>--%>
+
+                        <%--</section>--%>
+                    <%--</section>--%>
+                    <%--<footer class="footer bg-white b-t">--%>
+                        <%--<div class="row text-center-xs">--%>
+                            <%--<div class="col-md-6 hidden-sm">--%>
+                                <%--<p class="text-muted m-t">Showing 20-30 of 50</p>--%>
+                            <%--</div>--%>
+                            <%--<div class="col-md-6 col-sm-12 text-right text-center-xs">--%>
+                                <%--<ul class="pagination pagination-sm m-t-sm m-b-none">--%>
+                                    <%--<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>--%>
+                                    <%--<li class="active"><a href="#">1</a></li>--%>
+                                    <%--<li><a href="#">2</a></li>--%>
+                                    <%--<li><a href="#">3</a></li>--%>
+                                    <%--<li><a href="#">4</a></li>--%>
+                                    <%--<li><a href="#">5</a></li>--%>
+                                    <%--<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>--%>
+                                <%--</ul>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                    <%--</footer>--%>
+                <%--</section>--%>
+            <%--</aside>--%>
+        </section>
     </section>
-</section>
-
-<script>
-
-//    $('#chkComplaints').click(function(){
-//        var val = $(this).val();
-//        $('#complaintFields').slideToggle();
-//    });
-//
-//    $('#chkCases').click(function(){
-//        var val = $(this).val();
-//        $('#caseFields').slideToggle();
-//    });
-//
-//    $('#chkTasks').click(function(){
-//        var val = $(this).val();
-//        $('#taskFields').slideToggle();
-//    });
-//
-//    $('#chkDocuments').click(function(){
-//        var val = $(this).val();
-//        $('#docFields').slideToggle();
-//    });
-//
-//    $('#chkPeople').click(function(){
-//        var val = $(this).val();
-//        $('#peopleFields').slideToggle();
-//    });
-
-</script>
-
-<style>
-
-    #complaintFields, #caseFields, #taskFields, #docFields, #peopleFields { display:none}
-
-</style>
 
 </jsp:body>
 </t:layout>

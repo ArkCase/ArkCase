@@ -6,6 +6,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 
 import org.apache.chemistry.opencmis.client.api.ObjectId;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.IOUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -13,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,6 +113,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         messageProps.put("inputStream", fileInputStream);
         messageProps.put("acmUser", authentication);
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
+
+
+
+
         MuleMessage received = getMuleClient().send("vm://updateFile.in", ecmFile, messageProps);
         ObjectId objectId = received.getPayload(ObjectId.class);
 
@@ -125,6 +133,57 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         return ecmFile;
     }
+    
+    @Override
+    public String downloadFileTransaction(EcmFile ecmFile) throws MuleException {
+    	try 
+		{			
+			MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", ecmFile.getEcmFileId(), null);
+			
+			String result = getContent((ContentStream) message.getPayload());
+			
+			return result;
+		} 
+		catch (MuleException e) 
+		{
+			log.error("Cannot download file: " + e.getMessage(), e);
+			throw e;
+		}
+    }
+    
+    private String getContent(ContentStream contentStream)
+	{
+		String content = "";
+		InputStream inputStream = null;
+		
+		try
+        {
+			inputStream = contentStream.getStream();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(inputStream, writer);
+			content = writer.toString();
+        } 
+		catch (IOException e) 
+		{
+        	log.error("Could not copy input stream to the writer: " + e.getMessage(), e);
+		}
+		finally
+        {
+            if ( inputStream != null )
+            {
+                try
+                {
+                	inputStream.close();
+                }
+                catch (IOException e)
+                {
+                    log.error("Could not close CMIS content stream: " + e.getMessage(), e);
+                }
+            }
+        }
+		
+		return content;
+	}
 
     public MuleClient getMuleClient()
     {
@@ -145,4 +204,5 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
+
 }

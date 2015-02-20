@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.service.frevvo.forms.factory;
 
+import com.armedia.acm.form.casefile.service.CaseFilePSService;
 import com.armedia.acm.form.casefile.service.CaseFileService;
 import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
 import com.armedia.acm.form.closecomplaint.service.CloseComplaintService;
@@ -45,6 +46,7 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setPersonDao(frevvoFormController.getPersonDao());
+            service.setComplaintEventPublisher(frevvoFormController.getComplaintEventPublisher());
             
             return service;
 		}
@@ -143,6 +145,37 @@ public class FrevvoFormServiceFactory {
             service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            service.setCaseFileFactory(frevvoFormController.getCaseFileFactory());
+            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            
+            return service;
+		}
+		
+		if (FrevvoFormName.CASE_FILE_PS.equals(name))
+        {
+            String contextPath = request.getServletContext().getContextPath();
+
+            CaseFilePSService service = new CaseFilePSService();
+
+            service.setEcmFileService(frevvoFormController.getEcmFileService());
+            service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setSaveCaseService(frevvoFormController.getSaveCaseService());
+            service.setAcmHistoryDao(frevvoFormController.getAcmHistoryDao());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setMuleClient(frevvoFormController.getMuleClient());
+            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
+            service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
+            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
+            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            service.setCaseFilePSFactory(frevvoFormController.getCaseFilePSFactory());
             
             return service;
 		}

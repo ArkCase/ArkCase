@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.0.20</version>
+        <version>3.0.21</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -202,8 +202,18 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-history</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-forms</groupId>
             <artifactId>acm-forms-roi</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-subscription</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>

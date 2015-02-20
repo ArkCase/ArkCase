@@ -4,27 +4,34 @@
  */
 package com.armedia.acm.plugins.complaint.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Strings;
+
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
+import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
@@ -49,6 +56,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private SaveComplaintTransaction saveComplaintTransaction;
     private AcmPluginManager acmPluginManager;
     private PersonDao personDao;
+    private ComplaintEventPublisher complaintEventPublisher;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
 
@@ -111,10 +119,13 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
-		Complaint complaint = (Complaint) convertFromXMLToObject(cleanXML(xml), Complaint.class);
+		ComplaintForm complaint = (ComplaintForm) convertFromXMLToObject(cleanXML(xml), ComplaintForm.class);
 
         complaint = saveComplaint(complaint);
 
+        // Update Frevvo XML (with object ids) after saving the object 
+        updateXMLAttachment(attachments, FrevvoFormName.COMPLAINT, complaint);
+        
 		saveAttachments(attachments, complaint.getCmisFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
 
 		if (null != complaint && null != complaint.getComplaintId())
@@ -125,22 +136,34 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return true;
 	}
 
-    protected Complaint saveComplaint(Complaint complaint) throws MuleException
+    protected ComplaintForm saveComplaint(ComplaintForm complaint) throws MuleException
     {
     	getComplaintFactory().setPersonDao(getPersonDao());
-        com.armedia.acm.plugins.complaint.model.Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
+        Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
 
+        boolean isNew = acmComplaint.getComplaintId() == null;
+        
         acmComplaint = getSaveComplaintTransaction().saveComplaint(acmComplaint, getAuthentication());
+        
+        getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
 
-        complaint.setComplaintId(acmComplaint.getComplaintId());
-        complaint.setComplaintNumber(acmComplaint.getComplaintNumber());
-        complaint.setCmisFolderId(acmComplaint.getEcmFolderId());
-        complaint.setCategory(acmComplaint.getComplaintType());
-        complaint.setComplaintTag(acmComplaint.getTag());
-        complaint.setFrequency(acmComplaint.getFrequency());
-        complaint.setLocation(acmComplaint.getLocation());
+        complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint);
 
         return complaint;
+    }
+    
+    public void updateXML(Complaint complaint, Authentication auth)
+    {
+    	if (complaint != null)
+    	{
+    		ComplaintForm form = getComplaintFactory().asFrevvoComplaint(complaint);
+    		
+    		if (form != null)
+    		{
+    			String xml = convertFromObjectToXML(form);
+    			updateXML(xml, FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), auth);		
+    		}
+    	}
     }
 	
 	private JSONObject initFormData(){		
@@ -151,7 +174,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		List<Contact> peoples = new ArrayList<Contact>();
 		peoples.add(people);
 		
-		Complaint complaint = initIncidentFields();
+		ComplaintForm complaint = initIncidentFields();
 		
 		complaint.setInitiator(initiator);
 		complaint.setPeople(peoples);
@@ -196,7 +219,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 			complaint.setParticipantsOptions(participantsOptions);
 		}
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(complaint);
 		
 		JSONObject json = new JSONObject(jsonString);
@@ -216,7 +239,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".types"), ",");
 
 		mainInformation.setTitles(titles);
-		mainInformation.setAnonimuos("");
+		mainInformation.setAnonymous("");
 		mainInformation.setTypes(types);
 		mainInformation.setType("Initiator");
 		
@@ -282,7 +305,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		}
 		
 		mainInformation.setTitles(titles);
-		mainInformation.setAnonimuos("");
+		mainInformation.setAnonymous("");
 		mainInformation.setTypes(types);
 		
 		List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
@@ -330,12 +353,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 	}
 
-	private Complaint initIncidentFields() {
+	private ComplaintForm initIncidentFields() {
 		
 		String userId = getAuthentication().getName();
 		AcmUser user = getUserDao().findByUserId(userId);
 
-		Complaint complaint = new Complaint();
+		ComplaintForm complaint = new ComplaintForm();
 		
 		List<String> categories = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".categories"), ",");	
 		List<String> priorities = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".priorities"), ",");
@@ -380,7 +403,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		}
 		
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(searchResult);
 		
 		JSONObject json = new JSONObject(jsonString);
@@ -459,7 +482,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 			LOG.warn("There is no any Person with ID=" + id);
 		}
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(searchResult);
 		
 		JSONObject json = new JSONObject(jsonString);
@@ -514,5 +537,14 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	 */
 	public void setPersonDao(PersonDao personDao) {
 		this.personDao = personDao;
+	}
+
+	public ComplaintEventPublisher getComplaintEventPublisher() {
+		return complaintEventPublisher;
+	}
+
+	public void setComplaintEventPublisher(
+			ComplaintEventPublisher complaintEventPublisher) {
+		this.complaintEventPublisher = complaintEventPublisher;
 	}
 }

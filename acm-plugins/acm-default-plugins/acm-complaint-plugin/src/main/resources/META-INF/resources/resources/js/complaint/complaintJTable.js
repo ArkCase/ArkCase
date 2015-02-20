@@ -64,7 +64,9 @@ Complaint.JTable = {
         argNew.fields.subTables = {
             title: 'Entities'
             ,width: '10%'
-            ,sorting: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,edit: false
             ,create: false
             ,openChildAsAccordion: true
@@ -112,7 +114,8 @@ Complaint.JTable = {
         argNew.fields.subTables = {
             title: 'Entities'
             ,width: '10%'
-            ,sorting: false
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,edit: false
             ,create: false
             ,openChildAsAccordion: true
@@ -175,6 +178,8 @@ Complaint.JTable = {
 
             title: 'Initiator'
             ,paging: false
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -184,15 +189,15 @@ Complaint.JTable = {
                         {
                             var originator = complaint.originator;
                             var originatorPerson = originator.person;
-                                rc.Records.push({
-                                    personId: originatorPerson.id
-                                    ,title: originatorPerson.title
-                                    ,givenName: originatorPerson.givenName
-                                    ,familyName: originatorPerson.familyName
-                                    ,personType: originator.personType
-                                    ,personDescription: originator.personDescription
-                                });
-                            }
+                            rc.Records.push({
+                                personId: originatorPerson.id
+                                ,title: originatorPerson.title
+                                ,givenName: originatorPerson.givenName
+                                ,familyName: originatorPerson.familyName
+                                ,personType: originator.personType
+                                ,personDescription: originator.personDescription
+                            });
+                        }
                     }
                     return rc;
                 }
@@ -282,7 +287,9 @@ Complaint.JTable = {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Device'
                 }
@@ -430,7 +437,9 @@ Complaint.JTable = {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Organization'
                 }
@@ -580,7 +589,9 @@ Complaint.JTable = {
         $t.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Location'
                 }
@@ -761,7 +772,9 @@ Complaint.JTable = {
         $jt.jtable('openChildTable', $row.closest('tr')
             , {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: 'Add Alias'
                 }
@@ -942,11 +955,11 @@ Complaint.JTable = {
                 ,familyName: ""
                 ,company: ""
                 /*,hairColor:""
-                ,eyeColor:""
-                ,heightInInches:null*/
+                 ,eyeColor:""
+                 ,heightInInches:null*/
                 ,weightInPounds:null
                 /*,dateOfBirth:null
-                ,dateMarried:null*/
+                 ,dateMarried:null*/
                 ,addresses: []
                 ,contactMethods: []
                 ,securityTags: []
@@ -969,7 +982,8 @@ Complaint.JTable = {
     ,createJTablePeople: function($s) {
         this._createJTable4SubTablePeople($s, {
             title: 'People'
-            ,paging: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
             ,messages: {
                 addNewRecord: 'Add Person'
             }
@@ -1030,7 +1044,7 @@ Complaint.JTable = {
                 }
                 ,deleteAction: function(postData, jtParams) {
                     return {
-                       "Result": "OK"
+                        "Result": "OK"
                     };
                 }
             }
@@ -1082,7 +1096,7 @@ Complaint.JTable = {
                         Complaint.Service.savePersonAssociation(newPersonAssociationRecord);
                     }
                 }
-             }
+            }
 
             ,recordUpdated: function(event, data){
                 var whichRow = data.row.prevAll("tr").length;  //count prev siblings
@@ -1127,7 +1141,11 @@ Complaint.JTable = {
         $t.jtable('openChildTable'
             ,$row.closest('tr')
             , {
-                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES, sorting: true, messages: {
+                title: Complaint.PERSON_SUBTABLE_TITLE_DEVICES
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
+                ,messages: {
                     addNewRecord: 'Add Device'
                 }, actions: {
                     listAction: function (postData, jtParams) {
@@ -1319,10 +1337,12 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
-                    addNewRecord: 'Add Organization'
-                }
+                addNewRecord: 'Add Organization'
+            }
                 ,actions: {
                 listAction: function (postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -1409,7 +1429,7 @@ Complaint.JTable = {
                     };
                 }
             }
-            , fields: {
+                , fields: {
                 personId: {
                     type: 'hidden',
                     defaultValue: 1 //commData.record.StudentId
@@ -1442,7 +1462,7 @@ Complaint.JTable = {
                     edit: false
                 }
             }
-            , recordAdded: function (event, data) {
+                , recordAdded: function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1467,7 +1487,7 @@ Complaint.JTable = {
                     }
                 }
             }
-            , recordUpdated: function (event, data) {
+                , recordUpdated: function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1492,7 +1512,7 @@ Complaint.JTable = {
                     }
                 }
             }
-            , recordDeleted: function (event, data) {
+                , recordDeleted: function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1514,10 +1534,10 @@ Complaint.JTable = {
                     }
                 }
             }
-        }
-        ,function (data) { //opened handler
-            data.childTable.jtable('load');
-        });
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
     ,_closePeopleLocations: function($t, $row) {
         $t.jtable('closeChildTable', $row.closest('tr'));
@@ -1527,10 +1547,12 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_LOCATIONS
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
-                    addNewRecord: 'Add Location'
-                }
+                addNewRecord: 'Add Location'
+            }
                 ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -1629,7 +1651,7 @@ Complaint.JTable = {
                 }
             }
 
-            ,fields: {
+                ,fields: {
                 personId: {
                     type: 'hidden'
                     ,defaultValue: 1 //commData.record.StudentId
@@ -1678,7 +1700,7 @@ Complaint.JTable = {
                     ,edit: false
                 }
             }
-            ,recordAdded : function (event, data) {
+                ,recordAdded : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1706,7 +1728,7 @@ Complaint.JTable = {
                     }
                 }
             }
-            ,recordUpdated : function (event, data) {
+                ,recordUpdated : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1734,7 +1756,7 @@ Complaint.JTable = {
                     }
                 }
             }
-            ,recordDeleted : function (event, data) {
+                ,recordDeleted : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1756,10 +1778,10 @@ Complaint.JTable = {
                     }
                 }
             }
-        }
-        ,function (data) { //opened handler
-            data.childTable.jtable('load');
-        });
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
     ,_closePeopleAliases: function($jt, $row) {
         $jt.jtable('closeChildTable', $row.closest('tr'));
@@ -1769,10 +1791,12 @@ Complaint.JTable = {
             $row.closest('tr'),
             {
                 title: Complaint.PERSON_SUBTABLE_TITLE_ALIASES
-                ,sorting: true
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
-                    addNewRecord: 'Add Alias'
-                }
+                addNewRecord: 'Add Alias'
+            }
                 ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
@@ -1863,7 +1887,7 @@ Complaint.JTable = {
                     };
                 }
             }
-            ,fields: {
+                ,fields: {
                 personId: {
                     type: 'hidden'
                     ,defaultValue: 1 //commData.record.StudentId
@@ -1896,7 +1920,7 @@ Complaint.JTable = {
                     ,edit: false
                 }
             }
-            ,recordAdded : function (event, data) {
+                ,recordAdded : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1921,7 +1945,7 @@ Complaint.JTable = {
                     }
                 }
             }
-            ,recordUpdated : function (event, data) {
+                ,recordUpdated : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1946,7 +1970,7 @@ Complaint.JTable = {
                     }
                 }
             }
-            ,recordDeleted : function (event, data) {
+                ,recordDeleted : function (event, data) {
                 var recordParent = $row.closest('tr').data('record');
                 if (recordParent && recordParent.personId) {
                     var personId = recordParent.personId;
@@ -1969,10 +1993,10 @@ Complaint.JTable = {
                     }
                 }
             }
-        }
-        ,function (data) { //opened handler
-            data.childTable.jtable('load');
-        });
+            }
+            ,function (data) { //opened handler
+                data.childTable.jtable('load');
+            });
     }
 
     //----------------- end of People -----------------------
@@ -1987,8 +2011,10 @@ Complaint.JTable = {
     ,createJTableDocuments: function($s) {
         $s.jtable({
             title: 'Documents'
-            ,paging: false
-            ,messages: {
+                ,paging: true //fix me
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
+                ,messages: {
                 addNewRecord: 'Add Document'
             }
             ,actions: {
@@ -2110,6 +2136,9 @@ Complaint.JTable = {
         AcmEx.Object.jTableCreatePaging($jt
             ,{
                 title: 'Tasks'
+                ,paging: true
+                ,sorting: true //fix me
+                ,pageSize: 10 //Set page size (default: 10)
                 ,selecting: true
                 ,multiselect: false
                 ,selectingCheckboxes: false
@@ -2174,7 +2203,7 @@ Complaint.JTable = {
                         ,list: true
                         ,create: false
                         ,edit: false
-                        ,sorting: false
+                        ,sorting: true //fix me
                         ,width: '5%'
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
@@ -2186,7 +2215,7 @@ Complaint.JTable = {
                     ,title: {
                         title: 'Title'
                         ,width: '30%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2197,49 +2226,49 @@ Complaint.JTable = {
                     ,created: {
                         title: 'Created'
                         ,width: '10%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                     }
                     ,priority: {
                         title: 'Priority'
                         ,width: '10%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                     }
                     ,dueDate: {
                         title: 'Due'
                         ,width: '10%'
-                        ,sorting: true
+                        ,sorting: true //fix me
                     }
                     ,assignee: {
                         title: 'Assignee'
                         ,width: '10%'
-                        ,sorting: true
+                        ,sorting: true //fix me
                     }
                     ,status: {
                         title: 'Status'
                         ,width: '10%'
-                        ,sorting: false
+                        ,sorting: true //fix me
                     }
                     /*,description: {
-                        title: 'Action'
-                        ,width: '5%'
-                        ,sorting: false
-                        ,edit: false
-                        ,create: false
-                        ,display: function (commData) {
-                            var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
-                            var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
+                     title: 'Action'
+                     ,width: '5%'
+                     ,sorting: false
+                     ,edit: false
+                     ,create: false
+                     ,display: function (commData) {
+                     var $a = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                     var $b = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-book'></i></a>");
 
-                            $a.click(function (e) {
-                                Complaint.Event.onClickBtnTaskAssign(e);
-                                e.preventDefault();
-                            });
-                            $b.click(function (e) {
-                                Complaint.Event.onClickBtnTaskUnassign(e);
-                                e.preventDefault();
-                            });
-                            return $a.add($b);
-                        }
-                    }*/
+                     $a.click(function (e) {
+                     Complaint.Event.onClickBtnTaskAssign(e);
+                     e.preventDefault();
+                     });
+                     $b.click(function (e) {
+                     Complaint.Event.onClickBtnTaskUnassign(e);
+                     e.preventDefault();
+                     });
+                     return $a.add($b);
+                     }
+                     }*/
                 } //end field
             } //end arg
             ,sortMap
@@ -2247,39 +2276,62 @@ Complaint.JTable = {
     }
     //---------------- end of Tasks --------------------------
 
-    
+
     //
     //----------------- Location ------------------------------
     //
     ,createJTableLocation: function($s) {
         $s.jtable({
             title: 'Location'
-            ,paging: false
+            ,paging: false //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
+            ,messages: {
+                addNewRecord: 'Add Location'
+            }
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();
                     var c = Complaint.getComplaint();
                     if (c && c.location) {
-                    	var record = {};
+                        var record = {};
                         record.id = Acm.goodValue(c.location.id, 0);
                         record.address = Acm.goodValue(c.location.streetAddress);
                         record.city = Acm.goodValue(c.location.city);
+                        record.type = Acm.goodValue(c.location.type);
                         record.state = Acm.goodValue(c.location.state);
                         record.zip = Acm.goodValue(c.location.zip);
                         rc.Records.push(record);
                     }
                     return rc;
                 }
-                ,updateAction: function(postData, jtParams) {
-                    var record = Acm.urlToJson(postData);
+                ,createAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    var record = Acm.urlToJson(postData);
                     rc.Record.address = record.address;
+                    rc.Record.type = record.type;
                     rc.Record.city = record.city;
                     rc.Record.state = record.state;
                     rc.Record.zip = record.zip;
                     return rc;
                 }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.jTableGetEmptyRecord();
+                    rc.Record.address = record.address;
+                    rc.Record.type = record.type;
+                    rc.Record.city = record.city;
+                    rc.Record.state = record.state;
+                    rc.Record.zip = record.zip;
+                    return rc;
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
             }
+
             ,fields: {
                 id: {
                     title: 'ID'
@@ -2291,6 +2343,11 @@ Complaint.JTable = {
                 ,address: {
                     title: 'Address'
                     ,width: '20%'
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '8%'
+                    ,options: Complaint.getLocationTypes()
                 }
                 ,city: {
                     title: 'City'
@@ -2305,15 +2362,37 @@ Complaint.JTable = {
                     ,width: '10%'
                 }
             }
-            ,recordUpdated : function (event, data) {
+            ,recordAdded : function (event, data) {
                 var record = data.record;
                 var complaint = Complaint.getComplaint();
                 if (complaint) {
+                    complaint.location = {};
                     complaint.location.streetAddress = record.address;
                     complaint.location.city = record.city;
+                    complaint.location.type = record.type;
                     complaint.location.state = record.state;
                     complaint.location.zip = record.zip;
 
+                    Complaint.Service.saveComplaint(complaint);
+                }
+            }
+            ,recordUpdated : function (event, data) {
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint && complaint.location) {
+                    complaint.location.streetAddress = record.address;
+                    complaint.location.city = record.city;
+                    complaint.location.type = record.type;
+                    complaint.location.state = record.state;
+                    complaint.location.zip = record.zip;
+
+                    Complaint.Service.saveComplaint(complaint);
+                }
+            }
+            ,recordDeleted : function (event, data) {
+                var complaint = Complaint.getComplaint();
+                if (complaint && complaint.location) {
+                    complaint.location = null;
                     Complaint.Service.saveComplaint(complaint);
                 }
             }
@@ -2329,7 +2408,9 @@ Complaint.JTable = {
     ,createJTableNotes: function($s) {
         $s.jtable({
             title: 'Notes'
-            ,paging: false
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,messages: {
                 addNewRecord: 'Add Note'
             }
@@ -2463,12 +2544,233 @@ Complaint.JTable = {
                 }
             }
 
-            });
+        });
 
         $s.jtable('load');
     }
     //----------------- end of Notes ----------------------
 
+
+    //----------------- Participants ------------------------------
+
+    ,createJTableParticipants: function($s) {
+        $s.jtable({
+            title: 'Participants'
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
+            ,messages: {
+                addNewRecord: 'Add Participants'
+            }
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var complaint = Complaint.getComplaint();
+                    if (complaint && Acm.isArray(complaint.participants)) {
+                        for (var i = 0; i < complaint.participants.length; i++) {
+                            var participant = complaint.participants[i];
+                            var record = {};
+                            record.id = Acm.goodValue(participant.id, 0);
+                            record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
+                            record.type = Acm.goodValue(participant.participantType);
+                            rc.Records.push(record);
+                        }
+                        rc.TotalRecordCount = rc.Records.length;
+                    }
+                    return rc;
+                }
+                ,createAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.JTable.getEmptyRecord();
+                    rc.Record.title = record.title;
+                    rc.Record.type = record.type;
+                    return rc;
+                }
+                ,updateAction: function(postData, jtParams) {
+                    var record = Acm.urlToJson(postData);
+                    var rc = AcmEx.Object.JTable.getEmptyRecord();
+                    rc.Record.title = record.title;
+                    rc.Record.type = record.type;
+                    return rc;
+                }
+                ,deleteAction: function(postData, jtParams) {
+                    return {
+                        "Result": "OK"
+                    };
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                }
+                ,title: {
+                    title: 'First Name'
+                    ,width: '50%'
+                    ,edit: true
+                }
+                ,type: {
+                    title: 'Type'
+                    ,width: '50%'
+                    ,edit: true
+                }
+            }
+            ,recordAdded : function (event, data) {
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint) {
+                    var participant = {};
+                    participant.participantLdapId = record.title;
+                    participant.participantType = record.type;
+                    complaint.participants.push(participant)
+                    Complaint.Service.saveComplaint(complaint);
+                }
+            }
+            ,recordUpdated : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var record = data.record;
+                var complaint = Complaint.getComplaint();
+                if (complaint && Acm.isArray(complaint.participants)) {
+                    if (0 < complaint.participants.length && whichRow < complaint.participants.length) {
+                        var participant = complaint.participants[whichRow];
+                        participant.participantLdapId = record.title;
+                        participant.participantType = record.type;
+                        Complaint.Service.saveComplaint(complaint);
+                    }
+                }
+            }
+            ,recordDeleted : function (event, data) {
+                var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                var complaint = Complaint.getComplaint();
+                if (complaint && Acm.isArray(complaint.participants)) {
+                    if (0 < complaint.participants.length && whichRow < complaint.participants.length) {
+                        complaint.participants.splice(whichRow, 1);
+                        Complaint.Service.saveComplaint(complaint);
+
+                    }
+                }
+            }
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of Participants ----------------------
+
+
+
+    //----------------- References ------------------------------
+
+    ,createJTableReferences: function($s) {
+        $s.jtable({
+            title: 'References'
+            ,paging: true //fix me
+            ,sorting: true //fix me
+            ,pageSize: 10 //Set page size (default: 10)
+            ,actions: {
+                listAction: function(postData, jtParams) {
+                    var rc = AcmEx.Object.jTableGetEmptyRecords();
+                    var c = Complaint.getComplaint();
+                    if (c && c.childObjects) {
+                        for (var i = 0; i < c.childObjects.length; i++) {
+                            var childObject = c.childObjects[i];
+                            if("REFERENCE" == childObject.associationType){
+                                var record = {};
+                                record.id = Acm.goodValue(childObject.targetId, 0);
+                                record.title = Acm.goodValue(childObject.targetName);
+                                record.modified = Acm.getDateFromDatetime(childObject.modified);
+                                record.type = Acm.goodValue(childObject.targetType);
+                                record.status = Acm.goodValue(childObject.status);
+                                rc.Records.push(record);
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
+                    }
+                    return rc;
+                }
+            }
+            ,fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,defaultvalue : 0
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '30%'
+                    ,edit: true
+                    ,create: false
+                    ,display: function(data) {
+                        var url = App.getContextPath() + '/plugin/complaint/' + data.record.id;
+                        var $lnk = $("<a href='" + url + "'>" + data.record.title + "</a>");
+                        return $lnk;
+                    }
+                }
+                ,modified: {
+                    title: 'Modified'
+                    ,width: '14%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,type: {
+                    title: 'Reference Type'
+                    ,width: '14%'
+                    ,edit: false
+                    ,create: false
+                }
+                ,status: {
+                    title: 'Status'
+                    ,width: '14%'
+                    ,edit: false
+                    ,create: false
+                }
+            } //end field
+        });
+
+        $s.jtable('load');
+    }
+    //----------------- end of References ----------------------
+
+
+    //----------------- History ------------------------------
+
+    ,createJTableHistory: function($s) {
+        var sortMap = {};
+        AcmEx.Object.jTableCreatePaging($s
+            , {
+                title: 'History'
+                ,paging: true
+                ,sorting: true
+                ,pageSize: 10 //Set page size (default: 10)
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var rc = AcmEx.Object.jTableGetEmptyRecords();
+                        return rc;
+                    }
+                }
+                , fields: {
+                    id: {
+                        title: 'ID', key: true, list: false, create: false, edit: false
+                    }, eventType: {
+                        title: 'Event Name', width: '10%'
+                    }, eventDate: {
+                        title: 'Date', width: '12%'
+                    }, userId: {
+                        title: 'User', width: '10%'
+                    }
+                }//end field
+            }
+
+            //end arg
+            //,sortMap
+        );
+    }
+    //----------------- end of history ----------------------
 
 };
 

@@ -12,7 +12,7 @@
                              constraintName="uk_participant_rule"/>
     </changeSet>
 
-    <changeSet id="participant-constraint-01-privilege_participant_id" author="dmiller">
+    <changeSet id="participant-constraint-01-privilege_participant_id" author="dmiller" failOnError="false">
         <addForeignKeyConstraint
                 baseTableName="acm_participant_privilege"
                 baseColumnNames="cm_participant_id"

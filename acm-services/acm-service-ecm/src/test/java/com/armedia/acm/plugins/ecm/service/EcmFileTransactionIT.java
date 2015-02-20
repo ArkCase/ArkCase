@@ -24,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +40,6 @@ import static org.junit.Assert.*;
         "/spring/spring-library-cmis-configuration.xml",
         "/spring/spring-library-activemq.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",
@@ -89,13 +91,24 @@ public class EcmFileTransactionIT
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
+
+        DateFormat solrDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        String created = solrDateFormat.format(new Date());
+        Date date = solrDateFormat.parse(created);
+
+
         ecmFile.setFileName("log4j.properties-" + System.currentTimeMillis());
         ecmFile.setFileMimeType("text/plain");
 
+        ecmFile.setCreator("ANN-acm");
+        ecmFile.setModifier("MARJAN-ACM");
+        ecmFile.setCreated(date);
+        ecmFile.setModified(date);
+
         ObjectAssociation parent = new ObjectAssociation();
-        parent.setParentId(12345L);
-        parent.setParentType("COMPLAINT");
-        parent.setParentName("The Parent Name");
+        parent.setParentId(54321L);
+        parent.setParentType("CASE_FILE");
+        parent.setParentName("NAMEEEE");
         ecmFile.addParentObject(parent);
 
         Map<String, Object> messageProperties = new HashMap<>();
@@ -110,10 +123,18 @@ public class EcmFileTransactionIT
 
         EcmFile found = message.getPayload(EcmFile.class);
 
+
+//
+//        Map<String, Object> headers = new HashMap<>();
+//        MuleMessage response = muleClient.send("jms://solrContentFile.in", found, headers);
+//
+//        assertNotNull(response);
+
         entityManager.flush();
 
         assertNotNull(found.getEcmFileId());
         assertNotNull(found.getCreator());
+
 
         log.debug("upload file id '" + found.getEcmFileId() + "'");
 

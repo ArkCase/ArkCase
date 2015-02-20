@@ -99,7 +99,9 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		{
 			for (Entry<String, String> entry : rolesToGroups.entrySet())
 			{
-				retval.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")));
+                if(!("".equals(entry.getValue())) && entry.getValue() != null){
+                    retval.put(entry.getKey(), Arrays.asList(entry.getValue().split(",")));
+                }
 			}
 		}
 		

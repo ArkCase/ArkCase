@@ -45,9 +45,12 @@ TaskList.Event = {
             TaskList.Service.retrieveDetail(taskId);
         }
         TaskList.Object.showTab(node.key);
+
+
+        SubscriptionOp.Model.checkSubscription(App.getUserName(), Task.Model.getObjectType(), taskId);
     }
     ,onClickBtnSignConfirm : function(e) {
-        var taskId = Task.getTaskId();
+        var taskId = TaskOld.getTaskId();
 
         TaskList.Object.hideSignatureModal();
         TaskList.Service.signTask(taskId);
@@ -189,7 +192,7 @@ TaskList.Event = {
         if (clicked == "SEND_FOR_REWORK") {
             var reworkInstructions = AcmEx.Object.SummerNote.get(TaskList.Object.$divReworkInstructions);
             if (reworkInstructions == null || reworkInstructions == "") {
-                Acm.Dialog.error("Invalid rework instructions")
+                Acm.Dialog.info("Must enter rework details")
             }
             else {
                 var task = TaskList.getTask();

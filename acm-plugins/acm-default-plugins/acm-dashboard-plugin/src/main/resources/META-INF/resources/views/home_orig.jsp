@@ -17,16 +17,16 @@
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/dashboard/dashboardCallback.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_slimscroll}/${js_slimscroll}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/easypiechart/${js_easypiechart}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/sparkline/${js_sparkline}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/${js_flot}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/${js_flot_tooltip}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/${js_flot_spline}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/${js_flot_resize}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/${js_flot_grow}"></script>
-    <script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_charts}/flot/${js_flot_demo}"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/easypiechart/${js_easypiechart}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/sparkline/${js_sparkline}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/flot/${js_flot}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/flot/${js_flot_tooltip}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/flot/${js_flot_spline}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/flot/${js_flot_resize}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/flot/${js_flot_grow}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_charts}/flot/${js_flot_demo}'/>"></script>
 </jsp:attribute>
 
 <jsp:body>

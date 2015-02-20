@@ -37,6 +37,12 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     }
 
     @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectTypeOne in) {
+        ++handledObjectsCount;
+        return new SolrAdvancedSearchDocument();
+    }
+
+    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmObjectTypeOne.class.equals(acmObjectType);

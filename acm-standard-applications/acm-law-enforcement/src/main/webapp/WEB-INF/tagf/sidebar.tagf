@@ -7,7 +7,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span class="thumb avatar pull-left m-r">
                                 <%--<img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ann.jpg" class="dker">--%>
-                                <img id="sidebarPic" src="" default="<c:url value='/'/>resources/vendors/${acm_theme}/images/nopic.png" class="dker">
+                                <img id="sidebarPic" src="" default="<c:url value='/resources/vendors/${acm_theme}/images/nopic.png'/>" class="dker">
                                 <i class="on md b-light"></i>
                             </span>
                             <span class="hidden-nav-xs clear">

@@ -45,6 +45,9 @@ var Application = Application || {
         if ("undefined" != typeof Task) {
             acmModules.push(Task);
         }
+        if ("undefined" != typeof TaskOld) {
+            acmModules.push(TaskOld);
+        }
         if ("undefined" != typeof TaskWizard) {
             acmModules.push(TaskWizard);
         }
@@ -60,14 +63,17 @@ var Application = Application || {
         if ("undefined" != typeof Audit) {
             acmModules.push(Audit);
         }
-        if ("undefined" != typeof AdminAccess) {
-            acmModules.push(AdminAccess);
-        }
         if ("undefined" != typeof Report) {
             acmModules.push(Report);
         }
         if ("undefined" != typeof Profile) {
             acmModules.push(Profile);
+        }
+        if ("undefined" != typeof Subscription) {
+            acmModules.push(Subscription);
+        }
+        if ("undefined" != typeof AcmNotification) {
+            acmModules.push(AcmNotification);
         }
 
         for (var i = 0; i < acmModules.length; i++) {

@@ -5,7 +5,7 @@
  */
 var HelloWorld = HelloWorld || {
     create: function() {
-        console.log("HelloWorld create");
+        Acm.log("HelloWorld create");
     }
 
 };

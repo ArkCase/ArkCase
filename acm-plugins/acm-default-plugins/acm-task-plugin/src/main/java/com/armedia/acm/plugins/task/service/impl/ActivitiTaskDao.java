@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.model.TaskOutcome;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -13,8 +14,12 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.FormValue;
 import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
@@ -28,9 +33,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 
 class ActivitiTaskDao implements TaskDao
 {
@@ -108,8 +117,6 @@ class ActivitiTaskDao implements TaskDao
             }
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_NAME", in.getAttachedToObjectName());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "START_DATE", in.getTaskStartDate());
-            String status = in.getStatus() == null ? "ASSIGNED" : in.getStatus();
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "TASK_STATUS", status);
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "PERCENT_COMPLETE", in.getPercentComplete());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), "DETAILS", in.getDetails());
 
@@ -151,7 +158,6 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
-    @Override
     public void ensureCorrectAssigneeInParticipants(AcmTask in)
     {
         boolean assigneeFound = false;
@@ -162,17 +168,26 @@ class ActivitiTaskDao implements TaskDao
             {
                 if ( "assignee".equals(ap.getParticipantType()) )
                 {
-                    assigneeFound = true;
-                    if ( ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()) )
+                    if ( in.getAssignee() == null )
                     {
-                        ap.setParticipantLdapId(in.getAssignee());
-                        break;
+                        // task has no assignee so we need to remove this participant
+                        in.getParticipants().remove(ap);
                     }
+                    else
+                    {
+                        assigneeFound = true;
+                        if ( ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()) )
+                        {
+                            ap.setParticipantLdapId(in.getAssignee());
+                            break;
+                        }
+                    }
+
                 }
             }
         }
 
-        if ( ! assigneeFound )
+        if ( ! assigneeFound && in.getAssignee() != null )
         {
             AcmParticipant assignee = new AcmParticipant();
             assignee.setParticipantLdapId(in.getAssignee());
@@ -508,9 +523,9 @@ class ActivitiTaskDao implements TaskDao
     @Override
 	public List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc) {
     	
-    	List<WorkflowHistoryInstance> retval = new ArrayList<WorkflowHistoryInstance>();
+    	List<WorkflowHistoryInstance> retval = new ArrayList<>();
     	
-    	HistoricTaskInstanceQuery query = null;
+    	HistoricTaskInstanceQuery query;
 
         // due to an Activiti issue, we have to retrieve the task local issues separately for each task instance.
         // if we ask for them at the query level (via "includeTaskLocalVariables") Activiti basically returns one big
@@ -518,57 +533,54 @@ class ActivitiTaskDao implements TaskDao
         // only for the last task retrieved.
     	if (!adhoc)
     	{
-    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).orderByHistoricTaskInstanceEndTime().asc();
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().processInstanceId(id).includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
     	}
     	else {
-    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).orderByHistoricTaskInstanceEndTime().asc();
+    		query = getActivitiHistoryService().createHistoricTaskInstanceQuery().taskId(id).includeTaskLocalVariables().orderByHistoricTaskInstanceEndTime().asc();
     	}
     	
     	if (null != query)
     	{	    	
 	    	List<HistoricTaskInstance> historicTaskInstances = query.list();
 	    	
-	    	if (null != historicTaskInstances && historicTaskInstances.size() > 0)
+	    	if ( null != historicTaskInstances && !historicTaskInstances.isEmpty() )
 	    	{
 	    		for (HistoricTaskInstance historicTaskInstance : historicTaskInstances)
 	    		{
-	    			AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
 	    			
 	    			String taskId = historicTaskInstance.getId();
-	    			String participant = user.getFullName();
+
 	    			// TODO: For now Role is empty. This is agreed with Dave. Once we have that information, we should add it here.
 	    			String role = "";
-	    			String status = "";
 	    			Date startDate = historicTaskInstance.getStartTime();
 	    			Date endDate = historicTaskInstance.getEndTime();
-	    			
-	    			Map<String, Object> localVariables = getActivitiHistoryService()
-                            .createHistoricTaskInstanceQuery()
-                            .taskId(taskId)
-                            .includeTaskLocalVariables()
-                            .singleResult()
-                            .getTaskLocalVariables();
-	    			if (null != localVariables && localVariables.containsKey("outcome"))
-	    			{
-	    				String outcome = (String) localVariables.get("outcome");
-	    				status = WordUtils.capitalizeFully(outcome.replaceAll("_", " "));	
-	    			}
-	    			else if (null != historicTaskInstance.getEndTime())
-    				{
-    					status = "Completed";
-    				}else
-    				{
-    					status = "Assigned";
-    				}
+
+                    String status = findTaskStatus(historicTaskInstance);
+
+                    // for purposes of the workflow history, the task outcome should override the status.
+                    Map<String, Object> localVariables = historicTaskInstance.getTaskLocalVariables();
+
+                    if (null != localVariables && localVariables.containsKey("outcome"))
+                    {
+                        String outcome = (String) localVariables.get("outcome");
+                        status = WordUtils.capitalizeFully(outcome.replaceAll("_", " "));
+                    }
 	    			
 	    			WorkflowHistoryInstance workflowHistoryInstance = new WorkflowHistoryInstance();
 	    			
 	    			workflowHistoryInstance.setId(taskId);
-	    			workflowHistoryInstance.setParticipant(participant);
+
 	    			workflowHistoryInstance.setRole(role);
 	    			workflowHistoryInstance.setStatus(status);
 	    			workflowHistoryInstance.setStartDate(startDate);
 	    			workflowHistoryInstance.setEndDate(endDate);
+
+                    if ( historicTaskInstance.getAssignee() != null )
+                    {
+                        AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
+                        String participant = user.getFullName();
+                        workflowHistoryInstance.setParticipant(participant);
+                    }
 	    			
 	    			retval.add(workflowHistoryInstance);
 	    		}
@@ -577,6 +589,17 @@ class ActivitiTaskDao implements TaskDao
     	
 		return retval;
 	}
+
+    private String findTaskStatus(HistoricTaskInstance historicTaskInstance)
+    {
+        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
+    }
+
+    private String findTaskStatus(Task task)
+    {
+        // tasks in ACT_RU_TASK table (where Task objects come from) are active by definition
+        return TaskConstants.STATE_ACTIVE;
+    }
 
     @Override
     public List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize)
@@ -606,12 +629,19 @@ class ActivitiTaskDao implements TaskDao
 
     protected AcmTask acmTaskFromHistoricActivitiTask(HistoricTaskInstance hti)
     {
+        if ( hti == null )
+        {
+            return null;
+        }
+
+        // even active tasks have an entry in the historic task table, so this HistoricTaskInstance may
+        // represent an active task
         AcmTask retval;
         retval = new AcmTask();
         retval.setTaskStartDate(hti.getStartTime());
         retval.setTaskFinishedDate(hti.getEndTime());
         retval.setTaskDurationInMillis(hti.getDurationInMillis());
-        retval.setCompleted(true);
+        retval.setCompleted(hti.getEndTime() != null);
 
         retval.setTaskId(Long.valueOf(hti.getId()));
         retval.setDueDate(hti.getDueDate());
@@ -639,6 +669,9 @@ class ActivitiTaskDao implements TaskDao
 
             extractTaskLocalVariables(retval, taskLocal);
         }
+
+        String status = findTaskStatus(hti);
+        retval.setStatus(status);
 
         String pid = hti.getProcessDefinitionId();
         String processInstanceId = hti.getProcessInstanceId();
@@ -760,9 +793,6 @@ class ActivitiTaskDao implements TaskDao
         Date startDate = (Date) taskLocal.get("START_DATE");
         acmTask.setTaskStartDate(startDate);
 
-        String status = (String) taskLocal.get("TASK_STATUS");
-        acmTask.setStatus(status);
-
         Integer percentComplete = (Integer) taskLocal.get("PERCENT_COMPLETE");
         acmTask.setPercentComplete(percentComplete);
 
@@ -787,8 +817,6 @@ class ActivitiTaskDao implements TaskDao
 
     private Integer activitiPriorityFromAcmPriority(String acmPriority)
     {
-        Integer defaultPriority = 50;
-
         for ( Map.Entry<String, Integer> acmToActiviti : getPriorityLevelToNumberMap().entrySet() )
         {
             if ( acmToActiviti.getKey().equals(acmPriority) )
@@ -797,11 +825,16 @@ class ActivitiTaskDao implements TaskDao
             }
         }
 
-        return defaultPriority;
+        return TaskConstants.DEFAULT_PRIORITY;
     }
 
     protected AcmTask acmTaskFromActivitiTask(Task activitiTask)
     {
+        if ( activitiTask == null )
+        {
+            return null;
+        }
+
         AcmTask acmTask = new AcmTask();
 
         acmTask.setTaskId(Long.valueOf(activitiTask.getId()));
@@ -819,6 +852,9 @@ class ActivitiTaskDao implements TaskDao
         {
             extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
         }
+
+        String status = findTaskStatus(activitiTask);
+        acmTask.setStatus(status);
 
         String pid = activitiTask.getProcessDefinitionId();
         String processInstanceId = activitiTask.getProcessInstanceId();

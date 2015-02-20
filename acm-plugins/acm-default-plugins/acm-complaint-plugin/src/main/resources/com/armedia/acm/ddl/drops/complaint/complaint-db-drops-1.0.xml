@@ -12,5 +12,29 @@
         <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_cmpl_person_id"/>
     </changeSet>
 
+    <changeSet id="complaint-drops-02-drop-complaint-priority-key" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="FK_CMPL_PRIORITY"/>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="FK_CMPL_PRIORITY"/>
+    </changeSet>
+
+    <changeSet id="complaint-drops-03-drop-complaint-type-key" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="FK_CMPL_TYPE"/>
+        </preConditions>
+
+        <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="FK_CMPL_TYPE"/>
+    </changeSet>
+
+    <changeSet id="complaint-drops-04-drop-complaint-priority" author="dmiller" failOnError="false">
+        <dropTable tableName="ACM_COMPLAINT_PRIORITY_LU" cascadeConstraints="true"/>
+    </changeSet>
+
+    <changeSet id="complaint-drops-05-drop-complaint-type" author="dmiller" failOnError="false">
+        <dropTable tableName="ACM_COMPLAINT_TYPE_LU" cascadeConstraints="true"/>
+    </changeSet>
+
 </databaseChangeLog>
 

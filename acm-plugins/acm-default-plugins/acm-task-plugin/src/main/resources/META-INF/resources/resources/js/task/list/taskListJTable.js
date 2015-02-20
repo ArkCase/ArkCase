@@ -14,6 +14,7 @@ TaskList.JTable = {
         $s.jtable({
             title: 'Documents Under Review'
             ,paging: true   //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
@@ -130,6 +131,7 @@ TaskList.JTable = {
         $s.jtable({
             title: 'Attachments'
             ,paging: true   //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,sorting: true  //fix me
             ,messages: {
                 addNewRecord: 'Add Attachment'
@@ -228,6 +230,7 @@ TaskList.JTable = {
         $s.jtable({
             title: 'Workflow Overview'
             ,paging: true   //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,sorting: true  //fix me
             ,actions: {
                 listAction: function(postData, jtParams) {
@@ -305,6 +308,7 @@ TaskList.JTable = {
             title: 'Notes'
             ,paging: true   //fix me
             ,sorting: true  //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,messages: {
                 addNewRecord: 'Add Note'
             }
@@ -468,8 +472,10 @@ TaskList.JTable = {
         var sortMap = {};
         AcmEx.Object.jTableCreatePaging($s
             , {
-                title: 'Event Log'
-                ,sorting: "true"
+                title: 'History'
+                ,paging: true
+                ,sorting: true
+                ,pageSize: 10 //Set page size (default: 10)
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
                         var taskId = TaskList.getTaskId();
@@ -555,6 +561,7 @@ TaskList.JTable = {
             title: 'Reject Comments'
             ,paging: true   //fix me
             ,sorting: true  //fix me
+            ,pageSize: 10 //Set page size (default: 10)
             ,actions: {
                 listAction: function(postData, jtParams) {
                     var rc = AcmEx.Object.jTableGetEmptyRecords();

@@ -5,7 +5,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.search.service.SearchAccessControlFields;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -99,6 +99,12 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         solr.setAssignee_s(assigneeUserId);
 
         return solr;
+    }
+
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(CaseFile in) {
+        //No implementation needed
+        return null;
     }
 
     private AcmUser findAssignee(String assigneeUserId)

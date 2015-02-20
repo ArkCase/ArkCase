@@ -45,11 +45,6 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/admin/access"/>
-                    <property name="requiredPrivilege" ref="adminPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/admin/locks"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
@@ -82,10 +77,6 @@
         <property name="privilegeName" value="acm-admin"/>
         <property name="applicationRolesWithPrivilege">
             <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
                 <value>ROLE_ADMINISTRATOR</value>
             </list>
         </property>

@@ -5,21 +5,22 @@
  */
 CaseFile.Model = CaseFile.Model || {
     create : function() {
-        if (CaseFile.Model.Lookup.create)        {CaseFile.Model.Lookup.create();}
-        if (CaseFile.Model.Tree.create)          {CaseFile.Model.Tree.create();}
-        if (CaseFile.Model.List.create)          {CaseFile.Model.List.create();}
-        if (CaseFile.Model.Documents.create)     {CaseFile.Model.Documents.create();}
-        if (CaseFile.Model.Detail.create)        {CaseFile.Model.Detail.create();}
-        if (CaseFile.Model.Notes.create)         {CaseFile.Model.Notes.create();}
-        if (CaseFile.Model.Tasks.create)         {CaseFile.Model.Tasks.create();}
-        if (CaseFile.Model.References.create)    {CaseFile.Model.References.create();}
-        if (CaseFile.Model.Events.create)        {CaseFile.Model.Events.create();}
+        if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
+        if (CaseFile.Model.List.create)           {CaseFile.Model.List.create();}
+        if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
+        if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
+        if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
+        if (CaseFile.Model.Tasks.create)          {CaseFile.Model.Tasks.create();}
+        if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
+        if (CaseFile.Model.Events.create)         {CaseFile.Model.Events.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
+
+        if (CaseFile.Service.create)              {CaseFile.Service.create();}
 
         if ("undefined" != typeof Topbar) {
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_SET_ASN_DATA, this.onTopbarViewSetAsnData);
         }
-
     }
     ,onInitialized: function() {
         AcmEx.Model.Tree.Key.setNodeTypeMap(CaseFile.Model.Tree.Key.nodeTypeMap);
@@ -34,17 +35,18 @@ CaseFile.Model = CaseFile.Model || {
 
         CaseFile.Model.retrieveData(treeInfo);
 
-        if (CaseFile.Model.Lookup.onInitialized)     {CaseFile.Model.Lookup.onInitialized();}
-        if (CaseFile.Model.Tree.onInitialized)       {CaseFile.Model.Tree.onInitialized();}
-        if (CaseFile.Model.List.onInitialized)       {CaseFile.Model.List.onInitialized();}
-        if (CaseFile.Model.Documents.onInitialized)  {CaseFile.Model.Documents.onInitialized();}
-        if (CaseFile.Model.Detail.onInitialized)     {CaseFile.Model.Detail.onInitialized();}
-        if (CaseFile.Model.Notes.onInitialized)      {CaseFile.Model.Notes.onInitialized();}
-        if (CaseFile.Model.Tasks.onInitialized)      {CaseFile.Model.Tasks.onInitialized();}
-        if (CaseFile.Model.References.onInitialized) {CaseFile.Model.References.onInitialized();}
-        if (CaseFile.Model.Events.onInitialized)     {CaseFile.Model.Events.onInitialized();}
+        if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
+        if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
+        if (CaseFile.Model.List.onInitialized)           {CaseFile.Model.List.onInitialized();}
+        if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
+        if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
+        if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
+        if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
+        if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
+        if (CaseFile.Model.Events.onInitialized)         {CaseFile.Model.Events.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
 
+        if (CaseFile.Service.onInitialized)              {CaseFile.Service.onInitialized();}
     }
 
     ,onTopbarViewSetAsnData: function(asnData) {
@@ -52,7 +54,7 @@ CaseFile.Model = CaseFile.Model || {
             if ("/plugin/casefile" == asnData.name) {
                 var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
                 var sameResultSet = AcmEx.Model.Tree.Config.sameResultSet(asnData);
-                AcmEx.Model.Tree.Config.readConfig();
+                AcmEx.Model.Tree.Config.readTreeInfo();
 
                 if (!sameResultSet) {
                     CaseFile.Model.retrieveData(treeInfo);
@@ -133,7 +135,7 @@ CaseFile.Model = CaseFile.Model || {
             ]
 
             ,getKeyByObj: function(objId) {
-                var pageId = CaseFile.Model.Tree.Config.getPageId();
+                var pageId = AcmEx.Model.Tree.Config.getPageId();
                 return this.getKeyByObjWithPage(pageId, objId);
             }
             ,getKeyByObjWithPage: function(pageId, objId) {
@@ -190,6 +192,7 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ORGANIZATION          , this.onViewAddedOrganization);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ORGANIZATION        , this.onViewUpdatedOrganization);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ORGANIZATION        , this.onViewDeletedOrganization);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_RESTRICT_CHECKBOX        , this.onViewClickedRestrictCheckbox);
 
         }
         ,onInitialized: function() {
@@ -300,6 +303,9 @@ CaseFile.Model = CaseFile.Model || {
         }
         ,onViewDeletedOrganization: function(caseFileId, personAssociationId, organizationId) {
             CaseFile.Service.Detail.deleteOrganization(caseFileId, personAssociationId, organizationId);
+        }
+        ,onViewClickedRestrictCheckbox: function(caseFileId, restriction) {
+            CaseFile.Service.Detail.updateCaseRestriction(caseFileId, restriction);
         }
 
         ,getCaseFile: function(caseFileId) {
