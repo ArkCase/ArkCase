@@ -4,10 +4,10 @@
  * @author jwu
  */
 SearchBase.View = {
-    create : function($edtSearch, $btnSearch, $divFacet, $divResults, args, jtDataMaker) {
-        if (SearchBase.View.Query.create)            {SearchBase.View.Query.create($edtSearch, $btnSearch);}
-        if (SearchBase.View.Facet.create)            {SearchBase.View.Facet.create($divFacet);}
-        if (SearchBase.View.Results.create)          {SearchBase.View.Results.create($divResults, args, jtDataMaker);}
+    create : function(args) {
+        if (SearchBase.View.Query.create)            {SearchBase.View.Query.create(args.$edtSearch, args.$btnSearch);}
+        if (SearchBase.View.Facet.create)            {SearchBase.View.Facet.create(args.$divFacets);}
+        if (SearchBase.View.Results.create)          {SearchBase.View.Results.create(args.$divResults, args.jtArgs, args.jtDataMaker);}
     }
     ,onInitialized: function() {
         if (SearchBase.View.Query.onInitialized)     {SearchBase.View.Query.onInitialized();}
@@ -15,11 +15,32 @@ SearchBase.View = {
         if (SearchBase.View.Results.onInitialized)   {SearchBase.View.Results.onInitialized();}
     }
 
+    ,showDialog: function(args) {
+        if (Acm.isNotEmpty(args.title)) {
+            //todo: set title
+        }
+        if (Acm.isNotEmpty(args.prompt)) {
+            //todo: set placeholder text
+        }
+        if (Acm.isNotEmpty(args.btnGoText)) {
+            //todo
+        }
+        if (Acm.isNotEmpty(args.btnOkText)) {
+            //todo
+        }
+        if (Acm.isNotEmpty(args.btnCancelText)) {
+            //todo
+        }
+
+        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
+    }
 
     ,Query: {
         create: function($edtSearch, $btnSearch) {
-            this.$edtSearch = $edtSearch;
-            this.$btnSearch = $btnSearch;
+            var $edtSearchDefault  = $("#searchQuery");
+            var $btnSearchDefault  = $edtSearchDefault.next().find("button");
+            this.$edtSearch = ($edtSearch)? $edtSearch : $edtSearchDefault;
+            this.$btnSearch = ($btnSearch)? $btnSearch : $btnSearchDefault;
             this.$btnSearch.unbind("click").on("click", function(e) {SearchBase.View.Query.onClickBtnSearch(e, this);});
             this.$edtSearch.keyup(function(event){
                 if(13 == event.keyCode){
@@ -52,13 +73,13 @@ SearchBase.View = {
     }
 
     ,Facet: {
-        create: function($divFacet) {
-            this.$divFacet = $divFacet;
-            this.setHtmlDivFacet("");
+        create: function($divFacets) {
+            this.$divFacets = ($divFacets)? $divFacets : $("#divFacets");
 
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
         }
         ,onInitialized: function() {
+            SearchBase.View.Facet.initFacetPanel();
         }
 
         ,onClickCheckBox: function(event, ctrl) {
@@ -67,7 +88,7 @@ SearchBase.View = {
             }
 
             var selected = [];
-            var $checked = SearchBase.View.Facet.$divFacet.find("input:checked");
+            var $checked = SearchBase.View.Facet.$divFacets.find("input:checked");
             $checked.each(function(){
                 var s = {};
                 s.value = $(this).val();
@@ -93,9 +114,35 @@ SearchBase.View = {
                 return Acm.goodValue(key);
             }
         }
+        ,initFacetPanel: function() {
+            var html = "";
+            var si = SearchBase.Model.getSearchInfo();
+            if (SearchBase.Model.validateFilters(si.filters)) {
+                html += "<div name='init_fields'>";
+                for (var i = 0; i < si.filters.length; i++) {
+                    var display = si.filters[i].key;
+                    html += "<h6>" + display + "</h6>";
+                    html += "<div class='list-group auto' name='" + display + "'>";
+                    for (var j = 0; j < si.filters[i].values.length; j++) {
+                        var value = Acm.goodValue(si.filters[i].values[j]);
+                        html += "<label class='list-group-item'><input type='checkbox' value='" + value + "'";
+                        if (SearchBase.Model.findFilter(si.filters, display, value)) {
+                            html += " checked disabled";
+                        }
+                        html += " /><span class='badge bg-info'>" + "?"
+                            + "</span>" + value
+                            + "</label>";
+                    }
+                    html += "</div>";
+                }
+                html += "</div>";
+            }
+            this.setHtmlDivFacet(html);
+        }
         ,buildFacetPanel: function(facet) {
             var html = "";
             var si = SearchBase.Model.getSearchInfo();
+            var fixedFilters = SearchBase.Model.getFixedFilters();
 
             if (SearchBase.Model.validateSearchFacet(facet)) {
 
@@ -110,8 +157,11 @@ SearchBase.View = {
                                 for (var j = 0; j < facet.facet_fields[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_fields[i].values[j].count, 0)) {
                                         html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_fields[i].values[j].name) + "'";
-                                        if (SearchBase.Model.findFilter(si, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                        if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
                                             html += " checked";
+                                        }
+                                        if (SearchBase.Model.findFilter(fixedFilters, display, Acm.goodValue(facet.facet_fields[i].values[j].name))) {
+                                            html += " disabled";
                                         }
                                         html += " /><span class='badge bg-info'>" + facet.facet_fields[i].values[j].count
                                             + "</span>" + Acm.goodValue(facet.facet_fields[i].values[j].name)
@@ -136,7 +186,7 @@ SearchBase.View = {
                                 for (var j = 0; j < facet.facet_queries[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_queries[i].values[j].count, 0)) {
                                         html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_queries[i].values[j].name) + "'";
-                                        if (SearchBase.Model.findFilter(si, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
+                                        if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_queries[i].values[j].name))) {
                                             html += " checked";
                                         }
                                         html += " /><span class='badge bg-info'>" + facet.facet_queries[i].values[j].count
@@ -162,7 +212,7 @@ SearchBase.View = {
                                 for (var j = 0; j < facet.facet_dates[i].values.length; j++) {
                                     if (0 < Acm.goodValue(facet.facet_dates[i].values[j].count, 0)) {
                                         html += "<label class='list-group-item'><input type='checkbox' value='" + Acm.goodValue(facet.facet_dates[i].values[j].name) + "'";
-                                        if (SearchBase.Model.findFilter(si, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
+                                        if (SearchBase.Model.findFilter(si.filters, display, Acm.goodValue(facet.facet_dates[i].values[j].name))) {
                                             html += " checked";
                                         }
                                         html += " /><span class='badge bg-info'>" + facet.facet_dates[i].values[j].count
@@ -180,19 +230,19 @@ SearchBase.View = {
 
             this.setHtmlDivFacet(html);
 
-            this.$divFacet.find("input[type='checkbox']").on("click", function(e) {SearchBase.View.Facet.onClickCheckBox(e, this);});
+            this.$divFacets.find("input[type='checkbox']").on("click", function(e) {SearchBase.View.Facet.onClickCheckBox(e, this);});
         }
 
         ,setHtmlDivFacet: function(val) {
-            return Acm.Object.setHtml(this.$divFacet, val);
+            return Acm.Object.setHtml(this.$divFacets, val);
         }
     }
 
     ,Results: {
-        create: function($divResults, args, jtDataMaker) {
-            this.$divResults = $divResults;
+        create: function($divResults, jtArgs, jtDataMaker) {
+            this.$divResults = ($divResults)? $divResults : $("#divResults");
             this.jtDataMaker = (jtDataMaker)? jtDataMaker : this._jtDataMakerDefault;
-            SearchBase.View.Results._useJTable(args);
+            SearchBase.View.Results._useJTable(jtArgs);
 
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
@@ -206,7 +256,7 @@ SearchBase.View = {
             AcmEx.Object.JTable.load(SearchBase.View.Results.$divResults);
         }
         ,onViewChangedFacetSelection: function(selected) {
-            //todo: compare selected with si.filter, do nothing if same
+            //todo: compare selected with si.filters, do nothing if same
 
             AcmEx.Object.JTable.load(SearchBase.View.Results.$divResults);
         }
@@ -232,132 +282,139 @@ SearchBase.View = {
             }
             return jtData;
         }
+        ,displayName: function(data) {
+            var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
+            var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
 
-        ,_argsDefault: {
-            title: 'Search Results'
-            ,multiselect: false
-            ,selecting: false
-            ,selectingCheckboxes: false
-            ,pageSize: 16
-            ,paging: true
-            ,sorting: true
-            ,actions: {
-                pagingListAction: function (postData, jtParams, sortMap) {
-                    var si = SearchBase.Model.getSearchInfo();
-                    if (Acm.isEmpty(si.q)) {
-                        return AcmEx.Object.JTable.getEmptyRecords();
+
+            //$lnk.click(function(){alert("click" + data.record.id)});
+
+            //var $lnk = $("<p>line1</p><p>line2</p></br><p>line3</p><a href='" + url + "'>" + data.record.name + "</a><div>hello world1</div><div>hello world2</div>");
+
+            return $lnk;
+        }
+        ,displayParent: function(data) {
+            var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
+            var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName, Acm.goodValue(data.record.parentId)) + "</a>");
+            return $lnk;
+        }
+        ,_getDefaultJtArgs: function() {
+            return {
+                title: 'Search Results'
+                ,multiselect: false
+                ,selecting: false
+                ,selectingCheckboxes: false
+                ,pageSize: 16
+                ,paging: true
+                ,sorting: true
+                ,actions: {
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        var si = SearchBase.Model.getSearchInfo();
+                        if (Acm.isEmpty(si.q)) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+                        si.start = Acm.goodValue(jtParams.jtStartIndex, 0);
+
+                        if (SearchBase.Model.isFacetUpToDate()) {
+                            //var page = si.start;
+                            //var result = SearchBase.Model.cacheResult.get(page);
+                            var result = SearchBase.Model.getCachedResult(si);
+                            if (result) {
+                                return SearchBase.View.Results.jtDataMaker(result);
+                            }
+                        }
+
+                        return SearchBase.Service.facetSearchDeferred(si
+                            ,postData
+                            ,jtParams
+                            ,sortMap
+                            ,function(data) {
+                                var result = data;
+
+                                var title = si.total + ' results of "' + si.q + '"';
+                                AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, title);
+
+                                return SearchBase.View.Results.jtDataMaker(result);
+                            }
+                            ,function(error) {
+                                AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, "Error occurred");
+                            }
+                        );
+
                     }
-                    si.start = Acm.goodValue(jtParams.jtStartIndex, 0);
-
-                    if (SearchBase.Model.isFacetUpToDate()) {
-                        //var page = si.start;
-                        //var result = SearchBase.Model.cacheResult.get(page);
-                        var result = SearchBase.Model.getCachedResult(si);
-                        if (result) {
-                            return SearchBase.View.Results.jtDataMaker(result);
+                }  //end actions
+                ,fields: {
+                    id: {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                        ,sorting: false
+                    }
+                    ,name: {
+                        title: 'Name'
+                        ,width: '15%'
+                        ,sorting: false
+                        ,display: function(data) {
+                            return SearchBase.View.Results.displayName(data);
                         }
                     }
-
-                    return SearchBase.Service.facetSearchDeferred(si
-                        ,postData
-                        ,jtParams
-                        ,sortMap
-                        ,function(data) {
-                            var result = data;
-
-                            var title = si.total + ' results of "' + si.q + '"';
-                            AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, title);
-
-                            return SearchBase.View.Results.jtDataMaker(result);
-                        }
-                        ,function(error) {
-                            AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, "Error occurred");
-                        }
-                    );
-
-                }
-            }  //end actions
-            ,fields: {
-                id: {
-                    title: 'ID'
-                    ,key: true
-                    ,list: false
-                    ,create: false
-                    ,edit: false
-                    ,sorting: false
-                }
-                ,name: {
-                    title: 'Name'
-                    ,width: '15%'
-                    ,sorting: false
-                    ,display: function(data) {
-                        var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
-                        var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
-
-
-                        //$lnk.click(function(){alert("click" + data.record.id)});
-
-                        //var $lnk = $("<p>line1</p><p>line2</p></br><p>line3</p><a href='" + url + "'>" + data.record.name + "</a><div>hello world1</div><div>hello world2</div>");
-
-                        return $lnk;
+                    ,type: {
+                        title: 'Type'
+                        //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
+                        ,sorting: false
                     }
-                }
-                ,type: {
-                    title: 'Type'
-                    //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
-                    ,sorting: false
-                }
-                ,title: {
-                    title: 'Title'
-                    ,width: '30%'
-                }
-                ,parentId: {
-                    title: 'Parent ID'
-                    ,key: false
-                    ,list: false
-                    ,create: false
-                    ,edit: false
-                    ,sorting: false
-                }
-                ,parentName: {
-                    title: 'Parent'
-                    ,width: '15%'
-                    ,sorting: false
-                    ,display: function(data) {
-                        var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
-                        var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName, Acm.goodValue(data.record.parentId)) + "</a>");
-                        return $lnk;
+                    ,title: {
+                        title: 'Title'
+                        ,width: '30%'
                     }
-                }
-                ,parentType: {
-                    title: 'Parent Type'
-                    ,sorting: false
-                    ,list: false
-                }
-                ,owner: {
-                    title: 'Assignee'
-                    ,width: '15%'
-                    ,sorting: false
-                }
-                ,modified: {
-                    title: 'Modified'
-                    ,type: 'textarea'
-                    ,width: '20%'
-                    ,sorting: false
-                }
-            } //end field
-        } //end argDefault
+                    ,parentId: {
+                        title: 'Parent ID'
+                        ,key: false
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                        ,sorting: false
+                    }
+                    ,parentName: {
+                        title: 'Parent'
+                        ,width: '15%'
+                        ,sorting: false
+                        ,display: function(data) {
+                            return SearchBase.View.Results.displayParent(data);
+                        }
+                    }
+                    ,parentType: {
+                        title: 'Parent Type'
+                        ,sorting: false
+                        ,list: false
+                    }
+                    ,owner: {
+                        title: 'Assignee'
+                        ,width: '15%'
+                        ,sorting: false
+                    }
+                    ,modified: {
+                        title: 'Modified'
+                        ,type: 'textarea'
+                        ,width: '20%'
+                        ,sorting: false
+                    }
+                } //end field
+            };
+        }
 
-        ,_useJTable: function(args) {
-            var argsToUse = this._argsDefault;
-            for (var arg in args) {
-                argsToUse[arg] = args[arg];
+        ,_useJTable: function(jtArgs) {
+            var jtArgsToUse = this._getDefaultJtArgs();
+            for (var arg in jtArgs) {
+                jtArgsToUse[arg] = jtArgs[arg];
             }
 
             var sortMap = {};
             sortMap["title"] = "title_parseable";
 
-            AcmEx.Object.JTable.usePaging(this.$divResults, argsToUse, sortMap);
+            AcmEx.Object.JTable.usePaging(this.$divResults, jtArgsToUse, sortMap);
 
         }
     }

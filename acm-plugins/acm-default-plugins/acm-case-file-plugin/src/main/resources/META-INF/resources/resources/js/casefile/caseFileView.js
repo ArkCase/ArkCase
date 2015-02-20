@@ -372,42 +372,33 @@ CaseFile.View = CaseFile.View || {
         }
 
         //---- demo how to use object picker ----
-//        ,onPickObjectDemo: function() {
-//            CaseFile.View.Action.showDlgPickObjectDemo(function(event, ctrl) {
-//                SearchBase.View.Results.getSelectedRows().each(function () {
-//                    var record = $(this).data('record');
-//
-//                    var z = 1;
-//                });
-//
-//
-//                alert("Pick Object:" + 'objectInfo');
-//            }
-//            ,function(event, ctrl) {
-//                alert("Pick Object:" + 'Cancel');
-//            });
-//        }
-//        ,showDlgPickObjectDemo: function(onClickBtnPrimary, onClickBtnDefault) {
-//            var $edtSearch = $("#edtPoSearch");
-//            var $btnSearch = $edtSearch.next().find("button");
-//            var $divFacet = $("#divPoFacet");
-//            var $divResults = $("#divPoResults");
-//            SearchBase.createDialog("demoDialog"
-//                ,$edtSearch
-//                ,$btnSearch
-//                ,$divFacet
-//                ,$divResults
-////                ,args
-////                ,jtDataMaker
-//            );
-//            SearchBase.Model.fixFilters("fixmeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-//            Acm.Dialog.bootstrapModal($("#dlgPickObjectDemo"), onClickBtnPrimary, onClickBtnDefault);
-//        }
+        ,onPickObjectDemo: function() {
+            SearchBase.showSearchDialog({name: "demoDialog"
+                ,title: "My Dialog Title"
+                ,prompt: "Enter to search Case or Task"
+                ,btnGoText: "Search Now!"
+                ,btnOkText: "Select"
+                ,btnCancelText: "Away"
+                ,filters: [{key: "Object Type", values: ["CASE_FILE", "TASK"]}]
+                ,onClickBtnPrimary : function(event, ctrl) {
+                    SearchBase.View.Results.getSelectedRows().each(function () {
+                        var record = $(this).data('record');
+
+                        var z = 1;
+                        alert("ok");
+                    });
+                }
+                ,onClickBtnDefault : function(event, ctrl) {
+                    alert("cancel");
+                }
+            });
+        }
         //---------------------------------------
 
         ,onClickBtnConsolidateCase: function() {
-//            this.onPickObjectDemo();
-//            return;
+//borrow it to test object picker dialog
+            this.onPickObjectDemo();
+            return;
 
             CaseFile.View.Action.setValueEdtConsolidateCase("");
             CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
@@ -488,10 +479,10 @@ CaseFile.View = CaseFile.View || {
             this.setAttrOlMilestoneTracker("data-steps", allMilestones.length);
         }
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
-            Acm.Dialog.bootstrapModal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
+            Acm.Dialog.modal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
         }
         ,showDlgConsolidateCase: function(onClickBtnPrimary) {
-            Acm.Dialog.bootstrapModal(this.$dlgConsolidateCase, onClickBtnPrimary);
+            Acm.Dialog.modal(this.$dlgConsolidateCase, onClickBtnPrimary);
         }
         ,getValueEdtConsolidateCase: function() {
             return Acm.Object.getValue(this.$edtConsolidateCase);

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd">
+
+    <flow name="sendEmail" doc:name="Send notification to the user by email.">
+    
+        <vm:inbound-endpoint
+                address="vm://sendEmail.in"
+                exchange-pattern="request-response"
+                doc:name="Send Email">
+        </vm:inbound-endpoint>
+
+		<smtp:outbound-endpoint 
+			host="#[message.inboundProperties.host]" 
+			port="#[message.inboundProperties.port]" 
+        	user="#[message.inboundProperties.user]" 
+        	password="#[message.inboundProperties.password]" 
+        	from="#[message.inboundProperties.from]" 
+        	to="#[message.inboundProperties.to]" 
+        	subject="#[message.inboundProperties.subject]" 
+        	responseTimeout="30000"/>
+					   
+		<catch-exception-strategy>
+            <set-property propertyName="sendEmailException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

@@ -154,8 +154,7 @@ AcmEx.Object = {
         ,getEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
         ,getEmptyRecord: function() { return {"Result": "OK","Record": {}};}
         ,setTitle: function($jt, title) {
-            //todo: passing $jt
-            Acm.Object.setText($(".jtable-title-text"), title);
+            Acm.Object.setText($jt.find(".jtable-title-text"), title);
         }
         ,load: function($jt) {
             $jt.jtable('load');

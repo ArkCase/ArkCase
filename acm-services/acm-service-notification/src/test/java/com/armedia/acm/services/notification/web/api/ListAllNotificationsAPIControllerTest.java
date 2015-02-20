@@ -83,7 +83,7 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         notificationAnn.setModifier("modifier");
         notificationAnn.setModified(new Date());
         notificationAnn.setData("data");
-        notificationAnn.setAuto("auto");
+        notificationAnn.setType("type");
         notificationAnn.setNote("note");
 
         /*notificationEveryone.setId(700L);
@@ -171,7 +171,7 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         notification.setModifier("modifier");
         notification.setModified(new Date());
         notification.setData("data");
-        notification.setAuto("auto");
+        notification.setType("type");
         notification.setNote("note");
 
         List<Notification> notificationList = new ArrayList<>();

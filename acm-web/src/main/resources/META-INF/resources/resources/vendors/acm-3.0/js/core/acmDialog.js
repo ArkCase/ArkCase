@@ -62,7 +62,7 @@ Acm.Dialog = {
     //
     ,confirm: function(msg, callback, title){
         if (Acm.isEmpty(callback)) {
-            console.log("Confirm dialog needs callback");
+            Acm.log("Confirm dialog needs callback");
             return;
         }
 
@@ -81,14 +81,14 @@ Acm.Dialog = {
     //
     ,prompt: function(msg, callback, title){
         if (Acm.isEmpty(callback)) {
-            console.log("Prompt dialog needs callback");
+            Acm.log("Prompt dialog needs callback");
             return;
         }
 
         bootbox.prompt(msg, callback);
     }
 
-    ,bootstrapModal: function($s, onClickBtnPrimary, onClickBtnDefault) {
+    ,modal: function($s, onClickBtnPrimary, onClickBtnDefault) {
         if (onClickBtnPrimary) {
             $s.find("button.btn-primary").unbind("click").on("click", function(e){
                 onClickBtnPrimary(e, this);

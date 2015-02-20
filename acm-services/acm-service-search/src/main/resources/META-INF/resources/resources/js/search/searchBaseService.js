@@ -6,7 +6,10 @@
  * @author jwu
  */
 SearchBase.Service = {
-    create : function() {
+    create : function(args) {
+        if (args.url) {
+            this.API_FACET_SEARCH_ = args.url;
+        }
     }
     ,onInitialized: function() {
     }
@@ -23,8 +26,8 @@ SearchBase.Service = {
                 //for test
                 //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
 
-                var filter = SearchBase.Model.makeFilterParam(searchInfo);
-                url += filter;
+                var filterParam = SearchBase.Model.makeFilterParam(searchInfo.filters);
+                url += filterParam;
 
                 return url;
             }

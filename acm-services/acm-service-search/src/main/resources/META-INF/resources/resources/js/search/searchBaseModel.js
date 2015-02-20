@@ -4,34 +4,40 @@
  * @author jwu
  */
 SearchBase.Model = {
-    create : function() {
+    create : function(args) {
         this.cacheResult = new Acm.Model.CacheFifo(8);
-        this.setSearchInfo(AcmEx.Model.Search.getDefaultSearchInfo());
+
+        var si = this.getDefaultSearchInfo();
+        this.setSearchInfo(si);
+        if (this.validateFilters(args.filters)) {
+            this.setFixedFilters(args.filters);
+            this.addFixedFilters(si.filters);
+        }
 
         Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY          ,this.onViewSubmittedQuery);
         Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION  ,this.onViewChangedFacetSelection);
 
-        if (SearchBase.Service.create) {SearchBase.Service.create();}
+        if (SearchBase.Service.create) {SearchBase.Service.create(args);}
     }
     ,onInitialized: function() {
         if (SearchBase.Service.onInitialized) {SearchBase.Service.onInitialized();}
     }
-
     ,onViewSubmittedQuery: function(term) {
         var si = SearchBase.Model.getSearchInfo();
         if (!Acm.compare(term, si.q)) {
             si.q = term;
-            si.filter = [];
+            si.filters = [];
+            SearchBase.Model.addFixedFilters(si.filters);
             SearchBase.Model.setFacetUpToDate(false);
         }
     }
     ,onViewChangedFacetSelection: function(selected) {
-        //todo: ??? compare selected with si.filter; if same, do nothing and return
+        //todo: ??? compare selected with si.filters; if same, do nothing and return
 
         SearchBase.Model.setFacetUpToDate(false);
 
         var si = SearchBase.Model.getSearchInfo();
-        si.filter = [];
+        si.filters = [];
         if (Acm.isArray(selected)) {
             var cur = {key: null, values: []};
 
@@ -42,7 +48,7 @@ SearchBase.Model = {
                         cur.values.push(s.value);
                     } else {
                         if (Acm.isNotEmpty(cur.key)) {
-                            si.filter.push(cur);
+                            si.filters.push(cur);
                         }
                         cur = {};
                         cur.key = s.name;
@@ -51,21 +57,13 @@ SearchBase.Model = {
                 }
             }
             if (0 < i) {
-                si.filter.push(cur);
+                si.filters.push(cur);
             }
         }
+
+        SearchBase.Model.addFixedFilters(si.filters);
     }
 
-    //
-    // filter array json format: [{key, values:['v1', 'v2', ...]}, ...]
-    //
-    ,_searchInfo: null
-    ,getSearchInfo: function() {
-        return this._searchInfo;
-    }
-    ,setSearchInfo: function(searchInfo) {
-        this._searchInfo = searchInfo;
-    }
 
     ,getCachedResult: function(si) {
         var page = si.start;
@@ -76,59 +74,111 @@ SearchBase.Model = {
         //SearchBase.Model.cacheResult.put(page, result);
     }
 
-    ,setApi: function(url) {
-        alert("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-    }
-    ,fixFilters: function(filters) {
-        alert("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    //
+    // filter array json format: [{key, values:['v1', 'v2', ...]}, ...]
+    //
+    ,getDefaultSearchInfo: function() {
+        return {
+            q: null
+            ,start: 0
+            ,n: 16
+            ,total: 0
+            ,filters: []
+            ,sorters: []
+        };
     }
 
-    ,addFilter: function(si, key, value) {
-        for (var i = 0; i < si.filter.length; i++) {
-            var f = si.filter[i];
-            if (f.key == key) {
-                //find value first to avoid adding duplicate
-                for (var j = 0; j < f.values.length; j++) {
-                    if (f.values[j] == value) {
-                        return;
-                    }
-                }
-                f.values.push(value);
-                return;
+    ,_searchInfo: null
+    ,getSearchInfo: function() {
+        return this._searchInfo;
+    }
+    ,setSearchInfo: function(searchInfo) {
+        this._searchInfo = searchInfo;
+    }
+
+    ,_fixedFilters: []
+    ,getFixedFilters: function() {
+        return this._fixedFilters;
+    }
+    ,setFixedFilters: function(filters) {
+        this._fixedFilters = filters;
+    }
+    ,addFixedFilters: function(toFilters) {
+        var filters = this.getFixedFilters();
+        for (var i = 0; i < filters.length; i++) {
+            for (var j = 0; j < filters[i].values.length; j++) {
+                this.addFilter(toFilters, filters[i].key, filters[i].values[j]);
             }
+        }
+    }
+    ,validateFilters: function(data) {
+        if (!Acm.isArray(data)) {
+            return false;
+        }
+        for (var i = 0; i < data.length; i++) {
+            if (Acm.isEmpty(data[i].key)) {
+                return false;
+            }
+            if (!Acm.isArray(data[i].values)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    ,addFilter: function(filters, key, value) {
+        var filter = null;
+        if (Acm.isArray(filters)) {
+            for (var i = 0; i < filters.length; i++) {
+                var filter = filters[i];
+                if (filter.key == key) {
+                    //find value first to avoid adding duplicate
+                    for (var j = 0; j < filter.values.length; j++) {
+                        if (filter.values[j] == value) {
+                            return;
+                        }
+                    }
+                    filter.values.push(value);
+                    return;
+                }
+            }
+        } else {
+            filters = [];
         }
 
         //key entry not found, create one
-        var newFilter = {};
-        newFilter.key = key;
-        newFilter.values = [];
-        newFilter.values.push(value);
-        si.filter.push(newFilter);
+        filter = {};
+        filter.key = key;
+        filter.values = [];
+        filter.values.push(value);
+        filters.push(filter);
     }
-    ,removeFilter: function(si, key, value) {
-        for (var i = 0; i < si.filter.length; i++) {
-            var f = si.filter[i];
-            if (f.key == key) {
-                for (var j = 0; j < f.values.length; j++) {
-                    if (f.values[j] == value) {
-                        si.filter[i].values.splice(j, 1);
-                        break;
+    ,removeFilter: function(filters, key, value) {
+        if (Acm.isArray(filters)) {
+            for (var i = 0; i < filters.length; i++) {
+                var filter = filters[i];
+                if (filter.key == key) {
+                    for (var j = 0; j < filter.values.length; j++) {
+                        if (filter.values[j] == value) {
+                            filters[i].values.splice(j, 1);
+                            break;
+                        }
                     }
-                }
-                if (0 >= f.values.length) {
-                    si.filter.splice(i, 1);
+                    if (0 >= filter.values.length) {
+                        filters.splice(i, 1);
+                    }
                 }
             }
         }
     }
-    ,findFilter: function(si, key, value) {
-        if (!Acm.isArrayEmpty(si.filter)) {
-            for (var i = 0; i < si.filter.length; i++) {
-                var f = si.filter[i];
-                if (f.key == key) {
-                    if (!Acm.isArrayEmpty(f.values)) {
-                        for (var j = 0; j < f.values.length; j++) {
-                            if (f.values[j] == value) {
+    ,findFilter: function(filters, key, value) {
+        if (!Acm.isArrayEmpty(filters)) {
+            for (var i = 0; i < filters.length; i++) {
+                var filter = filters[i];
+                if (filter.key == key) {
+                    if (!Acm.isArrayEmpty(filter.values)) {
+                        for (var j = 0; j < filter.values.length; j++) {
+                            if (filter.values[j] == value) {
                                 return true;
                             }
                         }
@@ -138,31 +188,26 @@ SearchBase.Model = {
         }
         return false;
     }
-    ,makeFilterParam: function(si) {
+    ,makeFilterParam: function(filters) {
         var param = "";
-        if (!Acm.isArrayEmpty(si.filter)) {
-            for (var i = 0; i < si.filter.length; i++) {
+        if (!Acm.isArrayEmpty(filters)) {
+            for (var i = 0; i < filters.length; i++) {
                 if (0 == i) {
                     param= '&filters=';
                 } else {
                     param += '%26';
                 }
 
-                if (!Acm.isArrayEmpty(si.filter[i].values)) {
-                    for (var j = 0; j < si.filter[i].values.length; j++) {
+                if (!Acm.isArrayEmpty(filters[i].values)) {
+                    for (var j = 0; j < filters[i].values.length; j++) {
                         if (0 == j) {
-                            param += 'fq="' + Acm.goodValue(si.filter[i].key) + '":';
+                            param += 'fq="' + Acm.goodValue(filters[i].key) + '":';
                         } else {
                             param += '|';
                         }
-                        param += Acm.goodValue(si.filter[i].values[j]);
-
+                        param += Acm.goodValue(filters[i].values[j]);
                     }
                 }
-
-//                if (si.filter.length - 1 == i) {
-//                    param += '"';
-//                }
             }
         }
         return param;
@@ -372,33 +417,6 @@ SearchBase.Model = {
 
     }
 
-
-//    ,_term: null
-//    ,getTerm: function() {
-//        return this._term;
-//    }
-//    ,setTerm: function(term) {
-//        this._term = term;
-//    }
-//
-//    ,_termPrev: null
-//    ,getTermPrev: function() {
-//        return this._termPrev;
-//    }
-//    ,setTermPrev: function(termPrev) {
-//        this._termPrev = termPrev;
-//    }
-//
-//    ,_header: {}
-//    ,getHeader: function() {
-//        return this._header();
-//    }
-//    ,setHeader: function(header) {
-//        this.header = header;
-//    }
-
-
-
     ,validateFacetSearchData: function(data) {
         if (!Acm.Validator.validateSolrData(data)) {
             return false;
@@ -407,7 +425,6 @@ SearchBase.Model = {
         if ("true" != Acm.goodValue(data.responseHeader.params.facet)) {
             return false;
         }
-
 
         if (Acm.isEmpty(data.facet_counts)) {
             return false;

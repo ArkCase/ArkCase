@@ -4272,3 +4272,14 @@ h3.m-b-xs.text-black {
 #subNav section.vbox section.scrollable div.wrapper.facets h6 {
 	font-weight: bold;
 }
+
+
+#facets div.facets label.list-group-item {
+	padding: 0px;
+	background-color: transparent !important;
+	border: 0px;
+}
+
+#facets div.facets h6 {
+	font-weight: bold;
+}

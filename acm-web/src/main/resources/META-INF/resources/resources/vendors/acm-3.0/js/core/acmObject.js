@@ -251,6 +251,38 @@ Acm.Object = {
     ,empty : function($s) {
         $s.empty();
     }
+    ,createOptions: function(element, optionsArray) {
+        var options = '';
+        if (optionsArray) {
+            for (var i = 0; i < optionsArray.length; i++) {
+                options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
+            }
+        }
+        element.html(options);
+    }
+
+    ,removeElements: function(elements, elementsToRemove) {
+        var output = [];
+        if (elements) {
+            if (elementsToRemove) {
+                for (var i = 0; i < elements.length; i++) {
+                    var found = false;
+                    for (var j = 0; j < elementsToRemove.length; j++) {
+                        if (elements[i] === elementsToRemove[j]) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        output.push(elements[i]);
+                    }
+                }
+            }else{
+                return elements;
+            }
+        }
+        return output;
+    }
 
 
 };
