@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="dac-table-drop-01-drop-access-control-tables" author="dmiller">
+        <dropTable tableName="acm_access_control_default" cascadeConstraints="true"/>
+        <dropTable tableName="acm_access_control_entry" cascadeConstraints="true"/>
+        <dropTable tableName="acm_access_control_decision_lu" cascadeConstraints="true"/>
+        <dropTable tableName="acm_access_control_reason_lu" cascadeConstraints="true"/>
+    </changeSet>
+
+</databaseChangeLog>

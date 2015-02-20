@@ -3,14 +3,11 @@
  */
 package com.armedia.acm.services.search.web.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -29,9 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class SearchUsersAPIController {
 
-	private Logger LOG = LoggerFactory.getLogger(getClass());
+	private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 	
-	private MuleClient muleClient;
+	private ExecuteSolrQuery executeSolrQuery;
 	
 	@RequestMapping(value = "/usersSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -45,49 +42,36 @@ public class SearchUsersAPIController {
     ) throws MuleException
     {
 		
-		MuleMessage response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, authentication);
-		MuleMessage responseOwner = getOwner(0, 1, exclude, authentication);
+		String response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, authentication);
+		String responseOwner = getOwner(0, 1, exclude, authentication);
 		
-        if ( response.getPayload() instanceof String && responseOwner.getPayload() instanceof String)
+        JSONObject responseObject = new JSONObject(response);
+        JSONObject responseOwnerObject = new JSONObject(responseOwner);
+        	
+        if (responseObject != null && responseObject.get("response") != null)
         {
-        	JSONObject responseObject = new JSONObject((String) response.getPayload());
-        	JSONObject responseOwnerObject = new JSONObject((String) responseOwner.getPayload());
-        	
-        	if (responseObject != null && responseObject.get("response") != null) {
-        		JSONObject jsonObject = (JSONObject) responseObject.get("response");
-        		jsonObject.put("owner", responseOwnerObject);
-        	}
-        	
-            return responseObject.toString();
+            JSONObject jsonObject = responseObject.getJSONObject("response");
+            jsonObject.put("owner", responseOwnerObject);
         }
 
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return responseObject.toString();
     }
 	
-	private MuleMessage getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws MuleException
+	private String getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws MuleException
 	{
 		String query = "object_type_s:USER AND object_id_s:" + owner + " AND status_lcs:VALID";
 		String sort = "first_name_lcs ASC";
 		
 		query = query.replaceAll(" ", "+");
 		sort = sort.replaceAll(" ", "+");
-		
-		
-		Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-		headers.put("acmUser", authentication);
+
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                query, startRow, maxRows, sort);
         
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
-        
-        LOG.debug("Response type: " + response.getPayload().getClass());
-        
-        return response;
+        return results;
 	}
 	
-	private MuleMessage getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude,
+	private String getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude,
 								 Authentication authentication) throws MuleException
 	{
 		String searchQuery = "";
@@ -101,28 +85,20 @@ public class SearchUsersAPIController {
 		
 		query = query.replaceAll(" ", "+");
 		sort = sort.replaceAll(" ", "+");
+
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                query, startRow, maxRows, sort);
 		
-		
-		Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-		headers.put("acmUser", authentication);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
-        
-        LOG.debug("Response type: " + response.getPayload().getClass());
-        
-        return response;
-	}
-	
-	public MuleClient getMuleClient() {
-		return muleClient;
+		return results;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
-	
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
 }

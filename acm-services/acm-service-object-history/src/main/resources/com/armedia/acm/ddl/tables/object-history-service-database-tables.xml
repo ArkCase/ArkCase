@@ -110,4 +110,8 @@
             </column>
         </createTable>
     </changeSet>
+    
+    <changeSet id="07-remove-nullable-for-newasignee-in-assignment-table" author="riste.tutureski">
+    	<dropNotNullConstraint tableName="acm_assignment" columnName="cm_assignment_new_assignee"/>
+    </changeSet>   
 </databaseChangeLog>

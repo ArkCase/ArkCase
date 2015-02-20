@@ -38,7 +38,7 @@ public class ComplaintHistoryListener implements ApplicationListener<ComplaintPe
 				
 				getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), complaint, complaint.getComplaintId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress()); 	
 				
-				LOG.debug("Complain History added to database.");
+				LOG.debug("Complaint History added to database.");
 			}
 		}
 	}

@@ -5,77 +5,6 @@
 
     <bean id="dataAccessPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Data Access Control Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="listDefaultAccessPrivilege"/>
-                <ref bean="updateDefaultAccessPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <ref bean="listDefaultAccessPrivilegeUrl"/>
-                <ref bean="updateDefaultAccessPrivilegeUrl"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="listDefaultAccessPrivilegeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-        <property name="httpMethod" value="GET"/>
-        <property name="url" value="/api/{version}/plugin/dataaccess/accessControlDefaults"/>
-        <property name="requiredPrivilege" ref="listDefaultAccessPrivilege"/>
-    </bean>
-
-    <bean id="updateDefaultAccessPrivilegeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-        <property name="httpMethod" value="POST"/>
-        <property name="url" value="/api/{version}/plugin/dataaccess/default/{defaultAccessId}"/>
-        <property name="requiredPrivilege" ref="updateDefaultAccessPrivilege"/>
-    </bean>
-
-    <bean id="listDefaultAccessPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="list-default-access"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="updateDefaultAccessPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="update-default-access"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-    
-    <bean id="acmAccessControlDefaultDao" class="com.armedia.acm.services.dataaccess.dao.AcmAccessControlDefaultDao"/>
-
-    <bean id="acmAccessControlEntryDao" class="com.armedia.acm.services.dataaccess.dao.AcmAccessControlEntryDao"/>
-
-    <bean id="dataAccessDefaultGenerator" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultGeneratorImpl">
-        <property name="allUserAccessDiscretionaryUpdateAllowed" value="true"/>
-        <property name="allUsersAccess" value="DENY"/>
-        <property name="allUsersIndicator" value="*"/>
-        <property name="crudOperations">
-            <list>
-                <value>read</value>
-                <value>update</value>
-                <value>delete</value>
-            </list>
-        </property>
-        <property name="generatorUserName" value="ACL_SYSTEM_USER"/>
-        <property name="participantAccess" value="GRANT"/>
-        <property name="participantAccessDiscretionaryUpdateAllowed" value="true"/>
-    </bean>
-
-    <bean id="dataAccessDefaultService" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessDefaultServiceImpl">
-        <property name="accessControlDefaultDao" ref="acmAccessControlDefaultDao"/>
-        <property name="generator" ref="dataAccessDefaultGenerator"/>
-    </bean>
-
-    <bean id="dataAccessEntryService" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessEntryServiceImpl">
-        <property name="accessControlEntryDao" ref="acmAccessControlEntryDao"/>
     </bean>
 
     <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
@@ -92,5 +21,14 @@
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
+
+    <bean id="searchAccessControlFields" class="com.armedia.acm.services.dataaccess.service.SearchAccessControlFields">
+        <property name="participantAccessChecker" ref="participantAccessChecker"/>
+    </bean>
+
+    <bean id="arkPermissionEvaluator" class="com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
+    </bean>
 
 </beans>

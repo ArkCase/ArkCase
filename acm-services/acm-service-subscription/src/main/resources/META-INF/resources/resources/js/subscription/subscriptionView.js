@@ -5,86 +5,74 @@
  */
 Subscription.View = {
     create : function() {
-        this.$edtSearch = $("#searchQuery");
-        this.$btnSearch = this.$edtSearch.next().find("button");
-        this.$divFacet = $(".facets");
-        this.$divResults = $("#divResults");
     }
     ,onInitialized: function() {
     }
 
-    ,args: {
-        fields: {
-            id: {
-                title: 'ID'
-                ,key: true
-                ,list: false
-                ,create: false
-                ,edit: false
-                ,sorting: false
-            }
-            ,name: {
-                title: 'Name4'
-                ,width: '15%'
-                ,sorting: false
-                ,display: function(data) {
-                    var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
-                    var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
 
-
-                    //$lnk.click(function(){alert("click" + data.record.id)});
-
-                    //var $lnk = $("<p>line1</p><p>line2</p></br><p>line3</p><a href='" + url + "'>" + data.record.name + "</a><div>hello world1</div><div>hello world2</div>");
-
-                    return $lnk;
+    ,getJtArgs: function() {
+        return {
+            fields: {
+                id: {
+                    title: 'ID'
+                    ,key: true
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,sorting: false
+                }
+                ,name: {
+                    title: 'Name4'
+                    ,width: '15%'
+                    ,sorting: false
+                    ,display: function(data) {
+                        return SearchBase.View.Results.displayName(data);
+                    }
+                }
+                ,type: {
+                    title: 'Type'
+                    //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
+                    ,sorting: false
+                }
+                ,title: {
+                    title: 'Title'
+                    ,width: '30%'
+                }
+                ,parentId: {
+                    title: 'Parent ID'
+                    ,key: false
+                    ,list: false
+                    ,create: false
+                    ,edit: false
+                    ,sorting: false
+                }
+                ,parentName: {
+                    title: 'Parent'
+                    ,width: '15%'
+                    ,sorting: false
+                    ,display: function(data) {
+                        return SearchBase.View.Results.displayParent(data);
+                    }
+                }
+                ,parentType: {
+                    title: 'Parent Type'
+                    ,sorting: false
+                    ,list: false
+                }
+                ,owner: {
+                    title: 'Assignee'
+                    ,width: '15%'
+                    ,sorting: false
+                }
+                ,modified: {
+                    title: 'Modified'
+                    ,type: 'textarea'
+                    ,width: '20%'
+                    ,sorting: false
                 }
             }
-            ,type: {
-                title: 'Type'
-                //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
-                ,sorting: false
-            }
-            ,title: {
-                title: 'Title'
-                ,width: '30%'
-            }
-            ,parentId: {
-                title: 'Parent ID'
-                ,key: false
-                ,list: false
-                ,create: false
-                ,edit: false
-                ,sorting: false
-            }
-            ,parentName: {
-                title: 'Parent'
-                ,width: '15%'
-                ,sorting: false
-                ,display: function(data) {
-                    var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
-                    var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentName, Acm.goodValue(data.record.parentId)) + "</a>");
-                    return $lnk;
-                }
-            }
-            ,parentType: {
-                title: 'Parent Type'
-                ,sorting: false
-                ,list: false
-            }
-            ,owner: {
-                title: 'Assignee'
-                ,width: '15%'
-                ,sorting: false
-            }
-            ,modified: {
-                title: 'Modified'
-                ,type: 'textarea'
-                ,width: '20%'
-                ,sorting: false
-            }
-        }
-    } //end args
-
+        }; //end args
+    }
 
     ,jtDataMaker: function(result) {
         var jtData = AcmEx.Object.JTable.getEmptyRecords();

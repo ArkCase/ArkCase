@@ -460,6 +460,13 @@ var Acm = Acm || {
         }
     }
 
+    ,log: function(msg) {
+        if (window.console) {
+            if ('function' == typeof console.log) {
+                console.log(msg);
+            }
+        }
+    }
 
 };
 
