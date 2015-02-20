@@ -1,5 +1,6 @@
 package com.armedia.acm.services.notification;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import org.junit.Test;
@@ -29,17 +30,18 @@ public class NotificationIT
     private NotificationDao notificationDao;
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    @Autowired
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
 
     @Test
     @Transactional
     public void saveNotification() throws Exception
     {
+        auditPropertyEntityAdapter.setUserId("notifyUser");
+
         Notification n = new Notification();
 
-        n.setModifier("testModifier");
-        n.setModified(new Date());
-        n.setCreator("testCreator");
-        n.setCreated(new Date());
         n.setStatus("testStatus");
         n.setNote("testNote");
         n.setAction("Acknow");

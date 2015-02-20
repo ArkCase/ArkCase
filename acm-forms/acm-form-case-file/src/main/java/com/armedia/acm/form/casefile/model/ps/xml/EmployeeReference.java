@@ -1,19 +1,19 @@
 /**
  * 
  */
-package com.armedia.acm.form.casefile.model.xml;
+package com.armedia.acm.form.casefile.model.ps.xml;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import com.armedia.acm.form.casefile.model.Subject;
+import com.armedia.acm.form.casefile.model.ps.Subject;
 
 /**
  * @author riste.tutureski
  *
  */
-public class EmployerReference extends Subject{
+public class EmployeeReference extends Subject{
 
-	@XmlElement(name="employerReferenceFirstName")
+	@XmlElement(name="referenceFirstName")
 	@Override
 	public String getFirstName() {
 		return super.getFirstName();
@@ -24,7 +24,7 @@ public class EmployerReference extends Subject{
 		super.setFirstName(firstName);
 	}
 
-	@XmlElement(name="employerReferenceLastName")
+	@XmlElement(name="referenceLastName")
 	@Override
 	public String getLastName() {
 		return super.getLastName();
@@ -35,7 +35,7 @@ public class EmployerReference extends Subject{
 		super.setLastName(lastName);
 	}
 
-	@XmlElement(name="employerReferencePhoneNumber")
+	@XmlElement(name="referencePhoneNumber")
 	@Override
 	public String getPhoneNumber() {
 		return super.getPhoneNumber();

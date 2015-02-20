@@ -5,8 +5,8 @@
  */
 Search.View = {
     create : function() {
-        this.$divFacets  = $("#divFacets");
-        this.$divResults = $("#divResults");
+//        this.$divFacets  = $("#divFacets");
+//        this.$divResults = $("#divResults");
 
         if (Search.View.Query.create)            {Search.View.Query.create();}
     }

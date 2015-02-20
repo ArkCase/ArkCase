@@ -48,6 +48,7 @@ import static org.junit.Assert.assertTrue;
                 "/spring/spring-library-data-access-control.xml",
                 "/spring/spring-library-search.xml",
                 "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-particpants.xml",
                 "/spring/spring-library-activemq.xml"
         }
 )
@@ -68,6 +69,9 @@ public class ComplaintServiceIT
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
+    @Autowired
+    ComplaintEventPublisher complaintEventPublisher;
+
     @Before
     public void setUp() throws Exception
     {
@@ -75,6 +79,7 @@ public class ComplaintServiceIT
 
         service = new ComplaintService();
         service.setSaveComplaintTransaction(saveComplaintTransaction);
+        service.setComplaintEventPublisher(complaintEventPublisher);
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);

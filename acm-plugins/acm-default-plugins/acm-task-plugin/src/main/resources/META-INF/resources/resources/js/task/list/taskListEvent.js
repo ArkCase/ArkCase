@@ -45,9 +45,12 @@ TaskList.Event = {
             TaskList.Service.retrieveDetail(taskId);
         }
         TaskList.Object.showTab(node.key);
+
+
+        SubscriptionOp.Model.checkSubscription(App.getUserName(), Task.Model.getObjectType(), taskId);
     }
     ,onClickBtnSignConfirm : function(e) {
-        var taskId = Task.getTaskId();
+        var taskId = TaskOld.getTaskId();
 
         TaskList.Object.hideSignatureModal();
         TaskList.Service.signTask(taskId);

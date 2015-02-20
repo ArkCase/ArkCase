@@ -48,7 +48,7 @@ Acm.Object = {
         if (null == value) {
             value = "";
         }
-    	$s.text(value);
+        $s.text(value);
     }
 
     //
@@ -103,14 +103,14 @@ Acm.Object = {
         if ("placeholder" == v) {
             v = "";
         }
-        return v;    	
+        return v;
     }
     ,setSelectValue : function($s, value) {
         $s.find("option").filter(function() {
 //    	jQuery("select" + id + " option").filter(function() {
             return jQuery(this).val() == value;
-        //}).prop('selected', true); //for jQuery v1.6+
-    	}).attr('selected', true);
+            //}).prop('selected', true); //for jQuery v1.6+
+        }).attr('selected', true);
     }
     ,appendSelect: function($s, key, val) {
         $s.append($("<option></option>")
@@ -161,7 +161,7 @@ Acm.Object = {
         }
     }
     ,isChecked : function($s) {
-    	return $s.is(":checked");;
+        return $s.is(":checked");;
     }
     ,setChecked : function($s, value) {
         if ("true" == value || true == value) {
@@ -202,7 +202,7 @@ Acm.Object = {
     }
     ,removeClick : function($s) {
         $s.unbind("click")
-             .click(function(event){return event.preventDefault();});
+            .click(function(event){return event.preventDefault();});
     }
     ,show : function($s, show) {
         if (show == "true" || show == true) {
@@ -214,11 +214,11 @@ Acm.Object = {
     ,showParent : function($s, show) {
         var p = $s.parent();
         if (p)
-        if ("true" == show || true == show) {
-            p.show();
-        } else {
-            p.hide();
-        }
+            if ("true" == show || true == show) {
+                p.show();
+            } else {
+                p.hide();
+            }
     }
 
     //work around for hiding options in select list in IE
@@ -251,14 +251,14 @@ Acm.Object = {
     ,empty : function($s) {
         $s.empty();
     }
-    ,createOptions: function(element, optionsArray) {
+    ,createOptions: function($element, optionsArray) {
         var options = '';
-        if (optionsArray) {
+        if (Acm.isArray(optionsArray)) {
             for (var i = 0; i < optionsArray.length; i++) {
                 options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
             }
         }
-        element.html(options);
+        $element.html(options);
     }
 
     ,removeElements: function(elements, elementsToRemove) {
@@ -283,10 +283,4 @@ Acm.Object = {
         }
         return output;
     }
-
-
 };
-
-
-
-

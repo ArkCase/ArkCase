@@ -2,6 +2,9 @@ package com.armedia.acm.plugins.casefile.utility;
 
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.FileAddedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -13,6 +16,8 @@ import java.util.Date;
  */
 public class CaseFileEventUtility implements ApplicationEventPublisherAware
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     private ApplicationEventPublisher applicationEventPublisher;
 
     public void raiseEvent(CaseFile caseFile, String caseState, Date eventDate, String ipAddress, String userId, Authentication auth)
@@ -22,6 +27,15 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
 
         applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseFileAddedEvent(CaseFile source, String userId, boolean succeeded) {
+
+        FileAddedEvent fileAddedEvent = new FileAddedEvent(source);
+        fileAddedEvent.setSucceeded(succeeded);
+        fileAddedEvent.setUserId(userId);
+
+        applicationEventPublisher.publishEvent(fileAddedEvent);
     }
 
     @Override
