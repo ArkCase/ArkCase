@@ -4,7 +4,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
-import com.armedia.acm.plugins.complaint.model.complaint.Complaint;
+import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -33,7 +33,10 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations =
         {
+				"/spring/spring-library-object-history.xml",
                 "/spring/spring-library-data-source.xml",
+                "/spring/spring-library-object-association-plugin.xml",
+                "/spring/spring-library-complaint-plugin-test.xml",
                 "/spring/spring-library-complaint.xml",
                 "/spring/spring-library-complaint-plugin-test-mule.xml",
                 "/spring/spring-library-activiti-actions.xml",
@@ -43,7 +46,10 @@ import static org.junit.Assert.assertTrue;
                 "/spring/spring-library-user-service.xml",
                 "/spring/spring-library-context-holder.xml",
                 "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-search.xml"
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-particpants.xml",
+                "/spring/spring-library-activemq.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -63,6 +69,9 @@ public class ComplaintServiceIT
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
+    @Autowired
+    ComplaintEventPublisher complaintEventPublisher;
+
     @Before
     public void setUp() throws Exception
     {
@@ -70,6 +79,7 @@ public class ComplaintServiceIT
 
         service = new ComplaintService();
         service.setSaveComplaintTransaction(saveComplaintTransaction);
+        service.setComplaintEventPublisher(complaintEventPublisher);
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);
@@ -83,7 +93,7 @@ public class ComplaintServiceIT
 
         Date now = new Date();
 
-        Complaint frevvoComplaint = new Complaint();
+        ComplaintForm frevvoComplaint = new ComplaintForm();
         frevvoComplaint.setComplaintDescription("<strong>description</strong>");
         frevvoComplaint.setDate(now);
         frevvoComplaint.setPriority("High");
@@ -113,7 +123,7 @@ public class ComplaintServiceIT
         assertEquals("Witness first", frevvoComplaint.getPeople().get(0).getMainInformation().getFirstName());
         assertEquals("Complaintant first", frevvoComplaint.getInitiator().getMainInformation().getFirstName());
 
-        Complaint savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
+        ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 
         entityManager.flush();
 
@@ -184,7 +194,7 @@ public class ComplaintServiceIT
         ContactMethod contactMethod = new ContactMethod();
         in.setCommunicationDevice(Arrays.asList(contactMethod));
 
-        initMainInfo.setAnonimuos("true");
+        initMainInfo.setAnonymous("true");
         initMainInfo.setDescription(personType + " Desc");
         initMainInfo.setFirstName(personType + " first");
         initMainInfo.setLastName(personType + " last");
@@ -221,7 +231,7 @@ public class ComplaintServiceIT
         assertEquals(contactMethod.getType(), cm.getType());
     }
 
-    private void verifyComplaint(Complaint frevvoComplaint, com.armedia.acm.plugins.complaint.model.Complaint acmComplaint)
+    private void verifyComplaint(ComplaintForm frevvoComplaint, com.armedia.acm.plugins.complaint.model.Complaint acmComplaint)
     {
         assertNotNull(acmComplaint.getDetails());
         assertNotNull(acmComplaint.getIncidentDate());

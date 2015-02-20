@@ -71,6 +71,14 @@ Complaint.Event = {
             Complaint.Service.retrieveDetail(complaintId);
         }
         Complaint.Object.showTab(node.key);
+
+
+        SubscriptionOp.Model.checkSubscription(App.getUserName(), Complaint.Model.getObjectType(), complaintId);
+    }
+    ,onCheckedRestricted: function(restriction){
+        var c = Complaint.getComplaint();
+        c.restricted = restriction;
+        Complaint.Service.saveComplaint(c);
     }
     ,onSaveTitle: function(value) {
         var c = Complaint.getComplaint();
@@ -124,8 +132,8 @@ Complaint.Event = {
     }
     ,onSaveComplaintType: function(value) {
         var c = Complaint.getComplaint();
-        //c.complaintType = value;            //fix meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-        //Complaint.Service.saveComplaint(c);
+        c.complaintType = value;
+        Complaint.Service.saveComplaint(c);
     }
     ,onClickBtnEditDetails: function(e) {
         Complaint.Object.editDivDetails();

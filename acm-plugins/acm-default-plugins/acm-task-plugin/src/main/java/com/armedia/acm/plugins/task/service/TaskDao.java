@@ -16,10 +16,9 @@ import java.util.List;
  */
 public interface TaskDao
 {
+
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
-
-    void ensureCorrectAssigneeInParticipants(AcmTask in);
 
     /**
      * Complete a task on behalf of the given user.  Returns an AcmTask including historical information

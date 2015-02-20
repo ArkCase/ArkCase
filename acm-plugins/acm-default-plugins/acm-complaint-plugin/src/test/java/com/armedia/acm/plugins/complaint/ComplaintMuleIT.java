@@ -22,9 +22,13 @@ import javax.persistence.PersistenceContext;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+		"/spring/spring-library-object-history.xml",
+		"/spring/spring-library-data-source.xml",
         "/spring/spring-library-complaint-plugin-test.xml",
         "/spring/spring-library-complaint-plugin-test-mule.xml",
+        "/spring/spring-library-complaint-plugin-test-ecm.xml",
+        "/spring/spring-library-object-association-plugin.xml",
         "/spring/spring-library-complaint.xml",
         "/spring/spring-library-activiti-actions.xml",
         "/spring/spring-library-activiti-configuration.xml",
@@ -32,6 +36,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-drools-monitor.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-search.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
@@ -63,6 +68,7 @@ public class ComplaintMuleIT
     public void saveComplaintFlow() throws Exception
     {
         Complaint complaint = complaintFactory.complaint();
+        complaint.setRestricted(true);
 
         // complaint number should be set by the flow
         complaint.setComplaintNumber(null);

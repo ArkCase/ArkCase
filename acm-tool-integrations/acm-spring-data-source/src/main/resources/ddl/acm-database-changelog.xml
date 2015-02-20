@@ -33,6 +33,10 @@
     <!-- then triggers.  -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/triggers" relativeToChangelogFile="false"/>
 
+    <!-- drop tables... needs to be last... in case any existing tables are dropped, when changelogs in constraint
+         or trigger folders referred to them.  -->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/dropTables" relativeToChangelogFile="false"/>
+
     <!-- other types of database objects can be included here as the need arises.
          NOTE: Liquibase fails if it finds no objects.  So only add more object type patterns when
          you need to create them.

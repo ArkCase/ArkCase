@@ -127,8 +127,11 @@ CaseFile.Service = {
             }
             if (Acm.isNotEmpty(treeInfo.sort)) {
                 url += "&s=" + treeInfo.sort;
-            } else {
-                url += "&s=name desc";
+//            } else {
+//                url += "&s=name desc";
+            }
+            if (Acm.isNotEmpty(treeInfo.filter)) {
+                url += "&filters=" + treeInfo.filter;
             }
 
             Acm.Service.asyncGet(
@@ -147,7 +150,7 @@ CaseFile.Service = {
 
                             var subKey = treeInfo.key;
 
-                            var objId;
+                            var objId = 0;
                             var key;
                             if (null == subKey) {
                                 if (0 < caseFiles.length) {
@@ -1089,6 +1092,17 @@ CaseFile.Service = {
                         );
                     }
                 }
+            }
+        }
+        ,updateCaseRestriction: function(caseFileId, restriction) {
+            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateData(caseFile)) {
+                caseFile.restricted = restriction;
+                this.saveCaseFile(caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedRestriction(caseFileId, Acm.Service.responseWrapper(data, data.restricted));
+                    }
+                );
             }
         }
 

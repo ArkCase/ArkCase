@@ -705,7 +705,7 @@ Topbar.View = {
         }
         ,_goToResult: function(asnId) {
             if (asnId) {
-                var url = App.getContextPath() + url;
+                //var url = App.getContextPath() + url;
                 var asnList = Topbar.Model.Asn.getAsnList();
                 if (Topbar.Model.Asn.validateAsnList(asnList)) {
                     var asn = Topbar.Model.Asn.findAsn(asnId, asnList);
@@ -739,7 +739,7 @@ Topbar.View = {
                                 App.gotoPage(url);
                             }
                         } catch(e) {
-                            console.log(e.message);
+                            Acm.log(e.message);
                         }
                     } //validateAsn(asn)
                 } //validateAsnList(asnList)

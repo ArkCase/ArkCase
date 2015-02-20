@@ -3,9 +3,7 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
-import com.armedia.acm.services.dataaccess.model.AcmAccessControlDefault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

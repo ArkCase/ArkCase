@@ -7,12 +7,15 @@
  */
 Profile.Service = {
     create : function() {
-        if (this.Picture.create) {this.Picture.create();}
-        if (this.Info.create)    {this.Info.create();}
+        if (Profile.Service.Picture.create)         {Profile.Service.Picture.create();}
+        if (Profile.Service.Info.create)            {Profile.Service.Info.create();}
+        if (Profile.Service.Subscription.create)    {Profile.Service.Subscription.create();}
     }
     ,onInitialized: function() {
-        if (Profile.Service.Picture.onInitialized) {Profile.Service.Picture.onInitialized();}
-        if (Profile.Service.Info.onInitialized)    {Profile.Service.Info.onInitialized();}
+        if (Profile.Service.Picture.onInitialized)         {Profile.Service.Picture.onInitialized();}
+        if (Profile.Service.Info.onInitialized)            {Profile.Service.Info.onInitialized();}
+        if (Profile.Service.Subscription.onInitialized)    {Profile.Service.Subscription.onInitialized();}
+
     }
 
     ,Picture: {
@@ -320,7 +323,79 @@ Profile.Service = {
         }
 
     }
+    ,Subscription: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
 
+        ,API_RETRIEVE_SUBSCRIPTION: "/api/v1/service/subscription/"
 
+        ,API_DELETE_SUBSCRIPTION: "/api/v1/service/subscription/"
+
+        ,retrieveSubscriptionDeferred : function(postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + Profile.Service.Subscription.API_RETRIEVE_SUBSCRIPTION + App.getUserName();
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                    if(Acm.isArray(data)) {
+                        var response = data;
+                        var subscriptions = [];
+                        for (var i = 0; i < response.length; i++) {
+                            var subscription = {};
+                            if(Profile.Model.Subscription.validateSubscription(response[i])){
+                                subscription.id = Acm.goodValue(response[i].subscriptionId);
+                                subscription.parentId = Acm.goodValue(response[i].objectId);
+                                subscription.parentType = Acm.goodValue(response[i].subscriptionObjectType);
+                                subscription.parentTitle = Acm.goodValue(response[i].objectTitle);
+                                subscription.parentName = Acm.goodValue(response[i].objectName);
+                                subscription.created = Acm.getDateFromDatetime(response[i].created);
+                                subscriptions.push(subscription);
+                            }
+                        }
+                        Profile.Model.Subscription.cacheSubscription.put(App.getUserName(), subscriptions);
+                        jtData = callbackSuccess(subscriptions);
+                    }
+                    else
+                    {
+                        if (Acm.isNotEmpty(data.error)) {
+                            Profile.Controller.modelRetrievedSubscriptions(data);
+                        }
+                    }
+                    return jtData;
+                }
+            );
+        }
+
+        ,deleteSubscription : function(parentId,parentType,userId) {
+            var url = App.getContextPath() + this.API_DELETE_SUBSCRIPTION + userId + "/" + parentType + "/" +  parentId;
+
+            Acm.Service.asyncDelete(
+                function(response) {
+                    if (response.hasError) {
+                        Profile.Controller.modelDeletedSubscription(response);
+                    } else {
+                        if (Profile.Model.Subscription.validateDeletedSubscription(response)) {
+                            var subscriptions = Profile.Model.Subscription.cacheSubscription.get(userId);
+                            if (Acm.isArray(subscriptions) && Acm.isNotEmpty(subscriptions)) {
+                                for (var i = 0; i < subscriptions.length; i++) {
+                                    if (response.deletedSubscriptionId == subscriptions[i].parentId) {
+                                        subscriptions.splice(i, 1);
+                                        Profile.Controller.modelDeletedSubscription(Acm.Service.responseWrapper(response, response.deletedSubscriptionId));
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 };
 

@@ -5,12 +5,14 @@
  */
 Profile.Model = {
     create : function() {
-        if (Profile.Model.Picture.create) {Profile.Model.Picture.create();}
-        if (Profile.Model.Info.create)    {Profile.Model.Info.create();}
+        if (Profile.Model.Picture.create)           {Profile.Model.Picture.create();}
+        if (Profile.Model.Info.create)              {Profile.Model.Info.create();}
+        if (Profile.Model.Subscription.create)      {Profile.Model.Subscription.create();}
     }
     ,onInitialized: function() {
-        if (Profile.Model.Picture.onInitialized) {Profile.Model.Picture.onInitialized();}
-        if (Profile.Model.Info.onInitialized)    {Profile.Model.Info.onInitialized();}
+        if (Profile.Model.Picture.onInitialized)            {Profile.Model.Picture.onInitialized();}
+        if (Profile.Model.Info.onInitialized)               {Profile.Model.Info.onInitialized();}
+        if (Profile.Model.Subscription.onInitialized)       {Profile.Model.Subscription.onInitialized();}
     }
 
     ,Picture: {
@@ -138,5 +140,44 @@ Profile.Model = {
 
     }
 
+    ,Subscription: {
+        create: function () {
+            this.cacheSubscription = new Acm.Model.CacheFifo(3);
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_DELETED_SUBSCRIPTION , this.onViewDeletedSubscription);
+
+        }
+        , onInitialized: function () {
+        }
+        ,validateDeletedSubscription: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedSubscriptionId)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateSubscription: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.userId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.subscriptionObjectType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.subscriptionId)) {
+                return false;
+            }
+            return true;
+        }
+        ,onViewDeletedSubscription: function(parentId,parentType,userId){
+            Profile.Service.Subscription.deleteSubscription(parentId,parentType,userId);
+        }
+    }
 };
 

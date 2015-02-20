@@ -15,6 +15,7 @@ import com.armedia.acm.form.electroniccommunication.model.ElectronicCommunicatio
 import com.armedia.acm.form.electroniccommunication.model.ElectronicCommunicationInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -113,7 +114,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 		
 		form.setInformation(information);
 		
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(form);
 		
 		JSONObject json = new JSONObject(jsonString);

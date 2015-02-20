@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
+
+    <task:scheduler id="searchTaskScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="searchTaskScheduler">
+        <task:scheduled
+                ref="arm_subscriptionEventBatchInsertJob"
+                method="insertNewSubscriptionEvents"
+                fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
+    </task:scheduled-tasks>
+
+    <bean id="arm_subscriptionEventBatchInsertJob" class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
+        <property name="userHomeDir" value="${user.home}"/>
+        <property name="lastBatchInsertPropertyFileLocation" value="/.acm/subscriptionEventLastBatchInsert.properties"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="subscriptionDao" ref="subscriptionDao"/>
+        <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
+        <property name="subscriptionEventPublisher" ref="subscriptionEventPublisher"/>
+    </bean>
+
+    <bean id="subscriptionEventPublisher" class="com.armedia.acm.services.subscription.service.SubscriptionEventPublisher"/>
+
+    <bean id="subscriptionDao" class="com.armedia.acm.services.subscription.dao.SubscriptionDao"/>
+
+    <bean id="subscriptionEventDao" class="com.armedia.acm.services.subscription.dao.SubscriptionEventDao"/>
+
+    <bean id="subscriptionEventToSolrTransformer" class="com.armedia.acm.services.subscription.service.SubscriptionEventToSolrTransformer">
+        <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
+        <property name="subscriptionEventPlugin" ref="subscriptionPlugin"/>
+    </bean>
+
+    <bean id="eventTypeProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/eventType.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="subscriptionProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/subscriptionPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
+    <!--<bean id="subscriptionPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">-->
+        <!--<property name="pluginName" value="Subscription Service Plugin"/>-->
+        <!--<property name="privileges">-->
+            <!--<list>-->
+                <!--<ref bean="subscribePrivilege"/>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="urlPrivileges">-->
+            <!--<list>-->
+                <!--<bean id="getSubscriptionsByUser" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">-->
+                    <!--<property name="httpMethod" value="GET"/>-->
+                    <!--<property name="url" value="/api/{version}/service/subscription/{userId}"/>-->
+                    <!--<property name="requiredPrivilege" ref="subscribePrivilege"/>-->
+                <!--</bean>-->
+                <!--<bean id="getSubscriptionByUserObjectIdAndType" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">-->
+                    <!--<property name="httpMethod" value="GET"/>-->
+                    <!--<property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>-->
+                    <!--<property name="requiredPrivilege" ref="subscribePrivilege"/>-->
+                <!--</bean>-->
+                <!--<bean id="createSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">-->
+                    <!--<property name="httpMethod" value="PUT"/>-->
+                    <!--<property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>-->
+                    <!--<property name="requiredPrivilege" ref="subscribePrivilege"/>-->
+                <!--</bean>-->
+                <!--<bean id="deleteSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">-->
+                    <!--<property name="httpMethod" value="DELETE"/>-->
+                    <!--<property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>-->
+                    <!--<property name="requiredPrivilege" ref="subscribePrivilege"/>-->
+                <!--</bean>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="subscriptionProperties"-->
+          <!--class="org.springframework.beans.factory.config.PropertiesFactoryBean" >-->
+        <!--&lt;!&ndash; note: must leave "file:" at the start of the file name for spring-->
+        <!--to be able to read the file; otherwise it will try to read from the-->
+        <!--classpath &ndash;&gt;-->
+        <!--<property name="location" value="file:${user.home}/.acm/subscriptionPlugin.properties"/>-->
+        <!--<property name="ignoreResourceNotFound" value="true"/>-->
+        <!--<property name="localOverride" value="false"/>-->
+        <!--<property name="properties">-->
+            <!--<props>-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean id="subscriptionPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Search Plugin"/>
+        <property name="pluginProperties" ref="subscriptionProperties"/>
+        <property name="privileges">
+            <list>
+                <ref bean="subscribePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="getSubscriptionsByUser" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="getSubscriptionByUserObjectIdAndType" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="createSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="deleteSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="subscriptionUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/subscription"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+            </list>
+
+        </property>
+    </bean>
+
+    <bean id="subscribePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-subscription"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

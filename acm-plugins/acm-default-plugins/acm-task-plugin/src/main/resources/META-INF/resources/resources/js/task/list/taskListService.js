@@ -9,7 +9,7 @@ TaskList.Service = {
     create : function() {
     }
 
-    ,API_LIST_TASK             : "/api/latest/plugin/search/" + Task.getObjectType()
+    ,API_LIST_TASK             : "/api/latest/plugin/search/" + TaskOld.getObjectType()
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
     ,API_COMPLETE_TASK_WITH_OUTCOME         : "/api/latest/plugin/task/completeTask"
@@ -96,13 +96,13 @@ TaskList.Service = {
         );
     }
     ,signTask : function(taskId) {
-    	var formURL = App.getContextPath() + this.API_SIGN_TASK + Task.getObjectType() + "/" + taskId;
+    	var formURL = App.getContextPath() + this.API_SIGN_TASK + TaskOld.getObjectType() + "/" + taskId;
     	var theForm = TaskList.Object.getSignatureForm();
     	
     	Acm.Ajax.asyncPostForm(formURL, theForm, TaskList.Callback.EVENT_TASK_SIGNED);
     }
     ,findSignatureByTypeById : function(taskId) {
-    	var url = App.getContextPath() + this.API_FIND_BYTASKBYID_TASK_SIGNATURE + Task.getObjectType() + "/" + taskId;
+    	var url = App.getContextPath() + this.API_FIND_BYTASKBYID_TASK_SIGNATURE + TaskOld.getObjectType() + "/" + taskId;
     	
         Acm.Ajax.asyncGet(url, TaskList.Callback.EVENT_LIST_BYTYPEBYID_RETRIEVED);
     }
