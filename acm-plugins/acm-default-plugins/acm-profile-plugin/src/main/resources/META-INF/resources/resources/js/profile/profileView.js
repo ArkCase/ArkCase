@@ -448,30 +448,76 @@ Profile.View = {
         create: function() {
             this.$divSubscriptions = $("#divSubscriptions");
             this.useJTable(this.$divSubscriptions);
+
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_RETRIEVED_SUBSCRIPTIONS , this.onModelRetrievedSubscriptions);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_DELETED_SUBSCRIPTION , this.onModelDeletedSubscription);
+
         }
         ,onInitialized: function() {
         }
+        ,onModelRetrievedSubscriptions: function(subsriptions) {
+            if (subsriptions.hasError) {
+                Acm.Dialog.info(subsriptions.errorMsg);
+            }
+            else{
+                Profile.View.Subscription.refreshJTableSubscription();
+            }
+        }
+        ,onModelDeletedSubscription: function(subsription) {
+            if (subsription.hasError) {
+                Acm.Dialog.info(subsription.errorMsg);
+            }
+            else{
+                Profile.View.Subscription.refreshJTableSubscription();
+            }
+        }
+        ,_makeJtData: function(subscriptions) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            if (subscriptions) {
+                for (var i = 0; i < subscriptions.length; i++) {
+                    var Record = {};
+                    Record.id       = Acm.goodValue(subscriptions[i].id);
+                    Record.parentId    = Acm.goodValue(subscriptions[i].parentId);
+                    Record.parentTitle    = Acm.goodValue(subscriptions[i].parentTitle);
+                    Record.parentType     = Acm.goodValue(subscriptions[i].parentType);
+                    Record.parentName     = Acm.goodValue(subscriptions[i].parentName);
+                    Record.created  = Acm.goodValue(subscriptions[i].created);
+                    jtData.Records.push(Record);
+                }
+                jtData.TotalRecordCount = subscriptions.length;
+            }
+            return jtData;
+        }
         ,useJTable: function($s) {
-            $s.jtable({
-                title: 'Subscriptions'
-                ,paging: false
+            AcmEx.Object.JTable.usePaging($s
+            ,{
+                messages: {
+                    areYouSure: 'Are you sure?',
+                    noDataAvailable: 'No subscriptions available!',
+                    cancel: 'Cancel',
+                    deleteText: 'Unsubscribe'
+                }
+                ,title: 'Subscriptions'
+                ,paging: true
+                ,pageSize: 10 //Set page size (default: 10)
                 ,actions: {
-                    listAction: function (postData, jtParams) {
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        var sub = {};
-                        rc.Records.push({
-                            id: 1
-                            ,type: "Complaint"
-                            ,title: "Spending Co-worker"
-                            ,date: "11/2/2014"
-                        });
-                        /*rc.Records.push({
-                         id: 124
-                         ,type: "type2"
-                         ,title: "title2"
-                         ,date: "m2/dd/yyyy"
-                         });*/
-                        return rc;
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        var subscriptions = Profile.Model.Subscription.cacheSubscription.get(App.getUserName());
+                        if (subscriptions) {
+                            return Profile.View.Subscription._makeJtData(subscriptions);
+
+                        } else {
+                            return Profile.Service.Subscription.retrieveSubscriptionDeferred(postData
+                                ,jtParams
+                                ,sortMap
+                                ,function(data) {
+                                    var subscriptions = data;
+                                    return Profile.View.Subscription._makeJtData(subscriptions);
+                                }
+                                ,function(error) {
+                                }
+                            );
+                        }  //end else
                     }
                     ,deleteAction: function (postData, jtParams) {
                         return {
@@ -487,32 +533,54 @@ Profile.View = {
                         ,edit: false
                         ,list: true
                     }
-                    ,type: {
+                    ,parentId: {
+                        title: 'Object ID'
+                        ,create: false
+                        ,edit: false
+                        ,list: false
+                    }
+                    ,parentTitle: {
+                        title: 'Title'
+                        ,width: '40%'
+                        ,display: function(data) {
+                            var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
+                            var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentTitle) + "</a>");
+                            return $lnk;
+                        }
+                    }
+                    ,parentType: {
                         title: 'Type'
                         ,width: '20%'
-//                        ,create: false
-//                        ,edit: false
                     }
-                    ,title: {
-                        title: 'Title'
-                        ,width: '30%'
-//                        ,create: false
-//                        ,edit: false
+                    ,parentName: {
+                        title: 'Object Name'
+                        ,create: false
+                        ,edit: false
+                        ,list: false
                     }
-                    ,date: {
-                        title: 'Date'
-                        ,width: '30%'
-//                        ,create: false
-//                        ,edit: false
+                    ,created: {
+                        title: 'Created'
+                        ,width: '10%'
+                    }
+                }
+                ,deleteConfirmation: function(data) {
+                    data.deleteConfirmMessage = 'Unsubscribe from "' + data.record.parentTitle + ' (' + data.record.parentName +')" ?';
+                }
+                ,recordDeleted: function (event, data) {
+                    var record = data.record;
+                    var parentType = Acm.goodValue(record.parentType);
+                    var parentId = Acm.goodValue(record.parentId);
+                    var userId = Acm.goodValue(App.getUserName());
+                    if (Acm.isNotEmpty(parentId) && 0 < parentId && Acm.isNotEmpty(userId) && Acm.compare(userId, App.getUserName())) {
+                        Profile.Controller.viewDeletedSubscription(parentId,parentType,userId);
                     }
                 }
             });
             $s.jtable('load');
         }
-        ,refreshJTable: function() {
+        ,refreshJTableSubscription: function() {
             AcmEx.Object.jTableLoad(this.$divSubscriptions);
         }
     }
-
 };
 
