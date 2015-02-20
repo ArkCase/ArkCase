@@ -124,21 +124,21 @@ var SubscriptionOp = SubscriptionOp || {
             if (Acm.isEmpty(data.objectId)) {
                 return false;
             }
-//            if (Acm.isEmpty(data.subscriptionId)) {
-//                return false;
-//            }
+            if (Acm.isEmpty(data.subscriptionId)) {
+                return false;
+            }
             return true;
         }
         ,validateUnsubscribe: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.DeletedSubscriptionId)) {
+            if (Acm.isEmpty(data.deletedSubscriptionId)) {
                 return false;
             }
             return true;
         }
-        ,
+
     }
 
     ,Service: {
@@ -203,7 +203,7 @@ var SubscriptionOp = SubscriptionOp || {
                     } else if (!SubscriptionOp.Model.validateUnsubscribe(response)) {
                         SubscriptionOp.Controller.modelUnsubscribedObjectError(userId, objectType, objectId, "Invalidate unsubscribe data");
 
-                    } else {
+                    } else if (objectId == response.deletedSubscriptionId) {
                         SubscriptionOp.Model.setSubscribed(false);
                         SubscriptionOp.Controller.modelUnsubscribedObject(userId, objectType, objectId);
                     }

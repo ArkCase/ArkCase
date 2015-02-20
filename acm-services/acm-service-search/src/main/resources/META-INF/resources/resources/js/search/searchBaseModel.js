@@ -104,10 +104,18 @@ SearchBase.Model = {
         this._fixedFilters = filters;
     }
     ,addFixedFilters: function(toFilters) {
-        var filters = this.getFixedFilters();
-        for (var i = 0; i < filters.length; i++) {
-            for (var j = 0; j < filters[i].values.length; j++) {
-                this.addFilter(toFilters, filters[i].key, filters[i].values[j]);
+        if (!this.validateFilters(toFilters)) {
+            return;
+        }
+
+        var fixedFilters = this.getFixedFilters();
+        if (!this.validateFilters(fixedFilters)) {
+            return;
+        }
+
+        for (var i = 0; i < fixedFilters.length; i++) {
+            for (var j = 0; j < fixedFilters[i].values.length; j++) {
+                this.addFilter(toFilters, fixedFilters[i].key, fixedFilters[i].values[j]);
             }
         }
     }
@@ -222,7 +230,7 @@ SearchBase.Model = {
     }
 
     //
-    // Facet array JSON format: [{label, key, count, values:[{name, count, def}, ...]}, ...]
+    // Facet field array JSON format: [{label, key, count, values:[{name, count, def}, ...]}, ...]
     //
     ,_facet: {
         facet_queries: []
@@ -236,6 +244,30 @@ SearchBase.Model = {
     ,setFacet: function(facet) {
         this._facet = facet;
     }
+
+//    ,validateFacetFields: function(data) {
+//        if (Acm.isNotArray(data)) {
+//            return false;
+//        }
+//        for (var i = 0; i < data.length; i++) {
+//            if (Acm.isEmpty(data[i].label) && Acm.isEmpty(data[i].key)) {
+//                return false;
+//            }
+//            if (Acm.isNotArray(data[i].values)) {
+//                return false;
+//            }
+//            for (var j = 0; j < data[i].values.length; j++) {
+//                if (Acm.isEmpty(data[i].values[j].name)) {
+//                    return false;
+//                }
+//                if (Acm.isEmpty(data[i].values[j].count)) {
+//                    return false;
+//                }
+//            }
+//        }
+//        return true;
+//    }
+
     ,makeFacet: function(facetSearch) {
         var facet = {
             facet_queries  : []
