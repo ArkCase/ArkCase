@@ -20,7 +20,7 @@ var Complaint = Complaint || {
             });
         }
 
-        this.cretae_old();
+        this.create_old();
     }
 
     ,onInitialized: function() {
