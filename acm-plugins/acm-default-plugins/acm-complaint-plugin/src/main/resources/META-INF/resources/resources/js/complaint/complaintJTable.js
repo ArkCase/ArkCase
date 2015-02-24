@@ -2024,13 +2024,16 @@ Complaint.JTable = {
                     if (c && c.childObjects) {
                         for (var i = 0; i < c.childObjects.length; i++) {
                             var childObject = c.childObjects[i];
-                            var record = {};
-                            record.id = Acm.goodValue(childObject.targetId, 0);
-                            record.title = Acm.goodValue(childObject.targetName);
-                            record.created = Acm.getDateFromDatetime(childObject.created);
-                            record.creator = Acm.goodValue(childObject.creator);
-                            record.status = Acm.goodValue(childObject.status);
-                            rc.Records.push(record);
+                            // Check if the file is not Frevvo XML
+                            if (!Acm.isFrevvoXMLFile(childObject.targetName, childObject.targetSubtype)) {
+	                            var record = {};
+	                            record.id = Acm.goodValue(childObject.targetId, 0);
+	                            record.title = Acm.goodValue(childObject.targetName);
+	                            record.created = Acm.getDateFromDatetime(childObject.created);
+	                            record.creator = Acm.goodValue(childObject.creator);
+	                            record.status = Acm.goodValue(childObject.status);
+	                            rc.Records.push(record);
+                            }
                         }
                     }
                     return rc;
