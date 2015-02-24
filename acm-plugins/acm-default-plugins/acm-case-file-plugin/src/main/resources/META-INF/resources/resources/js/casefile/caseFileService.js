@@ -208,16 +208,19 @@ CaseFile.Service = {
                                 var documents = [];
                                 for (var i = 0; i < caseFile.childObjects.length; i++) {
                                     var childObject = caseFile.childObjects[i];
-                                    var document = {};
-                                    document.id = childObject.targetId;
-                                    document.name = childObject.targetName;
-                                    document.created = childObject.created;
-                                    document.creator = childObject.creator;
-                                    document.status = childObject.status;
-                                    document.targetType = childObject.targetType;
-                                    document.targetSubtype = childObject.targetSubtype;
-                                    document.category = childObject.category;
-                                    documents.push(document);
+                                    // Check if the file is not Frevvo XML
+                                    if (!Acm.isFrevvoXMLFile(childObject.targetName, childObject.targetSubtype)) {
+	                                    var document = {};
+	                                    document.id = childObject.targetId;
+	                                    document.name = childObject.targetName;
+	                                    document.created = childObject.created;
+	                                    document.creator = childObject.creator;
+	                                    document.status = childObject.status;
+	                                    document.targetType = childObject.targetType;
+	                                    document.targetSubtype = childObject.targetSubtype;
+	                                    document.category = childObject.category;
+	                                    documents.push(document);
+                                    }
                                 }
                                 CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
                             }
