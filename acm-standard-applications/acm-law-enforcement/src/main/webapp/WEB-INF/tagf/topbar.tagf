@@ -17,7 +17,7 @@
                                 <div class="padder-v2">
                                     <a href="<c:url value='${topbarAction.url}'/>">
                                         <span class="m-b-xs block">
-                                            <i class="i ${topbarAction.iconName} i-2x text-primary-lt"></i>
+                                            <i class="${topbarAction.iconName} i-2x text-primary-lt"></i>
                                         </span>
                                         <small class="text-muted">${topbarAction.actionName}</small>
                                     </a>

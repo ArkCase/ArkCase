@@ -9,6 +9,18 @@ var Task = Task || {
         if (Task.View.create)       {Task.View.create();}
         if (Task.Controller.create) {Task.Controller.create();}
 
+        if (ObjNav.create) {
+            ObjNav.create({name: "task"
+                ,$tree             : Task.View.Navigator.$tree
+                ,treeArgs          : Task.View.Navigator.getTreeArgs()
+                ,$ulFilter         : Task.View.Navigator.$ulFilter
+                ,treeFilter        : Task.View.MicroData.treeFilter
+                ,$ulSort           : Task.View.Navigator.$ulSort
+                ,treeSort          : Task.View.MicroData.treeSort
+                ,modelInterface    : Task.Model.interface
+            });
+        }
+
         if (SubscriptionOp.create) {
             SubscriptionOp.create({
                 getSubscriptionInfo: function() {
@@ -24,6 +36,7 @@ var Task = Task || {
         if (Task.Model.onInitialized)      {Task.Model.onInitialized();}
         if (Task.View.onInitialized)       {Task.View.onInitialized();}
         if (Task.Controller.onInitialized) {Task.Controller.onInitialized();}
+        if (ObjNav.onInitialized)          {ObjNav.onInitialized();}
         if (SubscriptionOp.onInitialized)  {SubscriptionOp.onInitialized();}
     }
 };

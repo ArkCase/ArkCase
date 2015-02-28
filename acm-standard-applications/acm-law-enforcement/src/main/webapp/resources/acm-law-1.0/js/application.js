@@ -94,16 +94,30 @@ var Application = Application || {
         }
     }
 
+    ,SESSION_DATA_PROFILE               : "AcmProfile"
+    ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
+    ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
+    ,SESSION_DATA_COMPLAINT_PRIORITIES  : "AcmComplaintPriorities"
+    ,SESSION_DATA_CASE_FILE_ASSIGNEES   : "AcmCaseAssignees"
+    ,SESSION_DATA_CASE_FILE_TYPES       : "AcmCaseTypes"
+    ,SESSION_DATA_CASE_FILE_PRIORITIES  : "AcmCasePriorities"
+    ,SESSION_DATA_QUICK_SEARCH_TERM     : "AcmQuickSearchTerm"
+    ,SESSION_DATA_ASN_LIST              : "AcmAsnList"
+    ,SESSION_DATA_ASN_DATA              : "AcmAsnData"
+    ,SESSION_DATA_COMPLAINT_TREEINFO    : "AcmComplaintTreeInfo"
+    ,SESSION_DATA_ADMIN_TREEINFO        : "AcmAdminTreeInfo"
+    ,SESSION_DATA_TASK_ASSIGNEES        : "AcmTaskAssignees"
+
     ,initSessionData: function() {
         sessionStorage.setItem("AcmProfile", null);
 
-        sessionStorage.setItem("AcmApprovers", null);
-        sessionStorage.setItem("AcmComplaintTypes", null);
-        sessionStorage.setItem("AcmPriorities", null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_TYPES, null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_PRIORITIES, null);
 
-        sessionStorage.setItem("AcmCaseAssignees", null);
-        sessionStorage.setItem("AcmCaseTypes", null);
-        sessionStorage.setItem("AcmCasePriorities", null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_ASSIGNEES, null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_TYPES, null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_PRIORITIES, null);
 
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);
