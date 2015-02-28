@@ -8,18 +8,28 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="complaintId">${complaintId}</span>
+        <span itemprop="objType">COMPLAINT</span>
+        <span itemprop="objId">${objId}</span>
+        <span itemprop="treeFilter">${treeFilter}</span>
+        <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
     </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
@@ -83,22 +93,22 @@
                                         <h3 class="m-b-xs text-black pull-left"><spring:message code="complaint.page.descShort" text="Complaints" /></h3>
                                         <div class="btn-group inline select pull-right">
                                             <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
-                                            <ul class="dropdown-menu text-left text-sm">
-                                                <li><a href="#">Sort Date Ascending</a></li>
-                                                <li><a href="#">Sort Date Descending</a></li>
-                                                <li><a href="#">Sort Complaint ID Ascending</a></li>
-                                                <li><a href="#">Sort Complaint ID Ascending</a></li>
+                                            <ul class="dropdown-menu text-left text-sm" id="ulSort">
+                                                <%--<li><a href="#">Sort Date Ascending</a></li>--%>
+                                                <%--<li><a href="#">Sort Date Descending</a></li>--%>
+                                                <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
+                                                <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
                                             </ul>
                                         </div>
                                         <div class="btn-group select pull-right">
                                             <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
-                                            <ul class="dropdown-menu text-left text-sm">
-                                                <li><a href="#">All Open Complaints</a></li>
-                                                <li><a href="#">All Complaints I've Created</a></li>
-                                                <li><a href="#">All Closed No Further Action</a></li>
-                                                <li><a href="#">All Closed Refer External</a></li>
-                                                <li><a href="#">All Closed Added to Existing Case</a></li>
-                                                <li><a href="#">All Closed Open Investigation </a></li>
+                                            <ul class="dropdown-menu text-left text-sm" id="ulFilter">
+                                                <%--<li><a href="#">All Open Complaints</a></li>--%>
+                                                <%--<li><a href="#">All Complaints I've Created</a></li>--%>
+                                                <%--<li><a href="#">All Closed No Further Action</a></li>--%>
+                                                <%--<li><a href="#">All Closed Refer External</a></li>--%>
+                                                <%--<li><a href="#">All Closed Added to Existing Case</a></li>--%>
+                                                <%--<li><a href="#">All Closed Open Investigation </a></li>--%>
                                                     <%--<li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>--%>
                                             </ul>
                                         </div>
@@ -122,7 +132,8 @@
                             <section class="vbox">
                                 <section class="scrollable">
                                     <div class="wrapper dk  clearfix">
-                                        <div class="row">
+                                        <div class="row" id="tabTop"  style="display:none;">
+                                            <p>tabTop</p>
                                             <div class="col-xs-12">
                                                 <div class="">
                                                     <div class=" clearfix">
@@ -151,17 +162,23 @@
                                                             <small class="text-muted">State</small></div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
 
-                                            </div></div>
+
+                                        <div class="row" id="tabTopBlank">
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No complaint is selected)</p>
+                                        </div>
                                     </div>
 
                                     <div>
                                         <div class="wrapper">
                                             <div class="row" id="tabBlank" style="display:none;">
-                                                <p></p>
+                                                <p>tabBlank</p>
                                             </div>
 
                                             <div class="row" id="tabCloseComplaintButton" style="display:none;">
+                                                <p>tabCloseComplaintButton</p>
                                                 <div class="col-md-12">
                                                     <div class="pull-right inline">
                                                         <div class="btn-group">
@@ -188,6 +205,7 @@
 
 
                                             <div class="row" id="tabDetail" style="display:none;">
+                                                <p>tabDetail</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a ">
                                                         <div class="panel-heading b-b bg-info">
@@ -212,6 +230,7 @@
                                             </div>
 
                                             <div class="row" id="tabLocation" style="display:none;">
+                                                <p>tabLocation</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divLocation" style="width:100%"></div>
@@ -220,6 +239,7 @@
                                             </div>
 
                                             <div class="row" id="tabInitiator" style="display:none;">
+                                                <p>tabInitiator</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divInitiator" style="width:100%"></div>
@@ -229,6 +249,7 @@
 
 
                                             <div class="row" id="tabPeople" style="display:none;">
+                                                <p>tabPeople</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divPeople" style="width:100%"></div>
@@ -237,6 +258,7 @@
                                             </div>
 
                                             <div class="row" id="tabDocuments" style="display:none;">
+                                                <p>tabDocuments</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divDocuments" style="width:100%"></div>
@@ -250,6 +272,7 @@
 
 
                                             <div class="row" id="tabTasks" style="display:none;">
+                                                <p>tabTasks</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div class="panel-body max-200 no-padder">
@@ -260,6 +283,7 @@
                                             </div>
 
                                             <div class="row" id="tabNotes" style="display:none;">
+                                                <p>tabNotes</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divNotes" style="width:100%"></div>
@@ -268,6 +292,7 @@
                                             </div>
 
                                             <div class="row" id="tabParticipants" style="display:none;">
+                                                <p>tabParticipants</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divParticipants" style="width:100%"></div>
@@ -276,6 +301,7 @@
                                             </div>
 
                                             <div class="row" id="tabRefComplaints" style="display:none;">
+                                                <p>tabRefComplaints</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divReferences" style="width:100%"></div>
@@ -284,6 +310,7 @@
                                             </div>
 
                                             <div class="row" id="tabHistory" style="display:none;">
+                                                <p>tabHistory</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divHistory" style="width:100%"></div>

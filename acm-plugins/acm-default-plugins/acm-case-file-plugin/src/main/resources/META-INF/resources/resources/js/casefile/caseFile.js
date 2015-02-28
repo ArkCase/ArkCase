@@ -5,9 +5,21 @@
  */
 var CaseFile = CaseFile || {
     create: function() {
+        if (CaseFile.Controller.create) {CaseFile.Controller.create();}
         if (CaseFile.Model.create)      {CaseFile.Model.create();}
         if (CaseFile.View.create)       {CaseFile.View.create();}
-        if (CaseFile.Controller.create) {CaseFile.Controller.create();}
+
+        if (ObjNav.create) {
+            ObjNav.create({name: "casefile"
+                ,$tree             : CaseFile.View.Navigator.$tree
+                ,treeArgs          : CaseFile.View.Navigator.getTreeArgs()
+                ,$ulFilter         : CaseFile.View.Navigator.$ulFilter
+                ,treeFilter        : CaseFile.View.MicroData.treeFilter
+                ,$ulSort           : CaseFile.View.Navigator.$ulSort
+                ,treeSort          : CaseFile.View.MicroData.treeSort
+                ,modelInterface    : CaseFile.Model.interface
+            });
+        }
 
         if (SubscriptionOp.create)           {
             SubscriptionOp.create({
@@ -21,10 +33,11 @@ var CaseFile = CaseFile || {
         }
     }
     ,onInitialized: function() {
+        if (CaseFile.Controller.onInitialized) {CaseFile.Controller.onInitialized();}
         if (CaseFile.Model.onInitialized)      {CaseFile.Model.onInitialized();}
         if (CaseFile.View.onInitialized)       {CaseFile.View.onInitialized();}
-        if (CaseFile.Controller.onInitialized) {CaseFile.Controller.onInitialized();}
-        if (SubscriptionOp.onInitialized)      {SubscriptionOp.onInitialized();}
+        if (ObjNav.onInitialized)              {ObjNav.onInitialized();}
+        //if (SubscriptionOp.onInitialized)      {SubscriptionOp.onInitialized();}
     }
 };
 

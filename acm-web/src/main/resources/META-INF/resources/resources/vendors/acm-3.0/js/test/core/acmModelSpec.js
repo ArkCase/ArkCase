@@ -19,6 +19,49 @@ describe("Acm.Model", function()
         });
     });
 
+    it("Acm.Model.Variable: get/set", function() {
+        var data = new Acm.Model.Variable();
+
+        data.set("A string");
+        expect(data.get()).toEqual("A string");
+
+        data.set(123);
+        expect(data.get()).toEqual(123);
+
+        data.set(true);
+        expect(data.get()).toEqual(true);
+
+        data.set(false);
+        expect(data.get()).toEqual(false);
+
+        data.set(null);
+        expect(data.get()).toEqual(null);
+
+        data.set({id:123, name:"Joe"});
+        expect(data.get()).toEqual({id:123, name:"Joe"});
+
+        data.set(["Jan", "Feb", "Mar"]);
+        expect(data.get()).toEqual(["Jan", "Feb", "Mar"]);
+    });
+
+    it("Acm.Model.Variable: initial value", function() {
+        var data = new Acm.Model.Variable("some initial value");
+        expect(data.get()).toEqual("some initial value");
+    });
+
+    it("Acm.Model.Variable: independent of one another", function() {
+        var data1 = new Acm.Model.Variable("something");
+        var data2 = new Acm.Model.Variable("other Thing");
+
+        expect(data1.get()).toEqual("something");
+        expect(data2.get()).toEqual("other Thing");
+
+        data1.set("more thing");
+        data2.set("more othre thing");
+        expect(data1.get()).toEqual("more thing");
+        expect(data2.get()).toEqual("more othre thing");
+    });
+
     it("Acm.Model.SessionData: get/set", function() {
         var data = new Acm.Model.SessionData("someData");
 

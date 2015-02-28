@@ -13,10 +13,6 @@ CaseFile.Controller = CaseFile.Controller || {
     ,MODEL_FOUND_SUBJECT_TYPES             : "case-model-found-subject-types"          //param: subjectTypes
     ,MODEL_FOUND_PRIORITIES                : "case-model-found-priorities"             //param: priorities
 
-    ,MODEL_RETRIEVED_CASE_FILE_LIST        : "case-model-retrieved-case-file-list"     //param: key
-    ,MODEL_RETRIEVED_CASE_FILE             : "case-model-retrieved-detail"             //param: caseFile
-    ,MODEL_SAVED_CASE_FILE                 : "case-model-saved-detail"                 //param: caseFile
-
     ,MODEL_SAVED_CASE_TITLE                : "case-model-saved-case-title"             //param: caseFileId, caseTitle
     ,MODEL_SAVED_INCIDENT_DATE             : "case-model-saved-incident-date"          //param: caseFileId, incidentDate
     ,MODEL_SAVED_ASSIGNEE                  : "case-model-saved-assignee"               //param: caseFileId, assignee
@@ -122,9 +118,9 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelRetrievedCaseFile: function(caseFile) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CASE_FILE, caseFile);
     }
-    ,modelSavedCaseFile : function(caseFile) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_FILE, caseFile);
-    }
+//    ,modelSavedCaseFile : function(caseFile) {
+//        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_FILE, caseFile);
+//    }
     ,modelSavedCaseTitle : function(caseFileId, title) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_TITLE, caseFileId, title);
     }
