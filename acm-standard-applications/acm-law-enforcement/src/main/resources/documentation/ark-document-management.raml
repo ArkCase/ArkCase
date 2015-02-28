@@ -1,0 +1,50 @@
+#%RAML 0.8
+title: ArkCase Document Management
+
+/file:
+  post:
+    description: Add a file 
+  /{fileId}:
+    post:
+      description: Replace the requested file with a new version
+    delete:
+      description: Remove the requested file
+/api/v1/service/ecm:
+  /id/{fileId}:
+    get:
+      description: Get file metadata
+  /copyToAnotherContainer:
+    post:
+      description: Copy one or more files to another container
+  /copyWithinContainer:
+    post:
+      description: Copy one or more files to an existing folder in the same container
+  /download:
+    /{fileId}:
+      get:
+        description: Download the active version of the requested file
+    /{fileId}/{version}:
+      get:
+        description: Download the requested version of the requested file
+  /folder/{folderId}:
+      delete:
+        description: deletes the requested folder.  
+      get:
+        description: Get a tree view with folder and file metadata for the requested folder.  Normally the folder ID would be a container folder (case file folder, complaint folder, or task folder), but this is not required.  It could be any folder.
+      /{newFolderName}:
+        post:
+          description: Rename the requested folder
+        put:
+          description: Create a new folder under the requested folder 
+  /moveToAnotherContainer:
+    post:
+      description: Move one or more files to another container
+  /moveWithinContainer:
+    post:
+      description: Move one or more files to an existing folder in the same container
+  /versionHistory/{fileId}:
+    get:
+      description: Get the version history for one file
+  
+
+    
