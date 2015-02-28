@@ -470,6 +470,22 @@ var Acm = Acm || {
             }
         }
     }
+    
+    ,isFrevvoXMLFile: function(name, type) {
+    	if (Acm.isNotEmpty(name) && Acm.isNotEmpty(type)) {
+    		var groups = name.match(/form_(.*)_(\d*)\.xml/);
+    		
+    		if (Acm.isArray(groups) && !Acm.isArrayEmpty(groups) && groups.length >= 2) {
+    			var formName = groups[1];
+    			
+    			if (Acm.equals(formName + '_xml', type)) {
+    				return true;
+    			}
+    		}
+    	}
+    	
+    	return false;
+    }
 
 };
 
