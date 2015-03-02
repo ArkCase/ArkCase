@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author riste.tutureski
  *
@@ -37,34 +41,34 @@ public class SearchUsersAPIController {
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword,
-            @RequestParam(value = "exclude", required = false, defaultValue = "") String exclude,
+            @RequestParam(value = "exclude", required = false) String exclude,
             Authentication authentication
-    ) throws MuleException
+    ) throws MuleException,UnsupportedEncodingException
     {
 		
 		String response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, authentication);
-		String responseOwner = getOwner(0, 1, exclude, authentication);
-		
         JSONObject responseObject = new JSONObject(response);
-        JSONObject responseOwnerObject = new JSONObject(responseOwner);
         	
-        if (responseObject != null && responseObject.get("response") != null)
+        if ( exclude != null && !exclude.trim().isEmpty() && responseObject != null && responseObject.has("response") )
         {
             JSONObject jsonObject = responseObject.getJSONObject("response");
+
+            String responseOwner = getOwner(0, 1, exclude, authentication);
+            JSONObject responseOwnerObject = new JSONObject(responseOwner);
+
             jsonObject.put("owner", responseOwnerObject);
         }
 
         return responseObject.toString();
     }
 	
-	private String getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws MuleException
+	private String getOwner(int startRow, int maxRows, String owner, Authentication authentication) throws MuleException,
+            UnsupportedEncodingException
 	{
+        owner = URLEncoder.encode(owner, StandardCharsets.UTF_8.displayName());
 		String query = "object_type_s:USER AND object_id_s:" + owner + " AND status_lcs:VALID";
 		String sort = "first_name_lcs ASC";
 		
-		query = query.replaceAll(" ", "+");
-		sort = sort.replaceAll(" ", "+");
-
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                 query, startRow, maxRows, sort);
         
@@ -72,22 +76,26 @@ public class SearchUsersAPIController {
 	}
 	
 	private String getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude,
-								 Authentication authentication) throws MuleException
+								 Authentication authentication) throws MuleException, UnsupportedEncodingException
 	{
-		String searchQuery = "";
-		if (StringUtils.isNotEmpty(searchKeyword))
+		String searchQuery = "object_type_s:USER AND status_lcs:VALID";
+
+		if (StringUtils.isNotEmpty(searchKeyword) && StringUtils.isNotBlank(searchKeyword))
 		{
-			searchQuery = "(first_name_lcs:" + searchKeyword + " OR last_name_lcs:" + searchKeyword + ") AND ";
+            searchKeyword = URLEncoder.encode(searchKeyword, StandardCharsets.UTF_8.displayName());
+			searchQuery += " AND (first_name_lcs:" + searchKeyword + " OR last_name_lcs:" + searchKeyword + ") ";
 		}
 		
-		String query = "object_type_s:USER AND " + searchQuery + "-object_id_s:" + exclude + " AND status_lcs:VALID";
+        if ( StringUtils.isNotEmpty(exclude) && StringUtils.isNotBlank(exclude) )
+        {
+            exclude = URLEncoder.encode(exclude, StandardCharsets.UTF_8.displayName());
+            searchQuery += " AND -object_id_s:" + exclude;
+        }
+
 		String sort = "first_name_lcs " + sortDirection + ", last_name_lcs " + sortDirection;
-		
-		query = query.replaceAll(" ", "+");
-		sort = sort.replaceAll(" ", "+");
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                query, startRow, maxRows, sort);
+                searchQuery, startRow, maxRows, sort);
 		
 		return results;
 	}
