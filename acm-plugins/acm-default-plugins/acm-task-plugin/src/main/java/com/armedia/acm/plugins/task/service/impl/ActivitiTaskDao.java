@@ -158,6 +158,7 @@ class ActivitiTaskDao implements TaskDao
         }
     }
 
+    @Override
     public void ensureCorrectAssigneeInParticipants(AcmTask in)
     {
         boolean assigneeFound = false;

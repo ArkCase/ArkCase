@@ -8,26 +8,42 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="complaintId">${complaintId}</span>
+        <span itemprop="objType">COMPLAINT</span>
+        <span itemprop="objId">${objId}</span>
+        <span itemprop="treeFilter">${treeFilter}</span>
+        <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
+
+        <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
+        <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
+        <span itemprop="roiFormUrl">${roiFormUrl}</span>
+        <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
+        <span itemprop="formDocuments">${formDocuments}</span>
     </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
+
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>--%>
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
@@ -83,22 +99,22 @@
                                         <h3 class="m-b-xs text-black pull-left"><spring:message code="complaint.page.descShort" text="Complaints" /></h3>
                                         <div class="btn-group inline select pull-right">
                                             <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
-                                            <ul class="dropdown-menu text-left text-sm">
-                                                <li><a href="#">Sort Date Ascending</a></li>
-                                                <li><a href="#">Sort Date Descending</a></li>
-                                                <li><a href="#">Sort Complaint ID Ascending</a></li>
-                                                <li><a href="#">Sort Complaint ID Ascending</a></li>
+                                            <ul class="dropdown-menu text-left text-sm" id="ulSort">
+                                                <%--<li><a href="#">Sort Date Ascending</a></li>--%>
+                                                <%--<li><a href="#">Sort Date Descending</a></li>--%>
+                                                <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
+                                                <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
                                             </ul>
                                         </div>
                                         <div class="btn-group select pull-right">
                                             <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
-                                            <ul class="dropdown-menu text-left text-sm">
-                                                <li><a href="#">All Open Complaints</a></li>
-                                                <li><a href="#">All Complaints I've Created</a></li>
-                                                <li><a href="#">All Closed No Further Action</a></li>
-                                                <li><a href="#">All Closed Refer External</a></li>
-                                                <li><a href="#">All Closed Added to Existing Case</a></li>
-                                                <li><a href="#">All Closed Open Investigation </a></li>
+                                            <ul class="dropdown-menu text-left text-sm" id="ulFilter">
+                                                <%--<li><a href="#">All Open Complaints</a></li>--%>
+                                                <%--<li><a href="#">All Complaints I've Created</a></li>--%>
+                                                <%--<li><a href="#">All Closed No Further Action</a></li>--%>
+                                                <%--<li><a href="#">All Closed Refer External</a></li>--%>
+                                                <%--<li><a href="#">All Closed Added to Existing Case</a></li>--%>
+                                                <%--<li><a href="#">All Closed Open Investigation </a></li>--%>
                                                     <%--<li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>--%>
                                             </ul>
                                         </div>
@@ -122,13 +138,13 @@
                             <section class="vbox">
                                 <section class="scrollable">
                                     <div class="wrapper dk  clearfix">
-                                        <div class="row">
+                                        <div class="row" id="tabTop"  style="display:none;">
                                             <div class="col-xs-12">
                                                 <div class="">
                                                     <div class=" clearfix">
                                                         <div class="col-xs-4 b-r">
                                                                 <%--<div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>--%>
-                                                            <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
+                                                            <div class="h4 font-bold"><a href="#" id="complaintTitle" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
                                                             <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
                                                         <div class="col-xs-2 b-r">
                                                                 <%--<div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>--%>
@@ -151,22 +167,26 @@
                                                             <small class="text-muted">State</small></div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
 
-                                            </div></div>
+
+                                        <div class="row" id="tabTopBlank">
+                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No complaint is selected)</p>
+                                        </div>
                                     </div>
 
                                     <div>
                                         <div class="wrapper">
                                             <div class="row" id="tabBlank" style="display:none;">
-                                                <p></p>
                                             </div>
 
-                                            <div class="row" id="tabCloseComplaintButton" style="display:none;">
+                                            <div class="row" id="tabAction" style="display:none;">
                                                 <div class="col-md-12">
                                                     <div class="pull-right inline">
                                                         <div class="btn-group">
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
-                                                            <input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
+                                                            <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
                                                             <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
                                                         </div>
@@ -205,7 +225,7 @@
                                                             </ul>
                                                             </span> <a href="#" class="font-bold">Details</a> </div>
                                                         <div class="panel-body">
-                                                            <div class="complaintDetails"></div>
+                                                            <div class="divDetail"></div>
                                                         </div>
                                                     </section>
                                                 </div>
@@ -240,9 +260,9 @@
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divDocuments" style="width:100%"></div>
-                                                        <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
-                                                        <input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />
-                                                        <input id="formDocuments" type="hidden" value='${formDocuments}' />
+                                                        <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />--%>
+                                                        <%--<input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />--%>
+                                                        <%--<input id="formDocuments" type="hidden" value='${formDocuments}' />--%>
                                                     </section>
                                                 </div>
                                             </div>
@@ -275,7 +295,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" id="tabRefComplaints" style="display:none;">
+                                            <div class="row" id="tabRefs" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divReferences" style="width:100%"></div>
@@ -297,33 +317,33 @@
 
 
 
-                                            <%--<div class="row" id="tabRefComplaints" style="display:none;">
-                                                    &lt;%&ndash;Other Complaints&ndash;%&gt;
-                                            </div>--%>
+                                            <%--<div class="row" id="tabRefComplaints" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Complaints&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabRefCases" style="display:none;">
-                                                    <%--Other Cases--%>
-                                            </div>
+                                            <%--<div class="row" id="tabRefCases" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Cases&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabRefTasks" style="display:none;">
-                                                    <%--Other Tasks--%>
-                                            </div>
+                                            <%--<div class="row" id="tabRefTasks" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Tasks&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabRefDocuments" style="display:none;">
-                                                    <%--Other Documents--%>
-                                            </div>
+                                            <%--<div class="row" id="tabRefDocuments" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Documents&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabApprovers" style="display:none;">
-                                                    <%--Approvers--%>
-                                            </div>
+                                            <%--<div class="row" id="tabApprovers" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Approvers&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabCollaborators" style="display:none;">
-                                                    <%--Collaborators--%>
-                                            </div>
+                                            <%--<div class="row" id="tabCollaborators" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Collaborators&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabWatchers" style="display:none;">
-                                                    <%--Watchers--%>
-                                            </div>
+                                            <%--<div class="row" id="tabWatchers" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Watchers&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
                                         </div>
                                     </div>
