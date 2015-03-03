@@ -107,6 +107,7 @@ var Application = Application || {
     ,SESSION_DATA_COMPLAINT_TREEINFO    : "AcmComplaintTreeInfo"
     ,SESSION_DATA_ADMIN_TREEINFO        : "AcmAdminTreeInfo"
     ,SESSION_DATA_TASK_ASSIGNEES        : "AcmTaskAssignees"
+    ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
 
     ,initSessionData: function() {
         sessionStorage.setItem("AcmProfile", null);
@@ -127,6 +128,7 @@ var Application = Application || {
         sessionStorage.setItem("AcmAdminTreeInfo", null);
 
         sessionStorage.setItem("AcmTaskAssignees", null);
+        sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
     }
 }

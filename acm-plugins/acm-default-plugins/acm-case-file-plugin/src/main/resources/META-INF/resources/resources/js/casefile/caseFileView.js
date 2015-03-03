@@ -54,7 +54,7 @@ CaseFile.View = CaseFile.View || {
             this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             this.token      = Acm.Object.MicroData.get("token");
             
-            this.formUrls = new Object();
+            this.formUrls = {}; //new Object();
             this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
             this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
             this.formUrls["roi"]                       = Acm.Object.MicroData.get("urlRoiForm");
@@ -80,7 +80,7 @@ CaseFile.View = CaseFile.View || {
             this.$ulSort   = $("#ulSort");
             this.$tree     = $("#tree");
 
-//            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
 //            if ("undefined" != typeof Topbar) {
 //                Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.VIEW_SET_ASN_DATA       , this.onTopbarViewSetAsnData, Acm.Dispatcher.PRIORITY_HIGH);
 //            }
@@ -89,7 +89,11 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,onViewChangedCaseTitle: function(caseFileId, title) {
-            CaseFile.View.Navigator.updateTitle(caseFileId, title);
+            var caseFileSolr = ObjNav.Model.List.getSolrObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+            if (ObjNav.Model.List.validateObjSolr(caseFileSolr)) {
+                caseFileSolr.title_parseable = Acm.goodValue(title);
+                ObjNav.View.Navigator.updateObjNode(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+            }
         }
 //        ,onTopbarViewSetAsnData: function(asnData) {
 //            if (AcmEx.Model.Tree.Config.validateTreeInfo(asnData)) {
@@ -117,61 +121,48 @@ CaseFile.View = CaseFile.View || {
                 }
             };
         }
-
-        ,updateTitle: function(caseFileId, caseTitle) {
-            var key = ObjNav.Model.Tree.Key.getKeyByObj(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
-            var caseFile = CaseFile.View.getActiveCaseFile();
-            if (caseFile) {
-                var nodeDisplay = Acm.goodValue(caseTitle) + " (" + Acm.goodValue(caseFile.caseNumber) + ")";
-                ObjNav.View.Navigator.setTitle(key, nodeDisplay);
-            }
-        }
-
         ,lazyLoad: function(event, data) {
-//            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
-//            var pageId = treeInfo.start;
-
             var key = data.node.key;
             var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
             switch (nodeType) {
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]): //"p/c":
+                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]):
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS         //level 2: /CaseFile/Details
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS
                             ,title: "Details"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE          //level 2: /CaseFile/People
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
                             ,title: "People"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS       //level 2: /CaseFile/Documents
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
                             ,title: "Documents"
 //                            ,folder: true
 //                            ,lazy: true
 //                            ,cache: false
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS    //level 2: /CaseFile/Participants
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
                             ,title: "Participants"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES           //level 2: /CaseFile/Notes
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES
                             ,title: "Notes"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS           //level 2: /CaseFile/Tasks
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS
                             ,title: "Tasks"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES      //level 2: /CaseFile/References
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
                             ,title: "References"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY         //level 2: /CaseFile/History
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: "History"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES       //level 2: /CaseFile/Correspondence
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
                             ,title: "Correspondence"
                         })
                         .getTree();
 
                     break;
 
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]): //"p/c/o":
+                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]):
                     var caseFileId = ObjNav.Model.Tree.Key.getObjIdByKey(key);
                     var c = ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
                     if (c) {
@@ -180,7 +171,7 @@ CaseFile.View = CaseFile.View || {
                             ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.2", title: "Doc2" + "[Status]"}
                         ];
                     } else {
-                        data.result = ObjNav.Service.Detail.retrieveCaseFileDeferred(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId
+                        data.result = ObjNav.Service.Detail.retrieveObjectDeferred(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId
                             ,function(response) {
                                 var z = 1;
 
@@ -252,7 +243,7 @@ CaseFile.View = CaseFile.View || {
         ,onInitialized: function() {
         }
 
-        ,onClickBtnEditCaseFile: function() {
+        ,onClickBtnEditCaseFile: function(event, ctrl) {
         	var urlEditCaseFileForm = CaseFile.View.MicroData.getFormUrls()['edit_case_file'];
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
@@ -476,12 +467,10 @@ CaseFile.View = CaseFile.View || {
             });
 
 
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES         ,this.onModelFoundPriorities);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_ERROR     ,this.onModelRetrievedObjectError);
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
@@ -489,21 +478,10 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
-            //MODEL_ADDED_PARTICIPANT
-            //MODEL_UPDATED_PARTICIPANT
-            //MODEL_DELETED_PARTICIPANT
-            //MODEL_SAVED_CHILD_OBJECT
-            //MODEL_ADDED_PERSON_ASSOCIATION
-            //MODEL_UPDATED_PERSON_ASSOCIATION
-            //MODEL_DELETED_PERSON_ASSOCIATION
-            //MODEL_ADDED_ADDRESS
-            //MODEL_UPDATED_ADDRESS
-            //MODEL_DELETED_ADDRESS
-            //MODEL_ADDED_CONTACT_METHOD
-            //MODEL_UPDATED_CONTACT_METHOD
-            //MODEL_DELETED_CONTACT_METHO
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT       ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_ERROR     ,this.onModelRetrievedObjectError);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
@@ -564,7 +542,6 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelSavedCaseTitle: function(caseFileId, title) {
             if (title.hasError) {
-                //alert("View: onCaseTitleSaved, hasError, errorMsg:" + title.errorMsg);
                 CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
             }
         }
@@ -622,13 +599,13 @@ CaseFile.View = CaseFile.View || {
         ,populateCaseFile: function(c) {
             if (CaseFile.Model.Detail.validateCaseFile(c)) {
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
-                this.setPropertyRestricted(Acm.goodValue(c.restricted));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
                 this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
                 this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setPropertyRestricted(Acm.goodValue(c.restricted));
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
@@ -685,21 +662,6 @@ CaseFile.View = CaseFile.View || {
 //        	if (CaseFile.View.Action.$btnChangeCaseStatus) {
 //        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
 //        	}
-//        }
-
-//retired
-//        ,populateCaseFile_old: function(c) {
-//            this.setTextLabCaseNumber(c.caseNumber);
-//            this.setTextLnkCaseTitle(c.title);
-//
-//            //this.setValueLnkCaseType(c.caseType);
-//            this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));
-//            this.setTextLnkCloseDate(Acm.getDateFromDatetime(c.closed));
-//            //this.setValueLnkCloseDisposition(c.disposition);
-//
-//            //this.refreshJTablePerson();
-//             //this.refreshJTableRois();
-////        this.refreshJTableClosingDocs();
 //        }
     }
     
@@ -774,7 +736,7 @@ CaseFile.View = CaseFile.View || {
                             if (CaseFile.Model.Detail.validateCaseFile(c)) {
                                 var personAssociations = c.personAssociations;
                                 for (var i = 0; i < personAssociations.length; i++) {
-                                    if (CaseFile.Model.Detail.validatePersonAssociation(personAssociations[i])) {
+                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociations[i])) {
                                         rc.Records.push({
                                             assocId:     personAssociations[i].id
                                             ,title:      personAssociations[i].person.title
@@ -870,7 +832,7 @@ CaseFile.View = CaseFile.View || {
                         if (CaseFile.Model.Detail.validateCaseFile(c)) {
                             if (c.personAssociations.length > whichRow) {
                                 var pa = c.personAssociations[whichRow];
-                                if (CaseFile.Model.Detail.validatePersonAssociation(pa)) {
+                                if (CaseFile.Model.People.validatePersonAssociation(pa)) {
                                     pa.person.title = record.title;
                                     pa.person.givenName = record.givenName;
                                     pa.person.familyName = record.familyName;
@@ -962,8 +924,8 @@ CaseFile.View = CaseFile.View || {
                                 var c = CaseFile.View.getActiveCaseFile();
                                 if (CaseFile.Model.Detail.validateCaseFile(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = CaseFile.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var personAssociation = CaseFile.Model.People.findPersonAssociation(assocId, personAssociations);
+                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                         var contactMethods = personAssociation.person.contactMethods;
                                         for (var i = 0; i < contactMethods.length; i++) {
                                             rc.Records.push({
@@ -1122,8 +1084,8 @@ CaseFile.View = CaseFile.View || {
                                 var c = CaseFile.View.getActiveCaseFile();
                                 if (CaseFile.Model.Detail.validateCaseFile(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = CaseFile.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var personAssociation = CaseFile.Model.People.findPersonAssociation(assocId, personAssociations);
+                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                         var securityTags = personAssociation.person.securityTags;
                                         for (var i = 0; i < securityTags.length; i++) {
                                             rc.Records.push({
@@ -1274,8 +1236,8 @@ CaseFile.View = CaseFile.View || {
                                 var c = CaseFile.View.getActiveCaseFile();
                                 if (CaseFile.Model.Detail.validateCaseFile(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = CaseFile.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var personAssociation = CaseFile.Model.People.findPersonAssociation(assocId, personAssociations);
+                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                         var organizations = personAssociation.person.organizations;
                                         for (var i = 0; i < organizations.length; i++) {
                                             rc.Records.push({
@@ -1424,8 +1386,8 @@ CaseFile.View = CaseFile.View || {
                                 var c = CaseFile.View.getActiveCaseFile();
                                 if (CaseFile.Model.Detail.validateCaseFile(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = CaseFile.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var personAssociation = CaseFile.Model.People.findPersonAssociation(assocId, personAssociations);
+                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                         var addresses = personAssociation.person.addresses;
                                         for (var i = 0; i < addresses.length; i++) {
                                             rc.Records.push({
@@ -1633,8 +1595,8 @@ CaseFile.View = CaseFile.View || {
                                 var c = CaseFile.View.getActiveCaseFile();
                                 if (CaseFile.Model.Detail.validateCaseFile(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = CaseFile.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    var personAssociation = CaseFile.Model.People.findPersonAssociation(assocId, personAssociations);
+                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                         var personAliases = personAssociation.person.personAliases;
                                         for (var i = 0; i < personAliases.length; i++) {
                                             rc.Records.push({

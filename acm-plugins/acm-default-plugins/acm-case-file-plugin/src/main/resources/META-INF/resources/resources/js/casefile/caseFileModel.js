@@ -9,6 +9,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
         if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
+        if (CaseFile.Model.People.create)         {CaseFile.Model.People.create();}
         if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
         if (CaseFile.Model.Tasks.create)          {CaseFile.Model.Tasks.create();}
         if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
@@ -45,18 +46,18 @@ CaseFile.Model = CaseFile.Model || {
         ,apiSaveObject: function(nodeType, objId) {
             return "/api/latest/plugin/casefile/";
         }
-        ,nodeId: function(obj) {
-            return obj.object_id_s;
-            //return parseInt(obj.object_id_s);
+        ,nodeId: function(objSolr) {
+            return objSolr.object_id_s;
+            //return parseInt(objSolr.object_id_s);
         }
-        ,nodeType: function(obj) {
+        ,nodeType: function(objSolr) {
             return CaseFile.Model.DOC_TYPE_CASE_FILE;
         }
-        ,nodeTitle: function(obj) {
-            return Acm.goodValue(obj.title_parseable) + " (" + Acm.goodValue(obj.name) + ")";
+        ,nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable) + " (" + Acm.goodValue(objSolr.name) + ")";
         }
-        ,nodeToolTip: function(obj) {
-            return Acm.goodValue(obj.title_parseable);
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable);
         }
         ,objToSolr: function(objData) {
             var solr = {};
@@ -163,7 +164,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Detail: {
         create : function() {
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_FILE           , this.onViewChangedCaseFile);  //when this event is generated
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_FILE           , this.onViewChangedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE          , this.onViewChangedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
@@ -171,34 +172,14 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DUE_DATE            , this.onViewChangedDueDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DETAIL              , this.onViewChangedDetail);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CHILD_OBJECT        , this.onViewChangedChildObject);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PARTICIPANT           , this.onViewAddedParticipant);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PARTICIPANT         , this.onViewUpdatedParticipant);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PARTICIPANT         , this.onViewDeletedParticipant);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PERSON_ASSOCIATION    , this.onViewAddedPersonAssociation);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PERSON_ASSOCIATION  , this.onViewUpdatedPersonAssociation);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PERSON_ASSOCIATION  , this.onViewDeletedPersonAssociation);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ADDRESS               , this.onViewAddedAddress);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ADDRESS             , this.onViewUpdatedAddress);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ADDRESS             , this.onViewDeletedAddress);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_CONTACT_METHOD        , this.onViewAddedContactMethod);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_CONTACT_METHOD      , this.onViewUpdatedContactMethod);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_CONTACT_METHOD      , this.onViewDeletedContactMethod);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_SECURITY_TAG          , this.onViewAddedSecurityTag);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_SECURITY_TAG        , this.onViewUpdatedSecurityTag);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_SECURITY_TAG        , this.onViewDeletedSecurityTag);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PERSON_ALIAS          , this.onViewAddedPersonAlias);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PERSON_ALIAS        , this.onViewUpdatedPersonAlias);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PERSON_ALIAS        , this.onViewDeletedPersonAlias);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ORGANIZATION          , this.onViewAddedOrganization);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ORGANIZATION        , this.onViewUpdatedOrganization);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ORGANIZATION        , this.onViewDeletedOrganization);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_RESTRICT_CHECKBOX        , this.onViewClickedRestrictCheckbox);
-
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_RESTRICT_CHECKBOX   , this.onViewClickedRestrictCheckbox);
         }
         ,onInitialized: function() {
         }
 
+        ,onViewChangedCaseFile: function(caseFileId) {
+            ObjNav.Service.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+        }
         ,onViewChangedCaseTitle: function(caseFileId, title) {
             CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
         }
@@ -221,95 +202,14 @@ CaseFile.Model = CaseFile.Model || {
         ,onViewChangedDetail: function(caseFileId, details) {
             CaseFile.Service.Detail.saveDetail(caseFileId, details);
         }
-        ,onViewChangedChildObject: function(caseFileId, childObject) {
-            CaseFile.Service.Detail.saveChildObject(caseFileId, childObject);
-        }
-        ,onViewAddedParticipant: function(caseFileId, participant) {
-            CaseFile.Service.Detail.addParticipant(caseFileId, participant);
-        }
-        ,onViewUpdatedParticipant: function(caseFileId, participant) {
-            CaseFile.Service.Detail.updateParticipant(caseFileId, participant);
-        }
-        ,onViewDeletedParticipant: function(caseFileId, participantId) {
-            CaseFile.Service.Detail.deleteParticipant(caseFileId, participantId);
-        }
-        ,onViewAddedPersonAssociation: function(caseFileId, personAssociation) {
-            var pa = CaseFile.Model.Detail.newPersonAssociation();
-            pa.parentType = CaseFile.Model.DOC_TYPE_CASE_FILE;
-            pa.parentId = caseFileId;
-            pa.personType = personAssociation.personType;
-            //pa.personDescription = personAssociation.personDescription;
-            pa.person.title = personAssociation.person.title;
-            pa.person.givenName = personAssociation.person.givenName;
-            pa.person.familyName = personAssociation.person.familyName;
-            CaseFile.Service.Detail.addPersonAssociation(caseFileId, pa);
-        }
-        ,onViewUpdatedPersonAssociation: function(caseFileId, personAssociation) {
-            CaseFile.Service.Detail.updatePersonAssociation(caseFileId, personAssociation);
-        }
-        ,onViewDeletedPersonAssociation: function(caseFileId, personAssociationId) {
-            CaseFile.Service.Detail.deletePersonAssociation(caseFileId, personAssociationId);
-        }
-        ,onViewAddedAddress: function(caseFileId, personAssociationId, address) {
-            CaseFile.Service.Detail.addAddress(caseFileId, personAssociationId, address);
-        }
-        ,onViewUpdatedAddress: function(caseFileId, personAssociationId, address) {
-            CaseFile.Service.Detail.updateAddress(caseFileId, personAssociationId, address);
-        }
-        ,onViewDeletedAddress: function(caseFileId, personAssociationId, addressId) {
-            CaseFile.Service.Detail.deleteAddress(caseFileId, personAssociationId, addressId);
-        }
-        ,onViewAddedContactMethod: function(caseFileId, personAssociationId, contactMethod) {
-            CaseFile.Service.Detail.addContactMethod(caseFileId, personAssociationId, contactMethod);
-        }
-        ,onViewUpdatedContactMethod: function(caseFileId, personAssociationId, contactMethod) {
-            CaseFile.Service.Detail.updateContactMethod(caseFileId, personAssociationId, contactMethod);
-        }
-        ,onViewDeletedContactMethod: function(caseFileId, personAssociationId, contactMethodId) {
-            CaseFile.Service.Detail.deleteContactMethod(caseFileId, personAssociationId, contactMethodId);
-        }
-        ,onViewAddedSecurityTag: function(caseFileId, personAssociationId, securityTag) {
-            CaseFile.Service.Detail.addSecurityTag(caseFileId, personAssociationId, securityTag);
-        }
-        ,onViewUpdatedSecurityTag: function(caseFileId, personAssociationId, securityTag) {
-            CaseFile.Service.Detail.updateSecurityTag(caseFileId, personAssociationId, securityTag);
-        }
-        ,onViewDeletedSecurityTag: function(caseFileId, personAssociationId, securityTagId) {
-            CaseFile.Service.Detail.deleteSecurityTag(caseFileId, personAssociationId, securityTagId);
-        }
-        ,onViewAddedPersonAlias: function(caseFileId, personAssociationId, personAlias) {
-            CaseFile.Service.Detail.addPersonAlias(caseFileId, personAssociationId, personAlias);
-        }
-        ,onViewUpdatedPersonAlias: function(caseFileId, personAssociationId, personAlias) {
-            CaseFile.Service.Detail.updatePersonAlias(caseFileId, personAssociationId, personAlias);
-        }
-        ,onViewDeletedPersonAlias: function(caseFileId, personAssociationId, personAliasId) {
-            CaseFile.Service.Detail.deletePersonAlias(caseFileId, personAssociationId, personAliasId);
-        }
-        ,onViewAddedOrganization: function(caseFileId, personAssociationId, organization) {
-            CaseFile.Service.Detail.addOrganization(caseFileId, personAssociationId, organization);
-        }
-        ,onViewUpdatedOrganization: function(caseFileId, personAssociationId, organization) {
-            CaseFile.Service.Detail.updateOrganization(caseFileId, personAssociationId, organization);
-        }
-        ,onViewDeletedOrganization: function(caseFileId, personAssociationId, organizationId) {
-            CaseFile.Service.Detail.deleteOrganization(caseFileId, personAssociationId, organizationId);
-        }
         ,onViewClickedRestrictCheckbox: function(caseFileId, restriction) {
             CaseFile.Service.Detail.updateCaseRestriction(caseFileId, restriction);
         }
 
-        ,getCaseFile: function(caseFileId) {
-            if (0 >= caseFileId) {
-                return null;
-            }
-
-            return ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
-        }
 
         ,getAssignee: function(caseFile) {
             var assignee = null;
-            if (caseFile) {
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 if (Acm.isArray(caseFile.participants)) {
                     for (var i = 0; i < caseFile.participants.length; i++) {
                         var participant =  caseFile.participants[i];
@@ -341,6 +241,144 @@ CaseFile.Model = CaseFile.Model || {
                 participant.participantLdapId = assignee;
                 caseFile.participants.push(participant);
             }
+        }
+        ,getCacheCaseFile: function(caseFileId) {
+            if (0 >= caseFileId) {
+                return null;
+            }
+            return ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+        }
+        ,putCacheCaseFile: function(caseFileId, caseFile) {
+            ObjNav.Model.Detail.putCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile);
+        }
+        ,validateCaseFile: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
+                return false;
+            }
+            if (!Acm.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Acm.isArray(data.milestones)) {
+                return false;
+            }
+            if (!Acm.isArray(data.participants)) {
+                return false;
+            }
+            if (!Acm.isArray(data.personAssociations)) {
+                return false;
+            }
+            if (!Acm.isArray(data.references)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    ,People: {
+        create : function() {
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CHILD_OBJECT        , this.onViewChangedChildObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PARTICIPANT           , this.onViewAddedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PARTICIPANT         , this.onViewUpdatedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PARTICIPANT         , this.onViewDeletedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PERSON_ASSOCIATION    , this.onViewAddedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PERSON_ASSOCIATION  , this.onViewUpdatedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PERSON_ASSOCIATION  , this.onViewDeletedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ADDRESS               , this.onViewAddedAddress);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ADDRESS             , this.onViewUpdatedAddress);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ADDRESS             , this.onViewDeletedAddress);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_CONTACT_METHOD        , this.onViewAddedContactMethod);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_CONTACT_METHOD      , this.onViewUpdatedContactMethod);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_CONTACT_METHOD      , this.onViewDeletedContactMethod);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_SECURITY_TAG          , this.onViewAddedSecurityTag);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_SECURITY_TAG        , this.onViewUpdatedSecurityTag);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_SECURITY_TAG        , this.onViewDeletedSecurityTag);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_PERSON_ALIAS          , this.onViewAddedPersonAlias);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_PERSON_ALIAS        , this.onViewUpdatedPersonAlias);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_PERSON_ALIAS        , this.onViewDeletedPersonAlias);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_ORGANIZATION          , this.onViewAddedOrganization);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_ORGANIZATION        , this.onViewUpdatedOrganization);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_DELETED_ORGANIZATION        , this.onViewDeletedOrganization);
+
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewChangedChildObject: function(caseFileId, childObject) {
+            CaseFile.Service.People.saveChildObject(caseFileId, childObject);
+        }
+        ,onViewAddedParticipant: function(caseFileId, participant) {
+            CaseFile.Service.People.addParticipant(caseFileId, participant);
+        }
+        ,onViewUpdatedParticipant: function(caseFileId, participant) {
+            CaseFile.Service.People.updateParticipant(caseFileId, participant);
+        }
+        ,onViewDeletedParticipant: function(caseFileId, participantId) {
+            CaseFile.Service.People.deleteParticipant(caseFileId, participantId);
+        }
+        ,onViewAddedPersonAssociation: function(caseFileId, personAssociation) {
+            var pa = CaseFile.Model.Detail.newPersonAssociation();
+            pa.parentType = CaseFile.Model.DOC_TYPE_CASE_FILE;
+            pa.parentId = caseFileId;
+            pa.personType = personAssociation.personType;
+            //pa.personDescription = personAssociation.personDescription;
+            pa.person.title = personAssociation.person.title;
+            pa.person.givenName = personAssociation.person.givenName;
+            pa.person.familyName = personAssociation.person.familyName;
+            CaseFile.Service.People.addPersonAssociation(caseFileId, pa);
+        }
+        ,onViewUpdatedPersonAssociation: function(caseFileId, personAssociation) {
+            CaseFile.Service.People.updatePersonAssociation(caseFileId, personAssociation);
+        }
+        ,onViewDeletedPersonAssociation: function(caseFileId, personAssociationId) {
+            CaseFile.Service.People.deletePersonAssociation(caseFileId, personAssociationId);
+        }
+        ,onViewAddedAddress: function(caseFileId, personAssociationId, address) {
+            CaseFile.Service.People.addAddress(caseFileId, personAssociationId, address);
+        }
+        ,onViewUpdatedAddress: function(caseFileId, personAssociationId, address) {
+            CaseFile.Service.People.updateAddress(caseFileId, personAssociationId, address);
+        }
+        ,onViewDeletedAddress: function(caseFileId, personAssociationId, addressId) {
+            CaseFile.Service.People.deleteAddress(caseFileId, personAssociationId, addressId);
+        }
+        ,onViewAddedContactMethod: function(caseFileId, personAssociationId, contactMethod) {
+            CaseFile.Service.People.addContactMethod(caseFileId, personAssociationId, contactMethod);
+        }
+        ,onViewUpdatedContactMethod: function(caseFileId, personAssociationId, contactMethod) {
+            CaseFile.Service.People.updateContactMethod(caseFileId, personAssociationId, contactMethod);
+        }
+        ,onViewDeletedContactMethod: function(caseFileId, personAssociationId, contactMethodId) {
+            CaseFile.Service.People.deleteContactMethod(caseFileId, personAssociationId, contactMethodId);
+        }
+        ,onViewAddedSecurityTag: function(caseFileId, personAssociationId, securityTag) {
+            CaseFile.Service.People.addSecurityTag(caseFileId, personAssociationId, securityTag);
+        }
+        ,onViewUpdatedSecurityTag: function(caseFileId, personAssociationId, securityTag) {
+            CaseFile.Service.People.updateSecurityTag(caseFileId, personAssociationId, securityTag);
+        }
+        ,onViewDeletedSecurityTag: function(caseFileId, personAssociationId, securityTagId) {
+            CaseFile.Service.People.deleteSecurityTag(caseFileId, personAssociationId, securityTagId);
+        }
+        ,onViewAddedPersonAlias: function(caseFileId, personAssociationId, personAlias) {
+            CaseFile.Service.People.addPersonAlias(caseFileId, personAssociationId, personAlias);
+        }
+        ,onViewUpdatedPersonAlias: function(caseFileId, personAssociationId, personAlias) {
+            CaseFile.Service.People.updatePersonAlias(caseFileId, personAssociationId, personAlias);
+        }
+        ,onViewDeletedPersonAlias: function(caseFileId, personAssociationId, personAliasId) {
+            CaseFile.Service.People.deletePersonAlias(caseFileId, personAssociationId, personAliasId);
+        }
+        ,onViewAddedOrganization: function(caseFileId, personAssociationId, organization) {
+            CaseFile.Service.People.addOrganization(caseFileId, personAssociationId, organization);
+        }
+        ,onViewUpdatedOrganization: function(caseFileId, personAssociationId, organization) {
+            CaseFile.Service.People.updateOrganization(caseFileId, personAssociationId, organization);
+        }
+        ,onViewDeletedOrganization: function(caseFileId, personAssociationId, organizationId) {
+            CaseFile.Service.People.deleteOrganization(caseFileId, personAssociationId, organizationId);
         }
 
         ,newPersonAssociation: function() {
@@ -382,30 +420,6 @@ CaseFile.Model = CaseFile.Model || {
             return personAssociation;
         }
 
-        ,validateCaseFile: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
-                return false;
-            }
-            if (!Acm.isArray(data.childObjects)) {
-                return false;
-            }
-            if (!Acm.isArray(data.milestones)) {
-                return false;
-            }
-            if (!Acm.isArray(data.participants)) {
-                return false;
-            }
-            if (!Acm.isArray(data.personAssociations)) {
-                return false;
-            }
-            if (!Acm.isArray(data.references)) {
-                return false;
-            }
-            return true;
-        }
         ,validatePersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -536,7 +550,7 @@ CaseFile.Model = CaseFile.Model || {
             this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
         }
         ,onInitialized: function() {
-            var assignees = CaseFile.Model.Lookup.getAssignees();
+            var assignees = CaseFile.Model.Lookup.gnees();
             if (Acm.isEmpty(assignees)) {
                 CaseFile.Service.Lookup.retrieveAssignees();
             } else {
@@ -564,7 +578,7 @@ CaseFile.Model = CaseFile.Model || {
         ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
         ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
-        ,getAssignees: function() {
+        ,gnees: function() {
             return this._assignees.get();
         }
         ,setAssignees: function(assignees) {

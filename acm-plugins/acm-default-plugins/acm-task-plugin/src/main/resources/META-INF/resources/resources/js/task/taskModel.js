@@ -6,8 +6,11 @@
 Task.Model = Task.Model || {
     create : function() {
         if (Task.Service.create)                                    {Task.Service.create();}
+        if (Task.Model.Lookup.create)                               {Task.Model.Lookup.create();}
         if (Task.Model.Tree.create)                                 {Task.Model.Tree.create();}
+        if (Task.Model.Action.create)                               {Task.Model.Action.create();}
         if (Task.Model.Detail.create)                               {Task.Model.Detail.create();}
+        if (Task.Model.ParentDetail.create)                         {Task.Model.ParentDetail.create();}
         if (Task.Model.Notes.create)                                {Task.Model.Notes.create();}
         if (Task.Model.History.create)                              {Task.Model.History.create();}
         if (Task.Model.WorkflowOverview.create)                     {Task.Model.WorkflowOverview.create();}
@@ -17,8 +20,11 @@ Task.Model = Task.Model || {
     }
     ,onInitialized: function() {
         if (Task.Service.onInitialized)                             {Task.Service.onInitialized();}
+        if (Task.Model.Lookup.onInitialized)                        {Task.Model.Lookup.onInitialized();}
         if (Task.Model.Tree.onInitialized)                          {Task.Model.Tree.onInitialized();}
+        if (Task.View.Action.create)                                {Task.View.Action.create();}
         if (Task.Model.Detail.onInitialized)                        {Task.Model.Detail.onInitialized();}
+        if (Task.Model.ParentDetail.onInitialized)                  {Task.Model.ParentDetail.onInitialized();}
         if (Task.Model.Notes.onInitialized)                         {Task.Model.Notes.onInitialized();}
         if (Task.Model.History.onInitialized)                       {Task.Model.History.onInitialized();}
         if (Task.Model.WorkflowOverview.onInitialized)              {Task.Model.WorkflowOverview.onInitialized();}
@@ -37,64 +43,47 @@ Task.Model = Task.Model || {
         ,apiSaveObject: function(nodeType, objId) {
             return "/api/latest/plugin/task/save/" + objId;
         }
-        ,nodeId: function(obj) {
-            return obj.object_id_s;
-            //return parseInt(obj.object_id_s);
+        ,nodeId: function(objSolr) {
+            return objSolr.object_id_s;
+            //return parseInt(objSolr.object_id_s);
         }
-        ,nodeType: function(obj) {
-            return (obj.adhocTask_b)? Task.Model.DOC_TYPE_ADHOC_TASK : Task.Model.DOC_TYPE_TASK;
+        ,nodeType: function(objSolr) {
+            return (objSolr.adhocTask_b)? Task.Model.DOC_TYPE_ADHOC_TASK : Task.Model.DOC_TYPE_TASK;
         }
-        ,nodeTitle: function(obj) {
+        ,nodeTitle: function(objSolr) {
             var title;
-            if(Acm.isNotEmpty(obj.name) && Acm.isNotEmpty(obj.priority_s) && Acm.isNotEmpty(obj.due_tdt)){
-                title = Acm.getDateFromDatetime(obj.due_tdt) + ", " + obj.priority_s +", "+ obj.name;
+            if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s) && Acm.isNotEmpty(objSolr.due_tdt)){
+                title = Acm.getDateFromDatetime(objSolr.due_tdt) + ", " + objSolr.priority_s +", "+ objSolr.name;
             }
-            else if(Acm.isNotEmpty(obj.name) && Acm.isNotEmpty(obj.priority_s)){
-                title = obj.priority_s +", "+ obj.name;
+            else if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s)){
+                title = objSolr.priority_s +", "+ objSolr.name;
             }
-            else if(Acm.isNotEmpty(obj.name)){
-                title = obj.name;
+            else if(Acm.isNotEmpty(objSolr.name)){
+                title = objSolr.name;
             }
             else{
                 title = "(No title)";
             }
             return title;
         }
-        ,nodeToolTip: function(obj) {
-            return Acm.goodValue(obj.name);
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
         }
         ,objToSolr: function(objData) {
             var solr = {};
-            solr.due_tdt = task.dueDate;
-            solr.title_parseable = task.title;
-            solr.priority_s = task.priority;
-            solr.object_id_s = task.taskId;
+            solr.due_tdt = objData.dueDate;
+            solr.title_parseable = objData.title;
+            solr.priority_s = objData.priority;
+            solr.object_id_s = objData.taskId;
             solr.object_type_s = Task.Model.DOC_TYPE_TASK;
-            solr.parent_object_id_i = task.attachedToObjectId;
-            solr.parent_object_type_s = task.attachedToObjectType;
-            solr.adhocTask_b = task.adhocTask;
+            solr.parent_object_id_i = objData.attachedToObjectId;
+            solr.parent_object_type_s = objData.attachedToObjectType;
+            solr.adhocTask_b = objData.adhocTask;
+            solr.name = objData.name;
             return solr;
         }
         ,validateObjData: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.taskId)) {
-                return false;
-            }
-//            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
-//             return false;
-//             }
-//             if (!Acm.isArray(data.childObjects)) {
-//             return false;
-//             }
-//             if (!Acm.isArray(data.participants)) {
-//             return false;
-//             }
-//             if (!Acm.isArray(data.personAssociations)) {
-//             return false;
-//             }
-            return true;
+            return Task.Model.Detail.validateTask(data);
         }
         ,nodeTypeMap: function() {
             return Task.Model.Tree.Key.nodeTypeMap;
@@ -103,6 +92,8 @@ Task.Model = Task.Model || {
 
 
 
+    ,DOC_TYPE_COMPLAINT   : "COMPLAINT"
+    ,DOC_TYPE_CASE_FILE   : "CASE_FILE"
     ,DOC_TYPE_TASK        : "TASK"
     ,DOC_TYPE_ADHOC_TASK  : "ADHOC"
 
@@ -119,6 +110,61 @@ Task.Model = Task.Model || {
     }
     ,findTask: function(nodeType, nodeId) {
         return ObjNav.Model.Detail.getCacheObject(nodeType, nodeId);
+    }
+
+    ,Lookup: {
+        create: function() {
+            this._assignees    = new Acm.Model.SessionData(Application.SESSION_DATA_TASK_ASSIGNEES);
+            this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_TASK_PRIORITIES);
+        }
+        ,onInitialized: function() {
+            var assignees = Task.Model.Lookup.getAssignees();
+            if (Acm.isEmpty(assignees)) {
+                Task.Service.Lookup.retrieveAssignees();
+            } else {
+                Task.Controller.modelRetrievedAssignees(assignees);
+            }
+
+            var priorities = Task.Model.Lookup.getPriorities();
+            if (Acm.isEmpty(priorities)) {
+                Task.Service.Lookup.retrievePriorities();
+            } else {
+                Task.Controller.modelRetrievedPriorities(priorities);
+            }
+        }
+
+
+        ,getAssignees: function() {
+            return this._assignees.get();
+        }
+        ,setAssignees: function(assignees) {
+            this._assignees.set(assignees);
+        }
+
+        ,getPriorities: function() {
+            return this._priorities.get();
+        }
+        ,setPriorities: function(priorities) {
+            this._priorities.set(priorities);
+        }
+        ,validateAssignees: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,validatePriorities: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
     }
 
     ,Tree: {
@@ -182,17 +228,342 @@ Task.Model = Task.Model || {
         }
     }
 
-    ,Detail: {
+    ,Action: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+    }
+
+    ,ParentDetail: {
         create : function() {
-            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_DETAIL  , this.onViewChangedDetail);
+            this.cacheParentObject = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
 
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            var task = Task.Model.findTask(nodeType, nodeId);
+            Task.Model.ParentDetail._retrieveParentObject(task);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            Task.Model.ParentDetail._retrieveParentObject(objData);
+        }
+
+        ,_retrieveParentObject: function(task) {
+            if (Task.Model.Detail.validateTask(task)) {
+                if(Acm.isNotEmpty(task.attachedToObjectId) && Acm.isNotEmpty(task.attachedToObjectType)){
+                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.attachedToObjectId);
+                    if (!Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
+                        if(Task.Model.DOC_TYPE_COMPLAINT == task.attachedToObjectType){
+                            Task.Service.ParentDetail.retrieveComplaint(task.attachedToObjectId);
+                        } else if(Task.Model.DOC_TYPE_CASE_FILE == task.attachedToObjectType){
+                            Task.Service.ParentDetail.retrieveCaseFile(task.attachedToObjectId);
+                        }
+
+                        //Task.Service.ParentDetail.retrieveParentObject(task.attachedToObjectType, task.attachedToObjectId);
+                    }
+                }
+            }
+        }
+
+        ,makeUnifiedData:function(parentObj, objType){
+            var unifiedData = null;
+            if(Task.Model.DOC_TYPE_COMPLAINT == objType){
+                if (Task.Model.ParentDetail.validateComplaint(parentObj)) {
+                    unifiedData = {};
+                    unifiedData.id = parentObj.complaintId;
+                    unifiedData.objectType = objType;
+                    unifiedData.title = parentObj.complaintTitle;
+                    unifiedData.incidentDate = parentObj.created;
+                    unifiedData.priority =  parentObj.priority;
+                    unifiedData.assignee = parentObj.creator;
+                    unifiedData.status = parentObj.status;
+                    unifiedData.subjectType = parentObj.complaintType;
+                    unifiedData.number = parentObj.complaintNumber;
+                }
+            }
+            else if(Task.Model.DOC_TYPE_CASE_FILE == objType){
+                if (Task.Model.ParentDetail.validateCaseFile(parentObj)) {
+                    unifiedData = {};
+                    unifiedData.id = parentObj.id;
+                    unifiedData.objectType = objType;
+                    unifiedData.title = parentObj.title;
+                    unifiedData.incidentDate = parentObj.created;
+                    unifiedData.priority =  parentObj.priority;
+                    unifiedData.assignee = parentObj.creator;
+                    unifiedData.status = parentObj.status;
+                    unifiedData.subjectType = parentObj.caseType;
+                    unifiedData.number = parentObj.caseNumber;
+                }
+            }
+            return unifiedData;
+        }
+
+        ,validateComplaint: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.complaintId) || Acm.isEmpty(data.complaintNumber)) {
+                return false;
+            }
+            if (!Acm.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Acm.isArray(data.participants)) {
+                return false;
+            }
+            if (!Acm.isArray(data.personAssociations)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateCaseFile: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
+                return false;
+            }
+            if (!Acm.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Acm.isArray(data.milestones)) {
+                return false;
+            }
+            if (!Acm.isArray(data.participants)) {
+                return false;
+            }
+            if (!Acm.isArray(data.personAssociations)) {
+                return false;
+            }
+            if (!Acm.isArray(data.references)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateUnifiedData: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            /*if (Acm.isEmpty(data.id)) {
+                return false;
+            }*/
+
+            return true;
+        }
+    }
+
+    ,Detail: {
+        create : function() {
+
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_DETAIL                , this.onViewChangedDetail);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_REWORK_DETAILS        , this.onViewChangedReworkDetail);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_TITLE                 , this.onViewChangedTitle);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_START_DATE            , this.onViewChangedStartDate);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_ASSIGNEE              , this.onViewChangedAssignee);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_PERCENT_COMPLETED     , this.onViewChangedPercentCompleted);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_PRIORITY              , this.onViewChangedPriority);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_CHANGED_DUE_DATE              , this.onViewChangedDueDate);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_COMPLETED_TASK                , this.onViewCompletedTask);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_DELETED_TASK                  , this.onViewDeletedTask);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_RETRIEVED_USERS               , this.onViewRetrievedUsers);
+        }
+        ,onInitialized: function() {
+        }
+        ,onViewRetrievedUsers: function(start, n, sortDirection, searchKeyword, exclude){
+            Task.Service.Detail.retrieveUsers(start, n, sortDirection, searchKeyword, exclude);
+        }
+        ,onViewCompletedTask: function(objData){
+            Task.Service.Detail.completeTask(objData);
+        }
+        ,onViewDeletedTask: function(taskId){
+            Task.Service.Detail.deleteTask(taskId);
+        }
         ,onViewChangedDetail: function(nodeType, taskId, details){
             Task.Service.Detail.saveDetail(nodeType, taskId, details);
         }
+        ,onViewChangedReworkDetail: function(nodeType, taskId, reworkDetails){
+            Task.Service.Detail.saveReworkDetails(nodeType, taskId, reworkDetails);
+        }
+        ,onViewChangedTitle: function(nodeType, taskId, title){
+            Task.Service.Detail.saveTitle(nodeType, taskId, title);
+        }
+        ,onViewChangedStartDate: function(nodeType, taskId, startDate) {
+            Task.Service.Detail.saveStartDate(nodeType, taskId, startDate);
+        }
+        ,onViewChangedAssignee: function(nodeType, taskId, assignee) {
+            Task.Service.Detail.saveAssignee(nodeType, taskId, assignee);
+        }
+        ,onViewChangedPercentCompleted: function(nodeType, taskId, percent) {
+            Task.Service.Detail.savePercentCompleted(nodeType, taskId, percent);
+        }
+        ,onViewChangedPriority: function(nodeType, taskId, priotiry) {
+            Task.Service.Detail.savePriority(nodeType, taskId, priotiry);
+        }
+        ,onViewChangedDueDate: function(nodeType, taskId, dueDate) {
+            Task.Service.Detail.saveDueDate(nodeType, taskId, dueDate);
+        }
+
+
+        // Reject Task
+        ,buildDlgRejectTaskOwner: function(element, results) {
+            if (element) {
+                for (var i = 0; i < results.length; i++) {
+                    var result = results[i];
+                    var checked = '';
+
+                    var selected = Task.View.Detail.getDlgRejectTaskSelected();
+                    if (selected == null) {
+                        var task = Task.View.getActiveTask();
+
+                        if (Acm.isNotEmpty(task) && task.owner) {
+                            selected = task.owner;
+                        }
+                    }
+
+                    if (selected && result.object_id_s == selected) {
+                        checked = 'checked="checked"';
+                        Task.View.Detail.setDlgRejectTaskSelected(selected);
+                    }
+
+                    var tr = '<tr>' +
+                        '<td><label class="checkbox m-n"><input type="radio" value="' + result.object_id_s + '" id="returnToUser" name="returnToUser" ' + checked + ' /><i></i></label></td>' +
+                        '<td>' + result.first_name_lcs + '</td>' +
+                        '<td>' + result.last_name_lcs + '</td>' +
+                        '<td>' + result.object_id_s + '</td>' +
+                        '<td>' + '' + '</td>' +
+                        '</tr>';
+
+                    element.append(tr);
+                }
+
+                $('input[name=returnToUser]:radio').change(function(e) {Task.View.Detail.onChangeDlgRejectTaskSelected(e,this);});
+            }
+        }
+        ,buildDlgRejectTaskUsers: function(element, results) {
+            if (element) {
+                for (var i = 0; i < results.length; i++) {
+                    var result = results[i];
+                    var checked = '';
+
+                    var selected = Task.View.Detail.getDlgRejectTaskSelected();
+
+                    if (selected && result.object_id_s == selected) {
+                        checked = 'checked="checked"';
+                        Task.View.Detail.setDlgRejectTaskSelected(selected);
+                    }
+
+                    var tr = '<tr>' +
+                        '<td><label class="checkbox m-n"><input type="radio" value="' + result.object_id_s + '" id="returnToUser" name="returnToUser" ' + checked + ' /><i></i></label></td>' +
+                        '<td>' + result.first_name_lcs + '</td>' +
+                        '<td>' + result.last_name_lcs + '</td>' +
+                        '<td>' + result.object_id_s + '</td>' +
+                        '<td>' + '' + '</td>' +
+                        '</tr>';
+
+                    element.append(tr);
+                }
+
+                $('input[name=returnToUser]:radio').change(function(e) {Task.View.Detail.onChangeDlgRejectTaskSelected(e,this);});
+            }
+        }
+        ,buildDlgRejectTaskMutedText: function(element, from, to, total) {
+            if (element) {
+                element.empty();
+                element.append('Showing ' + from + '-' + to +' of ' + total + ' items');
+            }
+        }
+        ,buildDlgRejectTaskPagination: function(element, page, pages) {
+            if (element) {
+                element.empty();
+
+                // Left pagination button
+                var $leftBtnHtml = $($.parseHTML('<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>'));
+                if (page == 1) {
+                    $leftBtnHtml.addClass('disabled');
+                } else {
+                    $leftBtnHtml.click(function(e) {Task.View.Detail.onClickDlgRejectTaskLeftBtn(e,this);});
+                }
+                element.append($leftBtnHtml);
+
+                // Page button
+                if (page != -1) {
+                    for (var i = 0; i < pages; i++) {
+                        var $page = $($.parseHTML('<li><a href="#">' + (i+1) + '</a></li>'));
+                        var active = '';
+
+                        if (i == (page - 1)) {
+                            $page.addClass('active');
+                        } else {
+                            $page.click(function(e) {Task.View.Detail.onClickDlgRejectTaskPageBtn(e,this);});
+                        }
+
+                        element.append($page);
+                    }
+                }
+
+                // Right pagination button
+                var $rightBtnHtml = $($.parseHTML('<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>'));
+                if (page == pages || pages == 0) {
+                    $rightBtnHtml.addClass('disabled');
+                } else {
+                    $rightBtnHtml.click(function(e) {Task.View.Detail.onClickDlgRejectTaskRightBtn(e,this);});
+                }
+                element.append($rightBtnHtml);
+            }
+        }
+        ,cleanDlgRejectTaskOwner: function(element) {
+            var $tbody = element.find('table#ownerTableRejectTask tbody');
+
+            if ($tbody) {
+                $tbody.empty();
+            }
+        }
+        ,cleanDlgRejectTaskUsers: function(element) {
+            var $tbody = element.find('table#usersTableRejectTask tbody');
+            var $textMuted = element.find('footer.panel-footer small.text-muted');
+            var $ulPagination = element.find('footer.panel-footer ul.pagination');
+
+            if ($tbody) {
+                $tbody.empty();
+            }
+
+            if ($textMuted) {
+                $textMuted.empty();
+            }
+
+            if ($ulPagination) {
+                $ulPagination.empty();
+            }
+        }
+
+        ,validateTask: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.taskId)) {
+                return false;
+            }
+//            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
+//             return false;
+//             }
+//             if (!Acm.isArray(data.childObjects)) {
+//             return false;
+//             }
+//             if (!Acm.isArray(data.participants)) {
+//             return false;
+//             }
+//             if (!Acm.isArray(data.personAssociations)) {
+//             return false;
+//             }
+            return true;
+        }
     }
+
 
     ,Notes: {
         create : function() {
@@ -308,7 +679,7 @@ Task.Model = Task.Model || {
             //var taskId = Task.Model.getTaskId();
             //var task = Task.Model.getObject();
             //var adhoc_b = false;
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.Detail.validateTask(task)) {
                 var taskId = task.taskId;
                 if (Acm.isNotEmpty(task.businessProcessId)){
                     Task.Service.WorkflowOverview.retrieveWorkflowOverview(task.businessProcessId,taskId, false);

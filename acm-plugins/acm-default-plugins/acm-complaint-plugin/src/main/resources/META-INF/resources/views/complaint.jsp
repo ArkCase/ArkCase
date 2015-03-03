@@ -13,6 +13,12 @@
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
+
+        <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
+        <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
+        <span itemprop="roiFormUrl">${roiFormUrl}</span>
+        <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
+        <span itemprop="formDocuments">${formDocuments}</span>
     </div>
 </jsp:attribute>
 
@@ -31,13 +37,13 @@
 
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>--%>
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
@@ -133,13 +139,12 @@
                                 <section class="scrollable">
                                     <div class="wrapper dk  clearfix">
                                         <div class="row" id="tabTop"  style="display:none;">
-                                            <p>tabTop</p>
                                             <div class="col-xs-12">
                                                 <div class="">
                                                     <div class=" clearfix">
                                                         <div class="col-xs-4 b-r">
                                                                 <%--<div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>--%>
-                                                            <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
+                                                            <div class="h4 font-bold"><a href="#" id="complaintTitle" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
                                                             <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
                                                         <div class="col-xs-2 b-r">
                                                                 <%--<div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>--%>
@@ -174,16 +179,14 @@
                                     <div>
                                         <div class="wrapper">
                                             <div class="row" id="tabBlank" style="display:none;">
-                                                <p>tabBlank</p>
                                             </div>
 
-                                            <div class="row" id="tabCloseComplaintButton" style="display:none;">
-                                                <p>tabCloseComplaintButton</p>
+                                            <div class="row" id="tabAction" style="display:none;">
                                                 <div class="col-md-12">
                                                     <div class="pull-right inline">
                                                         <div class="btn-group">
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
-                                                            <input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />
+                                                            <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
                                                             <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
                                                         </div>
@@ -205,7 +208,6 @@
 
 
                                             <div class="row" id="tabDetail" style="display:none;">
-                                                <p>tabDetail</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a ">
                                                         <div class="panel-heading b-b bg-info">
@@ -223,14 +225,13 @@
                                                             </ul>
                                                             </span> <a href="#" class="font-bold">Details</a> </div>
                                                         <div class="panel-body">
-                                                            <div class="complaintDetails"></div>
+                                                            <div class="divDetail"></div>
                                                         </div>
                                                     </section>
                                                 </div>
                                             </div>
 
                                             <div class="row" id="tabLocation" style="display:none;">
-                                                <p>tabLocation</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divLocation" style="width:100%"></div>
@@ -239,7 +240,6 @@
                                             </div>
 
                                             <div class="row" id="tabInitiator" style="display:none;">
-                                                <p>tabInitiator</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divInitiator" style="width:100%"></div>
@@ -249,7 +249,6 @@
 
 
                                             <div class="row" id="tabPeople" style="display:none;">
-                                                <p>tabPeople</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divPeople" style="width:100%"></div>
@@ -258,13 +257,12 @@
                                             </div>
 
                                             <div class="row" id="tabDocuments" style="display:none;">
-                                                <p>tabDocuments</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divDocuments" style="width:100%"></div>
-                                                        <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />
-                                                        <input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />
-                                                        <input id="formDocuments" type="hidden" value='${formDocuments}' />
+                                                        <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />--%>
+                                                        <%--<input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />--%>
+                                                        <%--<input id="formDocuments" type="hidden" value='${formDocuments}' />--%>
                                                     </section>
                                                 </div>
                                             </div>
@@ -272,7 +270,6 @@
 
 
                                             <div class="row" id="tabTasks" style="display:none;">
-                                                <p>tabTasks</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div class="panel-body max-200 no-padder">
@@ -283,7 +280,6 @@
                                             </div>
 
                                             <div class="row" id="tabNotes" style="display:none;">
-                                                <p>tabNotes</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divNotes" style="width:100%"></div>
@@ -292,7 +288,6 @@
                                             </div>
 
                                             <div class="row" id="tabParticipants" style="display:none;">
-                                                <p>tabParticipants</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divParticipants" style="width:100%"></div>
@@ -300,8 +295,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" id="tabRefComplaints" style="display:none;">
-                                                <p>tabRefComplaints</p>
+                                            <div class="row" id="tabRefs" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divReferences" style="width:100%"></div>
@@ -310,7 +304,6 @@
                                             </div>
 
                                             <div class="row" id="tabHistory" style="display:none;">
-                                                <p>tabHistory</p>
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divHistory" style="width:100%"></div>
@@ -324,33 +317,33 @@
 
 
 
-                                            <%--<div class="row" id="tabRefComplaints" style="display:none;">
-                                                    &lt;%&ndash;Other Complaints&ndash;%&gt;
-                                            </div>--%>
+                                            <%--<div class="row" id="tabRefComplaints" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Complaints&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabRefCases" style="display:none;">
-                                                    <%--Other Cases--%>
-                                            </div>
+                                            <%--<div class="row" id="tabRefCases" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Cases&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabRefTasks" style="display:none;">
-                                                    <%--Other Tasks--%>
-                                            </div>
+                                            <%--<div class="row" id="tabRefTasks" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Tasks&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabRefDocuments" style="display:none;">
-                                                    <%--Other Documents--%>
-                                            </div>
+                                            <%--<div class="row" id="tabRefDocuments" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Other Documents&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabApprovers" style="display:none;">
-                                                    <%--Approvers--%>
-                                            </div>
+                                            <%--<div class="row" id="tabApprovers" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Approvers&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabCollaborators" style="display:none;">
-                                                    <%--Collaborators--%>
-                                            </div>
+                                            <%--<div class="row" id="tabCollaborators" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Collaborators&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
-                                            <div class="row" id="tabWatchers" style="display:none;">
-                                                    <%--Watchers--%>
-                                            </div>
+                                            <%--<div class="row" id="tabWatchers" style="display:none;">--%>
+                                                    <%--&lt;%&ndash;Watchers&ndash;%&gt;--%>
+                                            <%--</div>--%>
 
                                         </div>
                                     </div>

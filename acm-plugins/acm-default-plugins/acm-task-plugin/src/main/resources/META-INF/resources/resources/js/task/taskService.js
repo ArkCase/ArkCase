@@ -7,16 +7,178 @@
  */
 Task.Service = {
     create : function() {
+        if (Task.Service.Lookup.create)              {Task.Service.Lookup.create();}
+        if (Task.Service.Action.create)              {Task.Service.Action.create();}
+        if (Task.Service.ParentDetail.create)        {Task.Service.ParentDetail.create();}
+        if (Task.Service.Detail.create)              {Task.Service.Detail.create();}
+        if (Task.Service.Notes.create)               {Task.Service.Notes.create();}
+        if (Task.Service.History.create)             {Task.Service.History.create();}
+        if (Task.Service.WorkflowOverview.create)    {Task.Service.WorkflowOverview.create();}
+        if (Task.Service.Attachments.create)         {Task.Service.Attachments.create();}
+        if (Task.Service.DocumentUnderReview.create) {Task.Service.DocumentUnderReview.create();}
+        if (Task.Service.RejectComments.create)      {Task.Service.RejectComments.create();}
     }
     ,onInitialized: function() {
+        if (Task.Service.Lookup.onInitialized)              {Task.Service.Lookup.onInitialized();}
+        if (Task.Service.Action.onInitialized)              {Task.Service.Action.onInitialized();}
+        if (Task.Service.ParentDetail.onInitialized)        {Task.Service.ParentDetail.onInitialized();}
+        if (Task.Service.Detail.onInitialized)              {Task.Service.Detail.onInitialized();}
+        if (Task.Service.Notes.onInitialized)               {Task.Service.Notes.onInitialized();}
+        if (Task.Service.History.onInitialized)             {Task.Service.History.onInitialized();}
+        if (Task.Service.WorkflowOverview.onInitialized)    {Task.Service.WorkflowOverview.onInitialized();}
+        if (Task.Service.Attachments.onInitialized)         {Task.Service.Attachments.onInitialized();}
+        if (Task.Service.DocumentUnderReview.onInitialized) {Task.Service.DocumentUnderReview.onInitialized();}
+        if (Task.Service.RejectComments.onInitialized)      {Task.Service.RejectComments.onInitialized();}
     }
 
+    ,Lookup: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+
+
+        ,retrieveAssignees : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedAssignees(response);
+
+                    } else {
+                        if (Task.Model.Lookup.validateAssignees(response)) {
+                            var assignees = response;
+                            Task.Model.Lookup.setAssignees(assignees);
+                            Task.Controller.modelRetrievedAssignees(assignees);
+                        }
+                    }
+                }
+                ,App.getContextPath() + Task.Service.Lookup.API_GET_ASSIGNEES
+            )
+        }
+
+        ,retrievePriorities : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedPriorities(response);
+
+                    } else {
+                        if (Task.Model.Lookup.validatePriorities(response)) {
+                            var priorities = response;
+                            Task.Model.Lookup.setPriorities(priorities);
+                            Task.Controller.modelRetrievedPriorities(priorities);
+                        }
+                    }
+                }
+                ,App.getContextPath() + Task.Service.Lookup.API_GET_PRIORITIES
+            )
+        }
+    }
+
+
+    ,Action: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+    }
+
+    ,ParentDetail: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_RETRIEVE_COMPLAINT_        : "/api/latest/plugin/complaint/byId/"
+        ,API_RETRIEVE_CASE_FILE_        : "/api/latest/plugin/casefile/byId/"
+
+        ,retrieveComplaint : function(objId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_COMPLAINT_ + objId;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedParentObjectError(response);
+
+                    } else {
+                        if (Task.Model.ParentDetail.validateUnifiedData(response)) {
+                            var complaint = response;
+                            var unifiedData = Task.Model.ParentDetail.makeUnifiedData(complaint, Task.Model.DOC_TYPE_COMPLAINT);
+                            if (unifiedData) {
+                                Task.Model.ParentDetail.cacheParentObject.put(objId, unifiedData);
+                                Task.Controller.modelRetrievedParentObject(unifiedData);
+                            }
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+        ,retrieveCaseFile : function(objId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_CASE_FILE_ + objId;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedParentObjectError(response);
+
+                    } else {
+                        if (Task.Model.ParentDetail.validateUnifiedData(response)) {
+                            var caseFile = response;
+                            var unifiedData = Task.Model.ParentDetail.makeUnifiedData(caseFile, Task.Model.DOC_TYPE_CASE_FILE);
+                            if (unifiedData) {
+                                Task.Model.ParentDetail.cacheParentObject.put(objId, unifiedData);
+                                Task.Controller.modelRetrievedParentObject(unifiedData);
+                            }
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
+//        ,apiRetrieveParentObject: function(objType, objId) {
+//            if(Task.Model.DOC_TYPE_COMPLAINT == objType){
+//                return "/api/latest/plugin/complaint/byId/" + objId;
+//            } else if(Task.Model.DOC_TYPE_CASE_FILE == objType){
+//                return "/api/latest/plugin/casefile/byId/" + objId;
+//            }
+//        }
+//
+//        ,retrieveParentObject : function(objType, objId) {
+//            var url = App.getContextPath() + Task.Service.ParentDetail.apiRetrieveParentObject(objType, objId);
+//            Acm.Service.asyncGet(
+//                function(response) {
+//                    if (response.hasError) {
+//                        Task.Controller.modelRetrievedParentObjectError(response);
+//
+//                    } else {
+//                        if (Task.Model.ParentDetail.validateUnifiedData(response)) {
+//                            var parentObj = response;
+//                            var topBarParentObjData = Task.Model.ParentDetail.makeUnifiedParentData(parentObj,objType);
+//                            if (topBarParentObjData) {
+//                                Task.Model.ParentDetail.cacheParentObject.put(objId, topBarParentObjData);
+//                                Task.Controller.modelRetrievedParentObject(topBarParentObjData);
+//                            }
+//                        }
+//                    }
+//                }
+//                ,url
+//            )
+//        }
+    }
 
     ,Detail: {
         create: function() {
         }
         ,onInitialized: function() {
         }
+
+        ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask"
+        ,API_DELETE_TASK           : "/api/latest/plugin/task/deleteTask/"
+        ,API_RETRIEVE_USERS        : "/api/latest/plugin/search/usersSearch"
 
         ,saveDetail: function(nodeType, taskId, details) {
             var task = Task.Model.findTask(nodeType, taskId);
@@ -25,10 +187,157 @@ Task.Service = {
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
                     ,function(data) {
-                        Task.Controller.modelSavedDetail(taskId, Acm.Service.responseWrapper(data, data.details));
+                        Task.Controller.modelSavedDetail(nodeType, taskId, Acm.Service.responseWrapper(data, data.details));
                     }
                 );
             }
+        }
+        ,saveReworkDetails: function(nodeType, taskId, reworkDetails) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.reworkInstructions = reworkDetails;
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedReworkDetails(nodeType, taskId, Acm.Service.responseWrapper(data, data.reworkInstructions));
+                    }
+                );
+            }
+        }
+        ,saveTitle: function(nodeType, taskId, title) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.title = title;
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedTitle(nodeType, taskId, Acm.Service.responseWrapper(data, data.title));
+                    }
+                );
+            }
+        }
+        ,saveStartDate: function(nodeType, taskId, startDate) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.incidentDate = startDate;
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedStartDate(nodeType, taskId, Acm.Service.responseWrapper(data, data.startDate));
+                    }
+                );
+            }
+        }
+        ,saveAssignee: function(nodeType, taskId, assignee) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.assignee = assignee
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedAssignee(nodeType, taskId, Acm.Service.responseWrapper(data, data.assignee));
+                    }
+                );
+            }
+        }
+        ,savePercentCompleted: function(nodeType, taskId, percent) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.percentComplete = percent;
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedPercentCompleted(nodeType, taskId, Acm.Service.responseWrapper(data, data.percentComplete));
+                    }
+                );
+            }
+        }
+        ,savePriority: function(nodeType, taskId, priority) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.priority = priority;
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedPriority(nodeType, taskId, Acm.Service.responseWrapper(data, data.priority));
+                    }
+                );
+            }
+        }
+        ,saveDueDate: function(nodeType, taskId, dueDate) {
+            var task = Task.Model.findTask(nodeType, taskId);
+            if (Task.Model.interface.validateObjData(task)) {
+                task.dueDate = dueDate;
+                ObjNav.Service.Detail.saveObject(nodeType, taskId
+                    ,task
+                    ,function(data) {
+                        Task.Controller.modelSavedDueDate(nodeType, taskId, Acm.Service.responseWrapper(data, data.dueDate));
+                    }
+                );
+            }
+        }
+        ,completeTask : function(task) {
+            var data;
+            var url = App.getContextPath() + this.API_COMPLETE_TASK;
+            if (Task.Model.interface.validateObjData(task)) {
+                data = task;
+
+            }
+            else{
+                var taskId = ObjNav.Model.getObjectId();
+                if(Acm.isNotEmpty(taskId) && taskId > 0){
+                    url = App.getContextPath() + this.API_COMPLETE_TASK + "/" + taskId;
+                }
+                data = {};
+            }
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelCompletedTask(response);
+                    } else {
+                        if (Task.Model.interface.validateObjData(response)) {
+                            Task.Controller.modelCompletedTask(response);
+                        }
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+        }
+        ,deleteTask : function(taskId) {
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelDeletedTask(response);
+                    } else {
+                        if (Task.Model.interface.validateObjData(response)) {
+                            Task.Controller.modelDeletedTask(response);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_DELETE_TASK + taskId
+                ,"{}"
+            )
+        }
+
+        ,retrieveUsers : function(start, n, sortDirection, searchKeyword, exclude) {
+            var params = {'start': start, 'n': n, 'sortDirection': sortDirection, 'searchKeyword': searchKeyword, 'exclude': exclude}
+            var query = $.param(params);
+
+            var url = App.getContextPath() + Task.Service.Detail.API_RETRIEVE_USERS + '?' + query;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedUsers(response);
+
+                    } else {
+                        //if (Task.Model.interface.validateParentObjData(response)) {
+                        Task.Controller.modelRetrievedUsers(response);
+                        //}
+                    }
+                }
+                ,url
+            )
         }
     }
 
@@ -235,7 +544,7 @@ Task.Service = {
                         Task.Controller.modelUploadedAttachments(response);
                     } else {
                         if(Task.Model.Attachments.validateUploadedAttachments(response)){
-                            var task = Task.Model.getObject();
+                            var task = Task.View.getActiveTask();
                             if(Task.Model.Attachments.validateExistingAttachments(task)){
                                 for(var i = 0; i < response.length; i++){
                                     var attachment = {};

@@ -9,6 +9,7 @@ Complaint.Service = {
     create : function() {
         if (Complaint.Service.Lookup.create) {Complaint.Service.Lookup.create();}
         if (Complaint.Service.Detail.create) {Complaint.Service.Detail.create();}
+        if (Complaint.Service.People.create) {Complaint.Service.People.create();}
         if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
         if (Complaint.Service.Notes.create) {Complaint.Service.Notes.create();}
         if (Complaint.Service.Tasks.create) {Complaint.Service.Tasks.create();}
@@ -16,6 +17,7 @@ Complaint.Service = {
     ,onInitialized: function() {
         if (Complaint.Service.Lookup.onInitialized) {Complaint.Service.Lookup.onInitialized();}
         if (Complaint.Service.Detail.onInitialized) {Complaint.Service.Detail.onInitialized();}
+        if (Complaint.Service.People.onInitialized) {Complaint.Service.People.onInitialized();}
         if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
         if (Complaint.Service.Notes.onInitialized) {Complaint.Service.Notes.onInitialized();}
         if (Complaint.Service.Tasks.onInitialized) {Complaint.Service.Tasks.onInitialized();}
@@ -27,7 +29,7 @@ Complaint.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_APPROVERS             : "/api/latest/users/withPrivilege/acm-complaint-approve"
         ,API_GET_COMPLAINT_TYPES       : "/api/latest/plugin/complaint/types"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
 
@@ -119,6 +121,94 @@ Complaint.Service = {
         , onInitialized: function () {
         }
 
+        ,_saveComplaint: function(complaintId, complaint, handler) {
+            ObjNav.Service.Detail.saveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId, complaint, handler);
+        }
+        ,saveComplaintTitle: function(complaintId, title) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                complaint.complaintTitle = title;
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedComplaintTitle(complaintId, Acm.Service.responseWrapper(data, data.title));
+                    }
+                );
+            }
+        }
+        ,saveIncidentDate: function(complaintId, incidentDate) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                complaint.incidentDate = incidentDate;
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedIncidentDate(complaintId, Acm.Service.responseWrapper(data, data.incidentDate));
+                    }
+                );
+            }
+        }
+        ,saveAssignee: function(complaintId, assignee) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                Complaint.Model.Detail.setAssignee(complaint, assignee);
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedAssignee(complaintId, Acm.Service.responseWrapper(data, assignee));
+                    }
+                );
+            }
+        }
+        ,saveComplaintType: function(complaintId, complaintType) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                complaint.complaintType = complaintType;
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedComplaintType(complaintId, Acm.Service.responseWrapper(data, data.complaintType));
+                    }
+                );
+            }
+        }
+        ,savePriority: function(complaintId, priority) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                complaint.priority = priority;
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedPriority(complaintId, Acm.Service.responseWrapper(data, data.priority));
+                    }
+                );
+            }
+        }
+        ,saveDetail: function(complaintId, details) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                complaint.details = details;
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedDetail(complaintId, Acm.Service.responseWrapper(data, data.details));
+                    }
+                );
+            }
+        }
+        ,updateComplaintRestriction: function(complaintId, restriction) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                complaint.restricted = restriction;
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedRestriction(complaintId, Acm.Service.responseWrapper(data, data.restricted));
+                    }
+                );
+            }
+        }
+    }
+
+    ,People: {
+        create: function () {
+        }
+        , onInitialized: function () {
+        }
+
 //        , API_SAVE_COMPLAINT: "/api/latest/plugin/complaint/"
         , API_SAVE_PERSON_ASSOCIATION: "/api/latest/plugin/personAssociation"
         , API_DELETE_PERSON_ASSOCIATION_: "/api/latest/plugin/personAssociation/delete/"
@@ -140,7 +230,7 @@ Complaint.Service = {
 //                    } else {
 //                        if (Complaint.Model.Detail.validateData(response)) {
 //                            var complaint = response;
-//                            Complaint.Model.Detail.cacheComplaint.put(complaint.complaintId, complaint);
+//                            Complaint.Model.Detail.putCacheComplaint(complaint.complaintId, complaint);
 //                            if (handler) {
 //                                handler(complaint);
 //                            } else {
@@ -154,7 +244,7 @@ Complaint.Service = {
 //            )
 //        }
         , addParticipant: function (complaintId, participant) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 complaint.participants.push(participant);
                 this._saveComplaint(complaintId, complaintId, complaint
@@ -177,7 +267,7 @@ Complaint.Service = {
             }
         }
         , updateParticipant: function (complaintId, participant) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 for (var i = 0; i < complaint.participants.length; i++) {
                     if (Acm.compare(complaint.participants[i].id, participant.id)) {
@@ -206,7 +296,7 @@ Complaint.Service = {
             }
         }
         , deleteParticipant: function (complaintId, participantId) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var toDelete = -1;
                 for (var i = 0; i < complaint.participants.length; i++) {
@@ -270,14 +360,14 @@ Complaint.Service = {
                     } else {
                         if (Complaint.Model.Detail.validatePersonAssociation(response)) {
                             //check complaintId == personAssociation.parentId;
-                            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+                            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
                             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                                 //check response.parentId == complaintId
                                 //check response.id not null, > 0
                                 //check response.id not already in complaint.personAssociations array
                                 var addedPersonAssociation = response;
                                 complaint.personAssociations.push(addedPersonAssociation);
-                                Complaint.Model.Detail.cacheComplaint.put(complaintId, complaint);
+                                Complaint.Model.Detail.putCacheComplaint(complaintId, complaint);
                                 Complaint.Controller.modelAddedPersonAssociation(complaintId, addedPersonAssociation);
                             }
                         }
@@ -288,7 +378,7 @@ Complaint.Service = {
             )
         }
         , updatePersonAssociation: function (complaintId, personAssociation) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 for (var i = 0; i < complaint.personAssociations.length; i++) {
                     if (Acm.compare(complaint.personAssociations[i].id, personAssociation.id)) {
@@ -336,16 +426,16 @@ Complaint.Service = {
                         Complaint.Controller.modelDeletedPersonAssociation(response);
 
                     } else {
-                        if (Complaint.Service.Detail._validateDeletedPersonAssociation(response)) {
+                        if (Complaint.Service.People._validateDeletedPersonAssociation(response)) {
                             if (response.deletedPersonAssociationId == personAssociationId) {
-                                var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+                                var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
                                 if (Complaint.Model.Detail.validateComplaint(complaint)) {
                                     for (var i = 0; i < complaint.personAssociations.length; i++) {
                                         var pa = complaint.personAssociations[i];
                                         if (Complaint.Model.Detail.validatePersonAssociation(pa)) {
                                             if (pa.id == response.deletedPersonAssociationId) {
                                                 complaint.personAssociations.splice(i, 1);
-                                                Complaint.Model.Detail.cacheComplaint.put(complaintId, complaint);
+                                                Complaint.Model.Detail.putCacheComplaint(complaintId, complaint);
                                                 Complaint.Controller.modelDeletedPersonAssociation(Acm.Service.responseWrapper(response, personAssociationId));
                                                 break;
                                             }
@@ -361,7 +451,7 @@ Complaint.Service = {
         }
 
         , addContactMethod: function (complaintId, personAssociationId, contactMethod) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -396,7 +486,7 @@ Complaint.Service = {
             }
         }
         , updateContactMethod: function (complaintId, personAssociationId, contactMethod) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -434,7 +524,7 @@ Complaint.Service = {
             }
         }
         , deleteContactMethod: function (complaintId, personAssociationId, contactMethodId) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -463,7 +553,7 @@ Complaint.Service = {
         }
 
         , addSecurityTag: function (complaintId, personAssociationId, securityTag) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -498,7 +588,7 @@ Complaint.Service = {
             }
         }
         , updateSecurityTag: function (complaintId, personAssociationId, securityTag) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -536,7 +626,7 @@ Complaint.Service = {
             }
         }
         , deleteSecurityTag: function (complaintId, personAssociationId, securityTagId) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -565,7 +655,7 @@ Complaint.Service = {
         }
 
         , addPersonAlias: function (complaintId, personAssociationId, personAlias) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -600,7 +690,7 @@ Complaint.Service = {
             }
         }
         , updatePersonAlias: function (complaintId, personAssociationId, personAlias) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -638,7 +728,7 @@ Complaint.Service = {
             }
         }
         , deletePersonAlias: function (complaintId, personAssociationId, personAliasId) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -667,7 +757,7 @@ Complaint.Service = {
         }
 
         , addAddress: function (complaintId, personAssociationId, address) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -707,7 +797,7 @@ Complaint.Service = {
             }
         }
         , updateAddress: function (complaintId, personAssociationId, address) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -749,7 +839,7 @@ Complaint.Service = {
             }
         }
         , deleteAddress: function (complaintId, personAssociationId, addressId) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -778,7 +868,7 @@ Complaint.Service = {
         }
 
         , addOrganization: function (complaintId, personAssociationId, organization) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -813,7 +903,7 @@ Complaint.Service = {
             }
         }
         , updateOrganization: function (complaintId, personAssociationId, organization) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -851,7 +941,7 @@ Complaint.Service = {
             }
         }
         , deleteOrganization: function (complaintId, personAssociationId, organizationId) {
-            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
                 var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -903,7 +993,7 @@ Complaint.Service = {
                     } else {
                         if(Complaint.Model.Documents.validateUploadedDocuments(response)){
                             var complaintId = Complaint.Model.getComplaintId();
-                            var complaint = Complaint.Model.Detail.getComplaint(complaintId);
+                            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
                             if(Complaint.Model.Documents.validateExistingDocuments(complaint)){
                                 for(var i = 0; i < response.length; i++){
                                     var attachment = {};
@@ -936,7 +1026,7 @@ Complaint.Service = {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
-                    url =  App.getContextPath() + Complaint.Service.Notes.API_LIST_NOTES_ + Complaint.Model.getObjectType() + "/";
+                    url =  App.getContextPath() + Complaint.Service.Notes.API_LIST_NOTES_ + Complaint.Model.DOC_TYPE_COMPLAINT + "/";
                     url += complaintId;
                     return url;
                 }

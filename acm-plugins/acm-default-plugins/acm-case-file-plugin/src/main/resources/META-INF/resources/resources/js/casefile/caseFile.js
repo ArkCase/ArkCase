@@ -25,7 +25,7 @@ var CaseFile = CaseFile || {
             SubscriptionOp.create({
                 getSubscriptionInfo: function() {
                     return {userId: App.getUserName()
-                        ,objectType: CaseFile.Model.getObjectType()
+                        ,objectType: CaseFile.Model.DOC_TYPE_CASE_FILE
                         ,objectId: CaseFile.Model.getCaseFileId()
                     };
                 }
@@ -37,7 +37,7 @@ var CaseFile = CaseFile || {
         if (CaseFile.Model.onInitialized)      {CaseFile.Model.onInitialized();}
         if (CaseFile.View.onInitialized)       {CaseFile.View.onInitialized();}
         if (ObjNav.onInitialized)              {ObjNav.onInitialized();}
-        //if (SubscriptionOp.onInitialized)      {SubscriptionOp.onInitialized();}
+        if (SubscriptionOp.onInitialized)      {SubscriptionOp.onInitialized();}
     }
 };
 

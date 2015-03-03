@@ -25,8 +25,8 @@ var Task = Task || {
             SubscriptionOp.create({
                 getSubscriptionInfo: function() {
                     return {userId: App.getUserName()
-                        ,objectType: Task.Model.getObjectType()
-                        ,objectId: Task.Model.getObjectId()
+                        , objectType: Task.Model.DOC_TYPE_TASK
+                        , objectId: ObjNav.Model.getObjectId()
                     };
                 }
             });
@@ -39,5 +39,11 @@ var Task = Task || {
         if (ObjNav.onInitialized)          {ObjNav.onInitialized();}
         if (SubscriptionOp.onInitialized)  {SubscriptionOp.onInitialized();}
     }
+
+
+    , DLG_REJECT_TASK_START: 0
+    , DLG_REJECT_TASK_N: 10
+    , DLG_REJECT_TASK_SORT_DIRECTION: 'ASC'
+    , REJECT_COMMENT: 'REJECT_COMMENT'
 };
 
