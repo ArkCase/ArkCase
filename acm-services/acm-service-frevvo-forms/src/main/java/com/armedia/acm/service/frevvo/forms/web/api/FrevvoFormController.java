@@ -45,10 +45,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
+import com.armedia.acm.form.cost.service.CostFactory;
+import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
+import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
@@ -95,6 +99,12 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private RuntimeService activitiRuntimeService;
 	
 	private ComplaintEventPublisher complaintEventPublisher;
+	
+	private AcmTimesheetDao acmTimesheetDao;
+	private TimeFactory timeFactory;
+	
+	private AcmCostsheetDao acmCostsheetDao;
+	private CostFactory costFactory;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -434,5 +444,37 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setComplaintEventPublisher(
 			ComplaintEventPublisher complaintEventPublisher) {
 		this.complaintEventPublisher = complaintEventPublisher;
+	}
+
+	public AcmTimesheetDao getAcmTimesheetDao() {
+		return acmTimesheetDao;
+	}
+
+	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
+		this.acmTimesheetDao = acmTimesheetDao;
+	}
+
+	public TimeFactory getTimeFactory() {
+		return timeFactory;
+	}
+
+	public void setTimeFactory(TimeFactory timeFactory) {
+		this.timeFactory = timeFactory;
+	}
+
+	public AcmCostsheetDao getAcmCostsheetDao() {
+		return acmCostsheetDao;
+	}
+
+	public void setAcmCostsheetDao(AcmCostsheetDao acmCostsheetDao) {
+		this.acmCostsheetDao = acmCostsheetDao;
+	}
+
+	public CostFactory getCostFactory() {
+		return costFactory;
+	}
+
+	public void setCostFactory(CostFactory costFactory) {
+		this.costFactory = costFactory;
 	}
 }
