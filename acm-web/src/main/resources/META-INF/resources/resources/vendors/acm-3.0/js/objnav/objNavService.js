@@ -190,7 +190,7 @@ ObjNav.Service = {
                         if (ObjNav.Model.interface.validateObjData(response)) {
                             ObjNav.Model.Detail.putCacheObject(objType, objId, response);
                             if (handler) {
-                                handler(objType, objId, objData);
+                                handler(response);
                             } else {
                                 ObjNav.Controller.modelSavedObject(objType, objId, response);
                             }

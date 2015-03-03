@@ -12,6 +12,12 @@
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
+
+        <%--<span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>--%>
+        <span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>
+        <span itemprop="roiFormUrl">${roiFormUrl}</span>
+        <span itemprop="changeCaseStatusFormUrl">${changeCaseStatusFormUrl}</span>
+
     </div>
 </jsp:attribute>
 
@@ -130,7 +136,7 @@
         <%--<h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>--%>
         <section id="taskDetailView" class="scrollable">
             <div id="tabTop"  style="display:none;">
-                <div class="wrapper dk  clearfix">
+                <div class="wrapper dk  clearfix" id="divParentDetail" style="display:none;">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="">
@@ -158,6 +164,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="wrapper bg-empty  clearfix">
                     <div class="pull-right inline">
                         <div class="btn-group-task">
@@ -166,15 +173,16 @@
                             <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
                             <!-- from the mockup -->
-                            <button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
-                            <button class="btn btn-info btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
-                            <button class="btn btn-info btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
+                            <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
+                            <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
+                            <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
+                            <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
 
 
                             <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                             <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
 
-                            <button class="btn btn-info btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
+                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
                         </div>
 
                     </div>
@@ -193,7 +201,7 @@
                                         <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
                                         <small class="text-muted">% of Completion</small></div>
                                     <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="text" data-pk="1" data-title="Enter Owner"></a></div>
+                                        <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-title="Enter Owner"></a></div>
                                         <small class="text-muted">Assignee</small></div>
                                     <div class="col-xs-2 b-r">
                                         <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
@@ -283,7 +291,7 @@
                     <div class="col-md-12">
                         <section class="panel b-a">
                             <div id="divDocuments" style="width:100%"></div>
-                            <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />
+                            <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />--%>
                         </section>
                     </div>
                 </div>
@@ -330,8 +338,8 @@
                             <div class="btn-group">
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
-                                <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
-                                <input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />
+                                <%--<input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />--%>
+                                <%--<input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />--%>
                                 <form id="formAttachments" style="display:none;">
                                             <%--<input type="file" id="file" name="file">--%>
                                         <input id="addNewAttachments" type="file" name="files[]" multiple/>

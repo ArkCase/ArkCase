@@ -86,6 +86,7 @@ ObjNav.View = {
 
             ObjNav.Controller.viewSelectedTreeNode(node.key);
         }
+
         ,_getDefaultTreeArgs: function() {
             return {
                 activate: function(event, data) {
@@ -130,10 +131,10 @@ ObjNav.View = {
                     builder.makeLast();
 
                     if ((0 > treeInfo.total)                                    //unknown size
-                        || (treeInfo.total - treeInfo.n > treeInfo.start)) {   //no more page left
+                        || (treeInfo.total - treeInfo.n > treeInfo.start)) {    //more page
                         var title = (0 > treeInfo.total)? "More records..."
                             : (treeInfo.total - treeInfo.start - treeInfo.n) + " more records...";
-                        builder.addLeafLast({key: ObjNav.Model.Tree.Key.NODE_TYPE_PART_PREV_PAGE
+                        builder.addLeafLast({key: ObjNav.Model.Tree.Key.NODE_TYPE_PART_NEXT_PAGE
                             ,title: title
                             ,tooltip: "Load more records"
                             ,expanded: false
@@ -251,6 +252,14 @@ ObjNav.View = {
             if (node) {
                 node.setTitle(title);
                 this.fixNodeIcon(node);
+            }
+        }
+        ,updateObjNode: function(nodeType, nodeId) {
+            var objSolr = ObjNav.Model.List.getSolrObject(nodeType, nodeId);
+            if (ObjNav.Model.List.validateObjSolr(objSolr)) {
+                var nodeTitle = ObjNav.Model.interface.nodeTitle(objSolr);
+                var key = ObjNav.Model.Tree.Key.getKeyByObj(nodeType, nodeId);
+                ObjNav.View.Navigator.setTitle(key, nodeTitle);
             }
         }
 

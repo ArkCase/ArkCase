@@ -13,17 +13,75 @@ Complaint.Controller = Complaint.Controller || {
     ,modelFoundAssignees: function(assignees) {
         Acm.Dispatcher.fireEvent(this.MODEL_FOUND_ASSIGNEES, assignees);
     }
-    ,MODEL_FOUND_SUBJECT_TYPES             : "complaint-model-found-complaint-types"
+    ,VIEW_CHANGED_ASSIGNEE                 : "complaint-view-changed-assignee"
+    ,viewChangedAssignee: function(complaintId, assignee) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, complaintId, assignee);
+    }
+    ,MODEL_SAVED_ASSIGNEE                  : "complaint-model-saved-assignee"
+    ,modelSavedAssignee : function(complaintId, assignee) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, complaintId, assignee);
+    }
+    ,MODEL_FOUND_COMPLAINT_TYPES             : "complaint-model-found-complaint-types"
     ,modelFoundComplaintTypes: function(complaintTypes) {
-        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_SUBJECT_TYPES, complaintTypes);
+        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_COMPLAINT_TYPES, complaintTypes);
+    }
+    ,VIEW_CHANGED_COMPLAINT_TYPE             : "complaint-view-changed-complaint-type"
+    ,viewChangedComplaintType: function(complaintId, complaintType) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_COMPLAINT_TYPE, complaintId, complaintType);
+    }
+    ,MODEL_SAVED_COMPLAINT_TYPE              : "complaint-model-saved-complaint-type"
+    ,modelSavedComplaintType : function(complaintId, complaintType) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_COMPLAINT_TYPE, complaintId, complaintType);
     }
     ,MODEL_FOUND_PRIORITIES                : "complaint-model-found-priorities"
     ,modelFoundPriorities: function(priorities) {
         Acm.Dispatcher.fireEvent(this.MODEL_FOUND_PRIORITIES, priorities);
     }
+    ,VIEW_CHANGED_PRIORITY                 : "complaint-view-changed-priority"
+    ,viewChangedPriority: function(complaintId, priority) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_PRIORITY, complaintId, priority);
+    }
+    ,MODEL_SAVED_PRIORITY                  : "complaint-model-saved-priority"
+    ,modelSavedPriority : function(complaintId, priority) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_PRIORITY, complaintId, priority);
+    }
+    ,VIEW_CHANGED_COMPLAINT_TITLE               : "complaint-view-changed-complaint-title"
+    ,viewChangedComplaintTitle: function(complaintId, title) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_COMPLAINT_TITLE, complaintId, title);
+    }
+    ,MODEL_SAVED_COMPLAINT_TITLE                : "complaint-model-saved-complaint-title"
+    ,modelSavedComplaintTitle : function(complaintId, title) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_COMPLAINT_TITLE, complaintId, title);
+    }
+    ,VIEW_CHANGED_INCIDENT_DATE            : "complaint-view-changed-incident-date"
+    ,viewChangedIncidentDate: function(complaintId, incidentDate) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_INCIDENT_DATE, complaintId, incidentDate);
+    }
+    ,MODEL_SAVED_INCIDENT_DATE             : "complaint-model-saved-incident-date"
+    ,modelSavedIncidentDate : function(complaintId, incidentDate) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_INCIDENT_DATE, complaintId, incidentDate);
+    }
+    ,VIEW_CHANGED_DETAIL                   : "complaint-view-changed-detail"
+    ,viewChangedDetail: function(complaintId, details) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, complaintId, details);
+    }
+    ,MODEL_SAVED_DETAIL                    : "complaint-model-saved-detail"
+    ,modelSavedDetail : function(complaintId, details) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, complaintId, details);
+    }
 
-    ,MODEL_RETRIEVED_COMPLAINT             : "complaint-model-retrieved-detail"             //param: complaint
-    ,MODEL_SAVED_COMPLAINT                 : "complaint-model-saved-complaint"              //param: complaint
+    ,VIEW_CHANGED_RESTRICTION        : "complaint-view-changed-restriction"
+    ,viewChangedRestriction: function(complaintId, restriction) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_RESTRICTION, complaintId, restriction);
+    }
+    ,MODEL_SAVED_RESTRICTION               : "complaint-model-saved-restriction"
+    ,modelSavedRestriction : function(complaintId, restriction) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, complaintId, restriction);
+    }
+
+    //----------------------------------------------------------------------------------
+
+
     ,MODEL_ADDED_PERSON_ASSOCIATION        : "complaint-model-added-person-association"     //param: complaintId, personAssociation
     ,MODEL_UPDATED_PERSON_ASSOCIATION      : "complaint-model-updated-person-association"   //param: complaintId, personAssociation
     ,MODEL_DELETED_PERSON_ASSOCIATION      : "complaint-model-deleted-person-association"   //param: complaintId, personAssociationId
@@ -62,25 +120,24 @@ Complaint.Controller = Complaint.Controller || {
     ,MODEL_UPDATED_LOCATION                : "complaint-model-updated-location"             //param: complaintId, location
     ,MODEL_DELETED_LOCATION                : "complaint-model-deleted-location"             //param: complaintId, location
 
-
-    ,VIEW_ADDED_PERSON_ASSOCIATION         : "complaint-view-added-person-association"      //param: complaintFileId, personAssociation
-    ,VIEW_UPDATED_PERSON_ASSOCIATION       : "complaint-view-updated-person-association"    //param: complaintFileId, personAssociation
-    ,VIEW_DELETED_PERSON_ASSOCIATION       : "complaint-view-deleted-person-association"    //param: complaintFileId, personAssociationId
-    ,VIEW_ADDED_ADDRESS                    : "complaint-view-added-address"                 //param: complaintFileId, personAssociationId, address
-    ,VIEW_UPDATED_ADDRESS                  : "complaint-view-updated-address"               //param: complaintFileId, personAssociationId, address
-    ,VIEW_DELETED_ADDRESS                  : "complaint-view-deleted-address"               //param: complaintFileId, personAssociationId, addressId
-    ,VIEW_ADDED_CONTACT_METHOD             : "complaint-view-added-contact-method"          //param: complaintFileId, personAssociationId, contactMethod
-    ,VIEW_UPDATED_CONTACT_METHOD           : "complaint-view-updated-contact-method"        //param: complaintFileId, personAssociationId, contactMethod
-    ,VIEW_DELETED_CONTACT_METHOD           : "complaint-view-deleted-contact-method"        //param: complaintFileId, personAssociationId, contactMethodId
-    ,VIEW_ADDED_SECURITY_TAG               : "complaint-view-added-security-tag"            //param: complaintFileId, personAssociationId, securityTag
-    ,VIEW_UPDATED_SECURITY_TAG             : "complaint-view-updated-security-tag"          //param: complaintFileId, personAssociationId, securityTag
-    ,VIEW_DELETED_SECURITY_TAG             : "complaint-view-deleted-security-tag"          //param: complaintFileId, personAssociationId, securityTagId
-    ,VIEW_ADDED_PERSON_ALIAS               : "complaint-view-added-person-alias"            //param: complaintFileId, personAssociationId, personAlias
-    ,VIEW_UPDATED_PERSON_ALIAS             : "complaint-view-updated-person-alias"          //param: complaintFileId, personAssociationId, personAlias
-    ,VIEW_DELETED_PERSON_ALIAS             : "complaint-view-deleted-person-alias"          //param: complaintFileId, personAssociationId, personAliasId
-    ,VIEW_ADDED_ORGANIZATION               : "complaint-view-added-organization"            //param: complaintFileId, personAssociationId, organization
-    ,VIEW_UPDATED_ORGANIZATION             : "complaint-view-updated-organization"          //param: complaintFileId, personAssociationId, organization
-    ,VIEW_DELETED_ORGANIZATION             : "complaint-view-deleted-organization"          //param: complaintFileId, personAssociationId, organizationId
+    ,VIEW_ADDED_PERSON_ASSOCIATION         : "complaint-view-added-person-association"
+    ,VIEW_UPDATED_PERSON_ASSOCIATION       : "complaint-view-updated-person-association"    //param: complaintId, personAssociation
+    ,VIEW_DELETED_PERSON_ASSOCIATION       : "complaint-view-deleted-person-association"    //param: complaintId, personAssociationId
+    ,VIEW_ADDED_ADDRESS                    : "complaint-view-added-address"                 //param: complaintId, personAssociationId, address
+    ,VIEW_UPDATED_ADDRESS                  : "complaint-view-updated-address"               //param: complaintId, personAssociationId, address
+    ,VIEW_DELETED_ADDRESS                  : "complaint-view-deleted-address"               //param: complaintId, personAssociationId, addressId
+    ,VIEW_ADDED_CONTACT_METHOD             : "complaint-view-added-contact-method"          //param: complaintId, personAssociationId, contactMethod
+    ,VIEW_UPDATED_CONTACT_METHOD           : "complaint-view-updated-contact-method"        //param: complaintId, personAssociationId, contactMethod
+    ,VIEW_DELETED_CONTACT_METHOD           : "complaint-view-deleted-contact-method"        //param: complaintId, personAssociationId, contactMethodId
+    ,VIEW_ADDED_SECURITY_TAG               : "complaint-view-added-security-tag"            //param: complaintId, personAssociationId, securityTag
+    ,VIEW_UPDATED_SECURITY_TAG             : "complaint-view-updated-security-tag"          //param: complaintId, personAssociationId, securityTag
+    ,VIEW_DELETED_SECURITY_TAG             : "complaint-view-deleted-security-tag"          //param: complaintId, personAssociationId, securityTagId
+    ,VIEW_ADDED_PERSON_ALIAS               : "complaint-view-added-person-alias"            //param: complaintId, personAssociationId, personAlias
+    ,VIEW_UPDATED_PERSON_ALIAS             : "complaint-view-updated-person-alias"          //param: complaintId, personAssociationId, personAlias
+    ,VIEW_DELETED_PERSON_ALIAS             : "complaint-view-deleted-person-alias"          //param: complaintId, personAssociationId, personAliasId
+    ,VIEW_ADDED_ORGANIZATION               : "complaint-view-added-organization"            //param: complaintId, personAssociationId, organization
+    ,VIEW_UPDATED_ORGANIZATION             : "complaint-view-updated-organization"          //param: complaintId, personAssociationId, organization
+    ,VIEW_DELETED_ORGANIZATION             : "complaint-view-deleted-organization"          //param: complaintId, personAssociationId, organizationId
 
     ,VIEW_ADDED_NOTE                       : "complaint-view-added-note"                    //param : note
     ,VIEW_UPDATED_NOTE                     : "complaint-view-updated-note"                  //param : note
@@ -97,12 +154,7 @@ Complaint.Controller = Complaint.Controller || {
     ,VIEW_DELETED_LOCATION                 : "complaint-view-deleted-location"              //param: complaintId, location
 
 
-    ,modelRetrievedComplaint: function(complaint) {
-        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COMPLAINT, complaint);
-    }
-    ,modelSavedComplaint : function(complaint) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_COMPLAINT, complaint);
-    }
+
     ,modelAddedPersonAssociation : function(complaintId, personAssociation) {
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_PERSON_ASSOCIATION, complaintId, personAssociation);
     }

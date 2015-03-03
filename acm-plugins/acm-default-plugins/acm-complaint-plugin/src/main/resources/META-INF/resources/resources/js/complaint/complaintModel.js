@@ -8,23 +8,33 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Service.create)                     {Complaint.Service.create();}
         if (Complaint.Model.Lookup.create)                {Complaint.Model.Lookup.create();}
         if (Complaint.Model.Tree.create)                  {Complaint.Model.Tree.create();}
+//        if (Complaint.Model.Object.create)                {Complaint.Model.Object.create();}
+//        if (Complaint.Model.TopPanel.create)              {Complaint.Model.TopPanel.create();}
+//        if (Complaint.Model.Action.create)                {Complaint.Model.Action.create();}
         if (Complaint.Model.Detail.create)                {Complaint.Model.Detail.create();}
+        if (Complaint.Model.People.create)                {Complaint.Model.People.create();}
         if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
         if (Complaint.Model.Notes.create)                 {Complaint.Model.Notes.create();}
         if (Complaint.Model.References.create)            {Complaint.Model.References.create();}
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
+        if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
     }
     ,onInitialized: function() {
         if (Complaint.Service.onInitialized)              {Complaint.Service.onInitialized();}
         if (Complaint.Model.Lookup.onInitialized)         {Complaint.Model.Lookup.onInitialized();}
         if (Complaint.Model.Tree.onInitialized)           {Complaint.Model.Tree.onInitialized();}
+//        if (Complaint.Model.Object.onInitialized)         {Complaint.Model.Object.onInitialized();}
+//        if (Complaint.Model.TopPanel.onInitialized)       {Complaint.Model.TopPanel.onInitialized();}
+//        if (Complaint.Model.Action.onInitialized)         {Complaint.Model.Action.onInitialized();}
         if (Complaint.Model.Detail.onInitialized)         {Complaint.Model.Detail.onInitialized();}
+        if (Complaint.Model.People.onInitialized)         {Complaint.Model.People.onInitialized();}
         if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
         if (Complaint.Model.Notes.onInitialized)          {Complaint.Model.Notes.onInitialized();}
         if (Complaint.Model.References.onInitialized)     {Complaint.Model.References.onInitialized();}
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
-        if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Tasks.onInitialized();}
+        if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
+        if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
     }
 
     ,interface: {
@@ -37,18 +47,18 @@ Complaint.Model = Complaint.Model || {
         ,apiSaveObject: function(nodeType, objId) {
             return "/api/latest/plugin/complaint/";
         }
-        ,nodeId: function(obj) {
-            return obj.object_id_s;
-            //return parseInt(obj.object_id_s);
+        ,nodeId: function(objSolr) {
+            return objSolr.object_id_s;
+            //return parseInt(objSolr.object_id_s);
         }
-        ,nodeType: function(obj) {
+        ,nodeType: function(objSolr) {
             return Complaint.Model.DOC_TYPE_COMPLAINT;
         }
-        ,nodeTitle: function(obj) {
-            return Acm.goodValue(obj.title_parseable);;
+        ,nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable);
         }
-        ,nodeToolTip: function(obj) {
-            return Acm.goodValue(obj.name);
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
         }
         ,objToSolr: function(objData) {
             var solr = {};
@@ -99,56 +109,184 @@ Complaint.Model = Complaint.Model || {
             ,onInitialized: function() {
             }
 
-            ,NODE_TYPE_PART_DETAILS      : "d"
-            ,NODE_TYPE_PART_LOCATION     : "p"
-            ,NODE_TYPE_PART_INITIATOR    : "i"
-            ,NODE_TYPE_PART_PEOPLE       : "p"
-            ,NODE_TYPE_PART_DOCUMENTS    : "o"
-            ,NODE_TYPE_PART_TASKS        : "t"
-            ,NODE_TYPE_PART_NOTES        : "n"
-            ,NODE_TYPE_PART_PARTICIPANTS : "a"
-            ,NODE_TYPE_PART_REFERENCES   : "r"
-            ,NODE_TYPE_PART_HISTORY      : "h"
+            ,NODE_TYPE_PART_DETAILS      : "det"
+            ,NODE_TYPE_PART_LOCATION     : "loc"
+            //,NODE_TYPE_PART_INITIATOR    : "i"
+            ,NODE_TYPE_PART_PEOPLE       : "ppl"
+            ,NODE_TYPE_PART_DOCUMENTS    : "doc"
+            ,NODE_TYPE_PART_TASKS        : "task"
+            ,NODE_TYPE_PART_NOTES        : "note"
+            ,NODE_TYPE_PART_PARTICIPANTS : "part"
+            ,NODE_TYPE_PART_REFERENCES   : "ref"
+            ,NODE_TYPE_PART_HISTORY      : "his"
 
 
             ,nodeTypeMap: [
                 {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
                 ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
                 ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice" ,tabIds:
-                    ["tabCloseComplaintButton"
-                    ,"tabDetail"
-                    ,"tabLocation"
-                    ,"tabInitiator"
-                    ,"tabPeople"
-                    ,"tabNotes"
-                    ,"tabDocuments"
-                    ,"tabTasks"
-                    ,"tabRefComplaints"
-                    ,"tabRefCases"
-                    ,"tabRefTasks"
-                    ,"tabRefDocuments"
-                    ,"tabApprovers"
-                    ,"tabCollaborators"
-                    ,"tabWatchers"
-                    ,"tabParticipants"
-                    ,"tabHistory"
+                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
+                    ,tabIds: ["tabAction"
+                        ,"tabDetail"
+                        ,"tabLocation"
+                        ,"tabInitiator"
+                        ,"tabPeople"
+                        ,"tabNotes"
+                        ,"tabDocuments"
+                        ,"tabTasks"
+                        ,"tabRefs"
+//                    ,"tabRefComplaints"
+//                    ,"tabRefCases"
+//                    ,"tabRefTasks"
+//                    ,"tabRefDocuments"
+//                    ,"tabApprovers"
+//                    ,"tabCollaborators"
+//                    ,"tabWatchers"
+                        ,"tabParticipants"
+                        ,"tabHistory"
                     ]}
-                ,{nodeType: "p/COMPLAINT/d"      ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/COMPLAINT/l"      ,icon: "",tabIds: ["tabLocation"]}
-                ,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
-                ,{nodeType: "p/COMPLAINT/p"      ,icon: "",tabIds: ["tabPeople"]}
-                ,{nodeType: "p/COMPLAINT/o"      ,icon: "",tabIds: ["tabDocuments"]}
-                ,{nodeType: "p/COMPLAINT/t"      ,icon: "",tabIds: ["tabTasks"]}
-                ,{nodeType: "p/COMPLAINT/n"      ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/COMPLAINT/a"      ,icon: "",tabIds: ["tabParticipants"]}
-                ,{nodeType: "p/COMPLAINT/r"      ,icon: "",tabIds: ["tabRefs"]}
-                ,{nodeType: "p/COMPLAINT/h"      ,icon: "",tabIds: ["tabHistory"]}
+                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
+                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
+                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
+                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
+                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
+                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
+                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
+                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
+                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
+                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
             ]
         }
     }
 
+
+//    ,Object: {
+//        create : function() {
+//        }
+//
+//        ,onInitialized: function() {
+//        }
+//        ,getCache: function(complaintId) {
+//            return ObjNav.Model.Detail.getCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+//        }
+//        ,putCache: function(complaintId, complaint) {
+//            ObjNav.Model.Detail.putCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId, complaint);
+//        }
+//
+//    }
     ,Detail: {
+        create : function() {
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TITLE     , this.onViewChangedComplaintTitle);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TYPE      , this.onViewChangedComplaintType);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_DETAIL              , this.onViewChangedDetail);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_RESTRICTION         , this.onViewChangedRestriction);
+        }
+
+        ,onInitialized: function() {
+        }
+
+        ,onViewChangedComplaint: function(complaintId) {
+            ObjNav.Service.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+        }
+        ,onViewChangedComplaintTitle: function(complaintId, title) {
+            Complaint.Service.Detail.saveComplaintTitle(complaintId, title);
+        }
+
+        ,onViewChangedIncidentDate: function(complaintId, incidentDate) {
+            Complaint.Service.Detail.saveIncidentDate(complaintId, incidentDate);
+        }
+        ,onViewChangedAssignee: function(complaintId, assignee) {
+            Complaint.Service.Detail.saveAssignee(complaintId, assignee);
+        }
+        ,onViewChangedComplaintType: function(complaintId, caseType) {
+            Complaint.Service.Detail.saveComplaintType(complaintId, caseType);
+        }
+        ,onViewChangedPriority: function(complaintId, priority) {
+            Complaint.Service.Detail.savePriority(complaintId, priority);
+        }
+        ,onViewChangedDetail: function(complaintId, details) {
+            Complaint.Service.Detail.saveDetail(complaintId, details);
+        }
+        ,onViewChangedRestriction: function(complaintId, restriction) {
+            Complaint.Service.Detail.updateComplaintRestriction(complaintId, restriction);
+        }
+
+        ,getAssignee: function(complaint) {
+            var assignee = null;
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                if (Acm.isArray(complaint.participants)) {
+                    for (var i = 0; i < complaint.participants.length; i++) {
+                        var participant =  complaint.participants[i];
+                        if ("assignee" == participant.participantType) {
+                            assignee = participant.participantLdapId;
+                            break;
+                        }
+                    }
+                }
+            }
+            return assignee;
+        }
+        ,setAssignee: function(complaint, assignee) {
+            if (complaint) {
+                if (!Acm.isArray(complaint.participants)) {
+                    complaint.participants = [];
+                }
+
+                for (var i = 0; i < complaint.participants.length; i++) {
+                    if ("assignee" == complaint.participants[i].participantType) {
+                        complaint.participants[i].participantLdapId = assignee;
+                        return;
+                    }
+                }
+
+                var participant = {};
+                participant.participantType = "assignee";
+                participant.participantLdapId = assignee;
+                complaint.participants.push(participant);
+            }
+        }
+
+        ,getCacheComplaint: function(complaintId) {
+            if (0 >= complaintId) {
+                return null;
+            }
+            return ObjNav.Model.Detail.getCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+        }
+        ,putCacheComplaint: function(complaintId, complaint) {
+            ObjNav.Model.Detail.putCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId, complaint);
+        }
+
+        ,validateComplaint: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.complaintId) || Acm.isEmpty(data.complaintNumber)) {
+                return false;
+            }
+            if (!Acm.isArray(data.childObjects)) {
+                return false;
+            }
+            if (!Acm.isArray(data.participants)) {
+                return false;
+            }
+            if (!Acm.isArray(data.personAssociations)) {
+                return false;
+            }
+            return true;
+        }
+
+    }
+
+//if (Complaint.Model.Object.create)                {Complaint.Model.Object.create();}
+//if (Complaint.Model.TopPanel.create)              {Complaint.Model.TopPanel.create();}
+//if (Complaint.Model.Action.create)                {Complaint.Model.Action.create();}
+//if (Complaint.Model.Detail.create)                {Complaint.Model.Detail.create();}
+//if (Complaint.Model.People.create)                {Complaint.Model.People.create();}
+
+    ,People: {
         create : function() {
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_ADDED_PERSON_ASSOCIATION    , this.onViewAddedPersonAssociation);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_UPDATED_PERSON_ASSOCIATION  , this.onViewUpdatedPersonAssociation);
@@ -178,7 +316,6 @@ Complaint.Model = Complaint.Model || {
         ,onInitialized: function() {
         }
 
-
         ,onViewAddedPersonAssociation: function(complaintId, personAssociation) {
             var pa = Complaint.Model.Detail.newPersonAssociation();
             pa.parentType = Complaint.Model.getObjectType();
@@ -188,84 +325,76 @@ Complaint.Model = Complaint.Model || {
             pa.person.title = personAssociation.person.title;
             pa.person.givenName = personAssociation.person.givenName;
             pa.person.familyName = personAssociation.person.familyName;
-            Complaint.Service.Detail.addPersonAssociation(complaintId, pa);
+            Complaint.Service.People.addPersonAssociation(complaintId, pa);
         }
         ,onViewUpdatedPersonAssociation: function(complaintId, personAssociation) {
-            Complaint.Service.Detail.updatePersonAssociation(complaintId, personAssociation);
+            Complaint.Service.People.updatePersonAssociation(complaintId, personAssociation);
         }
         ,onViewDeletedPersonAssociation: function(complaintId, personAssociationId) {
-            Complaint.Service.Detail.deletePersonAssociation(complaintId, personAssociationId);
+            Complaint.Service.People.deletePersonAssociation(complaintId, personAssociationId);
         }
         ,onViewAddedAddress: function(complaintId, personAssociationId, address) {
-            Complaint.Service.Detail.addAddress(complaintId, personAssociationId, address);
+            Complaint.Service.People.addAddress(complaintId, personAssociationId, address);
         }
         ,onViewUpdatedAddress: function(complaintId, personAssociationId, address) {
-            Complaint.Service.Detail.updateAddress(complaintId, personAssociationId, address);
+            Complaint.Service.People.updateAddress(complaintId, personAssociationId, address);
         }
         ,onViewDeletedAddress: function(complaintId, personAssociationId, addressId) {
-            Complaint.Service.Detail.deleteAddress(complaintId, personAssociationId, addressId);
+            Complaint.Service.People.deleteAddress(complaintId, personAssociationId, addressId);
         }
         ,onViewAddedContactMethod: function(complaintId, personAssociationId, contactMethod) {
-            Complaint.Service.Detail.addContactMethod(complaintId, personAssociationId, contactMethod);
+            Complaint.Service.People.addContactMethod(complaintId, personAssociationId, contactMethod);
         }
         ,onViewUpdatedContactMethod: function(complaintId, personAssociationId, contactMethod) {
-            Complaint.Service.Detail.updateContactMethod(complaintId, personAssociationId, contactMethod);
+            Complaint.Service.People.updateContactMethod(complaintId, personAssociationId, contactMethod);
         }
         ,onViewDeletedContactMethod: function(complaintId, personAssociationId, contactMethodId) {
-            Complaint.Service.Detail.deleteContactMethod(complaintId, personAssociationId, contactMethodId);
+            Complaint.Service.People.deleteContactMethod(complaintId, personAssociationId, contactMethodId);
         }
         ,onViewAddedSecurityTag: function(complaintId, personAssociationId, securityTag) {
-            Complaint.Service.Detail.addSecurityTag(complaintId, personAssociationId, securityTag);
+            Complaint.Service.People.addSecurityTag(complaintId, personAssociationId, securityTag);
         }
         ,onViewUpdatedSecurityTag: function(complaintId, personAssociationId, securityTag) {
-            Complaint.Service.Detail.updateSecurityTag(complaintId, personAssociationId, securityTag);
+            Complaint.Service.People.updateSecurityTag(complaintId, personAssociationId, securityTag);
         }
         ,onViewDeletedSecurityTag: function(complaintId, personAssociationId, securityTagId) {
-            Complaint.Service.Detail.deleteSecurityTag(complaintId, personAssociationId, securityTagId);
+            Complaint.Service.People.deleteSecurityTag(complaintId, personAssociationId, securityTagId);
         }
         ,onViewAddedPersonAlias: function(complaintId, personAssociationId, personAlias) {
-            Complaint.Service.Detail.addPersonAlias(complaintId, personAssociationId, personAlias);
+            Complaint.Service.People.addPersonAlias(complaintId, personAssociationId, personAlias);
         }
         ,onViewUpdatedPersonAlias: function(complaintId, personAssociationId, personAlias) {
-            Complaint.Service.Detail.updatePersonAlias(complaintId, personAssociationId, personAlias);
+            Complaint.Service.People.updatePersonAlias(complaintId, personAssociationId, personAlias);
         }
         ,onViewDeletedPersonAlias: function(complaintId, personAssociationId, personAliasId) {
-            Complaint.Service.Detail.deletePersonAlias(complaintId, personAssociationId, personAliasId);
+            Complaint.Service.People.deletePersonAlias(complaintId, personAssociationId, personAliasId);
         }
         ,onViewAddedOrganization: function(complaintId, personAssociationId, organization) {
-            Complaint.Service.Detail.addOrganization(complaintId, personAssociationId, organization);
+            Complaint.Service.People.addOrganization(complaintId, personAssociationId, organization);
         }
         ,onViewUpdatedOrganization: function(complaintId, personAssociationId, organization) {
-            Complaint.Service.Detail.updateOrganization(complaintId, personAssociationId, organization);
+            Complaint.Service.People.updateOrganization(complaintId, personAssociationId, organization);
         }
         ,onViewDeletedOrganization: function(complaintId, personAssociationId, organizationId) {
-            Complaint.Service.Detail.deleteOrganization(complaintId, personAssociationId, organizationId);
+            Complaint.Service.People.deleteOrganization(complaintId, personAssociationId, organizationId);
         }
         ,onViewAddedParticipant: function(complaintId, participant) {
-            Complaint.Service.Detail.addParticipant(complaintId, participant);
+            Complaint.Service.People.addParticipant(complaintId, participant);
         }
         ,onViewUpdatedParticipant: function(complaintId, participant) {
-            Complaint.Service.Detail.updateParticipant(complaintId, participant);
+            Complaint.Service.People.updateParticipant(complaintId, participant);
         }
         ,onViewDeletedParticipant: function(complaintId, participantId) {
-            Complaint.Service.Detail.deleteParticipant(complaintId, participantId);
+            Complaint.Service.People.deleteParticipant(complaintId, participantId);
         }
         ,onViewAddedLocation: function(complaint) {
-            Complaint.Service.Detail.addLocation(complaint);
+            Complaint.Service.People.addLocation(complaint);
         }
         ,onViewUpdatedLocation: function(complaint) {
-            Complaint.Service.Detail.updateLocation(complaint);
+            Complaint.Service.People.updateLocation(complaint);
         }
         ,onViewDeletedLocation: function(complaint) {
-            Complaint.Service.Detail.deleteLocation(complaint);
-        }
-
-        ,getComplaint: function(caseFileId) {
-            if (0 >= caseFileId) {
-                return null;
-            }
-
-            return ObjNav.Model.Detail.getCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, caseFileId);
+            Complaint.Service.People.deleteLocation(complaint);
         }
 
         ,newPersonAssociation: function() {
@@ -307,24 +436,6 @@ Complaint.Model = Complaint.Model || {
             return personAssociation;
         }
 
-        ,validateComplaint: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.complaintId) || Acm.isEmpty(data.complaintNumber)) {
-                return false;
-            }
-            if (!Acm.isArray(data.childObjects)) {
-                return false;
-            }
-            if (!Acm.isArray(data.participants)) {
-                return false;
-            }
-            if (!Acm.isArray(data.personAssociations)) {
-                return false;
-            }
-            return true;
-        }
         ,validatePersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -696,28 +807,24 @@ Complaint.Model = Complaint.Model || {
             this._priorities.set(priorities);
         }
 
-
-        //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator']
+        ,_personTypes : ['Initiator', 'Complaintant','Subject','Witness','Wrongdoer','Other']
         ,getPersonTypes : function() {
             return this._personTypes;
         }
+        ,_personTypesModifiable : ['Complaintant','Subject','Witness','Wrongdoer','Other']
+        ,getPersonTypesModifiable : function() {
+            return this._personTypesModifiable;
+        }
 
-        ,_personTitles : ['Mr','mr', 'Mrs','mrs', 'Ms','ms', 'Miss','miss']
+        ,_personTitles : ['Mr', 'Mrs', 'Ms', 'Miss']
         ,getPersonTitles : function() {
             return this._personTitles;
         }
 
-        ,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+        ,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
             'Email','Instant messenger', 'Social media','Website','Blog']
-        ,getContactMethodTypes : function() {
-            return this._contactMethodTypes;
-        }
-
-        ,_securityTagTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
-            'Email','Instant messenger', 'Social media','Website','Blog']
-        ,getSecurityTagTypes : function() {
-            return this._securityTagTypes;
+        ,getDeviceTypes : function() {
+            return this._deviceTypes;
         }
 
         ,_organizationTypes : ['Non-profit','Government','Corporation']
@@ -725,9 +832,9 @@ Complaint.Model = Complaint.Model || {
             return this._organizationTypes;
         }
 
-        ,_addressTypes : ['Business' , 'Home']
-        ,getAddressTypes : function() {
-            return this._addressTypes;
+        ,_locationTypes : ['Business' , 'Home']
+        ,getLocationTypes : function() {
+            return this._locationTypes;
         }
 
         ,_aliasTypes : ['FKA' , 'Married']
@@ -735,14 +842,6 @@ Complaint.Model = Complaint.Model || {
             return this._aliasTypes;
         }
 
-        ,getComplaintTypes: function() {
-            return ["SSBI", "Type1", "Type2", "Type3", "Type4"];
-            //return ["Type1", "Type2", "Type3", "Type4"];
-        }
-        ,getCloseDispositions: function() {
-            return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
-            //return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
-        }
     }
 
 };

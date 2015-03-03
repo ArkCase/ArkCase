@@ -22,7 +22,7 @@ ObjNav.Model = {
         ObjNav.Model.retrieveData(treeInfo);
     }
 
-
+    //to fix later
     ,onTopbarViewSetAsnData: function(asnData) {
         if (ObjNav.Model.Tree.Config.validateTreeInfo(asnData)) {
             if ("/plugin/casefile" == asnData.name) {
@@ -43,7 +43,7 @@ ObjNav.Model = {
         if (0 < treeInfo.objId) { //single caseFile
             ObjNav.Model.setObjectId(treeInfo.objId);
             ObjNav.Model.setObjectType(treeInfo.objType);
-            ObjNav.Service.retrieveObject(treeInfo.objType, treeInfo.objId);
+            ObjNav.Service.Detail.retrieveObject(treeInfo.objType, treeInfo.objId);
 
         } else {
             ObjNav.Service.List.retrieveObjectList(treeInfo);
@@ -437,6 +437,36 @@ ObjNav.Model = {
                 treeInfo.sort = sort;
                 ObjNav.Service.List.retrieveObjectList(treeInfo);
             }
+        }
+
+        ,getSolrObject: function(nodeType, nodeId) {
+            var solr = null;
+            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
+            var objList = ObjNav.Model.List.cachePage.get(treeInfo.start);
+            if (this.validateObjList(objList)) {
+                for (var i = 0; i < objList.length; i++) {
+                    if (nodeId == ObjNav.Model.interface.nodeId(objList[i]) && nodeType == ObjNav.Model.interface.nodeType(objList[i])) {
+                        solr = objList[i];
+                        break;
+                    }
+                }
+            }
+            return solr;
+        }
+
+        ,validateObjList: function(data) {
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+
+            return true;
+        }
+        ,validateObjSolr: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+
+            return true;
         }
 
     }

@@ -9,6 +9,7 @@ CaseFile.Service = {
     create : function() {
         if (CaseFile.Service.Lookup.create) {CaseFile.Service.Lookup.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
+        if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
         if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
@@ -17,6 +18,7 @@ CaseFile.Service = {
     ,onInitialized: function() {
         if (CaseFile.Service.Lookup.onInitialized) {CaseFile.Service.Lookup.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
+        if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
         if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
@@ -121,14 +123,11 @@ CaseFile.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_SAVE_PERSON_ASSOCIATION       : "/api/latest/plugin/personAssociation"
-        ,API_DELETE_PERSON_ASSOCIATION_    : "/api/latest/plugin/personAssociation/delete/"
-
         ,_saveCaseFile: function(caseFileId, caseFile, handler) {
             ObjNav.Service.Detail.saveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile, handler);
         }
         ,saveCaseTitle: function(caseFileId, title) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.title = title;
                 this._saveCaseFile(caseFileId, caseFile
@@ -139,7 +138,7 @@ CaseFile.Service = {
             }
         }
         ,saveIncidentDate: function(caseFileId, incidentDate) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.incidentDate = incidentDate;
                 this._saveCaseFile(caseFileId, caseFile
@@ -150,7 +149,7 @@ CaseFile.Service = {
             }
         }
         ,saveAssignee: function(caseFileId, assignee) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 CaseFile.Model.Detail.setAssignee(caseFile, assignee);
                 this._saveCaseFile(caseFileId, caseFile
@@ -161,7 +160,7 @@ CaseFile.Service = {
             }
         }
         ,saveSubjectType: function(caseFileId, caseType) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.caseType = caseType;
                 this._saveCaseFile(caseFileId, caseFile
@@ -172,7 +171,7 @@ CaseFile.Service = {
             }
         }
         ,savePriority: function(caseFileId, priority) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.priority = priority;
                 this._saveCaseFile(caseFileId, caseFile
@@ -183,7 +182,7 @@ CaseFile.Service = {
             }
         }
         ,saveDueDate: function(caseFileId, dueDate) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.dueDate = dueDate;
                 this._saveCaseFile(caseFileId, caseFile
@@ -194,7 +193,7 @@ CaseFile.Service = {
             }
         }
         ,saveDetail: function(caseFileId, details) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.details = details;
                 this._saveCaseFile(caseFileId, caseFile
@@ -204,8 +203,48 @@ CaseFile.Service = {
                 );
             }
         }
+
+        ,updateCaseRestriction: function(caseFileId, restriction) {
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                caseFile.restricted = restriction;
+                this._saveCaseFile(caseFileId, caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedRestriction(caseFileId, Acm.Service.responseWrapper(data, data.restricted));
+                    }
+                );
+            }
+        }
+
+
+//        ,closeCaseFile : function(data) {
+//            var caseFileId = CaseFile.getCaseFileId();
+//            Acm.Ajax.asyncPost(App.getContextPath() + this.API_CLOSE_CASE_FILE_ + caseFileId
+//                ,JSON.stringify(data)
+//                ,CaseFile.Callback.EVENT_CASEFILE_CLOSED
+//            );
+//        }
+//        ,consolidateCase: function(data) {
+//        }
+    }
+
+    ,People: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_SAVE_PERSON_ASSOCIATION       : "/api/latest/plugin/personAssociation"
+        ,API_DELETE_PERSON_ASSOCIATION_    : "/api/latest/plugin/personAssociation/delete/"
+
+
+        //-------------------------
+
+        ,_saveCaseFile: function(caseFileId, caseFile, handler) {
+            ObjNav.Service.Detail.saveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile, handler);
+        }
         ,saveChildObject: function(caseFileId, childObject) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 for (var i = 0; i < caseFile.childObjects.length; i++) {
                     if (Acm.compare(caseFile.childObjects[i].targetId, childObject.targetid)) {
@@ -214,7 +253,7 @@ CaseFile.Service = {
                         this._saveCaseFile(caseFileId, caseFile
                             ,function(data) {
                                 var savedChildObject = null;
-                                if (CaseFile.Model.Detail.validateData(data)) {
+                                if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                     for (var i = 0; i < data.childObjects.length; i++) {
                                         if (Acm.compare(data.childObjects[i].targetId, childObject.targetid)) {
                                             savedChildObject = data.childObjects[i];
@@ -230,13 +269,13 @@ CaseFile.Service = {
             }
         }
         ,addParticipant: function(caseFileId, participant) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 caseFile.participants.push(participant);
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var addedParticipant = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             for (var i = 0; i < data.participants.length; i++) {
                                 if (Acm.compare(data.participants[i].participantLdapId, participant.participantLdapId)
                                     && Acm.compare(data.participants[i].participantType, participant.participantType)) {
@@ -253,7 +292,7 @@ CaseFile.Service = {
             }
         }
         ,updateParticipant: function(caseFileId, participant) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 for (var i = 0; i < caseFile.participants.length; i++) {
                     if (Acm.compare(caseFile.participants[i].id, participant.id)) {
@@ -266,7 +305,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var savedParticipant = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             for (var i = 0; i < data.participants.length; i++) {
                                 if (Acm.compare(data.participants[i].id, participant.id)) {
                                     savedParticipant = data.participants[i];
@@ -282,7 +321,7 @@ CaseFile.Service = {
             }
         }
         ,deleteParticipant: function(caseFileId, participantId) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var toDelete = -1;
                 for (var i = 0; i < caseFile.participants.length; i++) {
@@ -296,7 +335,7 @@ CaseFile.Service = {
                     caseFile.participants.splice(toDelete, 1);
                     this._saveCaseFile(caseFileId, caseFile
                         ,function(data) {
-                            if (CaseFile.Model.Detail.validateData(data)) {
+                            if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                 CaseFile.Controller.modelDeletedParticipant(caseFileId, Acm.Service.responseWrapper(data, participantId));
                             }
                         }
@@ -314,7 +353,7 @@ CaseFile.Service = {
                     } else {
                         if (CaseFile.Model.Detail.validatePersonAssociation(response)) {
                             //check caseFileId == personAssociation.parentId;
-                            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+                            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
                             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                                 //check response.parentId == caseFileId
                                 //check response.id not null, > 0
@@ -332,7 +371,7 @@ CaseFile.Service = {
             )
         }
         ,updatePersonAssociation: function(caseFileId, personAssociation) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 for (var i = 0; i < caseFile.personAssociations.length; i++) {
                     if (Acm.compare(caseFile.personAssociations[i].id, personAssociation.id)) {
@@ -347,7 +386,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var savedPersonAssociation = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             for (var i = 0; i < data.personAssociations.length; i++) {
                                 if (Acm.compare(data.personAssociations[i].id, personAssociation.id)) {
                                     savedPersonAssociation = data.personAssociations[i];
@@ -382,7 +421,7 @@ CaseFile.Service = {
                     } else {
                         if (CaseFile.Service.Detail._validateDeletedPersonAssociation(response)) {
                             if (response.deletedPersonAssociationId == personAssociationId) {
-                                var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+                                var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                                     for (var i = 0; i < caseFile.personAssociations.length; i++) {
                                         var pa = caseFile.personAssociations[i];
@@ -405,7 +444,7 @@ CaseFile.Service = {
         }
 
         ,addContactMethod: function(caseFileId, personAssociationId, contactMethod) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -418,7 +457,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var addedContactMethod = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
                             var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
                             if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
@@ -440,7 +479,7 @@ CaseFile.Service = {
             }
         }
         ,updateContactMethod: function(caseFileId, personAssociationId, contactMethod) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -457,7 +496,7 @@ CaseFile.Service = {
                     this._saveCaseFile(caseFileId, caseFile
                         ,function(data) {
                             var savedContactMethod = null;
-                            if (CaseFile.Model.Detail.validateData(data)) {
+                            if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
                                 if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
                                     var contactMethods = personAssociation.person.contactMethods;
@@ -478,7 +517,7 @@ CaseFile.Service = {
             }
         }
         ,deleteContactMethod: function(caseFileId, personAssociationId, contactMethodId) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -496,7 +535,7 @@ CaseFile.Service = {
                         contactMethods.splice(toDelete, 1);
                         this._saveCaseFile(caseFileId, caseFile
                             ,function(data) {
-                                if (CaseFile.Model.Detail.validateData(data)) {
+                                if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                     CaseFile.Controller.modelDeletedContactMethod(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, contactMethodId));
                                 }
                             }
@@ -507,7 +546,7 @@ CaseFile.Service = {
         }
 
         ,addSecurityTag: function(caseFileId, personAssociationId, securityTag) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -520,7 +559,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var addedSecurityTag = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
                             var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
                             if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
@@ -542,7 +581,7 @@ CaseFile.Service = {
             }
         }
         ,updateSecurityTag: function(caseFileId, personAssociationId, securityTag) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -559,7 +598,7 @@ CaseFile.Service = {
                     this._saveCaseFile(caseFileId, caseFile
                         ,function(data) {
                             var savedSecurityTag = null;
-                            if (CaseFile.Model.Detail.validateData(data)) {
+                            if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
                                 if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
                                     var securityTags = personAssociation.person.securityTags;
@@ -580,7 +619,7 @@ CaseFile.Service = {
             }
         }
         ,deleteSecurityTag: function(caseFileId, personAssociationId, securityTagId) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -598,7 +637,7 @@ CaseFile.Service = {
                         securityTags.splice(toDelete, 1);
                         this._saveCaseFile(caseFileId, caseFile
                             ,function(data) {
-                                if (CaseFile.Model.Detail.validateData(data)) {
+                                if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                     CaseFile.Controller.modelDeletedSecurityTag(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, securityTagId));
                                 }
                             }
@@ -609,7 +648,7 @@ CaseFile.Service = {
         }
 
         ,addPersonAlias: function(caseFileId, personAssociationId, personAlias) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -622,7 +661,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var addedPersonAlias = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
                             var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
                             if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
@@ -644,7 +683,7 @@ CaseFile.Service = {
             }
         }
         ,updatePersonAlias: function(caseFileId, personAssociationId, personAlias) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -661,7 +700,7 @@ CaseFile.Service = {
                     this._saveCaseFile(caseFileId, caseFile
                         ,function(data) {
                             var savedPersonAlias = null;
-                            if (CaseFile.Model.Detail.validateData(data)) {
+                            if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
                                 if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
                                     var personAliases = personAssociation.person.personAliases;
@@ -682,7 +721,7 @@ CaseFile.Service = {
             }
         }
         ,deletePersonAlias: function(caseFileId, personAssociationId, personAliasId) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -700,7 +739,7 @@ CaseFile.Service = {
                         personAliases.splice(toDelete, 1);
                         this._saveCaseFile(caseFileId, caseFile
                             ,function(data) {
-                                if (CaseFile.Model.Detail.validateData(data)) {
+                                if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                     CaseFile.Controller.modelDeletedPersonAlias(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, personAliasId));
                                 }
                             }
@@ -711,7 +750,7 @@ CaseFile.Service = {
         }
 
         ,addAddress: function(caseFileId, personAssociationId, address) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -724,7 +763,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var addedAddress = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
                             var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
                             if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
@@ -751,7 +790,7 @@ CaseFile.Service = {
             }
         }
         ,updateAddress: function(caseFileId, personAssociationId, address) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -772,7 +811,7 @@ CaseFile.Service = {
                     this._saveCaseFile(caseFileId, caseFile
                         ,function(data) {
                             var savedAddress = null;
-                            if (CaseFile.Model.Detail.validateData(data)) {
+                            if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
                                 if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
                                     var addresses = personAssociation.person.addresses;
@@ -793,7 +832,7 @@ CaseFile.Service = {
             }
         }
         ,deleteAddress: function(caseFileId, personAssociationId, addressId) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -811,7 +850,7 @@ CaseFile.Service = {
                         addresses.splice(toDelete, 1);
                         this._saveCaseFile(caseFileId, caseFile
                             ,function(data) {
-                                if (CaseFile.Model.Detail.validateData(data)) {
+                                if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                     CaseFile.Controller.modelDeletedAddress(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, addressId));
                                 }
                             }
@@ -822,7 +861,7 @@ CaseFile.Service = {
         }
 
         ,addOrganization: function(caseFileId, personAssociationId, organization) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -835,7 +874,7 @@ CaseFile.Service = {
                 this._saveCaseFile(caseFileId, caseFile
                     ,function(data) {
                         var addedOrganization = null;
-                        if (CaseFile.Model.Detail.validateData(data)) {
+                        if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
                             var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
                             if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
@@ -857,7 +896,7 @@ CaseFile.Service = {
             }
         }
         ,updateOrganization: function(caseFileId, personAssociationId, organization) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -874,7 +913,7 @@ CaseFile.Service = {
                     this._saveCaseFile(caseFileId, caseFile
                         ,function(data) {
                             var savedOrganization = null;
-                            if (CaseFile.Model.Detail.validateData(data)) {
+                            if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
                                 if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
                                     var organizations = personAssociation.person.organizations;
@@ -895,7 +934,7 @@ CaseFile.Service = {
             }
         }
         ,deleteOrganization: function(caseFileId, personAssociationId, organizationId) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
                 var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
@@ -913,7 +952,7 @@ CaseFile.Service = {
                         organizations.splice(toDelete, 1);
                         this._saveCaseFile(caseFileId, caseFile
                             ,function(data) {
-                                if (CaseFile.Model.Detail.validateData(data)) {
+                                if (CaseFile.Model.Detail.validateCaseFile(data)) {
                                     CaseFile.Controller.modelDeletedOrganization(caseFileId, personAssociationId, Acm.Service.responseWrapper(data, organizationId));
                                 }
                             }
@@ -922,28 +961,6 @@ CaseFile.Service = {
                 }
             }
         }
-        ,updateCaseRestriction: function(caseFileId, restriction) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                caseFile.restricted = restriction;
-                this._saveCaseFile(caseFileId, caseFile
-                    ,function(data) {
-                        CaseFile.Controller.modelSavedRestriction(caseFileId, Acm.Service.responseWrapper(data, data.restricted));
-                    }
-                );
-            }
-        }
-
-
-//        ,closeCaseFile : function(data) {
-//            var caseFileId = CaseFile.getCaseFileId();
-//            Acm.Ajax.asyncPost(App.getContextPath() + this.API_CLOSE_CASE_FILE_ + caseFileId
-//                ,JSON.stringify(data)
-//                ,CaseFile.Callback.EVENT_CASEFILE_CLOSED
-//            );
-//        }
-//        ,consolidateCase: function(data) {
-//        }
     }
 
     ,Documents: {
@@ -1160,7 +1177,7 @@ CaseFile.Service = {
                         CaseFile.Controller.modelRetrievedTasks(response);
 
                     } else {
-                        //if (CaseFile.Model.Detail.validateData(response)) {
+                        //if (CaseFile.Model.Detail.validateCaseFile(response)) {
                             var tasks = response;
                             CaseFile.Model.Tasks.cacheTasks.put(0, tasks);
                             CaseFile.Controller.modelRetrievedTasks(response);
@@ -1178,7 +1195,7 @@ CaseFile.Service = {
                         CaseFile.Controller.modelCompletedTask(response);
 
                     } else {
-                        //if (CaseFile.Model.Detail.validateData(response)) {
+                        //if (CaseFile.Model.Detail.validateCaseFile(response)) {
                         var task = response;
                         var caseFileId = CaseFile.Model.getCaseFileId();
                         var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);
@@ -1213,7 +1230,7 @@ CaseFile.Service = {
                         CaseFile.Controller.modelCompletedTask(response);
 
                     } else {
-                        //if (CaseFile.Model.Detail.validateData(response)) {
+                        //if (CaseFile.Model.Detail.validateCaseFile(response)) {
                         var task = response;
                         var caseFileId = CaseFile.Model.getCaseFileId();
                         var tasks = CaseFile.Model.Tasks.cacheTasks.get(0);

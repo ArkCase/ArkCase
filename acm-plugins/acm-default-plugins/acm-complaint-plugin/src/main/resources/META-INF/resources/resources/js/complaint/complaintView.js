@@ -8,6 +8,8 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.MicroData.create)          {Complaint.View.MicroData.create();}
         if (Complaint.View.Navigator.create)          {Complaint.View.Navigator.create();}
         if (Complaint.View.Content.create)            {Complaint.View.Content.create();}
+        if (Complaint.View.Action.create)          {Complaint.View.Action.create();}
+        if (Complaint.View.Detail.create)          {Complaint.View.Detail.create();}
         if (Complaint.View.People.create)             {Complaint.View.People.create();}
         if (Complaint.View.Documents.create)          {Complaint.View.Documents.create();}
         if (Complaint.View.Notes.create)              {Complaint.View.Notes.create();}
@@ -22,6 +24,8 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.MicroData.onInitialized)      {Complaint.View.MicroData.onInitialized();}
         if (Complaint.View.Navigator.onInitialized)      {Complaint.View.Navigator.onInitialized();}
         if (Complaint.View.Content.onInitialized)        {Complaint.View.Content.onInitialized();}
+        if (Complaint.View.Action.onInitialized)         {Complaint.View.Action.onInitialized();}
+        if (Complaint.View.Detail.onInitialized)         {Complaint.View.Detail.onInitialized();}
         if (Complaint.View.People.onInitialized)         {Complaint.View.People.onInitialized();}
         if (Complaint.View.Documents.onInitialized)      {Complaint.View.Documents.onInitialized();}
         if (Complaint.View.Notes.onInitialized)          {Complaint.View.Notes.onInitialized();}
@@ -37,11 +41,11 @@ Complaint.View = Complaint.View || {
     }
     ,getActiveComplaint: function() {
         var objId = ObjNav.View.Navigator.getActiveObjId();
-        var caseFile = null;
+        var complaint = null;
         if (Acm.isNotEmpty(objId)) {
-            caseFile = ObjNav.Model.Detail.getCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, objId);
+            complaint = ObjNav.Model.Detail.getCacheObject(Complaint.Model.DOC_TYPE_COMPLAINT, objId);
         }
-        return caseFile;
+        return complaint;
     }
 
     ,MicroData: {
@@ -49,10 +53,16 @@ Complaint.View = Complaint.View || {
             this.treeFilter = Acm.Object.MicroData.getJson("treeFilter");
             this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             this.token      = Acm.Object.MicroData.get("token");
+
+            this.formUrls = {};
+            this.formUrls.closeComplaintFormUrl          = Acm.Object.MicroData.get("closeComplaintFormUrl");
+            this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
+            this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
+            this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
+            this.formUrls.formDocuments                  = Acm.Object.MicroData.get("formDocuments");
         }
         ,onInitialized: function() {
         }
-
     }
 
     ,Navigator: {
@@ -61,37 +71,30 @@ Complaint.View = Complaint.View || {
             this.$ulSort   = $("#ulSort");
             this.$tree     = $("#tree");
 
-            //Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_CASE_TITLE       , this.onViewChangedCaseTitle);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TITLE       , this.onViewChangedComplaintTitle);
         }
         ,onInitialized: function() {
         }
 
-        ,onViewChangedCaseTitle: function(caseFileId, title) {
-            Complaint.View.Tree.updateTitle(caseFileId, title);
+        ,onViewChangedComplaintTitle: function(complaintId, title) {
+            var complaintSolr = ObjNav.Model.List.getSolrObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+            if (ObjNav.Model.List.validateObjSolr(complaintSolr)) {
+                complaintSolr.title_parseable = Acm.goodValue(title);
+                ObjNav.View.Navigator.updateObjNode(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+            }
         }
 
         ,getTreeArgs: function() {
             return {
                 lazyLoad: function(event, data) {
-                    Complaint.View.Tree.lazyLoad(event, data);
+                    Complaint.View.Navigator.lazyLoad(event, data);
                 }
                 ,getContextMenu: function(node) {
-                    Complaint.View.Tree.getContextMenu(node);
+                    Complaint.View.Navigator.getContextMenu(node);
                 }
             };
         }
-
-        ,updateTitle: function(complaintId, title) {
-            var key = ObjNav.Model.Tree.Key.getKeyByObj(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
-            var c = Complaint.Model.Detail.getComplaint(complaintId);
-            if (c) {
-                ObjNav.View.Navigator.setTitle(key, Acm.goodValue(title));
-            }
-        }
         ,lazyLoad: function(event, data) {
-            //var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
-            //var pageId = treeInfo.start;
-
             var key = data.node.key;
             var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
             switch (nodeType) {
@@ -100,6 +103,9 @@ Complaint.View = Complaint.View || {
                         .reset()
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DETAILS
                             ,title: "Details"
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_LOCATION
+                            ,title: "Location"
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
                             ,title: "People"
@@ -110,24 +116,20 @@ Complaint.View = Complaint.View || {
 //                            ,lazy: true
 //                            ,cache: false
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-                            ,title: "Participants"
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
+                            ,title: "Tasks"
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_NOTES
                             ,title: "Notes"
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
-                            ,title: "Tasks"
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
+                            ,title: "Participants"
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
                             ,title: "References"
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: "History"
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
-
-                            ,title: "Correspondence"
                         })
                         .getTree();
 
@@ -169,22 +171,276 @@ Complaint.View = Complaint.View || {
     }
 
 
+    ,Action: {
+        create: function() {
+            this.$chkRestrict     = $("#restrict");
+            this.$chkRestrict.on("click", function(e) {Complaint.View.Action.onClickChkRestrict(e, this);});
+
+            this.$btnComplaintClose = $("#closeComplaint");
+            this.$btnComplaintClose.click(function(e){Complaint.View.Action.onClickBtnComplaintClose(e, this)});
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onClickBtnComplaintClose: function(event, ctrl) {
+            var url = Complaint.View.MicroData.formUrls.closeComplaintFormUrl;
+            var c = Complaint.View.getActiveComplaint();
+            if (Complaint.Model.Detail.validateComplaint(c) && Acm.isNotEmpty(url)) {
+                url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId
+                    + "',complaintNumber:'" + Acm.goodValue(c.complaintNumber)
+                    + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
+
+                Acm.Dialog.openWindow(url, "", 860, 700, function() {});
+            }
+        }
+
+        ,onModelRetrievedObject: function(objData) {
+            Complaint.View.Action.populate(objData);
+        }
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            Complaint.View.Action.populate(objData);
+            SubscriptionOp.Model.checkSubscription(App.getUserName(), objType, objId);
+        }
+
+        ,onClickChkRestrict: function(event,ctrl){
+            var restriction = ($(ctrl).prop('checked')) ? true : false;
+            Complaint.Controller.viewChangedRestriction(Complaint.View.getActiveComplaintId(), restriction);
+        }
+
+        ,populate: function(complaint) {
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                this.setCheckedChkRestrict(Acm.goodValue(complaint.restricted, false));
+            }
+        }
+
+        ,setCheckedChkRestrict: function(value){
+            Acm.Object.setChecked(this.$chkRestrict, value);
+        }
+
+    }
+
+    ,Detail: {
+        create: function() {
+            this.$labComplaintNumber   = $("#complaintNum");
+            this.$lnkComplaintTitle    = $("#complaintTitle");
+            AcmEx.Object.XEditable.useEditable(this.$lnkComplaintTitle, {
+                success: function(response, newValue) {
+                    Complaint.Controller.viewChangedComplaintTitle(Complaint.View.getActiveComplaintId(), newValue);
+                }
+            });
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_COMPLAINT_TITLE   ,this.onModelSavedComplaintTitle);
+
+
+            this.$lnkIncidentDate      = $("#incident");
+            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
+                success: function(response, newValue) {
+                    Complaint.Controller.viewChangedIncidentDate(Complaint.View.getActiveComplaintId(), newValue);
+                }
+            });
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_INCIDENT_DATE     ,this.onModelSavedIncidentDate);
+
+
+            this.$lnkPriority     = $("#priority");
+            this.$lnkAssignee     = $("#assigned");
+            this.$lnkComplaintType  = $("#type");
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_FOUND_ASSIGNEES         ,this.onModelFoundAssignees);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_ASSIGNEE          ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_FOUND_COMPLAINT_TYPES   ,this.onModelFoundComplaintTypes);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_COMPLAINT_TYPE    ,this.onModelSavedComplaintType);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_FOUND_PRIORITIES        ,this.onModelFoundPriorities);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_PRIORITY          ,this.onModelSavedPriority);
+
+            this.$lnkStatus       = $("#status");
+
+
+            this.$divDetail       = $(".divDetail");
+            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail.on("click", function(e) {Complaint.View.Detail.onClickBtnEditDetail(e, this);});
+            this.$btnSaveDetail.on("click", function(e) {Complaint.View.Detail.onClickBtnSaveDetail(e, this);});
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_DETAIL            ,this.onModelSavedDetail);
+
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+        }
+        ,onInitialized: function() {
+        }
+
+
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            Complaint.View.Detail.populateComplaint(objData);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            Complaint.View.Detail.populateComplaint(objData);
+        }
+
+        ,onModelFoundAssignees: function(assignees) {
+            var choices = [];
+            $.each(assignees, function(idx, val) {
+                var opt = {};
+                opt.value = val.userId;
+                opt.text = val.fullName;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(Complaint.View.Detail.$lnkAssignee, {
+                source: choices
+                ,success: function(response, newValue) {
+                    Complaint.Controller.viewChangedAssignee(Complaint.View.getActiveComplaintId(), newValue);
+                }
+            });
+        }
+        ,onModelFoundComplaintTypes: function(complaintTypes) {
+            var choices = [];
+            $.each(complaintTypes, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(Complaint.View.Detail.$lnkComplaintType, {
+                source: choices
+                ,success: function(response, newValue) {
+                    Complaint.Controller.viewChangedComplaintType(Complaint.View.getActiveComplaintId(), newValue);
+                }
+            });
+        }
+        ,onModelFoundPriorities: function(priorities) {
+            var choices = []; //[{value: "", text: "Choose Priority"}];
+            $.each(priorities, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(Complaint.View.Detail.$lnkPriority, {
+                source: choices
+                ,success: function(response, newValue) {
+                    Complaint.Controller.viewChangedPriority(Complaint.View.getActiveComplaintId(), newValue);
+                }
+            });
+        }
+
+        ,onModelSavedComplaintTitle: function(complaintId, title) {
+            if (title.hasError) {
+                Complaint.View.Detail.setTextLnkComplaintTitle("(Error)");
+            }
+        }
+        ,onModelSavedIncidentDate: function(complaintId, created) {
+            if (created.hasError) {
+                Complaint.View.Detail.setTextLnkIncidentDate("(Error)");
+            }
+        }
+        ,onModelSavedAssignee: function(complaintId, assginee) {
+            if (assginee.hasError) {
+                Complaint.View.Detail.setTextLnkAssignee("(Error)");
+            }
+        }
+        ,onModelSavedComplaintType: function(complaintId, subjectType) {
+            if (subjectType.hasError) {
+                Complaint.View.Detail.setTextLnkComplaintType("(Error)");
+            }
+        }
+        ,onModelSavedPriority: function(complaintId, priority) {
+            if (priority.hasError) {
+                Complaint.View.Detail.setTextLnkPriority("(Error)");
+            }
+        }
+        ,onModelSavedDetail: function(complaintId, details) {
+            if (details.hasError) {
+                Complaint.View.Detail.setHtmlDivDetail("(Error)");
+            }
+        }
+
+        ,DIRTY_EDITING_DETAIL: "Editing complaint detail"
+        ,onClickBtnEditDetail: function(event, ctrl) {
+            App.Object.Dirty.declare(Complaint.View.Detail.DIRTY_EDITING_DETAIL);
+            Complaint.View.Detail.editDivDetail();
+        }
+        ,onClickBtnSaveDetail: function(event, ctrl) {
+            var htmlDetail = Complaint.View.Detail.saveDivDetail();
+            Complaint.Controller.viewChangedDetail(Complaint.View.getActiveComplaintId(), htmlDetail);
+            App.Object.Dirty.clear(Complaint.View.Detail.DIRTY_EDITING_DETAIL);
+        }
+
+
+        ,populateComplaint: function(c) {
+            if (Complaint.Model.Detail.validateComplaint(c)) {
+                var assignee = Complaint.Model.Detail.getAssignee(c);
+                this.setTextLnkAssignee(Acm.goodValue(assignee));
+
+                this.setTextLnkComplaintTitle(Acm.goodValue(c.complaintTitle));
+                this.setTextLabComplaintNumber(Acm.goodValue(c.complaintNumber));
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                this.setTextLnkComplaintType(Acm.goodValue(c.complaintType));
+                this.setTextLnkPriority(Acm.goodValue(c.priority));
+                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setHtmlDivDetail(Acm.goodValue(c.details));
+            }
+        }
+
+        ,setTextLabComplaintNumber: function(txt) {
+            Acm.Object.setText(this.$labComplaintNumber, txt);
+        }
+        ,setTextLnkComplaintTitle: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkComplaintTitle, txt);
+        }
+        ,setTextLnkIncidentDate: function(txt) {
+            AcmEx.Object.XEditable.setDate(this.$lnkIncidentDate, txt);
+        }
+        ,getHtmlDivDetail: function() {
+            return AcmEx.Object.SummerNote.get(this.$divDetail);
+        }
+        ,setHtmlDivDetail: function(html) {
+            AcmEx.Object.SummerNote.set(this.$divDetail, html);
+        }
+        ,editDivDetail: function() {
+            AcmEx.Object.SummerNote.edit(this.$divDetail);
+        }
+        ,saveDivDetail: function() {
+            return AcmEx.Object.SummerNote.save(this.$divDetail);
+        }
+        ,setTextLnkAssignee: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkAssignee, txt);
+        }
+        ,setTextLnkComplaintType: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkComplaintType, txt);
+        }
+        ,setTextLnkPriority: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkPriority, txt);
+        }
+        ,setTextLnkStatus: function(txt) {
+            Acm.Object.setText(this.$lnkStatus, txt);
+        }
+
+    }
+
+
     ,People: {
         create: function() {
             this.$divPeople = $("#divPeople");
             this.createJTable(this.$divPeople);
-
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT         ,this.onModelRetrievedComplaint);
-            //Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT           ,this.onViewSelectedComplaint);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_PERSON_ASSOCIATION    ,this.onModelAddedPersonAssociation);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_PERSON_ASSOCIATION  ,this.onModelUpdatedPersonAssociation);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
 
             if (this.ContactMethods.create)     {this.ContactMethods.create();}
             if (this.SecurityTags.create)       {this.SecurityTags.create();}
             if (this.Organizations.create)      {this.Organizations.create();}
             if (this.Addresses.create)          {this.Addresses.create();}
             if (this.Aliases.create)            {this.Aliases.create();}
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_PERSON_ASSOCIATION    ,this.onModelAddedPersonAssociation);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_PERSON_ASSOCIATION  ,this.onModelUpdatedPersonAssociation);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
         }
         ,onInitialized: function() {
             if (Complaint.View.People.ContactMethods.onInitialized)     {Complaint.View.People.ContactMethods.onInitialized();}
@@ -194,14 +450,10 @@ Complaint.View = Complaint.View || {
             if (Complaint.View.People.Aliases.onInitialized)            {Complaint.View.People.Aliases.onInitialized();}
         }
 
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                //empty table?
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.People.$divPeople);
-            }
+        ,onModelRetrievedObject: function(complaint) {
+            AcmEx.Object.JTable.load(Complaint.View.People.$divPeople);
         }
-        ,onViewSelectedComplaint: function(complaintId) {
+        ,onViewSelectedObject: function(nodeType, nodeId) {
             AcmEx.Object.JTable.load(Complaint.View.People.$divPeople);
         }
         ,onModelAddedPersonAssociation: function(personAssociation) {
@@ -244,6 +496,9 @@ Complaint.View = Complaint.View || {
                                 var personAssociations = complaint.personAssociations;
                                 for (var i = 0; i < personAssociations.length; i++) {
                                     if (Complaint.Model.Detail.validatePersonAssociation(personAssociations[i])) {
+                                        //
+                                        //make initiator on top of table and disable delete button
+                                        //
                                         if(personAssociations[i].id == complaint.originator.id) {
                                             rc.Records.unshift({
                                                 assocId: personAssociations[i].id
@@ -295,7 +550,6 @@ Complaint.View = Complaint.View || {
                             return rc;
                         }
                         ,deleteAction: function(postData, jtParams) {
-
                             return {
                                 "Result": "OK"
                             };
@@ -1237,26 +1491,26 @@ Complaint.View = Complaint.View || {
             //todo implement add document button
 
 
-            /*this.$btnAddNewDocument = $("#addNewDocuments");
-             this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
+//            this.$btnAddNewDocument = $("#addNewDocuments");
+//             this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
+//
+//             this.$formNewDocuments = $("#formDocuments");
+//             this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
+//
+//             AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
 
-             this.$formNewDocuments = $("#formDocuments");
-             this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
-
-             AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);*/
-
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPLOADED_DOCUMENTS    ,this.onModelUploadedDocuments);
 
         }
         ,onInitialized: function() {
         }
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
-            }
+        ,onModelRetrievedObject: function(complaint) {
+            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
         }
         ,onModelUploadedDocuments: function(documents) {
             if (documents.hasError) {
@@ -1265,23 +1519,23 @@ Complaint.View = Complaint.View || {
                 AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
             }
         }
-        /*,onClickSpanAddNewDocuments: function(event, ctrl) {
-         Complaint.View.Documents.$btnAddNewDocument.click();
-         }
-         ,onChangeFileInput: function(event, ctrl) {
-         Complaint.View.Documents.$formNewDocuments.submit();
-         }
-         ,onSubmitAddNewDocuments: function(event, ctrl) {
-         event.preventDefault();
-         var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
-         var fd = new FormData();
-         fd.append("complaintId", Complaint.View.getActiveComplaintId());
-         for(var i = 0; i < count; i++ ){
-         fd.append("files[]", Complaint.View.Documents.$btnAddNewDocument[0].files[i]);
-         }
-         Complaint.ServiceNew.Documents.uploadDocuments(fd);
-         Complaint.View.Documents.$formNewDocuments[0].reset();
-         }*/
+//        ,onClickSpanAddNewDocuments: function(event, ctrl) {
+//         Complaint.View.Documents.$btnAddNewDocument.click();
+//         }
+//         ,onChangeFileInput: function(event, ctrl) {
+//         Complaint.View.Documents.$formNewDocuments.submit();
+//         }
+//         ,onSubmitAddNewDocuments: function(event, ctrl) {
+//         event.preventDefault();
+//         var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
+//         var fd = new FormData();
+//         fd.append("complaintId", Complaint.View.getActiveComplaintId());
+//         for(var i = 0; i < count; i++ ){
+//         fd.append("files[]", Complaint.View.Documents.$btnAddNewDocument[0].files[i]);
+//         }
+//         Complaint.Service.Documents.uploadDocuments(fd);
+//         Complaint.View.Documents.$formNewDocuments[0].reset();
+//         }
         ,_makeJtData: function(documents){
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
             if(Acm.isNotEmpty(documents)){
@@ -1318,11 +1572,11 @@ Complaint.View = Complaint.View || {
                         }
                         return AcmEx.Object.JTable.getEmptyRecords();
                     }
-                    /*, createAction: function (postData, jtParams) {
-                     return {
-                     "Result": "OK"
-                     };
-                     }*/
+//                    , createAction: function (postData, jtParams) {
+//                     return {
+//                     "Result": "OK"
+//                     };
+//                     }
                 }
                 ,fields: {
                     id: {
@@ -1336,7 +1590,7 @@ Complaint.View = Complaint.View || {
                         title: 'Title'
                         ,width: '30%'
                         ,display: function (commData) {
-                            var a = "<a href='" + App.getContextPath() + Complaint.ServiceNew.Documents.API_DOWNLOAD_DOCUMENT
+                            var a = "<a href='" + App.getContextPath() + Complaint.Service.Documents.API_DOWNLOAD_DOCUMENT
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
                                 + "'>" + commData.record.title + "</a>";
                             return $(a);
@@ -1369,25 +1623,22 @@ Complaint.View = Complaint.View || {
             this.$divNotes = $("#divNotes");
             this.createJTableNotes(this.$divNotes);
 
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_NOTE        ,this.onModelAddedNote);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_NOTE      ,this.onModelUpdatedNote);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_NOTE      ,this.onModelDeletedNote);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT      ,this.onViewSelectedComplaint);
         }
         ,onInitialized: function() {
         }
 
-        ,onViewSelectedComplaint: function(complaintId) {
+        ,onModelRetrievedObject: function(complaint) {
             AcmEx.Object.JTable.load(Complaint.View.Notes.$divNotes);
         }
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.Notes.$divNotes);
-            }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Notes.$divNotes);
         }
+
         ,onModelAddedNote: function(note) {
             if (note.hasError) {
                 Acm.Dialog.info(note.errorMsg);
@@ -1455,7 +1706,7 @@ Complaint.View = Complaint.View || {
                                 return Complaint.View.Notes._makeJtData(notes);
 
                             } else {
-                                return Complaint.ServiceNew.Notes.retrieveNotesDeferred(complaintId
+                                return Complaint.Service.Notes.retrieveNotesDeferred(complaintId
                                     ,postData
                                     ,jtParams
                                     ,sortMap
@@ -1531,7 +1782,7 @@ Complaint.View = Complaint.View || {
                             noteToSave.created = Acm.getCurrentDayInternal();
                             noteToSave.creator = App.getUserName();
                             noteToSave.parentId = Complaint.View.getActiveComplaintId();
-                            noteToSave.parentType = Complaint.Model.getObjectType();
+                            noteToSave.parentType = Complaint.Model.DOC_TYPE_COMPLAINT;
                             Complaint.Controller.viewAddedNote(noteToSave);
                         }
                     }
@@ -1572,20 +1823,16 @@ Complaint.View = Complaint.View || {
             this.$divHistory          = $("#divHistory");
             this.createJTableHistory(this.$divHistory);
 
-            //Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
-            //Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT      ,this.onViewSelectedComplaint);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.History.$divHistory);
-            }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.History.$divHistory);
         }
-        ,onViewSelectedComplaint: function(complaintId) {
+        ,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(Complaint.View.History.$divHistory);
         }
 
@@ -1629,22 +1876,22 @@ Complaint.View = Complaint.View || {
                             if (Complaint.Model.History.validateHistory(history)) {
                                 return Complaint.View.History._makeJtData(history);
                             } else {
-                                /*return Complaint.ServiceNew.History.retrieveHistoryDeferred(complaintId
-                                 ,postData
-                                 ,jtParams
-                                 ,sortMap
-                                 ,function(data) {
-                                 if(Complaint.Model.History.validateHistory(data)){
-                                 var history = {};
-                                 history.events = data.resultPage;
-                                 history.totalEvents = data.totalCount;
-                                 return Complaint.View.History._makeJtData(history);
-                                 }
-                                 return AcmEx.Object.JTable.getEmptyRecords();
-                                 }
-                                 ,function(error) {
-                                 }
-                                 );*/
+//                                return Complaint.Service.History.retrieveHistoryDeferred(complaintId
+//                                 ,postData
+//                                 ,jtParams
+//                                 ,sortMap
+//                                 ,function(data) {
+//                                 if(Complaint.Model.History.validateHistory(data)){
+//                                 var history = {};
+//                                 history.events = data.resultPage;
+//                                 history.totalEvents = data.totalCount;
+//                                 return Complaint.View.History._makeJtData(history);
+//                                 }
+//                                 return AcmEx.Object.JTable.getEmptyRecords();
+//                                 }
+//                                 ,function(error) {
+//                                 }
+//                                 );
                                 return AcmEx.Object.JTable.getEmptyRecords();
 
                             }  //end else
@@ -1679,19 +1926,18 @@ Complaint.View = Complaint.View || {
             this.$divReferences          = $("#divReferences");
             this.createJTableReferences(this.$divReferences);
 
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_DOCUMENT         ,this.onModelAddedDocument);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT      ,this.onViewComplaintSelected);
         }
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.References.$divReferences);
-            }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.References.$divReferences);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(Complaint.View.References.$divReferences);
         }
         ,onModelAddedDocument: function(complaintId) {
             if (complaintId.hasError) {
@@ -1699,9 +1945,6 @@ Complaint.View = Complaint.View || {
             } else {
                 AcmEx.Object.JTable.load(Complaint.View.References.$divReferences);
             }
-        }
-        ,onViewComplaintSelected: function(complaintId) {
-            AcmEx.Object.JTable.load(Complaint.View.References.$divReferences);
         }
 
         ,_makeJtData: function(documents){
@@ -1792,9 +2035,8 @@ Complaint.View = Complaint.View || {
             this.createJTableTasks(this.$divTasks);
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divTasks, Complaint.View.Tasks.onClickSpanAddTask);
 
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
-            //Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT      ,this.onViewSelectedComplaint);
-
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
@@ -1802,14 +2044,10 @@ Complaint.View = Complaint.View || {
         ,URL_NEW_TASK_:    "/plugin/task/wizard?parentType=COMPLAINT&reference="
 
 
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.Tasks.$divTasks);
-            }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Tasks.$divTasks);
         }
-        ,onViewSelectedComplaint: function(complaintId) {
+        ,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(Complaint.View.Tasks.$divTasks);
         }
         ,onClickSpanAddTask: function(event, ctrl) {
@@ -1867,7 +2105,7 @@ Complaint.View = Complaint.View || {
                                 return Complaint.View.Tasks._makeJtData(tasks);
 
                             } else {
-                                return Complaint.ServiceNew.Tasks.retrieveTaskListDeferred(complaintId
+                                return Complaint.Service.Tasks.retrieveTaskListDeferred(complaintId
                                     ,postData
                                     ,jtParams
                                     ,sortMap
@@ -1950,9 +2188,9 @@ Complaint.View = Complaint.View || {
             this.$divParticipants    = $("#divParticipants");
             this.createJTableParticipants(this.$divParticipants);
 
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT      ,this.onViewSelectedComplaint);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_PARTICIPANT      ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_PARTICIPANT    ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_PARTICIPANT    ,this.onModelModifiedParticipants);
@@ -1960,20 +2198,16 @@ Complaint.View = Complaint.View || {
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
-            }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
         }
         ,onModelSavedAssignee: function(complaintId, assginee) {
             if (!assginee.hasError) {
                 AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
             }
-        }
-        ,onViewSelectedComplaint: function(complaintId) {
-            AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
         }
         ,onModelModifiedParticipants: function(complaint) {
             if (complaint.hasError) {
@@ -2106,8 +2340,8 @@ Complaint.View = Complaint.View || {
             this.$divLocation    = $("#divLocation");
             this.createJTableLocation(this.$divLocation);
 
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COMPLAINT    ,this.onModelRetrievedComplaint);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_SELECTED_COMPLAINT      ,this.onViewSelectedComplaint);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_LOCATION         ,this.onModelModifiedLocation);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_LOCATION       ,this.onModelModifiedLocation);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_LOCATION       ,this.onModelModifiedLocation);
@@ -2115,14 +2349,10 @@ Complaint.View = Complaint.View || {
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedComplaint: function(complaint) {
-            if (complaint.hasError) {
-                Acm.Dialog.info(complaint.errorMsg);
-            } else {
-                AcmEx.Object.JTable.load(Complaint.View.Location.$divLocation);
-            }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Location.$divLocation);
         }
-        ,onViewSelectedComplaint: function(complaintId) {
+        ,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(Complaint.View.Location.$divLocation);
         }
         ,onModelModifiedLocation: function(complaint) {
@@ -2207,7 +2437,7 @@ Complaint.View = Complaint.View || {
                     ,type: {
                         title: 'Type'
                         ,width: '8%'
-                        ,options: Complaint.getLocationTypes()
+                        ,options: Complaint.Model.Lookup.getLocationTypes()
                     }
                     ,city: {
                         title: 'City'

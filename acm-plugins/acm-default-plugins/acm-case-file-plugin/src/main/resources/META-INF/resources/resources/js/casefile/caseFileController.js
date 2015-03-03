@@ -9,18 +9,84 @@ CaseFile.Controller = CaseFile.Controller || {
     ,onInitialized: function() {
     }
 
-    ,MODEL_FOUND_ASSIGNEES                 : "case-model-found-assignees"              //param: assignees
-    ,MODEL_FOUND_SUBJECT_TYPES             : "case-model-found-subject-types"          //param: subjectTypes
-    ,MODEL_FOUND_PRIORITIES                : "case-model-found-priorities"             //param: priorities
+    ,MODEL_FOUND_ASSIGNEES                 : "case-model-found-assignees"
+    ,modelFoundAssignees: function(assignees) {
+        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_ASSIGNEES, assignees);
+    }
+    ,VIEW_CHANGED_ASSIGNEE                 : "case-view-changed-assignee"
+    ,viewChangedAssignee: function(caseFileId, assignee) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, caseFileId, assignee);
+    }
+    ,MODEL_SAVED_ASSIGNEE                  : "case-model-saved-assignee"
+    ,modelSavedAssignee : function(caseFileId, assignee) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, caseFileId, assignee);
+    }
+    ,MODEL_FOUND_SUBJECT_TYPES             : "case-model-found-subject-types"
+    ,modelFoundSubjectTypes: function(subjectTypes) {
+        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_SUBJECT_TYPES, subjectTypes);
+    }
+    ,VIEW_CHANGED_SUBJECT_TYPE             : "case-view-changed-subject-type"
+    ,viewChangedSubjectType: function(caseFileId, caseType) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_SUBJECT_TYPE, caseFileId, caseType);
+    }
+    ,MODEL_SAVED_SUBJECT_TYPE              : "case-model-saved-subject-type"
+    ,modelSavedSubjectType : function(caseFileId, caseType) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_SUBJECT_TYPE, caseFileId, caseType);
+    }
+    ,MODEL_FOUND_PRIORITIES                : "case-model-found-priorities"
+    ,modelFoundPriorities: function(priorities) {
+        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_PRIORITIES, priorities);
+    }
+    ,VIEW_CHANGED_PRIORITY                 : "case-view-changed-priority"
+    ,viewChangedPriority: function(caseFileId, priority) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_PRIORITY, caseFileId, priority);
+    }
+    ,MODEL_SAVED_PRIORITY                  : "case-model-saved-priority"
+    ,modelSavedPriority : function(caseFileId, priority) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_PRIORITY, caseFileId, priority);
+    }
+    ,VIEW_CHANGED_CASE_TITLE               : "case-view-changed-case-title"
+    ,viewChangedCaseTitle: function(caseFileId, title) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_TITLE, caseFileId, title);
+    }
+    ,MODEL_SAVED_CASE_TITLE                : "case-model-saved-case-title"
+    ,modelSavedCaseTitle : function(caseFileId, title) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_TITLE, caseFileId, title);
+    }
+    ,VIEW_CHANGED_INCIDENT_DATE            : "case-view-changed-incident-date"
+    ,viewChangedIncidentDate: function(caseFileId, incidentDate) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_INCIDENT_DATE, caseFileId, incidentDate);
+    }
+    ,MODEL_SAVED_INCIDENT_DATE             : "case-model-saved-incident-date"
+    ,modelSavedIncidentDate : function(caseFileId, incidentDate) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_INCIDENT_DATE, caseFileId, incidentDate);
+    }
+    ,VIEW_CHANGED_DUE_DATE                 : "case-view-changed-due-date"
+    ,viewChangedDueDate: function(caseFileId, dueDate) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DUE_DATE, caseFileId, dueDate);
+    }
+    ,MODEL_SAVED_DUE_DATE                  : "case-model-saved-due-date"
+    ,modelSavedDueDate : function(caseFileId, dueDate) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DUE_DATE, caseFileId, dueDate);
+    }
+    ,VIEW_CHANGED_DETAIL                   : "case-view-changed-detail"
+    ,viewChangedDetail: function(caseFileId, details) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, caseFileId, details);
+    }
+    ,MODEL_SAVED_DETAIL                    : "case-model-saved-detail"
+    ,modelSavedDetail : function(caseFileId, details) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, caseFileId, details);
+    }
 
-    ,MODEL_SAVED_CASE_TITLE                : "case-model-saved-case-title"             //param: caseFileId, caseTitle
-    ,MODEL_SAVED_INCIDENT_DATE             : "case-model-saved-incident-date"          //param: caseFileId, incidentDate
-    ,MODEL_SAVED_ASSIGNEE                  : "case-model-saved-assignee"               //param: caseFileId, assignee
-    ,MODEL_SAVED_SUBJECT_TYPE              : "case-model-saved-subject-type"           //param: caseFileId, caseType
-    ,MODEL_SAVED_PRIORITY                  : "case-model-saved-priority"               //param: caseFileId, priority
-    ,MODEL_SAVED_DUE_DATE                  : "case-model-saved-due-date"               //param: caseFileId, dueDate
-    ,MODEL_SAVED_DETAIL                    : "case-model-saved-detail"                 //param: caseFileId, details
-    ,MODEL_SAVED_RESTRICTION               : "case-model-saved-restriction"            //param: caseFileId, restriction
+    ,VIEW_CLICKED_RESTRICT_CHECKBOX        : "case-view-clicked-restrict-checkbox"
+    ,viewClickedRestrictCheckbox: function(caseFileId, restriction) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_RESTRICT_CHECKBOX, caseFileId, restriction);
+    }
+    ,MODEL_SAVED_RESTRICTION               : "case-model-saved-restriction"
+    ,modelSavedRestriction : function(caseFileId, restriction) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, caseFileId, restriction);
+    }
+
     ,MODEL_SAVED_CHILD_OBJECT              : "case-model-saved-childObject"            //param: caseFileId, childObject
     ,MODEL_ADDED_PARTICIPANT               : "case-model-added-participant"            //param: caseFileId, participant
     ,MODEL_UPDATED_PARTICIPANT             : "case-model-updated-participant"          //param: caseFileId, participant
@@ -55,20 +121,11 @@ CaseFile.Controller = CaseFile.Controller || {
     ,MODEL_RETRIEVED_TASKS                 : "case-model-task-retrieved"               //param: taskId
     ,MODEL_COMPLETED_TASK                 : "case-model-task-completed"               //param: task
 
-    ,VIEW_CLICKED_PREV_PAGE                : "case-view-clicked-prev-page"             //param: none
-    ,VIEW_CLICKED_NEXT_PAGE 	           : "case-view-clicked-next-page"             //param: none
-    ,VIEW_SELECTED_CASE_FILE 		       : "case-view-selected-case"                 //param: caseFileId
-    ,VIEW_SELECTED_TREE_NODE 		       : "case-view-selected-tree-node"            //param: node key
 
-    ,VIEW_CHANGED_CASE_FILE               : "case-view-changed-case-file"              //param: caseFileId
-    ,VIEW_CHANGED_CASE_TITLE               : "case-view-changed-case-title"            //param: caseFileId, title
-    ,VIEW_CHANGED_INCIDENT_DATE            : "case-view-changed-incident-date"         //param: caseFileId, incidentDate
-    ,VIEW_CHANGED_ASSIGNEE                 : "case-view-changed-assignee"              //param: caseFileId, assignee
-    ,VIEW_CHANGED_SUBJECT_TYPE             : "case-view-changed-subject-type"          //param: caseFileId, caseType
-    ,VIEW_CHANGED_PRIORITY                 : "case-view-changed-priority"              //param: caseFileId, priority
-    ,VIEW_CHANGED_DUE_DATE                 : "case-view-changed-due-date"              //param: caseFileId, dueDate
-    ,VIEW_CHANGED_DETAIL                   : "case-view-changed-detail"                //param: caseFileId, details
-    ,VIEW_CLICKED_RESTRICT_CHECKBOX        : "case-view-clicked-restrict-checkbox"     //param: caseFileId,restriction
+    ,VIEW_CHANGED_CASE_FILE               : "case-view-changed-case-file"
+    ,viewChangedCaseFile: function(caseFileId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_FILE, caseFileId);
+    }
 
     ,VIEW_CHANGED_TREE_FILTER              : "case-view-changed-tree-filter"           //param: filter
     ,VIEW_CHANGED_TREE_SORT                : "case-view-changed-tree-sort"             //param: sort
@@ -103,48 +160,7 @@ CaseFile.Controller = CaseFile.Controller || {
     ,VIEW_DELETED_NOTE                     : "case-view-deleted-note"                  //param: noteId
 
 
-    ,modelFoundAssignees: function(assignees) {
-        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_ASSIGNEES, assignees);
-    }
-    ,modelFoundSubjectTypes: function(subjectTypes) {
-        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_SUBJECT_TYPES, subjectTypes);
-    }
-    ,modelFoundPriorities: function(priorities) {
-        Acm.Dispatcher.fireEvent(this.MODEL_FOUND_PRIORITIES, priorities);
-    }
-    ,modelRetrievedCaseFileList: function(key) {
-        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CASE_FILE_LIST, key);
-    }
-    ,modelRetrievedCaseFile: function(caseFile) {
-        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_CASE_FILE, caseFile);
-    }
-//    ,modelSavedCaseFile : function(caseFile) {
-//        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_FILE, caseFile);
-//    }
-    ,modelSavedCaseTitle : function(caseFileId, title) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_TITLE, caseFileId, title);
-    }
-    ,modelSavedIncidentDate : function(caseFileId, incidentDate) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_INCIDENT_DATE, caseFileId, incidentDate);
-    }
-    ,modelSavedAssignee : function(caseFileId, assignee) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, caseFileId, assignee);
-    }
-    ,modelSavedSubjectType : function(caseFileId, caseType) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_SUBJECT_TYPE, caseFileId, caseType);
-    }
-    ,modelSavedPriority : function(caseFileId, priority) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_PRIORITY, caseFileId, priority);
-    }
-    ,modelSavedDueDate : function(caseFileId, dueDate) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DUE_DATE, caseFileId, dueDate);
-    }
-    ,modelSavedDetail : function(caseFileId, details) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, caseFileId, details);
-    }
-    ,modelSavedRestriction : function(caseFileId, restriction) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, caseFileId, restriction);
-    }
+
     ,modelSavedChildObject : function(caseFileId, childObject) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CHILD_OBJECT, caseFileId, childObject);
     }
@@ -234,45 +250,6 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,modelCompletedTask: function(task) {
         Acm.Dispatcher.fireEvent(this.MODEL_COMPLETED_TASK, task);
-    }
-    ,viewClickedPrevPage: function() {
-        Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_PREV_PAGE);
-    }
-    ,viewClickedNextPage: function() {
-        Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_NEXT_PAGE);
-    }
-    ,viewSelectedCaseFile: function(caseFileId) {
-        Acm.Dispatcher.fireEvent(this.VIEW_SELECTED_CASE_FILE, caseFileId);
-    }
-    ,viewSelectedTreeNode: function(nodeKey) {
-        Acm.Dispatcher.fireEvent(this.VIEW_SELECTED_TREE_NODE, nodeKey);
-    }
-    ,viewChangedCaseFile: function(caseFileId) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_FILE, caseFileId);
-    }
-    ,viewChangedCaseTitle: function(caseFileId, title) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_TITLE, caseFileId, title);
-    }
-    ,viewChangedIncidentDate: function(caseFileId, incidentDate) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_INCIDENT_DATE, caseFileId, incidentDate);
-    }
-    ,viewChangedAssignee: function(caseFileId, assignee) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, caseFileId, assignee);
-    }
-    ,viewChangedSubjectType: function(caseFileId, caseType) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_SUBJECT_TYPE, caseFileId, caseType);
-    }
-    ,viewChangedPriority: function(caseFileId, priority) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_PRIORITY, caseFileId, priority);
-    }
-    ,viewChangedDueDate: function(caseFileId, dueDate) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DUE_DATE, caseFileId, dueDate);
-    }
-    ,viewChangedDetail: function(caseFileId, details) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, caseFileId, details);
-    }
-    ,viewClickedRestrictCheckbox: function(caseFileId, restriction) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CLICKED_RESTRICT_CHECKBOX, caseFileId, restriction);
     }
     ,viewChangedTreeFilter: function(filter) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TREE_FILTER, filter);
