@@ -51,11 +51,11 @@ Task.Controller = Task.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_START_DATE, nodeType, taskId, startDate);
     }
     ,VIEW_CHANGED_DUE_DATE                                      : "task-view-changed-due-date"
-    ,viewChangedDueDate: function(taskId, dueDate) {
+    ,viewChangedDueDate: function(nodeType,taskId, dueDate) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DUE_DATE, nodeType, taskId, dueDate);
     }
     ,MODEL_SAVED_DUE_DATE                                       : "task-model-saved-due-date"
-    ,modelSavedDueDate: function(taskId, dueDate) {
+    ,modelSavedDueDate: function(nodeType,taskId, dueDate) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DUE_DATE, nodeType, taskId, dueDate);
     }
 
@@ -65,7 +65,7 @@ Task.Controller = Task.Controller || {
     }
     ,MODEL_SAVED_DETAIL                             : "task-model-changed-detail"
     ,modelSavedDetail: function(nodeType, taskId, details) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, taskId, details);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, nodeType, taskId, details);
     }
     ,VIEW_CHANGED_REWORK_DETAILS                           : "task-view-changed-rework-detail"
     ,viewChangedReworkDetails: function(nodeType, taskId, reworkDetails) {
@@ -73,7 +73,7 @@ Task.Controller = Task.Controller || {
     }
     ,MODEL_SAVED_REWORK_DETAILS                             : "task-model-changed-rework-detail"
     ,modelSavedReworkDetails: function(nodeType, taskId, reworkDetails) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_REWORK_DETAILS, taskId, reworkDetails);
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_REWORK_DETAILS, nodeType, taskId, reworkDetails);
     }
 
 //    ,VIEW_POPULATED_TASK_DETAILS                    : "task-view-populated-task-details"

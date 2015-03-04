@@ -458,16 +458,25 @@ Complaint.View = Complaint.View || {
         }
         ,onModelAddedPersonAssociation: function(personAssociation) {
             if (personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
+            }
+            else{
                 AcmEx.Object.JTable.load(Complaint.View.People.$divPeople);
             }
         }
         ,onModelUpdatedPersonAssociation: function(personAssociation) {
             if (personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
+            }
+            else{
                 AcmEx.Object.JTable.load(Complaint.View.People.$divPeople);
             }
         }
         ,onModelDeletedPersonAssociation: function(personAssociationId) {
             if (personAssociationId.hasError) {
+                Acm.Dialog.info(personAssociationId.errorMsg);
+            }
+            else{
                 AcmEx.Object.JTable.load(Complaint.View.People.$divPeople);
             }
         }
@@ -499,14 +508,16 @@ Complaint.View = Complaint.View || {
                                         //
                                         //make initiator on top of table and disable delete button
                                         //
-                                        if(personAssociations[i].id == Acm.goodValue(complaint.originator.id)) {
-                                            rc.Records.unshift({
-                                                assocId: personAssociations[i].id
-                                                , title: personAssociations[i].person.title
-                                                , givenName: personAssociations[i].person.givenName
-                                                , familyName: personAssociations[i].person.familyName
-                                                , personType: personAssociations[i].personType
-                                            });
+                                        if(Acm.isNotEmpty(complaint.originator)){
+                                            if(personAssociations[i].id == Acm.goodValue(complaint.originator.id)) {
+                                                rc.Records.unshift({
+                                                    assocId: personAssociations[i].id
+                                                    , title: personAssociations[i].person.title
+                                                    , givenName: personAssociations[i].person.givenName
+                                                    , familyName: personAssociations[i].person.familyName
+                                                    , personType: personAssociations[i].personType
+                                                });
+                                            }
                                         }
                                         else{
                                             rc.Records.push({
@@ -585,9 +596,13 @@ Complaint.View = Complaint.View || {
                         var complaint = Complaint.View.getActiveComplaint();
                         //remove the edit/delete buttons if needed - make this check for initiator
                         //initiator record cannot be deleted, so disable delete button
-                        if (data.record.assocId == complaint.originator.id){
-                            //data.row.find('.jtable-edit-command-button').hide();
-                            data.row.find('.jtable-delete-command-button').hide();
+                        if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                            if(Acm.isNotEmpty(complaint.originator) && Acm.isNotEmpty(complaint.originator.id)){
+                                if (data.record.assocId == complaint.originator.id){
+                                    //data.row.find('.jtable-edit-command-button').hide();
+                                    data.row.find('.jtable-delete-command-button').hide();
+                                }
+                            }
                         }
                     }
                     ,recordAdded: function(event, data){
@@ -610,6 +625,7 @@ Complaint.View = Complaint.View || {
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
                         var record = data.record;
                         var assocId = record.assocId;
+                        var complaintId = Complaint.View.getActiveComplaintId();
                         var c = Complaint.View.getActiveComplaint();
                         if (Complaint.Model.Detail.validateComplaint(c)) {
                             if (c.personAssociations.length > whichRow) {
@@ -648,7 +664,7 @@ Complaint.View = Complaint.View || {
                 rc.Record.assocId = assocId;
                 rc.Record.type = Acm.goodValue(record.type);
                 rc.Record.value = Acm.goodValue(record.value);
-                rc.Record.created = Acm.getCurrentDay(); //record.created;
+                rc.Record.created = Acm.getCurrentDayInternal(); //record.created;
                 rc.Record.creator = App.getUserName();   //record.creator;
             }
             return rc;
@@ -705,7 +721,7 @@ Complaint.View = Complaint.View || {
                                 var c = Complaint.View.getActiveComplaint();
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
+                                    var personAssociation = Complaint.Model.People.findPersonAssociation(assocId, personAssociations);
                                     if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var contactMethods = personAssociation.person.contactMethods;
                                         for (var i = 0; i < contactMethods.length; i++) {
@@ -747,7 +763,7 @@ Complaint.View = Complaint.View || {
                         ,type: {
                             title: 'Type'
                             ,width: '15%'
-                            ,options: Complaint.Model.Lookup.getContactMethodTypes()
+                            ,options: Complaint.Model.Lookup.getDeviceTypes()
                         }
                         ,value: {
                             title: 'Value'
@@ -777,6 +793,8 @@ Complaint.View = Complaint.View || {
                         var assocId = record.assocId;
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
+                        contactMethod.created = Acm.getCurrentDayInternal();
+                        contactMethod.creator = Acm.goodValue(record.creator);
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -794,6 +812,8 @@ Complaint.View = Complaint.View || {
                         contactMethod.id    = Acm.goodValue(record.id, 0);
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
+                        contactMethod.created = Acm.getCurrentDayInternal();
+                        contactMethod.creator = Acm.goodValue(record.creator);
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < contactMethod.id) {
@@ -866,7 +886,7 @@ Complaint.View = Complaint.View || {
                                 var c = Complaint.View.getActiveComplaint();
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
+                                    var personAssociation = Complaint.Model.People.findPersonAssociation(assocId, personAssociations);
                                     if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var securityTags = personAssociation.person.securityTags;
                                         for (var i = 0; i < securityTags.length; i++) {
@@ -935,6 +955,8 @@ Complaint.View = Complaint.View || {
                         var assocId = record.assocId;
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
+                        securityTag.created = Acm.getCurrentDayInternal();
+                        securityTag.creator = Acm.goodValue(record.creator);
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -948,6 +970,8 @@ Complaint.View = Complaint.View || {
                         securityTag.id    = Acm.goodValue(record.id, 0);
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
+                        securityTag.created = Acm.getCurrentDayInternal();
+                        securityTag.creator = Acm.goodValue(record.creator);
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < securityTag.id) {
@@ -1019,7 +1043,7 @@ Complaint.View = Complaint.View || {
                                 var c = Complaint.View.getActiveComplaint();
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
+                                    var personAssociation = Complaint.Model.People.findPersonAssociation(assocId, personAssociations);
                                     if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var organizations = personAssociation.person.organizations;
                                         for (var i = 0; i < organizations.length; i++) {
@@ -1086,6 +1110,8 @@ Complaint.View = Complaint.View || {
                         var assocId = record.assocId;
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
+                        organization.created = Acm.getCurrentDayInternal();
+                        organization.creator = Acm.goodValue(record.creator);
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -1099,6 +1125,8 @@ Complaint.View = Complaint.View || {
                         organization.organizationId    = Acm.goodValue(record.id, 0);
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
+                        organization.created = Acm.getCurrentDayInternal();
+                        organization.creator = Acm.goodValue(record.creator);
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < organization.organizationId) {
@@ -1170,7 +1198,7 @@ Complaint.View = Complaint.View || {
                                 var c = Complaint.View.getActiveComplaint();
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
+                                    var personAssociation = Complaint.Model.People.findPersonAssociation(assocId, personAssociations);
                                     if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var addresses = personAssociation.person.addresses;
                                         for (var i = 0; i < addresses.length; i++) {
@@ -1247,7 +1275,7 @@ Complaint.View = Complaint.View || {
                         ,type: {
                             title: 'Type'
                             ,width: '8%'
-                            ,options: Complaint.Model.Lookup.getAddressTypes()
+                            ,options: Complaint.Model.Lookup.getLocationTypes()
                         }
                         ,streetAddress: {
                             title: 'Address'
@@ -1292,6 +1320,8 @@ Complaint.View = Complaint.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
+                        address.creator       = Acm.goodValue(record.creator);
+                        address.created       = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -1309,6 +1339,8 @@ Complaint.View = Complaint.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
+                        address.creator       = Acm.goodValue(record.creator);
+                        address.created       = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < address.id) {
@@ -1380,7 +1412,7 @@ Complaint.View = Complaint.View || {
                                 var c = Complaint.View.getActiveComplaint();
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
-                                    var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
+                                    var personAssociation = Complaint.Model.People.findPersonAssociation(assocId, personAssociations);
                                     if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var personAliases = personAssociation.person.personAliases;
                                         for (var i = 0; i < personAliases.length; i++) {
@@ -1449,6 +1481,8 @@ Complaint.View = Complaint.View || {
                         var assocId = record.assocId;
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
+                        personAlias.creator  = Acm.goodValue(record.creator);
+                        personAlias.created = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -1462,6 +1496,8 @@ Complaint.View = Complaint.View || {
                         personAlias.id         = Acm.goodValue(record.id, 0);
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
+                        personAlias.creator  = Acm.goodValue(record.creator);
+                        personAlias.created = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < personAlias.id) {
@@ -1488,16 +1524,18 @@ Complaint.View = Complaint.View || {
             this.$divDocuments = $("#divDocuments");
             this.createJTableDocuments(this.$divDocuments);
 
-            //todo implement add document button
+            /*this.$btnAddNewDocument = $("#addNewDocuments");
+            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});*/
+
+            /*this.$formNewDocuments = $("#formDocuments");
+            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});*/
+
+            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddDocument);
+            this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+            Complaint.View.Documents.fillReportSelection();
+            //AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
 
 
-//            this.$btnAddNewDocument = $("#addNewDocuments");
-//             this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
-//
-//             this.$formNewDocuments = $("#formDocuments");
-//             this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
-//
-//             AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
@@ -1519,23 +1557,68 @@ Complaint.View = Complaint.View || {
                 AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
             }
         }
-//        ,onClickSpanAddNewDocuments: function(event, ctrl) {
-//         Complaint.View.Documents.$btnAddNewDocument.click();
-//         }
-//         ,onChangeFileInput: function(event, ctrl) {
-//         Complaint.View.Documents.$formNewDocuments.submit();
-//         }
-//         ,onSubmitAddNewDocuments: function(event, ctrl) {
-//         event.preventDefault();
-//         var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
-//         var fd = new FormData();
-//         fd.append("complaintId", Complaint.View.getActiveComplaintId());
-//         for(var i = 0; i < count; i++ ){
-//         fd.append("files[]", Complaint.View.Documents.$btnAddNewDocument[0].files[i]);
-//         }
-//         Complaint.Service.Documents.uploadDocuments(fd);
-//         Complaint.View.Documents.$formNewDocuments[0].reset();
-//         }
+        /*,onClickSpanAddNewDocuments: function(event, ctrl) {
+            Complaint.View.Documents.$btnAddNewDocument.click();
+        }*/
+        ,onChangeFileInput: function(event, ctrl) {
+            Complaint.View.Documents.$formNewDocuments.submit();
+        }
+        ,beforeSpanAddDocument: function(html) {
+            Complaint.View.Documents.$spanAddDocument.before(html);
+        }
+        ,getSelectReport: function() {
+            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
+        }
+        ,fillReportSelection: function() {
+            var formDocuments = Complaint.View.MicroData.formUrls.formDocuments;
+            /*try {
+                formDocuments = JSON.parse(Complaint.Object.getFormDocuments());
+            }catch(e) {
+
+            }*/
+            var html = "<span>"
+                + "<select class='input-sm form-control input-s-sm inline v-middle'>"
+                + "<option value=''>Document Type</option>";
+
+            if (Acm.isNotEmpty(formDocuments) && formDocuments.length > 0) {
+                for (var i = 0; i < formDocuments.length; i ++) {
+                    html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
+                }
+            }
+
+            html += "</select>"
+            + "</span>";
+            Complaint.View.Documents.beforeSpanAddDocument(html);
+        }
+        ,getSelectReport: function() {
+            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
+        }
+        ,onClickSpanAddDocument: function(e) {
+            var report = Complaint.View.Documents.getSelectReport();
+            if(Acm.isNotEmpty(report)){
+                var c = Complaint.View.getActiveComplaint();
+                if(Complaint.Model.Detail.validateComplaint(c)){
+                    var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
+                    if (Acm.isNotEmpty(url)) {
+                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, this.onDone);
+                    }
+                }
+            }
+        }
+
+     /*   ,onSubmitAddNewDocuments: function(event, ctrl) {
+             event.preventDefault();
+             var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
+             var fd = new FormData();
+             fd.append("complaintId", Complaint.View.getActiveComplaintId());
+             for(var i = 0; i < count; i++ ) {
+                 fd.append("files[]", Complaint.View.Documents.$btnAddNewDocument[0].files[i]);
+             }
+             Complaint.Service.Documents.uploadDocuments(fd);
+             Complaint.View.Documents.$formNewDocuments[0].reset();
+        }
+*/
         ,_makeJtData: function(documents){
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
             if(Acm.isNotEmpty(documents)){
@@ -1572,11 +1655,11 @@ Complaint.View = Complaint.View || {
                         }
                         return AcmEx.Object.JTable.getEmptyRecords();
                     }
-//                    , createAction: function (postData, jtParams) {
-//                     return {
-//                     "Result": "OK"
-//                     };
-//                     }
+                    , createAction: function (postData, jtParams) {
+                        return {
+                           "Result": "OK"
+                        };
+                    }
                 }
                 ,fields: {
                     id: {

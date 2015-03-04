@@ -10,6 +10,7 @@ Task.Model = Task.Model || {
         if (Task.Model.Tree.create)                                 {Task.Model.Tree.create();}
         if (Task.Model.Action.create)                               {Task.Model.Action.create();}
         if (Task.Model.Detail.create)                               {Task.Model.Detail.create();}
+        if (Task.Model.RejectTask.onInitialized)                    {Task.Model.RejectTask.onInitialized();}
         if (Task.Model.ParentDetail.create)                         {Task.Model.ParentDetail.create();}
         if (Task.Model.Notes.create)                                {Task.Model.Notes.create();}
         if (Task.Model.History.create)                              {Task.Model.History.create();}
@@ -24,6 +25,7 @@ Task.Model = Task.Model || {
         if (Task.Model.Tree.onInitialized)                          {Task.Model.Tree.onInitialized();}
         if (Task.View.Action.create)                                {Task.View.Action.create();}
         if (Task.Model.Detail.onInitialized)                        {Task.Model.Detail.onInitialized();}
+        if (Task.Model.RejectTask.onInitialized)                    {Task.Model.RejectTask.onInitialized();}
         if (Task.Model.ParentDetail.onInitialized)                  {Task.Model.ParentDetail.onInitialized();}
         if (Task.Model.Notes.onInitialized)                         {Task.Model.Notes.onInitialized();}
         if (Task.Model.History.onInitialized)                       {Task.Model.History.onInitialized();}
@@ -408,139 +410,6 @@ Task.Model = Task.Model || {
             Task.Service.Detail.saveDueDate(nodeType, taskId, dueDate);
         }
 
-
-        // Reject Task
-        ,buildDlgRejectTaskOwner: function(element, results) {
-            if (element) {
-                for (var i = 0; i < results.length; i++) {
-                    var result = results[i];
-                    var checked = '';
-
-                    var selected = Task.View.Detail.getDlgRejectTaskSelected();
-                    if (selected == null) {
-                        var task = Task.View.getActiveTask();
-
-                        if (Acm.isNotEmpty(task) && task.owner) {
-                            selected = task.owner;
-                        }
-                    }
-
-                    if (selected && result.object_id_s == selected) {
-                        checked = 'checked="checked"';
-                        Task.View.Detail.setDlgRejectTaskSelected(selected);
-                    }
-
-                    var tr = '<tr>' +
-                        '<td><label class="checkbox m-n"><input type="radio" value="' + result.object_id_s + '" id="returnToUser" name="returnToUser" ' + checked + ' /><i></i></label></td>' +
-                        '<td>' + result.first_name_lcs + '</td>' +
-                        '<td>' + result.last_name_lcs + '</td>' +
-                        '<td>' + result.object_id_s + '</td>' +
-                        '<td>' + '' + '</td>' +
-                        '</tr>';
-
-                    element.append(tr);
-                }
-
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.Detail.onChangeDlgRejectTaskSelected(e,this);});
-            }
-        }
-        ,buildDlgRejectTaskUsers: function(element, results) {
-            if (element) {
-                for (var i = 0; i < results.length; i++) {
-                    var result = results[i];
-                    var checked = '';
-
-                    var selected = Task.View.Detail.getDlgRejectTaskSelected();
-
-                    if (selected && result.object_id_s == selected) {
-                        checked = 'checked="checked"';
-                        Task.View.Detail.setDlgRejectTaskSelected(selected);
-                    }
-
-                    var tr = '<tr>' +
-                        '<td><label class="checkbox m-n"><input type="radio" value="' + result.object_id_s + '" id="returnToUser" name="returnToUser" ' + checked + ' /><i></i></label></td>' +
-                        '<td>' + result.first_name_lcs + '</td>' +
-                        '<td>' + result.last_name_lcs + '</td>' +
-                        '<td>' + result.object_id_s + '</td>' +
-                        '<td>' + '' + '</td>' +
-                        '</tr>';
-
-                    element.append(tr);
-                }
-
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.Detail.onChangeDlgRejectTaskSelected(e,this);});
-            }
-        }
-        ,buildDlgRejectTaskMutedText: function(element, from, to, total) {
-            if (element) {
-                element.empty();
-                element.append('Showing ' + from + '-' + to +' of ' + total + ' items');
-            }
-        }
-        ,buildDlgRejectTaskPagination: function(element, page, pages) {
-            if (element) {
-                element.empty();
-
-                // Left pagination button
-                var $leftBtnHtml = $($.parseHTML('<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>'));
-                if (page == 1) {
-                    $leftBtnHtml.addClass('disabled');
-                } else {
-                    $leftBtnHtml.click(function(e) {Task.View.Detail.onClickDlgRejectTaskLeftBtn(e,this);});
-                }
-                element.append($leftBtnHtml);
-
-                // Page button
-                if (page != -1) {
-                    for (var i = 0; i < pages; i++) {
-                        var $page = $($.parseHTML('<li><a href="#">' + (i+1) + '</a></li>'));
-                        var active = '';
-
-                        if (i == (page - 1)) {
-                            $page.addClass('active');
-                        } else {
-                            $page.click(function(e) {Task.View.Detail.onClickDlgRejectTaskPageBtn(e,this);});
-                        }
-
-                        element.append($page);
-                    }
-                }
-
-                // Right pagination button
-                var $rightBtnHtml = $($.parseHTML('<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>'));
-                if (page == pages || pages == 0) {
-                    $rightBtnHtml.addClass('disabled');
-                } else {
-                    $rightBtnHtml.click(function(e) {Task.View.Detail.onClickDlgRejectTaskRightBtn(e,this);});
-                }
-                element.append($rightBtnHtml);
-            }
-        }
-        ,cleanDlgRejectTaskOwner: function(element) {
-            var $tbody = element.find('table#ownerTableRejectTask tbody');
-
-            if ($tbody) {
-                $tbody.empty();
-            }
-        }
-        ,cleanDlgRejectTaskUsers: function(element) {
-            var $tbody = element.find('table#usersTableRejectTask tbody');
-            var $textMuted = element.find('footer.panel-footer small.text-muted');
-            var $ulPagination = element.find('footer.panel-footer ul.pagination');
-
-            if ($tbody) {
-                $tbody.empty();
-            }
-
-            if ($textMuted) {
-                $textMuted.empty();
-            }
-
-            if ($ulPagination) {
-                $ulPagination.empty();
-            }
-        }
-
         ,validateTask: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -564,7 +433,12 @@ Task.Model = Task.Model || {
         }
     }
 
-
+    ,RejectTask: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+    }
     ,Notes: {
         create : function() {
             this.cacheNoteList = new Acm.Model.CacheFifo();
@@ -802,6 +676,12 @@ Task.Model = Task.Model || {
                 return false;
             }
             if (Acm.isEmpty(data.parentObjects[0].status)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentObjects[0].parentName)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentObjects[0].parentId)) {
                 return false;
             }
             return true;

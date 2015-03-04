@@ -130,7 +130,7 @@ Complaint.Service = {
                 complaint.complaintTitle = title;
                 this._saveComplaint(complaintId, complaint
                     ,function(data) {
-                        Complaint.Controller.modelSavedComplaintTitle(complaintId, Acm.Service.responseWrapper(data, data.title));
+                        Complaint.Controller.modelSavedComplaintTitle(complaintId, Acm.Service.responseWrapper(data, data.complaintTitle));
                     }
                 );
             }
@@ -358,7 +358,7 @@ Complaint.Service = {
                         Complaint.Controller.modelAddedPersonAssociation(complaintId, response);
 
                     } else {
-                        if (Complaint.Model.Detail.validatePersonAssociation(response)) {
+                        if (Complaint.Model.People.validatePersonAssociation(response)) {
                             //check complaintId == personAssociation.parentId;
                             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
                             if (Complaint.Model.Detail.validateComplaint(complaint)) {
@@ -432,7 +432,7 @@ Complaint.Service = {
                                 if (Complaint.Model.Detail.validateComplaint(complaint)) {
                                     for (var i = 0; i < complaint.personAssociations.length; i++) {
                                         var pa = complaint.personAssociations[i];
-                                        if (Complaint.Model.Detail.validatePersonAssociation(pa)) {
+                                        if (Complaint.Model.People.validatePersonAssociation(pa)) {
                                             if (pa.id == response.deletedPersonAssociationId) {
                                                 complaint.personAssociations.splice(i, 1);
                                                 Complaint.Model.Detail.putCacheComplaint(complaintId, complaint);
@@ -454,8 +454,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var contactMethods = personAssociation.person.contactMethods;
                     //ensure contactMethod.id undefined?
                     contactMethods.push(contactMethod);
@@ -466,8 +466,8 @@ Complaint.Service = {
                         var addedContactMethod = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                 var contactMethods = personAssociation.person.contactMethods;
                                 for (var i = 0; i < contactMethods.length; i++) {
                                     if (Acm.compare(contactMethods[i].type, contactMethod.type)
@@ -489,8 +489,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var contactMethods = personAssociation.person.contactMethods;
                     for (var i = 0; i < contactMethods.length; i++) {
                         if (Acm.compare(contactMethods[i].id, contactMethod.id)) {
@@ -504,8 +504,8 @@ Complaint.Service = {
                         , function (data) {
                             var savedContactMethod = null;
                             if (Complaint.Model.Detail.validateComplaint(data)) {
-                                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                     var contactMethods = personAssociation.person.contactMethods;
                                     for (var i = 0; i < contactMethods.length; i++) {
                                         if (Acm.compare(contactMethods[i].id, contactMethod.id)) {
@@ -527,8 +527,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var contactMethods = personAssociation.person.contactMethods;
                     for (var i = 0; i < contactMethods.length; i++) {
@@ -556,8 +556,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var securityTags = personAssociation.person.securityTags;
                     //ensure securityTag.id undefined?
                     securityTags.push(securityTag);
@@ -568,8 +568,8 @@ Complaint.Service = {
                         var addedSecurityTag = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                 var securityTags = personAssociation.person.securityTags;
                                 for (var i = 0; i < securityTags.length; i++) {
                                     if (Acm.compare(securityTags[i].type, securityTags.type)
@@ -591,8 +591,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var securityTags = personAssociation.person.securityTags;
                     for (var i = 0; i < securityTags.length; i++) {
                         if (Acm.compare(securityTags[i].id, securityTag.id)) {
@@ -606,8 +606,8 @@ Complaint.Service = {
                         , function (data) {
                             var savedSecurityTag = null;
                             if (Complaint.Model.Detail.validateComplaint(data)) {
-                                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                     var securityTags = personAssociation.person.securityTags;
                                     for (var i = 0; i < securityTags.length; i++) {
                                         if (Acm.compare(securityTags[i].id, securityTag.id)) {
@@ -629,8 +629,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var securityTags = personAssociation.person.securityTags;
                     for (var i = 0; i < securityTags.length; i++) {
@@ -658,8 +658,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var personAliases = personAssociation.person.personAliases;
                     //ensure personAlias.id undefined?
                     personAliases.push(personAlias);
@@ -670,8 +670,8 @@ Complaint.Service = {
                         var addedPersonAlias = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                 var personAliases = personAssociation.person.personAliases;
                                 for (var i = 0; i < personAliases.length; i++) {
                                     if (Acm.compare(personAliases[i].aliasType, personAlias.aliasType)
@@ -693,8 +693,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var personAliases = personAssociation.person.personAliases;
                     for (var i = 0; i < personAliases.length; i++) {
                         if (Acm.compare(personAliases[i].id, personAlias.id)) {
@@ -708,8 +708,8 @@ Complaint.Service = {
                         , function (data) {
                             var savedPersonAlias = null;
                             if (Complaint.Model.Detail.validateComplaint(data)) {
-                                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                     var personAliases = personAssociation.person.personAliases;
                                     for (var i = 0; i < personAliases.length; i++) {
                                         if (Acm.compare(personAliases[i].id, personAlias.id)) {
@@ -731,8 +731,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var personAliases = personAssociation.person.personAliases;
                     for (var i = 0; i < personAliases.length; i++) {
@@ -760,8 +760,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var addresses = personAssociation.person.addresses;
                     //ensure address.id undefined?
                     addresses.push(address);
@@ -772,8 +772,8 @@ Complaint.Service = {
                         var addedAddress = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                 var addresses = personAssociation.person.addresses;
                                 for (var i = 0; i < addresses.length; i++) {
                                     if (Acm.compare(addresses[i].type, address.type)
@@ -800,8 +800,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var addresses = personAssociation.person.addresses;
                     for (var i = 0; i < addresses.length; i++) {
                         if (Acm.compare(addresses[i].id, address.id)) {
@@ -819,8 +819,8 @@ Complaint.Service = {
                         , function (data) {
                             var savedAddress = null;
                             if (Complaint.Model.Detail.validateComplaint(data)) {
-                                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                     var addresses = personAssociation.person.addresses;
                                     for (var i = 0; i < addresses.length; i++) {
                                         if (Acm.compare(addresses[i].id, address.id)) {
@@ -842,8 +842,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var addresses = personAssociation.person.addresses;
                     for (var i = 0; i < addresses.length; i++) {
@@ -871,8 +871,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var organizations = personAssociation.person.organizations;
                     //ensure organization.id undefined?
                     organizations.push(organization);
@@ -883,8 +883,8 @@ Complaint.Service = {
                         var addedOrganization = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                 var organizations = personAssociation.person.organizations;
                                 for (var i = 0; i < organizations.length; i++) {
                                     if (Acm.compare(organizations[i].organizationType, organization.organizationType)
@@ -906,8 +906,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var organizations = personAssociation.person.organizations;
                     for (var i = 0; i < organizations.length; i++) {
                         if (Acm.compare(organizations[i].organizationId, organization.organizationId)) {
@@ -921,8 +921,8 @@ Complaint.Service = {
                         , function (data) {
                             var savedOrganization = null;
                             if (Complaint.Model.Detail.validateComplaint(data)) {
-                                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                     var organizations = personAssociation.person.organizations;
                                     for (var i = 0; i < organizations.length; i++) {
                                         if (Acm.compare(organizations[i].organizationId, organization.organizationId)) {
@@ -944,8 +944,8 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 var personAssociations = complaint.personAssociations;
-                var personAssociation = Complaint.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = Complaint.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var organizations = personAssociation.person.organizations;
                     for (var i = 0; i < organizations.length; i++) {
