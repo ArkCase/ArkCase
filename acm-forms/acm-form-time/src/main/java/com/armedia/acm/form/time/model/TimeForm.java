@@ -7,15 +7,19 @@ import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 
 /**
  * @author riste.tutureski
  *
  */
+@XmlRootElement(name="form_" + FrevvoFormName.TIME, namespace=FrevvoFormNamespace.TIME_NAMESPACE)
 public class TimeForm {
 
 	private Long id;

@@ -52,7 +52,9 @@ import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
+import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
@@ -100,9 +102,11 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private ComplaintEventPublisher complaintEventPublisher;
 	
+	private TimesheetService timesheetService;
 	private AcmTimesheetDao acmTimesheetDao;
 	private TimeFactory timeFactory;
 	
+	private CostsheetService costsheetService;
 	private AcmCostsheetDao acmCostsheetDao;
 	private CostFactory costFactory;
 	
@@ -445,6 +449,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 			ComplaintEventPublisher complaintEventPublisher) {
 		this.complaintEventPublisher = complaintEventPublisher;
 	}
+	
+	public TimesheetService getTimesheetService() {
+		return timesheetService;
+	}
+
+	public void setTimesheetService(TimesheetService timesheetService) {
+		this.timesheetService = timesheetService;
+	}
 
 	public AcmTimesheetDao getAcmTimesheetDao() {
 		return acmTimesheetDao;
@@ -460,6 +472,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setTimeFactory(TimeFactory timeFactory) {
 		this.timeFactory = timeFactory;
+	}
+
+	public CostsheetService getCostsheetService() {
+		return costsheetService;
+	}
+
+	public void setCostsheetService(CostsheetService costsheetService) {
+		this.costsheetService = costsheetService;
 	}
 
 	public AcmCostsheetDao getAcmCostsheetDao() {

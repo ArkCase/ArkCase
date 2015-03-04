@@ -220,6 +220,7 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setTimesheetService(frevvoFormController.getTimesheetService());
             service.setAcmTimesheetDao(frevvoFormController.getAcmTimesheetDao());
             service.setTimeFactory(frevvoFormController.getTimeFactory());
             
@@ -241,6 +242,7 @@ public class FrevvoFormServiceFactory {
             service.setUserDao(frevvoFormController.getUserDao());
             service.setUserActionDao(frevvoFormController.getUserActionDao());
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setCostsheetService(frevvoFormController.getCostsheetService());
             service.setAcmCostsheetDao(frevvoFormController.getAcmCostsheetDao());
             service.setCostFactory(frevvoFormController.getCostFactory());
             

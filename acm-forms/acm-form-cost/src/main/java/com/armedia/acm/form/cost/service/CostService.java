@@ -12,14 +12,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.cost.model.CostForm;
-import com.armedia.acm.form.cost.model.CostFormConstants;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
-import com.armedia.acm.services.costsheet.model.CostsheetConstants;
+import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +31,7 @@ public class CostService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
+	private CostsheetService costsheetService;
 	private AcmCostsheetDao acmCostsheetDao;
 	private CostFactory costFactory;
 	
@@ -54,6 +54,9 @@ public class CostService extends FrevvoFormAbstractService {
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception 
 	{
+		// Get submission name - Save or Submit
+		String submissionName = getRequest().getParameter("submission_name");
+		
 		// Unmarshall XML to object
 		CostForm form = (CostForm) convertFromXMLToObject(cleanXML(xml), CostForm.class);
 		
@@ -63,25 +66,8 @@ public class CostService extends FrevvoFormAbstractService {
 			return false;
 		}
 		
-		AcmCostsheet costsheet = getCostFactory().asAcmCostsheet(form);
-		
-		// If submission_name is "Save", save as draft (editable version), otherwise save for approval
-		String submission_name = getRequest().getParameter("submission_name");
-		if (submission_name != null && submission_name.equals(CostFormConstants.SAVE) && costsheet != null)
-		{
-			costsheet.setStatus(CostsheetConstants.DRAFT);
-		}
-		else if (submission_name != null && submission_name.equals(CostFormConstants.SUBMIT) && costsheet != null)
-		{
-			costsheet.setStatus(CostsheetConstants.IN_APPROVAL);
-		}
-		else
-		{
-			LOG.warn("Cannot save the costhseet. Maybe submission name is not provided or costsheet itself not contain required information.");
-			return false;
-		}
-		
-		AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+		AcmCostsheet costsheet = getCostFactory().asAcmCostsheet(form);		
+		AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName);
 		
 		form = getCostFactory().asFrevvoCostForm(saved);
 		
@@ -122,6 +108,14 @@ public class CostService extends FrevvoFormAbstractService {
 	public String getFormName() 
 	{
 		return FrevvoFormName.COST;
+	}
+
+	public CostsheetService getCostsheetService() {
+		return costsheetService;
+	}
+
+	public void setCostsheetService(CostsheetService costsheetService) {
+		this.costsheetService = costsheetService;
 	}
 
 	public AcmCostsheetDao getAcmCostsheetDao() {

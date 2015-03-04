@@ -7,5 +7,15 @@
     
     <bean id="acmTimesheetDao" class="com.armedia.acm.services.timesheet.dao.AcmTimesheetDao" />
     <bean id="acmTimeDao" class="com.armedia.acm.services.timesheet.dao.AcmTimeDao" />
+	
+	<bean id="timesheetService" class="com.armedia.acm.services.timesheet.service.TimesheetServiceImpl">
+		<property name="acmTimesheetDao" ref="acmTimesheetDao" />
+		<property name="submissionStatusesMap">
+			<map>
+				<entry key="Save" value="DRAFT" />
+				<entry key="Submit" value="IN_APPROVAL" />
+			</map>
+		</property>
+	</bean>
 
 </beans>

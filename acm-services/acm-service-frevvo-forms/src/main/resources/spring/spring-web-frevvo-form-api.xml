@@ -39,8 +39,10 @@
         <property name="caseFileFactory" ref="caseFileFactory"/>
         <property name="caseFilePSFactory" ref="caseFilePSFactory"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
+        <property name="timesheetService" ref="timesheetService" />
         <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
         <property name="timeFactory" ref="timeFactory"/>
+        <property name="costsheetService" ref="costsheetService" />
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="costFactory" ref="costFactory"/>
 	</bean>

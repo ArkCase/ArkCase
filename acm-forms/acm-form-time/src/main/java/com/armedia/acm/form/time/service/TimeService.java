@@ -15,7 +15,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.time.model.TimeForm;
-import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
@@ -25,7 +24,7 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
-import com.armedia.acm.services.timesheet.model.TimesheetConstants;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +37,7 @@ public class TimeService extends FrevvoFormAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
+	private TimesheetService timesheetService;
 	private AcmTimesheetDao acmTimesheetDao;
 	private TimeFactory timeFactory;
 	private ComplaintDao complaintDao;
@@ -62,6 +62,9 @@ public class TimeService extends FrevvoFormAbstractService {
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception 
 	{
+		// Get submission name - Save or Submit
+		String submissionName = getRequest().getParameter("submission_name");
+		
 		// Unmarshall XML to object
 		TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), TimeForm.class);
 		
@@ -73,24 +76,7 @@ public class TimeService extends FrevvoFormAbstractService {
 		
 		// Convert Frevvo form to Acm timesheet
 		AcmTimesheet timesheet = getTimeFactory().asAcmTimesheet(form);
-		
-		// If submission_name is "Save", save as draft (editable version), otherwise save for approval
-		String submission_name = getRequest().getParameter("submission_name");
-		if (submission_name != null && submission_name.equals(TimeFormConstants.SAVE) && timesheet != null)
-		{
-			timesheet.setStatus(TimesheetConstants.DRAFT);
-		}
-		else if (submission_name != null && submission_name.equals(TimeFormConstants.SUBMIT) && timesheet != null)
-		{
-			timesheet.setStatus(TimesheetConstants.IN_APPROVAL);
-		}
-		else
-		{
-			LOG.warn("Cannot save the timehseet. Maybe submission name is not provided or timesheet itself not contain requred information.");
-			return false;
-		}
-		
-		AcmTimesheet saved = getAcmTimesheetDao().save(timesheet);
+		AcmTimesheet saved = getTimesheetService().save(timesheet, submissionName);
 		
 		form = getTimeFactory().asFrevvoTimeForm(saved);
 		
@@ -176,6 +162,14 @@ public class TimeService extends FrevvoFormAbstractService {
 	public String getFormName() 
 	{
 		return FrevvoFormName.TIME;
+	}
+	
+	public TimesheetService getTimesheetService() {
+		return timesheetService;
+	}
+
+	public void setTimesheetService(TimesheetService timesheetService) {
+		this.timesheetService = timesheetService;
 	}
 
 	public AcmTimesheetDao getAcmTimesheetDao() {
