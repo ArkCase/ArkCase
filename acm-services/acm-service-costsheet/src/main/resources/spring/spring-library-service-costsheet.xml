@@ -7,5 +7,15 @@
     
     <bean id="acmCostsheetDao" class="com.armedia.acm.services.costsheet.dao.AcmCostsheetDao" />
     <bean id="acmCostDao" class="com.armedia.acm.services.costsheet.dao.AcmCostDao" />
+    
+    <bean id="costsheetService" class="com.armedia.acm.services.costsheet.service.CostsheetServiceImpl">
+    	<property name="acmCostsheetDao" ref="acmCostsheetDao" />
+    	<property name="submissionStatusesMap">
+    		<map>
+    			<entry key="Save" value="DRAFT" />
+    			<entry key="Submit" value="IN_APPROVAL" />
+    		</map>
+    	</property>
+    </bean>
 
 </beans>

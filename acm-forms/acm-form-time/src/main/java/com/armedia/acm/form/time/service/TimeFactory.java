@@ -52,19 +52,8 @@ public class TimeFactory {
 			retval.setUserId(form.getUser());
 			retval.setParentType(form.getType());
 			retval.setTimes(asAcmTimes(form));
-			
-			// Create calendar for given date and set the current date to first day of the week
-			// (first day of the week is Sunday)
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(form.getPeriod());
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-			
-			// Set start date
-			retval.setStartDate(calendar.getTime());
-			
-			// Change calendar to end date of the week and set it to the timesheet
-			calendar.add(Calendar.DATE, 6);
-			retval.setEndDate(calendar.getTime());
+			retval.setStartDate(getStartDate(form.getPeriod()));
+			retval.setEndDate(getEndDate(form.getPeriod()));
 		}
 		else
 		{
@@ -237,7 +226,7 @@ public class TimeFactory {
 				item.setId(time.getId());
 				item.setCode(time.getObjectId());
 
-				item = setTimeFromAcmTime(item, time, timesheet);
+				item = setTimeFromAcmTime(item, time);
 				
 				itemsMap.put(time.getObjectId(), item);
 			}
@@ -257,17 +246,17 @@ public class TimeFactory {
 	 * 
 	 * @param item
 	 * @param time
-	 * @param timesheet
 	 * @return
 	 */
-	private TimeItem setTimeFromAcmTime(TimeItem item, AcmTime time, AcmTimesheet timesheet)
+	private TimeItem setTimeFromAcmTime(TimeItem item, AcmTime time)
 	{
 		LOG.debug("Setting time to Frevvo Time Item from Acm Time.");
-		
-		Date startDate = timesheet.getStartDate();
+		Calendar calendar = Calendar.getInstance();
 		Date date = time.getDate();
 		
-		long offset = Math.abs(date.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
+		calendar.setTime(date);
+		
+		long offset = calendar.get(Calendar.DAY_OF_WEEK);
 		
 		if (offset == 0) item.setSunday(time.getValue());
 		if (offset == 1) item.setMonday(time.getValue());
@@ -278,6 +267,43 @@ public class TimeFactory {
 		if (offset == 6) item.setSaturday(time.getValue());
 		
 		return item;
+	}
+	
+	public Date getStartDate(Date period)
+	{
+		if (period != null)
+		{
+			// Create calendar for given date and set the current date to first day of the week
+			// (first day of the week is Sunday)
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(period);
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			
+			// This will return the first date of the week for given date
+			return calendar.getTime();
+		}
+		
+		return null;
+	}
+	
+	public Date getEndDate(Date period)
+	{
+		if (period != null)
+		{
+			// Create calendar for given date and set the current date to first day of the week
+			// (first day of the week is Sunday)
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(period);
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			
+			// Change calendar to end date of the week and set it to the timesheet
+			calendar.add(Calendar.DATE, 6);
+			
+			// This will return the last date of the week for given date
+			return calendar.getTime();
+		}
+		
+		return null;
 	}
 	
 }
