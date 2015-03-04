@@ -37,7 +37,10 @@ Task.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        //,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+
+        ,API_GET_ASSIGNEES             : "/api/latest/plugin/search/USER"
+
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
 
 
@@ -48,10 +51,12 @@ Task.Service = {
                         Task.Controller.modelRetrievedAssignees(response);
 
                     } else {
-                        if (Task.Model.Lookup.validateAssignees(response)) {
-                            var assignees = response;
-                            Task.Model.Lookup.setAssignees(assignees);
-                            Task.Controller.modelRetrievedAssignees(assignees);
+                        if (Acm.Validator.validateSolrData(response)) {
+                            if (Task.Model.Lookup.validateAssignees(response.response.docs)) {
+                                var assignees = response.response.docs;
+                                Task.Model.Lookup.setAssignees(assignees);
+                                Task.Controller.modelRetrievedAssignees(assignees);
+                            }
                         }
                     }
                 }
@@ -362,7 +367,7 @@ Task.Service = {
                     var jtData = AcmEx.Object.jTableGetEmptyRecord();
                     if (Task.Model.Notes.validateNotes(data)) {
                         var noteList = data;
-                        Task.Model.Notes.cacheNoteList.put(taskId, noteList);
+                        Task.Model.Notes.cacheNoteList.put(taskId + "." +jtParams.jtStartIndex, noteList);
                         jtData = callbackSuccess(noteList);
                     }
                     return jtData;
@@ -484,7 +489,7 @@ Task.Service = {
                     var jtData = AcmEx.Object.jTableGetEmptyRecord();
                     if (Task.Model.History.validateHistory(data)) {
                         var history = data;
-                        Task.Model.History.cacheHistory.put(taskId, history);
+                        Task.Model.History.cacheHistory.put(taskId + "." +jtParams.jtStartIndex, history);
                         jtData = callbackSuccess(history);
                     }
                     return jtData;

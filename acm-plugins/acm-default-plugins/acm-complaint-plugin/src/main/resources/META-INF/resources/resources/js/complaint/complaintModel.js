@@ -275,9 +275,7 @@ Complaint.Model = Complaint.Model || {
             if (!Acm.isArray(data.personAssociations)) {
                 return false;
             }
-            if (Acm.isEmpty(data.originator)) {
-                return false;
-            }
+
 
             return true;
         }
@@ -321,8 +319,8 @@ Complaint.Model = Complaint.Model || {
         }
 
         ,onViewAddedPersonAssociation: function(complaintId, personAssociation) {
-            var pa = Complaint.Model.Detail.newPersonAssociation();
-            pa.parentType = Complaint.Model.getObjectType();
+            var pa = Complaint.Model.People.newPersonAssociation();
+            pa.parentType = ObjNav.Model.getObjectType();
             pa.parentId = complaintId;
             pa.personType = personAssociation.personType;
             //pa.personDescription = personAssociation.personDescription;
@@ -811,11 +809,12 @@ Complaint.Model = Complaint.Model || {
             this._priorities.set(priorities);
         }
 
-        ,_personTypes : ['Initiator', 'Complaintant','Subject','Witness','Wrongdoer','Other']
+        ,_personTypes : ['Subject','Witness','Wrongdoer','Other']
         ,getPersonTypes : function() {
             return this._personTypes;
         }
-        ,_personTypesModifiable : ['Complaintant','Subject','Witness','Wrongdoer','Other']
+        //'Initiator'
+        ,_personTypesModifiable : ['Subject','Witness','Wrongdoer','Other']
         ,getPersonTypesModifiable : function() {
             return this._personTypesModifiable;
         }
