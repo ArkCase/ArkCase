@@ -495,11 +495,11 @@ Complaint.View = Complaint.View || {
                             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                                 var personAssociations = complaint.personAssociations;
                                 for (var i = 0; i < personAssociations.length; i++) {
-                                    if (Complaint.Model.Detail.validatePersonAssociation(personAssociations[i])) {
+                                    if (Complaint.Model.People.validatePersonAssociation(personAssociations[i])) {
                                         //
                                         //make initiator on top of table and disable delete button
                                         //
-                                        if(personAssociations[i].id == complaint.originator.id) {
+                                        if(personAssociations[i].id == Acm.goodValue(complaint.originator.id)) {
                                             rc.Records.unshift({
                                                 assocId: personAssociations[i].id
                                                 , title: personAssociations[i].person.title
@@ -614,7 +614,7 @@ Complaint.View = Complaint.View || {
                         if (Complaint.Model.Detail.validateComplaint(c)) {
                             if (c.personAssociations.length > whichRow) {
                                 var pa = c.personAssociations[whichRow];
-                                if (Complaint.Model.Detail.validatePersonAssociation(pa)) {
+                                if (Complaint.Model.People.validatePersonAssociation(pa)) {
                                     pa.person.title = record.title;
                                     pa.person.givenName = record.givenName;
                                     pa.person.familyName = record.familyName;
@@ -706,7 +706,7 @@ Complaint.View = Complaint.View || {
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
                                     var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var contactMethods = personAssociation.person.contactMethods;
                                         for (var i = 0; i < contactMethods.length; i++) {
                                             rc.Records.push({
@@ -867,7 +867,7 @@ Complaint.View = Complaint.View || {
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
                                     var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var securityTags = personAssociation.person.securityTags;
                                         for (var i = 0; i < securityTags.length; i++) {
                                             rc.Records.push({
@@ -1020,7 +1020,7 @@ Complaint.View = Complaint.View || {
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
                                     var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var organizations = personAssociation.person.organizations;
                                         for (var i = 0; i < organizations.length; i++) {
                                             rc.Records.push({
@@ -1171,7 +1171,7 @@ Complaint.View = Complaint.View || {
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
                                     var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var addresses = personAssociation.person.addresses;
                                         for (var i = 0; i < addresses.length; i++) {
                                             rc.Records.push({
@@ -1381,7 +1381,7 @@ Complaint.View = Complaint.View || {
                                 if (Complaint.Model.Detail.validateComplaint(c)) {
                                     var personAssociations = c.personAssociations;
                                     var personAssociation = Complaint.Model.Detail.findPersonAssociation(assocId, personAssociations);
-                                    if (Complaint.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                    if (Complaint.Model.People.validatePersonAssociation(personAssociation)) {
                                         var personAliases = personAssociation.person.personAliases;
                                         for (var i = 0; i < personAliases.length; i++) {
                                             rc.Records.push({

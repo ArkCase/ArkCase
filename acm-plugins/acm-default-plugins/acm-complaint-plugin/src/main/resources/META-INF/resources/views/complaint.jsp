@@ -239,13 +239,13 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" id="tabInitiator" style="display:none;">
+                                            <%--<div class="row" id="tabInitiator" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divInitiator" style="width:100%"></div>
                                                     </section>
                                                 </div>
-                                            </div>
+                                            </div>--%>
 
 
                                             <div class="row" id="tabPeople" style="display:none;">
