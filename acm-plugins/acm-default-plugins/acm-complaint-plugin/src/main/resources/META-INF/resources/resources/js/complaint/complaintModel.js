@@ -275,6 +275,10 @@ Complaint.Model = Complaint.Model || {
             if (!Acm.isArray(data.personAssociations)) {
                 return false;
             }
+            if (Acm.isEmpty(data.originator)) {
+                return false;
+            }
+
             return true;
         }
 
