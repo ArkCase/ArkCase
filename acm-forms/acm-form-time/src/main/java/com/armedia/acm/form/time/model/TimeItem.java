@@ -3,7 +3,11 @@
  */
 package com.armedia.acm.form.time.model;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author riste.tutureski
@@ -12,7 +16,10 @@ import javax.xml.bind.annotation.XmlElement;
 public class TimeItem {
 
 	private Long id;
-	private Long code;
+	private String type;
+	private List<String> typeOptions;
+	private String code;
+	private Map<String, List<String>> codeOptions;
 	private long sunday;
 	private long monday;
 	private long tuesday;
@@ -30,15 +37,42 @@ public class TimeItem {
 		this.id = id;
 	}
 	
+	@XmlElement(name="type")
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	@XmlTransient
+	public List<String> getTypeOptions() {
+		return typeOptions;
+	}
+
+	public void setTypeOptions(List<String> typeOptions) {
+		this.typeOptions = typeOptions;
+	}
+
 	@XmlElement(name="code")
-	public Long getCode() {
+	public String getCode() {
 		return code;
 	}
 	
-	public void setCode(Long code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 	
+	@XmlTransient
+	public Map<String, List<String>> getCodeOptions() {
+		return codeOptions;
+	}
+
+	public void setCodeOptions(Map<String, List<String>> codeOptions) {
+		this.codeOptions = codeOptions;
+	}
+
 	@XmlElement(name="sunday")
 	public long getSunday() {
 		return sunday;

@@ -42,9 +42,6 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 	@Column(name = "cm_timesheet_user_id")
 	private String userId;
 	
-	@Column(name = "cm_timesheet_object_type")
-	private String parentType;
-	
 	@Column(name = "cm_timesheet_start_date")
     @Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
@@ -116,14 +113,6 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 	public void setUserId(String userId) 
 	{
 		this.userId = userId;
-	}
-
-	public String getParentType() {
-		return parentType;
-	}
-
-	public void setParentType(String parentType) {
-		this.parentType = parentType;
 	}
 	
 	public Date getStartDate() 

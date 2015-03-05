@@ -24,9 +24,7 @@ public class TimeForm {
 
 	private Long id;
 	private String user;
-	private List<String> userOptions;
-	private String type;
-	private List<String> codeOptions;
+	private List<String> userOptions;	
 	private Date period;
 	private List<TimeItem> items;
 	private String status;
@@ -58,24 +56,6 @@ public class TimeForm {
 	public void setUserOptions(List<String> userOptions) {
 		this.userOptions = userOptions;
 	}	
-
-	@XmlElement(name="type")
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	@XmlTransient
-	public List<String> getCodeOptions() {
-		return codeOptions;
-	}
-
-	public void setCodeOptions(List<String> codeOptions) {
-		this.codeOptions = codeOptions;
-	}
 	
 	@XmlElement(name="period")
 	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)

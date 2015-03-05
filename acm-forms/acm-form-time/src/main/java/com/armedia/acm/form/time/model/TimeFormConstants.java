@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.form.time.model;
 
+import com.armedia.acm.frevvo.config.FrevvoFormName;
+
 /**
  * @author riste.tutureski
  *
@@ -30,4 +32,10 @@ public interface TimeFormConstants {
 	public final static String FRIDAY = "FRIDAY";
 	public final static String SATURDAY = "SATURDAY";
 	
+	/**
+	 * Time types
+	 */
+	public final static String CASE_FILE = FrevvoFormName.CASE_FILE;
+	public final static String COMPLAINT = FrevvoFormName.COMPLAINT;
+	public final static String OTHER = "OTHER";
 }

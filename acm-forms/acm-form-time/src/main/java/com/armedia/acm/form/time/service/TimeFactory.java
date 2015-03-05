@@ -50,7 +50,6 @@ public class TimeFactory {
 		{
 			retval.setId(form.getId());
 			retval.setUserId(form.getUser());
-			retval.setParentType(form.getType());
 			retval.setTimes(asAcmTimes(form));
 			retval.setStartDate(getStartDate(form.getPeriod()));
 			retval.setEndDate(getEndDate(form.getPeriod()));
@@ -83,7 +82,6 @@ public class TimeFactory {
 			
 			form.setId(timesheet.getId());
 			form.setUser(timesheet.getUserId());
-			form.setType(timesheet.getParentType());
 			
 			// Doesn't matter which date - it should be one date between start and end date ... I am taking "startDate"
 			form.setPeriod(timesheet.getStartDate());
@@ -174,7 +172,8 @@ public class TimeFactory {
 					AcmTime time = new AcmTime();
 						
 					time.setId(item.getId());
-					time.setObjectId(item.getCode());
+					time.setCode(item.getCode());
+					time.setType(item.getType());
 					
 					calendar.add(Calendar.DATE, offset);
 					time.setDate(calendar.getTime());
@@ -208,15 +207,15 @@ public class TimeFactory {
 		
 		if (timesheet != null && timesheet.getTimes() != null)
 		{
-			Map<Long, TimeItem> itemsMap = new HashMap<>();
+			Map<String, TimeItem> itemsMap = new HashMap<>();
 			List<AcmTime> times = timesheet.getTimes();
 			for (AcmTime time : times)
 			{
 				TimeItem item = null;
 				
-				if (itemsMap.containsKey(time.getObjectId()))
+				if (itemsMap.containsKey(time.getCode()))
 				{
-					item = itemsMap.get(time.getObjectId());
+					item = itemsMap.get(time.getCode());
 				}
 				else
 				{
@@ -224,14 +223,15 @@ public class TimeFactory {
 				}
 				
 				item.setId(time.getId());
-				item.setCode(time.getObjectId());
+				item.setCode(time.getCode());
+				item.setType(time.getType());
 
 				item = setTimeFromAcmTime(item, time);
 				
-				itemsMap.put(time.getObjectId(), item);
+				itemsMap.put(time.getCode(), item);
 			}
 			
-			for (Entry<Long, TimeItem> entry : itemsMap.entrySet())
+			for (Entry<String, TimeItem> entry : itemsMap.entrySet())
 			{
 				retval.addAll(Arrays.asList(entry.getValue()));
 			}
