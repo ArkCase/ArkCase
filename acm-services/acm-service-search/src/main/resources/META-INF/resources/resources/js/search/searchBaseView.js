@@ -5,9 +5,9 @@
  */
 SearchBase.View = {
     create : function(args) {
-        if (SearchBase.View.Query.create)            {SearchBase.View.Query.create(args.$edtSearch, args.$btnSearch);}
-        if (SearchBase.View.Facet.create)            {SearchBase.View.Facet.create(args.$divFacets);}
-        if (SearchBase.View.Results.create)          {SearchBase.View.Results.create(args.$divResults, args.jtArgs, args.jtDataMaker);}
+        if (SearchBase.View.Query.create)            {SearchBase.View.Query.create(args);}
+        if (SearchBase.View.Facet.create)            {SearchBase.View.Facet.create(args);}
+        if (SearchBase.View.Results.create)          {SearchBase.View.Results.create(args);}
     }
     ,onInitialized: function() {
         if (SearchBase.View.Query.onInitialized)     {SearchBase.View.Query.onInitialized();}
@@ -35,11 +35,11 @@ SearchBase.View = {
     }
 
     ,Query: {
-        create: function($edtSearch, $btnSearch) {
+        create: function(args) {
             var $edtSearchDefault  = $("#searchQuery");
             var $btnSearchDefault  = $edtSearchDefault.next().find("button");
-            this.$edtSearch = ($edtSearch)? $edtSearch : $edtSearchDefault;
-            this.$btnSearch = ($btnSearch)? $btnSearch : $btnSearchDefault;
+            this.$edtSearch = (args.$edtSearch)? args.$edtSearch : $edtSearchDefault;
+            this.$btnSearch = (args.$btnSearch)? args.$btnSearch : $btnSearchDefault;
             this.$btnSearch.unbind("click").on("click", function(e) {SearchBase.View.Query.onClickBtnSearch(e, this);});
             this.$edtSearch.keyup(function(event){
                 if(13 == event.keyCode){
@@ -72,8 +72,9 @@ SearchBase.View = {
     }
 
     ,Facet: {
-        create: function($divFacets) {
-            this.$divFacets = ($divFacets)? $divFacets : $("#divFacets");
+        create: function(args) {
+            this.$divFacets = (args.$divFacets)? args.$divFacets : $("#divFacets");
+            this.topFacets = args.topFacets;
 
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
         }
@@ -119,7 +120,7 @@ SearchBase.View = {
             this.setHtmlDivFacet(html);
         }
         //mergeFilters
-        ,_buildFacetSection: function(sectionName, sectionFields, si, fixedFilters, copiedFilters) {
+        ,_buildFacetSection: function(sectionName, sectionFields, si, fixedFilters, copiedFilters, buildTopFacets) {
             var html = "";
             if (Acm.isArray(sectionFields)) {
                 html += "<div name='" + sectionName + "'>";
@@ -128,29 +129,32 @@ SearchBase.View = {
                         var fieldKey = this._getFacetDisplay(sectionFields[i].label, sectionFields[i].key);
                         if (Acm.isNotEmpty(fieldKey)) {
                             if (Acm.isArray(sectionFields[i].values)) {
-                                html += "<h6>" + fieldKey + "</h6>";
-                                html += "<div class='list-group auto' name='" + fieldKey + "'>";
-                                for (var j = 0; j < sectionFields[i].values.length; j++) {
-                                    var fieldValue = sectionFields[i].values[j].name;
-                                    if (Acm.isNotEmpty(fieldValue)) {
-                                        var fieldCount = Acm.goodValue(sectionFields[i].values[j].count, 0);
-                                        var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, fieldKey, fieldValue);
-                                        if (0 < fieldCount || isFixedFilter) {
-                                            html += "<label class='list-group-item'><input type='checkbox' value='" + fieldValue + "'";
-                                            if (SearchBase.Model.findFilter(si.filters, fieldKey, fieldValue)) {
-                                                html += " checked";
+                                var isTopFacet = Acm.isItemInArray(fieldKey, this.topFacets);
+                                if (isTopFacet == buildTopFacets) {
+                                    html += "<h6>" + fieldKey + "</h6>";
+                                    html += "<div class='list-group auto' name='" + fieldKey + "'>";
+                                    for (var j = 0; j < sectionFields[i].values.length; j++) {
+                                        var fieldValue = sectionFields[i].values[j].name;
+                                        if (Acm.isNotEmpty(fieldValue)) {
+                                            var fieldCount = Acm.goodValue(sectionFields[i].values[j].count, 0);
+                                            var isFixedFilter = SearchBase.Model.findFilter(fixedFilters, fieldKey, fieldValue);
+                                            if (0 < fieldCount || isFixedFilter) {
+                                                html += "<label class='list-group-item'><input type='checkbox' value='" + fieldValue + "'";
+                                                if (SearchBase.Model.findFilter(si.filters, fieldKey, fieldValue)) {
+                                                    html += " checked";
+                                                }
+                                                if (isFixedFilter) {
+                                                    html += " disabled";
+                                                    SearchBase.Model.removeFilter(copiedFilters, fieldKey, fieldValue);
+                                                }
+                                                html += " /><span class='badge bg-info'>" + fieldCount
+                                                    + "</span>" + fieldValue
+                                                    + "</label>";
                                             }
-                                            if (isFixedFilter) {
-                                                html += " disabled";
-                                                SearchBase.Model.removeFilter(copiedFilters, fieldKey, fieldValue);
-                                            }
-                                            html += " /><span class='badge bg-info'>" + fieldCount
-                                                + "</span>" + fieldValue
-                                                + "</label>";
                                         }
                                     }
+                                    html += "</div>";
                                 }
-                                html += "</div>";
                             }
                         }
                     }
@@ -188,6 +192,8 @@ SearchBase.View = {
             return html;
         }
         ,buildFacetPanel: function(facet) {
+            var htmlFixed = "";
+            var htmlTopFacets = "";
             var html = "";
             var si = SearchBase.Model.getSearchInfo();
             var fixedFilters = SearchBase.Model.getFixedFilters();
@@ -204,11 +210,21 @@ SearchBase.View = {
                 if (0 < SearchBase.Model.getCountFacetDates(facet)){
                     html += this._buildFacetSection("facet_dates", facet.facet_dates, si, fixedFilters, copiedFilters);
                 }
+
+                if (0 < SearchBase.Model.getCountFacetFields(facet)){
+                    htmlTopFacets += this._buildFacetSection("facet_fields", facet.facet_fields, si, fixedFilters, copiedFilters, true);
+                }
+                if (0 < SearchBase.Model.getCountFacetQueries(facet)){
+                    htmlTopFacets += this._buildFacetSection("facet_queries", facet.facet_queries, si, fixedFilters, copiedFilters, true);
+                }
+                if (0 < SearchBase.Model.getCountFacetDates(facet)){
+                    htmlTopFacets += this._buildFacetSection("facet_dates", facet.facet_dates, si, fixedFilters, copiedFilters, true);
+                }
             }  //end if validateSearchFacet
 
-            html = this._buildFilterSection(copiedFilters) + html;
+            htmlFixed = this._buildFilterSection(copiedFilters);
 
-            this.setHtmlDivFacet(html);
+            this.setHtmlDivFacet(htmlFixed + htmlTopFacets + html);
 
             this.$divFacets.find("input[type='checkbox']").on("click", function(e) {SearchBase.View.Facet.onClickCheckBox(e, this);});
         }
@@ -219,12 +235,12 @@ SearchBase.View = {
     }
 
     ,Results: {
-        create: function($divResults, jtArgs, jtDataMaker) {
-            this.$divResults = ($divResults)? $divResults : $("#divResults");
+        create: function(args) {
+            this.$divResults = (args.$divResults)? args.$divResults : $("#divResults");
             AcmEx.Object.JTable.setTitle(this.$divResults, "Search Results");
 
-            this.jtDataMaker = (jtDataMaker)? jtDataMaker : this._jtDataMakerDefault;
-            SearchBase.View.Results._useJTable(jtArgs);
+            this.jtDataMaker = (args.jtDataMaker)? args.jtDataMaker : this._jtDataMakerDefault;
+            SearchBase.View.Results._useJTable(args.jtArgs);
 
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
             Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
@@ -267,12 +283,7 @@ SearchBase.View = {
         ,displayName: function(data) {
             var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
             var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
-
-
-            //$lnk.click(function(){alert("click" + data.record.id)});
-
             //var $lnk = $("<p>line1</p><p>line2</p></br><p>line3</p><a href='" + url + "'>" + data.record.name + "</a><div>hello world1</div><div>hello world2</div>");
-
             return $lnk;
         }
         ,displayParent: function(data) {
