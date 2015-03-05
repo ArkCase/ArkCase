@@ -550,7 +550,7 @@ CaseFile.Model = CaseFile.Model || {
             this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
         }
         ,onInitialized: function() {
-            var assignees = CaseFile.Model.Lookup.gnees();
+            var assignees = CaseFile.Model.Lookup.getAssignees();
             if (Acm.isEmpty(assignees)) {
                 CaseFile.Service.Lookup.retrieveAssignees();
             } else {
@@ -578,7 +578,7 @@ CaseFile.Model = CaseFile.Model || {
         ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
         ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
-        ,gnees: function() {
+        ,getAssignees: function() {
             return this._assignees.get();
         }
         ,setAssignees: function(assignees) {

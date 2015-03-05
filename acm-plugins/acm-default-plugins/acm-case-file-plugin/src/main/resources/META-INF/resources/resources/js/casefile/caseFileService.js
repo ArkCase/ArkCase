@@ -976,13 +976,10 @@ CaseFile.Service = {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.files)) {
+            if (Acm.isNotArray(data)) {
                 return false;
             }
-            if (!Acm.isArray(data.files)) {
-                return false;
-            }
-            if (0 >= data.files.length) {
+            if (0 >= data.length) {
                 return false;
             }
             return true;
@@ -1002,8 +999,8 @@ CaseFile.Service = {
                         if (CaseFile.Service.Documents._validateUploadInfo(response)) {
                             if(response!= null){
                                 var uploadInfo = response;
-                                var caseFileId = CaseFile.Model.getCaseFileId();
-                                var prevAttachmentsList = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
+                                //var caseFileId = CaseFile.Model.getCaseFileId();
+                                /*var prevAttachmentsList = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
                                 for(var i = 0; i < response.files.length; i++){
                                     var attachment = {};
                                     attachment.id = response.files[i].id;
@@ -1016,7 +1013,7 @@ CaseFile.Service = {
                                     prevAttachmentsList.push(attachment);
                                     //attachment.category = response.files[i].category;
                                 }
-                                CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);
+                                CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);*/
                                 CaseFile.Controller.modelAddedDocument(uploadInfo);
                             }
                         }

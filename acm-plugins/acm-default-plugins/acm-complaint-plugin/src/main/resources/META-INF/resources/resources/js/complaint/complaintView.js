@@ -1570,12 +1570,12 @@ Complaint.View = Complaint.View || {
             return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
         }
         ,fillReportSelection: function() {
-            var formDocuments = Complaint.View.MicroData.formUrls.formDocuments;
-            /*try {
-                formDocuments = JSON.parse(Complaint.Object.getFormDocuments());
+
+            try {
+                var formDocuments = JSON.parse(Complaint.View.MicroData.formUrls.formDocuments);
             }catch(e) {
 
-            }*/
+            }
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle'>"
                 + "<option value=''>Document Type</option>";
