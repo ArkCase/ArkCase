@@ -42,8 +42,11 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
     @JoinColumn(name="cm_time_timesheet_id") 
     private AcmTimesheet timesheet;
 	
-	@Column(name = "cm_time_object_id")
-	private Long objectId;
+	@Column(name = "cm_time_code")
+	private String code;
+	
+	@Column(name = "cm_time_type")
+	private String type;
 	
 	@Column(name = "cm_time_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -85,12 +88,20 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
 		this.timesheet = timesheet;
 	}
 
-	public Long getObjectId() {
-		return objectId;
+	public String getCode() {
+		return code;
 	}
 
-	public void setObjectId(Long objectId) {
-		this.objectId = objectId;
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Date getDate() 

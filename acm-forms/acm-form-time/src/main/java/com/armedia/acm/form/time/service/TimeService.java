@@ -6,8 +6,11 @@ package com.armedia.acm.form.time.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +18,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.time.model.TimeForm;
+import com.armedia.acm.form.time.model.TimeFormConstants;
+import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
-import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
@@ -40,8 +41,6 @@ public class TimeService extends FrevvoFormAbstractService {
 	private TimesheetService timesheetService;
 	private AcmTimesheetDao acmTimesheetDao;
 	private TimeFactory timeFactory;
-	private ComplaintDao complaintDao;
-	private CaseFileDao caseFileDao;
 	
 	@Override
 	public Object get(String action) 
@@ -89,7 +88,6 @@ public class TimeService extends FrevvoFormAbstractService {
 	{
 		String userId = getAuthentication().getName();
         AcmUser user = getUserDao().findByUserId(userId);
-		String type = getRequest().getParameter("type");
 		
 		TimeForm form = new TimeForm();
 		
@@ -100,21 +98,14 @@ public class TimeService extends FrevvoFormAbstractService {
 		// Set period (now)
 		form.setPeriod(new Date());
 		
-		// Set charge codes depends on the type
-		List<String> codeOptions = new ArrayList<>();
-		if (type != null)
-		{
-			if (FrevvoFormName.COMPLAINT.toUpperCase().equals(type))
-			{
-				codeOptions = getComplaintCodeOptions();
-			}
-			else if (FrevvoFormName.CASE_FILE.toUpperCase().equals(type))
-			{
-				codeOptions = getCaseFileCodeOptions();
-			}
-		}
+		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIME + ".types"), ",");
 		
-		form.setCodeOptions(codeOptions);
+		// Set charge codes for each type
+		Map<String, List<String>> codeOptions = getCodeOptions(types);
+		TimeItem item = new TimeItem();
+		item.setTypeOptions(types);
+		item.setCodeOptions(codeOptions);
+		form.setItems(Arrays.asList(item));
 		
 		// Init Statuses
 		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIME + ".statuses"), ","));
@@ -128,30 +119,53 @@ public class TimeService extends FrevvoFormAbstractService {
 		return json;
 	}
 	
-	private List<String> getComplaintCodeOptions()
+	private Map<String, List<String>> getCodeOptions(List<String> types)
 	{
-		List<String> codeOptions = new ArrayList<>();
-		List<Complaint> complaints = getComplaintDao().findAll();
-		if (complaints != null)
+		Map<String, List<String>> codeOptions = new HashMap<String, List<String>>();
+		
+		if (types != null)
 		{
-			for (Complaint complaint : complaints)
+			for (String type : types)
 			{
-				codeOptions.add(complaint.getComplaintId() + "=" + complaint.getComplaintNumber());
+				String[] typeArray = type.split("=");
+				if (typeArray != null && typeArray.length == 2)
+				{
+					List<String> options = new ArrayList<>();
+					
+					if (TimeFormConstants.OTHER.toUpperCase().equals(typeArray[0]))
+					{
+						options = convertToList((String) getProperties().get(FrevvoFormName.TIME + ".type.other"), ",");
+					}
+					else
+					{
+						options = getCodeOptionsByObjectType(typeArray[0]);
+					}
+					
+					codeOptions.put(typeArray[0], options);
+				}
 			}
 		}
 		
 		return codeOptions;
 	}
 	
-	private List<String> getCaseFileCodeOptions()
+	private List<String> getCodeOptionsByObjectType(String objectType)
 	{
 		List<String> codeOptions = new ArrayList<>();
-		List<CaseFile> caseFiles = getCaseFileDao().findAll();
-		if (caseFiles != null)
+		
+		JSONObject jsonObject = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, "name ASC");
+		if (jsonObject != null && jsonObject.has("response") && jsonObject.getJSONObject("response").has("docs"))
 		{
-			for (CaseFile caseFile : caseFiles)
+			JSONArray objects = jsonObject.getJSONObject("response").getJSONArray("docs");
+			
+			for (int i = 0; i < objects.length(); i++)
 			{
-				codeOptions.add(caseFile.getId() + "=" + caseFile.getCaseNumber());
+				JSONObject object = objects.getJSONObject(i);
+				
+				if (object.has("name"))
+				{
+					codeOptions.add(object.getString("name") + "=" + object.getString("name"));
+				}
 			}
 		}
 		
@@ -186,22 +200,6 @@ public class TimeService extends FrevvoFormAbstractService {
 
 	public void setTimeFactory(TimeFactory timeFactory) {
 		this.timeFactory = timeFactory;
-	}
-
-	public ComplaintDao getComplaintDao() {
-		return complaintDao;
-	}
-
-	public void setComplaintDao(ComplaintDao complaintDao) {
-		this.complaintDao = complaintDao;
-	}
-
-	public CaseFileDao getCaseFileDao() {
-		return caseFileDao;
-	}
-
-	public void setCaseFileDao(CaseFileDao caseFileDao) {
-		this.caseFileDao = caseFileDao;
 	}
 
 }

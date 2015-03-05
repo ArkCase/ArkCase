@@ -12,9 +12,6 @@
 	         <column name="cm_timesheet_user_id" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_object_type" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
 	         <column name="cm_timesheet_start_date" type="TIMESTAMP WITH TIME ZONE">
 	             <constraints nullable="false"/>
 	         </column>
@@ -47,7 +44,10 @@
 	         <column name="cm_time_timesheet_id" type="NUMBER(32,0))">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_object_id" type="NUMBER(32,0)">
+	         <column name="cm_time_code" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_type" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_date" type="TIMESTAMP WITH TIME ZONE">
