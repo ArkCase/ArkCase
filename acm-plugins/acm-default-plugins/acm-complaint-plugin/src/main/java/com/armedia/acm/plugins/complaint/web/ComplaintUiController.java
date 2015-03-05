@@ -4,6 +4,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.armedia.acm.form.config.FormUrl;
@@ -26,7 +28,7 @@ import com.armedia.acm.services.users.model.AcmUserActionName;
 public class ComplaintUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-
+    private AcmPlugin plugin;
     private AuthenticationTokenService authenticationTokenService;
 	private FormUrl formUrl;
 	private UserActionDao userActionDao;
@@ -34,18 +36,12 @@ public class ComplaintUiController
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth, HttpServletRequest request) {
-        ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaint");
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("complaint");
 
-        String token = this.authenticationTokenService.getTokenForAuthentication(auth);
-        retval.addObject("token", token);
-        
-        // Frevvo form URLs
-        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
-        retval.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
-        retval.addObject("formDocuments", getFormProperties().get("form.documents"));
-        
+        initModelAndView(mv, auth);
+
+
         if (null != request && "successful".equals(request.getParameter("frevvoFormSubmit_status")))
         {
         	AcmUserAction userAction = getUserActionDao().findByUserIdAndName(auth.getName(), AcmUserActionName.LAST_COMPLAINT_CREATED);
@@ -58,75 +54,72 @@ public class ComplaintUiController
         		{
         			String page = request.getParameter("frevvoFormSubmit_page");
 
-        			retval.addObject("frevvoFormSubmit_id", id);
-        			retval.addObject("frevvoFormSubmit_page", page);
+        			mv.addObject("frevvoFormSubmit_id", id);
+        			mv.addObject("frevvoFormSubmit_page", page);
         		}
 			}
         }
         
-        return retval;
+        return mv;
     }
 
     @PreAuthorize("hasPermission(#complaintId, 'COMPLAINT', 'read')")
     @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
     public ModelAndView openComplaint(Authentication auth, @PathVariable(value = "complaintId") Long complaintId
     ) {
-        ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaint");
-        retval.addObject("complaintId", complaintId);
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("complaint");
+        mv.addObject("objId", complaintId);
+
+        initModelAndView(mv, auth);
+        return mv;
+    }
+
+    private ModelAndView initModelAndView(ModelAndView mv, Authentication auth) {
+        Map<String, Object> props = getPlugin().getPluginProperties();
+        if (null != props) {
+            try {
+                Object propFilter = props.get("search.tree.filter");
+                if (null != propFilter) {
+                    JSONArray treeFilter = new JSONArray(propFilter.toString());
+                    mv.addObject("treeFilter", treeFilter);
+                }
+                Object propSort = props.get("search.tree.sort");
+                if (null != propSort) {
+                    JSONArray treeSort = new JSONArray(propSort.toString());
+                    mv.addObject("treeSort", treeSort);
+                }
+
+            } catch (JSONException e) {
+                log.error(e.getMessage());
+            }
+        }
 
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
-        retval.addObject("token", token);
-        
-        // Frevvo form URLs
-        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        retval.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
-        retval.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
-        retval.addObject("formDocuments", getFormProperties().get("form.documents"));
-        
+        mv.addObject("token", token);
         log.debug("Security token: " + token);
-        return retval;
+
+        // Frevvo form URLs
+        mv.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
+        mv.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
+        mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
+        mv.addObject("formDocuments", getFormProperties().get("form.documents"));
+        return mv;
     }
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView openComplaintWizard()
     {
-        ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintWizard");
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("complaintWizard");
 
         // Frevvo form URLs
-        retval.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT));
+        mv.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT));
 
-        return retval;
+        return mv;
 
     }
 
-    @RequestMapping(value = "/old", method = RequestMethod.GET)
-    public ModelAndView openComplaintList(Authentication auth,
-                                          @RequestParam(value = "initId", required = false) Integer initId
-            ,@RequestParam(value = "initTab", required = false) String initTab
-    ) {
-        ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintList");
-        retval.addObject("initId",  initId);
-        retval.addObject("initTab",  initTab);
-
-        String token = this.authenticationTokenService.getTokenForAuthentication(auth);
-        retval.addObject("token", token);
-        retval.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-
-        log.debug("Security token: " + token);
-        return retval;
-    }
-
-    @RequestMapping(value = "/old/{complaintId}", method = RequestMethod.GET)
-    public ModelAndView openComplaintDetail(@PathVariable(value = "complaintId") Long complaintId)
-    {
-        ModelAndView retval = new ModelAndView();
-        retval.setViewName("complaintList");
-        retval.addObject("complaintId", complaintId);
-        return retval;
-    }
 
 	public AuthenticationTokenService getAuthenticationTokenService() {
 		return authenticationTokenService;
@@ -161,4 +154,11 @@ public class ComplaintUiController
 		this.formProperties = formProperties;
 	}
 
+    public AcmPlugin getPlugin() {
+        return plugin;
+    }
+
+    public void setPlugin(AcmPlugin plugin) {
+        this.plugin = plugin;
+    }
 }

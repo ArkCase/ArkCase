@@ -8,27 +8,42 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="task.page.title" text="Tasks | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="taskId">${taskId}</span>
+        <span itemprop="objType">TASK</span>
+        <span itemprop="objId">${objId}</span>
+        <span itemprop="treeFilter">${treeFilter}</span>
+        <span itemprop="treeSort">${treeSort}</span>
+
+        <%--<span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>--%>
+        <span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>
+        <span itemprop="roiFormUrl">${roiFormUrl}</span>
+        <span itemprop="changeCaseStatusFormUrl">${changeCaseStatusFormUrl}</span>
+
     </div>
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/js/task/taskOld.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListJTable.js'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/taskOld.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskList.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListObject.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListEvent.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListPage.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListRule.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListService.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListCallback.js'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/js/task/list/taskListJTable.js'/>"></script>--%>
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
@@ -75,23 +90,23 @@
                 <h3 class="m-b-xs text-black pull-left">Tasks</h3>
                 <div class="btn-group inline select pull-right">
                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
-                    <ul class="dropdown-menu text-left text-sm">
-                        <li><a href="#">Sort Date Ascending</a></li>
-                        <li><a href="#">Sort Date Descending</a></li>
-                        <li><a href="#">Sort Task ID Ascending</a></li>
-                        <li><a href="#">Sort Task ID Ascending</a></li>
+                    <ul class="dropdown-menu text-left text-sm" id="ulSort">
+                        <%--<li><a href="#">Sort Date Ascending</a></li>--%>
+                        <%--<li><a href="#">Sort Date Descending</a></li>--%>
+                        <%--<li><a href="#">Sort Task ID Ascending</a></li>--%>
+                        <%--<li><a href="#">Sort Task ID Ascending</a></li>--%>
                     </ul>
                 </div>
                 <div class="btn-group select pull-right">
                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span></button>
-                    <ul class="dropdown-menu text-left text-sm">
-                        <li><a href="#">All Open Task</a></li>
-                        <li><a href="#">Tasks I've Opened</a></li>
-                        <li><a href="#">Unapproved Tasks</a></li>
-                        <li><a href="#">Approved Tasks</a></li>
-                        <li><a href="#">Tasks From Group</a></li>
-                        <li><a href="#">Closed or Expired Tasks</a></li>
-                        <li><a href="#">New Tasks</a></li>
+                    <ul class="dropdown-menu text-left text-sm" id="ulFilter">
+                        <%--<li><a href="#">All Open Task</a></li>--%>
+                        <%--<li><a href="#">Tasks I've Opened</a></li>--%>
+                        <%--<li><a href="#">Unapproved Tasks</a></li>--%>
+                        <%--<li><a href="#">Approved Tasks</a></li>--%>
+                        <%--<li><a href="#">Tasks From Group</a></li>--%>
+                        <%--<li><a href="#">Closed or Expired Tasks</a></li>--%>
+                        <%--<li><a href="#">New Tasks</a></li>--%>
                     </ul>
                 </div>
             </header>
@@ -118,92 +133,103 @@
 
 <aside class="bg-light lter">
     <section class="vbox">
-        <h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>
+        <%--<h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>--%>
         <section id="taskDetailView" class="scrollable">
-            <div class="wrapper dk  clearfix">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="">
-                            <div class=" clearfix">
-                                <div class="col-xs-4 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Task Title"></a></div>
-                                    <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                    <small class="text-muted">Incident Date</small></div>
-                                <div class="col-xs-1 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                    <small class="text-muted">Priority</small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
-                                    <small class="text-muted">Assigned To</small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
-                                    <small class="text-muted">Subject Type</small></div>
-                                <div class="col-xs-1">
-                                    <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
-                                    <small class="text-muted">State</small></div>
+            <div id="tabTop"  style="display:none;">
+                <div class="wrapper dk  clearfix" id="divParentDetail" style="display:none;">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="">
+                                <div class=" clearfix">
+                                    <div class="col-xs-4 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Task Title"></a></div>
+                                        <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                        <small class="text-muted">Incident Date</small></div>
+                                    <div class="col-xs-1 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                        <small class="text-muted">Priority</small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
+                                        <small class="text-muted">Assigned To</small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
+                                        <small class="text-muted">Subject Type</small></div>
+                                    <div class="col-xs-1">
+                                        <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
+                                        <small class="text-muted">State</small></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wrapper bg-empty  clearfix">
+                    <div class="pull-right inline">
+                        <div class="btn-group-task">
+                            <!-- TODO: when data-toggle is modal, the tooltip won't come up
+                            -->
+                            <%--<button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>--%>
+
+                            <!-- from the mockup -->
+                            <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
+                            <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
+                            <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
+                            <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
+
+
+                            <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
+                            <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
+
+                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
+                        </div>
+
+                    </div>
+                        <%--
+                                        <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
+                        --%>
+                    <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"></a></h4>
+                    <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
+
+                <hr/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="">
+                                <div class=" clearfix">
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
+                                        <small class="text-muted">% of Completion</small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-title="Enter Owner"></a></div>
+                                        <small class="text-muted">Assignee</small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
+                                        <small class="text-muted">Priority</small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
+                                        <small class="text-muted">Start Date</small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
+                                        <small class="text-muted">Due Date</small></div>
+                                    <div class="col-xs-2">
+                                        <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
+                                        <small class="text-muted">State</small></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="wrapper bg-empty  clearfix">
-                <div class="pull-right inline">
-                    <div class="btn-group-task">
-                        <!-- TODO: when data-toggle is modal, the tooltip won't come up
-                        -->
-                        <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
-                        <!-- from the mockup -->
-                        <button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
-                        <button class="btn btn-info btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
-                        <button class="btn btn-info btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
-
-
-                        <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
-                        <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
-
-                        <button class="btn btn-info btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
-                    </div>
-                    
-                </div>
-                    <%--
-                                    <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
-                    --%>
-                <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"></a></h4>
-                <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
-
-            <hr/>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="">
-                            <div class=" clearfix">
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
-                                    <small class="text-muted">% of Completion</small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="text" data-pk="1" data-title="Enter Owner"></a></div>
-                                    <small class="text-muted">Assignee</small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
-                                    <small class="text-muted">Priority</small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
-                                    <small class="text-muted">Start Date</small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                    <small class="text-muted">Due Date</small></div>
-                                <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
-                                    <small class="text-muted">State</small></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="row" id="tabTopBlank">
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No task data)</p>
             </div>
+
             <div class="wrapper">
-
+                <div class="row" id="tabBlank" style="display:none;">
+                    <p>tabBlank</p>
+                </div>
 
                 <div class="row" id="tabDetails" style="display:none;">
                     <div class="col-md-12">
@@ -223,7 +249,7 @@
                                 </ul>
                                 </span> <a href="#" class="font-bold">Task Details</a> </div>
                             <div class="panel-body">
-                                <div class="taskDetails"></div>
+                                <div class="divDetail"></div>
                             </div>
                         </section>
                     </div>
@@ -265,7 +291,7 @@
                     <div class="col-md-12">
                         <section class="panel b-a">
                             <div id="divDocuments" style="width:100%"></div>
-                            <input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />
+                            <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />--%>
                         </section>
                     </div>
                 </div>
@@ -312,11 +338,11 @@
                             <div class="btn-group">
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
                                 <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
-                                <input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />
-                                <input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />
-                                <form id="formFiles" style="display:none;">
+                                <%--<input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />--%>
+                                <%--<input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />--%>
+                                <form id="formAttachments" style="display:none;">
                                             <%--<input type="file" id="file" name="file">--%>
-                                        <input id="newAttachment" type="file" name="files[]" multiple/>
+                                        <input id="addNewAttachments" type="file" name="files[]" multiple/>
 
                                         <%--<input type="submit">--%>
                                 </form>
@@ -380,19 +406,12 @@
 
 
 
-
-
-
-
-
-
 </section>
 </section>
 </section>
 </section>
 </jsp:body>
 </t:layout>
-
 
 
 
