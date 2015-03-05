@@ -207,6 +207,16 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-timesheet</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-costsheet</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-forms</groupId>
             <artifactId>acm-forms-roi</artifactId>
             <version>${acm.version}</version>
@@ -246,6 +256,18 @@
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
             <artifactId>acm-form-electronic-communication</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-time</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-cost</artifactId>
             <version>${acm.version}</version>
         </dependency>
         
