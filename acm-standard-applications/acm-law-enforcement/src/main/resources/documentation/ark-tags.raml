@@ -1,0 +1,17 @@
+#%RAML 0.8
+title: ArkCase Tags
+
+/tags:  
+  get:
+    description: Retrieve a tree view of all tags configured from the administration "Tags" module
+  put:
+    description: Create a new top-level tag
+  /{tagId}:
+    delete:
+      description: Remove the requested tag; the requested tag cannot have any sub-tags
+    post:
+      description: Rename the requested tag
+    put:
+      description: Create a sub-tag under the requested tag
+
+    
