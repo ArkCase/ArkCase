@@ -1881,7 +1881,7 @@ CaseFile.View = CaseFile.View || {
                                 var childObject = c.childObjects[i];
                                 if (Acm.compare(CaseFile.Model.DOC_TYPE_FILE, childObject.targetType)) {
                                     var record = {};
-                                    if (Acm.compare(CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE, childObject.category)) {
+                                    if (!Acm.compare(CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE, childObject.category)) {
                                         record.id = Acm.goodValue(childObject.targetId, 0);
                                         record.title = Acm.goodValue(childObject.targetName);
                                         record.created = Acm.getDateFromDatetime(childObject.created);
