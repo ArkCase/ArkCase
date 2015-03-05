@@ -16,5 +16,7 @@ public class FrevvoFormName {
 	public static final String CHANGE_CASE_STATUS = "change_case_status";
 	public static final String CLOSE_COMPLAINT = "close_complaint";
 	public static final String ELECTRONIC_COMMUNICATION = "electronic_communication";
+	public static final String TIME = "time";
+	public static final String COST = "cost";
 	
 }
