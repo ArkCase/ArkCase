@@ -7,10 +7,11 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
-        <span itemprop="token">${token}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
+        <span itemprop="token">${token}</span>
 
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
@@ -24,6 +25,11 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFile.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileModel.js'/>"></script>
@@ -31,18 +37,13 @@
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
-    <!-- File Manager -->
-    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_knob}/js/${js_knob}"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/${js_upload_fileupload}"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_upload}/js/${js_upload_iframe}"></script>--%>
-
-    <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_summernote}/summernote.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_summernote}/${js_summernote}'/>"></script>
 
-    <!-- JTable -->
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
@@ -52,7 +53,6 @@
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
 
-    <!-- X-Editable -->
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
@@ -165,7 +165,6 @@
 
                             <div>
                                 <div class="col-md-12" id="tabBlank" style="display:none;">
-                                    <p class="dev">tabBlank</p>
                                 </div>
 
 
@@ -337,7 +336,6 @@
                                     </section>
                                 </div>
 
-
                             </div>
                         </section>
                     </section>
@@ -350,106 +348,3 @@
 </section>
 </jsp:body>
 </t:layout>
-
-<!-- used for testing -->
-<%--<div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">--%>
-    <%--<div class="modal-dialog modal-lg">--%>
-        <%--<div class="modal-content">--%>
-            <%--<div class="modal-header">--%>
-                <%--<button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Close</span></button>--%>
-                <%--<h4 class="modal-title" id="myModalLabel">Object Picker Demo</h4>--%>
-            <%--</div>--%>
-            <%--<header class="header bg-gradient b-b clearfix">--%>
-                <%--<div class="row m-t-sm">--%>
-                    <%--<div class="col-md-12 m-b-sm">--%>
-                        <%--<div class="input-group">--%>
-                            <%--<input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>--%>
-                            <%--<span class="input-group-btn">--%>
-                            <%--&lt;%&ndash;<button class="btn btn-md btn-default" type="button"><spring:message code="search.submit.text" text="Go!" /></button>&ndash;%&gt;--%>
-                            <%--<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>--%>
-                            <%--</span> </div>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</header>--%>
-            <%--<div class="modal-body">--%>
-                <%--<div class="row">--%>
-                    <%--<div class="col-xs-3">--%>
-                        <%--<div class="facets" id="divPoFacets">--%>
-                            <%--&lt;%&ndash;<h6>Create User</h6>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<div class="list-group ">&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">5</span> sally-acm </label>&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> ann-acm </label>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<h6>Person, Organization Type</h6>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> initiator </label>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<h6>Object Type</h6>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">6</span> TASK </label>&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<h6>Assignee Full Name</h6>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">6</span> sally supervisor </label>&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">2</span> ann administrator </label>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<h6>Priority</h6>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;<div class="list-group ">&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<span class="badge bg-info">6</span> medium </label>&ndash;%&gt;--%>
-                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<div class="col-xs-9">--%>
-                        <%--<section class="panel panel-default">--%>
-                            <%--<div class="table-responsive" id="divPoResults">--%>
-                                <%--&lt;%&ndash;<table class="table table-striped b-t b-light">&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<thead>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<tr>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<th width="10"><input type="checkbox"> </th>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;</tr>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;</thead>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<tbody>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;<tr>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<td><input type="checkbox"></td>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<td>[Type]</td>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<td>[ID]</td>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<td>[Title]</td>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<td>[Created]</td>&ndash;%&gt;--%>
-                                        <%--&lt;%&ndash;<td>[Status]</td>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;</tr>&ndash;%&gt;--%>
-                                    <%--&lt;%&ndash;</tbody>&ndash;%&gt;--%>
-                                <%--&lt;%&ndash;</table>&ndash;%&gt;--%>
-                            <%--</div>--%>
-                        <%--</section>--%>
-                    <%--</div>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-            <%--<div class="modal-footer">--%>
-                <%--<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>--%>
-                <%--<button type="button" class="btn btn-primary">Select</button>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</div>--%>

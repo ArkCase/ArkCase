@@ -83,7 +83,7 @@ Topbar.Model = {
             }
 
             Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
-            Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+            //Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
         }
 
         ,_pullInterval: 16
