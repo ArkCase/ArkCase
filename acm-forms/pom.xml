@@ -18,6 +18,8 @@
     	<module>acm-form-close-complaint</module>
     	<module>acm-form-case-file</module>
     	<module>acm-form-electronic-communication</module>
+    	<module>acm-form-time</module>
+    <module>acm-form-cost</module>
   </modules>
 
 </project>

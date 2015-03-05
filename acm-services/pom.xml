@@ -37,6 +37,8 @@
         <module>acm-service-subscription</module>
         <module>acm-service-object-history</module>
         <module>acm-service-tag</module>
+    	<module>acm-service-timesheet</module>
+    <module>acm-service-costsheet</module>
   </modules>
 
 
