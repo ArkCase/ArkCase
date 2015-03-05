@@ -52,6 +52,8 @@
 
         <joda-time.version>2.3</joda-time.version>
 
+        <json-schema-validator.version>2.2.6</json-schema-validator.version>
+
         <jstl.version>1.2</jstl.version>
         <junit.version>4.11</junit.version>
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
@@ -881,6 +883,14 @@
 	            <version>${gson.version}</version>
 	        </dependency>
 
+            <!-- json schema validation -->
+            <dependency>
+                <groupId>com.github.fge</groupId>
+                <artifactId>json-schema-validator</artifactId>
+                <version>${json-schema-validator.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
             <!-- xml -->
             <dependency>
                 <groupId>org.codehaus.castor</groupId>
@@ -1056,6 +1066,7 @@
                 <version>${easymock.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <!-- end of testing -->
 
         </dependencies>
