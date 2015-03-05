@@ -7,7 +7,9 @@ import com.armedia.acm.form.casefile.service.CaseFilePSService;
 import com.armedia.acm.form.casefile.service.CaseFileService;
 import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
 import com.armedia.acm.form.closecomplaint.service.CloseComplaintService;
+import com.armedia.acm.form.cost.service.CostService;
 import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
+import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -197,6 +199,50 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            
+            return service;
+		}
+		
+		if (FrevvoFormName.TIME.equals(name))
+        {
+            String contextPath = request.getServletContext().getContextPath();
+
+            TimeService service = new TimeService();
+
+            service.setEcmFileService(frevvoFormController.getEcmFileService());
+            service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setTimesheetService(frevvoFormController.getTimesheetService());
+            service.setAcmTimesheetDao(frevvoFormController.getAcmTimesheetDao());
+            service.setTimeFactory(frevvoFormController.getTimeFactory());
+            
+            return service;
+		}
+		
+		if (FrevvoFormName.COST.equals(name))
+        {
+            String contextPath = request.getServletContext().getContextPath();
+
+            CostService service = new CostService();
+
+            service.setEcmFileService(frevvoFormController.getEcmFileService());
+            service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setCostsheetService(frevvoFormController.getCostsheetService());
+            service.setAcmCostsheetDao(frevvoFormController.getAcmCostsheetDao());
+            service.setCostFactory(frevvoFormController.getCostFactory());
             
             return service;
 		}
