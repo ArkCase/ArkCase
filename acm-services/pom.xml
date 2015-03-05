@@ -36,6 +36,7 @@
     	<module>acm-service-functional-access-control</module>
         <module>acm-service-subscription</module>
         <module>acm-service-object-history</module>
+        <module>acm-service-tag</module>
   </modules>
 
 
