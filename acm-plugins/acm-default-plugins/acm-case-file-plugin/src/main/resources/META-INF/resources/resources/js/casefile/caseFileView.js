@@ -57,8 +57,8 @@ CaseFile.View = CaseFile.View || {
             this.formUrls = {}; //new Object();
             this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
             this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
-            this.formUrls["roi"]                       = Acm.Object.MicroData.get("urlRoiForm");
-            this.formUrls["electronic_communication"]  = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
+            this.formUrls["roiFormUrl"]                = Acm.Object.MicroData.get("urlRoiForm");
+            this.formUrls["electronicCommunicationFormUrl"]  = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
             this.formUrls["enable_frevvo_form_engine"] = Acm.Object.MicroData.get("enableFrevvoFormEngine");
             this.formUrls["change_case_status"]        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
             this.formUrls["edit_change_case_status"]   = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
@@ -1772,7 +1772,7 @@ CaseFile.View = CaseFile.View || {
             var report = CaseFile.View.Documents.getSelectReport();
             var reportext = CaseFile.View.Documents.getSelectReportText();
 
-            if(report == "roi" || report == "electronic_communication"){
+            if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
                 var token = CaseFile.View.MicroData.getToken();
 
                 var caseFileId = CaseFile.View.getActiveCaseFileId();
