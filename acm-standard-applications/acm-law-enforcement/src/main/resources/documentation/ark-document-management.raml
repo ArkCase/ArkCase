@@ -64,7 +64,16 @@ title: ArkCase Document Management
             parentCmisFolderId:
               description: CMIS object ID for the folder to contain the uploaded file.  If given, the folder must be within the parent object's folder tree; otherwise an exception is thrown.  The uploaded file will be placed in the requested folder.  If not given, the folder will be placed in the parent object's root folder.
               type: string
-              required: false       
+              required: false   
+      responses:
+        403:
+          description: User is not authorized to add a file to the container object.
+        200:
+          description: File successfully added.
+          body:
+            application/json:
+              schema:
+                !include ecm-file-schema.json    
     /{fileId}:
       uriParameters:
         fileId:
