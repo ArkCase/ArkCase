@@ -79,5 +79,14 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
 	 </changeSet>
+	 
+	 <changeSet id="03-change-cost-value-type-precision" author="riste.tutureski">
+	 	<dropColumn tableName="acm_cost" columnName="cm_cost_value"/>
+	 	<addColumn tableName="acm_cost">
+	 		<column name="cm_cost_value" type="NUMBER(32,2)">
+	             <constraints nullable="false"/>
+	        </column>
+	 	</addColumn>
+	 </changeSet>
      
 </databaseChangeLog>

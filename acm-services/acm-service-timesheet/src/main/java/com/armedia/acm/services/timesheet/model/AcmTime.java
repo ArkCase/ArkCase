@@ -53,7 +53,7 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
 	private Date date;
 	
 	@Column(name = "cm_time_value")
-	private Long value;
+	private Double value;
 	
 	@Column(name = "cm_time_creator")
 	private String creator;
@@ -114,12 +114,12 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
 		this.date = date;
 	}
 
-	public Long getValue() 
+	public Double getValue() 
 	{
 		return value;
 	}
 
-	public void setValue(Long value) 
+	public void setValue(Double value) 
 	{
 		this.value = value;
 	}
