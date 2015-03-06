@@ -29,6 +29,8 @@ public class TimeForm {
 	private List<TimeItem> items;
 	private String status;
 	private List<String> statusOptions;
+	private String initData;
+	private List<String> totals;
 	
 	@XmlElement(name="id")
 	public Long getId() {
@@ -92,5 +94,23 @@ public class TimeForm {
 
 	public void setStatusOptions(List<String> statusOptions) {
 		this.statusOptions = statusOptions;
+	}
+
+	@XmlElement(name="initData")
+	public String getInitData() {
+		return initData;
+	}
+
+	public void setInitData(String initData) {
+		this.initData = initData;
+	}
+	
+	@XmlElement(name="totalTableItem")
+	public List<String> getTotals() {
+		return totals;
+	}
+
+	public void setTotals(List<String> totals) {
+		this.totals = totals;
 	}
 }

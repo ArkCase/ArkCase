@@ -5,7 +5,7 @@
  */
 SearchBase.Model = {
     create : function(args) {
-        this.cacheResult = new Acm.Model.CacheFifo(8);
+        this.cacheResult = new Acm.Model.CacheFifo();
 
         var si = this.getDefaultSearchInfo();
         this.setSearchInfo(si);
