@@ -809,7 +809,7 @@ Complaint.Model = Complaint.Model || {
             this._priorities.set(priorities);
         }
 
-        ,_personTypes : ['Subject','Witness','Wrongdoer','Other']
+        ,_personTypes : ['Initiator','Subject','Witness','Wrongdoer','Other']
         ,getPersonTypes : function() {
             return this._personTypes;
         }

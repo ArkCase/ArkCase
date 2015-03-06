@@ -508,8 +508,8 @@ Complaint.View = Complaint.View || {
                                         //
                                         //make initiator on top of table and disable delete button
                                         //
-                                        if(Acm.isNotEmpty(complaint.originator)){
-                                            if(personAssociations[i].id == Acm.goodValue(complaint.originator.id)) {
+                                        //if(Acm.isNotEmpty(complaint.originator)){
+                                        if (Acm.isNotEmpty(complaint.originator) && (personAssociations[i].id == Acm.goodValue(complaint.originator.id))) {
                                                 rc.Records.unshift({
                                                     assocId: personAssociations[i].id
                                                     , title: personAssociations[i].person.title
@@ -518,7 +518,7 @@ Complaint.View = Complaint.View || {
                                                     , personType: personAssociations[i].personType
                                                 });
                                             }
-                                        }
+                                        //}
                                         else{
                                             rc.Records.push({
                                                 assocId: personAssociations[i].id
@@ -664,7 +664,7 @@ Complaint.View = Complaint.View || {
                 rc.Record.assocId = assocId;
                 rc.Record.type = Acm.goodValue(record.type);
                 rc.Record.value = Acm.goodValue(record.value);
-                rc.Record.created = Acm.getCurrentDayInternal(); //record.created;
+                rc.Record.created = Acm.getCurrentDay(); //record.created;
                 rc.Record.creator = App.getUserName();   //record.creator;
             }
             return rc;

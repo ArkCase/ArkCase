@@ -1266,7 +1266,7 @@ Task.View = Task.View || {
                             if (0 >= taskId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
-                            var notes = Task.Model.Notes.cacheNoteList.get(taskId + "." + jtParams.jtStartIndex);
+                            var notes = Task.Model.Notes.cacheNoteList.get(taskId);
                             if (Task.Model.Notes.validateNotes(notes)) {
                                 return Task.View.Notes._makeJtData(notes);
 

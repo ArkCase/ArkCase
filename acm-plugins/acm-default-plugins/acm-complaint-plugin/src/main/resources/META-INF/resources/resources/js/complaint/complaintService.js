@@ -247,7 +247,7 @@ Complaint.Service = {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
                 complaint.participants.push(participant);
-                this._saveComplaint(complaintId, complaintId, complaint
+                this._saveComplaint(complaintId, complaint
                     , function (data) {
                         var addedParticipant = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
@@ -277,7 +277,7 @@ Complaint.Service = {
                     }
                 } //end for
 
-                this._saveComplaint(complaintId, complaintId, complaint
+                this._saveComplaint(complaintId, complaint
                     , function (data) {
                         var savedParticipant = null;
                         if (Complaint.Model.Detail.validateComplaint(data)) {
@@ -308,7 +308,7 @@ Complaint.Service = {
 
                 if (0 <= toDelete) {
                     complaint.participants.splice(toDelete, 1);
-                    this._saveComplaint(complaintId, complaintId, complaint
+                    this._saveComplaint(complaintId, complaint
                         , function (data) {
                             if (Complaint.Model.Detail.validateComplaint(data)) {
                                 Complaint.Controller.modelDeletedParticipant(complaintId, Acm.Service.responseWrapper(data, participantId));
@@ -320,7 +320,7 @@ Complaint.Service = {
         }
         , addLocation: function (complaint) {
             if (Complaint.Model.Detail.validateComplaint(complaint)) {
-                this._saveComplaint(complaint.complaintId, complaintId, complaint
+                this._saveComplaint(complaint.complaintId, complaint
                     , function (data) {
                         if (Complaint.Model.Detail.validateComplaint(data)) {
                             Complaint.Controller.modelAddedLocation(complaint.complaintId, Acm.Service.responseWrapper(data, complaint.complaintId));
