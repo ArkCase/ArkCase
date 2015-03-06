@@ -76,5 +76,14 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
 	 </changeSet>
+	 
+	 <changeSet id="03-change-time-value-type-precision" author="riste.tutureski">
+	 	<dropColumn tableName="acm_time" columnName="cm_time_value"/>
+	 	<addColumn tableName="acm_time">
+	 		<column name="cm_time_value" type="NUMBER(32,2)">
+	             <constraints nullable="false"/>
+	        </column>
+	 	</addColumn>
+	 </changeSet>
      
 </databaseChangeLog>
