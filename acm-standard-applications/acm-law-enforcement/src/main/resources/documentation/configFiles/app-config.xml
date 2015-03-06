@@ -40,6 +40,8 @@
                 <ref bean="organizationType"/>
                 <ref bean="groupType"/>
                 <ref bean="userType"/>
+                <ref bean="notificationType"/>
+                <ref bean="subscriptionType"/>
             </list>
         </property>
     </bean>
@@ -141,7 +143,7 @@
 
     <bean id="tagNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Tags"/>
-        <property name="iconName" value="i-chat3"/>
+        <property name="iconName" value="i i-chat3"/>
         <property name="url" value="/plugin/tag"/>
         <property name="requiredPrivilege" value="acm-tag"/>
     </bean>

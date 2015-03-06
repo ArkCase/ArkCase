@@ -121,6 +121,10 @@ SearchBase.View = {
         }
         //mergeFilters
         ,_buildFacetSection: function(sectionName, sectionFields, si, fixedFilters, copiedFilters, buildTopFacets) {
+            if (!buildTopFacets) {
+                buildTopFacets = false;
+            }
+
             var html = "";
             if (Acm.isArray(sectionFields)) {
                 html += "<div name='" + sectionName + "'>";
