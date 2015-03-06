@@ -351,7 +351,7 @@ CaseFile.Service = {
                         CaseFile.Controller.modelAddedPersonAssociation(caseFileId, response);
 
                     } else {
-                        if (CaseFile.Model.Detail.validatePersonAssociation(response)) {
+                        if (CaseFile.Model.People.validatePersonAssociation(response)) {
                             //check caseFileId == personAssociation.parentId;
                             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
                             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
@@ -360,7 +360,7 @@ CaseFile.Service = {
                                 //check response.id not already in caseFile.personAssociations array
                                 var addedPersonAssociation = response;
                                 caseFile.personAssociations.push(addedPersonAssociation);
-                                CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
+                                //CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
                                 CaseFile.Controller.modelAddedPersonAssociation(caseFileId, addedPersonAssociation);
                             }
                         }
@@ -419,16 +419,16 @@ CaseFile.Service = {
                         CaseFile.Controller.modelDeletedPersonAssociation(response);
 
                     } else {
-                        if (CaseFile.Service.Detail._validateDeletedPersonAssociation(response)) {
+                        if (CaseFile.Service.People._validateDeletedPersonAssociation(response)) {
                             if (response.deletedPersonAssociationId == personAssociationId) {
                                 var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
                                 if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                                     for (var i = 0; i < caseFile.personAssociations.length; i++) {
                                         var pa = caseFile.personAssociations[i];
-                                        if (CaseFile.Model.Detail.validatePersonAssociation(pa)) {
+                                        if (CaseFile.Model.People.validatePersonAssociation(pa)) {
                                             if (pa.id == response.deletedPersonAssociationId) {
                                                 caseFile.personAssociations.splice(i, 1);
-                                                CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
+                                                //CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
                                                 CaseFile.Controller.modelDeletedPersonAssociation(Acm.Service.responseWrapper(response, personAssociationId));
                                                 break;
                                             }
@@ -447,8 +447,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var contactMethods = personAssociation.person.contactMethods;
                     //ensure contactMethod.id undefined?
                     contactMethods.push(contactMethod);
@@ -459,8 +459,8 @@ CaseFile.Service = {
                         var addedContactMethod = null;
                         if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                 var contactMethods = personAssociation.person.contactMethods;
                                 for (var i = 0; i < contactMethods.length; i++) {
                                     if (Acm.compare(contactMethods[i].type, contactMethod.type)
@@ -482,8 +482,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var contactMethods = personAssociation.person.contactMethods;
                     for (var i = 0; i < contactMethods.length; i++) {
                         if (Acm.compare(contactMethods[i].id, contactMethod.id)) {
@@ -497,8 +497,8 @@ CaseFile.Service = {
                         ,function(data) {
                             var savedContactMethod = null;
                             if (CaseFile.Model.Detail.validateCaseFile(data)) {
-                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                     var contactMethods = personAssociation.person.contactMethods;
                                     for (var i = 0; i < contactMethods.length; i++) {
                                         if (Acm.compare(contactMethods[i].id, contactMethod.id)) {
@@ -520,8 +520,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var contactMethods = personAssociation.person.contactMethods;
                     for (var i = 0; i < contactMethods.length; i++) {
@@ -549,8 +549,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var securityTags = personAssociation.person.securityTags;
                     //ensure securityTag.id undefined?
                     securityTags.push(securityTag);
@@ -561,8 +561,8 @@ CaseFile.Service = {
                         var addedSecurityTag = null;
                         if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                 var securityTags = personAssociation.person.securityTags;
                                 for (var i = 0; i < securityTags.length; i++) {
                                     if (Acm.compare(securityTags[i].type, securityTags.type)
@@ -584,8 +584,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var securityTags = personAssociation.person.securityTags;
                     for (var i = 0; i < securityTags.length; i++) {
                         if (Acm.compare(securityTags[i].id, securityTag.id)) {
@@ -599,8 +599,8 @@ CaseFile.Service = {
                         ,function(data) {
                             var savedSecurityTag = null;
                             if (CaseFile.Model.Detail.validateCaseFile(data)) {
-                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                     var securityTags = personAssociation.person.securityTags;
                                     for (var i = 0; i < securityTags.length; i++) {
                                         if (Acm.compare(securityTags[i].id, securityTag.id)) {
@@ -622,8 +622,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var securityTags = personAssociation.person.securityTags;
                     for (var i = 0; i < securityTags.length; i++) {
@@ -651,8 +651,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var personAliases = personAssociation.person.personAliases;
                     //ensure personAlias.id undefined?
                     personAliases.push(personAlias);
@@ -663,8 +663,8 @@ CaseFile.Service = {
                         var addedPersonAlias = null;
                         if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                 var personAliases = personAssociation.person.personAliases;
                                 for (var i = 0; i < personAliases.length; i++) {
                                     if (Acm.compare(personAliases[i].aliasType, personAlias.aliasType)
@@ -686,8 +686,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var personAliases = personAssociation.person.personAliases;
                     for (var i = 0; i < personAliases.length; i++) {
                         if (Acm.compare(personAliases[i].id, personAlias.id)) {
@@ -701,8 +701,8 @@ CaseFile.Service = {
                         ,function(data) {
                             var savedPersonAlias = null;
                             if (CaseFile.Model.Detail.validateCaseFile(data)) {
-                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                     var personAliases = personAssociation.person.personAliases;
                                     for (var i = 0; i < personAliases.length; i++) {
                                         if (Acm.compare(personAliases[i].id, personAlias.id)) {
@@ -724,8 +724,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var personAliases = personAssociation.person.personAliases;
                     for (var i = 0; i < personAliases.length; i++) {
@@ -753,8 +753,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var addresses = personAssociation.person.addresses;
                     //ensure address.id undefined?
                     addresses.push(address);
@@ -765,8 +765,8 @@ CaseFile.Service = {
                         var addedAddress = null;
                         if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                 var addresses = personAssociation.person.addresses;
                                 for (var i = 0; i < addresses.length; i++) {
                                     if (Acm.compare(addresses[i].type, address.type)
@@ -793,8 +793,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var addresses = personAssociation.person.addresses;
                     for (var i = 0; i < addresses.length; i++) {
                         if (Acm.compare(addresses[i].id, address.id)) {
@@ -812,8 +812,8 @@ CaseFile.Service = {
                         ,function(data) {
                             var savedAddress = null;
                             if (CaseFile.Model.Detail.validateCaseFile(data)) {
-                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                     var addresses = personAssociation.person.addresses;
                                     for (var i = 0; i < addresses.length; i++) {
                                         if (Acm.compare(addresses[i].id, address.id)) {
@@ -835,8 +835,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var addresses = personAssociation.person.addresses;
                     for (var i = 0; i < addresses.length; i++) {
@@ -864,8 +864,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var organizations = personAssociation.person.organizations;
                     //ensure organization.id undefined?
                     organizations.push(organization);
@@ -876,8 +876,8 @@ CaseFile.Service = {
                         var addedOrganization = null;
                         if (CaseFile.Model.Detail.validateCaseFile(data)) {
                             var personAssociations = data.personAssociations;
-                            var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                            if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                            var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                            if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                 var organizations = personAssociation.person.organizations;
                                 for (var i = 0; i < organizations.length; i++) {
                                     if (Acm.compare(organizations[i].organizationType, organization.organizationType)
@@ -899,8 +899,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var organizations = personAssociation.person.organizations;
                     for (var i = 0; i < organizations.length; i++) {
                         if (Acm.compare(organizations[i].organizationId, organization.organizationId)) {
@@ -914,8 +914,8 @@ CaseFile.Service = {
                         ,function(data) {
                             var savedOrganization = null;
                             if (CaseFile.Model.Detail.validateCaseFile(data)) {
-                                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, data.personAssociations);
-                                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, data.personAssociations);
+                                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                                     var organizations = personAssociation.person.organizations;
                                     for (var i = 0; i < organizations.length; i++) {
                                         if (Acm.compare(organizations[i].organizationId, organization.organizationId)) {
@@ -937,8 +937,8 @@ CaseFile.Service = {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 var personAssociations = caseFile.personAssociations;
-                var personAssociation = CaseFile.Model.Detail.findPersonAssociation(personAssociationId, personAssociations);
-                if (CaseFile.Model.Detail.validatePersonAssociation(personAssociation)) {
+                var personAssociation = CaseFile.Model.People.findPersonAssociation(personAssociationId, personAssociations);
+                if (CaseFile.Model.People.validatePersonAssociation(personAssociation)) {
                     var toDelete = -1;
                     var organizations = personAssociation.person.organizations;
                     for (var i = 0; i < organizations.length; i++) {
@@ -1346,7 +1346,7 @@ CaseFile.Service = {
                             var ecmFile = response;
                             var caseFileId = caseFileIn.id;
 
-                            var caseFile = CaseFile.Model.Detail.cacheCaseFile.get(caseFileId);
+                            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
                             if(CaseFile.Model.Detail.validateCaseFile(caseFile)){
                                 var childObject = {};
                                 childObject.targetId = ecmFile.fileId;
@@ -1356,14 +1356,14 @@ CaseFile.Service = {
                                 childObject.modified = ecmFile.modified;
                                 childObject.modifier = ecmFile.modifier;
                                 childObject.status = ecmFile.status;
-                                childObject.targetType = CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE;
-                                childObject.category = CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE;
+                                childObject.targetType = CaseFile.Model.DOC_TYPE_FILE;
+                                childObject.category = CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE;
 
                                 caseFile.childObjects.push(childObject);
-                                CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
+                                //CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
                             }
 
-                            var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
+                            /*var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
                             var document = {};
                             document.id = ecmFile.fileId;
                             document.name = ecmFile.fileName;
@@ -1374,7 +1374,7 @@ CaseFile.Service = {
                             document.category = CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE;
                             documents.push(document);
                             CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
-
+*/
 
                             CaseFile.Controller.modelCreatedCorrespondence(caseFileId);
                         }
