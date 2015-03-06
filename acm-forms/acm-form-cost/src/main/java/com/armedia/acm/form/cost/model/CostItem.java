@@ -23,7 +23,7 @@ public class CostItem {
 	private String title;
 	private List<String> titleOptions;
 	private String description;
-	private long amount;	
+	private Double amount;	
 	
 	@XmlElement(name="id")
 	public Long getId() {
@@ -71,11 +71,11 @@ public class CostItem {
 	}
 
 	@XmlElement(name="amount")
-	public long getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 	
-	public void setAmount(long amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 	
