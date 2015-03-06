@@ -6,12 +6,17 @@ package com.armedia.acm.form.cost.model;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 
 /**
  * @author riste.tutureski
  *
  */
+@XmlRootElement(name="form_" + FrevvoFormName.COST, namespace=FrevvoFormNamespace.COST_NAMESPACE)
 public class CostForm {
 
 	private Long id;
@@ -24,6 +29,8 @@ public class CostForm {
 	private List<CostItem> items;
 	private String status;
 	private List<String> statusOptions;
+	private String initData;
+	private List<String> balanceTable;
 	
 	@XmlElement(name="id")
 	public Long getId() {
@@ -113,5 +120,23 @@ public class CostForm {
 
 	public void setStatusOptions(List<String> statusOptions) {
 		this.statusOptions = statusOptions;
+	}
+
+	@XmlElement(name="initData")
+	public String getInitData() {
+		return initData;
+	}
+
+	public void setInitData(String initData) {
+		this.initData = initData;
+	}
+
+	@XmlElement(name="balanceTableItem")
+	public List<String> getBalanceTable() {
+		return balanceTable;
+	}
+
+	public void setBalanceTable(List<String> balanceTable) {
+		this.balanceTable = balanceTable;
 	}
 }

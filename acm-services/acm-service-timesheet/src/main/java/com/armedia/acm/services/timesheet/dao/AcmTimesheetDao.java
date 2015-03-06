@@ -7,6 +7,9 @@ import java.util.Date;
 
 import javax.persistence.Query;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 
@@ -16,6 +19,8 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
  */
 public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 
+	private Logger LOG = LoggerFactory.getLogger(getClass());
+	
 	@Override
 	protected Class<AcmTimesheet> getPersistenceClass() 
 	{
@@ -34,7 +39,15 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 		selectQuery.setParameter("startDate", startDate);
 		selectQuery.setParameter("endDate", endDate);
 		
-		AcmTimesheet timesheet = (AcmTimesheet) selectQuery.getSingleResult();
+		AcmTimesheet timesheet = null;
+		try
+		{
+			timesheet = (AcmTimesheet) selectQuery.getSingleResult();
+		}
+		catch (Exception e)
+		{
+			LOG.warn("Timesheet for period of " + startDate + " to " + endDate + " is not found.");
+		}
 		
 		return timesheet;
 	}
