@@ -19,11 +19,6 @@
             <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-data</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
@@ -32,11 +27,10 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-spring-data-source</artifactId>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-data</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-search</artifactId>
@@ -81,7 +75,7 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>

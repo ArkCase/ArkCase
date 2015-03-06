@@ -11,8 +11,9 @@ var Tag = Tag || {
 
         if (SearchBase.create) {
             SearchBase.create({name: "tag"
-                //,filters    : [{key: "Object Type", values: ["DOCUMENT"]}]
-                ,topFacets  : ["Object Type"]
+                ,filters    : [{key: "Object Type", values: ["DOCUMENT"]}]
+                //,topFacets  : ["Tag"]
+                ,topFacets  : ["Status"]
             });
         }
     }
