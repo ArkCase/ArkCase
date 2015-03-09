@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
+import com.armedia.acm.services.costsheet.dao.AcmCostDao;
+import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 
@@ -22,6 +24,9 @@ public class CostFactory {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
+	private AcmCostDao acmCostDao;
+	private AcmCostsheetDao acmCostsheetDao;
+	
 	/**
 	 * Converting Frevvo CostForm to AcmCostsheet
 	 * 
@@ -32,7 +37,17 @@ public class CostFactory {
 	{
 		LOG.debug("Start converting Frevvo Cost Form to Acm Costsheet ...");
 		
-		AcmCostsheet retval = new AcmCostsheet();
+		AcmCostsheet retval = null;
+		
+		if (form != null && form.getId() != null)
+		{
+			retval = getAcmCostsheetDao().find(form.getId());
+		}
+		
+		if (retval == null)
+		{
+			retval = new AcmCostsheet();
+		}
 		
 		if (form != null)
 		{
@@ -104,7 +119,17 @@ public class CostFactory {
 		{
 			for (CostItem item : items)
 			{
-				AcmCost cost = new AcmCost();
+				AcmCost cost = null;
+				
+				if (item.getId() != null)
+				{
+					cost = getAcmCostDao().find(item.getId());
+				}
+				
+				if (cost == null)
+				{
+					cost = new AcmCost();
+				}
 				
 				cost.setId(item.getId());
 				cost.setDate(item.getDate());
@@ -149,5 +174,20 @@ public class CostFactory {
 		
 		return retval;
 	}
-	
+
+	public AcmCostsheetDao getAcmCostsheetDao() {
+		return acmCostsheetDao;
+	}
+
+	public void setAcmCostsheetDao(AcmCostsheetDao acmCostsheetDao) {
+		this.acmCostsheetDao = acmCostsheetDao;
+	}
+
+	public AcmCostDao getAcmCostDao() {
+		return acmCostDao;
+	}
+
+	public void setAcmCostDao(AcmCostDao acmCostDao) {
+		this.acmCostDao = acmCostDao;
+	}	
 }

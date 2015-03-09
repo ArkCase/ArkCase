@@ -1,18 +1,13 @@
 #%RAML 0.8
 title: ArkCase Document Management
 
-/file:
-  post:
-    description: Add a file 
-  /{fileId}:
-    post:
-      description: Replace the requested file with a new version
-    delete:
-      description: Remove the requested file
+
 /api/v1/service/ecm:
   /id/{fileId}:
+    delete:
+      description: Remove the requested file (both metadata and the content file itself)
     get:
-      description: Get file metadata
+      description: Get file metadata      
   /copyToAnotherContainer:
     post:
       description: Copy one or more files to another container
@@ -42,6 +37,58 @@ title: ArkCase Document Management
   /moveWithinContainer:
     post:
       description: Move one or more files to an existing folder in the same container
+  /upload:
+    post:
+      description: Add a file.  User must have "add file" permission on the parent object.  File name must be unique in the folder where the file is added. If the parentCmisFolderId is provided, that folder must be within the parent object's folder tree.  
+      body:
+        multipart/form-data:
+          formParameters:
+            file:
+              description: The file to be added
+              type: file
+              required: true
+            fileType:
+              description: The logical file type ("other", "roi", ...); not the MIME type.
+              type: string
+              required: true
+              example: other, roi, case_file
+            parentObjectType:
+              description: Type tag for the parent object
+              type: string
+              required: true
+              example: CASE_FILE, COMPLAINT, TASK
+            parentObjectId:
+              description: Object ID for the parent object
+              type: integer
+              required: true
+            parentCmisFolderId:
+              description: CMIS object ID for the folder to contain the uploaded file.  If given, the folder must be within the parent object's folder tree; otherwise an exception is thrown.  The uploaded file will be placed in the requested folder.  If not given, the folder will be placed in the parent object's root folder.
+              type: string
+              required: false   
+      responses:
+        403:
+          description: User is not authorized to add a file to the container object.
+        200:
+          description: File successfully added.
+          body:
+            application/json:
+              schema:
+                !include ecm-file-schema.json    
+    /{fileId}:
+      uriParameters:
+        fileId:
+          description: ID of the file to be versioned
+          type: integer
+          required: true
+      post:
+        description: Add a new file version.  User must have "version file" permission for the requested file.
+        body:
+          multipart/form-data:
+            formParameters:
+              file:
+                description: The file to be added
+                type: file
+                required: true                
   /versionHistory/{fileId}:
     get:
       description: Get the version history for one file

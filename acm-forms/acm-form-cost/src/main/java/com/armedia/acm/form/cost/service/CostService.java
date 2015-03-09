@@ -36,6 +36,54 @@ public class CostService extends FrevvoFormAbstractService {
 	private CostFactory costFactory;
 	
 	@Override
+	public Object init() 
+	{
+		Object result = "";
+		
+		String objectId = getRequest().getParameter("objectId");		
+		String userId = getAuthentication().getName();
+		
+		CostForm form = new CostForm();
+			
+		if (objectId != null && !"".equals(objectId))
+		{			
+			AcmCostsheet costsheet = null;
+			
+			try
+			{
+				Long objectIdLong = Long.parseLong(objectId);
+				costsheet = getAcmCostsheetDao().findByUserIdAndObjectId(userId, objectIdLong);
+				form.setObjectId(objectIdLong);
+			}
+			catch(Exception e)
+			{
+				LOG.error("Cannot parse " + objectId + " to Long type. Empty form will be created.", e);
+			}
+			
+			if (costsheet != null)
+			{
+				form = getCostFactory().asFrevvoCostForm(costsheet);
+			}
+			else
+			{
+				form.setItems(Arrays.asList(new CostItem()));
+			}
+			
+		}
+		
+		form.setUser(userId);
+		form.setBalanceTable(Arrays.asList(new String()));
+		
+		// Back initDate in the form. It will need Frevvo engine to recalculate init values after calling this method
+		JSONObject initData = (JSONObject) initFormData();
+		form.setInitData(initData.toString());
+		
+		result = convertFromObjectToXML(form);
+		
+		return result;
+	}
+	
+	@Override
 	public Object get(String action) 
 	{
 		Object result = null;
@@ -71,7 +119,7 @@ public class CostService extends FrevvoFormAbstractService {
 		
 		form = getCostFactory().asFrevvoCostForm(saved);
 		
-		// TODO: Add logic for approval workflow and edit form
+		// TODO: Add logic for approval workflow and save attachments
 		
 		return true;
 	}

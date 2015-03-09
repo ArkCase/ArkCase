@@ -11,13 +11,11 @@ var AcmNotification = AcmNotification || {
         if (AcmNotification.Model.create)      {AcmNotification.Model.create();}
         if (AcmNotification.View.create)       {AcmNotification.View.create();}
 
-
         if (SearchBase.create) {
-            SearchBase.create({name: "notification"
+            SearchBase.create({name: AcmNotification.Model.MicroData.searchName
                 ,jtArgs     : AcmNotification.View.getJtArgs()
                 ,jtDataMaker: AcmNotification.View.jtDataMaker
-                ,filters    : [{key: "Object Type", values: ["NOTIFICATION"]}
-                              ,{key: "Owner", values: [App.getUserName()]}]
+                ,filters    : AcmNotification.Model.MicroData.getSearchFilters()
             });
         }
     }

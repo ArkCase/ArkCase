@@ -29,6 +29,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
+        <!-- json schema validation -->
+        <dependency>
+            <groupId>com.github.fge</groupId>
+            <artifactId>json-schema-validator</artifactId>
+        </dependency>
         
         <!-- logging -->
         <dependency>

@@ -55,15 +55,21 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <!-- upload the file and update the EcmFile CMIS id  -->
         <!-- alfresco adds a ";1.0" string to the object ID, so we have to remove it. -->
         <enricher
-                source="#[org.mule.util.StringUtils.replace(message.payload.id, &quot;;1.0&quot;, &quot;&quot;)]"
+                source="#[org.mule.util.StringUtils.replace(message.payload.versionSeriesId, &quot;;1.0&quot;, &quot;&quot;)]"
                 target="#[flowVars['ecmFile'].ecmFileId]">
-            <cmis:create-document-by-id-from-content
+            <processor-chain>
+                <cmis:create-document-by-id-from-content
                     content-ref="#[message.inboundProperties.inputStream]"
                     filename="#[payload.fileName]"
                     folderId="#[message.inboundProperties.ecmFolderId]"
                     mimeType="#[payload.fileMimeType]"
                     objectType="cmis:document"
                     versioningState="MAJOR"/>
+                <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+                <cmis:get-object-by-id objectId="#[payload.id]"/>
+                <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+            </processor-chain>
+
         </enricher>
         <logger category="com.armedia.acm.plugins.ecm" level="DEBUG"
                 message="File Id: #[payload.ecmFileId]"/>
