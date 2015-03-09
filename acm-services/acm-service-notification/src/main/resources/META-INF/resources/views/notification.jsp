@@ -8,6 +8,9 @@
     <title><spring:message code="notification.page.title" text="Notification | ACM | ArkCase" /></title>
 
     <div id="microData" itemscope="true" style="display: none">
+        <span itemprop="search.name">${searchName}</span>
+        <span itemprop="search.filters">${searchFilters}</span>
+        <span itemprop="search.topFacets">${searchTopFacets}</span>
     </div>
 </script>
 </jsp:attribute>
