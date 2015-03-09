@@ -10,15 +10,14 @@ var Subscription = Subscription || {
         if (Subscription.View.create)       {Subscription.View.create();}
 
         if (SearchBase.create) {
-            SearchBase.create({name: "subscription"
+            SearchBase.create({name: Subscription.Model.MicroData.searchName
                 ,jtArgs     : Subscription.View.getJtArgs()
                 ,jtDataMaker: Subscription.View.jtDataMaker
-                ,filters    : [{key: "Object Type", values: ["SUBSCRIPTION_EVENT"]}
-                    ,{key: "Owner", values: [App.getUserName()]}
-                ]
+                ,filters    : Subscription.Model.MicroData.getSearchFilters()
             });
         }
     }
+
 
     ,onInitialized: function() {
         if (Subscription.Controller.onInitialized) {Subscription.Controller.onInitialized();}

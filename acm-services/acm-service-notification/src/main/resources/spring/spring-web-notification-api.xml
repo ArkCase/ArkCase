@@ -17,6 +17,7 @@
     </bean>
 
     <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">
+        <property name="pluginProperties" ref="notificationProperties"/>
     </bean>
     
 </beans>

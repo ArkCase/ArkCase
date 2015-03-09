@@ -10,10 +10,9 @@ var Tag = Tag || {
         if (Tag.View.create)       {Tag.View.create();}
 
         if (SearchBase.create) {
-            SearchBase.create({name: "tag"
-                ,filters    : [{key: "Object Type", values: ["DOCUMENT"]}]
-                //,topFacets  : ["Tag"]
-                ,topFacets  : ["Status"]
+            SearchBase.create({name: Tag.Model.MicroData.searchName
+                ,filters    : Tag.Model.MicroData.searchFilters
+                ,topFacets  : Tag.Model.MicroData.searchTopFacets
             });
         }
     }
