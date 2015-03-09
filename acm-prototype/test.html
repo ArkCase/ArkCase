@@ -135,6 +135,8 @@
                             </div> 
                             
                             
+                             <button class="btn btn-default  btn-sm" onClick="window.open('documents.html', '_blank');">Edit</button>
+                            
                             
                   <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Close Document" onClick="window.close();"><i class="fa fa-times"></i></button>
                 </div>
@@ -216,60 +218,28 @@
                 <section class="panel panel-default portlet-item">
                   <header class="panel-heading">
                     <ul class="nav nav-pills pull-right">
-                     <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm"  data-toggle="modal" data-target="#tagman"><i class="fa fa-tag"></i> New</button></div></li>
-                     
-                     
-                     
-                     
+                     <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Tag"><i class="fa fa-tag"></i> New</button></div></li>
                       <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
+                    Tags <span class="badge bg-info">1</span> </header>
+                  <section class="panel-body">
+                    <ul id="cloud">
+                    
+             
                     
                     
-                    <div class="modal fade" id="tagman" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                              <div class="modal-dialog">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">New Tag</h4>
-                                  </div>
-                                  <div class="modal-body"> 
-                                  
-                                  
-                                  <p>Choose a tag to associate with this document: </p>
-                                  
-                                  [Insert tree view with checkboxes]
-                                  
-                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Add Tag</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div> 
-                    
-                    Tags <span class="badge bg-info">8</span> </header>
-                  <table class="panel-body table table-striped b-light">
-                      <thead>
-                        <tr>
-                          
-                          <th class="th-sortable" data-toggle="class">Tag <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                          <th width="10">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                         
-                          <td>[Tag]</td>
-                          <td><button type="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-cog"></i> </button>
-                          <ul class="dropdown-menu">
-                            <li><a href="#">Remove</a></li>
-                          </ul></td>
-                        </tr>
-                        </tr>
-                        
-                      </tbody>
-                    </table>
+                      <li><a href="#" class="tag1" class="dropdown-toggle" data-toggle="dropdown">tag cloud 1<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      <li><a href="#" class="tag2" class="dropdown-toggle" data-toggle="dropdown">tag cloud  2<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      <li><a href="#" class="tag3" class="dropdown-toggle" data-toggle="dropdown">tag cloud  3<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      <li><a href="#" class="tag4" class="dropdown-toggle" data-toggle="dropdown">tag cloud  4<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      <li><a href="#" class="tag5" class="dropdown-toggle" data-toggle="dropdown">tag cloud  5<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                       <li><a href="#" class="tag6" class="dropdown-toggle" data-toggle="dropdown">tag cloud  6<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      <li><a href="#" class="tag7" class="dropdown-toggle" data-toggle="dropdown">tag cloud  7<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      <li><a href="#" class="tag8" class="dropdown-toggle" data-toggle="dropdown">tag cloud  8<ul class="dropdown-menu"><li><a href="#">Remove</a></li></ul></li>
+                      
+                      
+                    </ul>
+                  </section>
                 </section>
                 <section class="panel panel-default portlet-item">
                   <header class="panel-heading">
@@ -277,28 +247,26 @@
                       <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
                     Version History </header>
-                    
               
                     <table class="panel-body table table-striped b-light">
                       <thead>
                         <tr>
-                          
+                          <th width="20"><label class="checkbox m-n i-checks">
+                            <input type="checkbox">
+                            <i></i></label></th>
                           <th class="th-sortable" data-toggle="class">Version <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
                           <th>Date/Time</th>
                           <th>User</th>
-                            <th width="10">Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                         
+                          <td><label class="checkbox m-n i-checks">
+                            <input type="checkbox" name="post[]">
+                            <i></i></label></td>
                           <td>[Version]</td>
                           <td>MM/DD/YYYY HH:MM:SS</td>
                           <td>[User]</td>
-                          <td><button type="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-cog"></i> </button>
-                          <ul class="dropdown-menu">
-                            <li><a href="#">Make Active</a></li>
-                          </ul></td>
                         </tr>
                         </tr>
                         
@@ -314,7 +282,9 @@
                   <table class="panel-body table table-striped b-light">
                       <thead>
                         <tr>
-                         
+                          <th width="20"><label class="checkbox m-n i-checks">
+                            <input type="checkbox">
+                            <i></i></label></th>
                           <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
                           <th>Date/Time</th>
                           <th>User</th>
@@ -322,7 +292,9 @@
                       </thead>
                       <tbody>
                         <tr>
-                        
+                          <td><label class="checkbox m-n i-checks">
+                            <input type="checkbox" name="post[]">
+                            <i></i></label></td>
                           <td>[Event]</td>
                           <td>MM/DD/YYYY HH:MM:SS</td>
                           <td>[User]</td>
@@ -405,7 +377,7 @@
                         <li>&nbsp;</li>
                       </ul>
                       <a href="#" class="font-bold">Notes</a></div>
-                    <div class="panel-body no-padder">
+                    <div class="panel-body max-200 no-padder">
                       <table class="table table-striped th-sortable table-hover">
                         <thead>
                           <tr>
@@ -420,10 +392,10 @@
                             <td>[Note]</td>
                             <td>[Created]</td>
                             <td>[Author]</td>
-                            <td><button type="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-cog"></i> </button>
-                          <ul class="dropdown-menu">
-                            <li><a href="#">Delete</a></li>
-                          </ul></td>
+                            <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                <option value="0">Choose Action</option>
+                                <option value="1">Delete</option>
+                              </select></td>
                           </tr>
                         </tbody>
                       </table>
