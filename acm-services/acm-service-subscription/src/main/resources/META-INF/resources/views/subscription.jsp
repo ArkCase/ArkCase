@@ -8,7 +8,8 @@
     <title><spring:message code="subscription.page.title" text="Subscription | ACM | ArkCase" /></title>
 
     <div id="microData" itemscope="true" style="display: none">
-        <%--<span itemprop="searchEx">${searchEx}</span>--%>
+        <span itemprop="search.name">${searchName}</span>
+        <span itemprop="search.filters">${searchFilters}</span>
     </div>
 </script>
 </jsp:attribute>

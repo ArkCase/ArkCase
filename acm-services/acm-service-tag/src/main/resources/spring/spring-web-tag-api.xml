@@ -4,5 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="tagUiController" class="com.armedia.acm.services.tag.web.TagUiController">
+        <property name="pluginProperties" ref="tagProperties"/>
     </bean>
 </beans>
