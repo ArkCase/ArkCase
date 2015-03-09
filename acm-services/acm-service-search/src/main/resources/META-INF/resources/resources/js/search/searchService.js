@@ -6,7 +6,7 @@
  * @author jwu
  */
 Search.Service = {
-    create : function() {
+    create : function(args) {
     }
     ,onInitialized: function() {
     }
