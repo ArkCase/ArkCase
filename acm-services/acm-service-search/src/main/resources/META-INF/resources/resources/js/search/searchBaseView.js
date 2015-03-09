@@ -228,7 +228,7 @@ SearchBase.View = {
 
             htmlFixed = this._buildFilterSection(copiedFilters);
 
-            this.setHtmlDivFacet(htmlFixed + htmlTopFacets + html);
+            this.setHtmlDivFacet(htmlTopFacets + htmlFixed + html);
 
             this.$divFacets.find("input[type='checkbox']").on("click", function(e) {SearchBase.View.Facet.onClickCheckBox(e, this);});
         }
