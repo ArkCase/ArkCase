@@ -996,6 +996,8 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
+                        contactMethod.created = Acm.getCurrentDayInternal();
+                        contactMethod.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedContactMethod(caseFileId, assocId, contactMethod);
@@ -1012,6 +1014,8 @@ CaseFile.View = CaseFile.View || {
                         contactMethod.id    = Acm.goodValue(record.id, 0);
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
+                        contactMethod.created = Acm.getCurrentDayInternal();
+                        contactMethod.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < contactMethod.id) {
                             CaseFile.Controller.viewUpdatedContactMethod(caseFileId, assocId, contactMethod);
@@ -1153,6 +1157,8 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
+                        securityTag.created = Acm.getCurrentDayInternal();
+                        securityTag.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedSecurityTag(caseFileId, assocId, securityTag);
@@ -1165,6 +1171,8 @@ CaseFile.View = CaseFile.View || {
                         securityTag.id    = Acm.goodValue(record.id, 0);
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
+                        securityTag.created = Acm.getCurrentDayInternal();
+                        securityTag.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < securityTag.id) {
                             CaseFile.Controller.viewUpdatedSecurityTag(caseFileId, assocId, securityTag);
@@ -1303,6 +1311,8 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
+                        organization.created = Acm.getCurrentDayInternal();
+                        organization.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedOrganization(caseFileId, assocId, organization);
@@ -1315,6 +1325,8 @@ CaseFile.View = CaseFile.View || {
                         organization.organizationId    = Acm.goodValue(record.id, 0);
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
+                        organization.created = Acm.getCurrentDayInternal();
+                        organization.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < organization.organizationId) {
                             CaseFile.Controller.viewUpdatedOrganization(caseFileId, assocId, organization);
@@ -1508,6 +1520,8 @@ CaseFile.View = CaseFile.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
+                        address.created = Acm.getCurrentDayInternal();
+                        address.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedAddress(caseFileId, assocId, address);
@@ -1524,6 +1538,8 @@ CaseFile.View = CaseFile.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
+                        address.created = Acm.getCurrentDayInternal();
+                        address.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < address.id) {
                             CaseFile.Controller.viewUpdatedAddress(caseFileId, assocId, address);
@@ -1664,6 +1680,8 @@ CaseFile.View = CaseFile.View || {
                         var assocId = record.assocId;
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
+                        personAlias.created = Acm.getCurrentDayInternal();
+                        personAlias.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedPersonAlias(caseFileId, assocId, personAlias);
@@ -1676,6 +1694,8 @@ CaseFile.View = CaseFile.View || {
                         personAlias.id         = Acm.goodValue(record.id, 0);
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
+                        personAlias.created = Acm.getCurrentDayInternal();
+                        personAlias.creator = Acm.goodValue(record.creator);
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < personAlias.id) {
                             CaseFile.Controller.viewUpdatedPersonAlias(caseFileId, assocId, personAlias);
@@ -2877,7 +2897,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelCreatedCorrespondence: function(caseFileId) {
             if (caseFileId.hasError) {
-                ;
+                Acm.Dialog.info(caseFileId.errorMsg);
             } else {
                 AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divTemplates);
             }

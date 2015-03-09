@@ -367,7 +367,7 @@ Task.Service = {
                     var jtData = AcmEx.Object.jTableGetEmptyRecord();
                     if (Task.Model.Notes.validateNotes(data)) {
                         var noteList = data;
-                        Task.Model.Notes.cacheNoteList.put(taskId + "." +jtParams.jtStartIndex, noteList);
+                        Task.Model.Notes.cacheNoteList.put(taskId, noteList);
                         jtData = callbackSuccess(noteList);
                     }
                     return jtData;
