@@ -124,6 +124,7 @@
         <preConditions>
             <and>
                 <dbms type="oracle"/>
+                <tableExists tableName="acm_complaint"/>
                 <columnExists tableName="acm_complaint" columnName="cm_complaint_ecm_folder_id"/>
             </and>
         </preConditions>
@@ -148,6 +149,7 @@
         <preConditions>
             <and>
                 <dbms type="oracle"/>
+                <tableExists tableName="acm_case_file"/>
                 <columnExists tableName="acm_case_file" columnName="cm_case_ecm_folder_id"/>
             </and>
         </preConditions>
