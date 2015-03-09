@@ -3,8 +3,11 @@
  */
 package com.armedia.acm.form.time.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
+import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -41,6 +45,64 @@ public class TimeService extends FrevvoFormAbstractService {
 	private TimesheetService timesheetService;
 	private AcmTimesheetDao acmTimesheetDao;
 	private TimeFactory timeFactory;
+	
+	@Override
+	public Object init() 
+	{
+		Object result = "";
+		
+		String period = getRequest().getParameter("period");		
+		String userId = getAuthentication().getName();
+		
+		TimeForm form = new TimeForm();
+		
+		Date periodDate = null;
+		try 
+		{
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormats.FREVVO_DATE_FORMAT);
+			
+			if (period == null || "".equals(period))
+			{
+				period = dateFormat.format(new Date());
+			}
+			
+			periodDate = dateFormat.parse(period);		
+		}
+		catch (ParseException e) 
+		{
+			LOG.error("Could not parse date sent from Frevvo.", e);
+		}
+			
+		if (periodDate != null)
+		{
+			Date startDate = getTimeFactory().getStartDate(periodDate);
+			Date endDate = getTimeFactory().getEndDate(periodDate);
+			
+			AcmTimesheet timesheet = getAcmTimesheetDao().findByUserIdStartAndEndDate(userId, startDate, endDate);
+			
+			if (timesheet != null)
+			{
+				form = getTimeFactory().asFrevvoTimeForm(timesheet);
+			}
+			else
+			{
+				form.setItems(Arrays.asList(new TimeItem()));
+			}
+			
+		}
+		
+		form.setPeriod(periodDate);
+		form.setUser(userId);
+		form.setTotals(Arrays.asList(new String()));
+		
+		// Back initDate in the form. It will need Frevvo engine to recalculate init values after calling this method
+		JSONObject initData = (JSONObject) initFormData();
+		form.setInitData(initData.toString());
+		
+		result = convertFromObjectToXML(form);
+		
+		return result;
+	}
 	
 	@Override
 	public Object get(String action) 
@@ -79,7 +141,7 @@ public class TimeService extends FrevvoFormAbstractService {
 		
 		form = getTimeFactory().asFrevvoTimeForm(saved);
 		
-		// TODO: Add logic for approval workflow and edit form
+		// TODO: Add logic for approval workflow and save attachemtns
 		
 		return true;
 	}

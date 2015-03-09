@@ -319,7 +319,7 @@ CaseFile.Model = CaseFile.Model || {
             CaseFile.Service.People.deleteParticipant(caseFileId, participantId);
         }
         ,onViewAddedPersonAssociation: function(caseFileId, personAssociation) {
-            var pa = CaseFile.Model.Detail.newPersonAssociation();
+            var pa = CaseFile.Model.People.newPersonAssociation();
             pa.parentType = CaseFile.Model.DOC_TYPE_CASE_FILE;
             pa.parentId = caseFileId;
             pa.personType = personAssociation.personType;
@@ -519,7 +519,8 @@ CaseFile.Model = CaseFile.Model || {
 
 
         ,onViewClickedAddCorrespondence: function(caseFileId, templateName) {
-            var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            //var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
             }
