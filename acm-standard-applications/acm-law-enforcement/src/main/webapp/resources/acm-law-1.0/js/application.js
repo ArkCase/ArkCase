@@ -75,6 +75,12 @@ var Application = Application || {
         if ("undefined" != typeof AcmNotification) {
             acmModules.push(AcmNotification);
         }
+        if ("undefined" != typeof Costsheet) {
+            acmModules.push(Costsheet);
+        }
+        if ("undefined" != typeof Timesheet) {
+            acmModules.push(Timesheet);
+        }
 
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
