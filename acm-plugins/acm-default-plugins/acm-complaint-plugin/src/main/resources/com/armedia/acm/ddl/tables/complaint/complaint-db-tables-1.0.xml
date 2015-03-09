@@ -346,5 +346,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="complaint-17-add-container-folder-id" author="dmiller">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
