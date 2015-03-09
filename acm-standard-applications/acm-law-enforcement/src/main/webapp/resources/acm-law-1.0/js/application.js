@@ -81,6 +81,10 @@ var Application = Application || {
         if ("undefined" != typeof Timesheet) {
             acmModules.push(Timesheet);
         }
+        if ("undefined" != typeof Tag) {
+            acmModules.push(Tag);
+        }
+
 
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
