@@ -75,14 +75,14 @@
 
     <bean id="createTimesheetAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Timesheet"/>
-        <property name="iconName" value="i i-notice"/>
+        <property name="iconName" value="i i-alarm"/>
         <property name="url" value="/plugin/timesheet/wizard"/>
         <property name="requiredPrivilege" value="acm-timesheet-create"/>
     </bean>
 
     <bean id="createCostsheetAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Costsheet"/>
-        <property name="iconName" value="i i-notice"/>
+        <property name="iconName" value="fa fa-money"/>
         <property name="url" value="/plugin/costsheet/wizard"/>
         <property name="requiredPrivilege" value="acm-costsheet-create"/>
     </bean>
