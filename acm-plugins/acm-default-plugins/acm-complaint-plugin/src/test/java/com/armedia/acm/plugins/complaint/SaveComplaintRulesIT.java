@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -31,7 +32,7 @@ public class SaveComplaintRulesIT
     private StatelessKnowledgeSession workingMemory;
 
     @Before
-    public void nullEcmFolderId() throws Exception
+    public void setUp() throws Exception
     {
         SpreadsheetCompiler sc = new SpreadsheetCompiler();
 
@@ -77,7 +78,7 @@ public class SaveComplaintRulesIT
     }
 
     @Test
-    public void nullFolderId() throws Exception
+    public void nullFolderPath() throws Exception
     {
         Complaint complaint = new Complaint();
         complaint.setComplaintId(12345L);
@@ -88,11 +89,13 @@ public class SaveComplaintRulesIT
 
         log.info("folder path: " + complaint.getEcmFolderPath());
 
-        complaint.setEcmFolderId("An ID");
+        AcmContainerFolder folder = new AcmContainerFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        complaint.setContainerFolder(folder);
         complaint.setEcmFolderPath(null);
 
         workingMemory.execute(complaint);
         assertNull(complaint.getEcmFolderPath());
-        assertEquals("An ID", complaint.getEcmFolderId());
+        assertEquals("cmisFolderId", complaint.getContainerFolder().getCmisFolderId());
     }
 }
