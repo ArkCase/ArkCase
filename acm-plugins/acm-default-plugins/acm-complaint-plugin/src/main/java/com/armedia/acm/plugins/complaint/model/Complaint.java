@@ -195,7 +195,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         if ( getContainerFolder() != null )
         {
             getContainerFolder().setContainerObjectId(getComplaintId());
-            getContainerFolder().setContainerObjectType("COMPLAINT");
+            getContainerFolder().setContainerObjectType(getObjectType());
         }
     }
 
