@@ -23,7 +23,7 @@
                 <section class="scrollable padder">
                     <section class="row m-b-md">
                         <div class="col-sm-12">
-                            <h3 class="m-b-xs text-black"><spring:message code="timesheet.page.descShort" text="Track Time" /></h3>
+                            <h3 class="m-b-xs text-black"><spring:message code="timesheet.page.descShort" text="Time Tracking" /></h3>
                         </div>
                     </section>
 

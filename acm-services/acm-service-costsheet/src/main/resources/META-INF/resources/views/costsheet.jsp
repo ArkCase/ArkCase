@@ -26,7 +26,7 @@
                 <section class="scrollable padder">
                     <section class="row m-b-md">
                         <div class="col-sm-12">
-                            <h3 class="m-b-xs text-black"><spring:message code="costsheetNew.page.descShort" text="Track Cost" /></h3>
+                            <h3 class="m-b-xs text-black"><spring:message code="costsheet.page.descShort" text="Cost Tracking" /></h3>
                         </div>
                     </section>
 
