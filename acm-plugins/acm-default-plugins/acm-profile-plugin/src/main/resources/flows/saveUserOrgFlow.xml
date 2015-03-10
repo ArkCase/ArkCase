@@ -54,14 +54,14 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <choice>
             <when expression="#[payload.ecmFolderPath != null]">
                 <processor-chain>
-                    <!-- store the userOrg (Profile info) in a flow variable so the enricher can see it -->
-                    <set-variable variableName="userOrg" value="#[message.payload]"/>
+                    <!-- store the container folder in a flow variable so the enricher can see it -->
+                    <set-variable variableName="containerFolder" value="#[message.payload.containerFolder]"/>
                     <!-- update the userOrg with the ID of the folder -->
-                    <enricher source="#[message.payload.id]" target="#[flowVars['userOrg'].ecmFolderId]">
+                    <enricher source="#[message.payload.id]" target="#[flowVars['containerFolder'].cmisFolderId]">
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
                     <logger category="com.armedia.acm.plugins.profile" level="DEBUG"
-                            message="Folder Id: #[payload.ecmFolderId]"/>
+                            message="Folder Id: #[payload.containerFolder.cmisFolderId]"/>
                 </processor-chain>
             </when>
             <otherwise>
