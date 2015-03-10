@@ -15,6 +15,8 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
         if (CaseFile.Model.Events.create)         {CaseFile.Model.Events.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
+        if (CaseFile.Model.Time.create)           {CaseFile.Model.Time.create();}
+        if (CaseFile.Model.Cost.create)           {CaseFile.Model.Cost.create();}
 
         if (CaseFile.Service.create)              {CaseFile.Service.create();}
 
@@ -32,6 +34,8 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
         if (CaseFile.Model.Events.onInitialized)         {CaseFile.Model.Events.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
+        if (CaseFile.Model.Time.onInitialized)           {CaseFile.Model.Time.onInitialized();}
+        if (CaseFile.Model.Cost.onInitialized)           {CaseFile.Model.Cost.onInitialized();}
 
         if (CaseFile.Service.onInitialized)              {CaseFile.Service.onInitialized();}
     }
@@ -133,7 +137,8 @@ CaseFile.Model = CaseFile.Model || {
             ,NODE_TYPE_PART_REFERENCES   : "r"
             ,NODE_TYPE_PART_HISTORY      : "h"
             ,NODE_TYPE_PART_TEMPLATES    : "tm"
-
+            ,NODE_TYPE_PART_TIME         : "time"
+            ,NODE_TYPE_PART_COST         : "cost"
 
             ,nodeTypeMap: [
                 {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
@@ -146,6 +151,8 @@ CaseFile.Model = CaseFile.Model || {
                         ,"tabNotes","tabTasks"
                         ,"tabRefs","tabHistory"
                         ,"tabTemplates"
+                        ,"tabTime"
+                        ,"tabCost"
                     ]
                 }
                 ,{nodeType: "p/CASE_FILE/d"      ,icon: "",tabIds: ["tabDetail"]}
@@ -158,6 +165,8 @@ CaseFile.Model = CaseFile.Model || {
                 ,{nodeType: "p/CASE_FILE/r"      ,icon: "",tabIds: ["tabRefs"]}
                 ,{nodeType: "p/CASE_FILE/h"      ,icon: "",tabIds: ["tabHistory"]}
                 ,{nodeType: "p/CASE_FILE/tm"     ,icon: "",tabIds: ["tabTemplates"]}
+                ,{nodeType: "p/CASE_FILE/time"   ,icon: "",tabIds: ["tabTime"]}
+                ,{nodeType: "p/CASE_FILE/cost"   ,icon: "",tabIds: ["tabCost"]}
             ]
         }
     }
@@ -654,6 +663,20 @@ CaseFile.Model = CaseFile.Model || {
         ,getCloseDispositions: function() {
             return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
             //return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
+        }
+    }
+
+    ,Time: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+    }
+
+    ,Cost: {
+        create : function() {
+        }
+        ,onInitialized: function() {
         }
     }
 
