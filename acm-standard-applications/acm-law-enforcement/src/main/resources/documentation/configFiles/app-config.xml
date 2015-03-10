@@ -8,7 +8,10 @@
         <property name="topbarActions">
             <list>
                 <ref bean="createComplaintAction"/>
-                <ref bean="createTaskAction"/> 
+                <ref bean="createCaseFileAction"/>
+                <ref bean="createTaskAction"/>
+                <ref bean="createTimesheetAction"/>
+                <ref bean="createCostsheetAction"/>
             </list>
         </property>
         <property name="navigatorTabs">
@@ -24,6 +27,8 @@
                 <ref bean="notificationNavigatorAction"/>
                 <ref bean="subscriptionNavigatorAction"/>
                 <ref bean="tagNavigatorAction"/>
+                <ref bean="timeTrackingNavigatorAction"/>
+                <ref bean="costTrackingNavigatorAction"/>
             </list>
         </property>
         <property name="objectTypes">
@@ -53,7 +58,7 @@
         <property name="url" value="/plugin/task/wizard"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
     </bean>
-    
+
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Complaint"/>
         <property name="iconName" value="i i-notice"/>
@@ -67,6 +72,21 @@
         <property name="url" value="/plugin/casefile/wizard"/>
         <property name="requiredPrivilege" value="case-file-create"/>
     </bean>
+
+    <bean id="createTimesheetAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Timesheet"/>
+        <property name="iconName" value="i i-alarm"/>
+        <property name="url" value="/plugin/timesheet/wizard"/>
+        <property name="requiredPrivilege" value="acm-timesheet-create"/>
+    </bean>
+
+    <bean id="createCostsheetAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Costsheet"/>
+        <property name="iconName" value="fa fa-money"/>
+        <property name="url" value="/plugin/costsheet/wizard"/>
+        <property name="requiredPrivilege" value="acm-costsheet-create"/>
+    </bean>
+
 
     <!-- end of top bar actions -->
 
@@ -121,29 +141,43 @@
     </bean>
 
     <bean id="reportNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Report"/>
+        <property name="actionName" value="Reports"/>
         <property name="iconName" value="i i-stats"/>
         <property name="url" value="/plugin/report"/>
         <property name="requiredPrivilege" value="acm-report"/>
     </bean>
-	
+
     <bean id="subscriptionNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Subscriptions"/>
-        <property name="iconName" value="i i-alarm"/>
+        <property name="iconName" value="fa fa-bullhorn"/>
         <property name="url" value="/plugin/subscription"/>
         <property name="requiredPrivilege" value="acm-subscription"/>
     </bean>
 
     <bean id="notificationNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Notifications"/>
-        <property name="iconName" value="i i-chat3"/>
+        <property name="iconName" value="fa fa-bell-o"/>
         <property name="url" value="/plugin/notification"/>
         <property name="requiredPrivilege" value="acm-notification"/>
     </bean>
 
+    <bean id="timeTrackingNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Time Tracking"/>
+        <property name="iconName" value="i i-alarm"/>
+        <property name="url" value="/plugin/timesheet"/>
+        <property name="requiredPrivilege" value="acm-timesheet"/>
+    </bean>
+
+    <bean id="costTrackingNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Cost Tracking"/>
+        <property name="iconName" value="fa fa-money"/>
+        <property name="url" value="/plugin/costsheet"/>
+        <property name="requiredPrivilege" value="acm-costsheet"/>
+    </bean>
+
     <bean id="tagNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Tags"/>
-        <property name="iconName" value="i i-chat3"/>
+        <property name="iconName" value="fa fa-tags"/>
         <property name="url" value="/plugin/tag"/>
         <property name="requiredPrivilege" value="acm-tag"/>
     </bean>
