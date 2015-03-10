@@ -104,5 +104,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="userorg-07-add-container-folder-id" author="dmiller">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
