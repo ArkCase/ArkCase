@@ -135,6 +135,8 @@
 <c:set var="vd_fancytree"          scope="session" value="fancytree-2.2.0"/>
 <c:set var="js_fancytree"          scope="session" value="jquery.fancytree.js"/>
 <c:set var="js_fancytree_table"    scope="session" value="jquery.fancytree.table.js"/>
+<c:set var="js_fancytree_edit"     scope="session" value="jquery.fancytree.edit.js"/>
+<c:set var="js_fancytree_dnd"      scope="session" value="jquery.fancytree.dnd.js"/>
 
 <c:set var="vd_contextmenu"        scope="session" value="ui-contextmenu-1.5.1-0"/>
 <c:set var="js_contextmenu"        scope="session" value="jquery.ui-contextmenu.js"/>

@@ -50,6 +50,8 @@
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_edit}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_dnd}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
 
     <!-- X-Editable -->
@@ -57,16 +59,16 @@
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
 /////////////////////////////////////////////////////////////////////
-<style>
-    table.fancytree-ext-table {
-        width: 100%;
-        outline: 0;
-    }
+<%--<style>--%>
+    <%--table.fancytree-ext-table {--%>
+        <%--width: 100%;--%>
+        <%--outline: 0;--%>
+    <%--}--%>
 
-    table.fancytree-ext-table tbody tr td {
-        border: 0px;
-    }
-</style>
+    <%--table.fancytree-ext-table tbody tr td {--%>
+        <%--border: 0px;--%>
+    <%--}--%>
+<%--</style>--%>
 //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
