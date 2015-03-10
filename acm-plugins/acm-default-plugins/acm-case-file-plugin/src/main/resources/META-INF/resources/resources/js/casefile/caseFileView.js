@@ -18,6 +18,8 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.Events.create)          {CaseFile.View.Events.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
+        if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
+        if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
     }
     ,onInitialized: function() {
         if (CaseFile.View.MicroData.onInitialized)      {CaseFile.View.MicroData.onInitialized();}
@@ -33,6 +35,8 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.onInitialized)     {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.Events.onInitialized)         {CaseFile.View.Events.onInitialized();}
         if (CaseFile.View.Correspondence.onInitialized) {CaseFile.View.Correspondence.onInitialized();}
+        if (CaseFile.View.Time.onInitialized)           {CaseFile.View.Time.onInitialized();}
+        if (CaseFile.View.Cost.onInitialized)           {CaseFile.View.Cost.onInitialized();}
     }
 
     ,getActiveCaseFileId: function() {
@@ -157,6 +161,12 @@ CaseFile.View = CaseFile.View || {
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
                             ,title: "Correspondence"
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
+                            ,title: "Time"
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_COST
+                            ,title: "Cost"
                         })
                         .getTree();
 
@@ -3037,6 +3047,151 @@ CaseFile.View = CaseFile.View || {
             });
         }
     }
+
+    ,Time: {
+        create: function() {
+            this.$divTime          = $("#divTime");
+            this.createJTableTime(this.$divTime);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Time.$divTime);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(CaseFile.View.Time.$divTime);
+        }
+
+        ,_makeJtData: function(timeData) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            return jtData;
+        }
+        ,createJTableTime: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Time Tracking'
+                    ,paging: true
+                    ,sorting: true
+                    ,pageSize: 10 //Set page size (default: 10)
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+
+                        }  //end else
+                    }
+
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                        }, name: {
+                            title: 'Form Name'
+                            ,width: '20%'
+                        }, user: {
+                            title: 'Username'
+                            ,width: '10%'
+                        }, hours: {
+                            title: 'Total Hours'
+                            ,width: '10%'
+                        }, modified: {
+                            title: 'Modified Date'
+                            ,width: '10%'
+                        }, status: {
+                            title: 'Status'
+                            ,width: '10%'
+                        }
+                    } //end field
+                } //end arg
+                ,sortMap
+            );
+        }
+    }
+
+
+    ,Cost: {
+        create: function() {
+            this.$divCost          = $("#divCost");
+            this.createJTableCost(this.$divCost);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(CaseFile.View.Cost.$divCost);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(CaseFile.View.Cost.$divCost);
+        }
+
+        ,_makeJtData: function(costData) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            return jtData;
+        }
+        ,createJTableCost: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Cost Tracking'
+                    ,paging: true
+                    ,sorting: true
+                    ,pageSize: 10 //Set page size (default: 10)
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }  //end else
+                    }
+
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                        }, name: {
+                            title: 'Form Name'
+                            ,width: '20%'
+                        }, user: {
+                            title: 'Username'
+                            ,width: '10%'
+                        }, costs: {
+                            title: 'Total Cost'
+                            ,width: '10%'
+                        }, modified: {
+                            title: 'Modified Date'
+                            ,width: '10%'
+                        }, status: {
+                            title: 'Status'
+                            ,width: '10%'
+                        }
+                    } //end field
+                } //end arg
+                ,sortMap
+            );
+        }
+    }
+
 
 };
 
