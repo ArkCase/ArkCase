@@ -93,8 +93,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private List<String> approvers;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
-     * to get the CMIS object ID of the complaint folder.
+     * This field is only used when the case file is created. Usually it will be null.  Use the ecmFolderId
+     * to get the CMIS object ID of the case file folder.
      */
     @Transient
     private String ecmFolderPath;

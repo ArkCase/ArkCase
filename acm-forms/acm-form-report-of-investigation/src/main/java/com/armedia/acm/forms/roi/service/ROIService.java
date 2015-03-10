@@ -86,7 +86,7 @@ public class ROIService extends FrevvoFormAbstractService {
 				return false;
 			}
 			
-			ecmFolderId = complaint.getEcmFolderId();
+			ecmFolderId = complaint.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 			parentObjectName = complaint.getComplaintNumber();		
