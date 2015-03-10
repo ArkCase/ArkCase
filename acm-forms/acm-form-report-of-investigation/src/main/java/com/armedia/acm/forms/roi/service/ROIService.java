@@ -59,7 +59,7 @@ public class ROIService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception {
 		
-		String ecmFolderId = null;
+		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
 		String parentObjectName = null;
@@ -86,7 +86,7 @@ public class ROIService extends FrevvoFormAbstractService {
 				return false;
 			}
 			
-			ecmFolderId = complaint.getContainerFolder().getCmisFolderId();
+			cmisFolderId = complaint.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 			parentObjectName = complaint.getComplaintNumber();		
@@ -101,7 +101,7 @@ public class ROIService extends FrevvoFormAbstractService {
 				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
 				return false;
 			}
-			ecmFolderId = caseFile.getEcmFolderId();
+            cmisFolderId = caseFile.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			parentObjectName = caseFile.getCaseNumber();
@@ -110,7 +110,7 @@ public class ROIService extends FrevvoFormAbstractService {
 			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
-		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
+		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId, parentObjectName);
 		
 		return true;
 	}

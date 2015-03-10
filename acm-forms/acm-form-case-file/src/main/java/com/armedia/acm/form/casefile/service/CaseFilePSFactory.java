@@ -193,7 +193,7 @@ public class CaseFilePSFactory
 			retval.setNumber(caseFile.getCaseNumber());
 			retval.setTitle(caseFile.getTitle());
 			retval.setType(caseFile.getCaseType());
-			retval.setCmisFolderId(caseFile.getEcmFolderId());
+			retval.setCmisFolderId(caseFile.getContainerFolder().getCmisFolderId());
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 			{
