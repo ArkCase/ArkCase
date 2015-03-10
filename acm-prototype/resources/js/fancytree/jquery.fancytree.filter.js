@@ -4,7 +4,7 @@
  * Remove or highlight tree nodes, based on a filter.
  * (Extension module for jquery.fancytree.js: https://github.com/mar10/fancytree/)
  *
- * Copyright (c) 2014, Martin Wendt (http://wwWendt.de)
+ * Copyright (c) 2008-2015, Martin Wendt (http://wwWendt.de)
  *
  * Released under the MIT license
  * https://github.com/mar10/fancytree/wiki/LicenseInfo
@@ -44,6 +44,8 @@ $.ui.fancytree._FancytreeClass.prototype._applyFilterImpl = function(filter, bra
 	}
 
 	this.enableFilter = true;
+	this.lastFilterArgs = arguments;
+
 	this.$div.addClass("fancytree-ext-filter");
 	if( hideMode ){
 		this.$div.addClass("fancytree-ext-filter-hide");
@@ -89,6 +91,9 @@ $.ui.fancytree._FancytreeClass.prototype.filterNodes = function(filter, leavesOn
 	return this._applyFilterImpl(filter, false, leavesOnly);
 };
 
+/**
+ * @deprecated
+ */
 $.ui.fancytree._FancytreeClass.prototype.applyFilter = function(filter){
 	this.warn("Fancytree.applyFilter() is deprecated since 2014-05-10. Use .filterNodes() instead.");
 	return this.filterNodes.apply(this, arguments);
@@ -119,6 +124,7 @@ $.ui.fancytree._FancytreeClass.prototype.clearFilter = function(){
 		delete node.subMatch;
 	});
 	this.enableFilter = false;
+	this.lastFilterArgs = null;
 	this.$div.removeClass("fancytree-ext-filter fancytree-ext-filter-dimm fancytree-ext-filter-hide");
 	this.render();
 };
@@ -129,14 +135,21 @@ $.ui.fancytree._FancytreeClass.prototype.clearFilter = function(){
  */
 $.ui.fancytree.registerExtension({
 	name: "filter",
-	version: "0.2.0",
+	version: "0.3.0",
 	// Default options for this extension.
 	options: {
+		autoApply: true, // re-apply last filter if lazy data is loaded
 		mode: "dimm"
-//		leavesOnly: false
 	},
 	treeInit: function(ctx){
-		this._super(ctx);
+		this._superApply(arguments);
+	},
+	nodeLoadChildren: function(ctx, source) {
+		return this._superApply(arguments).done(function() {
+			if( ctx.tree.enableFilter && ctx.tree.lastFilterArgs && ctx.options.filter.autoApply ) {
+				ctx.tree._applyFilterImpl.apply(ctx.tree, ctx.tree.lastFilterArgs);
+			}
+		});
 	},
 	nodeRenderStatus: function(ctx) {
 		// Set classes for current status
@@ -145,7 +158,7 @@ $.ui.fancytree.registerExtension({
 			tree = ctx.tree,
 			$span = $(node[tree.statusClassPropName]);
 
-		res = this._super(ctx);
+		res = this._superApply(arguments);
 		// nothing to do, if node was not yet rendered
 		if( !$span.length || !tree.enableFilter ) {
 			return res;
