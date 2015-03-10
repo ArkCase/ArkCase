@@ -113,40 +113,24 @@ ObjNav.Service = {
 //                            if (caseFileId != caseFile.id) {
 //                                return;         //user clicks another caseFile before callback, do nothing
 //                            }
-                            ObjNav.Model.Detail.putCacheObject(objType, objId, objData);
 
-                            // save list of childObjects also in the cache for easier handling
-//                            if(caseFile.childObjects){
-//                                var documents = [];
-//                                for (var i = 0; i < caseFile.childObjects.length; i++) {
-//                                    var childObject = caseFile.childObjects[i];
-//                                    var document = {};
-//                                    document.id = childObject.targetId;
-//                                    document.name = childObject.targetName;
-//                                    document.created = childObject.created;
-//                                    document.creator = childObject.creator;
-//                                    document.status = childObject.status;
-//                                    document.targetType = childObject.targetType;
-//                                    document.targetSubtype = childObject.targetSubtype;
-//                                    document.category = childObject.category;
-//                                    documents.push(document);
-//                                }
-//                                ObjNav.Model.Documents.cacheDocuments.put(caseFileId, documents);
-//                            }
-
+//                            ObjNav.Model.Detail.putCacheObject(objType, objId, objData);
+                            var solr = ObjNav.Model.interface.objToSolr(objData);
+                            var nodeId = ObjNav.Model.interface.nodeId(solr);
+                            var nodeType = ObjNav.Model.interface.nodeType(solr);
+                            ObjNav.Model.Detail.putCacheObject(nodeType, nodeId, objData);
 
                             var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
                             if (0 < treeInfo.objId) {      //handle single object situation
                                 treeInfo.total = 1;
                                 treeInfo.start = 0;
 
-                                var solr = ObjNav.Model.interface.objToSolr(objData);
                                 var objList = [solr];
                                 ObjNav.Model.List.cachePage.put(treeInfo.start, objList);
 
-                                ObjNav.Model.setObjectId(objId);
-                                ObjNav.Model.setObjectType(objType);
-                                var key = ObjNav.Model.Tree.Key.getKeyByObjWithPage(treeInfo.start, treeInfo.objType, treeInfo.objId);
+                                ObjNav.Model.setObjectId(nodeId);
+                                ObjNav.Model.setObjectType(nodeType);
+                                var key = ObjNav.Model.Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                                 ObjNav.Controller.modelRetrievedObjectList(key);
 
                             } else {

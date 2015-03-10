@@ -23,12 +23,6 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintView.js'/>"></script>
@@ -37,20 +31,12 @@
 
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
 
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintServiceNew.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintObject.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintEvent.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintPage.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintRule.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintCallback.js'/>"></script>--%>
-    <%--<script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintJTable.js'/>"></script>--%>
-
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
     <!-- File Manager -->
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_knob}/js/${js_knob}'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_upload}/js/${js_upload_fileupload}'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_upload}/js/${js_upload_iframe}'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_knob}/js/${js_knob}'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_upload}/js/${js_upload_fileupload}'/>"></script>--%>
+    <%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_upload}/js/${js_upload_iframe}'/>"></script>--%>
 
     <!-- Summernote WYSIWYG -->
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_summernote}/summernote.css'/>" type="text/css"/>
@@ -188,7 +174,7 @@
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
                                                             <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
-                                                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="i i-alarm"></i> Subscribe</button>
+                                                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> Subscribe</button>
                                                         </div>
                                                     </div>
 
