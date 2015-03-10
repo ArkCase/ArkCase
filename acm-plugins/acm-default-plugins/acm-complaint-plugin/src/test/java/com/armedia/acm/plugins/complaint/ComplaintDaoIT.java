@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,6 +72,10 @@ public class ComplaintDaoIT
 
         Complaint complaint = complaintFactory.complaint();
         complaint.setRestricted(true);
+
+        AcmContainerFolder acf = new AcmContainerFolder();
+        acf.setCmisFolderId("cmisFolderId");
+        complaint.setContainerFolder(acf);
 
         complaint = complaintDao.save(complaint);
 
