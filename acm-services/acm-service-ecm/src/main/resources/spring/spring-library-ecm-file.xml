@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
+    <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao"/>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
         <lookup-method name="getMuleClient" bean="muleClient"/>
@@ -13,6 +14,7 @@
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
     </bean>
 
     <bean id="documentToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.DocumentToSolrTrasnformer">
