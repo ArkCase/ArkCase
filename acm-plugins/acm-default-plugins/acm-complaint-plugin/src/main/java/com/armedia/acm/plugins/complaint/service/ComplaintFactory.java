@@ -156,7 +156,7 @@ public class ComplaintFactory
     		complaintForm.setPeople(contacts);
     	}
     	
-    	complaintForm.setCmisFolderId(complaint.getEcmFolderId());
+    	complaintForm.setCmisFolderId(complaint.getContainerFolder().getCmisFolderId());
     	
     	// Populate participants
     	if (complaint.getParticipants() != null && complaint.getParticipants().size() > 0)

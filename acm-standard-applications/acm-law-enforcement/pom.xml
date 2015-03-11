@@ -46,11 +46,25 @@
             <artifactId>acm-service-audit</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-timesheet</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-costsheet</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-plugin-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-mule-context-manager</artifactId>

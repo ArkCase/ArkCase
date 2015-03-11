@@ -204,5 +204,11 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="case-file-14-add-container-folder-id" author="dmiller">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
     
 </databaseChangeLog>
