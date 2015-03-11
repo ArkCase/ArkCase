@@ -169,5 +169,28 @@
         </sql>
     </changeSet>
 
+    <changeSet id="files-08-populate-container-folder-from-user-profile" author="dmiller">
+        <preConditions>
+            <and>
+                <dbms type="oracle"/>
+                <tableExists tableName="acm_user_org"/>
+                <columnExists tableName="acm_user_org" columnName="cm_profile_ecm_folder_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            INSERT INTO acm_container_folder
+            SELECT seq_gen_identity.nextval AS cm_container_folder_id,
+                    systimestamp AS cm_container_folder_created,
+                    cm_user AS cm_container_folder_creator,
+                    systimestamp AS cm_container_folder_modified,
+                    cm_user AS cm_container_folder_modifier,
+                    'USER_ORG' AS cm_object_type,
+                    cm_user_org_id AS cm_object_id,
+                    cm_profile_ecm_folder_id AS cm_cmis_folder_id
+            FROM    acm_user_org
+            WHERE   cm_profile_ecm_folder_id IS NOT NULL
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
 

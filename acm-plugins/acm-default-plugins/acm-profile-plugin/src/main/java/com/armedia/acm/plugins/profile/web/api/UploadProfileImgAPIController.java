@@ -62,8 +62,8 @@ public class UploadProfileImgAPIController {
                 UserOrg in = null;
                 try {
                         in = getUserOrgDao().getUserOrgForUser(user);
-                        //this "if()" part is a workaround for already added rows in acm_user_org table but with profileEcmFolderID=null
-                        if( in.getEcmFolderId() == null ){
+                        //this "if()" part is a workaround for already added rows in acm_user_org table but with no CMIS folder
+                        if( in.getContainerFolder().getCmisFolderId() == null ){
                             try {
                                    in = getSaveUserOrgTransaction().saveUserOrg(in,authentication);
                             } catch ( MuleException e ) {
@@ -73,7 +73,7 @@ public class UploadProfileImgAPIController {
                                 throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
                             }
                         }
-                        String folderId = in.getEcmFolderId();
+                        String folderId = in.getContainerFolder().getCmisFolderId();
                         String objectType = "PROFILE_IMG";
                         Long objectId = in.getUserOrgId();
                         String objectName = in.getUser().getFullName();
