@@ -21,6 +21,7 @@ public class SolrDocument implements SolrBaseDocument {
     private Long priority_i;
     private String priority_s;
     private String parent_object_type_s;
+    private String parent_object_id_s;
     private boolean adhocTask_b;
 
     private boolean public_doc_b;
@@ -37,6 +38,10 @@ public class SolrDocument implements SolrBaseDocument {
     private List<String> deny_acl_ss;
     private List<String> allow_acl_ss;
     private Long parent_object_id_i;
+
+    //////////////////disposition id and type //////////////////////////////////////
+    private String disposition_id_s;
+    private String disposition_type_s;
 
     @Override
     public String getId() {
@@ -222,6 +227,30 @@ public class SolrDocument implements SolrBaseDocument {
         return parent_object_id_i;
     }
 
+    public String getDisposition_id_s() {
+        return disposition_id_s;
+    }
+
+    public void setDisposition_id_s(String disposition_id_s) {
+        this.disposition_id_s = disposition_id_s;
+    }
+
+    public String getDisposition_type_s() {
+        return disposition_type_s;
+    }
+
+    public void setDisposition_type_s(String disposition_type_s) {
+        this.disposition_type_s = disposition_type_s;
+    }
+
+    public String getParent_object_id_s() {
+        return parent_object_id_s;
+    }
+
+    public void setParent_object_id_s(String parent_object_id_s) {
+        this.parent_object_id_s = parent_object_id_s;
+    }
+
     @Override
     public String toString() {
         return "SolrDocument{" +
@@ -242,6 +271,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", priority_i=" + priority_i +
                 ", priority_s='" + priority_s + '\'' +
                 ", parent_object_type_s='" + parent_object_type_s + '\'' +
+                ", parent_object_id_s='" + parent_object_id_s + '\'' +
                 ", adhocTask_b=" + adhocTask_b +
                 ", public_doc_b=" + public_doc_b +
                 ", protected_object_b=" + protected_object_b +
@@ -252,6 +282,8 @@ public class SolrDocument implements SolrBaseDocument {
                 ", deny_acl_ss=" + deny_acl_ss +
                 ", allow_acl_ss=" + allow_acl_ss +
                 ", parent_object_id_i=" + parent_object_id_i +
+                ", disposition_id_s='" + disposition_id_s + '\'' +
+                ", disposition_type_s='" + disposition_type_s + '\'' +
                 '}';
     }
 }

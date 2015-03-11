@@ -57,6 +57,7 @@ public class SearchObjectByTypeAPIController {
         String sortParams = null;
         String params = "";
         String query = "object_type_s:" + objectType;
+        String user = authentication.getName();
         if (StringUtils.isBlank(filters)) {
             if (!StringUtils.isBlank(assignee)) {
                 query += " AND assignee_s:" + assignee;
@@ -76,6 +77,8 @@ public class SearchObjectByTypeAPIController {
                     StringBuilder stringBuilder = new StringBuilder();
                     int i =0;
                     for( String filter:testFilters ) {
+                        if(filter.contains("?"))
+                            filter=filter.replace("?",user);
                         if( i>0 ) {
                             stringBuilder.append("&");
                             stringBuilder.append(filter);
