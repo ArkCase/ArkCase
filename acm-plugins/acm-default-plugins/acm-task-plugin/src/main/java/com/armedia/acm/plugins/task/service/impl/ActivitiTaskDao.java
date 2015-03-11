@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 
+import com.armedia.acm.activiti.AcmTaskEvent;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
@@ -13,7 +17,6 @@ import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
@@ -52,8 +55,10 @@ class ActivitiTaskDao implements TaskDao
     private UserDao userDao;
     private AcmParticipantDao participantDao;
     private DataAccessPrivilegeListener dataAccessPrivilegeListener;
-
-
+    private ExtractAcmTaskFromEvent taskExtractor;
+    private TaskBusinessRule taskBusinessRule;
+    private EcmFileService fileService;
+    private AcmContainerFolderDao containerFolderDao;
 
     @Override
     @Transactional
@@ -701,6 +706,26 @@ class ActivitiTaskDao implements TaskDao
         return retval;
     }
 
+    @Override
+    public void createFolderForTaskEvent(AcmTaskEvent event) throws AcmTaskException, AcmCreateObjectFailedException
+    {
+        log.info("Creating folder for task with ID: " + event.getObjectId());
+
+        AcmTask task = getTaskExtractor().fromEvent(event);
+
+        task = getTaskBusinessRule().applyRules(task);
+
+        String folderId = getFileService().createFolder(task.getEcmFolderPath());
+
+        task.getContainerFolder().setCmisFolderId(folderId);
+        task.getContainerFolder().setContainerObjectType(task.getObjectType());
+        task.getContainerFolder().setContainerObjectId(task.getId());
+
+        getContainerFolderDao().save(task.getContainerFolder());
+
+        log.info("Created folder id '" + folderId + "' for task with ID " + task.getTaskId());
+    }
+
     private void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
     {
         // check for selected task outcome
@@ -989,5 +1014,45 @@ class ActivitiTaskDao implements TaskDao
     public void setDataAccessPrivilegeListener(DataAccessPrivilegeListener dataAccessPrivilegeListener)
     {
         this.dataAccessPrivilegeListener = dataAccessPrivilegeListener;
+    }
+
+    public ExtractAcmTaskFromEvent getTaskExtractor()
+    {
+        return taskExtractor;
+    }
+
+    public void setTaskExtractor(ExtractAcmTaskFromEvent taskExtractor)
+    {
+        this.taskExtractor = taskExtractor;
+    }
+
+    public TaskBusinessRule getTaskBusinessRule()
+    {
+        return taskBusinessRule;
+    }
+
+    public void setTaskBusinessRule(TaskBusinessRule taskBusinessRule)
+    {
+        this.taskBusinessRule = taskBusinessRule;
+    }
+
+    public EcmFileService getFileService()
+    {
+        return fileService;
+    }
+
+    public void setFileService(EcmFileService fileService)
+    {
+        this.fileService = fileService;
+    }
+
+    public AcmContainerFolderDao getContainerFolderDao()
+    {
+        return containerFolderDao;
+    }
+
+    public void setContainerFolderDao(AcmContainerFolderDao containerFolderDao)
+    {
+        this.containerFolderDao = containerFolderDao;
     }
 }
