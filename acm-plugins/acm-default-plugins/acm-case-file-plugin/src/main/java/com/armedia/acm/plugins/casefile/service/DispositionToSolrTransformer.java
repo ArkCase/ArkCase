@@ -43,7 +43,7 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
 
         solr.setDisposition_type_s(in.getDispositionType());
         if(in.getExistingCaseNumber()!=null)
-        solr.setName(in.getExistingCaseNumber());
+        solr.setTarget_object_number_s(in.getExistingCaseNumber());
 
         return solr;
 
@@ -56,7 +56,14 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
 
     @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType) {
-        return false;
+
+        boolean objectNotNull = acmObjectType != null;
+        String ourClassName = Disposition.class.getName();
+        String theirClassName = acmObjectType.getName();
+        boolean classNames = theirClassName.equals(ourClassName);
+        boolean isSupported = objectNotNull && classNames;
+
+        return isSupported;
     }
 
     public DispositionDao getDispositionDao() {
