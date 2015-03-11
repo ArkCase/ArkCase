@@ -4,17 +4,16 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
-
-
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,7 +33,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,20 +101,21 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private PersonAssociation originator;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
+     * This field is only used when the complaint is created. Usually it will be null.  Use the containerFolder
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
     private String ecmFolderPath;
 
     /**
-     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
+     * Container folder where the complaint's attachments/content files are stored.
      */
-    @Column(name = "cm_complaint_ecm_folder_id")
-    private String ecmFolderId;
+    @OneToOne
+    @JoinColumn(name = "cm_container_folder_id")
+    private AcmContainerFolder containerFolder = new AcmContainerFolder();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id")
+    @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id")
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -191,6 +190,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         {
             ap.setObjectId(getComplaintId());
             ap.setObjectType("COMPLAINT");
+        }
+
+        if ( getContainerFolder() != null )
+        {
+            getContainerFolder().setContainerObjectId(getComplaintId());
+            getContainerFolder().setContainerObjectType("COMPLAINT");
         }
     }
 
@@ -349,16 +354,6 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.ecmFolderPath = ecmFolderPath;
     }
 
-    public String getEcmFolderId()
-    {
-        return ecmFolderId;
-    }
-
-    public void setEcmFolderId(String ecmFolderId)
-    {
-        this.ecmFolderId = ecmFolderId;
-    }
-
     public Collection<ObjectAssociation> getChildObjects()
     {
         return Collections.unmodifiableCollection(childObjects);
@@ -483,6 +478,21 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.restricted = restricted;
     }
 
+    public AcmContainerFolder getContainerFolder()
+    {
+        return containerFolder;
+    }
+
+    public void setContainerFolder(AcmContainerFolder containerFolder)
+    {
+        if ( containerFolder != null )
+        {
+            containerFolder.setContainerObjectType(getObjectType());
+        }
+
+        this.containerFolder = containerFolder;
+    }
+
     @Override
     public String toString()
     {
@@ -501,7 +511,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
                 ", status='" + status + '\'' +
                 ", originator=" + originator +
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
-                ", ecmFolderId='" + ecmFolderId + '\'' +
+                ", containerFolder=" + containerFolder +
                 ", childObjects=" + childObjects +
                 ", approvers=" + approvers +
                 ", personAssociations=" + personAssociations +

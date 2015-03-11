@@ -59,7 +59,7 @@ public class AddFileAPIController
             }
 
 
-            String folderId = in.getEcmFolderId();
+            String folderId = in.getContainerFolder().getCmisFolderId();
             String objectType = "COMPLAINT";
             Long objectId = complaintId;
             String objectName = in.getComplaintNumber();

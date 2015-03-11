@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -79,8 +80,9 @@ public class AddFileAPIControllerTest extends EasyMockSupport
 
         Complaint complaint = new Complaint();
         complaint.setComplaintId(Long.valueOf(complaintId));
-        //complaint.s("COMPLAINT");
-        complaint.setEcmFolderId("cmisFolderId");
+        AcmContainerFolder folder = new AcmContainerFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        complaint.setContainerFolder(folder);
         complaint.setComplaintNumber("complaintNumber");
 
         // MVC test classes must call getName() somehow
@@ -96,7 +98,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
                 acceptHeader,
                 contextPath,
                 mockAuthentication,
-                complaint.getEcmFolderId(),
+                complaint.getContainerFolder().getCmisFolderId(),
                 "COMPLAINT",
                 complaint.getComplaintId(),
                 complaint.getComplaintNumber()
@@ -129,7 +131,9 @@ public class AddFileAPIControllerTest extends EasyMockSupport
 
         Complaint complaint = new Complaint();
         complaint.setComplaintId(Long.valueOf(complaintId));
-        complaint.setEcmFolderId("cmisFolderId");
+        AcmContainerFolder folder = new AcmContainerFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        complaint.setContainerFolder(folder);
         complaint.setComplaintNumber("complaintNumber");
 
         // MVC test classes must call getName() somehow
@@ -144,7 +148,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
                 acceptHeader,
                 contextPath,
                 mockAuthentication,
-                complaint.getEcmFolderId(),
+                complaint.getContainerFolder().getCmisFolderId(),
                 "COMPLAINT",
                 complaint.getComplaintId(),
                 complaint.getComplaintNumber()
