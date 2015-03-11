@@ -90,9 +90,12 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setModifier_s(in.getModifier());
         solr.setLast_modified_tdt(in.getModified());
 
+        solr.setDue_tdt(in.getDueDate());
         solr.setTitle_parseable(in.getComplaintTitle());
         solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setStatus_s(in.getStatus());
+
+        solr.setDisposition_id_s(Long.toString(in.getDisposition().getId()));
 
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_s(assigneeUserId);

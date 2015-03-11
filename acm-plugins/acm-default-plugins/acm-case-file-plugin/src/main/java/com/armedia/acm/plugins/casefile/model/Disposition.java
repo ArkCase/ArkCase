@@ -69,7 +69,7 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     @Override
     public String getObjectType()
     {
-        return "Disposition";
+        return "DISPOSITION";
     }
 
     public Long getId()
