@@ -23,7 +23,7 @@ public class SolrDocument implements SolrBaseDocument {
     private String parent_object_type_s;
     private String parent_object_id_s;
     private boolean adhocTask_b;
-
+    private String target_object_number_s;
     private boolean public_doc_b;
     private boolean protected_object_b;
 
@@ -251,6 +251,14 @@ public class SolrDocument implements SolrBaseDocument {
         this.parent_object_id_s = parent_object_id_s;
     }
 
+    public String getTarget_object_number_s() {
+        return target_object_number_s;
+    }
+
+    public void setTarget_object_number_s(String target_object_number_s) {
+        this.target_object_number_s = target_object_number_s;
+    }
+
     @Override
     public String toString() {
         return "SolrDocument{" +
@@ -273,6 +281,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", parent_object_type_s='" + parent_object_type_s + '\'' +
                 ", parent_object_id_s='" + parent_object_id_s + '\'' +
                 ", adhocTask_b=" + adhocTask_b +
+                ", target_object_number_s='" + target_object_number_s + '\'' +
                 ", public_doc_b=" + public_doc_b +
                 ", protected_object_b=" + protected_object_b +
                 ", title_parseable='" + title_parseable + '\'' +

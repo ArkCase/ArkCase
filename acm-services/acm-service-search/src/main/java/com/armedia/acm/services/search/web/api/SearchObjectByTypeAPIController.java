@@ -3,6 +3,7 @@ package com.armedia.acm.services.search.web.api;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
@@ -71,16 +72,16 @@ public class SearchObjectByTypeAPIController {
             }
         } else {
                 f = filters.split(",");
-                List<String> testFilters = null;
+                List<String> testFilters;
                 if (f != null) {
                     testFilters = findFilters(objectType, f);
                     StringBuilder stringBuilder = new StringBuilder();
                     int i =0;
                     for( String filter:testFilters ) {
-                        if(filter.contains("?"))
-                            filter=filter.replace("?",user);
+                        if(filter.contains(SearchConstants.USER))
+                            filter=filter.replace(SearchConstants.USER,user);
                         if( i>0 ) {
-                            stringBuilder.append("&");
+                            stringBuilder.append(SearchConstants.AND_SPLITTER);
                             stringBuilder.append(filter);
                         } else {
                             stringBuilder.append(filter);
