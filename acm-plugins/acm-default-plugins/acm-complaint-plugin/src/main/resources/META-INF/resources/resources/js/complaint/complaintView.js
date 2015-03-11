@@ -8,8 +8,8 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.MicroData.create)          {Complaint.View.MicroData.create();}
         if (Complaint.View.Navigator.create)          {Complaint.View.Navigator.create();}
         if (Complaint.View.Content.create)            {Complaint.View.Content.create();}
-        if (Complaint.View.Action.create)          {Complaint.View.Action.create();}
-        if (Complaint.View.Detail.create)          {Complaint.View.Detail.create();}
+        if (Complaint.View.Action.create)             {Complaint.View.Action.create();}
+        if (Complaint.View.Detail.create)             {Complaint.View.Detail.create();}
         if (Complaint.View.People.create)             {Complaint.View.People.create();}
         if (Complaint.View.Documents.create)          {Complaint.View.Documents.create();}
         if (Complaint.View.Notes.create)              {Complaint.View.Notes.create();}
@@ -18,7 +18,8 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.create)       {Complaint.View.Participants.create();}
         if (Complaint.View.Location.create)           {Complaint.View.Location.create();}
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
-
+        if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
+        if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
     }
     ,onInitialized: function() {
         if (Complaint.View.MicroData.onInitialized)      {Complaint.View.MicroData.onInitialized();}
@@ -34,6 +35,8 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.onInitialized)   {Complaint.View.Participants.onInitialized();}
         if (Complaint.View.Location.onInitialized)       {Complaint.View.Location.onInitialized();}
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
+        if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
+        if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
     }
 
     ,getActiveComplaintId: function() {
@@ -130,6 +133,12 @@ Complaint.View = Complaint.View || {
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: "History"
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
+                            ,title: "Time"
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_COST
+                            ,title: "Cost"
                         })
                         .getTree();
 
@@ -2572,6 +2581,152 @@ Complaint.View = Complaint.View || {
             $s.jtable('load');
         }
     }
+
+
+    ,Time: {
+        create: function() {
+            this.$divTime          = $("#divTime");
+            this.createJTableTime(this.$divTime);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Time.$divTime);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(Complaint.View.Time.$divTime);
+        }
+
+        ,_makeJtData: function(history) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            return jtData;
+        }
+        ,createJTableTime: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Time Tracking'
+                    ,paging: true
+                    ,sorting: true
+                    ,pageSize: 10 //Set page size (default: 10)
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+
+                            }  //end else
+                        }
+
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                        }, name: {
+                            title: 'Form Name'
+                            ,width: '20%'
+                        }, user: {
+                            title: 'Username'
+                            ,width: '10%'
+                        }, hours: {
+                            title: 'Total Hours'
+                            ,width: '10%'
+                        }, modified: {
+                            title: 'Modified Date'
+                            ,width: '10%'
+                        }, status: {
+                            title: 'Status'
+                            ,width: '10%'
+                        }
+                    } //end field
+                } //end arg
+                ,sortMap
+            );
+        }
+    }
+
+
+    ,Cost: {
+        create: function() {
+            this.$divCost          = $("#divCost");
+            this.createJTableCost(this.$divCost);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            AcmEx.Object.JTable.load(Complaint.View.Cost.$divCost);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(Complaint.View.Cost.$divCost);
+        }
+
+        ,_makeJtData: function(costData) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            return jtData;
+        }
+        ,createJTableCost: function($jt) {
+            var sortMap = {};
+            sortMap["created"] = "created";
+
+            AcmEx.Object.JTable.usePaging($jt
+                ,{
+                    title: 'Cost Tracking'
+                    ,paging: true
+                    ,sorting: true
+                    ,pageSize: 10 //Set page size (default: 10)
+                    ,selecting: true
+                    ,multiselect: false
+                    ,selectingCheckboxes: false
+                    ,actions: {
+                        pagingListAction: function (postData, jtParams, sortMap) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }  //end else
+                    }
+
+                    ,fields: {
+                        id: {
+                            title: 'ID'
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                        }, name: {
+                            title: 'Form Name'
+                            ,width: '20%'
+                        }, user: {
+                            title: 'Username'
+                            ,width: '10%'
+                        }, costs: {
+                            title: 'Total Cost'
+                            ,width: '10%'
+                        }, modified: {
+                            title: 'Modified Date'
+                            ,width: '10%'
+                        }, status: {
+                            title: 'Status'
+                            ,width: '10%'
+                        }
+                    } //end field
+                } //end arg
+                ,sortMap
+            );
+        }
+    }
+
 
 };
 

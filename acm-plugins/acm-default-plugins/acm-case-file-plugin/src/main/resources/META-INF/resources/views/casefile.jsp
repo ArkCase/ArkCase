@@ -336,6 +336,18 @@
                                     </section>
                                 </div>
 
+                                <div class="col-md-12" id="tabTime" style="display:none;">
+                                    <section class="panel b-a">
+                                        <div id="divTime" style="width:100%"></div>
+                                    </section>
+                                </div>
+
+                                <div class="col-md-12" id="tabCost" style="display:none;">
+                                    <section class="panel b-a">
+                                        <div id="divCost" style="width:100%"></div>
+                                    </section>
+                                </div>
+
                             </div>
                         </section>
                     </section>
