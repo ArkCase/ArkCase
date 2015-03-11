@@ -113,7 +113,6 @@ Timesheet.View = {
             var formUrls = Timesheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newTimesheetFormUrl)){
                 var newTimesheetFormUrl = Timesheet.View.MicroData.formUrls.newTimesheetFormUrl;
-                newTimesheetFormUrl = newTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getCurrentDay() + "',");
                 newTimesheetFormUrl = newTimesheetFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {});
             }

@@ -44,7 +44,7 @@ Timesheet.Model = {
             return Timesheet.Model.DOC_TYPE_TIMESHEET;
         }
         ,nodeTitle: function(objSolr) {
-            var nodeTitle = "Timsheet " + Acm.getDateFromDatetime(objSolr.create_tdt);
+            var nodeTitle = "Timesheet " + Acm.getDateFromDatetime(objSolr.create_tdt);
             return nodeTitle;
         }
         ,nodeToolTip: function(objSolr) {
