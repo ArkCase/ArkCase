@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <!-- This flow creates a task container folder when tasks are created. Payload must be an AcmTaskEvent.
+    -->
+
+    <!-- This exception strategy tries up to 15 times to create the folder.  When we first process the create
+         event, we may get an error retrieving the task from Activiti.  So we try again a few times... after
+         15 times there must be something else going on.  But this seems to work well for most issues I've seen -->
+    <rollback-exception-strategy name="taskContainerFolderRollbackStrategy" maxRedeliveryAttempts="15">
+        <logger level="INFO" category="com.armedia.acm.plugins.task.service" message="Retrying create task container folder (#[exception.getClass().getName()]"/>
+        <on-redelivery-attempts-exceeded>
+            <logger level="ERROR" category="com.armedia.acm.plugins.task.service" message="Failed to create task container folder!"/>
+        </on-redelivery-attempts-exceeded>
+    </rollback-exception-strategy>
+
+    <configuration defaultExceptionStrategy-ref="taskContainerFolderRollbackStrategy"/>
+
+    <flow name="jmsCreateTaskContainerFolder"
+          doc:name="Create Task Container Folder"
+          doc:description="Payload must be an AcmTaskEvent POJO.">
+
+        <jms:inbound-endpoint
+                queue="createTaskContainerFolder.in"
+                exchange-pattern="one-way"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS" />
+
+        <timer-interceptor/>
+
+        <echo-component doc:name="Echo"/>
+
+        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
+        <scripting:transformer name="activitiCreateTaskContainerFolder">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+
+                    // ensure we set the right modifier and creator for any objects we end up inserting or updating
+                    registry.auditPropertyEntityAdapter.setUserId(message.getInboundProperty("ACM_USER"));
+
+                    registry.acmTaskDao.createFolderForTaskEvent(message.payload);
+
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+
+        </scripting:transformer>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Created container folder for task."/>
+    </flow>
+
+</mule>

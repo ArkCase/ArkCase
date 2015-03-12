@@ -82,7 +82,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         toAdd.addParentObject(parent);
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFolderId", cmisFolderId);
+        messageProps.put("cmisFolderId", cmisFolderId);
         messageProps.put("inputStream", fileInputStream);
         messageProps.put("acmUser", authentication);
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());

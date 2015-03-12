@@ -705,6 +705,22 @@ $(function() {
                                                 </div>
                                             </div>
 
+                                            <div class="row" id="tabTime" style="display:none;">
+                                                <div class="col-md-12">
+                                                    <section class="panel b-a">
+                                                        <div id="divTime" style="width:100%"></div>
+                                                    </section>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" id="tabCost" style="display:none;">
+                                                <div class="col-md-12">
+                                                    <section class="panel b-a">
+                                                        <div id="divCost" style="width:100%"></div>
+                                                    </section>
+                                                </div>
+                                            </div>
+
 
 
 

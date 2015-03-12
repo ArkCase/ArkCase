@@ -70,7 +70,7 @@ public class AddFileToCaseAPIController {
                 throw new AcmObjectNotFoundException("case", caseId, "No Such Case", null);
             }
 
-            String folderId = in.getEcmFolderId();
+            String folderId = in.getContainerFolder().getCmisFolderId();
             String objectType = in.getObjectType();
             Long objectId = caseId;
             String objectName = in.getCaseNumber();
