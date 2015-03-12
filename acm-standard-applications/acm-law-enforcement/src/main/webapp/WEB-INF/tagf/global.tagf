@@ -15,7 +15,7 @@
 <c:set var="js_angular_table"      scope="session" value="ng-table.js"/>
 
 <c:set var="vd_bootbox"            scope="session" value="bootbox-2.4.0"/>
-<c:set var="js_bootbox"            scope="session" value="bootbox.js"/>
+<c:set var="js_bootbox"            scope="session" value="bootbox.min.js"/>
 
 <c:set var="vd_bootstrap"          scope="session" value="bootstrap-3.1.1"/>
 <c:set var="js_bootstrap"          scope="session" value="bootstrap.js"/>
@@ -68,7 +68,7 @@
 <c:set var="js_jquery"             scope="session" value="jquery-1.11.0.js"/>
 
 <c:set var="vd_jquery_ui"          scope="session" value="jquery-ui-1.10.3"/>
-<c:set var="js_jquery_ui"          scope="session" value="jquery.ui-1.10.3.custom.js"/>
+<c:set var="js_jquery_ui"          scope="session" value="jquery-ui-1.10.3.custom.min.js"/>
 
 <c:set var="vd_jtable"             scope="session" value="jtable-2.4.0"/>
 <c:set var="js_jtable"             scope="session" value="jquery.jtable.js"/>
@@ -132,7 +132,7 @@
 <c:set var="vd_underscore"         scope="session" value="underscore-1.6.0"/>
 <c:set var="js_underscore"         scope="session" value="underscore.js"/>
 
-<c:set var="vd_fancytree"          scope="session" value="fancytree-2.2.0"/>
+<c:set var="vd_fancytree"          scope="session" value="fancytree-2.8.1"/>
 <c:set var="js_fancytree"          scope="session" value="jquery.fancytree.js"/>
 <c:set var="js_fancytree_table"    scope="session" value="jquery.fancytree.table.js"/>
 <c:set var="js_fancytree_edit"     scope="session" value="jquery.fancytree.edit.js"/>
@@ -175,12 +175,12 @@
 
 
 <!-- jquery must be first -->
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery}/jquery-1.11.0.js'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_ui}/js/jquery-ui-1.10.3.custom.min.js'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_microdata}/jquery.microdata.js'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootstrap}/js/bootstrap.js'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_issueCollector}/jiraIssueCollector.js'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootbox}/bootbox.min.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery}/${js_jquery}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_ui}/js/${js_jquery_ui}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_microdata}/${js_microdata}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootstrap}/js/${js_bootstrap}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_issueCollector}/${js_issueCollector}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootbox}/${js_bootbox}'/>" ></script>
 
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acm.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acmDialog.js'/>"></script>

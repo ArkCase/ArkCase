@@ -22,6 +22,12 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/task/task.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/taskView.js'/>"></script>

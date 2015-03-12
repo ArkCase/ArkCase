@@ -23,6 +23,12 @@
 </jsp:attribute>
 
 <jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNav.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaint.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintView.js'/>"></script>
@@ -69,6 +75,60 @@
         <%--border: 0px;--%>
     <%--}--%>
 <%--</style>--%>
+
+<!--
+    <script type='text/javascript'>//<![CDATA[
+$(function() {
+
+	    $("#treetable").fancytree({
+
+
+			extensions: ["table"],
+			checkbox: true,
+			table: {
+        indentation: 10,      // indent 20px per node level
+        nodeColumnIdx: 1,     // render the node title into the 2nd column
+        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+      },
+	  renderColumns: function(event, data) {
+        var node = data.node,
+        $tdList = $(node.tr).find(">td");
+        // (index #0 is rendered by fancytree by adding the checkbox)
+        $tdList.eq(1).text("[ID]");
+
+
+
+
+		$tdList.eq(3).text(node.data.type);
+		$tdList.eq(4).text(node.data.created);
+		$tdList.eq(5).text(node.data.author);
+		$tdList.eq(6).text(node.data.version);
+		$tdList.eq(7).text(node.data.status);
+		$tdList.eq(8).html(node.data.action);
+
+
+
+        // (index #2 is rendered by fancytree)
+        //$tdList.eq(3).text(node.key);
+        //$tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
+      },
+
+        source: [
+	{"title": "Folder 1", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Subfolder</a></li><li><a href='#'>Add Document</a></li><li><a href='#'>Delete Subfolder</a></li></ul></div>",  "children": [
+
+			{"title": "Document 1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 2", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
+
+
+	]}
+]
+    });
+
+    //]]>
+    </script>
+-->
 //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
@@ -254,6 +314,352 @@
                                                     </section>
                                                 </div>
                                             </div>
+
+<!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
+                                            <div class="row">
+                                            <div class="col-md-12">
+                                            <section class="panel b-a">
+                                                <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
+                                                    <li style="margin-right:5px"></li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>
+
+
+
+
+
+
+
+
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> Email</button>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> Print</button>
+                                                        </div>
+                                                    </li>
+                                                    <li> </li>
+                                                </ul>
+
+
+
+
+
+
+
+
+                                                    <a href="#" class="font-bold">Documents </a> </div>
+
+
+                                                <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Create Folder</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                                <p>Enter a name for the folder you would like to create:</p>
+
+                                                                <label for="folderName2">Folder Name</label><br/>
+                                                                <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button type="button" class="btn btn-primary">Create Folder<</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+
+                                                                <p>Where would you like to email this file?</p>
+
+                                                                <label for="emailaddy">Email Address</label><br/>
+                                                                <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" />
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button type="button" class="btn btn-primary">Send Email</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <table id="treetable" class="table table-striped th-sortable table-hover">
+
+                                                    <thead>
+                                                    <tr>
+                                                        <th><span class='fancytree-checkbox'></span></th>
+                                                        <th>ID</th>
+                                                        <th width="40%">Title</th>
+                                                        <th>Type</th>
+                                                        <th>Created</th>
+                                                        <th>Author</th>
+                                                        <th>Version</th>
+                                                        <th>Status</th>
+                                                        <th colspan="2"></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <table id="treetable2">
+                                                    <colgroup>
+                                                        <col width="30px"></col>
+                                                        <col width="30px"></col>
+                                                        <col width="*"></col>
+                                                        <col width="50px"></col>
+                                                        <col width="30px"></col>
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr> <th></th> <th>#</th> <th></th> <th>Key</th> <th>Like</th> </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr> <td></td> <td></td> <td></td> <td></td> </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </section>
+
+
+
+                                            <h3>Additional Action Examples</h3>
+                                            <p>I added these modal window examples below to save time (it takes longer for me to code it into the FancyTree).</p>
+
+
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#createsubfolder">
+
+                                                <span class="text">Create Subfolder</span>
+                                            </button> <div class="modal fade" id="createsubfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Create Subfolder</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <p>Enter a name for the subfolder you would like to create:</p>
+
+                                                            <label for="folderName">Folder Name</label><br/>
+                                                            <input type="text" id="folderName" class="input-lg" placeholder="Folder Name" />
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Create Subfolder</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#deletesubfolder">
+
+                                                <span class="text">Delete Subfolder</span>
+                                            </button> <div class="modal fade" id="deletesubfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Delete Subfolder</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+
+                                                            <p>Are you sure you want to delete [folder name] from [partent folder]?</p>
+
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Delete Subfolder</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#replaceFile">
+
+                                                <span class="text">Replace File</span>
+                                            </button> <div class="modal fade" id="replaceFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Replace File</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+
+                                                            <p>Choose a file from your computer to replace [document name]:</p>
+
+                                                            <label for="fileName">File</label><br/>
+                                                            <input type="file" id="fileName" class="input-lg" />
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Replace File</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#delete">
+
+                                                <span class="text">Delete</span>
+                                            </button> <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Delete</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <p>Are you sure you want to delete [file name] from [partent folder]?</p>
+
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#copy">
+
+                                                <span class="text">Copy</span>
+                                            </button> <div class="modal fade" id="copy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Copy</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <p>Where would you like to copy this file? Choose the directory from the box below:</p>
+                                                            <p>[place tree view here]</p>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Copy</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <button class="btn btn-default" data-toggle="modal" data-target="#move">
+
+                                                <span class="text">Move</span>
+                                            </button> <div class="modal fade" id="move" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                            <h4 class="modal-title" id="myModalLabel">Move</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+
+                                                            <p>Where would you like to move this file? Choose the directory from the box below:</p>
+                                                            <p>[place tree view here]</p>
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary">Move</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <button class="btn btn-default" onClick="window.open('documents.html', '_blank');">Edit</button>
+                                            <button class="btn btn-default" onClick="window.open('documents.html', '_blank');">View</button>
+
+
+
+
+                                            <div class="btn-group">
+                                                <button type="buton" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Add Subfolder</a></li>
+                                                    <li><a href="#">Add Document</a></li>
+                                                    <li><a href="#">Delete Subfolder</a></li>
+                                                </ul>
+                                            </div>
+
+
+                                            <div class="btn-group">
+                                                <button type="buton" class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">Download</a></li>
+                                                    <li><a href="#">Replace</a></li>
+                                                    <li><a href="#">History</a></li>
+                                                    <li><a href="#">Delete</a></li>
+                                                    <li><a href="#">Copy</a></li>
+                                                    <li><a href="#">Move</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">View</a></li>
+                                                </ul>
+                                            </div>
+
+
+
+                                            </div>
+                                            </div>
+<!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->
 
 
 

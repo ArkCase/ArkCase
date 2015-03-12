@@ -29,6 +29,7 @@
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFile.js'/>"></script>
@@ -37,7 +38,6 @@
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/objnav/objNavController.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
