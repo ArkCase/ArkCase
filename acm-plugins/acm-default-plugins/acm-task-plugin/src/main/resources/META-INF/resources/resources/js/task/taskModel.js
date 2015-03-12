@@ -81,7 +81,7 @@ Task.Model = Task.Model || {
             solr.parent_object_id_i = objData.attachedToObjectId;
             solr.parent_object_type_s = objData.attachedToObjectType;
             solr.adhocTask_b = objData.adhocTask;
-            solr.name = objData.name;
+            solr.name = objData.title;
             return solr;
         }
         ,validateObjData: function(data) {
