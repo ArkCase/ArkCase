@@ -4,6 +4,7 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -715,15 +716,26 @@ class ActivitiTaskDao implements TaskDao
 
         task = getTaskBusinessRule().applyRules(task);
 
-        String folderId = getFileService().createFolder(task.getEcmFolderPath());
+        // if the task doesn't have a container folder, the rules will set the EcmFolderPath.  If it does have
+        // one, the rules will leave EcmFolderPath null.  So only create a folder if EcmFolderPath is not null.
 
-        task.getContainerFolder().setCmisFolderId(folderId);
-        task.getContainerFolder().setContainerObjectType(task.getObjectType());
-        task.getContainerFolder().setContainerObjectId(task.getId());
+        if ( task.getEcmFolderPath() != null )
+        {
+            String folderId = getFileService().createFolder(task.getEcmFolderPath());
 
-        getContainerFolderDao().save(task.getContainerFolder());
+            AcmContainerFolder folder = new AcmContainerFolder();
 
-        log.info("Created folder id '" + folderId + "' for task with ID " + task.getTaskId());
+            folder.setCmisFolderId(folderId);
+            folder.setContainerObjectType(task.getObjectType());
+            folder.setContainerObjectId(task.getId());
+
+            folder = getContainerFolderDao().save(folder);
+            task.setContainerFolder(folder);
+
+            log.info("Created folder id '" + folderId + "' for task with ID " + task.getTaskId());
+        }
+
+
     }
 
     private void findSelectedTaskOutcome(HistoricTaskInstance hti, AcmTask retval)
