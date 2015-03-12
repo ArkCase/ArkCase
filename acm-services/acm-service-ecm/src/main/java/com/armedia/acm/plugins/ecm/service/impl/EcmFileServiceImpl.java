@@ -3,13 +3,17 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 
+import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -40,7 +44,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private ApplicationEventPublisher applicationEventPublisher;
 
-
+    private MuleClient muleClient;
 
     @Override
     public EcmFile upload(
@@ -263,6 +267,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 		}
 	}
 
+    @Override
+    public String createFolder(String folderPath) throws AcmCreateObjectFailedException
+    {
+        try
+        {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_CREATE_FOLDER, folderPath, null);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            String cmisId = cmisObject.getId();
+            return cmisId;
+        }
+        catch (MuleException e)
+        {
+            log.error("Could not create folder: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException("Folder", e.getMessage(), e);
+        }
+    }
+
     public String constructJqueryFileUploadJson(FileUpload fileUpload) throws IOException
     {
         Map<String, List<FileUpload>> retMap = makeFileUploadMap(fileUpload);
@@ -345,5 +366,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }    
+    }
+
+    public MuleClient getMuleClient()
+    {
+        return muleClient;
+    }
+
+    public void setMuleClient(MuleClient muleClient)
+    {
+        this.muleClient = muleClient;
+    }
 }
