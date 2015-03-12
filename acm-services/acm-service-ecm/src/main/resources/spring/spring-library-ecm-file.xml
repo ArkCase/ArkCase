@@ -52,6 +52,11 @@
                     <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
                 </bean>
 
+                <bean id="documentUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/document/{fileId}"/>
+                    <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
