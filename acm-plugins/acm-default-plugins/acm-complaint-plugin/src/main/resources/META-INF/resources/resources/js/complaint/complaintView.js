@@ -200,7 +200,8 @@ Complaint.View = Complaint.View || {
             if (Complaint.Model.Detail.validateComplaint(c) && Acm.isNotEmpty(url)) {
                 url = url.replace("_data=(", "_data=(complaintId:'" + c.complaintId
                     + "',complaintNumber:'" + Acm.goodValue(c.complaintNumber)
-                    + "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
+                    + "',mode:'create',");
+                    //+ "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
 
                 Acm.Dialog.openWindow(url, "", 860, 700, function() {});
             }
