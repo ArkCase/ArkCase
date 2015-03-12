@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
@@ -60,19 +61,39 @@ public class TaskRulesTest
     }
 
     @Test
-    public void folderId() throws Exception
+    public void folderId_cmisFolderIsNull() throws Exception
     {
         AcmTask task = new AcmTask();
 
         Long taskId = 500L;
 
         task.setTaskId(taskId);
+        task.setEcmFolderPath(null);
 
         workingMemory.execute(task);
 
         log.info("Task folder path: " + task.getEcmFolderPath());
 
         assertTrue(task.getEcmFolderPath().endsWith(taskId.toString()));
+
+    }
+
+    @Test
+    public void folderId_cmisFolderAlreadyExists() throws Exception
+    {
+        AcmTask task = new AcmTask();
+        AcmContainerFolder folder = new AcmContainerFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        task.setContainerFolder(folder);
+
+        task.setEcmFolderPath(null);
+
+        Long taskId = 500L;
+        task.setTaskId(taskId);
+
+        workingMemory.execute(task);
+
+        assertNull(task.getEcmFolderPath());
 
     }
 

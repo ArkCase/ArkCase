@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -49,7 +48,7 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private TaskOutcome taskOutcome;
     private List<AcmParticipant> participants;
 
-    private AcmContainerFolder containerFolder = new AcmContainerFolder();
+    private AcmContainerFolder containerFolder;
 
     /**
      * ecmFolderPath is a transient property; it is set by business rules when the task is created, and is used
