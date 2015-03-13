@@ -141,7 +141,7 @@
         </property>
         <property name="suportedObjectTypesNames">
             <list>
-                <value>COMPLAINTS</value>
+                <value>COMPLAINT</value>
             </list>
         </property>
         <property name="urlPrivileges">

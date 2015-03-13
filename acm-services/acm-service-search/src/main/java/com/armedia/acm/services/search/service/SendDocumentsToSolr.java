@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
@@ -104,7 +105,8 @@ public class SendDocumentsToSolr
     {
         try
         {
-            String json = mapper.writeValueAsString(solrDocument);
+            String json1 = mapper.writeValueAsString(solrDocument);
+            String json = prepareSolrStringForDelete(json1);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Sending JSON to SOLR: " + json);
@@ -152,17 +154,18 @@ public class SendDocumentsToSolr
         }
     }
 
-    private String prepareSolrStringForDelete(SolrDeleteDocumentByIdRequest doc) {
-        //SUBSCRIPTION","public_doc_b":false,"protected_object_b":false,"deny_acl_ss":null,"allow_acl_ss":null}}
+    private String prepareSolrStringForDelete(String jsonString) {
+//        {"delete":{"id":"99434-SUBSCRIPTION","public_doc_b":false,"protected_object_b":false,"deny_acl_ss":null,"allow_acl_ss":null}}
+
+        JSONObject jsonObject = new JSONObject(jsonString);
+         String deleteValue = jsonObject.getString("delete");
+         String deleteStringModified = deleteValue.replace(","," AND ");
          StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.append("{stream.body={\"delete\":{\"query\":\"id:");
-         stringBuilder.append(doc.getDelete().getId());
-         stringBuilder.append(" AND");
-         stringBuilder.append(" public_doc_b:");
-         stringBuilder.append(doc.getDelete().isPublic_doc_b());
-         stringBuilder.append(" AND");
-         stringBuilder.append(" de");
-        return null;
+         stringBuilder.append("{stream.body={\"delete\":{\"query\":");
+         stringBuilder.append(deleteStringModified);
+         stringBuilder.append("}");
+
+        return stringBuilder.toString();
     }
 
     public synchronized MuleClient getMuleClient()
