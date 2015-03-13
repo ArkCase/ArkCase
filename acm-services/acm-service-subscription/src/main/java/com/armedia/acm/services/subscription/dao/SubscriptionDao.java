@@ -104,15 +104,26 @@ public class SubscriptionDao extends AcmAbstractDao<AcmSubscription> {
 
     @Transactional
     public int deleteSubscription( String userId, Long objectId, String objectType ) throws SQLException {
-        Query deleteQuery = getEm().createQuery(
-                "DELETE FROM AcmSubscription sub " +
-                        "WHERE sub.userId=:userId " +
-                        "AND sub.objectId=:objectId " +
-                        "AND sub.subscriptionObjectType=:objectType");
-        deleteQuery.setParameter("userId",userId);
-        deleteQuery.setParameter("objectId",objectId);
-        deleteQuery.setParameter("objectType",objectType);
-        int rowCount = deleteQuery.executeUpdate();
+
+        Query selectQuery = getEm().createQuery("SELECT sub FROM AcmSubscription sub " +
+                "WHERE sub.userId=:userId " +
+                "AND sub.objectId=:objectId " +
+                "AND sub.subscriptionObjectType=:objectType");
+        selectQuery.setParameter("userId",userId);
+        selectQuery.setParameter("objectId",objectId);
+        selectQuery.setParameter("objectType",objectType);
+
+        List<AcmSubscription> results;
+
+        results = selectQuery.getResultList();
+
+        AcmSubscription subscriptionForDel;
+        int rowCount = 0;
+        if(!results.isEmpty()){
+            subscriptionForDel = results.get(0);
+            getEm().remove(subscriptionForDel);
+            rowCount = 1;
+        }
         return rowCount;
     }
 }
