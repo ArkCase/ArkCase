@@ -585,8 +585,15 @@ class ActivitiTaskDao implements TaskDao
                     if ( historicTaskInstance.getAssignee() != null )
                     {
                         AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
-                        String participant = user.getFullName();
-                        workflowHistoryInstance.setParticipant(participant);
+                        if ( user != null )
+                        {
+                            String participant = user.getFullName();
+                            workflowHistoryInstance.setParticipant(participant);
+                        }
+                        else
+                        {
+                            workflowHistoryInstance.setParticipant("[unknown]");
+                        }
                     }
 	    			
 	    			retval.add(workflowHistoryInstance);
