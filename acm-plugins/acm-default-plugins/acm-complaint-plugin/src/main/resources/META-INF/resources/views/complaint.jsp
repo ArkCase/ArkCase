@@ -56,6 +56,7 @@
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_gridnav}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_edit}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_dnd}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
@@ -75,60 +76,6 @@
         <%--border: 0px;--%>
     <%--}--%>
 <%--</style>--%>
-
-<!--
-    <script type='text/javascript'>//<![CDATA[
-$(function() {
-
-	    $("#treetable").fancytree({
-
-
-			extensions: ["table"],
-			checkbox: true,
-			table: {
-        indentation: 10,      // indent 20px per node level
-        nodeColumnIdx: 1,     // render the node title into the 2nd column
-        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
-      },
-	  renderColumns: function(event, data) {
-        var node = data.node,
-        $tdList = $(node.tr).find(">td");
-        // (index #0 is rendered by fancytree by adding the checkbox)
-        $tdList.eq(1).text("[ID]");
-
-
-
-
-		$tdList.eq(3).text(node.data.type);
-		$tdList.eq(4).text(node.data.created);
-		$tdList.eq(5).text(node.data.author);
-		$tdList.eq(6).text(node.data.version);
-		$tdList.eq(7).text(node.data.status);
-		$tdList.eq(8).html(node.data.action);
-
-
-
-        // (index #2 is rendered by fancytree)
-        //$tdList.eq(3).text(node.key);
-        //$tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
-      },
-
-        source: [
-	{"title": "Folder 1", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Subfolder</a></li><li><a href='#'>Add Document</a></li><li><a href='#'>Delete Subfolder</a></li></ul></div>",  "children": [
-
-			{"title": "Document 1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-			{"title": "Document 2", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-			{"title": "Document 3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-			{"title": "Document 4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
-
-
-	]}
-]
-    });
-
-    //]]>
-    </script>
--->
 //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
@@ -313,10 +260,10 @@ $(function() {
                                                         <%--<input id="formDocuments" type="hidden" value='${formDocuments}' />--%>
                                                     </section>
                                                 </div>
-                                            </div>
+                                            <%--</div>--%>
 
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
-                                            <div class="row">
+                                            <%--<div class="row">--%>
                                             <div class="col-md-12">
                                             <section class="panel b-a">
                                                 <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
@@ -404,7 +351,7 @@ $(function() {
                                                     </div>
                                                 </div>
 
-                                                <table id="treetable" class="table table-striped th-sortable table-hover">
+                                                <table id="treeDoc" class="table table-striped th-sortable table-hover">
 
                                                     <thead>
                                                     <tr>
@@ -434,28 +381,12 @@ $(function() {
                                                     </tbody>
                                                 </table>
 
-                                                <table id="treetable2">
-                                                    <colgroup>
-                                                        <col width="30px"></col>
-                                                        <col width="30px"></col>
-                                                        <col width="*"></col>
-                                                        <col width="50px"></col>
-                                                        <col width="30px"></col>
-                                                    </colgroup>
-                                                    <thead>
-                                                    <tr> <th></th> <th>#</th> <th></th> <th>Key</th> <th>Like</th> </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr> <td></td> <td></td> <td></td> <td></td> </tr>
-                                                    </tbody>
-                                                </table>
-
                                             </section>
 
 
 
-                                            <h3>Additional Action Examples</h3>
-                                            <p>I added these modal window examples below to save time (it takes longer for me to code it into the FancyTree).</p>
+                                            <%--<h3>Additional Action Examples</h3>--%>
+                                            <%--<p>I added these modal window examples below to save time (it takes longer for me to code it into the FancyTree).</p>--%>
 
 
                                             <button class="btn btn-default" data-toggle="modal" data-target="#createsubfolder">

@@ -135,6 +135,7 @@
 <c:set var="vd_fancytree"          scope="session" value="fancytree-2.8.1"/>
 <c:set var="js_fancytree"          scope="session" value="jquery.fancytree.js"/>
 <c:set var="js_fancytree_table"    scope="session" value="jquery.fancytree.table.js"/>
+<c:set var="js_fancytree_gridnav"  scope="session" value="jquery.fancytree.gridnav.js"/>
 <c:set var="js_fancytree_edit"     scope="session" value="jquery.fancytree.edit.js"/>
 <c:set var="js_fancytree_dnd"      scope="session" value="jquery.fancytree.dnd.js"/>
 
