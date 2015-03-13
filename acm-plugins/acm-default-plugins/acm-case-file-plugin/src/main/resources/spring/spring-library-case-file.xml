@@ -21,6 +21,7 @@
 
     <bean id="caseFileDao" class="com.armedia.acm.plugins.casefile.dao.CaseFileDao"/>  
     <bean id="changeCaseStatusDao" class="com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao"/>
+    <bean id="dispositionDao" class="com.armedia.acm.plugins.casefile.dao.DispositionDao"/>
 
     <bean id="caseFileEventUtility" class="com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility"/>
 
@@ -33,6 +34,9 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+c    </bean>
+    <bean id="dispositionToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.DispositionToSolrTransformer">
+        <property name="dispositionDao" ref="dispositionDao"/>
     </bean>
 
     <bean id="acmCasePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

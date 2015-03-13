@@ -19,7 +19,6 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
     @Override
     public List<Disposition> getObjectsModifiedSince(Date lastModified, int start, int pageSize) {
         return getDispositionDao().findModifiedSince(lastModified, start, pageSize);
-
     }
 
     @Override
