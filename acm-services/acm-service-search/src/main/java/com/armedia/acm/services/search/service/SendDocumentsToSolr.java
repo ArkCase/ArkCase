@@ -152,6 +152,18 @@ public class SendDocumentsToSolr
         }
     }
 
+    private String prepareSolrStringForDelete(SolrDeleteDocumentByIdRequest doc) {
+        //SUBSCRIPTION","public_doc_b":false,"protected_object_b":false,"deny_acl_ss":null,"allow_acl_ss":null}}
+         StringBuilder stringBuilder = new StringBuilder();
+         stringBuilder.append("{stream.body={\"delete\":{\"query\":\"id:");
+         stringBuilder.append(doc.getDelete().getId());
+         stringBuilder.append(" AND");
+         stringBuilder.append(" public_doc_b:");
+         stringBuilder.append(doc.getDelete().isPublic_doc_b());
+         stringBuilder.append(" AND");
+         stringBuilder.append(" de");
+        return null;
+    }
 
     public synchronized MuleClient getMuleClient()
     {
