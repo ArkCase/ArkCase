@@ -105,7 +105,8 @@ public class SendDocumentsToSolr
     {
         try
         {
-            String json = mapper.writeValueAsString(solrDocument);
+            String json1 = mapper.writeValueAsString(solrDocument);
+            String json = prepareSolrStringForDelete(json1);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Sending JSON to SOLR: " + json);
@@ -154,18 +155,17 @@ public class SendDocumentsToSolr
     }
 
     private String prepareSolrStringForDelete(String jsonString) {
-        //SUBSCRIPTION","public_doc_b":false,"protected_object_b":false,"deny_acl_ss":null,"allow_acl_ss":null}}
+//        {"delete":{"id":"99434-SUBSCRIPTION","public_doc_b":false,"protected_object_b":false,"deny_acl_ss":null,"allow_acl_ss":null}}
 
-         JSONObject jsonObject = new JSONObject(jsonString);
+        JSONObject jsonObject = new JSONObject(jsonString);
+         String deleteValue = jsonObject.getString("delete");
+         String deleteStringModified = deleteValue.replace(","," AND ");
          StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.append("{stream.body={\"delete\":{\"query\":\"id:");
-         stringBuilder.append(jsonObject.get("id")); //getDelete().getId());
-         stringBuilder.append(" AND");
-         stringBuilder.append(" public_doc_b:");
-//         stringBuilder.append(" AND");
-         stringBuilder.append(" de");
+         stringBuilder.append("{stream.body={\"delete\":{\"query\":");
+         stringBuilder.append(deleteStringModified);
+         stringBuilder.append("}");
 
-        return null;
+        return stringBuilder.toString();
     }
 
     public synchronized MuleClient getMuleClient()
