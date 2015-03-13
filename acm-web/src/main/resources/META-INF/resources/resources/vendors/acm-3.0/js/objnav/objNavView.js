@@ -330,13 +330,16 @@ ObjNav.View = {
         }
 
         ,Filter: {
-            defaultFilter: null
-            ,buildFilter: function($ulFilter, treeFilter, onFilterChanged) {
+            //defaultFilter: null
+            buildFilter: function($ulFilter, treeFilter, onFilterChanged) {
                 var html = "";
                 if (this.validateFilter(treeFilter)) {
                     for (var i = 0; i < treeFilter.length; i++) {
                         if (treeFilter[i].default) {
-                            this.defaultFilter = Acm.goodValue(treeFilter[i].name);
+                            //this.defaultFilter = Acm.goodValue(treeFilter[i].name);
+
+                            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
+                            treeInfo.filter = Acm.goodValue(treeFilter[i].name);
                         }
                         html += "<li value='" + Acm.goodValue(treeFilter[i].name)
                             +  "'><a href='#'>" + Acm.goodValue(treeFilter[i].desc) + "</a></li>";
@@ -363,13 +366,16 @@ ObjNav.View = {
         }
 
         ,Sorter: {
-            defaultSort: null
-            ,buildSort: function($ulSort, treeSort, onSortChanged) {
+            //defaultSort: null
+            buildSort: function($ulSort, treeSort, onSortChanged) {
                 var html = "";
                 if (this.validateSort(treeSort)) {
                     for (var i = 0; i < treeSort.length; i++) {
                         if (treeSort[i].default) {
-                            this.defaultSort = Acm.goodValue(treeSort[i].name);
+                            //this.defaultSort = Acm.goodValue(treeSort[i].name);
+
+                            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
+                            treeInfo.sort = Acm.goodValue(treeSort[i].name);
                         }
                         html += "<li value='" + Acm.goodValue(treeSort[i].name)
                             +  "'><a href='#'>" + Acm.goodValue(treeSort[i].desc) + "</a></li>";
