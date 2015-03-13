@@ -32,6 +32,7 @@ var Complaint = Complaint || {
             });
         }
 
+        //this.test();
     }
 
     ,onInitialized: function() {
@@ -43,59 +44,23 @@ var Complaint = Complaint || {
         if (SubscriptionOp.onInitialized)       {SubscriptionOp.onInitialized();}
     }
 
-    ,test: function() {
-        var $t = $("#treetable2");
-        $("#treetable").fancytree({
-//            source: [{
-//                title: "2014-03-12321 - Sample Complaint Title</em>",
-//                href: "complaints.html",
-//                tooltip: "2014-03-12321",
-//                expanded: "fancytree-expanded",
-//
-//                children: [{
-//                    title: "Initiator",
-//                    href: "complaintIntitiator.html",
-//                    description1: "John Doe",
-//                    description2: "Victim"
-//                },{
-//                    title: "Details",
-//                    href: "complaintDetails.html"
-//                }, {
-//                    title: "People",
-//                    href: "complaintPeople.html"
-//                }, {
-//                    title: "Documents",
-//                    expanded: "fancytree-expanded",
-//                    href: "complaintDocuments.html",
-//                    expanded: "fancytree-expanded"
-//                }, {
-//                    title: "Participants",
-//                    folder: false,
-//                    href: "complaintParticipants.html"
-//                }, {
-//                    title: "Notes",
-//                    href: "complaintNotes.html"
-//                }, {
-//                    title: "Tasks",
-//                    href: "complaintTasks.html",
-//                    nodeType: "task"
-//                }, {
-//                    title: "References",
-//                    href: "complaintOther.html"
-//                }, {
-//                    title: "History",
-//                    folder: false,
-//                    href: "complaintHistory.html"
-//                }]
-//            }]
-//            ,
 
-            extensions: ["table", "edit", "dnd"]
+    ,test: function() {
+        CLIPBOARD = null;
+
+        var $treeDoc = $("#treeDoc");
+        $treeDoc.fancytree({
+
+            extensions: ["table", "gridnav", "edit", "dnd"]
             ,checkbox: true
             ,table: {
                 indentation: 10,      // indent 20px per node level
                 nodeColumnIdx: 2,     // render the node title into the 2nd column
                 checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+            }
+            ,gridnav: {
+                autofocusInput: false,
+                handleCursorKeys: true
             }
             ,renderColumns: function(event, data) {
                 var node = data.node,
@@ -206,7 +171,167 @@ var Complaint = Complaint || {
                 }
             }
 
+        }).on("nodeCommand", function(event, data){
+            // Custom event handler that is triggered by keydown-handler and
+            // context menu:
+            var refNode, moveMode,
+                tree = $(this).fancytree("getTree"),
+                node = tree.getActiveNode();
+
+            switch( data.cmd ) {
+                case "moveUp":
+                    refNode = node.getPrevSibling();
+                    if( refNode ) {
+                        node.moveTo(refNode, "before");
+                        node.setActive();
+                    }
+                    break;
+                case "moveDown":
+                    refNode = node.getNextSibling();
+                    if( refNode ) {
+                        node.moveTo(refNode, "after");
+                        node.setActive();
+                    }
+                    break;
+                case "indent":
+                    refNode = node.getPrevSibling();
+                    if( refNode ) {
+                        node.moveTo(refNode, "child");
+                        refNode.setExpanded();
+                        node.setActive();
+                    }
+                    break;
+                case "outdent":
+                    if( !node.isTopLevel() ) {
+                        node.moveTo(node.getParent(), "after");
+                        node.setActive();
+                    }
+                    break;
+                case "rename":
+                    node.editStart();
+                    break;
+                case "remove":
+                    refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                    node.remove();
+                    if( refNode ) {
+                        refNode.setActive();
+                    }
+                    break;
+                case "addChild":
+                    node.editCreateNode("child", "");
+                    break;
+                case "addSibling":
+                    node.editCreateNode("after", "");
+                    break;
+                case "cut":
+                    CLIPBOARD = {mode: data.cmd, data: node};
+                    break;
+                case "copy":
+                    CLIPBOARD = {
+                        mode: data.cmd,
+                        data: node.toDict(function(n){
+                            delete n.key;
+                        })
+                    };
+                    break;
+                case "clear":
+                    CLIPBOARD = null;
+                    break;
+                case "paste":
+                    if( CLIPBOARD.mode === "cut" ) {
+                        // refNode = node.getPrevSibling();
+                        CLIPBOARD.data.moveTo(node, "child");
+                        CLIPBOARD.data.setActive();
+                    } else if( CLIPBOARD.mode === "copy" ) {
+                        node.addChildren(CLIPBOARD.data).setActive();
+                    }
+                    break;
+                default:
+                    alert("Unhandled command: " + data.cmd);
+                    return;
+            }
+        }).on("keydown", function(e){
+            var cmd = null;
+
+            // console.log(e.type, $.ui.fancytree.eventToString(e));
+            switch( $.ui.fancytree.eventToString(e) ) {
+                case "ctrl+shift+n":
+                case "meta+shift+n": // mac: cmd+shift+n
+                    cmd = "addChild";
+                    break;
+                case "ctrl+c":
+                case "meta+c": // mac
+                    cmd = "copy";
+                    break;
+                case "ctrl+v":
+                case "meta+v": // mac
+                    cmd = "paste";
+                    break;
+                case "ctrl+x":
+                case "meta+x": // mac
+                    cmd = "cut";
+                    break;
+                case "ctrl+n":
+                case "meta+n": // mac
+                    cmd = "addSibling";
+                    break;
+                case "del":
+                case "meta+backspace": // mac
+                    cmd = "remove";
+                    break;
+                // case "f2":  // already triggered by ext-edit pluging
+                //   cmd = "rename";
+                //   break;
+                case "ctrl+up":
+                    cmd = "moveUp";
+                    break;
+                case "ctrl+down":
+                    cmd = "moveDown";
+                    break;
+                case "ctrl+right":
+                case "ctrl+shift+right": // mac
+                    cmd = "indent";
+                    break;
+                case "ctrl+left":
+                case "ctrl+shift+left": // mac
+                    cmd = "outdent";
+            }
+            if( cmd ){
+                $(this).trigger("nodeCommand", {cmd: cmd});
+                // e.preventDefault();
+                // e.stopPropagation();
+                return false;
+            }
         });
+
+        $treeDoc.contextmenu({
+            delegate: "span.fancytree-node",
+            menu: [
+                {title: "Edit <kbd>[F2]</kbd>", cmd: "rename", uiIcon: "ui-icon-pencil" },
+                {title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" },
+                {title: "----"},
+                {title: "New sibling <kbd>[Ctrl+N]</kbd>", cmd: "addSibling", uiIcon: "ui-icon-plus" },
+                {title: "New child <kbd>[Ctrl+Shift+N]</kbd>", cmd: "addChild", uiIcon: "ui-icon-arrowreturn-1-e" },
+                {title: "----"},
+                {title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors"},
+                {title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy"},
+                {title: "Paste as child<kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+            ],
+            beforeOpen: function(event, ui) {
+                var node = $.ui.fancytree.getNode(ui.target);
+                $treeDoc.contextmenu("enableEntry", "paste", !!CLIPBOARD);
+                node.setActive();
+            },
+            select: function(event, ui) {
+                var that = this;
+                // delay the event, so the menu can close and the click event does
+                // not interfere with the edit control
+                setTimeout(function(){
+                    $(that).trigger("nodeCommand", {cmd: ui.cmd});
+                }, 100);
+            }
+        });
+
     }
 };
 
