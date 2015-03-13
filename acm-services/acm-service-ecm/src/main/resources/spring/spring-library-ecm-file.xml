@@ -4,7 +4,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
-    <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao"/>
+    <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
         <lookup-method name="getMuleClient" bean="muleClient"/>
@@ -53,10 +55,14 @@
                     <property name="url" value="/api/{version}/plugin/ecm/download/byId/{ecmFileId}"/>
                     <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
                 </bean>
-
                 <bean id="documentUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/document/{fileId}"/>
+                    <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
+                </bean>
+                <bean id="folderListUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
                 </bean>
             </list>

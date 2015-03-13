@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
@@ -10,6 +12,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -27,7 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -281,6 +287,75 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             log.error("Could not create folder: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException("Folder", e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection)
+            throws AcmListObjectsFailedException
+    {
+        try
+        {
+            String sortParam = "cmis:name";
+            if ( "created".equals(sortBy) )
+            {
+                sortParam = "cmis:creationDate";
+            }
+            else if ( "modified".equals(sortBy) )
+            {
+                sortParam = "cmis:lastModificationDate";
+            }
+            sortParam = sortParam + " " + sortDirection;
+            Map<String, Object> messageProperties = new HashMap<>();
+            messageProperties.put("orderBy", sortParam);
+
+            MuleMessage message = getMuleClient().send(
+                    EcmFileConstants.MULE_ENDPOINT_LIST_FOLDER_CONTENTS,
+                    folderId,
+                    messageProperties);
+            Object children = message.getPayload();
+            log.debug("children type: '" + children.getClass().getName());
+
+            ItemIterable<CmisObject> cmisChildren = (ItemIterable<CmisObject>) children;
+
+            log.debug(cmisChildren.getTotalNumItems() + " items found");
+
+            List<AcmCmisObject> retval = new ArrayList<>();
+            for ( CmisObject cmisObject : cmisChildren )
+            {
+                AcmCmisObject acmCmisObject = new AcmCmisObject();
+                acmCmisObject.setCmisObjectId(cmisObject.getId());
+                acmCmisObject.setName(cmisObject.getName());
+
+                log.debug("child object CMIS type: " + cmisObject.getType().getDisplayName());
+                log.debug("child object Java type: " + cmisObject.getClass().getName());
+
+
+
+                if ( cmisObject.getBaseTypeId().equals(BaseTypeId.CMIS_DOCUMENT) )
+                {
+                    acmCmisObject.setObjectType("file");
+                }
+                else if ( cmisObject.getBaseTypeId().equals(BaseTypeId.CMIS_FOLDER) )
+                {
+                    acmCmisObject.setObjectType("folder");
+                }
+                else
+                {
+                    log.info("Child object is not a document or a folder, skipping");
+                    continue;
+                }
+
+                retval.add(acmCmisObject);
+            }
+
+
+            return retval;
+        }
+        catch (MuleException e)
+        {
+            log.error("Could not list folder contents: " + e.getMessage(), e);
+            throw new AcmListObjectsFailedException("Folder Contents", e.getMessage(), e);
         }
     }
 

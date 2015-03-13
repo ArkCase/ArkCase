@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.mule.api.MuleException;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by armdev on 5/1/14.
@@ -117,4 +120,6 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException If the folder could not be created.
      */
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
+
+    List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection) throws AcmListObjectsFailedException;
 }
