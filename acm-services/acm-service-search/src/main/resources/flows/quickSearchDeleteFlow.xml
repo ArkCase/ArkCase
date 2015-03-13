@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <http:endpoint name="http.quickSearchDelete"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.quicksearch.core}/${solr.updateHandler}"
+                   contentType="application/x-www-form-urlencoded; charset=UTF-8"
+                   mimeType="application/json"
+                   encoding="UTF-8"
+                   method="POST"
+                   exchange-pattern="request-response"
+                   doc:name="Issue a quick search document delete in SOLR">
+    </http:endpoint>
+
+    <flow name="quickSearchDelete" doc:name="Quick Search Delete Flow">
+        <vm:inbound-endpoint
+                address="vm://quickSearchDelete.in"
+                exchange-pattern="request-response"
+                doc:name="VM"/>
+
+        <timer-interceptor/>
+
+        <!--&lt;!&ndash; NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. &ndash;&gt;-->
+        <!--<scripting:transformer name="dataAccessControlFilters">-->
+            <!--<scripting:script engine="groovy" file="scripts/dataAccessFilter.groovy"/>-->
+        <!--</scripting:transformer>-->
+<!--stream.body={%22delete%22:{%22id%22:%221243-SUBSCRIPTION%22}}&commit=true-->
+        <set-payload value="stream.body=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=true"/>
+
+        <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
+
+        <http:outbound-endpoint ref="http.quickSearchDelete">
+            <response>
+                <object-to-string-transformer/>
+            </response>
+        </http:outbound-endpoint>
+
+    </flow>
+
+</mule>
