@@ -31,6 +31,7 @@ public interface SearchConstants
     String PROPERTY_NUMBER_FOUND = "numFound";
     String PROPERTY_RESPONSE = "response";
 
+    String USER = "${user}";
     /**
      * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
      */

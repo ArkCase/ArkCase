@@ -184,6 +184,11 @@
                 <ref bean="acmTaskDeletePrivilege"/>
             </list>
         </property>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>TASK</value>
+            </list>
+        </property>
         <property name="urlPrivileges">
             <list>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
