@@ -19,6 +19,8 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
         if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
+        if (Complaint.Model.Time.create)                  {Complaint.Model.Time.create();}
+        if (Complaint.Model.Cost.create)                  {Complaint.Model.Cost.create();}
     }
     ,onInitialized: function() {
         if (Complaint.Service.onInitialized)              {Complaint.Service.onInitialized();}
@@ -35,6 +37,8 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
         if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
         if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
+        if (Complaint.Model.Time.onInitialized)           {Complaint.Model.Time.onInitialized();}
+        if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
 
     ,interface: {
@@ -119,6 +123,9 @@ Complaint.Model = Complaint.Model || {
             ,NODE_TYPE_PART_PARTICIPANTS : "part"
             ,NODE_TYPE_PART_REFERENCES   : "ref"
             ,NODE_TYPE_PART_HISTORY      : "his"
+            ,NODE_TYPE_PART_TIME         : "time"
+            ,NODE_TYPE_PART_COST         : "cost"
+
 
 
             ,nodeTypeMap: [
@@ -144,6 +151,8 @@ Complaint.Model = Complaint.Model || {
 //                    ,"tabWatchers"
                         ,"tabParticipants"
                         ,"tabHistory"
+                        ,"tabTime"
+                        ,"tabCost"
                     ]}
                 ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
                 ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
@@ -155,6 +164,8 @@ Complaint.Model = Complaint.Model || {
                 ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
                 ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
                 ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
+                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
+                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
             ]
         }
     }
@@ -845,6 +856,20 @@ Complaint.Model = Complaint.Model || {
             return this._aliasTypes;
         }
 
+    }
+
+    ,Time: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+    }
+
+    ,Cost: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
     }
 
 };

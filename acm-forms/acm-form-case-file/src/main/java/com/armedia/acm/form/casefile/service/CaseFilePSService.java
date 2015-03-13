@@ -178,7 +178,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		
 		// Add id's and other information to the Frevvo form
 		form.setId(caseFile.getId());
-		form.setCmisFolderId(caseFile.getEcmFolderId());
+		form.setCmisFolderId(caseFile.getContainerFolder().getCmisFolderId());
 		form.setNumber(caseFile.getCaseNumber());
 		
 		// Add Address History id's to the Frevvo form

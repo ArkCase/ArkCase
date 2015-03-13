@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.profile.model;
 
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
@@ -67,17 +68,18 @@ public class UserOrg implements Serializable{
     private String mobilePhoneNumber;
 
     /**
-     * This field is only used when the profile is created. Usually it will be null.  Use the ecmFolderId
+     * This field is only used when the profile is created. Usually it will be null.  Use the container folder
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
     private String ecmFolderPath;
 
     /**
-     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
+     * Container folder where the case file's attachments/content files are stored.
      */
-    @Column(name = "cm_profile_ecm_folder_id")
-    private String ecmFolderId;
+    @OneToOne
+    @JoinColumn(name = "cm_container_folder_id")
+    private AcmContainerFolder containerFolder = new AcmContainerFolder();
 
     @Column(name = "cm_ecm_fileId")
     private Long ecmFileId;
@@ -93,23 +95,33 @@ public class UserOrg implements Serializable{
     @JoinColumn(name = "cm_organization")
     private Organization organization;
 
+    @PrePersist
+    public void beforeInsert()
+    {
+        setupChildPointers();
+    }
+
+    @PreUpdate
+    public void beforeUpdate()
+    {
+        setupChildPointers();
+    }
+
+    private void setupChildPointers()
+    {
+        if ( getContainerFolder() != null )
+        {
+            getContainerFolder().setContainerObjectId(getUserOrgId());
+            getContainerFolder().setContainerObjectType("USER_ORG");
+        }
+    }
+
     public String getEcmFolderPath() {
         return ecmFolderPath;
     }
 
     public void setEcmFolderPath(String ecmFolderPath) {
         this.ecmFolderPath = ecmFolderPath;
-    }
-
-    public String getEcmFolderId() {
-        return ecmFolderId;
-    }
-
-    public void setEcmFolderId(String ecmFolderId) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Set folder ID to '" + ecmFolderId + "'");
-        }
-        this.ecmFolderId = ecmFolderId;
     }
 
     public Organization getOrganization() {
@@ -254,5 +266,15 @@ public class UserOrg implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public AcmContainerFolder getContainerFolder()
+    {
+        return containerFolder;
+    }
+
+    public void setContainerFolder(AcmContainerFolder containerFolder)
+    {
+        this.containerFolder = containerFolder;
     }
 }

@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
 import org.mule.api.MuleException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -109,4 +108,13 @@ public interface EcmFileService
      * @throws AcmObjectNotFoundException
      */
     String download(Long id) throws MuleException;
+
+    /**
+     * Create a folder in the CMIS repository
+     * @param folderPath The path to be created.  If it already exists, the ID of the existing folder is returned.
+     * @return CMIS Object ID of the new folder (if it was created), or the existing folder (if the folderPath already
+     * existed).  Either way, the object ID represents the folder at the requested folderPath.
+     * @throws AcmCreateObjectFailedException If the folder could not be created.
+     */
+    String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 }

@@ -112,7 +112,7 @@ public class EcmFileTransactionIT
         ecmFile.addParentObject(parent);
 
         Map<String, Object> messageProperties = new HashMap<>();
-        messageProperties.put("ecmFolderId", testFolderId);
+        messageProperties.put("cmisFolderId", testFolderId);
         messageProperties.put("inputStream", is);
         messageProperties.put("acmUser", auth);
         messageProperties.put("auditAdapter", auditAdapter);
