@@ -14,6 +14,8 @@ import java.util.Date;
 @Table(name = "acm_subscription")
 public class AcmSubscription implements AcmObject, AcmEntity {
 
+    public static final String OBJECT_TYPE = "SUBSCRIPTION";
+
     @Id
     @Column(name = "cm_subscription_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -140,7 +142,7 @@ public class AcmSubscription implements AcmObject, AcmEntity {
     @Override
     @JsonIgnore
     public String getObjectType() {
-        return "SUBSCRIPTION";
+        return OBJECT_TYPE;
     }
 
     @Override
