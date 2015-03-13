@@ -7,6 +7,9 @@
 <t:layout>
 	<jsp:attribute name="endOfHead">
 	    <title><spring:message code="timesheet.page.title" text="Time Tracking | ACM | Armedia Case Management" /></title>
+        <div id="detailData" itemscope="true" style="display: none">
+            <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
+        </div>
 	</jsp:attribute>
 
     <jsp:body>

@@ -52,7 +52,7 @@ public class CaseFileWorkflowListener
         pvars.put("CASE_FILE", caseFile.getId());
         pvars.put("REQUEST_TYPE", "BACKGROUND_INVESTIGATION");
         pvars.put("REQUEST_ID", caseFile.getId());
-        pvars.put("OBJECT_FOLDER_ID", caseFile.getEcmFolderId());
+        pvars.put("OBJECT_FOLDER_ID", caseFile.getContainerFolder().getCmisFolderId());
         pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
         pvars.put("taskPriority", configuration.getTaskPriority());
 

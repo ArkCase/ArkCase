@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.casefile.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +64,10 @@ public class CaseFileDaoIT
         caseFile.setStatus("status");
         caseFile.setTitle("title");
         caseFile.setRestricted(true);
+
+        AcmContainerFolder folder = new AcmContainerFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        caseFile.setContainerFolder(folder);
 
         CaseFile saved = caseFileDao.save(caseFile);
 

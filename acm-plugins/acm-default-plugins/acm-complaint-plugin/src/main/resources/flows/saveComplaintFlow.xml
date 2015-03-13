@@ -65,7 +65,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <choice>
             <when expression="#[payload.ecmFolderPath != null]">
                 <processor-chain>
-                    <!-- store the complaint in a flow variable so the enricher can see it -->
+                    <!-- store the complaint folder in a flow variable so the enricher can see it -->
                     <set-variable variableName="containerFolder" value="#[message.payload.containerFolder]"/>
                     <!-- update the complaint with the ID of the folder -->
                     <enricher  source="#[message.payload.id]" target="#[flowVars['containerFolder'].cmisFolderId]">

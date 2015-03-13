@@ -36,12 +36,6 @@ var Application = Application || {
         if ( "undefined" != typeof CaseFile ) {
             acmModules.push(CaseFile);
         }
-        if ("undefined" != typeof ComplaintWizard) {
-            acmModules.push(ComplaintWizard);
-        }
-        if ("undefined" != typeof ComplaintList) {
-            acmModules.push(ComplaintList);
-        }
         if ("undefined" != typeof Task) {
             acmModules.push(Task);
         }
@@ -50,9 +44,6 @@ var Application = Application || {
         }
         if ("undefined" != typeof TaskWizard) {
             acmModules.push(TaskWizard);
-        }
-        if ("undefined" != typeof TaskList) {
-            acmModules.push(TaskList);
         }
         if ("undefined" != typeof Search) {
             acmModules.push(Search);
@@ -83,6 +74,9 @@ var Application = Application || {
         }
         if ("undefined" != typeof Tag) {
             acmModules.push(Tag);
+        }
+        if ("undefined" != typeof Document) {
+            acmModules.push(Document);
         }
 
 

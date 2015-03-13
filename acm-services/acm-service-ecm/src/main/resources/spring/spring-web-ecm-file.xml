@@ -11,4 +11,7 @@
         <property name="muleClient" ref="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
     </bean>
+
+    <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
+    </bean>
 </beans>
