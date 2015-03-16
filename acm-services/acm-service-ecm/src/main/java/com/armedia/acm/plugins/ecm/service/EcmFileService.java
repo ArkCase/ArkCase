@@ -34,7 +34,6 @@ public interface EcmFileService
      * @param targetCmisFolderId ID of the folder where the file should be stored
      * @param parentObjectType Type of the object that contains this file - task, case file, complaint...
      * @param parentObjectId ID  of the parent object
-     * @param parentObjectName Name of the parent object
      * @return Spring response entity; mime type of application/json for non-IE browsers, or text/plain for IE
      * @throws AcmCreateObjectFailedException
      */
@@ -46,8 +45,7 @@ public interface EcmFileService
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException;
+            Long parentObjectId) throws AcmCreateObjectFailedException;
 
     EcmFile upload(
             String fileType,
@@ -57,8 +55,7 @@ public interface EcmFileService
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException;
+            Long parentObjectId) throws AcmCreateObjectFailedException;
 
     EcmFile upload(
             String fileType,
@@ -69,8 +66,7 @@ public interface EcmFileService
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException;
+            Long parentObjectId) throws AcmCreateObjectFailedException;
 
     /** This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
@@ -81,7 +77,6 @@ public interface EcmFileService
      * @param targetCmisFolderId ID of the folder where the file should be stored
      * @param parentObjectType Type of the object that contains this file - task, case file, complaint...
      * @param parentObjectId ID  of the parent object
-     * @param parentObjectName Name of the parent object
      * @return EcmFile object representing the uploaded file.
      * @throws AcmCreateObjectFailedException
      */
@@ -91,8 +86,7 @@ public interface EcmFileService
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException;
+            Long parentObjectId) throws AcmCreateObjectFailedException;
     
     /**
      * 

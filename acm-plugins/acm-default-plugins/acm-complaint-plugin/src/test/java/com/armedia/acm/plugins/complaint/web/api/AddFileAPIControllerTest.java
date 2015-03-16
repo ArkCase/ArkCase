@@ -100,8 +100,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
                 mockAuthentication,
                 complaint.getContainerFolder().getCmisFolderId(),
                 "COMPLAINT",
-                complaint.getComplaintId(),
-                complaint.getComplaintNumber()
+                complaint.getComplaintId()
         )).andReturn(null);
 
         replayAll();
@@ -150,8 +149,7 @@ public class AddFileAPIControllerTest extends EasyMockSupport
                 mockAuthentication,
                 complaint.getContainerFolder().getCmisFolderId(),
                 "COMPLAINT",
-                complaint.getComplaintId(),
-                complaint.getComplaintNumber()
+                complaint.getComplaintId()
         )).andThrow(new AcmCreateObjectFailedException("test.txt", "testMessage", null));
 
         replayAll();

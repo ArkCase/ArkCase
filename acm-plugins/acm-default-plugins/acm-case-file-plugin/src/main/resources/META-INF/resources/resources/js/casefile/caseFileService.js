@@ -1332,7 +1332,6 @@ CaseFile.Service = {
                 + "?templateName=" + templateName
                 + "&parentObjectType=" + CaseFile.Model.DOC_TYPE_CASE_FILE
                 + "&parentObjectId=" + caseFileIn.id
-                + "&parentObjectName=" + caseFileIn.caseNumber
                 + "&targetCmisFolderId=" + caseFileIn.containerFolder.cmisFolderId
                 ;
 

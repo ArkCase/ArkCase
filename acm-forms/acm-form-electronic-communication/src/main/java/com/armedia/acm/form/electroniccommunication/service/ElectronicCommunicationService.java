@@ -53,7 +53,6 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
-		String parentObjectName = null;
 		
 		ElectronicCommunicationForm form = (ElectronicCommunicationForm) convertFromXMLToObject(cleanXML(xml), ElectronicCommunicationForm.class);
 		
@@ -80,7 +79,6 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 			cmisFolderId = complaint.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
-			parentObjectName = complaint.getComplaintNumber();		
 
 			// Record user action
 			getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_MODIFIED, getAuthentication().getName());
@@ -95,13 +93,12 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 			cmisFolderId = caseFile.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
-			parentObjectName = caseFile.getCaseNumber();
 			
 			// Record user action
 			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
-		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId, parentObjectName);
+		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
 		
 		return true;
 	}

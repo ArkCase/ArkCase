@@ -76,7 +76,6 @@ public class UploadProfileImgAPIController {
                         String folderId = in.getContainerFolder().getCmisFolderId();
                         String objectType = "PROFILE_IMG";
                         Long objectId = in.getUserOrgId();
-                        String objectName = in.getUser().getFullName();
 
                     //creating a unique file that will be uploaded on alfresco.
                     AcmMultipartFile f = new AcmMultipartFile(
@@ -92,7 +91,7 @@ public class UploadProfileImgAPIController {
                         String contextPath = request.getServletContext().getContextPath();
 
                         return getEcmFileService().upload(uploadFileType, f, acceptType, contextPath, authentication,
-                            folderId, objectType, objectId, objectName);
+                            folderId, objectType, objectId);
                 } catch (IOException e){
                     if(log.isErrorEnabled()){
                         log.error("Creating unique file name failed",e);

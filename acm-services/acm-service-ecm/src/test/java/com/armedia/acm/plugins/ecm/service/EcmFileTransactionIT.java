@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,12 +104,6 @@ public class EcmFileTransactionIT
         ecmFile.setCreated(date);
         ecmFile.setModified(date);
 
-        ObjectAssociation parent = new ObjectAssociation();
-        parent.setParentId(54321L);
-        parent.setParentType("CASE_FILE");
-        parent.setParentName("NAMEEEE");
-        ecmFile.addParentObject(parent);
-
         Map<String, Object> messageProperties = new HashMap<>();
         messageProperties.put("cmisFolderId", testFolderId);
         messageProperties.put("inputStream", is);
@@ -123,18 +116,10 @@ public class EcmFileTransactionIT
 
         EcmFile found = message.getPayload(EcmFile.class);
 
-
-//
-//        Map<String, Object> headers = new HashMap<>();
-//        MuleMessage response = muleClient.send("jms://solrContentFile.in", found, headers);
-//
-//        assertNotNull(response);
-
         entityManager.flush();
 
         assertNotNull(found.getEcmFileId());
         assertNotNull(found.getCreator());
-
 
         log.debug("upload file id '" + found.getEcmFileId() + "'");
 

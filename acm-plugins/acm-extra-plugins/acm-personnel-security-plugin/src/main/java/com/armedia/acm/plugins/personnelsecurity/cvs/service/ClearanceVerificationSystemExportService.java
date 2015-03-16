@@ -25,7 +25,6 @@ public class ClearanceVerificationSystemExportService
     public void exportDeterminationRecord(
             String adjudicatorId,
             Long caseId,
-            String caseNumber,
             String caseCmisFolderId,
             String subjectLastName,
             String adjudicationOutcome
@@ -54,7 +53,7 @@ public class ClearanceVerificationSystemExportService
         {
             // TODO: use JMS to handle this upload via Mule so we get some retry logic
             getEcmFileService().upload(FILE_TYPE, recordInputStream, "text/plain", "cvsExport.txt", auth, caseCmisFolderId,
-                    "CASE_FILE", caseId, caseNumber);
+                    "CASE_FILE", caseId);
         }
         catch (AcmCreateObjectFailedException e)
         {

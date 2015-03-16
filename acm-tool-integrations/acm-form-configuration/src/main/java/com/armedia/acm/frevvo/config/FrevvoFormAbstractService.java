@@ -229,8 +229,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
             MultiValueMap<String, MultipartFile> attachments,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException
 	{
         FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
 
@@ -277,7 +276,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                                 targetCmisFolderId,
                                 parentObjectType,
                                 parentObjectId,
-                                parentObjectName,
                                 xmlAttachment);
                         }
                         retval.setFormXml(formXml);
@@ -316,7 +314,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	                                targetCmisFolderId,
 	                                parentObjectType,
 	                                parentObjectId,
-	                                parentObjectName,
 	                                pdfAttachment);
                         }
                         retval.setPdfRendition(pdfRendition);
@@ -336,7 +333,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                                     targetCmisFolderId,
                                     parentObjectType,
                                     parentObjectId,
-                                    parentObjectName,
                                     attachment);
                             retval.getUploadedFiles().add(uploaded);
                         }
@@ -353,7 +349,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                             String targetCmisFolderId,
                             String parentObjectType,
                             Long parentObjectId,
-                            String parentObjectName,
                             MultipartFile attachment)
             throws AcmCreateObjectFailedException
     {
@@ -375,8 +370,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 getAuthentication(),
                 targetCmisFolderId,
                 parentObjectType,
-                parentObjectId,
-                parentObjectName);
+                parentObjectId);
 
             return uploaded;
         }

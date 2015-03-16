@@ -14,7 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -73,7 +77,6 @@ public class AddFileToCaseAPIController {
             String folderId = in.getContainerFolder().getCmisFolderId();
             String objectType = in.getObjectType();
             Long objectId = caseId;
-            String objectName = in.getCaseNumber();
 
             String contextPath = request.getServletContext().getContextPath();
 
@@ -94,7 +97,7 @@ public class AddFileToCaseAPIController {
                             }
 
                             ResponseEntity<? extends Object> responseEntity =  getEcmFileService().upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
-                                    objectType, objectId, objectName);
+                                    objectType, objectId);
 
                             getCaseFileEventUtility().raiseFileAddedEvent(in,authentication.getName(),true);
                             getUploadedFilesJSON().add(responseEntity.getBody());

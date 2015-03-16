@@ -126,11 +126,10 @@ public class BackgroundInvestigationBusinessProcessIT
         clearanceVerificationSystemExportService.exportDeterminationRecord(
                 defaultAdjudicator,
                 caseId,
-                caseNumber,
                 folderId,
                 subjectLastName,
                 "GRANT_CLEARANCE");
-        expect(correspondenceService.generate("ClearanceGranted.docx", "CASE_FILE", caseId, caseNumber, folderId)).andReturn(null);
+        expect(correspondenceService.generate("ClearanceGranted.docx", "CASE_FILE", caseId, folderId)).andReturn(null);
 
         // should happen after clearance is issued
         mockMilestoneService.saveMilestone(caseId, "CASE_FILE", "Issued");
@@ -172,11 +171,10 @@ public class BackgroundInvestigationBusinessProcessIT
         clearanceVerificationSystemExportService.exportDeterminationRecord(
                 defaultAdjudicator,
                 caseId,
-                caseNumber,
                 folderId,
                 subjectLastName,
                 "DENY_CLEARANCE");
-        expect(correspondenceService.generate("ClearanceDenied.docx", "CASE_FILE", caseId, caseNumber, folderId)).andReturn(null);
+        expect(correspondenceService.generate("ClearanceDenied.docx", "CASE_FILE", caseId, folderId)).andReturn(null);
 
         // always happens at end of process
         mockMilestoneService.saveMilestone(caseId, "CASE_FILE", "Closed");

@@ -1332,7 +1332,6 @@ Document.Service = {
                 + "?templateName=" + templateName
                 + "&parentObjectType=" + Document.Model.DOC_TYPE_CASE_FILE
                 + "&parentObjectId=" + caseFileIn.id
-                + "&parentObjectName=" + caseFileIn.caseNumber
                 + "&targetCmisFolderId=" + caseFileIn.ecmFolderId
                 ;
 

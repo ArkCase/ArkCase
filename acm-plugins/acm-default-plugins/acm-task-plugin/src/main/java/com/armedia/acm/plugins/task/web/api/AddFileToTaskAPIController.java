@@ -72,7 +72,6 @@ public class AddFileToTaskAPIController
             String folderId = cmisId;
             String objectType = "TASK";
             Long objectId = taskId;
-            String objectName = date + "_" + taskId;
 
             String contextPath = request.getServletContext().getContextPath();
 
@@ -92,7 +91,7 @@ public class AddFileToTaskAPIController
                         for (final MultipartFile attachment : attachmentsList)
                         {
                             ResponseEntity<? extends Object> temp = getEcmFileService().upload(uploadFileType, attachment, acceptType, contextPath, authentication, folderId,
-                                    objectType, objectId, objectName);
+                                    objectType, objectId);
                             getUploadedFilesJSON().add(temp.getBody());
                         }
                     }
