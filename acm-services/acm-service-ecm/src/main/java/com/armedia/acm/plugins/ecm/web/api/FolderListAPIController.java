@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisFolder;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
@@ -26,7 +26,6 @@ public class FolderListAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileService ecmFileService;
-    private AcmContainerFolderDao containerFolderDao;
 
     @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}", method = RequestMethod.GET)
@@ -36,9 +35,9 @@ public class FolderListAPIController
             @PathVariable("objectId") Long objectId,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection
-    ) throws AcmListObjectsFailedException, AcmCreateObjectFailedException
+    ) throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        AcmContainerFolder containerFolder = getContainerFolderDao().getOrCreateContainerFolder(objectType, objectId);
+        AcmContainerFolder containerFolder = getEcmFileService().getOrCreateContainerFolder(objectType, objectId);
 
         List<AcmCmisObject> children = getEcmFileService().listFolderContents(
                 containerFolder.getCmisFolderId(),
@@ -62,15 +61,5 @@ public class FolderListAPIController
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
-    }
-
-    public AcmContainerFolderDao getContainerFolderDao()
-    {
-        return containerFolderDao;
-    }
-
-    public void setContainerFolderDao(AcmContainerFolderDao containerFolderDao)
-    {
-        this.containerFolderDao = containerFolderDao;
     }
 }

@@ -20,7 +20,10 @@
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.complaint"/>
 
-        <cmis:folder get="CHILDREN" folderId="#[payload]" orderBy="#[message.inboundProperties.orderBy]"/>
+        <cmis:folder
+                get="CHILDREN"
+                folderId="#[payload]"
+                orderBy="#[message.inboundProperties.orderBy]"/>
     </flow>
 
 </mule>
