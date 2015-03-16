@@ -126,7 +126,11 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         // Update Frevvo XML (with object ids) after saving the object 
         updateXMLAttachment(attachments, FrevvoFormName.COMPLAINT, complaint);
         
-		saveAttachments(attachments, complaint.getCmisFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
+		saveAttachments(
+                attachments,
+                complaint.getCmisFolderId(),
+                FrevvoFormName.COMPLAINT.toUpperCase(),
+                complaint.getComplaintId());
 
 		if (null != complaint && null != complaint.getComplaintId())
 		{

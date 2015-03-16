@@ -69,12 +69,11 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
                 eq(unit.getAuthentication()),
                 eq("cmisId"),
                 eq("parentType"),
-                eq(500L),
-                eq("parentName"))).andReturn(null);
+                eq(500L))).andReturn(null);
 
         replayAll();
 
-        unit.saveAttachments(attachments, "cmisId", "parentType", 500L, "parentName");
+        unit.saveAttachments(attachments, "cmisId", "parentType", 500L);
 
         verifyAll();
 

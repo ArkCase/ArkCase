@@ -62,13 +62,12 @@ public class AddFileAPIController
             String folderId = in.getContainerFolder().getCmisFolderId();
             String objectType = "COMPLAINT";
             Long objectId = complaintId;
-            String objectName = in.getComplaintNumber();
 
             String contextPath = request.getServletContext().getContextPath();
 
             ResponseEntity<? extends Object> responseEntity =  getEcmFileService().
                     upload(uploadFileType, file, acceptType, contextPath, authentication, folderId,
-                    objectType, objectId, objectName);
+                    objectType, objectId);
 
             getEventPublisher().publishComplaintFileAddedEvent(in,authentication.getName(),true);
 

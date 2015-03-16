@@ -62,7 +62,6 @@ public class ROIService extends FrevvoFormAbstractService {
 		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
-		String parentObjectName = null;
 		
 		ROIForm roiForm = (ROIForm) convertFromXMLToObject(cleanXML(xml), ROIForm.class);
 		
@@ -89,7 +88,6 @@ public class ROIService extends FrevvoFormAbstractService {
 			cmisFolderId = complaint.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
-			parentObjectName = complaint.getComplaintNumber();		
 
 			// Record user action
 			getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_MODIFIED, getAuthentication().getName());
@@ -104,13 +102,12 @@ public class ROIService extends FrevvoFormAbstractService {
             cmisFolderId = caseFile.getContainerFolder().getCmisFolderId();
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
-			parentObjectName = caseFile.getCaseNumber();
 			
 			// Record user action
 			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
-		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId, parentObjectName);
+		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
 		
 		return true;
 	}
