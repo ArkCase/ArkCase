@@ -1,7 +1,6 @@
 package com.armedia.acm.services.subscription.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
-import java.sql.SQLTimeoutException;
 
 /**
  * Created by marjan.stefanoski on 03.02.2015.
@@ -63,7 +61,8 @@ public class RemovingSubscriptionAPIController {
             if( log.isDebugEnabled() )
                 log.debug("Subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "] not found in the DB");
             getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
-            throw new AcmObjectNotFoundException(OBJECT_TYPE, objectId, SUBSCRIPTION_NOT_FOUND_MSG, null);
+            String msg = (String)getSubscriptionPlugin().getPluginProperties().get(SUCCESS_MSG);
+            return prepareJsonReturnMsg( msg, objectId );
         } else {
             log.debug("Subscription for user:"+userId+" on object['" + objectType + "]:[" + objectId + "] successfully removed");
             getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, true);
@@ -72,10 +71,10 @@ public class RemovingSubscriptionAPIController {
         }
     }
 
-    private String prepareJsonReturnMsg( String successMsg,Long objectId ) {
+    private String prepareJsonReturnMsg( String msg,Long objectId ) {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedSubscriptionId", objectId);
-        objectToReturnJSON.put("Message",successMsg);
+        objectToReturnJSON.put("Message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;

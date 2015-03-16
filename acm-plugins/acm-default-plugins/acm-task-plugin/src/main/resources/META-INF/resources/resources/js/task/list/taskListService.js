@@ -11,12 +11,13 @@ TaskList.Service = {
 
     ,API_LIST_TASK             : "/api/latest/plugin/search/" + TaskOld.getObjectType()
     ,API_RETRIEVE_DETAIL       : "/api/latest/plugin/task/byId/"
+    ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
+
     ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask/"
     ,API_COMPLETE_TASK_WITH_OUTCOME         : "/api/latest/plugin/task/completeTask"
     ,API_DELETE_TASK         : "/api/latest/plugin/task/deleteTask/"
     ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
     ,API_FIND_BYTASKBYID_TASK_SIGNATURE : "/api/latest/plugin/signature/find/"
-    ,API_SAVE_DETAIL       				: "/api/latest/plugin/task/save/"
     ,API_RETRIEVE_COMPLAINT_DETAIL        : "/api/latest/plugin/complaint/byId/"
     ,API_RETRIEVE_CASE_DETAIL        : "/api/latest/plugin/casefile/byId/"
     ,API_SAVE_NOTE               : "/api/latest/plugin/note"

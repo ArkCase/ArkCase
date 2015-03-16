@@ -36,12 +36,6 @@ var Application = Application || {
         if ( "undefined" != typeof CaseFile ) {
             acmModules.push(CaseFile);
         }
-        if ("undefined" != typeof ComplaintWizard) {
-            acmModules.push(ComplaintWizard);
-        }
-        if ("undefined" != typeof ComplaintList) {
-            acmModules.push(ComplaintList);
-        }
         if ("undefined" != typeof Task) {
             acmModules.push(Task);
         }
@@ -50,9 +44,6 @@ var Application = Application || {
         }
         if ("undefined" != typeof TaskWizard) {
             acmModules.push(TaskWizard);
-        }
-        if ("undefined" != typeof TaskList) {
-            acmModules.push(TaskList);
         }
         if ("undefined" != typeof Search) {
             acmModules.push(Search);
@@ -75,6 +66,19 @@ var Application = Application || {
         if ("undefined" != typeof AcmNotification) {
             acmModules.push(AcmNotification);
         }
+        if ("undefined" != typeof Costsheet) {
+            acmModules.push(Costsheet);
+        }
+        if ("undefined" != typeof Timesheet) {
+            acmModules.push(Timesheet);
+        }
+        if ("undefined" != typeof Tag) {
+            acmModules.push(Tag);
+        }
+        if ("undefined" != typeof Document) {
+            acmModules.push(Document);
+        }
+
 
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
@@ -94,16 +98,31 @@ var Application = Application || {
         }
     }
 
+    ,SESSION_DATA_PROFILE               : "AcmProfile"
+    ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
+    ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
+    ,SESSION_DATA_COMPLAINT_PRIORITIES  : "AcmComplaintPriorities"
+    ,SESSION_DATA_CASE_FILE_ASSIGNEES   : "AcmCaseAssignees"
+    ,SESSION_DATA_CASE_FILE_TYPES       : "AcmCaseTypes"
+    ,SESSION_DATA_CASE_FILE_PRIORITIES  : "AcmCasePriorities"
+    ,SESSION_DATA_QUICK_SEARCH_TERM     : "AcmQuickSearchTerm"
+    ,SESSION_DATA_ASN_LIST              : "AcmAsnList"
+    ,SESSION_DATA_ASN_DATA              : "AcmAsnData"
+    ,SESSION_DATA_COMPLAINT_TREEINFO    : "AcmComplaintTreeInfo"
+    ,SESSION_DATA_ADMIN_TREEINFO        : "AcmAdminTreeInfo"
+    ,SESSION_DATA_TASK_ASSIGNEES        : "AcmTaskAssignees"
+    ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
+
     ,initSessionData: function() {
         sessionStorage.setItem("AcmProfile", null);
 
-        sessionStorage.setItem("AcmApprovers", null);
-        sessionStorage.setItem("AcmComplaintTypes", null);
-        sessionStorage.setItem("AcmPriorities", null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_TYPES, null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_PRIORITIES, null);
 
-        sessionStorage.setItem("AcmCaseAssignees", null);
-        sessionStorage.setItem("AcmCaseTypes", null);
-        sessionStorage.setItem("AcmCasePriorities", null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_ASSIGNEES, null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_TYPES, null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_PRIORITIES, null);
 
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);
@@ -113,6 +132,7 @@ var Application = Application || {
         sessionStorage.setItem("AcmAdminTreeInfo", null);
 
         sessionStorage.setItem("AcmTaskAssignees", null);
+        sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
     }
 }

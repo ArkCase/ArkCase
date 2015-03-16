@@ -1,0 +1,89 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet id="01-create-timesheet-table" author="riste.tutureski">
+	     <createTable tableName="acm_timesheet">
+	         <column name="cm_timesheet_id" type="NUMBER(32,0)">
+	             <constraints primaryKey="true" primaryKeyName="pk_cm_timesheet_id"/>
+	         </column>
+	         <column name="cm_timesheet_user_id" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_start_date" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_end_date" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_status" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_created" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_creator" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_modified" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_timesheet_modifier" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	     </createTable>
+	 </changeSet>
+
+	 <changeSet id="02-create-time-table" author="riste.tutureski">
+	     <createTable tableName="acm_time">
+	         <column name="cm_time_id" type="NUMBER(32,0)">
+	             <constraints primaryKey="true" primaryKeyName="pk_cm_time_id"/>
+	         </column>
+	         <column name="cm_time_timesheet_id" type="NUMBER(32,0))">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_code" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_type" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_date" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_value" type="NUMBER(32,0)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_created" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_creator" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_modified" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_time_modifier" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	     </createTable>
+	     <addForeignKeyConstraint baseTableName="acm_time" baseColumnNames="cm_time_timesheet_id"
+                                 constraintName="fk_time_timesheet_id"
+                                 referencedTableName="acm_timesheet"
+                                 referencedColumnNames="cm_timesheet_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+	 </changeSet>
+	 
+	 <changeSet id="03-change-time-value-type-precision" author="riste.tutureski">
+	 	<dropColumn tableName="acm_time" columnName="cm_time_value"/>
+	 	<addColumn tableName="acm_time">
+	 		<column name="cm_time_value" type="NUMBER(32,2)">
+	             <constraints nullable="false"/>
+	        </column>
+	 	</addColumn>
+	 </changeSet>
+     
+</databaseChangeLog>

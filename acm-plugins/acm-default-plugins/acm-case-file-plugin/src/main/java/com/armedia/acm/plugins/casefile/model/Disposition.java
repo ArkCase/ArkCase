@@ -26,6 +26,7 @@ import java.util.Date;
 public class Disposition implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = 7786267451369775524L;
+    public static final String OBJECT_TYPE = "DISPOSITION";
 
     @Id
     @Column(name = "cm_disposition_id")
@@ -67,9 +68,8 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     private String modifier;
 
     @Override
-    public String getObjectType()
-    {
-        return "Disposition";
+    public String getObjectType() {
+        return OBJECT_TYPE;
     }
 
     public Long getId()

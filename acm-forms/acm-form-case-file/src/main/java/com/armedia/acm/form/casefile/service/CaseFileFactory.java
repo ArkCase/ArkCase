@@ -118,7 +118,7 @@ public class CaseFileFactory
 			retval.setCaseType(caseFile.getCaseType());
 			retval.setCaseNumber(caseFile.getCaseNumber());
 			retval.setCaseDescription(caseFile.getDetails());
-			retval.setCmisFolderId(caseFile.getEcmFolderId());
+			retval.setCmisFolderId(caseFile.getContainerFolder().getCmisFolderId());
 			retval.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)

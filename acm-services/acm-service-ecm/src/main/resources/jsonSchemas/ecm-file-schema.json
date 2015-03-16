@@ -1,0 +1,81 @@
+/**
+ * Ecm File Schema
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ECM File Schema",
+  "type": "object",
+  "properties":
+  {
+    "id": {
+      "type": "integer",
+      "description": "unique ID for this ECM file",
+      "minimum": 1
+    },
+    "cmisVersionSeriesLabel": {
+      "type": "string",
+      "description": "CMIS Object ID representing every version of this file"
+    },
+    "activeVersionLabel": {
+      "type": "string",
+      "description": "Version tag of the active file version"
+    },
+    "fileType": {
+      "type": "string",
+      "description": "application-defined file type, e.g. other, roi, report"
+    },
+    "mimeType": {
+      "type": "string",
+      "description": "the MIME type of the active version; this convenience property is an alternative to iterating over the fileVersions to find the one with the activeVersionLabel"
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The name of the file, e.g. MyFile.docx"
+    },
+    "status": {
+      "type": "string",
+      "description": "File state, most files will be ACTIVE"
+    },
+    "participants": {
+      "description": "List of file participants",
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "creator": {
+      "type": "string",
+      "description": "User id that created the file; could be a system user"
+    },
+    "modifier": {
+      "type": "string",
+      "description": "User id that last updated the file; could be a system user"
+    },
+    "created": {
+      "type": "string",
+      "description": "Date the file was added to the system",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "modified": {
+      "type": "string",
+      "description": "Date the file was last modified",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "objectType": {
+      "type": "string",
+      "description": "Object type for this object - the constant value FILE",
+      "pattern": "^FILE$"
+    },
+    "fileVersions": {
+      "description": "List of file versions",
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1
+    }
+
+
+  },
+  "required": [ "fileType" ]
+}
