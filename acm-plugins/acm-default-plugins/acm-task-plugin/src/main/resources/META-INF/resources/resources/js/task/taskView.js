@@ -1640,7 +1640,8 @@ Task.View = Task.View || {
             event.preventDefault();
             var count = Task.View.Attachments.$btnAddNewAttachment[0].files.length;
             var fd = new FormData();
-            fd.append("taskId", ObjNav.View.Navigator.getActiveObjId());
+            fd.append("parentObjectType", Task.Model.DOC_TYPE_TASK);
+            fd.append("parentObjectId", ObjNav.View.Navigator.getActiveObjId());
             for(var i = 0; i < count; i++ ){
                 fd.append("files[]", Task.View.Attachments.$btnAddNewAttachment[0].files[i]);
             }

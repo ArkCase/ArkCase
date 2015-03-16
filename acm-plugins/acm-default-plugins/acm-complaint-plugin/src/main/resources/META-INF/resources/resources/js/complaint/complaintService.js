@@ -976,7 +976,7 @@ Complaint.Service = {
         ,onInitialized: function(){
         }
 
-        ,API_UPLOAD_FILE            : "/api/latest/plugin/task/file"
+        ,API_UPLOAD_FILE            : "/file"
         ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
 
         ,uploadDocuments: function(formData) {
