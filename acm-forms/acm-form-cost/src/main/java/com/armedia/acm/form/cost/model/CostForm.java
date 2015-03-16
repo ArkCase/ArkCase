@@ -4,6 +4,7 @@
 package com.armedia.acm.form.cost.model;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,6 +24,7 @@ public class CostForm {
 	private String user;
 	private List<String> userOptions;
 	private Long objectId;
+	private Map<String, List<String>> codeOptions;
 	private String objectType;
 	private List<String> objectTypeOptions;
 	private String objectNumber;
@@ -68,6 +70,15 @@ public class CostForm {
 		this.objectId = objectId;
 	}
 	
+	@XmlTransient
+	public Map<String, List<String>> getCodeOptions() {
+		return codeOptions;
+	}
+
+	public void setCodeOptions(Map<String, List<String>> codeOptions) {
+		this.codeOptions = codeOptions;
+	}
+
 	@XmlElement(name="type")
 	public String getObjectType() {
 		return objectType;
