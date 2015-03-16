@@ -3,8 +3,13 @@
  */
 package com.armedia.acm.form.cost.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,15 +45,15 @@ public class CostService extends FrevvoFormAbstractService {
 	{
 		Object result = "";
 		
-		String objectId = getRequest().getParameter("objectId");		
+		String objectId = getRequest().getParameter("objectId");	
+		String objectType = getRequest().getParameter("objectType");
 		String userId = getAuthentication().getName();
 		
 		CostForm form = new CostForm();
+		AcmCostsheet costsheet = null;
 			
 		if (objectId != null && !"".equals(objectId))
 		{			
-			AcmCostsheet costsheet = null;
-			
 			try
 			{
 				Long objectIdLong = Long.parseLong(objectId);
@@ -58,19 +63,19 @@ public class CostService extends FrevvoFormAbstractService {
 			catch(Exception e)
 			{
 				LOG.error("Cannot parse " + objectId + " to Long type. Empty form will be created.", e);
-			}
-			
-			if (costsheet != null)
-			{
-				form = getCostFactory().asFrevvoCostForm(costsheet);
-			}
-			else
-			{
-				form.setItems(Arrays.asList(new CostItem()));
-			}
-			
+			}			
 		}
 		
+		if (costsheet != null)
+		{
+			form = getCostFactory().asFrevvoCostForm(costsheet);
+		}
+		else
+		{
+			form.setItems(Arrays.asList(new CostItem()));
+		}
+		
+		form.setObjectType(objectType);
 		form.setUser(userId);
 		form.setBalanceTable(Arrays.asList(new String()));
 		
@@ -135,6 +140,10 @@ public class CostService extends FrevvoFormAbstractService {
 		form.setUser(userId);
 		form.setUserOptions(Arrays.asList(userId + "=" + user.getFullName()));
 		
+		// Init Types
+		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COST + ".types"), ",");
+		form.setObjectTypeOptions(types);
+		
 		// Init Statuses
 		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.COST + ".statuses"), ","));
 		
@@ -143,6 +152,10 @@ public class CostService extends FrevvoFormAbstractService {
 		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COST + ".titles"), ","));
 		form.setItems(Arrays.asList(item));
 		
+		// Set charge codes for each type
+		Map<String, List<String>> codeOptions = getCodeOptions(types);
+		form.setCodeOptions(codeOptions);
+		
 		// Create JSON and back to the Frevvo form
 		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(form);
@@ -150,6 +163,49 @@ public class CostService extends FrevvoFormAbstractService {
 		JSONObject json = new JSONObject(jsonString);
 
 		return json;
+	}
+	
+	private Map<String, List<String>> getCodeOptions(List<String> types)
+	{
+		Map<String, List<String>> codeOptions = new HashMap<String, List<String>>();
+		
+		if (types != null)
+		{
+			for (String type : types)
+			{
+				String[] typeArray = type.split("=");
+				if (typeArray != null && typeArray.length == 2)
+				{
+					List<String> options = getCodeOptionsByObjectType(typeArray[0]);
+					codeOptions.put(typeArray[0], options);
+				}
+			}
+		}
+		
+		return codeOptions;
+	}
+	
+	private List<String> getCodeOptionsByObjectType(String objectType)
+	{
+		List<String> codeOptions = new ArrayList<>();
+		
+		JSONObject jsonObject = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, "name ASC");
+		if (jsonObject != null && jsonObject.has("response") && jsonObject.getJSONObject("response").has("docs"))
+		{
+			JSONArray objects = jsonObject.getJSONObject("response").getJSONArray("docs");
+			
+			for (int i = 0; i < objects.length(); i++)
+			{
+				JSONObject object = objects.getJSONObject(i);
+				
+				if (object.has("name"))
+				{
+					codeOptions.add(object.getString("object_id_s") + "=" + object.getString("name"));
+				}
+			}
+		}
+		
+		return codeOptions;
 	}
 
 	@Override
