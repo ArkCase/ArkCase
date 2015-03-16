@@ -1,10 +1,11 @@
 package com.armedia.acm.plugins.task.service;
 
+import com.armedia.acm.activiti.AcmTaskEvent;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -19,6 +20,8 @@ public interface TaskDao
 
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
+
+    void ensureCorrectAssigneeInParticipants(AcmTask in);
 
     /**
      * Complete a task on behalf of the given user.  Returns an AcmTask including historical information
@@ -77,4 +80,6 @@ public interface TaskDao
     List<WorkflowHistoryInstance> getWorkflowHistory(String id, boolean adhoc);
 
     List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize);
+
+    void createFolderForTaskEvent(AcmTaskEvent event) throws AcmTaskException, AcmCreateObjectFailedException;
 }

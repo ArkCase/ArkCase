@@ -123,14 +123,15 @@ var TreePatch = {};
  * @property {function} defaultKey callback(node) is called for ner nodes without a key. Must return a new unique key. (default null: generates default keys like that: "_" + counter)
  * @property {Boolean} enableAspx Accept passing ajax data in a property named `d` (default: true).
  * @property {String[]} extensions List of active extensions (default: [])
- * @property {object} fx Animation options, null:off (default: { height: "toggle", duration: 200 })
+ * @property {Boolean} focusOnSelect Set focus when node is checked by a mouse click (default: false)
  * @property {Boolean} generateIds Add `id="..."` to node markup (default: true).
  * @property {Boolean} icons Display node icons  (default: true)
  * @property {String} idPrefix (default: "ft_")
  * @property {String} imagePath Path to a folder containing icons (default: null, using 'skin/' subdirectory).
  * @property {Boolean} keyboard Support keyboard navigation (default: true).
  * @property {String} keyPathSeparator (default: "/")
- * @property {Integer} minExpandLevel 1: root node is not collapsible (default: 1)
+ * @property {Integer} minExpandLevel 2: top-level nodes are not collapsible (default: 1)
+ * @property {Boolean} quicksearch navigate to next node by typing the first letters (default: false)
  * @property {object} scrollOfs: optional margins for node.scrollIntoView() (default: {top: 0, bottom: 0})
  * @property {jQuery} scrollParent: scrollable container for node.scrollIntoView() (default: $container)
  * @property {Integer} selectMode 1:single, 2:multi, 3:multi-hier (default: 2)
@@ -138,6 +139,7 @@ var TreePatch = {};
  * @property {object} strings Translation table
  * @property {Boolean} tabbable Add tabindex='0' to container, so tree can be reached using TAB
  * @property {Boolean} titlesTabbable Add tabindex='0' to node title span, so it can receive keyboard focus
+ * @property {object} toggleEffect Animation options, false:off (default: { effect: "blind", options: {direction: "vertical", scale: "box"}, duration: 200 })
  * @property {function} EVENT
  *
  */
@@ -182,11 +184,13 @@ var FancytreeOptions = {};
  * @property {function} keypress (currently unused)
  * @property {function} lazyLoad `data.node` is a lazy node that is expanded for the first time. The new child data must be returned in the `data.result` property (see `source` option for available formats).
  * @property {function} loadChildren Node data was loaded, i.e. `node.nodeLoadChildren()` finished
+ * @property {function} loadError A load error occured. Return `false` to prevent default processing
  * @property {function} postProcess Allows to modify the ajax response
  * @property {function} removeNode `data.node` was removed (NOTE: this event is only available as callback, but not for bind())
  * @property {function} renderColumns (used by table extension)
  * @property {function} renderNode Allow tweaking after node state was rendered (NOTE: this event is only available as callback, but not for bind())
- * @property {function} renderTitle TODO: may be removed! (NOTE: this event is only available as callback, but not for bind())
+ * @property {function} renderTitle Allow replacing the `&lt;span class='fancytree-title'>` markup (NOTE: this event is only available as callback, but not for bind())
+ * @property {function} restore ext-persist has expanded, selected, and activated the previous state
  * @property {function} select `data.node` was selected
  *
  */

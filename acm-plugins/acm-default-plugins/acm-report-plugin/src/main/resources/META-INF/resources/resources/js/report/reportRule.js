@@ -21,8 +21,9 @@ Report.Rule = {
 	,validateCaseStatus : function(status) {
 		if ( undefined === status || caseNumber === "" || caseNumber === "Choose Case Status" ) {
 			return "Draft";
-		}
-		else {
+		} if (status === null) {
+			return "";
+		} else {
 			return status;
 		}
 	}

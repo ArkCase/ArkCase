@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             file's MIME type and filename, and a parentObject pointing to the owning object (e.g. a complaint, case file,
             task, another file, etc). The inbound properties must include these properties:
                - "inputStream" - an InputStream with the file contents.
-               - "ecmFolderId" - a string with the CMIS ID of the parent folder.  The file will be added to this folder.
+               - "cmisFolderId" - a string with the CMIS ID of the parent folder.  The file will be added to this folder.
                - "acmUser" - an Authentication object representing the user who is adding the file.
             The return payload is the updated EcmFile object.
         </description>
@@ -55,15 +55,21 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <!-- upload the file and update the EcmFile CMIS id  -->
         <!-- alfresco adds a ";1.0" string to the object ID, so we have to remove it. -->
         <enricher
-                source="#[org.mule.util.StringUtils.replace(message.payload.id, &quot;;1.0&quot;, &quot;&quot;)]"
+                source="#[org.mule.util.StringUtils.replace(message.payload.versionSeriesId, &quot;;1.0&quot;, &quot;&quot;)]"
                 target="#[flowVars['ecmFile'].ecmFileId]">
-            <cmis:create-document-by-id-from-content
+            <processor-chain>
+                <cmis:create-document-by-id-from-content
                     content-ref="#[message.inboundProperties.inputStream]"
                     filename="#[payload.fileName]"
-                    folderId="#[message.inboundProperties.ecmFolderId]"
+                    folderId="#[message.inboundProperties.cmisFolderId]"
                     mimeType="#[payload.fileMimeType]"
                     objectType="cmis:document"
                     versioningState="MAJOR"/>
+                <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+                <cmis:get-object-by-id objectId="#[payload.id]"/>
+                <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+            </processor-chain>
+
         </enricher>
         <logger category="com.armedia.acm.plugins.ecm" level="DEBUG"
                 message="File Id: #[payload.ecmFileId]"/>

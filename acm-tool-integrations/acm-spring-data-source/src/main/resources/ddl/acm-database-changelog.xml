@@ -33,6 +33,9 @@
     <!-- then triggers.  -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/triggers" relativeToChangelogFile="false"/>
 
+    <!-- data maintenance SQL scripts -->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/sql" relativeToChangelogFile="false"/>
+
     <!-- drop tables... needs to be last... in case any existing tables are dropped, when changelogs in constraint
          or trigger folders referred to them.  -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/dropTables" relativeToChangelogFile="false"/>

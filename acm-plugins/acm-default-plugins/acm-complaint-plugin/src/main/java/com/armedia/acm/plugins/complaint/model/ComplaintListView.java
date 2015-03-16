@@ -57,9 +57,6 @@ public class ComplaintListView
     @Column(name = "cm_complaint_status", insertable = false, updatable = false)
     private String status;
 
-    @Column(name = "cm_complaint_ecm_folder_id", insertable = false, updatable = false)
-    private String ecmFolderId;
-
     @PrePersist
     public void saveNotAllowed()
     {
@@ -121,11 +118,6 @@ public class ComplaintListView
         return status;
     }
 
-    public String getEcmFolderId()
-    {
-        return ecmFolderId;
-    }
-
     protected void setComplaintId(Long complaintId)
     {
         this.complaintId = complaintId;
@@ -181,8 +173,4 @@ public class ComplaintListView
         this.status = status;
     }
 
-    protected void setEcmFolderId(String ecmFolderId)
-    {
-        this.ecmFolderId = ecmFolderId;
-    }
 }

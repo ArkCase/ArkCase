@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.21</version>
+        <version>3.0.22</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -36,6 +36,9 @@
     	<module>acm-service-functional-access-control</module>
         <module>acm-service-subscription</module>
         <module>acm-service-object-history</module>
+        <module>acm-service-tag</module>
+    	<module>acm-service-timesheet</module>
+    <module>acm-service-costsheet</module>
   </modules>
 
 

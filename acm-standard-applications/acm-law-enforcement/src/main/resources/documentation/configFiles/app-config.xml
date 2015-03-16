@@ -8,7 +8,10 @@
         <property name="topbarActions">
             <list>
                 <ref bean="createComplaintAction"/>
-                <ref bean="createTaskAction"/> 
+                <ref bean="createCaseFileAction"/>
+                <ref bean="createTaskAction"/>
+                <ref bean="createTimesheetAction"/>
+                <ref bean="createCostsheetAction"/>
             </list>
         </property>
         <property name="navigatorTabs">
@@ -23,6 +26,9 @@
                 <ref bean="auditNavigatorAction"/>
                 <ref bean="notificationNavigatorAction"/>
                 <ref bean="subscriptionNavigatorAction"/>
+                <ref bean="tagNavigatorAction"/>
+                <ref bean="timeTrackingNavigatorAction"/>
+                <ref bean="costTrackingNavigatorAction"/>
             </list>
         </property>
         <property name="objectTypes">
@@ -39,6 +45,8 @@
                 <ref bean="organizationType"/>
                 <ref bean="groupType"/>
                 <ref bean="userType"/>
+                <ref bean="notificationType"/>
+                <ref bean="subscriptionType"/>
             </list>
         </property>
     </bean>
@@ -46,96 +54,132 @@
     <!-- top bar buttons -->
     <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Task"/>
-        <property name="iconName" value="i-checkmark"/>
+        <property name="iconName" value="i i-checkmark"/>
         <property name="url" value="/plugin/task/wizard"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
     </bean>
-    
+
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Complaint"/>
-        <property name="iconName" value="i-notice"/>
+        <property name="iconName" value="i i-notice"/>
         <property name="url" value="/plugin/complaint/wizard"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
     </bean>
 
     <bean id="createCaseFileAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Case File"/>
-        <property name="iconName" value="i-file2"/>
+        <property name="iconName" value="i i-file2"/>
         <property name="url" value="/plugin/casefile/wizard"/>
         <property name="requiredPrivilege" value="case-file-create"/>
     </bean>
+
+    <bean id="createTimesheetAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Timesheet"/>
+        <property name="iconName" value="i i-alarm"/>
+        <property name="url" value="/plugin/timesheet/wizard"/>
+        <property name="requiredPrivilege" value="acm-timesheet-create"/>
+    </bean>
+
+    <bean id="createCostsheetAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Costsheet"/>
+        <property name="iconName" value="fa fa-money"/>
+        <property name="url" value="/plugin/costsheet/wizard"/>
+        <property name="requiredPrivilege" value="acm-costsheet-create"/>
+    </bean>
+
 
     <!-- end of top bar actions -->
 
     <!-- navigator tabs -->
     <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Tasks"/>
-        <property name="iconName" value="i-checkmark"/>
+        <property name="iconName" value="i i-checkmark"/>
         <property name="url" value="/plugin/task"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
 
     <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Complaints"/>
-        <property name="iconName" value="i-notice"/>
+        <property name="iconName" value="i i-notice"/>
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
     </bean>
 
     <bean id="searchNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Search"/>
-        <property name="iconName" value="i-search2"/>
+        <property name="iconName" value="i i-search2"/>
         <property name="url" value="/plugin/search"/>
         <property name="requiredPrivilege" value="acm-search"/>
     </bean>
 
     <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Case Files"/>
-        <property name="iconName" value="i-folder"/>
+        <property name="iconName" value="i i-folder"/>
         <property name="url" value="/plugin/casefile"/>
         <property name="requiredPrivilege" value="case-file-list"/>
     </bean>
 
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Dashboard"/>
-        <property name="iconName" value="i-statistics"/>
+        <property name="iconName" value="i i-statistics"/>
         <property name="url" value="/plugin/dashboard"/>
         <property name="requiredPrivilege" value="acm-dashboard"/>
     </bean>
 
     <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Administration"/>
-        <property name="iconName" value="fa-wrench"/>
+        <property name="iconName" value="fa fa-wrench"/>
         <property name="url" value="/plugin/admin"/>
         <property name="requiredPrivilege" value="acm-admin"/>
     </bean>
 
     <bean id="auditNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Audit"/>
-        <property name="iconName" value="fa-bolt"/>
+        <property name="iconName" value="fa fa-bolt"/>
         <property name="url" value="/plugin/audit"/>
         <property name="requiredPrivilege" value="acm-audit"/>
     </bean>
 
     <bean id="reportNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Report"/>
-        <property name="iconName" value="i-stats"/>
+        <property name="actionName" value="Reports"/>
+        <property name="iconName" value="i i-stats"/>
         <property name="url" value="/plugin/report"/>
         <property name="requiredPrivilege" value="acm-report"/>
     </bean>
-	
+
     <bean id="subscriptionNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Subscriptions"/>
-        <property name="iconName" value="i-alarm"/>
+        <property name="iconName" value="fa fa-bullhorn"/>
         <property name="url" value="/plugin/subscription"/>
         <property name="requiredPrivilege" value="acm-subscription"/>
     </bean>
 
     <bean id="notificationNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Notifications"/>
-        <property name="iconName" value="i-chat3"/>
+        <property name="iconName" value="fa fa-bell-o"/>
         <property name="url" value="/plugin/notification"/>
         <property name="requiredPrivilege" value="acm-notification"/>
+    </bean>
+
+    <bean id="timeTrackingNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Time Tracking"/>
+        <property name="iconName" value="i i-alarm"/>
+        <property name="url" value="/plugin/timesheet"/>
+        <property name="requiredPrivilege" value="acm-timesheet"/>
+    </bean>
+
+    <bean id="costTrackingNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Cost Tracking"/>
+        <property name="iconName" value="fa fa-money"/>
+        <property name="url" value="/plugin/costsheet"/>
+        <property name="requiredPrivilege" value="acm-costsheet"/>
+    </bean>
+
+    <bean id="tagNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
+        <property name="actionName" value="Tags"/>
+        <property name="iconName" value="fa fa-tags"/>
+        <property name="url" value="/plugin/tag"/>
+        <property name="requiredPrivilege" value="acm-tag"/>
     </bean>
     <!-- end of navigator tabs -->
 
@@ -143,19 +187,19 @@
     <bean id="complaintType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="COMPLAINT"/>
         <property name="description" value="Complaint"/>
-        <property name="iconName" value="i-notice"/>
+        <property name="iconName" value="i i-notice"/>
         <property name="url" value="/plugin/complaint/"/>
     </bean>
     <bean id="caseFileType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="CASE_FILE"/>
         <property name="description" value="Case File"/>
-        <property name="iconName" value="i-folder"/>
+        <property name="iconName" value="i i-folder"/>
         <property name="url" value="/plugin/casefile/"/>
     </bean>
     <bean id="taskType" class="com.armedia.acm.core.AcmObjectType">
         <property name="name" value="TASK"/>
         <property name="description" value="Task"/>
-        <property name="iconName" value="i-checkmark"/>
+        <property name="iconName" value="i i-checkmark"/>
         <property name="url" value="/plugin/task/"/>
     </bean>
     <bean id="documentType" class="com.armedia.acm.core.AcmObjectType">
@@ -210,6 +254,18 @@
         <property name="name" value="USER"/>
         <property name="description" value="User"/>
         <property name="iconName" value=""/>
+        <property name="url" value=""/>
+    </bean>
+    <bean id="notificationType" class="com.armedia.acm.core.AcmObjectType">
+        <property name="name" value="NOTIFICATION"/>
+        <property name="description" value="Notification"/>
+        <property name="iconName" value="i i-chat3"/>
+        <property name="url" value=""/>
+    </bean>
+    <bean id="subscriptionType" class="com.armedia.acm.core.AcmObjectType">
+        <property name="name" value="SUBSCRIPTION_EVENT"/>
+        <property name="description" value="Subscription Event"/>
+        <property name="iconName" value="i i-alarm"/>
         <property name="url" value=""/>
     </bean>
     <!-- end of objectTypes -->

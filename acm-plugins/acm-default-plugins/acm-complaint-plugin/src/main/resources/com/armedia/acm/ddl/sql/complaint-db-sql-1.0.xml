@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="complaint-sql-01-populate-container-folder-id" author="dmiller">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_container_folder"/>
+                <columnExists tableName="acm_complaint" columnName="cm_container_folder_id"/>
+            </and>
+        </preConditions>
+        <comment>ANSI standard SQL, should work on any database</comment>
+        <sql>
+            UPDATE acm_complaint comp
+            SET cm_container_folder_id =
+                (SELECT acf.cm_container_folder_id
+                 FROM   acm_container_folder acf
+                 WHERE  acf.cm_object_id = comp.cm_complaint_id
+                 AND    acf.cm_object_type = 'COMPLAINT')
+            WHERE EXISTS
+                (SELECT 1
+                 FROM   acm_container_folder acf
+                 WHERE  acf.cm_object_id = comp.cm_complaint_id
+                 AND    acf.cm_object_type = 'COMPLAINT')
+            AND  comp.cm_container_folder_id IS NULL
+        </sql>
+    </changeSet>
+</databaseChangeLog>

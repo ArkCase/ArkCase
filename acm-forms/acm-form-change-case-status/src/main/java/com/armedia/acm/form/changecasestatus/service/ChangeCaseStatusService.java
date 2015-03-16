@@ -138,7 +138,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
-                caseFile.getEcmFolderId(),
+                caseFile.getContainerFolder().getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(),
                 caseFile.getId(),
                 caseFile.getCaseNumber());

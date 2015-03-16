@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -93,8 +94,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private List<String> approvers;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
-     * to get the CMIS object ID of the complaint folder.
+     * This field is only used when the case file is created. Usually it will be null.  Use the containerFolder
+     * to get the CMIS object ID of the case file folder.
      */
     @Transient
     private String ecmFolderPath;
@@ -119,6 +120,17 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @Column(name = "cm_case_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "cm_parent_id")
+    private Collection<ObjectAssociation> childObjects = new ArrayList<>();
+
+    /**
+     * Container folder where the case file's attachments/content files are stored.
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_container_folder_id")
+    private AcmContainerFolder containerFolder = new AcmContainerFolder();
 
     @PrePersist
     protected void beforeInsert()
@@ -153,6 +165,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
+
+        if ( getContainerFolder() != null )
+        {
+            getContainerFolder().setContainerObjectId(getId());
+            getContainerFolder().setContainerObjectType(getObjectType());
+        }
     }
 
     @PreUpdate
@@ -160,6 +178,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     {
         setupChildPointers();
     }
+
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getId());
@@ -167,15 +186,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 
         personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
     }
-    /**
-     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
-     */
-    @Column(name = "cm_case_ecm_folder_id")
-    private String ecmFolderId;
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id")
-    private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     public Collection<ObjectAssociation> getChildObjects()
     {
@@ -188,6 +198,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         childObject.setParentName(getCaseNumber());
         childObject.setParentType(getObjectType());
         childObject.setParentId(getId());
+    }
+
+    public AcmContainerFolder getContainerFolder()
+    {
+        return containerFolder;
+    }
+
+    public void setContainerFolder(AcmContainerFolder containerFolder)
+    {
+        this.containerFolder = containerFolder;
     }
 
     public PersonAssociation getOriginator() {
@@ -307,17 +327,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     {
         this.ecmFolderPath = ecmFolderPath;
     }
-
-    public String getEcmFolderId()
-    {
-        return ecmFolderId;
-    }
-
-    public void setEcmFolderId(String ecmFolderId)
-    {
-        this.ecmFolderId = ecmFolderId;
-    }
-
 
     public Date getClosed()
     {
@@ -523,8 +532,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", milestones=" + milestones +
                 ", originator=" + originator +
                 ", restricted=" + restricted +
-                ", ecmFolderId='" + ecmFolderId + '\'' +
                 ", childObjects=" + childObjects +
+                ", containerFolder=" + containerFolder +
                 '}';
     }
 }
