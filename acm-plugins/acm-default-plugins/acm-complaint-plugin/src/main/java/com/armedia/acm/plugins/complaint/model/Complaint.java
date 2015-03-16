@@ -153,7 +153,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
      * (CloseComplaintRequest POJO).
      */
     @OneToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = false)
+    @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = true)
     private Disposition disposition;
 
     @Column(name = "cm_complaint_restricted_flag", nullable = false)
