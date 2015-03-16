@@ -40,6 +40,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setName(in.getFileName());
         solr.setContent_type(in.getFileMimeType());
+        solr.setStatus_lcs(in.getStatus());
 
 
         ObjectAssociation parent = null;
