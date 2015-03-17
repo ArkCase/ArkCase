@@ -24,6 +24,8 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,6 +41,7 @@ public class CostService extends FrevvoFormAbstractService {
 	private CostsheetService costsheetService;
 	private AcmCostsheetDao acmCostsheetDao;
 	private CostFactory costFactory;
+	private SearchResults searchResults;
 	
 	@Override
 	public Object init() 
@@ -189,18 +192,25 @@ public class CostService extends FrevvoFormAbstractService {
 	{
 		List<String> codeOptions = new ArrayList<>();
 		
-		JSONObject jsonObject = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, "name ASC");
-		if (jsonObject != null && jsonObject.has("response") && jsonObject.getJSONObject("response").has("docs"))
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC);
+		
+		if (jsonResults != null)
 		{
-			JSONArray objects = jsonObject.getJSONObject("response").getJSONArray("docs");
+			JSONArray objects = getSearchResults().getDocuments(jsonResults);
 			
-			for (int i = 0; i < objects.length(); i++)
+			List<String> ids = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_OBJECT_ID_S);
+			List<String> names = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_NAME);
+			
+			if (ids != null)
 			{
-				JSONObject object = objects.getJSONObject(i);
-				
-				if (object.has("name"))
+				for (int i = 0; i < ids.size(); i++)
 				{
-					codeOptions.add(object.getString("object_id_s") + "=" + object.getString("name"));
+					// This check is only for safe execution. "ids" and "names" always will have the same size but
+					// check that before invoking "get(index)" method
+					if (i < names.size())
+					{
+						codeOptions.add(ids.get(i) + "=" + names.get(i));
+					}
 				}
 			}
 		}
@@ -238,4 +248,11 @@ public class CostService extends FrevvoFormAbstractService {
 		this.costFactory = costFactory;
 	}
 
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
 }

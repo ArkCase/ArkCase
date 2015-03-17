@@ -221,6 +221,7 @@ public class FrevvoFormServiceFactory {
             service.setTimesheetService(frevvoFormController.getTimesheetService());
             service.setAcmTimesheetDao(frevvoFormController.getAcmTimesheetDao());
             service.setTimeFactory(frevvoFormController.getTimeFactory());
+            service.setSearchResults(frevvoFormController.getSearchResults());
             
             return service;
 		}
@@ -243,6 +244,7 @@ public class FrevvoFormServiceFactory {
             service.setCostsheetService(frevvoFormController.getCostsheetService());
             service.setAcmCostsheetDao(frevvoFormController.getAcmCostsheetDao());
             service.setCostFactory(frevvoFormController.getCostFactory());
+            service.setSearchResults(frevvoFormController.getSearchResults());
             
             return service;
 		}

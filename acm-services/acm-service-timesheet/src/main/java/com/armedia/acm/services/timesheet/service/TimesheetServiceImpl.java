@@ -38,9 +38,9 @@ public class TimesheetServiceImpl implements TimesheetService {
 	}
 	
 	@Override
-	public JSONObject getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams) 
+	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams) 
 	{
-		JSONObject retval = null;
+		String retval = null;
 				
 		LOG.debug("Taking objects from Solr for object type = " + objectType);
 		
@@ -48,8 +48,7 @@ public class TimesheetServiceImpl implements TimesheetService {
 		
 		try 
 		{
-			String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
-			retval = new JSONObject(result);
+			retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
 			
 			LOG.debug("Objects was retrieved.");
 		} 
