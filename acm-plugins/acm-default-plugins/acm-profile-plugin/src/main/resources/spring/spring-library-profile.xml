@@ -63,11 +63,6 @@
                     <property name="url" value="/api/{version}/plugin/profile/userOrgInfo/set"/>
                     <property name="requiredPrivilege" ref="profilePrivilege"/>
                 </bean>
-                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/profile/img"/>
-                    <property name="requiredPrivilege" ref="profilePrivilege"/>
-                </bean>
             </list>
         </property>
 

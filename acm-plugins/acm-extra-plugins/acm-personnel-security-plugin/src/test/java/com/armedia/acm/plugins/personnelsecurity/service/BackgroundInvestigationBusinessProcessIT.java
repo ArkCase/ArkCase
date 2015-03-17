@@ -88,7 +88,7 @@ public class BackgroundInvestigationBusinessProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v10.bpmn20.xml")
+                .addClasspathResource("activiti/personnelSecurityBackgroundInvestigation_v11.bpmn20.xml")
                 .deploy();
 
         mocks = new Object[] { mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService };

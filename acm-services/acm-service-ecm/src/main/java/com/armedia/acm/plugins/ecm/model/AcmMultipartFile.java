@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.armedia.acm.file;
+package com.armedia.acm.plugins.ecm.model;
 
 import java.io.File;
 import java.io.IOException;

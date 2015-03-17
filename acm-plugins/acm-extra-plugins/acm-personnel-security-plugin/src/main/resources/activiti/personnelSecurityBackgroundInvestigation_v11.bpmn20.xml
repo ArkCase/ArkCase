@@ -85,7 +85,7 @@
         </activiti:taskListener>
       </extensionElements>
     </userTask>
-    <serviceTask id="cvsExportTask" name="Generate CVS Export" activiti:expression="#{clearanceVerificationSystemExportService.exportDeterminationRecord(adjudicator, OBJECT_ID, OBJECT_NAME, OBJECT_FOLDER_ID, SUBJECT_LAST_NAME, adjudicationOutcome)}"/>
+    <serviceTask id="cvsExportTask" name="Generate CVS Export" activiti:expression="#{clearanceVerificationSystemExportService.exportDeterminationRecord(adjudicator, OBJECT_ID, OBJECT_FOLDER_ID, SUBJECT_LAST_NAME, adjudicationOutcome)}"/>
     <userTask id="adjudicationTask" name="Adjudicate Clearance Request '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
       <extensionElements>
         <activiti:formProperty id="adjudicationOutcome" name="adjudicationOutcome" type="enum" required="true">
@@ -116,8 +116,8 @@
         </activiti:taskListener>
       </extensionElements>
     </userTask>
-    <serviceTask id="clearanceDeniedTask" name="Generate Clearance Denied correspondence" activiti:expression="#{correspondenceService.generate('ClearanceDenied.docx', 'CASE_FILE', OBJECT_ID, OBJECT_NAME, OBJECT_FOLDER_ID)}"/>
-    <serviceTask id="clearanceGrantedTask" name="Generate Clearance Granted Correspondence" activiti:expression="#{correspondenceService.generate('ClearanceGranted.docx', 'CASE_FILE', OBJECT_ID, OBJECT_NAME, OBJECT_FOLDER_ID)}"/>
+    <serviceTask id="clearanceDeniedTask" name="Generate Clearance Denied correspondence" activiti:expression="#{correspondenceService.generate('ClearanceDenied.docx', 'CASE_FILE', OBJECT_ID, OBJECT_FOLDER_ID)}"/>
+    <serviceTask id="clearanceGrantedTask" name="Generate Clearance Granted Correspondence" activiti:expression="#{correspondenceService.generate('ClearanceGranted.docx', 'CASE_FILE', OBJECT_ID, OBJECT_FOLDER_ID)}"/>
     <userTask id="issueClearanceTask" name="Issue Clearance '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
       <extensionElements>
         <activiti:formProperty id="issueClearanceOutcome" name="issueClearanceOutcome" type="enum" required="true">
