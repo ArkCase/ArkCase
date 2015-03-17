@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,8 +25,9 @@ import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
-import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -45,6 +45,7 @@ public class TimeService extends FrevvoFormAbstractService {
 	private TimesheetService timesheetService;
 	private AcmTimesheetDao acmTimesheetDao;
 	private TimeFactory timeFactory;
+	private SearchResults searchResults;
 	
 	@Override
 	public Object init() 
@@ -215,18 +216,19 @@ public class TimeService extends FrevvoFormAbstractService {
 	{
 		List<String> codeOptions = new ArrayList<>();
 		
-		JSONObject jsonObject = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, "name ASC");
-		if (jsonObject != null && jsonObject.has("response") && jsonObject.getJSONObject("response").has("docs"))
+		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC);
+		
+		if (jsonResults != null)
 		{
-			JSONArray objects = jsonObject.getJSONObject("response").getJSONArray("docs");
+			JSONArray objects = getSearchResults().getDocuments(jsonResults);
 			
-			for (int i = 0; i < objects.length(); i++)
+			List<String> names = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_NAME);
+			
+			if (names != null)
 			{
-				JSONObject object = objects.getJSONObject(i);
-				
-				if (object.has("name"))
+				for (String name : names)
 				{
-					codeOptions.add(object.getString("name") + "=" + object.getString("name"));
+					codeOptions.add(name + "=" + name);
 				}
 			}
 		}
@@ -264,4 +266,11 @@ public class TimeService extends FrevvoFormAbstractService {
 		this.timeFactory = timeFactory;
 	}
 
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
 }

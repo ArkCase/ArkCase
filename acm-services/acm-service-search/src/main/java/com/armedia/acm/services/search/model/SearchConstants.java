@@ -30,10 +30,16 @@ public interface SearchConstants
 
     String PROPERTY_NUMBER_FOUND = "numFound";
     String PROPERTY_RESPONSE = "response";
+    String PROPERTY_DOCS = "docs";
+    String PROPERTY_NAME = "name";
+    String PROPERTY_OBJECT_ID_S = "object_id_s";
 
     String USER = "${user}";
     /**
      * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
      */
     String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    
+    String SORT_ASC = "ASC";
+    String SORT_DESC = "DESC";
 }

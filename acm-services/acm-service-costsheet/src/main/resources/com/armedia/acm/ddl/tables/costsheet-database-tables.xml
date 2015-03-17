@@ -88,5 +88,9 @@
 	        </column>
 	 	</addColumn>
 	 </changeSet>
+	 
+	 <changeSet id="04-remove-nullable-constraint-for-description-in-cost-table" author="riste.tutureski">
+	 	<dropNotNullConstraint tableName="acm_cost" columnName="cm_cost_description"/>
+	 </changeSet>
      
 </databaseChangeLog>
