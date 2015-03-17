@@ -413,7 +413,8 @@ TaskList.Event = {
          this.$btnNewAttachment = TaskList.Object.$btnNewAttachment;*/
         var count = TaskList.Object.$btnNewAttachment[0].files.length;
         var fd = new FormData();
-        fd.append("taskId", TaskList.getTaskId());
+        fd.append("parentObjectType", Task.Model.DOC_TYPE_TASK);
+        fd.append("parentObjectId", TaskList.getTaskId());
         for(var i = 0; i < count; i++ ){
             fd.append("files[]", TaskList.Object.$btnNewAttachment[0].files[i]);
         }

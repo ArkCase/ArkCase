@@ -19,8 +19,7 @@ public interface EcmFileTransaction
                 String fileName,
                 String cmisFolderId,
                 String parentObjectType,
-                Long parentObjectId,
-                String parentObjectName)
+                Long parentObjectId)
                 throws MuleException;
 
         EcmFile addFileTransaction(
@@ -32,8 +31,7 @@ public interface EcmFileTransaction
                 String fileName,
                 String cmisFolderId,
                 String parentObjectType,
-                Long parentObjectId,
-                String parentObjectName)
+                Long parentObjectId)
                 throws MuleException;
 
         EcmFile updateFileTransaction(

@@ -1,6 +1,6 @@
 package com.armedia.acm.frevvo.config;
 
-import com.armedia.acm.file.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.frevvo.config.service.FrevvoTestService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.Capture;
@@ -69,12 +69,11 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
                 eq(unit.getAuthentication()),
                 eq("cmisId"),
                 eq("parentType"),
-                eq(500L),
-                eq("parentName"))).andReturn(null);
+                eq(500L))).andReturn(null);
 
         replayAll();
 
-        unit.saveAttachments(attachments, "cmisId", "parentType", 500L, "parentName");
+        unit.saveAttachments(attachments, "cmisId", "parentType", 500L);
 
         verifyAll();
 

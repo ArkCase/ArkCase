@@ -18,11 +18,4 @@
         <property name="saveUserOrgTransaction" ref="saveUserOrgTransaction"/>
     </bean>
 
-    <bean id="uploadProfileImg" class="com.armedia.acm.plugins.profile.web.api.UploadProfileImgAPIController">
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
-        <property name="userDao" ref="acmUserDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="saveUserOrgTransaction" ref="saveUserOrgTransaction"/>
-    </bean>
-
 </beans>

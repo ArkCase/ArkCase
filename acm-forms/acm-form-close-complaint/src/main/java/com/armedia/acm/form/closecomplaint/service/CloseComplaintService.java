@@ -150,8 +150,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
                 attachments,
                 complaint.getContainerFolder().getCmisFolderId(),
                 FrevvoFormName.COMPLAINT.toUpperCase(),
-                complaint.getComplaintId(),
-                complaint.getComplaintNumber());
+                complaint.getComplaintId());
 
 		CloseComplaintFormEvent event = new CloseComplaintFormEvent(
 				complaint.getComplaintNumber(), complaint.getComplaintId(), savedRequest, uploadedFiles, mode,
