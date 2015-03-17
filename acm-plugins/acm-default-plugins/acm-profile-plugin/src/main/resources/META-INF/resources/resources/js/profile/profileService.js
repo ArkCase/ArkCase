@@ -24,19 +24,23 @@ Profile.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_UPLOAD_IMAGE: "/api/latest/plugin/profile/img"
+        ,API_UPLOAD_IMAGE: "/file"
 
         ,_validateUploadInfo: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.files)) {
+            if (!Acm.isArray(data))
+            {
                 return false;
             }
-            if (!Acm.isArray(data.files)) {
+            if (Acm.isEmpty(data[0].files)) {
                 return false;
             }
-            if (0 >= data.files.length) {
+            if (!Acm.isArray(data[0].files)) {
+                return false;
+            }
+            if (0 >= data[0].files.length) {
                 return false;
             }
             return true;

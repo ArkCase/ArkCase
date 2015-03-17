@@ -970,7 +970,7 @@ CaseFile.Service = {
         }
 
         ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
-        ,API_UPLOAD_DOCUMENT: "/api/latest/plugin/casefile/file"
+        ,API_UPLOAD_DOCUMENT: "/file"
 
         ,_validateUploadInfo: function(data) {
             if (Acm.isEmpty(data)) {

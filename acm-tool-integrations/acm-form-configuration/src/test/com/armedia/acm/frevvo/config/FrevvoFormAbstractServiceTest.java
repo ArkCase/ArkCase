@@ -1,6 +1,6 @@
 package com.armedia.acm.frevvo.config;
 
-import com.armedia.acm.file.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.frevvo.config.service.FrevvoTestService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.Capture;

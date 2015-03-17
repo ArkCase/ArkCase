@@ -15,6 +15,8 @@ Profile.Model = {
         if (Profile.Model.Subscription.onInitialized)       {Profile.Model.Subscription.onInitialized();}
     }
 
+    ,DOC_TYPE_USER_PROFILE: "USER_ORG"
+
     ,Picture: {
         create: function() {
         }
@@ -28,9 +30,9 @@ Profile.Model = {
         ,getEcmFileId: function(uploadInfo) {
             var ecmFileId = -1;
             if (uploadInfo) {
-                if (Acm.isArray(uploadInfo.files)) {
-                    if (0 < uploadInfo.files.length) {
-                        var url = Acm.goodValue(uploadInfo.files[0].url); //url in format of "acm/file/123"
+                if (Acm.isArray(uploadInfo[0].files)) {
+                    if (0 < uploadInfo[0].files.length) {
+                        var url = Acm.goodValue(uploadInfo[0].files[0].url); //url in format of "acm/file/123"
                         var idx = url.lastIndexOf("/");
                         if (0 <= idx) {
                             ecmFileId = parseInt(url.substring(idx+1)) || (-1);

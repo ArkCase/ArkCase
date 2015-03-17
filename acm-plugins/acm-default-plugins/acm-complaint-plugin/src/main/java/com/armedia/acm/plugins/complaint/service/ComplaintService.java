@@ -4,8 +4,6 @@
  */
 package com.armedia.acm.plugins.complaint.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;

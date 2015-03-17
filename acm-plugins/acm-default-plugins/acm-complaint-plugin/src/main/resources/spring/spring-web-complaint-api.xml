@@ -13,12 +13,6 @@
         <property name="complaintProperties" ref="complaintPluginProperties"/>
     </bean>
 
-    <bean id="addComplaintFileController" class="com.armedia.acm.plugins.complaint.web.api.AddFileAPIController">
-        <property name="complaintDao" ref="acmComplaintDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="eventPublisher" ref="complaintEventPublisher"/>
-    </bean>
-
     <bean id="findComplaintsByUserAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintsByUserAPIController">
         <property name="complaintDao" ref="acmComplaintDao"/>
         <property name="eventPublisher" ref="complaintEventPublisher"/>

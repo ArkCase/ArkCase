@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.web;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +42,15 @@ public class FileUploadController
     public ResponseEntity<?> uploadFile(
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
+            @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
             @RequestHeader("Accept") String acceptType,
             MultipartHttpServletRequest request,
-            Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+            Authentication authentication,
+            HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
     {
 
         String contextPath = request.getServletContext().getContextPath();
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         AcmContainerFolder folder = getEcmFileService().getOrCreateContainerFolder(parentObjectType, parentObjectId);
         String folderId = folder.getCmisFolderId();
@@ -64,9 +70,19 @@ public class FileUploadController
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
+                        AcmMultipartFile f = new AcmMultipartFile(
+                                attachment.getName(),
+                                attachment.getOriginalFilename(),
+                                attachment.getContentType(),
+                                attachment.isEmpty(),
+                                attachment.getSize(),
+                                attachment.getBytes(),
+                                attachment.getInputStream(),
+                                true);
+
                         ResponseEntity<?> temp = getEcmFileService().upload(
-                                uploadFileType,
-                                attachment,
+                                fileType,
+                                f,
                                 acceptType,
                                 contextPath,
                                 authentication,
@@ -74,6 +90,8 @@ public class FileUploadController
                                 parentObjectType,
                                 parentObjectId);
                         uploadedFilesJSON.add(temp.getBody());
+
+                        // TODO: audit events
                     }
                 }
             }
