@@ -1,15 +1,22 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
-
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -23,13 +30,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by armdev on 5/1/14.
@@ -42,7 +54,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     
     private EcmFileDao ecmFileDao;
 
+    private AcmContainerFolderDao containerFolderDao;
+
     private ApplicationEventPublisher applicationEventPublisher;
+
+    private Map<String, String> sortParameterNameToCmisFieldName;
+
+    private Map<BaseTypeId, String> cmisBaseTypeToAcmType;
+
+    private Properties ecmFileServiceProperties;
 
     private MuleClient muleClient;
 
@@ -284,6 +304,126 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+    @Override
+    @Transactional
+    public AcmContainerFolder getOrCreateContainerFolder(String objectType, Long objectId) throws
+            AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        log.info("Finding folder for object " + objectType + " id " + objectId);
+
+        try
+        {
+            AcmContainerFolder retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
+            return retval;
+        }
+        catch ( AcmObjectNotFoundException e)
+        {
+            return createContainerFolder(objectType, objectId);
+        }
+        catch ( PersistenceException pe )
+        {
+            throw new AcmUserActionFailedException("Find container folder", objectType, objectId, pe.getMessage(), pe);
+        }
+    }
+
+    /**
+     * Objects should really have a folder already.  Since we got here the object does not actually have one.
+     * The application doesn't really care where the folder is, so we'll just create a folder in a sensible
+     * location.
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    private AcmContainerFolder createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
+    {
+        log.debug("Creating new folder for object " + objectType + " id " + objectId);
+
+        String path = getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH);
+        path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
+        path += "/" + objectId;
+
+        String cmisFolderId = createFolder(path);
+
+        log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
+
+        AcmContainerFolder newFolder = new AcmContainerFolder();
+        newFolder.setContainerObjectId(objectId);
+        newFolder.setContainerObjectType(objectType);
+        newFolder.setCmisFolderId(cmisFolderId);
+
+        newFolder = getContainerFolderDao().save(newFolder);
+
+        return newFolder;
+    }
+
+
+    @Override
+    public List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection)
+            throws AcmListObjectsFailedException
+    {
+        try
+        {
+            String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
+            Map<String, Object> messageProperties = new HashMap<>();
+            messageProperties.put("orderBy", sortParam);
+
+            MuleMessage message = getMuleClient().send(
+                    EcmFileConstants.MULE_ENDPOINT_LIST_FOLDER_CONTENTS,
+                    folderId,
+                    messageProperties);
+            Object children = message.getPayload();
+            log.debug("children type: '" + children.getClass().getName());
+
+            ItemIterable<CmisObject> cmisChildren = (ItemIterable<CmisObject>) children;
+
+            log.debug(cmisChildren.getTotalNumItems() + " items found");
+
+            List<AcmCmisObject> retval = new ArrayList<>();
+            for ( CmisObject cmisObject : cmisChildren )
+            {
+                AcmCmisObject acmCmisObject = fromCmisObject(cmisObject);
+                if (acmCmisObject != null)
+                {
+                    retval.add(acmCmisObject);
+                }
+            }
+
+            return retval;
+        }
+        catch (MuleException e)
+        {
+            log.error("Could not list folder contents: " + e.getMessage(), e);
+            throw new AcmListObjectsFailedException("Folder Contents", e.getMessage(), e);
+        }
+    }
+
+    private AcmCmisObject fromCmisObject(CmisObject cmisObject)
+    {
+        if ( ! getCmisBaseTypeToAcmType().containsKey(cmisObject.getBaseTypeId()) )
+        {
+            log.info("Child object is not a document or a folder, skipping");
+            return null;
+        }
+
+        AcmCmisObject acmCmisObject = new AcmCmisObject();
+        acmCmisObject.setCmisObjectId(cmisObject.getId());
+        acmCmisObject.setName(cmisObject.getName());
+        acmCmisObject.setObjectType(getCmisBaseTypeToAcmType().get(cmisObject.getBaseTypeId()));
+
+        return acmCmisObject;
+    }
+
+    private String listFolderContents_getSortSpec(String sortBy, String sortDirection)
+    {
+        String sortParam = EcmFileConstants.FOLDER_LIST_DEFAULT_SORT_PARAM;
+        if ( getSortParameterNameToCmisFieldName().containsKey(sortBy) )
+        {
+            sortParam = getSortParameterNameToCmisFieldName().get(sortBy);
+        }
+        sortParam = sortParam + " " + sortDirection;
+        return sortParam;
+    }
+
     public String constructJqueryFileUploadJson(FileUpload fileUpload) throws IOException
     {
         Map<String, List<FileUpload>> retMap = makeFileUploadMap(fileUpload);
@@ -376,5 +516,45 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setMuleClient(MuleClient muleClient)
     {
         this.muleClient = muleClient;
+    }
+
+    public Map<String, String> getSortParameterNameToCmisFieldName()
+    {
+        return sortParameterNameToCmisFieldName;
+    }
+
+    public void setSortParameterNameToCmisFieldName(Map<String, String> sortParameterNameToCmisFieldName)
+    {
+        this.sortParameterNameToCmisFieldName = sortParameterNameToCmisFieldName;
+    }
+
+    public Map<BaseTypeId, String> getCmisBaseTypeToAcmType()
+    {
+        return cmisBaseTypeToAcmType;
+    }
+
+    public void setCmisBaseTypeToAcmType(Map<BaseTypeId, String> cmisBaseTypeToAcmType)
+    {
+        this.cmisBaseTypeToAcmType = cmisBaseTypeToAcmType;
+    }
+
+    public AcmContainerFolderDao getContainerFolderDao()
+    {
+        return containerFolderDao;
+    }
+
+    public void setContainerFolderDao(AcmContainerFolderDao containerFolderDao)
+    {
+        this.containerFolderDao = containerFolderDao;
+    }
+
+    public Properties getEcmFileServiceProperties()
+    {
+        return ecmFileServiceProperties;
+    }
+
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    {
+        this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 }

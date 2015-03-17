@@ -24,13 +24,43 @@ title: ArkCase Document Management
   /folder/{folderId}:
       delete:
         description: deletes the requested folder.  
-      get:
-        description: Get a tree view with folder and file metadata for the requested folder.  Normally the folder ID would be a container folder (case file folder, complaint folder, or task folder), but this is not required.  It could be any folder.
       /{newFolderName}:
         post:
           description: Rename the requested folder
         put:
           description: Create a new folder under the requested folder 
+  /folder/{objectType}/{objectId}:
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of objects in the requested container. 
+      queryParameters:
+        s:
+          description: Sort order
+          required: false
+          default: name
+        dir:
+          description: Sort direction (ascending or descending)
+          required: false
+          enum: ["asc", "desc"]
+          default: asc   
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json    
   /moveToAnotherContainer:
     post:
       description: Move one or more files to another container

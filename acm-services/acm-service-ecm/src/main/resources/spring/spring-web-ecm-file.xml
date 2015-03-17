@@ -14,4 +14,8 @@
 
     <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
     </bean>
+
+    <bean id="folderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.FolderListAPIController">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 </beans>

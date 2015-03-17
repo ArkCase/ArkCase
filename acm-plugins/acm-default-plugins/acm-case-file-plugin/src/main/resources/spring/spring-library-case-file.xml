@@ -34,7 +34,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
-   </bean>
+    </bean>
     <bean id="dispositionToSolrTransformer" class="com.armedia.acm.plugins.casefile.service.DispositionToSolrTransformer">
         <property name="dispositionDao" ref="dispositionDao"/>
     </bean>
