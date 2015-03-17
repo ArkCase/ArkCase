@@ -1,0 +1,51 @@
+/**
+ * Folder List Schema
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Folder List Schema",
+  "type": "object",
+  "properties": {
+    "containerObjectType": {
+      "type": "string",
+      "description": "Container object type, e.g. COMPLAINT, TASK etc."
+    },
+    "containerObjectId": {
+      "type": "integer",
+      "description": "Container object ID",
+      "minimum": 1
+    },
+    "cmisFolderId": {
+      "type": "string",
+      "description": "CMIS folder ID whose children are included in the children array"
+    },
+    "children": {
+      "type": "array",
+      "description": "List of the immediate children of the requested folder",
+      "uniqueItems": true,
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "properties": {
+          "cmisObjectId": {
+            "type": "string",
+            "description": "CMIS object ID for this object"
+          },
+          "objectType": {
+            "type": "string",
+            "enum": [
+              "folder",
+              "file"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "object name"
+          }
+        },
+        "required": [ "cmisObjectId", "objectType", "name" ]
+      }
+    }
+  },
+  "required": [ "containerObjectType", "containerObjectId", "cmisFolderId", "children" ]
+}
