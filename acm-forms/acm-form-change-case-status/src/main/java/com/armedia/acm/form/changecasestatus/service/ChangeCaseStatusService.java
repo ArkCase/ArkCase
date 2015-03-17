@@ -140,8 +140,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
                 attachments,
                 caseFile.getContainerFolder().getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(),
-                caseFile.getId(),
-                caseFile.getCaseNumber());
+                caseFile.getId());
 		
 		ChangeCaseStatusFormEvent event = new ChangeCaseStatusFormEvent(caseFile.getCaseNumber(), caseFile.getId(), savedRequest, uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
 		getApplicationEventPublisher().publishEvent(event);

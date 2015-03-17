@@ -45,7 +45,9 @@ Profile.View = {
 
             var _this = Profile.View.Picture;
             var fd = new FormData();
-            fd.append("userId", App.getUserName());
+            fd.append("parentObjectId", Profile.Model.Info.getProfileInfo().userOrgId);
+            fd.append("parentObjectType", Profile.Model.DOC_TYPE_USER_PROFILE);
+            fd.append("fileType", "user_profile");
             fd.append("file", _this.$fileInput[0].files[0]);
             Profile.Service.Picture.uploadImage(fd);
             Profile.View.Picture.showImgPicLoading(true);

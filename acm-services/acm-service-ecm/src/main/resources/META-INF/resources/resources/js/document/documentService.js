@@ -1332,7 +1332,6 @@ Document.Service = {
                 + "?templateName=" + templateName
                 + "&parentObjectType=" + Document.Model.DOC_TYPE_CASE_FILE
                 + "&parentObjectId=" + caseFileIn.id
-                + "&parentObjectName=" + caseFileIn.caseNumber
                 + "&targetCmisFolderId=" + caseFileIn.ecmFolderId
                 ;
 
@@ -1351,8 +1350,8 @@ Document.Service = {
                                 var childObject = {};
                                 childObject.targetId = ecmFile.fileId;
                                 childObject.targetName = ecmFile.fileName;
-                                childObject.created = ecmFile.creator;
-                                childObject.creator = ecmFile.created;
+                                childObject.created = ecmFile.created;
+                                childObject.creator = ecmFile.creator;
                                 childObject.modified = ecmFile.modified;
                                 childObject.modifier = ecmFile.modifier;
                                 childObject.status = ecmFile.status;
@@ -1362,19 +1361,6 @@ Document.Service = {
                                 caseFile.childObjects.push(childObject);
                                 //Document.Model.Detail.cacheDocument.put(caseFileId, caseFile);
                             }
-
-                            /*var documents = Document.Model.Documents.cacheDocuments.get(caseFileId);
-                            var document = {};
-                            document.id = ecmFile.fileId;
-                            document.name = ecmFile.fileName;
-                            document.status = ecmFile.status;
-                            document.creator = ecmFile.creator;
-                            document.created = ecmFile.created;
-                            document.targetType = Document.Model.DOCUMENT_TARGET_TYPE_FILE;
-                            document.category = Document.Model.DOCUMENT_CATEGORY_CORRESPONDENCE;
-                            documents.push(document);
-                            Document.Model.Documents.cacheDocuments.put(caseFileId, documents);
-*/
 
                             Document.Controller.modelCreatedCorrespondence(caseFileId);
                         }

@@ -42,14 +42,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String fileName,
             String cmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName)
+            Long parentObjectId)
             throws MuleException
     {
         // by default, files are documents
         String category = "DOCUMENT";
         EcmFile retval = addFileTransaction(authentication, fileType, category, fileInputStream, mimeType, fileName,
-                cmisFolderId, parentObjectType, parentObjectId, parentObjectName);
+                cmisFolderId, parentObjectType, parentObjectId);
 
         return retval;
     }
@@ -64,22 +63,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String fileName,
             String cmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName)
+            Long parentObjectId)
             throws MuleException
     {
         EcmFile toAdd = new EcmFile();
         toAdd.setFileMimeType(mimeType);
         toAdd.setFileName(fileName);
         toAdd.setFileType(fileType);
-
-        ObjectAssociation parent = new ObjectAssociation();
-        parent.setParentId(parentObjectId);
-        parent.setParentType(parentObjectType);
-        parent.setParentName(parentObjectName);
-        parent.setCategory(fileCategory);
-        parent.setTargetSubtype(fileType);
-        toAdd.addParentObject(parent);
 
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("cmisFolderId", cmisFolderId);

@@ -1761,8 +1761,9 @@ CaseFile.View = CaseFile.View || {
             var report = CaseFile.View.Documents.getSelectReportText();
 
             var fd = new FormData();
-            fd.append("uploadFileType", report);
-            fd.append("caseFileId", CaseFile.Model.getCaseFileId());
+            fd.append("fileType", report);
+            fd.append("parentObjectId", CaseFile.Model.getCaseFileId());
+            fd.append("parentObjectType", CaseFile.Model.DOC_TYPE_CASE_FILE);
             for(var i = 0; i < count; i++ ){
                 fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
             }

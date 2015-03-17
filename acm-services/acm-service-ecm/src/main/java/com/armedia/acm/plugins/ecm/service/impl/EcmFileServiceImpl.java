@@ -75,8 +75,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -93,8 +92,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     fileName,
                     targetCmisFolderId,
                     parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
+                    parentObjectId);
 
             return uploaded;
         }
@@ -115,8 +113,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -134,8 +131,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     fileName,
                     targetCmisFolderId,
                     parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
+                    parentObjectId);
 
             return uploaded;
         }
@@ -153,8 +149,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException
     {
         if ( log.isInfoEnabled() )
         {
@@ -172,8 +167,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     file.getOriginalFilename(),
                     targetCmisFolderId,
                     parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
+                    parentObjectId);
 
             return uploaded;
         } catch (IOException | MuleException e)
@@ -193,8 +187,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException
     {
 
         HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
@@ -207,8 +200,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     authentication,
                     targetCmisFolderId,
                     parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
+                    parentObjectId);
 
             FileUpload fileUpload = fileUploadFromEcmFile(file, contextPath, uploaded);
 
