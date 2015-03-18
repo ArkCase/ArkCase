@@ -1,10 +1,13 @@
-package com.armedia.acm.plugins.ecm.web;
+package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.search.service.ObjectMapperFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -15,21 +18,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@RequestMapping("/file")
-public class FileUploadController
+@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+public class FileUploadAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -38,18 +42,60 @@ public class FileUploadController
     private final String uploadFileType = "attachment";
 
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadFile(
+    @RequestMapping(
+            value = "/upload",
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<EcmFile> uploadFile(
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
-            @RequestHeader("Accept") String acceptType,
             MultipartHttpServletRequest request,
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
     {
+        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, request, session);
+        return uploaded;
+    }
 
-        String contextPath = request.getServletContext().getContextPath();
+    @RequestMapping(
+            value = "/upload",
+            method = RequestMethod.POST,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = "!" + MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String uploadFileForBrowsersWithoutFileUploadViaXHR(
+            @RequestParam("parentObjectType") String parentObjectType,
+            @RequestParam("parentObjectId") Long parentObjectId,
+            @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
+            MultipartHttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication,
+            HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
+    {
+        String responseMimeType = MediaType.TEXT_PLAIN_VALUE;
+        response.setContentType(responseMimeType);
+
+        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, request, session);
+
+        ObjectMapper om = new ObjectMapperFactory().createObjectMapper();
+        String jsonUploadedFiles = om.writeValueAsString(uploaded);
+
+        return jsonUploadedFiles;
+    }
+
+    protected List<EcmFile> uploadFiles(
+            Authentication authentication,
+            String parentObjectType,
+            Long parentObjectId,
+            String fileType,
+            MultipartHttpServletRequest request,
+            HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         AcmContainerFolder folder = getEcmFileService().getOrCreateContainerFolder(parentObjectType, parentObjectId);
@@ -58,7 +104,7 @@ public class FileUploadController
         //for multiple files
         MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
 
-        List<Object> uploadedFilesJSON = new ArrayList<>();
+        List<EcmFile> uploadedFiles = new ArrayList<>();
 
         if ( attachments != null )
         {
@@ -80,23 +126,23 @@ public class FileUploadController
                                 attachment.getInputStream(),
                                 true);
 
-                        ResponseEntity<?> temp = getEcmFileService().upload(
+                        EcmFile temp = getEcmFileService().upload(
                                 fileType,
                                 f,
-                                acceptType,
-                                contextPath,
                                 authentication,
                                 folderId,
                                 parentObjectType,
                                 parentObjectId);
-                        uploadedFilesJSON.add(temp.getBody());
+                        uploadedFiles.add(temp);
 
                         // TODO: audit events
                     }
                 }
             }
         }
-        return new ResponseEntity<Object>(uploadedFilesJSON, HttpStatus.OK);
+
+
+        return uploadedFiles;
     }
 
     @RequestMapping(value = "/{ecmFileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
