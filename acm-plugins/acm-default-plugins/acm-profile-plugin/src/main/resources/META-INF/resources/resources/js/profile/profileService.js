@@ -24,9 +24,10 @@ Profile.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_UPLOAD_IMAGE: "/file"
+        ,API_UPLOAD_IMAGE: "/api/latest/service/ecm/upload"
 
         ,_validateUploadInfo: function(data) {
+            // upload response is an array of EcmFile JSON
             if (Acm.isEmpty(data)) {
                 return false;
             }
@@ -34,13 +35,8 @@ Profile.Service = {
             {
                 return false;
             }
-            if (Acm.isEmpty(data[0].files)) {
-                return false;
-            }
-            if (!Acm.isArray(data[0].files)) {
-                return false;
-            }
-            if (0 >= data[0].files.length) {
+
+            if (0 >= data.length) {
                 return false;
             }
             return true;

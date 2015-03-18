@@ -27,7 +27,7 @@ TaskList.Service = {
     ,API_RETRIEVE_WORKFLOW_HISTORY       : "/api/latest/plugin/task/history/"
     ,API_TASK_EVENTS : "/api/latest/plugin/task/events/"
     ,API_RETRIEVE_USERS : "/api/latest/plugin/search/usersSearch"
-    ,API_UPLOAD_FILE: "/file"
+    ,API_UPLOAD_FILE: "/api/latest/service/ecm/upload"
     ,API_LIST_REJECT_COMMENTS : "/api/latest/plugin/note/"
 
 

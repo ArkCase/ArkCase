@@ -21,6 +21,7 @@ public class ClearanceVerificationSystemExportService
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String FILE_TYPE = "cvs export";
+    private static final String CATEGORY = "Document";
 
     public void exportDeterminationRecord(
             String adjudicatorId,
@@ -52,7 +53,7 @@ public class ClearanceVerificationSystemExportService
         try
         {
             // TODO: use JMS to handle this upload via Mule so we get some retry logic
-            getEcmFileService().upload(FILE_TYPE, recordInputStream, "text/plain", "cvsExport.txt", auth, caseCmisFolderId,
+            getEcmFileService().upload(FILE_TYPE, CATEGORY, recordInputStream, "text/plain", "cvsExport.txt", auth, caseCmisFolderId,
                     "CASE_FILE", caseId);
         }
         catch (AcmCreateObjectFailedException e)
