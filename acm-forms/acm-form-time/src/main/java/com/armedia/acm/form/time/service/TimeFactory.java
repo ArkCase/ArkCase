@@ -21,6 +21,8 @@ import com.armedia.acm.services.timesheet.dao.AcmTimeDao;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 /**
  * @author riste.tutureski
@@ -32,6 +34,7 @@ public class TimeFactory {
 	
 	private AcmTimeDao acmTimeDao;
 	private AcmTimesheetDao acmTimesheetDao;
+	private UserDao userDao;
 	
 	/**
 	 * Converting Frevvo TimeForm to AcmTimesheet
@@ -58,11 +61,12 @@ public class TimeFactory {
 		if (form != null)
 		{
 			retval.setId(form.getId());
-			retval.setUserId(form.getUser());
+			retval.setUser(getUser(form.getUser()));
 			retval.setTimes(asAcmTimes(form));
 			retval.setStartDate(getStartDate(form.getPeriod()));
 			retval.setEndDate(getEndDate(form.getPeriod()));
 			retval.setStatus(form.getStatus());
+			retval.setDetails(form.getDetails());
 		}
 		else
 		{
@@ -91,13 +95,18 @@ public class TimeFactory {
 			form = new TimeForm();
 			
 			form.setId(timesheet.getId());
-			form.setUser(timesheet.getUserId());
+			
+			if (timesheet.getUser() != null)
+			{
+				form.setUser(timesheet.getUser().getUserId());
+			}
 			
 			// Doesn't matter which date - it should be one date between start and end date ... I am taking "startDate"
 			form.setPeriod(timesheet.getStartDate());
 			
 			form.setItems(asFrevvoTimeItems(timesheet));
 			form.setStatus(timesheet.getStatus());
+			form.setDetails(timesheet.getDetails());
 		}
 		else
 		{
@@ -222,6 +231,21 @@ public class TimeFactory {
 			time = new AcmTime();
 		}
 		
+		String objectIdAsString = item.getObjectId();
+		Long objectId = null;
+		if (objectIdAsString != null)
+		{
+			try 
+			{
+				objectId = Long.parseLong(objectIdAsString);
+			} 
+			catch (Exception e) 
+			{
+				LOG.warn(objectIdAsString + " cannot be parset to Long. Normal behavior for types that don't have ID's in the database. Continue with execution.");
+			}
+		}
+		
+		time.setObjectId(objectId);
 		time.setCode(item.getCode());
 		time.setType(item.getType());
 		
@@ -261,6 +285,17 @@ public class TimeFactory {
 				else
 				{
 					item = new TimeItem();
+				}
+				
+				if (time.getObjectId() != null)
+				{
+					// For these who have ID in the database.
+					item.setObjectId(time.getObjectId().toString());
+				}
+				else if (time.getCode() != null)
+				{
+					// For these who don't have ID in the database, the charge code have role as objectId
+					item.setObjectId(time.getCode());
 				}
 				
 				item.setCode(time.getCode());
@@ -343,6 +378,22 @@ public class TimeFactory {
 		return item;
 	}
 	
+	private AcmUser getUser(String userId)
+	{	
+		AcmUser user = null;
+		
+		try
+		{
+			user = getUserDao().findByUserId(userId);			
+		}
+		catch(Exception e)
+		{
+			LOG.error("Could not retrive user.", e);
+		}
+		
+		return user;
+	}
+	
 	public Date getStartDate(Date period)
 	{
 		if (period != null)
@@ -395,7 +446,13 @@ public class TimeFactory {
 	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
 		this.acmTimesheetDao = acmTimesheetDao;
 	}
-	
-	
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
 	
 }
