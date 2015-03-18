@@ -222,13 +222,19 @@ public class TimeService extends FrevvoFormAbstractService {
 		{
 			JSONArray objects = getSearchResults().getDocuments(jsonResults);
 			
+			List<String> ids = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_OBJECT_ID_S);
 			List<String> names = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_NAME);
 			
-			if (names != null)
+			if (ids != null)
 			{
-				for (String name : names)
+				for (int i = 0; i < ids.size(); i++)
 				{
-					codeOptions.add(name + "=" + name);
+					// This check is only for safe execution. "ids" and "names" always will have the same size but
+					// check that before invoking "get(index)" method
+					if (i < names.size())
+					{
+						codeOptions.add(ids.get(i) + "=" + names.get(i));
+					}
 				}
 			}
 		}

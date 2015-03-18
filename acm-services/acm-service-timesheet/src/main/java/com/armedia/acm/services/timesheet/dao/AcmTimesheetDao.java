@@ -4,6 +4,7 @@
 package com.armedia.acm.services.timesheet.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Query;
 
@@ -31,7 +32,7 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 	{
 		Query selectQuery = getEm().createQuery("SELECT timesheet "
 											  + "FROM AcmTimesheet timesheet "
-											  + "WHERE timesheet.userId = :userId "
+											  + "WHERE timesheet.user.userId = :userId "
 											  + "AND timesheet.startDate = :startDate "
 											  + "AND timesheet.endDate = :endDate");
 		
@@ -50,6 +51,27 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 		}
 		
 		return timesheet;
+	}
+	
+	public List<AcmTimesheet> findByObjectId(Long objectId)
+	{
+		// Use "WHERE timesheet.id IN" because DISTINCT not work with type CLOB. 
+		// This query will avoid using DISTINCT with timesheet.details property which is of type CLOB
+		Query selectQuery = getEm().createQuery("SELECT timesheet "
+											  + "FROM AcmTimesheet timesheet "
+											  + "WHERE timesheet.id IN("
+												  + "SELECT DISTINCT t.id "
+												  + "FROM AcmTimesheet t "
+												  + "LEFT JOIN t.times AS times "
+												  + "WHERE times.objectId = :objectId"
+											  + ")");
+		
+		selectQuery.setParameter("objectId", objectId);
+		
+		@SuppressWarnings("unchecked")
+		List<AcmTimesheet> timesheets = (List<AcmTimesheet>) selectQuery.getResultList();
+		
+		return timesheets;
 	}
 
 }
