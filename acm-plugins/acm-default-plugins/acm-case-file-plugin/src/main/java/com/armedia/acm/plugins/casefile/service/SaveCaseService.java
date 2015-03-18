@@ -63,6 +63,7 @@ public class SaveCaseService
 
         if ( newCase )
         {
+            getCaseFileEventUtility().raiseEvent(retval, "created", new Date(), ipAddress, auth.getName(), auth);
             getCaseFileEventUtility().raiseEvent(retval, retval.getStatus(), new Date(), ipAddress, auth.getName(), auth);
         }
         else

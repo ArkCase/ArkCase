@@ -27,14 +27,25 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent> {
 		
 		if (event != null)
 		{
-			CaseFile caseFile = (CaseFile) event.getSource();
-			
-			getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), caseFile, caseFile.getId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress()); 	
-			
-			LOG.debug("Case File History added to database.");
+            boolean execute = checkExecution(event.getEventType());
+            if( execute ) {
+
+                CaseFile caseFile = (CaseFile) event.getSource();
+
+                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), caseFile, caseFile.getId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress());
+
+                LOG.debug("Case File History added to database.");
+            }
 		}
 	}
 
+    private boolean checkExecution(String eventType) {
+        if ("com.armedia.acm.casefile.event.created".equals(eventType) || "com.armedia.acm.casefile.event.updated".equals(eventType)) {
+            return true;
+        }
+
+        return false;
+    }
 	public AcmObjectHistoryService getAcmObjectHistoryService()
 	{
 		return acmObjectHistoryService;
