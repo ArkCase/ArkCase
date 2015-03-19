@@ -18,7 +18,7 @@ public interface TimesheetService {
 	public AcmTimesheet save(AcmTimesheet timesheet);
 	public AcmTimesheet save(AcmTimesheet timesheet, String submissionName);
 	public AcmTimesheet get(Long id);
-	public List<AcmTimesheet> getByObjectId(Long objectId);
-	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams);
+	public List<AcmTimesheet> getByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams);
+	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId);
 	
 }

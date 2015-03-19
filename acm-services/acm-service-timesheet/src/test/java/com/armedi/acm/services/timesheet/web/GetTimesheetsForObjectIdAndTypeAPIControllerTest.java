@@ -3,7 +3,9 @@
  */
 package com.armedi.acm.services.timesheet.web;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.easymock.EasyMockSupport;
 
@@ -27,11 +29,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
-import com.armedia.acm.services.timesheet.web.GetTimesheetAPIController;
+import com.armedia.acm.services.timesheet.web.GetTimesheetsForObjectIdAndTypeAPIController;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -42,13 +45,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-service-timesheet-test.xml"
 })
-public class GetTimesheetAPIControllerTest extends EasyMockSupport {
+public class GetTimesheetsForObjectIdAndTypeAPIControllerTest extends EasyMockSupport {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private MockMvc mockMvc;
 	private TimesheetService mockTimesheetService;
-	private GetTimesheetAPIController unit;
+	private GetTimesheetsForObjectIdAndTypeAPIController unit;
 	private Authentication mockAuthentication;
 	
 	@Autowired
@@ -58,7 +61,7 @@ public class GetTimesheetAPIControllerTest extends EasyMockSupport {
     public void setUp() throws Exception
     {
 		mockTimesheetService = createMock(TimesheetService.class);
-		unit = new GetTimesheetAPIController();
+		unit = new GetTimesheetsForObjectIdAndTypeAPIController();
 		mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 		mockAuthentication = createMock(Authentication.class);
 		
@@ -66,7 +69,7 @@ public class GetTimesheetAPIControllerTest extends EasyMockSupport {
     }
 	
 	@Test
-	public void getTimesheetSuccessTest() throws Exception
+	public void getTimesheetsByObjectIdAndTypeSuccessTest() throws Exception
 	{		
 		AcmTimesheet timesheet = new AcmTimesheet();
 		timesheet.setId(1L);
@@ -75,27 +78,29 @@ public class GetTimesheetAPIControllerTest extends EasyMockSupport {
 		
 		AcmTime time1 = new AcmTime();
 		time1.setId(3L);
+		time1.setObjectId(5L);
 		time1.setTimesheet(timesheet);
 		time1.setCode("code1");
-		time1.setType("type1");
+		time1.setType("type");
 		time1.setValue(8.0);
 		
 		AcmTime time2 = new AcmTime();
 		time2.setId(4L);
+		time1.setObjectId(5L);
 		time2.setTimesheet(timesheet);
 		time2.setCode("code2");
-		time2.setType("type2");
+		time2.setType("type");
 		time2.setValue(7.0);
 		
 		timesheet.setTimes(Arrays.asList(time1, time2));
 		
 		expect(mockAuthentication.getName()).andReturn("acm-user");
-		expect(mockTimesheetService.get(1L)).andReturn(timesheet);
+		expect(mockTimesheetService.getByObjectIdAndType(5L, "type", 0, 10, "")).andReturn(Arrays.asList(timesheet));
 		
 		replayAll();
 		
 		MvcResult result = mockMvc.perform(
-	            get("/api/v1/service/timesheet/{id}", 1L)
+	            get("/api/v1/service/timesheet/objectId/{objectId}/objectType/{objectType}", 5L, "type")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .principal(mockAuthentication))
@@ -106,19 +111,20 @@ public class GetTimesheetAPIControllerTest extends EasyMockSupport {
 		LOG.info("Results: " + result.getResponse().getContentAsString());
 		
 		ObjectMapper mapper = new ObjectMapper();
-		AcmTimesheet response = mapper.readValue(result.getResponse().getContentAsString(), AcmTimesheet.class);
+		List<AcmTimesheet> response = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ArrayList<AcmTimesheet>>(){});
 		
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-		assertEquals(timesheet.getId(), response.getId());
+		assertEquals(1, response.size());
+		assertEquals(timesheet.getId(), response.get(0).getId());
 	}
 	
 	@Test
-	public void getTimesheetFailedTest() throws Exception
+	public void getTimesheetsByObjectIdAndTypeFailedTest() throws Exception
 	{		
-		Class<?> expectedThrowableClass = AcmObjectNotFoundException.class;
+		Class<?> expectedThrowableClass = AcmListObjectsFailedException.class;
 		
 		expect(mockAuthentication.getName()).andReturn("acm-user");
-		expect(mockTimesheetService.get(1L)).andReturn(null);
+		expect(mockTimesheetService.getByObjectIdAndType(5L, "type", 0, 10, "")).andReturn(null);
 		
 		replayAll();
 		
@@ -127,7 +133,7 @@ public class GetTimesheetAPIControllerTest extends EasyMockSupport {
 		try
 		{
 			result = mockMvc.perform(
-	            get("/api/v1/service/timesheet/{id}", 1L)
+	            get("/api/v1/service/timesheet/objectId/{objectId}/objectType/{objectType}", 5L, "type")
                     .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .principal(mockAuthentication))
@@ -142,5 +148,6 @@ public class GetTimesheetAPIControllerTest extends EasyMockSupport {
 		
 		assertEquals(null, result);
 		assertEquals(expectedThrowableClass, exception.getCause().getClass());
-	}	
+	}
+	
 }
