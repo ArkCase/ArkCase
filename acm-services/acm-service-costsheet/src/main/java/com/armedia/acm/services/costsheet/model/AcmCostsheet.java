@@ -14,6 +14,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -23,6 +26,8 @@ import javax.persistence.TemporalType;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author riste.tutureski
@@ -39,8 +44,9 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "cm_costsheet_user_id")
-	private String userId;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cm_costsheet_user_id")
+	private AcmUser user;
 	
 	@Column(name = "cm_costsheet_object_id")
 	private Long parentId;
@@ -56,6 +62,10 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 	
 	@Column(name = "cm_costsheet_status")
 	private String status;
+	
+	@Lob
+    @Column(name = "cm_costsheet_details")
+    private String details;
 	
 	@Column(name = "cm_costsheet_creator")
 	private String creator;
@@ -106,16 +116,14 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 		this.id = id;
 	}
 	
-	public String getUserId() 
-	{
-		return userId;
+	public AcmUser getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) 
-	{
-		this.userId = userId;
+	public void setUser(AcmUser user) {
+		this.user = user;
 	}
-	
+
 	public Long getParentId() {
 		return parentId;
 	}
@@ -156,6 +164,14 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 	public void setStatus(String status) 
 	{
 		this.status = status;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	@Override
@@ -207,6 +223,7 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getObjectType() 
 	{
 		return CostsheetConstants.OBJECT_TYPE;
