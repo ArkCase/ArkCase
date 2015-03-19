@@ -18,6 +18,10 @@
 		</property>
 		<property name="executeSolrQuery" ref="executeSolrQuery" />
 	</bean>
+	
+	<bean id="timesheetToSolrTransformer" class="com.armedia.acm.services.timesheet.service.TimesheetToSolrTransformer">
+		<property name="acmTimesheetDao" ref="acmTimesheetDao"/>
+	</bean>
 
     <bean id="acmTimesheetPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Time Tracking Service Plugin"/>
@@ -39,6 +43,36 @@
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/timesheet/wizard"/>
                     <property name="requiredPrivilege" ref="timesheetCreatePrivilege"/>
+                </bean>
+                
+                <bean id="getTimesheetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/timesheet/{id}"/>
+                    <property name="requiredPrivilege" ref="timesheetPrivilege"/>
+                </bean>
+                
+                <bean id="getTimesheetsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/timesheet"/>
+                    <property name="requiredPrivilege" ref="timesheetPrivilege"/>
+                </bean>
+                
+                <bean id="getTimesheetsForUserUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/timesheet/user/{userId}"/>
+                    <property name="requiredPrivilege" ref="timesheetPrivilege"/>
+                </bean>
+                
+                <bean id="getTimesheetsForObjectIdAndTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/timesheet/objectId/{objectId}/objectType/{objectType}"/>
+                    <property name="requiredPrivilege" ref="timesheetPrivilege"/>
+                </bean>
+                
+                <bean id="saveTimesheetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/timesheet"/>
+                    <property name="requiredPrivilege" ref="timesheetPrivilege"/>
                 </bean>
             </list>
         </property>

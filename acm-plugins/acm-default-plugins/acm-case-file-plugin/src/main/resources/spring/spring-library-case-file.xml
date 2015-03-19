@@ -188,6 +188,11 @@
     
     <bean id="caseFileHistoryListener" class="com.armedia.acm.plugins.casefile.service.CaseFileHistoryListener">
     	<property name="acmObjectHistoryService" ref="acmObjectHistoryService" />
+        <property name="nonHistoryGeneratingEvents">
+            <list>
+                <value>com.armedia.acm.casefile.event.search</value>
+            </list>
+        </property>
     </bean>
     
     <bean id="caseFileAssigneeChangeChecker" class="com.armedia.acm.plugins.casefile.service.CaseFileAssigneeChangeChecker">
