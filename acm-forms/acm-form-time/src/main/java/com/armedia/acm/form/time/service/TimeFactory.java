@@ -231,21 +231,7 @@ public class TimeFactory {
 			time = new AcmTime();
 		}
 		
-		String objectIdAsString = item.getObjectId();
-		Long objectId = null;
-		if (objectIdAsString != null)
-		{
-			try 
-			{
-				objectId = Long.parseLong(objectIdAsString);
-			} 
-			catch (Exception e) 
-			{
-				LOG.warn(objectIdAsString + " cannot be parset to Long. Normal behavior for types that don't have ID's in the database. Continue with execution.");
-			}
-		}
-		
-		time.setObjectId(objectId);
+		time.setObjectId(item.getObjectId());
 		time.setCode(item.getCode());
 		time.setType(item.getType());
 		
@@ -287,17 +273,7 @@ public class TimeFactory {
 					item = new TimeItem();
 				}
 				
-				if (time.getObjectId() != null)
-				{
-					// For these who have ID in the database.
-					item.setObjectId(time.getObjectId().toString());
-				}
-				else if (time.getCode() != null)
-				{
-					// For these who don't have ID in the database, the charge code have role as objectId
-					item.setObjectId(time.getCode());
-				}
-				
+				item.setObjectId(time.getObjectId());
 				item.setCode(time.getCode());
 				item.setType(time.getType());
 

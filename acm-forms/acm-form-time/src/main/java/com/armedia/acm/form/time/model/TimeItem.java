@@ -18,10 +18,7 @@ public class TimeItem {
 	private String type;
 	private List<String> typeOptions;
 	
-	// Use string to avoid problems in marshalling/unmarshalling. 
-	// Other than Complaint and Case, we have Other types for charging which don't have any ID in the database.
-	// This string will be converted to Long in the TimeFactory where we should insert/update record in database
-	private String objectId;
+	private Long objectId;
 	
 	private String code;
 	private Map<String, List<String>> codeOptions;
@@ -66,11 +63,11 @@ public class TimeItem {
 	}
 
 	@XmlElement(name="objectId")
-	public String getObjectId() {
+	public Long getObjectId() {
 		return objectId;
 	}
 
-	public void setObjectId(String objectId) {
+	public void setObjectId(Long objectId) {
 		this.objectId = objectId;
 	}
 
