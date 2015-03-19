@@ -75,8 +75,8 @@ var Application = Application || {
         if ("undefined" != typeof Tag) {
             acmModules.push(Tag);
         }
-        if ("undefined" != typeof Document) {
-            acmModules.push(Document);
+        if ("undefined" != typeof AcmDocument) {
+            acmModules.push(AcmDocument);
         }
 
 

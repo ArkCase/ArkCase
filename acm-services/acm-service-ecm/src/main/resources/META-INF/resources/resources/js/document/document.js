@@ -1,20 +1,20 @@
 /**
- * Document module
+ * AcmDocument module
  *
  * @author jwu
  */
-var Document = Document || {
+var AcmDocument = AcmDocument || {
     create: function() {
-//        if (Document.Controller.create) {Document.Controller.create();}
-//        if (Document.Model.create)      {Document.Model.create();}
-//        if (Document.View.create)       {Document.View.create();}
-
+        if (AcmDocument.Controller.create) {AcmDocument.Controller.create();}
+        if (AcmDocument.Model.create)      {AcmDocument.Model.create();}
+        if (AcmDocument.View.create)       {AcmDocument.View.create();}
     }
     ,onInitialized: function() {
-//        if (Document.Controller.onInitialized) {Document.Controller.onInitialized();}
-//        if (Document.Model.onInitialized)      {Document.Model.onInitialized();}
-//        if (Document.View.onInitialized)       {Document.View.onInitialized();}
+        if (AcmDocument.Controller.onInitialized) {AcmDocument.Controller.onInitialized();}
+        if (AcmDocument.Model.onInitialized)      {AcmDocument.Model.onInitialized();}
+        if (AcmDocument.View.onInitialized)       {AcmDocument.View.onInitialized();}
     }
 };
+
 
 
