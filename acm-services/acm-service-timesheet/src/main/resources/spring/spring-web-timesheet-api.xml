@@ -3,6 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-
+	<bean id="getTimesheetAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="getTimesheetsAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetsAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="getTimesheetsForUserAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetsForUserAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="getTimesheetsForObjectIdAndTypeAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetsForObjectIdAndTypeAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="saveTimesheetAPIController" class="com.armedia.acm.services.timesheet.web.SaveTimesheetAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
 
 </beans>
