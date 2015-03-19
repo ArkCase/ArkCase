@@ -352,5 +352,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="complaint-18-rename-container-id" author="dmiller">
+        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+    </changeSet>
+
 </databaseChangeLog>
 
