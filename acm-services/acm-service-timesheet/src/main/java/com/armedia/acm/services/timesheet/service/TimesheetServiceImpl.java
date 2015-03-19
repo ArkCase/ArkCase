@@ -59,34 +59,21 @@ public class TimesheetServiceImpl implements TimesheetService {
 	 * Return timesheets with times only for specified object id
 	 */
 	@Override
-	public List<AcmTimesheet> getByObjectId(Long objectId)
+	public List<AcmTimesheet> getByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
 	{
 		List<AcmTimesheet> retval = null;
 		
 		if (objectId != null)
 		{
 			// Get timesheets form database for given object id
-			List<AcmTimesheet> timesheets = getAcmTimesheetDao().findByObjectId(objectId);
+			List<AcmTimesheet> timesheets = getAcmTimesheetDao().findByObjectIdAndType(objectId, objectType, startRow, maxRows, sortParams);
 		
 			if (timesheets != null)
 			{
 				for (AcmTimesheet timesheet : timesheets)
 				{
-					if (timesheet.getTimes() != null)
-					{
-						List<AcmTime> times = new ArrayList<AcmTime>();
-						
-						for (AcmTime time : timesheet.getTimes())
-						{
-							// If provided objectId is equal with id in the AcmTime, then we should show on UI, otherwise not - skip
-							if (objectId.equals(time.getObjectId()))
-							{
-								times.add(time);
-							}
-						}
-						
-						timesheet.setTimes(times);
-					}
+					List<AcmTime> times = getTimesForObjectId(timesheet.getTimes(), objectId);
+					timesheet.setTimes(times);
 					
 					if (retval == null)
 					{
@@ -101,14 +88,39 @@ public class TimesheetServiceImpl implements TimesheetService {
 		return retval;
 	}
 	
+	private List<AcmTime> getTimesForObjectId(List<AcmTime> times, Long objectId)
+	{
+		List<AcmTime> retval = new ArrayList<AcmTime>();
+		
+		if (times != null)
+		{			
+			for (AcmTime time : times)
+			{
+				// If provided objectId is equal with id in the AcmTime, then we should show on UI, otherwise not - skip
+				if (objectId.equals(time.getObjectId()))
+				{
+					retval.add(time);
+				}
+			}
+		}
+		
+		return retval;
+	}
+	
 	@Override
-	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams) 
+	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId) 
 	{
 		String retval = null;
 				
 		LOG.debug("Taking objects from Solr for object type = " + objectType);
 		
-		String query = "object_type_s:" + objectType + " AND -status_s:DELETE";
+		String authorQuery = "";
+		if (userId != null)
+		{
+			authorQuery = " AND author:" + userId;
+		}
+		
+		String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
 		
 		try 
 		{

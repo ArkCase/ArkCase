@@ -8,13 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 
@@ -24,29 +23,31 @@ import com.armedia.acm.services.timesheet.service.TimesheetService;
  */
 @Controller
 @RequestMapping({ "/api/v1/service/timesheet", "/api/latest/service/timesheet" })
-public class GetTimesheetAPIController {
+public class GetTimesheetsAPIController {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	private TimesheetService timesheetService;
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public AcmTimesheet getTimesheet(@PathVariable("id") Long id,
-            Authentication auth) throws AcmObjectNotFoundException
+	public String getTimesheets(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,			
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            Authentication auth) throws AcmListObjectsFailedException
 	{
 		if (LOG.isInfoEnabled()) 
 		{
-			LOG.info("Taking timesheet id=" + id);
+			LOG.info("Taking all timesheets.");
 		}
 		
-		AcmTimesheet timesheet = getTimesheetService().get(id);
+		String jsonResponse = getTimesheetService().getObjectsFromSolr(TimesheetConstants.OBJECT_TYPE, auth, startRow, maxRows, sort, null);
 		
-		if (timesheet == null)
+		if (jsonResponse == null)
 		{
-			throw new AcmObjectNotFoundException(TimesheetConstants.OBJECT_TYPE, id, "Could not retrieve Timesheet.", new Throwable());
+			throw new AcmListObjectsFailedException(TimesheetConstants.OBJECT_TYPE, "Could not retrieve list of Timesheets.", new Throwable());
 		}
 		
-		return timesheet;
+		return jsonResponse;
 	}
 
 	public TimesheetService getTimesheetService() {

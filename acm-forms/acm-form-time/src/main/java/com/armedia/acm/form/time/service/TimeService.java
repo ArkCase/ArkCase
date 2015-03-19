@@ -216,7 +216,7 @@ public class TimeService extends FrevvoFormAbstractService {
 	{
 		List<String> codeOptions = new ArrayList<>();
 		
-		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC);
+		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
 		
 		if (jsonResults != null)
 		{

@@ -233,7 +233,7 @@ public class TimesheetServiceTest extends EasyMockSupport {
 		
 		replayAll();
 		
-		String response = timesheetService.getObjectsFromSolr(objectType, mockAuthentication, 0, 10, "");
+		String response = timesheetService.getObjectsFromSolr(objectType, mockAuthentication, 0, 10, "", null);
 		
 		verifyAll();
 		
@@ -251,6 +251,7 @@ public class TimesheetServiceTest extends EasyMockSupport {
 	public void getTimesheetsByObjectIdTest() throws Exception
 	{		
 		long objectId = 5L;
+		String objectType = "type";
 		
 		AcmTimesheet timesheet = new AcmTimesheet();
 		timesheet.setId(1L);
@@ -286,11 +287,11 @@ public class TimesheetServiceTest extends EasyMockSupport {
 		
 		timesheet.setTimes(Arrays.asList(time1, time2, time3));
 		
-		expect(mockAcmTimesheetDao.findByObjectId(objectId)).andReturn(Arrays.asList(timesheet));
+		expect(mockAcmTimesheetDao.findByObjectIdAndType(objectId, objectType, 0, 10, "")).andReturn(Arrays.asList(timesheet));
 		
 		replayAll();
 		
-		List<AcmTimesheet> found = timesheetService.getByObjectId(objectId);
+		List<AcmTimesheet> found = timesheetService.getByObjectIdAndType(objectId, objectType, 0, 10, "");
 		
 		verifyAll();
 

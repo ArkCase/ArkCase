@@ -7,7 +7,19 @@
 		<property name="timesheetService" ref="timesheetService"/>
 	</bean>
 	
-	<bean id="saveTimesheetDetailsAPIController" class="com.armedia.acm.services.timesheet.web.SaveTimesheetDetailsAPIController">
+	<bean id="getTimesheetsAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetsAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="getTimesheetsForUserAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetsForUserAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="getTimesheetsForObjectIdAndTypeAPIController" class="com.armedia.acm.services.timesheet.web.GetTimesheetsForObjectIdAndTypeAPIController">
+		<property name="timesheetService" ref="timesheetService"/>
+	</bean>
+	
+	<bean id="saveTimesheetAPIController" class="com.armedia.acm.services.timesheet.web.SaveTimesheetAPIController">
 		<property name="timesheetService" ref="timesheetService"/>
 	</bean>
 

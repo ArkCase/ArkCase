@@ -53,8 +53,14 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 		return timesheet;
 	}
 	
-	public List<AcmTimesheet> findByObjectId(Long objectId)
+	public List<AcmTimesheet> findByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
 	{
+		String orderByQuery = "";
+		if (sortParams != null && !"".equals(sortParams))
+		{
+			orderByQuery = " ORDER BY timesheet." + sortParams;
+		}
+		
 		// Use "WHERE timesheet.id IN" because DISTINCT not work with type CLOB. 
 		// This query will avoid using DISTINCT with timesheet.details property which is of type CLOB
 		Query selectQuery = getEm().createQuery("SELECT timesheet "
@@ -63,10 +69,15 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 												  + "SELECT DISTINCT t.id "
 												  + "FROM AcmTimesheet t "
 												  + "LEFT JOIN t.times AS times "
-												  + "WHERE times.objectId = :objectId"
-											  + ")");
+												  + "WHERE times.objectId = :objectId "
+												  + "AND times.type = :objectType"
+											  + ")"
+											  + orderByQuery);
 		
 		selectQuery.setParameter("objectId", objectId);
+		selectQuery.setParameter("objectType", objectType);
+		selectQuery.setFirstResult(startRow);
+		selectQuery.setMaxResults(maxRows);
 		
 		@SuppressWarnings("unchecked")
 		List<AcmTimesheet> timesheets = (List<AcmTimesheet>) selectQuery.getResultList();
