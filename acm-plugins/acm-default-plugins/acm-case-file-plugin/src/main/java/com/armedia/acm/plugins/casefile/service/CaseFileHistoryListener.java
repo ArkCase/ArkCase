@@ -8,6 +8,8 @@ import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 
+import java.util.List;
+
 /**
  * @author riste.tutureski
  *
@@ -19,7 +21,9 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent> {
 	private static final String OBJECT_TYPE = "CASE_FILE";
 	
 	private AcmObjectHistoryService acmObjectHistoryService;
-	
+
+    private List<String> nonHistoryGeneratingEvents;
+
 	@Override
 	public void onApplicationEvent(CaseEvent event) 
 	{
@@ -27,8 +31,7 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent> {
 		
 		if (event != null)
 		{
-            boolean execute = checkExecution(event.getEventType());
-            if( execute ) {
+            if( !getNonHistoryGeneratingEvents().contains(event.getEventType()) ) {
 
                 CaseFile caseFile = (CaseFile) event.getSource();
 
@@ -39,13 +42,6 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent> {
 		}
 	}
 
-    private boolean checkExecution(String eventType) {
-        if ("com.armedia.acm.casefile.event.created".equals(eventType) || "com.armedia.acm.casefile.event.updated".equals(eventType)) {
-            return true;
-        }
-
-        return false;
-    }
 	public AcmObjectHistoryService getAcmObjectHistoryService()
 	{
 		return acmObjectHistoryService;
@@ -55,4 +51,12 @@ public class CaseFileHistoryListener implements ApplicationListener<CaseEvent> {
 	{
 		this.acmObjectHistoryService = acmObjectHistoryService;
 	}
+
+    public List<String> getNonHistoryGeneratingEvents() {
+        return nonHistoryGeneratingEvents;
+    }
+
+    public void setNonHistoryGeneratingEvents(List<String> nonHistoryGeneratingEvents) {
+        this.nonHistoryGeneratingEvents = nonHistoryGeneratingEvents;
+    }
 }
