@@ -29,6 +29,7 @@ public class TimeForm {
 	private List<TimeItem> items;
 	private String status;
 	private List<String> statusOptions;
+	private String details;
 	private String initData;
 	private List<String> totals;
 	
@@ -94,6 +95,15 @@ public class TimeForm {
 
 	public void setStatusOptions(List<String> statusOptions) {
 		this.statusOptions = statusOptions;
+	}
+
+	@XmlElement(name="details")
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	@XmlElement(name="initData")
