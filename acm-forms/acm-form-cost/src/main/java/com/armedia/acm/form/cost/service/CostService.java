@@ -3,13 +3,10 @@
  */
 package com.armedia.acm.form.cost.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
@@ -34,7 +31,7 @@ import com.google.gson.GsonBuilder;
  * @author riste.tutureski
  *
  */
-public class CostService extends FrevvoFormAbstractService {
+public class CostService extends FrevvoFormChargeAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -168,54 +165,12 @@ public class CostService extends FrevvoFormAbstractService {
 		return json;
 	}
 	
-	private Map<String, List<String>> getCodeOptions(List<String> types)
+	@Override
+	public String getSolrResponse(String objectType)
 	{
-		Map<String, List<String>> codeOptions = new HashMap<String, List<String>>();
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
 		
-		if (types != null)
-		{
-			for (String type : types)
-			{
-				String[] typeArray = type.split("=");
-				if (typeArray != null && typeArray.length == 2)
-				{
-					List<String> options = getCodeOptionsByObjectType(typeArray[0]);
-					codeOptions.put(typeArray[0], options);
-				}
-			}
-		}
-		
-		return codeOptions;
-	}
-	
-	private List<String> getCodeOptionsByObjectType(String objectType)
-	{
-		List<String> codeOptions = new ArrayList<>();
-		
-		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC);
-		
-		if (jsonResults != null)
-		{
-			JSONArray objects = getSearchResults().getDocuments(jsonResults);
-			
-			List<String> ids = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_OBJECT_ID_S);
-			List<String> names = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_NAME);
-			
-			if (ids != null)
-			{
-				for (int i = 0; i < ids.size(); i++)
-				{
-					// This check is only for safe execution. "ids" and "names" always will have the same size but
-					// check that before invoking "get(index)" method
-					if (i < names.size())
-					{
-						codeOptions.add(ids.get(i) + "=" + names.get(i));
-					}
-				}
-			}
-		}
-		
-		return codeOptions;
+		return jsonResults;
 	}
 
 	@Override

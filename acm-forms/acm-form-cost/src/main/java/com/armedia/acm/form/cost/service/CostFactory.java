@@ -15,6 +15,8 @@ import com.armedia.acm.services.costsheet.dao.AcmCostDao;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 /**
  * @author riste.tutureski
@@ -26,6 +28,7 @@ public class CostFactory {
 	
 	private AcmCostDao acmCostDao;
 	private AcmCostsheetDao acmCostsheetDao;
+	private UserDao userDao;
 	
 	/**
 	 * Converting Frevvo CostForm to AcmCostsheet
@@ -52,7 +55,7 @@ public class CostFactory {
 		if (form != null)
 		{
 			retval.setId(form.getId());
-			retval.setUserId(form.getUser());
+			retval.setUser(getUser(form.getUser()));
 			retval.setParentId(form.getObjectId());
 			retval.setParentType(form.getObjectType());
 			retval.setParentNumber(form.getObjectNumber());
@@ -86,7 +89,12 @@ public class CostFactory {
 			form = new CostForm();
 			
 			form.setId(costsheet.getId());
-			form.setUser(costsheet.getUserId());
+			
+			if (costsheet.getUser() != null)
+			{
+				form.setUser(costsheet.getUser().getUserId());
+			}
+
 			form.setObjectId(costsheet.getParentId());
 			form.setObjectType(costsheet.getParentType());
 			form.setObjectNumber(costsheet.getParentNumber());
@@ -174,6 +182,22 @@ public class CostFactory {
 		
 		return retval;
 	}
+	
+	private AcmUser getUser(String userId)
+	{	
+		AcmUser user = null;
+		
+		try
+		{
+			user = getUserDao().findByUserId(userId);			
+		}
+		catch(Exception e)
+		{
+			LOG.error("Could not retrive user.", e);
+		}
+		
+		return user;
+	}
 
 	public AcmCostsheetDao getAcmCostsheetDao() {
 		return acmCostsheetDao;
@@ -189,5 +213,13 @@ public class CostFactory {
 
 	public void setAcmCostDao(AcmCostDao acmCostDao) {
 		this.acmCostDao = acmCostDao;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}	
 }

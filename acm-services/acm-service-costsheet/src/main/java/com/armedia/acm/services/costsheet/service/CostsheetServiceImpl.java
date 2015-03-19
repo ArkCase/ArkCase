@@ -3,9 +3,9 @@
  */
 package com.armedia.acm.services.costsheet.service;
 
+import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,14 @@ public class CostsheetServiceImpl implements CostsheetService {
 	private ExecuteSolrQuery executeSolrQuery;
 	
 	@Override
+	public AcmCostsheet save(AcmCostsheet costsheet) 
+	{
+		AcmCostsheet saved = getAcmCostsheetDao().save(costsheet);
+		
+		return saved;
+	}
+	
+	@Override
 	public AcmCostsheet save(AcmCostsheet costsheet, String submissionName) 
 	{		
 		costsheet.setStatus(getSubmissionStatusesMap().get(submissionName));
@@ -38,13 +46,44 @@ public class CostsheetServiceImpl implements CostsheetService {
 	}
 	
 	@Override
-	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams) 
+	public AcmCostsheet get(Long id) 
+	{
+		AcmCostsheet timesheet = getAcmCostsheetDao().find(id);
+		
+		return timesheet;
+	}
+	
+	/**
+	 * Return costsheets for specified object id and object type
+	 */
+	@Override
+	public List<AcmCostsheet> getByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
+	{
+		List<AcmCostsheet> retval = null;
+		
+		if (objectId != null)
+		{
+			// Get costsheets form database for given object id and type
+			retval = getAcmCostsheetDao().findByObjectIdAndType(objectId, objectType, startRow, maxRows, sortParams);
+		}
+		
+		return retval;
+	}
+	
+	@Override
+	public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId) 
 	{
 		String retval = null;
 		
 		LOG.debug("Taking objects from Solr for object type = " + objectType);
 		
-		String query = "object_type_s:" + objectType + " AND -status_s:DELETE";
+		String authorQuery = "";
+		if (userId != null)
+		{
+			authorQuery = " AND author:" + userId;
+		}
+		
+		String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
 		
 		try 
 		{

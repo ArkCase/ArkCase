@@ -173,6 +173,7 @@ public class AcmCost implements Serializable, AcmObject, AcmEntity {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getObjectType() 
 	{
 		return CostConstants.OBJECT_TYPE;
