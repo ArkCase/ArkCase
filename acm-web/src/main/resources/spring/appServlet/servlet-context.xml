@@ -101,7 +101,7 @@
         </mvc:interceptor>
         <mvc:interceptor>
             <mvc:mapping path="/plugin/**"/>
-            <mvc:mapping path="/api/*/plugin/**"/>
+            <mvc:mapping path="/api/**"/>
             <ref bean="acmAuditPropertyInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

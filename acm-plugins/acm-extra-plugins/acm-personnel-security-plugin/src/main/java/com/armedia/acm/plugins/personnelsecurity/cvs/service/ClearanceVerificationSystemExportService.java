@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.personnelsecurity.cvs.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.ClearanceVerificationSystemDeterminationRecord;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class ClearanceVerificationSystemExportService
             getEcmFileService().upload(FILE_TYPE, CATEGORY, recordInputStream, "text/plain", "cvsExport.txt", auth, caseCmisFolderId,
                     "CASE_FILE", caseId);
         }
-        catch (AcmCreateObjectFailedException e)
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             log.error("Could not create CVS export: " + e.getMessage(), e);
         }

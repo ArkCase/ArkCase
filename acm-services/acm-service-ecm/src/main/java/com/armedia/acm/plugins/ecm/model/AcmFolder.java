@@ -16,40 +16,40 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "acm_container_folder")
-public class AcmContainerFolder implements AcmEntity, Serializable, AcmObject
+@Table(name = "acm_folder")
+public class AcmFolder implements AcmEntity, Serializable, AcmObject
 {
 
     private static final String OBJECT_TYPE = "FOLDER";
-    private static final long serialVersionUID = 2571845031587707081L;
+    private static final long serialVersionUID = -1087924246860797061L;
 
     @Id
-    @Column(name = "cm_container_folder_id")
+    @Column(name = "cm_folder_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cm_container_folder_created", nullable = false, insertable = true, updatable = false)
+    @Column(name = "cm_folder_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @Column(name = "cm_container_folder_creator", insertable = true, updatable = false)
+    @Column(name = "cm_folder_creator", insertable = true, updatable = false)
     private String creator;
 
-    @Column(name = "cm_container_folder_modified", nullable = false)
+    @Column(name = "cm_folder_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(name = "cm_container_folder_modifier")
+    @Column(name = "cm_folder_modifier")
     private String modifier;
 
-    @Column(name = "cm_object_type")
-    private String containerObjectType;
-
-    @Column(name = "cm_object_id")
-    private Long containerObjectId;
+    @Column(name = "cm_folder_name")
+    private String name;
 
     @Column(name = "cm_cmis_folder_id")
     private String cmisFolderId;
+
+    @Column(name = "cm_parent_folder_id")
+    private Long parentFolderId;
 
     @Override
     public Date getCreated()
@@ -116,6 +116,16 @@ public class AcmContainerFolder implements AcmEntity, Serializable, AcmObject
         this.id = id;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     public String getCmisFolderId()
     {
         return cmisFolderId;
@@ -126,23 +136,13 @@ public class AcmContainerFolder implements AcmEntity, Serializable, AcmObject
         this.cmisFolderId = cmisFolderId;
     }
 
-    public String getContainerObjectType()
+    public Long getParentFolderId()
     {
-        return containerObjectType;
+        return parentFolderId;
     }
 
-    public void setContainerObjectType(String containerObjectType)
+    public void setParentFolderId(Long parentFolderId)
     {
-        this.containerObjectType = containerObjectType;
-    }
-
-    public Long getContainerObjectId()
-    {
-        return containerObjectId;
-    }
-
-    public void setContainerObjectId(Long containerObjectId)
-    {
-        this.containerObjectId = containerObjectId;
+        this.parentFolderId = parentFolderId;
     }
 }

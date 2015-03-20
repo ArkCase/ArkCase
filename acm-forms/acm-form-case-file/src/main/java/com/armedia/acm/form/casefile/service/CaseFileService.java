@@ -130,7 +130,12 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		if ( !"edit".equals(mode) )
 		{
 			CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-			workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule());
+			workflowListener.handleNewCaseFile(
+                    getCaseFile(),
+                    frevvoFiles,
+                    getActivitiRuntimeService(),
+                    getFileWorkflowBusinessRule(),
+                    this);
 		}
 		
 		return true;

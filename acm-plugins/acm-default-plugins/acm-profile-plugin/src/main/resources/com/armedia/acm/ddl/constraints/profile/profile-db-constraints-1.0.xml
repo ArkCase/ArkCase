@@ -43,4 +43,20 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
+
+    <changeSet id="profile-constraints-03-container-foreign-key" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_container_id"/>
+                <columnExists tableName="acm_user_org" columnName="cm_container_id"/>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_container_id"
+                                 constraintName="fk_user_org_container"
+                                 referencedTableName="acm_container"
+                                 referencedColumnNames="cm_container_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
 </databaseChangeLog>

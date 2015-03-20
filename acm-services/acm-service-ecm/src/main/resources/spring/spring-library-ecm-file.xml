@@ -25,11 +25,13 @@
     </bean>
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
-    <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao"/>
+    <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerDao"/>
+    <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
         <lookup-method name="getMuleClient" bean="muleClient"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">

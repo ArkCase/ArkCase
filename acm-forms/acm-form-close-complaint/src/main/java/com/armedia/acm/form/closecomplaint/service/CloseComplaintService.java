@@ -146,9 +146,10 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
+        String cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
-                complaint.getContainerFolder().getCmisFolderId(),
+                cmisFolderId,
                 FrevvoFormName.COMPLAINT.toUpperCase(),
                 complaint.getComplaintId());
 

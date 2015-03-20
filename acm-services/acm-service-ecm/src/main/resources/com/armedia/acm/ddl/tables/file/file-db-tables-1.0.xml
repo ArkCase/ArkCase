@@ -595,6 +595,48 @@
         <addNotNullConstraint tableName="acm_file" columnName="cm_folder_id"/>
     </changeSet>
 
+    <changeSet id="files-27-make-folder-id-unique" author="dmiller">
+        <addUniqueConstraint tableName="acm_folder" columnNames="cm_cmis_folder_id"/>
+    </changeSet>
+
+    <changeSet id="files-28-add-container-id-to-file" author="dmiller">
+        <addColumn tableName="acm_file">
+            <column name="cm_container_id" type="NUMBER(32,0)">
+                <constraints foreignKeyName="fk_file_container_id"
+                             referencedTableName="acm_container"
+                             referencedColumnNames="cm_container_id"
+                             initiallyDeferred="true"
+                             deferrable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-29-populate-file-container-id" author="dmiller">
+        <sql>
+            UPDATE acm_file af
+            SET    af.cm_container_id =
+            (
+                    SELECT ac.cm_container_id
+                    FROM   acm_folder folder,
+                           acm_container ac
+                    WHERE  af.cm_folder_id = folder.cm_folder_id
+                    AND    folder.cm_folder_id = ac.cm_folder_id
+            )
+            WHERE EXISTS
+            (
+                    SELECT ac.cm_container_id
+                    FROM   acm_folder folder,
+                           acm_container ac
+                    WHERE  af.cm_folder_id = folder.cm_folder_id
+                    AND    folder.cm_folder_id = ac.cm_folder_id
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-30-make-file-container-id-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_file" columnName="cm_container_id"/>
+    </changeSet>
+
 
 </databaseChangeLog>
 

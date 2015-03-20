@@ -5,8 +5,9 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ public interface EcmFileService
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException;
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /** This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
@@ -49,7 +50,7 @@ public interface EcmFileService
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException;
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
     
     /**
      * 
@@ -82,7 +83,7 @@ public interface EcmFileService
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 
     @Transactional
-    AcmContainerFolder getOrCreateContainerFolder(String objectType, Long objectId) throws
+    AcmContainer getOrCreateContainerFolder(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection) throws AcmListObjectsFailedException;

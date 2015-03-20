@@ -4,13 +4,12 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -111,8 +110,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
      * Container folder where the complaint's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumn(name = "cm_container_folder_id")
-    private AcmContainerFolder containerFolder = new AcmContainerFolder();
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer containerFolder = new AcmContainer();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id")
@@ -192,10 +191,10 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
             ap.setObjectType("COMPLAINT");
         }
 
-        if ( getContainerFolder() != null )
+        if ( getContainer() != null )
         {
-            getContainerFolder().setContainerObjectId(getComplaintId());
-            getContainerFolder().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectId(getComplaintId());
+            getContainer().setContainerObjectType(getObjectType());
         }
     }
 
@@ -478,12 +477,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.restricted = restricted;
     }
 
-    public AcmContainerFolder getContainerFolder()
+    public AcmContainer getContainer()
     {
         return containerFolder;
     }
 
-    public void setContainerFolder(AcmContainerFolder containerFolder)
+    public void setContainer(AcmContainer containerFolder)
     {
         if ( containerFolder != null )
         {
