@@ -4,10 +4,11 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
@@ -47,7 +48,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     
     private EcmFileDao ecmFileDao;
 
-    private AcmContainerFolderDao containerFolderDao;
+    private AcmContainerDao containerFolderDao;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -69,13 +70,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
         }
 
+        AcmContainer container = getOrCreateContainerFolder(parentObjectType, parentObjectId);
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
@@ -86,8 +88,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     fileContentType,
                     fileName,
                     targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
+                    container);
 
             return uploaded;
         }
@@ -105,13 +106,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
             log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
         }
+
+        AcmContainer container = getOrCreateContainerFolder(parentObjectType, parentObjectId);
 
         try
         {
@@ -122,8 +125,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     file.getContentType(),
                     file.getOriginalFilename(),
                     targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
+                    container);
 
             return uploaded;
         } catch (IOException | MuleException e)
@@ -205,14 +207,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Transactional
-    public AcmContainerFolder getOrCreateContainerFolder(String objectType, Long objectId) throws
+    public AcmContainer getOrCreateContainerFolder(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         log.info("Finding folder for object " + objectType + " id " + objectId);
 
         try
         {
-            AcmContainerFolder retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
+            AcmContainer retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
             return retval;
         }
         catch ( AcmObjectNotFoundException e)
@@ -233,7 +235,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
      * @param objectId
      * @return
      */
-    private AcmContainerFolder createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
+    private AcmContainer createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
     {
         log.debug("Creating new folder for object " + objectType + " id " + objectId);
 
@@ -245,14 +247,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
 
-        AcmContainerFolder newFolder = new AcmContainerFolder();
-        newFolder.setContainerObjectId(objectId);
-        newFolder.setContainerObjectType(objectType);
+        AcmContainer newContainer = new AcmContainer();
+        newContainer.setContainerObjectId(objectId);
+        newContainer.setContainerObjectType(objectType);
+        AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+        newContainer.setFolder(newFolder);
 
-        newFolder = getContainerFolderDao().save(newFolder);
+        newContainer = getContainerFolderDao().save(newContainer);
 
-        return newFolder;
+        return newContainer;
     }
 
 
@@ -377,12 +382,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.cmisBaseTypeToAcmType = cmisBaseTypeToAcmType;
     }
 
-    public AcmContainerFolderDao getContainerFolderDao()
+    public AcmContainerDao getContainerFolderDao()
     {
         return containerFolderDao;
     }
 
-    public void setContainerFolderDao(AcmContainerFolderDao containerFolderDao)
+    public void setContainerFolderDao(AcmContainerDao containerFolderDao)
     {
         this.containerFolderDao = containerFolderDao;
     }

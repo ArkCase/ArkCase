@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -12,16 +11,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
@@ -52,8 +53,8 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_file_modifier")
     private String modifier;
 
-    @Column(name = "cm_file_ecm_id")
-    private String ecmFileId;
+    @Column(name = "cm_version_series_id")
+    private String versionSeriesId;
 
     @Column(name = "cm_file_name")
     private String fileName;
@@ -61,12 +62,25 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_file_mime_type")
     private String fileMimeType;
 
+    @ManyToOne
+    @JoinColumn(name = "cm_folder_id")
+    private AcmFolder folder;
+
+    @ManyToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container;
+
     @Column(name = "cm_file_type")
     private String fileType;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_target_id")
-    private Collection<ObjectAssociation> parentObjects = new ArrayList<>();
+    @Column(name = "cm_file_active_version_tag")
+    private String activeVersionTag;
+
+    @Column(name = "cm_file_category")
+    private String category = "Document";
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="file")
+    private List<EcmFileVersion> versions = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -76,11 +90,20 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
             setStatus("ACTIVE");
         }
 
-        for ( ObjectAssociation parentObject : parentObjects )
+        fixChildPointers();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        fixChildPointers();
+    }
+
+    private void fixChildPointers()
+    {
+        for ( EcmFileVersion version : getVersions() )
         {
-            parentObject.setTargetId(fileId);
-            parentObject.setTargetName(fileName);
-            parentObject.setTargetType(OBJECT_TYPE);
+            version.setFile(this);
         }
     }
 
@@ -152,16 +175,6 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
         this.modifier = modifier;
     }
 
-    public String getEcmFileId()
-    {
-        return ecmFileId;
-    }
-
-    public void setEcmFileId(String ecmFileId)
-    {
-        this.ecmFileId = ecmFileId;
-    }
-
     public String getFileName()
     {
         return fileName;
@@ -192,17 +205,64 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
         this.fileType = fileType;
     }
 
-    public Collection<ObjectAssociation> getParentObjects()
+    public String getVersionSeriesId()
     {
-        return Collections.unmodifiableCollection(parentObjects);
+        return versionSeriesId;
     }
 
-    public void addParentObject(ObjectAssociation parentObject)
+    public void setVersionSeriesId(String versionSeriesId)
     {
-        parentObjects.add(parentObject);
-        parentObject.setTargetName(getFileName());
-        parentObject.setTargetType(OBJECT_TYPE);
-        parentObject.setTargetId(getFileId());
+        this.versionSeriesId = versionSeriesId;
+    }
+
+    public AcmFolder getFolder()
+    {
+        return folder;
+    }
+
+    public void setFolder(AcmFolder folder)
+    {
+        this.folder = folder;
+    }
+
+    public String getActiveVersionTag()
+    {
+        return activeVersionTag;
+    }
+
+    public void setActiveVersionTag(String activeVersionTag)
+    {
+        this.activeVersionTag = activeVersionTag;
+    }
+
+    public String getCategory()
+    {
+        return category;
+    }
+
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    public List<EcmFileVersion> getVersions()
+    {
+        return versions;
+    }
+
+    public void setVersions(List<EcmFileVersion> versions)
+    {
+        this.versions = versions;
+    }
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
     }
 
     @JsonIgnore

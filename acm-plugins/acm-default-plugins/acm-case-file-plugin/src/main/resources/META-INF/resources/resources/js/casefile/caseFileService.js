@@ -1332,8 +1332,7 @@ CaseFile.Service = {
                 + "?templateName=" + templateName
                 + "&parentObjectType=" + CaseFile.Model.DOC_TYPE_CASE_FILE
                 + "&parentObjectId=" + caseFileIn.id
-                + "&targetCmisFolderId=" + caseFileIn.containerFolder.cmisFolderId
-                ;
+                + "&targetCmisFolderId=" + caseFileIn.container.folder.cmisFolderId;
 
             Acm.Service.asyncPost(
                 function(response) {

@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -98,8 +98,13 @@ public class FileUploadAPIController
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
-        AcmContainerFolder folder = getEcmFileService().getOrCreateContainerFolder(parentObjectType, parentObjectId);
-        String folderId = folder.getCmisFolderId();
+        AcmContainer container = getEcmFileService().getOrCreateContainerFolder(parentObjectType, parentObjectId);
+        if ( container.getFolder() == null )
+        {
+            // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+            throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
+        }
+        String folderId = container.getFolder().getCmisFolderId();
 
         //for multiple files
         MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();

@@ -1,17 +1,13 @@
 package com.armedia.acm.plugins.profile.model;
 
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 20.10.2014.
@@ -78,8 +74,8 @@ public class UserOrg implements Serializable{
      * Container folder where the case file's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumn(name = "cm_container_folder_id")
-    private AcmContainerFolder containerFolder = new AcmContainerFolder();
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
 
     @Column(name = "cm_ecm_fileId")
     private Long ecmFileId;
@@ -109,10 +105,10 @@ public class UserOrg implements Serializable{
 
     private void setupChildPointers()
     {
-        if ( getContainerFolder() != null )
+        if ( getContainer() != null )
         {
-            getContainerFolder().setContainerObjectId(getUserOrgId());
-            getContainerFolder().setContainerObjectType("USER_ORG");
+            getContainer().setContainerObjectId(getUserOrgId());
+            getContainer().setContainerObjectType("USER_ORG");
         }
     }
 
@@ -268,13 +264,13 @@ public class UserOrg implements Serializable{
         this.title = title;
     }
 
-    public AcmContainerFolder getContainerFolder()
+    public AcmContainer getContainer()
     {
-        return containerFolder;
+        return container;
     }
 
-    public void setContainerFolder(AcmContainerFolder containerFolder)
+    public void setContainer(AcmContainer container)
     {
-        this.containerFolder = containerFolder;
+        this.container = container;
     }
 }

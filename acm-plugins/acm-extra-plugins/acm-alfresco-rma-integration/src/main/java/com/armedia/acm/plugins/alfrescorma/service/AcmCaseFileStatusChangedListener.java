@@ -1,99 +1,83 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
-import java.util.Collection;
-import java.util.Date;
-
+import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
+import com.armedia.acm.plugins.casefile.model.CaseEvent;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
-import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import java.util.Date;
+import java.util.List;
 
-public class AcmCaseFileStatusChangedListener implements ApplicationListener<CaseEvent> {
+public class AcmCaseFileStatusChangedListener implements ApplicationListener<CaseEvent>
+{
 
-	private transient Logger LOG = LoggerFactory.getLogger(getClass());
-	private EcmFileDao ecmFileDao;
-	
-	@Override
-	public void onApplicationEvent(CaseEvent event) {
-		if ("com.armedia.acm.casefile.event.closed".equals(event.getEventType().toLowerCase()))
-		{
-			CaseFile caseFile = event.getCaseFile();
-			
-			 if (null != caseFile)
-		     {
-				 Collection<ObjectAssociation> associations =  caseFile.getChildObjects();
-				 
-				 if (null != associations && associations.size() > 0)
-	        	{
-	        		for (ObjectAssociation association : associations)
-	        		{
-	        			if ("FILE".equals(association.getTargetType()))
-	        			{
-	        				try
-	        				{
-		        				EcmFile file = ecmFileDao.find(association.getTargetId());
-		        				
-		        				AcmRecord record = new AcmRecord();
-		        				
-		        				record.setEcmFileId(file.getEcmFileId());
-		        		        record.setCategoryFolder("Case Files");
-		        		        record.setOriginatorOrg("Armedia LLC");
-		        		        record.setOriginator(file.getModifier());
-		        		        record.setPublishedDate(new Date());
-		        		        record.setReceivedDate(event.getEventDate());
-		        		        record.setRecordFolder(association.getParentName());
-		        		        
-		        		        try
-		        		        {
-		        		            if ( LOG.isTraceEnabled() )
-		        		            {
-		        		                LOG.trace("Sending JMS message.");
-		        		            }
-		        		            
-		        		            getMuleClient().dispatch("jms://rmaRecord.in", record, null);
-		        		            
-		        		            if ( LOG.isTraceEnabled() )
-		        		            {
-		        		                LOG.trace("Done");
-		        		            }
+    private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private EcmFileDao ecmFileDao;
 
-		        		        }
-		        		        catch (MuleException e)
-		        		        {
-		        		            LOG.error("Could not create RMA folder: " + e.getMessage(), e);
-		        		        }
-		        		        
-	        				}
-	        				catch(Exception e)
-	        				{
-	        					LOG.error("Cannot finish Record Management Strategy for file with id=" + association.getTargetId(), e);
-	        				}
-	        			}
-	        		}
-	        	}
-		     }
-		}
-	}
-	
-	public MuleClient getMuleClient()
+    @Override
+    public void onApplicationEvent(CaseEvent event)
     {
-        return null;  // this method should be overridden by Spring method injection
+        if ("com.armedia.acm.casefile.event.closed".equals(event.getEventType().toLowerCase()))
+        {
+            CaseFile caseFile = event.getCaseFile();
+
+            if (null != caseFile)
+            {
+                List<EcmFile> files = getEcmFileDao().findForContainer(caseFile.getContainer().getId());
+                for (EcmFile file : files)
+                {
+                    AcmRecord record = new AcmRecord();
+
+                    record.setEcmFileId(file.getFolder().getCmisFolderId());
+                    record.setCategoryFolder("Case Files");
+                    record.setOriginatorOrg("Armedia LLC");
+                    record.setOriginator(file.getModifier());
+                    record.setPublishedDate(new Date());
+                    record.setReceivedDate(event.getEventDate());
+                    record.setRecordFolder(caseFile.getCaseNumber());
+
+                    try
+                    {
+                        if (LOG.isTraceEnabled())
+                        {
+                            LOG.trace("Sending JMS message.");
+                        }
+
+                        getMuleClient().dispatch("jms://rmaRecord.in", record, null);
+
+                        if (LOG.isTraceEnabled())
+                        {
+                            LOG.trace("Done");
+                        }
+
+                    } catch (MuleException e)
+                    {
+                        LOG.error("Could not create RMA folder: " + e.getMessage(), e);
+                    }
+                }
+            }
+        }
     }
 
-	public EcmFileDao getEcmFileDao() {
-		return ecmFileDao;
-	}
+    public MuleClient getMuleClient()
+    {
+        return null;  // mule client is returned by Spring method injection
+    }
 
-	public void setEcmFileDao(EcmFileDao ecmFileDao) {
-		this.ecmFileDao = ecmFileDao;
-	}
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
+    }
 
 }

@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -129,8 +129,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
      * Container folder where the case file's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumn(name = "cm_container_folder_id")
-    private AcmContainerFolder containerFolder = new AcmContainerFolder();
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer containerFolder = new AcmContainer();
 
     @PrePersist
     protected void beforeInsert()
@@ -166,10 +166,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             ap.setObjectType(getObjectType());
         }
 
-        if ( getContainerFolder() != null )
+        if ( getContainer() != null )
         {
-            getContainerFolder().setContainerObjectId(getId());
-            getContainerFolder().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectId(getId());
+            getContainer().setContainerObjectType(getObjectType());
         }
     }
 
@@ -200,12 +200,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         childObject.setParentId(getId());
     }
 
-    public AcmContainerFolder getContainerFolder()
+    public AcmContainer getContainer()
     {
         return containerFolder;
     }
 
-    public void setContainerFolder(AcmContainerFolder containerFolder)
+    public void setContainer(AcmContainer containerFolder)
     {
         this.containerFolder = containerFolder;
     }

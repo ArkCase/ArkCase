@@ -14,6 +14,7 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Strings;
 
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -140,6 +141,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     protected ComplaintForm saveComplaint(ComplaintForm complaint) throws MuleException
     {
     	getComplaintFactory().setPersonDao(getPersonDao());
+        getComplaintFactory().setFileService(getEcmFileService());
         Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
 
         boolean isNew = acmComplaint.getComplaintId() == null;

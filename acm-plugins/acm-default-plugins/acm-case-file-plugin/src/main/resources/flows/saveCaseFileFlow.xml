@@ -50,13 +50,13 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <when expression="#[payload.ecmFolderPath != null]">
                 <processor-chain>
                     <!-- store the container folder in a flow variable so the enricher can see it -->
-                    <set-variable variableName="containerFolder" value="#[message.payload.containerFolder]"/>
+                    <set-variable variableName="container" value="#[message.payload.container]"/>
                     <!-- update the case file with the ID of the folder -->
-                    <enricher  source="#[message.payload.id]" target="#[flowVars['containerFolder'].cmisFolderId]">
+                    <enricher  source="#[message.payload.id]" target="#[flowVars['container'].cmisFolderId]">
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
                     <logger category="com.armedia.acm.plugins.casefile" level="DEBUG"
-                             message="Folder Id: #[payload.containerFolder.cmisFolderId]"/>
+                             message="Folder Id: #[payload.container.cmisFolderId]"/>
                 </processor-chain>
             </when>
             <otherwise>

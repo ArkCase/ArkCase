@@ -94,7 +94,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         EcmFile fromDb = new EcmFile();
         fromDb.setFileId(ecmFileId);
-        fromDb.setEcmFileId(cmisId);
+        fromDb.setVersionSeriesId(cmisId);
 
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 

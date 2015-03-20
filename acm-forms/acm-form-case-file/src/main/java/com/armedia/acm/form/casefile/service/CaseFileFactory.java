@@ -43,6 +43,7 @@ public class CaseFileFactory
 	private EcmFileDao ecmFileDao;
 	private AcmHistoryDao acmHistoryDao;
 	private EcmFileService ecmFileService;
+    private CaseFileService formService;
 
 	public CaseFile asAcmCaseFile(CaseFileForm form, CaseFile caseFile)
 	{
@@ -118,7 +119,8 @@ public class CaseFileFactory
 			retval.setCaseType(caseFile.getCaseType());
 			retval.setCaseNumber(caseFile.getCaseNumber());
 			retval.setCaseDescription(caseFile.getDetails());
-			retval.setCmisFolderId(caseFile.getContainerFolder().getCmisFolderId());
+            String cmisFolderId = getFormService().findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+			retval.setCmisFolderId(cmisFolderId);
 			retval.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
@@ -207,5 +209,14 @@ public class CaseFileFactory
 	public void setEcmFileService(EcmFileService ecmFileService) {
 		this.ecmFileService = ecmFileService;
 	}
-	
+
+    public CaseFileService getFormService()
+    {
+        return formService;
+    }
+
+    public void setFormService(CaseFileService formService)
+    {
+        this.formService = formService;
+    }
 }
