@@ -159,7 +159,6 @@ Timesheet.View = {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Timesheet.Controller.MODEL_SAVED_DETAIL            ,this.onModelSavedDetail);
-            Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_ADDED_TIMESHEET          ,this.onModelAddedTimesheet);
         }
         ,onInitialized: function() {
 
@@ -190,13 +189,7 @@ Timesheet.View = {
                 Timesheet.View.Detail.setHtmlDivDetail("(Error)");
             }
         }
-        ,onModelAddedTimesheet: function(timesheet) {
-            if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
-                if(Acm.isNotEmpty(timesheet.details)){
-                    Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
-                }
-            }
-        }
+
         ,DIRTY_EDITING_DETAIL: "Editing Timesheet detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
             App.Object.Dirty.declare(Timesheet.View.Detail.DIRTY_EDITING_DETAIL);
