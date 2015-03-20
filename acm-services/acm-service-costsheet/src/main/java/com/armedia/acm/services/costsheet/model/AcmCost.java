@@ -38,7 +38,7 @@ public class AcmCost implements Serializable, AcmObject, AcmEntity {
 	private Long id;
 	
 	@JsonIgnore
-    @ManyToOne(cascade = { CascadeType.ALL}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     @JoinColumn(name="cm_cost_costsheet_id") 
     private AcmCostsheet costsheet;
 	
@@ -173,6 +173,7 @@ public class AcmCost implements Serializable, AcmObject, AcmEntity {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getObjectType() 
 	{
 		return CostConstants.OBJECT_TYPE;

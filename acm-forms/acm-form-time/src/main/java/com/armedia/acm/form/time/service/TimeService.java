@@ -8,11 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.form.time.model.TimeItem;
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -38,7 +36,7 @@ import com.google.gson.GsonBuilder;
  * @author riste.tutureski
  *
  */
-public class TimeService extends FrevvoFormAbstractService {
+public class TimeService extends FrevvoFormChargeAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -182,64 +180,29 @@ public class TimeService extends FrevvoFormAbstractService {
 		return json;
 	}
 	
-	private Map<String, List<String>> getCodeOptions(List<String> types)
-	{
-		Map<String, List<String>> codeOptions = new HashMap<String, List<String>>();
+	@Override
+	public List<String> getOptions(String type)
+	{		
+		List<String> options = new ArrayList<>();
 		
-		if (types != null)
+		if (TimeFormConstants.OTHER.toUpperCase().equals(type))
 		{
-			for (String type : types)
-			{
-				String[] typeArray = type.split("=");
-				if (typeArray != null && typeArray.length == 2)
-				{
-					List<String> options = new ArrayList<>();
-					
-					if (TimeFormConstants.OTHER.toUpperCase().equals(typeArray[0]))
-					{
-						options = convertToList((String) getProperties().get(FrevvoFormName.TIME + ".type.other"), ",");
-					}
-					else
-					{
-						options = getCodeOptionsByObjectType(typeArray[0]);
-					}
-					
-					codeOptions.put(typeArray[0], options);
-				}
-			}
+			options = convertToList((String) getProperties().get(FrevvoFormName.TIME + ".type.other"), ",");
+		}
+		else
+		{
+			options = getCodeOptionsByObjectType(type);
 		}
 		
-		return codeOptions;
+		return options;
 	}
 	
-	private List<String> getCodeOptionsByObjectType(String objectType)
+	@Override
+	public String getSolrResponse(String objectType)
 	{
-		List<String> codeOptions = new ArrayList<>();
-		
 		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
 		
-		if (jsonResults != null)
-		{
-			JSONArray objects = getSearchResults().getDocuments(jsonResults);
-			
-			List<String> ids = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_OBJECT_ID_S);
-			List<String> names = getSearchResults().getListForField(objects, SearchConstants.PROPERTY_NAME);
-			
-			if (ids != null)
-			{
-				for (int i = 0; i < ids.size(); i++)
-				{
-					// This check is only for safe execution. "ids" and "names" always will have the same size but
-					// check that before invoking "get(index)" method
-					if (i < names.size())
-					{
-						codeOptions.add(ids.get(i) + "=" + names.get(i));
-					}
-				}
-			}
-		}
-		
-		return codeOptions;
+		return jsonResults;
 	}
 
 	@Override
