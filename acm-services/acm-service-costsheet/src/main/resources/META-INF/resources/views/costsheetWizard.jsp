@@ -6,7 +6,7 @@
 
 <t:layout>
 	<jsp:attribute name="endOfHead">
-	    <title><spring:message code="costsheet.page.title" text="Cost Tracking | ACM | ArkCase" /></title>
+	    <title><spring:message code="costsheetNew.page.title" text="Cost Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
             <span itemprop="newCostsheetFormUrl">${newCostsheetFormUrl}</span>
         </div>
