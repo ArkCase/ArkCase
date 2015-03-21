@@ -62,6 +62,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         AcmContainer container = new AcmContainer();
                         payload.setContainer(container);
                         payload.getContainer().setContainerObjectType(payload.getObjectType());
+                        payload.getContainer().setContainerObjectTitle(payload.getComplaintNumber());
                     }
 
                     if ( payload.getContainer().getFolder() == null )

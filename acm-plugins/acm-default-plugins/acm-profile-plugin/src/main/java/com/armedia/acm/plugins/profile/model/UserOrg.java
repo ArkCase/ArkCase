@@ -109,6 +109,7 @@ public class UserOrg implements Serializable{
         {
             getContainer().setContainerObjectId(getUserOrgId());
             getContainer().setContainerObjectType("USER_ORG");
+            getContainer().setContainerObjectTitle(getUser().getUserId());
         }
     }
 

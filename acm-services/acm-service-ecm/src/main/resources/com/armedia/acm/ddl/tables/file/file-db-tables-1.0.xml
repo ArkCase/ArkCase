@@ -637,6 +637,130 @@
         <addNotNullConstraint tableName="acm_file" columnName="cm_container_id"/>
     </changeSet>
 
+    <changeSet id="files-31-add-container-title" author="dmiller">
+        <addColumn tableName="acm_container">
+            <column name="cm_object_title" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-32-update-container-title-case-files" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_case_file"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  acf.cm_case_number
+                    FROM    acm_case_file acf
+                    WHERE   c.cm_object_id = acf.cm_case_id
+                    AND     c.cm_object_type = 'CASE_FILE'
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_case_file acf
+                    WHERE   c.cm_object_id = acf.cm_case_id
+                    AND     c.cm_object_type = 'CASE_FILE'
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-33-update-container-title-complaints" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_complaint"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  ac.cm_complaint_number
+                    FROM    acm_complaint ac
+                    WHERE   c.cm_object_id = ac.cm_complaint_id
+                    AND     c.cm_object_type = 'COMPLAINT'
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_complaint ac
+                    WHERE   c.cm_object_id = ac.cm_complaint_id
+                    AND     c.cm_object_type = 'COMPLAINT'
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-34-update-container-title-user-profiles" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_user_org"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  auo.cm_user
+                    FROM    acm_user_org auo
+                    WHERE   c.cm_object_id = auo.cm_user_org_id
+                    AND     c.cm_object_type = 'USER_ORG'
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_user_org auo
+                    WHERE   c.cm_object_id = auo.cm_user_org_id
+                    AND     c.cm_object_type = 'USER_ORG'
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <!-- This SQL is in general a REALLY BAD IDEA!!! We shouldn't query Activiti directly!
+         I'm only doing this since it's only needed because I keep changing the document management
+         data model during implementation.  -Dave -->
+    <changeSet id="files-35-update-container-title-tasks" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="act_hi_taskinst"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  aht.name_
+                    FROM    act_hi_taskinst aht
+                    WHERE   c.cm_object_type = 'TASK'
+                    AND     TO_CHAR(c.cm_object_id) = aht.id_
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    act_hi_taskinst aht
+                    WHERE   c.cm_object_type = 'TASK'
+                    AND     TO_CHAR(c.cm_object_id) = aht.id_
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-36-make-object-title-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_container" columnName="cm_object_title"/>
+    </changeSet>
 
 </databaseChangeLog>
 

@@ -4,15 +4,10 @@
 package com.armedia.acm.form.casefile.service;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
 import com.armedia.acm.form.config.xml.ParticipantItem;
+import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -24,6 +19,11 @@ import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author riste.tutureski
@@ -43,7 +43,6 @@ public class CaseFileFactory
 	private EcmFileDao ecmFileDao;
 	private AcmHistoryDao acmHistoryDao;
 	private EcmFileService ecmFileService;
-    private CaseFileService formService;
 
 	public CaseFile asAcmCaseFile(CaseFileForm form, CaseFile caseFile)
 	{
@@ -108,7 +107,7 @@ public class CaseFileFactory
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, CaseFileForm form)
+	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, FrevvoFormAbstractService formService)
 	{		
 		CaseFileForm retval = new CaseFileForm();
 		
@@ -119,7 +118,7 @@ public class CaseFileFactory
 			retval.setCaseType(caseFile.getCaseType());
 			retval.setCaseNumber(caseFile.getCaseNumber());
 			retval.setCaseDescription(caseFile.getDetails());
-            String cmisFolderId = getFormService().findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+            String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			retval.setCmisFolderId(cmisFolderId);
 			retval.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
 			
@@ -210,13 +209,4 @@ public class CaseFileFactory
 		this.ecmFileService = ecmFileService;
 	}
 
-    public CaseFileService getFormService()
-    {
-        return formService;
-    }
-
-    public void setFormService(CaseFileService formService)
-    {
-        this.formService = formService;
-    }
 }
