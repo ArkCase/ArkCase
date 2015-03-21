@@ -75,6 +75,7 @@ public class EcmFileDaoIT
         container.setFolder(folder);
         container.setContainerObjectId(500L);
         container.setContainerObjectType("containerObjectType");
+        container.setContainerObjectTitle("containerObjectTitle");
 
         file.setFolder(folder);
         file.setContainer(container);

@@ -195,6 +195,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         {
             getContainer().setContainerObjectId(getComplaintId());
             getContainer().setContainerObjectType(getObjectType());
+
+            log.debug("Setting container object title to: " + getComplaintNumber());
+            getContainer().setContainerObjectTitle(getComplaintNumber());
         }
     }
 
@@ -222,6 +225,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     public void setComplaintNumber(String complaintNumber)
     {
         this.complaintNumber = complaintNumber;
+
+        if ( getContainer() != null )
+        {
+            getContainer().setContainerObjectTitle(complaintNumber);
+        }
     }
 
     public String getComplaintType()

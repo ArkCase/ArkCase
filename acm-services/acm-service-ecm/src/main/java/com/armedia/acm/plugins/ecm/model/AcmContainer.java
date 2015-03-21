@@ -4,6 +4,7 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,7 +51,10 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_object_id")
     private Long containerObjectId;
 
-    @OneToOne
+    @Column(name = "cm_object_title")
+    private String containerObjectTitle;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_folder_id")
     private AcmFolder folder;
 
@@ -147,5 +151,15 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     public void setFolder(AcmFolder folder)
     {
         this.folder = folder;
+    }
+
+    public String getContainerObjectTitle()
+    {
+        return containerObjectTitle;
+    }
+
+    public void setContainerObjectTitle(String containerObjectTitle)
+    {
+        this.containerObjectTitle = containerObjectTitle;
     }
 }

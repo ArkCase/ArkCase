@@ -9,7 +9,7 @@
     	<property name="acmHistoryDao" ref="acmHistoryDao" />
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
-    	<property name="ecmFileService" ref="ecmFileService" />    	
+    	<property name="ecmFileService" ref="ecmFileService" />
     </bean>
     
     <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService">

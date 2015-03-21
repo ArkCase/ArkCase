@@ -44,6 +44,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setParent_id_s(Long.toString(in.getContainer().getId()));
         solr.setParent_type_s(in.getContainer().getObjectType());
+        solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
 
         solr.setEcmFileId(in.getVersionSeriesId());

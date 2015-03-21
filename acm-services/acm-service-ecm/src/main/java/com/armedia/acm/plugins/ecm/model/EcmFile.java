@@ -62,7 +62,8 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_file_mime_type")
     private String fileMimeType;
 
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_folder_id")
     private AcmFolder folder;
 

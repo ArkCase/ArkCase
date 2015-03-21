@@ -170,6 +170,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         {
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle(getCaseNumber());
         }
     }
 

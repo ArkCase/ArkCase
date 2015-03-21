@@ -739,6 +739,7 @@ class ActivitiTaskDao implements TaskDao
             container.setFolder(folder);
             container.setContainerObjectType(task.getObjectType());
             container.setContainerObjectId(task.getId());
+            container.setContainerObjectTitle(task.getTitle());
 
             container = getContainerFolderDao().save(container);
             task.setContainer(container);
