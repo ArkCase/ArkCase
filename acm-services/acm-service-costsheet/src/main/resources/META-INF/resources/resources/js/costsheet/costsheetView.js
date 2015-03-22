@@ -130,6 +130,7 @@ Costsheet.View = {
                 newCostsheetFormUrl = newCostsheetFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newCostsheetFormUrl, "", 860, 700, function() {
                     Costsheet.Controller.viewAddedCostsheet(Costsheet.View.getActiveCostsheet());
+                    Costsheet.Controller.viewEdittedCostsheet(Costsheet.View.getActiveCostsheet());
                 });
             }
         }
