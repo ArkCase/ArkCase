@@ -127,8 +127,8 @@ Timesheet.View = {
                 var newTimesheetFormUrl = Timesheet.View.MicroData.formUrls.newTimesheetFormUrl;
                 newTimesheetFormUrl = newTimesheetFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {
-                    Timesheet.Controller.viewAddedTimesheet(Timesheet.View.getActiveTimesheet());
-                    Timesheet.Controller.viewEdittedTimesheet(Timesheet.View.getActiveTimesheet());
+                    Timesheet.Controller.viewClosedAddTimesheetWindow();
+                    Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
                 });
             }
         }
@@ -136,12 +136,14 @@ Timesheet.View = {
             var formUrls = Timesheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editTimesheetFormUrl)){
                 var editTimesheetFormUrl = Timesheet.View.MicroData.formUrls.editTimesheetFormUrl;
-                var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
-                editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
-                editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {
-                    Timesheet.Controller.viewEdittedTimesheet(Timesheet.View.getActiveTimesheet());
-                });
+                if(Timesheet.Model.Detail.validateTimesheet(Timesheet.View.getActiveTimesheet())){
+                    var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
+                    editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
+                    editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
+                    Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {
+                        Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
+                    });
+                }
             }
         }
     }
@@ -166,20 +168,13 @@ Timesheet.View = {
 
         }
         ,onModelRetrievedObject: function(timesheet) {
+            Timesheet.View.Detail.resetDetail();
             if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
-                if(Acm.isNotEmpty(timesheet.details)){
-                    Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
-                }
-                if(Acm.isNotEmpty(timesheet.startDate) && Acm.isNotEmpty(timesheet.endDate)){
-                    var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " +  Acm.getDateFromDatetime(timesheet.endDate)
-                    Timesheet.View.Detail.setTextTimesheetName(timesheetName);
-                }
-                if(Acm.isNotEmpty(timesheet.modified)){
-                    Timesheet.View.Detail.setTextTimesheetModifiedDate("Last Modified " + Acm.getDateFromDatetime(timesheet.modified));
-                }
+                Timesheet.View.Detail.populateDetail(timesheet);
             }
         }
         ,onViewSelectedObject: function(objType, objId) {
+            Timesheet.View.Detail.resetDetail();
             var timesheet = Timesheet.View.getActiveTimesheet();
             if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
                 Timesheet.View.Detail.populateDetail(timesheet);
@@ -191,13 +186,21 @@ Timesheet.View = {
             }
         }
         ,populateDetail: function(timesheet){
-            Timesheet.View.Detail.resetDetail();
             if(Acm.isNotEmpty(timesheet.details)){
                 Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
+            }
+            if(Acm.isNotEmpty(timesheet.startDate) && Acm.isNotEmpty(timesheet.endDate)){
+                var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " +  Acm.getDateFromDatetime(timesheet.endDate)
+                Timesheet.View.Detail.setTextTimesheetName(timesheetName);
+            }
+            if(Acm.isNotEmpty(timesheet.modified)){
+                Timesheet.View.Detail.setTextTimesheetModifiedDate("Last Modified " + Acm.getDateFromDatetime(timesheet.modified));
             }
         }
         ,resetDetail: function(timesheet) {
             Timesheet.View.Detail.setHtmlDivDetail("");
+            Timesheet.View.Detail.setTextTimesheetModifiedDate("");
+            Timesheet.View.Detail.setTextTimesheetName("");
         }
 
         ,DIRTY_EDITING_DETAIL: "Editing Timesheet detail"
@@ -240,8 +243,6 @@ Timesheet.View = {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT            , this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT              , this.onViewSelectedObject);
-            /*Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_ADDED_TIMESHEET           ,this.onModelAddedTimesheet);
-            Acm.Dispatcher.addEventListener(Timesheet.Controller.MODEL_EDITTED_TIMESHEET         ,this.onModelAddedTimesheet);*/
         }
         , onInitialized: function () {
         }

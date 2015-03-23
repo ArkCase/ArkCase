@@ -53,6 +53,7 @@ Costsheet.Model = {
             solr.author_s = objData.creator;
             solr.object_id_s = objData.id;
             solr.object_type_s = Costsheet.Model.DOC_TYPE_COSTSHEET;
+            solr.name = "Costsheet" + " " + Acm.goodValue(objData.parentNumber);
             return solr;
         }
         ,validateObjData: function(data) {
@@ -251,9 +252,9 @@ Costsheet.Model = {
             if (Acm.isEmpty(data.incidentDate)) {
                 return false;
             }
-            /*if (Acm.isEmpty(data.priority)) {
+            if (Acm.isEmpty(data.priority)) {
                 return false;
-            }*/
+            }
             if (Acm.isEmpty(data.assignee)) {
                 return false;
             }
@@ -273,18 +274,18 @@ Costsheet.Model = {
     ,Detail:{
         create : function() {
             Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_SAVED_DETAIL          ,this.onViewSavedDetail);
-            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_CLOSED_ADD_COSTSHEET_WINDOW       ,this.onViewAddedCostsheet);
-            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_CLOSED_EDIT_COSTSHEET_WINDOW     ,this.onViewEdittedCostsheet);
+            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_CLOSED_ADD_COSTSHEET_WINDOW       ,this.onViewClosedAddTimesheetWindow);
+            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_CLOSED_EDIT_COSTSHEET_WINDOW     ,this.onViewClosedEditTimesheetWindow);
         }
         ,onInitialized: function() {
         }
         ,retrieveObjectList: function(){
             ObjNav.Service.List.retrieveObjectList(ObjNav.Model.Tree.Config.getTreeInfo());
         }
-        ,onViewAddedCostsheet: function(costsheet){
+        ,onViewClosedAddTimesheetWindow: function(){
             setTimeout(Costsheet.Model.Detail.retrieveObjectList,1000);
         }
-        ,onViewEdittedCostsheet: function(costsheet){
+        ,onViewClosedEditTimesheetWindow: function(costsheet){
             ObjNav.Service.Detail.retrieveObject(Costsheet.Model.DOC_TYPE_COSTSHEET, costsheet.id);
         }
         ,onViewSavedDetail: function(costsheet, details){
