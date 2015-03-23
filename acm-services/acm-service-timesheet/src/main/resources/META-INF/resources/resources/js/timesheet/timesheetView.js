@@ -128,6 +128,7 @@ Timesheet.View = {
                 newTimesheetFormUrl = newTimesheetFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {
                     Timesheet.Controller.viewAddedTimesheet(Timesheet.View.getActiveTimesheet());
+                    Timesheet.Controller.viewEdittedTimesheet(Timesheet.View.getActiveTimesheet());
                 });
             }
         }
@@ -135,7 +136,8 @@ Timesheet.View = {
             var formUrls = Timesheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editTimesheetFormUrl)){
                 var editTimesheetFormUrl = Timesheet.View.MicroData.formUrls.editTimesheetFormUrl;
-                editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getCurrentDay() + "',");
+                var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
+                editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
                 editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {
                     Timesheet.Controller.viewEdittedTimesheet(Timesheet.View.getActiveTimesheet());
@@ -177,17 +179,25 @@ Timesheet.View = {
                 }
             }
         }
-        ,onViewSelectedObject: function(timesheet) {
+        ,onViewSelectedObject: function(objType, objId) {
+            var timesheet = Timesheet.View.getActiveTimesheet();
             if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
-                if(Acm.isNotEmpty(timesheet.details)){
-                    Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
-                }
+                Timesheet.View.Detail.populateDetail(timesheet);
             }
         }
         ,onModelSavedDetail: function(timesheet, details) {
             if (details.hasError) {
                 Timesheet.View.Detail.setHtmlDivDetail("(Error)");
             }
+        }
+        ,populateDetail: function(timesheet){
+            Timesheet.View.Detail.resetDetail();
+            if(Acm.isNotEmpty(timesheet.details)){
+                Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
+            }
+        }
+        ,resetDetail: function(timesheet) {
+            Timesheet.View.Detail.setHtmlDivDetail("");
         }
 
         ,DIRTY_EDITING_DETAIL: "Editing Timesheet detail"
