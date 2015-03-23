@@ -100,7 +100,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private PersonAssociation originator;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the containerFolder
+     * This field is only used when the complaint is created. Usually it will be null.  Use the container
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
@@ -111,7 +111,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
      */
     @OneToOne
     @JoinColumn(name = "cm_container_id")
-    private AcmContainer containerFolder = new AcmContainer();
+    private AcmContainer container = new AcmContainer();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id")
@@ -487,17 +487,17 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
 
     public AcmContainer getContainer()
     {
-        return containerFolder;
+        return container;
     }
 
-    public void setContainer(AcmContainer containerFolder)
+    public void setContainer(AcmContainer container)
     {
-        if ( containerFolder != null )
+        if ( container != null )
         {
-            containerFolder.setContainerObjectType(getObjectType());
+            container.setContainerObjectType(getObjectType());
         }
 
-        this.containerFolder = containerFolder;
+        this.container = container;
     }
 
     @Override
@@ -518,7 +518,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
                 ", status='" + status + '\'' +
                 ", originator=" + originator +
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
-                ", containerFolder=" + containerFolder +
+                ", container=" + container +
                 ", childObjects=" + childObjects +
                 ", approvers=" + approvers +
                 ", personAssociations=" + personAssociations +

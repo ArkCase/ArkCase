@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.personnelsecurity.casestatus.service;
 
-import com.armedia.acm.auth.AcmAuthentication;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
