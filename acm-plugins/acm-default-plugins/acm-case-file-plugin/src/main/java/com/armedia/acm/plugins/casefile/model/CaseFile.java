@@ -94,7 +94,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private List<String> approvers;
 
     /**
-     * This field is only used when the case file is created. Usually it will be null.  Use the containerFolder
+     * This field is only used when the case file is created. Usually it will be null.  Use the container
      * to get the CMIS object ID of the case file folder.
      */
     @Transient
@@ -130,7 +130,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
      */
     @OneToOne
     @JoinColumn(name = "cm_container_id")
-    private AcmContainer containerFolder = new AcmContainer();
+    private AcmContainer container = new AcmContainer();
 
     @PrePersist
     protected void beforeInsert()
@@ -203,12 +203,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 
     public AcmContainer getContainer()
     {
-        return containerFolder;
+        return container;
     }
 
-    public void setContainer(AcmContainer containerFolder)
+    public void setContainer(AcmContainer container)
     {
-        this.containerFolder = containerFolder;
+        this.container = container;
     }
 
     public PersonAssociation getOriginator() {
@@ -534,7 +534,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", originator=" + originator +
                 ", restricted=" + restricted +
                 ", childObjects=" + childObjects +
-                ", containerFolder=" + containerFolder +
+                ", container=" + container +
                 '}';
     }
 }
