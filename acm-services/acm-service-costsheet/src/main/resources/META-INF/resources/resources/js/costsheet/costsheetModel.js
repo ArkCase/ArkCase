@@ -138,10 +138,16 @@ Costsheet.Model = {
             this.cacheParentObject = new Acm.Model.CacheFifo();
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+
         }
         ,onInitialized: function() {
         }
 
+        ,onViewSelectedObject: function(objType, objId) {
+            var costsheet = Costsheet.Model.getActiveCostsheet(objType, objId);
+            Costsheet.Model.ParentDetail.retrieveParentObject(costsheet);
+        }
         ,onModelRetrievedObject: function(costsheet) {
             Costsheet.Model.ParentDetail.retrieveParentObject(costsheet);
         }
@@ -252,9 +258,9 @@ Costsheet.Model = {
             if (Acm.isEmpty(data.incidentDate)) {
                 return false;
             }
-            if (Acm.isEmpty(data.priority)) {
+            /*if (Acm.isEmpty(data.priority)) {
                 return false;
-            }
+            }*/
             if (Acm.isEmpty(data.assignee)) {
                 return false;
             }
