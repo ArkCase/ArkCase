@@ -9,6 +9,8 @@
 	    <title><spring:message code="timesheet.page.title" text="Time Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
             <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
+            <span itemprop="objType">TIMESHEET</span>
+            <span itemprop="objId">${objId}</span>
         </div>
 	</jsp:attribute>
 

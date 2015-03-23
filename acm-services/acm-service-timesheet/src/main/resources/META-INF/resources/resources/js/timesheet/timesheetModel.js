@@ -51,6 +51,7 @@ Timesheet.Model = {
             solr.author_s = objData.creator;
             solr.object_id_s = objData.id;
             solr.object_type_s = Timesheet.Model.DOC_TYPE_TIMESHEET;
+            solr.name = "Timesheet" + " " + Acm.getDateFromDatetime(objData.startDate) + " - " + Acm.getDateFromDatetime(objData.endDate)
             return solr;
         }
         ,validateObjData: function(data) {
@@ -132,27 +133,18 @@ Timesheet.Model = {
     ,Detail:{
         create : function() {
             Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_SAVED_DETAIL          ,this.onViewSavedDetail);
-            Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_ADDED_TIMESHEET       ,this.onViewAddedTimesheet);
-            Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_EDITTED_TIMESHEET     ,this.onViewEdittedTimesheet);
+            Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_CLOSED_ADD_TIMESHEET_WINDOW       ,this.onViewClosedAddTimesheetWindow);
+            Acm.Dispatcher.addEventListener(Timesheet.Controller.VIEW_CLOSED_EDIT_TIMESHEET_WINDOW     ,this.onViewClosedEditTimesheetWindow);
         }
         ,onInitialized: function() {
         }
-        ,_treeInfo: null
-        ,getTreeInfo: function() {
-            return this._treeInfo;
-        }
-        ,setTreeInfo: function(_treeInfo) {
-            this._treeInfo = _treeInfo;
-        }
         ,retrieveObjectList: function(){
-            ObjNav.Service.List.retrieveObjectList(Timesheet.Model.Detail.getTreeInfo());
+            ObjNav.Service.List.retrieveObjectList(ObjNav.Model.Tree.Config.getTreeInfo());
         }
-        ,onViewAddedTimesheet: function(timesheet){
-            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
-            Timesheet.Model.Detail.setTreeInfo(treeInfo);
+        ,onViewClosedAddTimesheetWindow: function(){
             setTimeout(Timesheet.Model.Detail.retrieveObjectList,1000);
         }
-        ,onViewEdittedTimesheet: function(timesheet){
+        ,onViewClosedEditTimesheetWindow: function(timesheet){
             ObjNav.Service.Detail.retrieveObject(Timesheet.Model.DOC_TYPE_TIMESHEET, timesheet.id);
         }
         ,onViewSavedDetail: function(timesheet, details){
