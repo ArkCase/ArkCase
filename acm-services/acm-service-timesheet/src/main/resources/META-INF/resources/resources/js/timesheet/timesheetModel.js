@@ -137,15 +137,26 @@ Timesheet.Model = {
         }
         ,onInitialized: function() {
         }
-        ,onViewSavedDetail: function(timesheet, details){
-            Timesheet.Service.Detail.saveDetail(timesheet,details);
+        ,_treeInfo: null
+        ,getTreeInfo: function() {
+            return this._treeInfo;
+        }
+        ,setTreeInfo: function(_treeInfo) {
+            this._treeInfo = _treeInfo;
+        }
+        ,retrieveObjectList: function(){
+            ObjNav.Service.List.retrieveObjectList(Timesheet.Model.Detail.getTreeInfo());
         }
         ,onViewAddedTimesheet: function(timesheet){
             var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
-            ObjNav.Service.List.retrieveObjectList(treeInfo);
+            Timesheet.Model.Detail.setTreeInfo(treeInfo);
+            setTimeout(Timesheet.Model.Detail.retrieveObjectList,1000);
         }
         ,onViewEdittedTimesheet: function(timesheet){
             ObjNav.Service.Detail.retrieveObject(Timesheet.Model.DOC_TYPE_TIMESHEET, timesheet.id);
+        }
+        ,onViewSavedDetail: function(timesheet, details){
+            Timesheet.Service.Detail.saveDetail(timesheet,details);
         }
         ,getCacheTimesheet: function(timesheetId) {
             if (0 >= timesheetId) {

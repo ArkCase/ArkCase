@@ -6,7 +6,7 @@
 
 <t:layout>
 	<jsp:attribute name="endOfHead">
-	    <title><spring:message code="costsheetNew.page.title" text="Cost Tracking | ACM | ArkCase" /></title>
+	    <title><spring:message code="costsheet.page.title" text="Cost Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
             <span itemprop="newCostsheetFormUrl">${newCostsheetFormUrl}</span>
         </div>
@@ -93,35 +93,31 @@
                                 <section class="scrollable">
                                     <div class="wrapper dk  clearfix">
                                         <div class="row" id="tabTop"  style="display:none;">
-                                            <div class="col-xs-12">
-                                                <div class="">
-                                                    <div class=" clearfix">
-
-                                                            <%--keep this for showing parent data --%>
-
-                                                            <%--<div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
-                                                                <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
-                                                            <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                                <small class="text-muted">Create Date</small></div>
-                                                            <div class="col-xs-1 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                                                <small class="text-muted">Priority</small></div>
-                                                            <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                                <small class="text-muted">Assigned To</small></div>
-                                                            <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                                <small class="text-muted">Case Type</small></div>
-                                                            <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                                                <small class="text-muted">Due Date</small></div>
-                                                            <div class="col-xs-1">
-                                                                <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">State</small></div>--%>
-
-                                                        <div class="col-xs-2 b-r">
-                                                            <small class="text-muted">Parent Info</small></div>
+                                            <div class="wrapper dk  clearfix" id="divParentDetail" style="display:none;">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="">
+                                                            <div class=" clearfix">
+                                                                <div class="col-xs-4 b-r">
+                                                                    <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Title"></a></div>
+                                                                    <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
+                                                                <div class="col-xs-2 b-r">
+                                                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Incident Date"></a></div>
+                                                                    <small class="text-muted">Incident Date</small></div>
+                                                                <div class="col-xs-1 b-r">
+                                                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Priority"></a></div>
+                                                                    <small class="text-muted">Priority</small></div>
+                                                                <div class="col-xs-2 b-r">
+                                                                    <div class="h4 font-bold"><a href="#" id="parentObjAssignee" data-type="select" data-pk="1"  data-title="Assignee"></a></div>
+                                                                    <small class="text-muted">Assigned To</small></div>
+                                                                <div class="col-xs-2 b-r">
+                                                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Subject Type"></a></div>
+                                                                    <small class="text-muted">Subject Type</small></div>
+                                                                <div class="col-xs-1">
+                                                                    <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
+                                                                    <small class="text-muted">State</small></div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -175,10 +171,10 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" id="tabPeople" style="display:none;">
+                                            <div class="row" id="tabPerson" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
-                                                        <div id="divPeople" style="width:100%"></div>
+                                                        <div id="divPerson" style="width:100%"></div>
                                                     </section>
                                                 </div>
                                             </div>
