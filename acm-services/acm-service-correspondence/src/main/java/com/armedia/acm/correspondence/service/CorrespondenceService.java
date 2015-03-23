@@ -2,6 +2,7 @@ package com.armedia.acm.correspondence.service;
 
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -46,7 +47,8 @@ public class CorrespondenceService
             String templateName,
             String parentObjectType,
             Long parentObjectId,
-            String targetCmisFolderId) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException
+            String targetCmisFolderId)
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         CorrespondenceTemplate template = findTemplate(templateName);
 
@@ -71,7 +73,7 @@ public class CorrespondenceService
                     fosToWriteFile,
                     fisForUploadToEcm);
 
-            log.debug("Correspondence CMIS ID: " + retval.getEcmFileId());
+            log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
 
             // TODO: raise event with IP address
 
@@ -114,7 +116,7 @@ public class CorrespondenceService
             String parentObjectType,
             Long parentObjectId,
             String targetCmisFolderId
-    ) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException
+    ) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 

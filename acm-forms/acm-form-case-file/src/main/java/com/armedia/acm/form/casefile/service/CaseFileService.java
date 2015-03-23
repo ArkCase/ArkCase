@@ -109,7 +109,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		form = saveReference(form);
 		
 		// Create Frevvo form from CaseFile
-		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form);
+		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), this);
 		
 		updateXMLAttachment(attachments, FrevvoFormName.CASE_FILE, form);
 		
@@ -130,7 +130,12 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		if ( !"edit".equals(mode) )
 		{
 			CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-			workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule());
+			workflowListener.handleNewCaseFile(
+                    getCaseFile(),
+                    frevvoFiles,
+                    getActivitiRuntimeService(),
+                    getFileWorkflowBusinessRule(),
+                    this);
 		}
 		
 		return true;

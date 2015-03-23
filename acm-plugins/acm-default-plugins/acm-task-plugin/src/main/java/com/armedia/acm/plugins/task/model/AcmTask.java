@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -48,22 +48,22 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private TaskOutcome taskOutcome;
     private List<AcmParticipant> participants;
 
-    private AcmContainerFolder containerFolder;
+    private AcmContainer container;
 
     /**
      * ecmFolderPath is a transient property; it is set by business rules when the task is created, and is used
-     * to create the right folder.  For existing tasks, containerFolder has the folderId.
+     * to create the right folder.  For existing tasks, container has the folderId.
      */
     private transient String ecmFolderPath;
 
-    public AcmContainerFolder getContainerFolder()
+    public AcmContainer getContainer()
     {
-        return containerFolder;
+        return container;
     }
 
-    public void setContainerFolder(AcmContainerFolder containerFolder)
+    public void setContainer(AcmContainer container)
     {
-        this.containerFolder = containerFolder;
+        this.container = container;
     }
 
     public String getEcmFolderPath()
