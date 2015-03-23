@@ -273,24 +273,15 @@ Costsheet.Model = {
     ,Detail:{
         create : function() {
             Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_SAVED_DETAIL          ,this.onViewSavedDetail);
-            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_ADDED_COSTSHEET       ,this.onViewAddedCostsheet);
-            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_EDITTED_COSTSHEET     ,this.onViewEdittedCostsheet);
+            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_CLOSED_ADD_COSTSHEET_WINDOW       ,this.onViewAddedCostsheet);
+            Acm.Dispatcher.addEventListener(Costsheet.Controller.VIEW_CLOSED_EDIT_COSTSHEET_WINDOW     ,this.onViewEdittedCostsheet);
         }
         ,onInitialized: function() {
         }
-        ,_treeInfo: null
-        ,getTreeInfo: function() {
-            return this._treeInfo;
-        }
-        ,setTreeInfo: function(_treeInfo) {
-            this._treeInfo = _treeInfo;
-        }
         ,retrieveObjectList: function(){
-            ObjNav.Service.List.retrieveObjectList(Costsheet.Model.Detail.getTreeInfo());
+            ObjNav.Service.List.retrieveObjectList(ObjNav.Model.Tree.Config.getTreeInfo());
         }
         ,onViewAddedCostsheet: function(costsheet){
-            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
-            Costsheet.Model.Detail.setTreeInfo(treeInfo);
             setTimeout(Costsheet.Model.Detail.retrieveObjectList,1000);
         }
         ,onViewEdittedCostsheet: function(costsheet){

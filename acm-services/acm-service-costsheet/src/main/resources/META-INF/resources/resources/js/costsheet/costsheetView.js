@@ -129,8 +129,10 @@ Costsheet.View = {
                 var newCostsheetFormUrl = Costsheet.View.MicroData.formUrls.newCostsheetFormUrl;
                 newCostsheetFormUrl = newCostsheetFormUrl.replace("embed", "popupform");
                 Acm.Dialog.openWindow(newCostsheetFormUrl, "", 860, 700, function() {
-                    Costsheet.Controller.viewAddedCostsheet(Costsheet.View.getActiveCostsheet());
-                    Costsheet.Controller.viewEdittedCostsheet(Costsheet.View.getActiveCostsheet());
+                    Costsheet.Controller.viewClosedAddCostsheetWindow();
+                    if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())) {
+                        Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
+                    }
                 });
             }
         }
@@ -138,13 +140,16 @@ Costsheet.View = {
             var formUrls = Costsheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editCostsheetFormUrl)){
                 var editCostsheetFormUrl = Costsheet.View.MicroData.formUrls.editCostsheetFormUrl;
-                var objectId = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentId);
-                var objectType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
-                editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(objectId:'" + objectId + "',type:'" + objectType + "',");
-                editCostsheetFormUrl = editCostsheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(editCostsheetFormUrl, "", 860, 700, function() {
-                    Costsheet.Controller.viewEdittedCostsheet(Costsheet.View.getActiveCostsheet());
-                });
+                var timesheet = Costsheet.View.getActiveCostsheet();
+                if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())){
+                    var objectId = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentId);
+                    var objectType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
+                    editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(objectId:'" + objectId + "',type:'" + objectType + "',");
+                    editCostsheetFormUrl = editCostsheetFormUrl.replace("embed", "popupform");
+                    Acm.Dialog.openWindow(editCostsheetFormUrl, "", 860, 700, function() {
+                        Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
+                    });
+                }
             }
         }
     }

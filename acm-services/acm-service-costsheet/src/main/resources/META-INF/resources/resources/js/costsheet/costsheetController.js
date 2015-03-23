@@ -16,13 +16,13 @@ Costsheet.Controller = {
     ,modelSavedDetail: function(costsheet, details) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, costsheet, details);
     }
-    ,VIEW_EDITTED_COSTSHEET               : "costsheet-view-editted-costsheet"
-    ,viewEdittedCostsheet: function(costsheet) {
-        Acm.Dispatcher.fireEvent(this.VIEW_EDITTED_COSTSHEET, costsheet);
+    ,VIEW_CLOSED_EDIT_COSTSHEET_WINDOW               : "costsheet-view-closed-edit-costsheet-window"
+    ,viewClosedEditCostsheetWindow: function(costsheet) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_EDIT_COSTSHEET_WINDOW, costsheet);
     }
-    ,VIEW_ADDED_COSTSHEET                 : "costsheet-view-added-costsheet"
-    ,viewAddedCostsheet: function(costsheet) {
-        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_COSTSHEET, costsheet);
+    ,VIEW_CLOSED_ADD_COSTSHEET_WINDOW                 : "costsheet-view-closed-add-costsheet-window"
+    ,viewClosedAddCostsheetWindow: function(costsheet) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_COSTSHEET_WINDOW, costsheet);
     }
 
     ,MODEL_RETRIEVED_PARENT_OBJECT        : "costsheet-model-retrieved-parent-object"
