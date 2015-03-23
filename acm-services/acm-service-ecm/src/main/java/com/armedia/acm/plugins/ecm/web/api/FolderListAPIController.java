@@ -5,7 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisFolder;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,17 +37,23 @@ public class FolderListAPIController
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection
     ) throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        AcmContainerFolder containerFolder = getEcmFileService().getOrCreateContainerFolder(objectType, objectId);
+        AcmContainer containerFolder = getEcmFileService().getOrCreateContainerFolder(objectType, objectId);
+
+        if ( containerFolder.getFolder() == null )
+        {
+            // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+            throw new IllegalStateException("Container '" + containerFolder.getId() + "' does not have a folder!");
+        }
 
         List<AcmCmisObject> children = getEcmFileService().listFolderContents(
-                containerFolder.getCmisFolderId(),
+                containerFolder.getFolder().getCmisFolderId(),
                 sortBy,
                 sortDirection);
 
         AcmCmisFolder retval = new AcmCmisFolder();
         retval.setContainerObjectId(objectId);
         retval.setContainerObjectType(objectType);
-        retval.setCmisFolderId(containerFolder.getCmisFolderId());
+        retval.setCmisFolderId(containerFolder.getFolder().getCmisFolderId());
         retval.setChildren(children);
 
         return retval;

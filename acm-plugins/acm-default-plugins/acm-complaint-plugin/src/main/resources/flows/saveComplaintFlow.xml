@@ -51,6 +51,37 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         </scripting:transformer>
 
+        <scripting:transformer name="ensureContainerExists">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    import com.armedia.acm.plugins.ecm.model.AcmContainer;
+                    import com.armedia.acm.plugins.ecm.model.AcmFolder;
+
+                    if ( payload.getContainer() == null )
+                    {
+                        AcmContainer container = new AcmContainer();
+                        payload.setContainer(container);
+                        payload.getContainer().setContainerObjectType(payload.getObjectType());
+                        payload.getContainer().setContainerObjectTitle(payload.getComplaintNumber());
+                    }
+
+                    if ( payload.getContainer().getFolder() == null )
+                    {
+                        AcmFolder folder = new AcmFolder();
+                        folder.setName("ROOT");
+                        payload.getContainer().setFolder(folder);
+                    }
+
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+
+        </scripting:transformer>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.complaint" message="Container: #[payload.container]"/>
+        <logger level="DEBUG" category="com.armedia.acm.plugins.complaint" message="Folder: #[payload.container.folder]"/>
+
         <!-- Tell mule to call the save method (as opposed to other DAO methods that may also take an EcmFile
              parameter).  The property must go in the inbound scope.  The only way to do it is to set an outbound
              property, then call an outbound endpoint (thereby starting a new flow).
@@ -66,15 +97,12 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <when expression="#[payload.ecmFolderPath != null]">
                 <processor-chain>
                     <!-- store the complaint folder in a flow variable so the enricher can see it -->
-                    <set-variable variableName="containerFolder" value="#[message.payload.containerFolder]"/>
+                    <set-variable variableName="folder" value="#[message.payload.container.folder]"/>
                     <!-- update the complaint with the ID of the folder -->
-                    <enricher  source="#[message.payload.id]" target="#[flowVars['containerFolder'].cmisFolderId]">
+                    <enricher  source="#[message.payload.id]" target="#[flowVars['folder'].cmisFolderId]">
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
-                    <logger category="com.armedia.acm.plugins.complaint" level="DEBUG"
-                            message="Folder Id: #[payload.containerFolder.cmisFolderId]"/>
                 </processor-chain>
-
             </when>
             <otherwise>
                 <logger category="com.armedia.acm.plugins.complaint" level="INFO" message="No need to create folder."/>

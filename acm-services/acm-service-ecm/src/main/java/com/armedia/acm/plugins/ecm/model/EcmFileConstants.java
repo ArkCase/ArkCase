@@ -10,10 +10,12 @@ public interface EcmFileConstants
 
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "cmis:name";
 
-    String FIND_CONTAINER_FOLDER_QUERY =
-            "SELECT e FROM AcmContainerFolder e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
+    String FIND_CONTAINER_QUERY =
+            "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
 
     String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
     String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
+
+    String CONTAINER_FOLDER_NAME = "ROOT";
 
 }

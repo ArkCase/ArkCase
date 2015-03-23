@@ -14,13 +14,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import com.armedia.acm.services.users.model.AcmUser;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,8 +135,30 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	
-	@Override
+
+    public String findFolderId(AcmContainer container, String objectType, Long id)
+    {
+        // hopefully the container has it, but sometimes the container isn't set on the parent object
+        if ( container != null )
+        {
+            return container.getFolder().getCmisFolderId();
+        }
+
+        AcmContainer found = null;
+        try
+        {
+            found = getEcmFileService().getOrCreateContainerFolder(objectType, id);
+            return found.getFolder().getCmisFolderId();
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            return null;
+        }
+
+    }
+
+    @Override
 	public UserActionDao getUserActionDao() {
 		return userActionDao;
 	}
@@ -229,7 +254,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
             MultiValueMap<String, MultipartFile> attachments,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
 	{
         FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
 
@@ -350,7 +375,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                             String parentObjectType,
                             Long parentObjectId,
                             MultipartFile attachment)
-            throws AcmCreateObjectFailedException
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         try
         {

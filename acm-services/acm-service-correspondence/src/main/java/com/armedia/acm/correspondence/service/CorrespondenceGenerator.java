@@ -1,6 +1,7 @@
 package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -76,7 +77,7 @@ public class CorrespondenceGenerator
             CorrespondenceTemplate template,
             Object[] queryArguments,
             OutputStream correspondenceOutputStream,
-            InputStream correspondenceInputStream) throws IOException, AcmCreateObjectFailedException
+            InputStream correspondenceInputStream) throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         List<Object[]> results = query(template, queryArguments);
 
