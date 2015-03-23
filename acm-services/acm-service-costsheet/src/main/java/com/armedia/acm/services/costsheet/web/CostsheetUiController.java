@@ -2,6 +2,9 @@ package com.armedia.acm.services.costsheet.web;
 
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,6 +26,20 @@ public class CostsheetUiController
         // Frevvo form URLs
         retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COST));
         return retval;
+    }
+
+    @RequestMapping(value = "/{costsheetId}", method = RequestMethod.GET)
+    public ModelAndView openTimesheet(Authentication auth, @PathVariable(value = "costsheetId") Long costsheetId
+    ) {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("costsheet");
+        retval.addObject("objId", costsheetId);
+
+
+        // Frevvo form URLs
+        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COST));
+        return retval;
+
     }
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
