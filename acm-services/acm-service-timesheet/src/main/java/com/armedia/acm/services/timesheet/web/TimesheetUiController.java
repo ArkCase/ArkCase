@@ -3,6 +3,8 @@ package com.armedia.acm.services.timesheet.web;
 
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,6 +32,20 @@ public class TimesheetUiController
     {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("timesheetWizard");
+
+        // Frevvo form URLs
+        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIME));
+        return retval;
+
+    }
+
+    @RequestMapping(value = "/{timesheetId}", method = RequestMethod.GET)
+    public ModelAndView openTimesheet(Authentication auth, @PathVariable(value = "timesheetId") Long timesheetId
+    ) {
+        ModelAndView retval = new ModelAndView();
+        retval.setViewName("timesheet");
+        retval.addObject("objId", timesheetId);
+
 
         // Frevvo form URLs
         retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIME));

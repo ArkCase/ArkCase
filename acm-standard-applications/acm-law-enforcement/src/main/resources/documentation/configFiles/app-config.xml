@@ -47,6 +47,8 @@
                 <ref bean="userType"/>
                 <ref bean="notificationType"/>
                 <ref bean="subscriptionType"/>
+                <ref bean="timesheetType"/>
+                <ref bean="costsheetType"/>
             </list>
         </property>
     </bean>
@@ -267,6 +269,18 @@
         <property name="description" value="Subscription Event"/>
         <property name="iconName" value="i i-alarm"/>
         <property name="url" value=""/>
+    </bean>
+    <bean id="timesheetType" class="com.armedia.acm.core.AcmObjectType">
+        <property name="name" value="TIMESHEET"/>
+        <property name="description" value="Timesheet"/>
+        <property name="iconName" value="i i-alarm"/>
+        <property name="url" value="/plugin/timesheet/"/>
+    </bean>
+    <bean id="costsheetType" class="com.armedia.acm.core.AcmObjectType">
+        <property name="name" value="COSTSHEET"/>
+        <property name="description" value="Costsheet"/>
+        <property name="iconName" value="fa fa-money"/>
+        <property name="url" value="/plugin/costsheet/"/>
     </bean>
     <!-- end of objectTypes -->
 </beans>
