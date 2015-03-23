@@ -4,20 +4,19 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
-import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -25,10 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,7 +32,6 @@ import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +48,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     
     private EcmFileDao ecmFileDao;
 
-    private AcmContainerFolderDao containerFolderDao;
+    private AcmContainerDao containerFolderDao;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -69,43 +63,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public EcmFile upload(
             String fileType,
-            InputStream fileContents,
-            String fileContentType,
-            String fileName,
-            Authentication authentication,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
-    {
-        if ( log.isInfoEnabled() )
-        {
-            log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
-        }
-
-        try
-        {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
-                    authentication,
-                    fileType,
-                    fileContents,
-                    fileContentType,
-                    fileName,
-                    targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
-
-            return uploaded;
-        }
-        catch (MuleException e)
-        {
-            log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(fileName, e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public EcmFile upload(
-            String fileType,
             String fileCategory,
             InputStream fileContents,
             String fileContentType,
@@ -113,13 +70,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
         }
 
+        AcmContainer container = getOrCreateContainerFolder(parentObjectType, parentObjectId);
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
@@ -130,8 +88,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     fileContentType,
                     fileName,
                     targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
+                    container);
 
             return uploaded;
         }
@@ -149,13 +106,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
             log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
         }
+
+        AcmContainer container = getOrCreateContainerFolder(parentObjectType, parentObjectId);
 
         try
         {
@@ -166,8 +125,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     file.getContentType(),
                     file.getOriginalFilename(),
                     targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
+                    container);
 
             return uploaded;
         } catch (IOException | MuleException e)
@@ -178,55 +136,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
 
-    @Override
-    public ResponseEntity<? extends Object> upload(
-            String fileType,
-            MultipartFile file,
-            String acceptHeader,
-            String contextPath,
-            Authentication authentication,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId) throws AcmCreateObjectFailedException
-    {
-
-        HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
-
-        try
-        {
-            EcmFile uploaded = upload(
-                    fileType,
-                    file,
-                    authentication,
-                    targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId);
-
-            FileUpload fileUpload = fileUploadFromEcmFile(file, contextPath, uploaded);
-
-            Object retval;
-
-            if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
-            {
-                // sending a string with text/plain for IE.
-                String json = constructJqueryFileUploadJson(fileUpload);
-                retval = json;
-            }
-            else
-            {
-                // Jackson will convert this map into proper JSON for non-IE browsers.
-                Map<String, List<FileUpload>> jsonMap = makeFileUploadMap(fileUpload);
-                retval = jsonMap;
-            }
-
-            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
-        } catch (IOException  e)
-        {
-            log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
-        }
-    }
-    
     @Override
 	public EcmFile update(EcmFile ecmFile, MultipartFile file,
 			Authentication authentication) throws AcmCreateObjectFailedException 
@@ -298,14 +207,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Transactional
-    public AcmContainerFolder getOrCreateContainerFolder(String objectType, Long objectId) throws
+    public AcmContainer getOrCreateContainerFolder(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         log.info("Finding folder for object " + objectType + " id " + objectId);
 
         try
         {
-            AcmContainerFolder retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
+            AcmContainer retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
             return retval;
         }
         catch ( AcmObjectNotFoundException e)
@@ -326,7 +235,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
      * @param objectId
      * @return
      */
-    private AcmContainerFolder createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
+    private AcmContainer createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
     {
         log.debug("Creating new folder for object " + objectType + " id " + objectId);
 
@@ -338,14 +247,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
 
-        AcmContainerFolder newFolder = new AcmContainerFolder();
-        newFolder.setContainerObjectId(objectId);
-        newFolder.setContainerObjectType(objectType);
+        AcmContainer newContainer = new AcmContainer();
+        newContainer.setContainerObjectId(objectId);
+        newContainer.setContainerObjectType(objectType);
+        AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+        newContainer.setFolder(newFolder);
 
-        newFolder = getContainerFolderDao().save(newFolder);
+        newContainer = getContainerFolderDao().save(newContainer);
 
-        return newFolder;
+        return newContainer;
     }
 
 
@@ -416,66 +328,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return sortParam;
     }
 
-    public String constructJqueryFileUploadJson(FileUpload fileUpload) throws IOException
-    {
-        Map<String, List<FileUpload>> retMap = makeFileUploadMap(fileUpload);
-
-        ObjectMapper om = new ObjectMapper();
-
-        return om.writeValueAsString(retMap);
-    }
-
-    public Map<String, List<FileUpload>> makeFileUploadMap(FileUpload fileUpload)
-    {
-        // construct JSON suitable for jQuery File Upload Plugin
-        List<FileUpload> retval = Collections.singletonList(fileUpload);
-        return Collections.singletonMap("files", retval);
-    }
-
-    public FileUpload fileUploadFromEcmFile(MultipartFile file, String contextPath, EcmFile uploaded)
-    {
-        FileUpload fileUpload = new FileUpload();
-
-        String baseUrl = contextPath + "/file/" + uploaded.getFileId();
-        fileUpload.setDeleteUrl(baseUrl);
-        fileUpload.setName(file.getOriginalFilename());
-        fileUpload.setSize(file.getSize());
-        fileUpload.setUrl(baseUrl);
-        fileUpload.setCreator(uploaded.getCreator());
-        fileUpload.setId(uploaded.getFileId());
-        fileUpload.setStatus(uploaded.getStatus());
-        fileUpload.setCreated(uploaded.getCreated());
-        fileUpload.setUploadFileType(uploaded.getFileType());
-        return fileUpload;
-    }
-
-    public String determineResponseContentType(String acceptHeader)
-    {
-        // since IE is broken we have to conditionally set the response content type
-        if ( acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE) || acceptHeader.contains("text/javascript"))
-        {
-            // good browser, it can send files via AJAX, so it can get the answer as JSON
-            return MediaType.APPLICATION_JSON_VALUE;
-        }
-        else
-        {
-            // bad browser, must send the files via normal HTML file upload, so must get the answer as a string,
-            // since if we send JSON response type, it will ask the user to download a JSON file.
-            return MediaType.TEXT_PLAIN_VALUE;
-        }
-    }
-
-    public HttpHeaders contentTypeFromAcceptHeader(String acceptType)
-    {
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        String responseMimeType = determineResponseContentType(acceptType);
-
-        responseHeaders.add("Content-Type", responseMimeType);
-
-        return responseHeaders;
-    }
-
     public EcmFileTransaction getEcmFileTransaction()
     {
         return ecmFileTransaction;
@@ -530,12 +382,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.cmisBaseTypeToAcmType = cmisBaseTypeToAcmType;
     }
 
-    public AcmContainerFolderDao getContainerFolderDao()
+    public AcmContainerDao getContainerFolderDao()
     {
         return containerFolderDao;
     }
 
-    public void setContainerFolderDao(AcmContainerFolderDao containerFolderDao)
+    public void setContainerFolderDao(AcmContainerDao containerFolderDao)
     {
         this.containerFolderDao = containerFolderDao;
     }

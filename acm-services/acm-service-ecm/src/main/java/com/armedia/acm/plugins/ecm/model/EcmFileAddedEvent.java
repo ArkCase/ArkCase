@@ -31,15 +31,10 @@ public class EcmFileAddedEvent extends AcmEvent
         setObjectId(uploaded.getFileId());
         setEventDate(new Date());
         setUserId(uploaded.getModifier());
-        setEcmFileId(uploaded.getEcmFileId());
+        setEcmFileId(uploaded.getVersionSeriesId());
 
-        if ( uploaded.getParentObjects() != null && !uploaded.getParentObjects().isEmpty() )
-        {
-            ObjectAssociation parent = uploaded.getParentObjects().iterator().next();
-            setParentObjectType(parent.getParentType());
-            setParentObjectId(parent.getParentId());
-            setParentObjectName(parent.getParentName());
-        }
+        setParentObjectType(uploaded.getContainer().getContainerObjectType());
+        setParentObjectId(uploaded.getContainer().getContainerObjectId());
 
         if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {

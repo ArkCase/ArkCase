@@ -110,5 +110,9 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="userorg-08-rename-container-id" author="dmiller">
+        <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+    </changeSet>
+
 </databaseChangeLog>
 

@@ -533,7 +533,7 @@ Task.Service = {
         ,onInitialized: function(){
         }
 
-        ,API_UPLOAD_FILE            : "/file"
+        ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
         ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
 
         ,uploadAttachments: function(formData) {

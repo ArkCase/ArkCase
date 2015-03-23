@@ -57,7 +57,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
             getApplicationEventPublisher().publishEvent(event);
 
-            download(ecmFile.getEcmFileId(), response,inline);
+            download(ecmFile.getVersionSeriesId(), response,inline);
         }
         else
         {

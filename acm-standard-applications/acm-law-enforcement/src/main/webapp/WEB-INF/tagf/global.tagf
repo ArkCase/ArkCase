@@ -180,7 +180,12 @@
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_ui}/js/${js_jquery_ui}'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_microdata}/${js_microdata}'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootstrap}/js/${js_bootstrap}'/>" ></script>
+
+<!-- somehow with the new JIRA, the issue collector doesn't work any more.  Plus you have to be on the Armedia
+     VPN, so no customers could really use it anyway.
+
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_issueCollector}/${js_issueCollector}'/>" ></script>
+-->
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootbox}/${js_bootbox}'/>" ></script>
 
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/core/acm.js'/>"></script>

@@ -42,22 +42,12 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setContent_type(in.getFileMimeType());
         solr.setStatus_lcs(in.getStatus());
 
+        solr.setParent_id_s(Long.toString(in.getContainer().getId()));
+        solr.setParent_type_s(in.getContainer().getObjectType());
+        solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
-        ObjectAssociation parent = null;
 
-        if ( in.getParentObjects() != null && !in.getParentObjects().isEmpty() ) {
-
-            for ( ObjectAssociation objectAssociation : in.getParentObjects() ) {
-                 parent = objectAssociation;
-                 break;
-            }
-
-            solr.setParent_id_s(Long.toString(parent.getParentId()));
-            solr.setParent_type_s(parent.getParentType());
-            solr.setParent_number_lcs(parent.getParentName());
-        }
-
-        solr.setEcmFileId(in.getEcmFileId());
+        solr.setEcmFileId(in.getVersionSeriesId());
 
         return solr;
     }
