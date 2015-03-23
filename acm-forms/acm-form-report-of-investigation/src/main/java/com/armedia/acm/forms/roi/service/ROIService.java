@@ -5,6 +5,10 @@ package com.armedia.acm.forms.roi.service;
 
 import java.util.Date;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +89,7 @@ public class ROIService extends FrevvoFormAbstractService {
 				return false;
 			}
 			
-			cmisFolderId = complaint.getContainerFolder().getCmisFolderId();
+			cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 
@@ -99,7 +103,7 @@ public class ROIService extends FrevvoFormAbstractService {
 				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
 				return false;
 			}
-            cmisFolderId = caseFile.getContainerFolder().getCmisFolderId();
+            cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			
@@ -111,8 +115,8 @@ public class ROIService extends FrevvoFormAbstractService {
 		
 		return true;
 	}
-	
-	/**
+
+    /**
 	 * Initialization of ROI Form fields
 	 * 
 	 * @return
@@ -180,6 +184,5 @@ public class ROIService extends FrevvoFormAbstractService {
 	 */
 	public void setUserActionDao(UserActionDao userActionDao) {
 		this.userActionDao = userActionDao;
-	}	
-
+	}
 }

@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.personnelsecurity.cvs.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.ClearanceVerificationSystemDeterminationRecord;
+import com.armedia.acm.plugins.personnelsecurity.cvs.model.PersonnelSecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +22,7 @@ public class ClearanceVerificationSystemExportService
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final String FILE_TYPE = "cvs export";
+
 
     public void exportDeterminationRecord(
             String adjudicatorId,
@@ -30,7 +32,7 @@ public class ClearanceVerificationSystemExportService
             String adjudicationOutcome
     )
     {
-        boolean clearanceGranted = "GRANT_CLEARANCE".equals(adjudicationOutcome);
+        boolean clearanceGranted = PersonnelSecurityConstants.ADJUDICATION_OUTCOME_GRANT_CLEARANCE.equals(adjudicationOutcome);
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(adjudicatorId, adjudicatorId);
 
@@ -52,10 +54,18 @@ public class ClearanceVerificationSystemExportService
         try
         {
             // TODO: use JMS to handle this upload via Mule so we get some retry logic
-            getEcmFileService().upload(FILE_TYPE, recordInputStream, "text/plain", "cvsExport.txt", auth, caseCmisFolderId,
-                    "CASE_FILE", caseId);
+            getEcmFileService().upload(
+                    PersonnelSecurityConstants.CVS_FILE_TYPE,
+                    PersonnelSecurityConstants.CVS_FILE_CATEGORY,
+                    recordInputStream,
+                    PersonnelSecurityConstants.CVS_FILE_MIME_TYPE,
+                    PersonnelSecurityConstants.CVS_FILE_NAME,
+                    auth,
+                    caseCmisFolderId,
+                    "CASE_FILE",
+                    caseId);
         }
-        catch (AcmCreateObjectFailedException e)
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             log.error("Could not create CVS export: " + e.getMessage(), e);
         }
