@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -17,6 +19,8 @@ import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorContact;
 import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorMainInformation;
 import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleContact;
 import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleMainInformation;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
@@ -27,6 +31,8 @@ import com.armedia.acm.plugins.person.model.xml.InitiatorPersonAlias;
 import com.armedia.acm.plugins.person.model.xml.PeopleOrganization;
 import com.armedia.acm.plugins.person.model.xml.PeoplePersonAlias;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,10 +41,12 @@ import java.util.List;
 
 public class ComplaintFactory
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 	private static final String ANONYMOUS = "Anonymous";
 	private static final String DEFAULT_USER = "*";
 	
 	private PersonDao personDao;
+    private EcmFileService fileService;
 	
     public Complaint asAcmComplaint(ComplaintForm formComplaint)
     {
@@ -155,8 +163,26 @@ public class ComplaintFactory
     		
     		complaintForm.setPeople(contacts);
     	}
-    	
-    	complaintForm.setCmisFolderId(complaint.getContainerFolder().getCmisFolderId());
+
+        try
+        {
+            // see if the complaint has its container... sometimes it doesn't
+            if ( complaint.getContainer() != null )
+            {
+                complaintForm.setCmisFolderId(complaint.getContainer().getFolder().getCmisFolderId());
+            }
+            else
+            {
+                AcmContainer container = getFileService().getOrCreateContainerFolder(complaint.getObjectType(), complaint.getId());
+                complaintForm.setCmisFolderId(container.getFolder().getCmisFolderId());
+            }
+        }
+        catch ( AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            log.error("Unknown CMIS folder for this complaint! " + e.getMessage(), e);
+        }
+
+
     	
     	// Populate participants
     	if (complaint.getParticipants() != null && complaint.getParticipants().size() > 0)
@@ -417,4 +443,14 @@ public class ComplaintFactory
 	public void setPersonDao(PersonDao personDao) {
 		this.personDao = personDao;
 	}
+
+    public EcmFileService getFileService()
+    {
+        return fileService;
+    }
+
+    public void setFileService(EcmFileService fileService)
+    {
+        this.fileService = fileService;
+    }
 }

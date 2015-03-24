@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.service.impl;
 
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
@@ -82,9 +83,11 @@ public class TaskRulesTest
     public void folderId_cmisFolderAlreadyExists() throws Exception
     {
         AcmTask task = new AcmTask();
-        AcmContainerFolder folder = new AcmContainerFolder();
+        AcmContainer container = new AcmContainer();
+        AcmFolder folder = new AcmFolder();
+        container.setFolder(folder);
         folder.setCmisFolderId("cmisFolderId");
-        task.setContainerFolder(folder);
+        task.setContainer(container);
 
         task.setEcmFolderPath(null);
 

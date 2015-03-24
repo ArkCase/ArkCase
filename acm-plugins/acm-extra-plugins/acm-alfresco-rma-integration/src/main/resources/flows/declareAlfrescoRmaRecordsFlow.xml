@@ -59,7 +59,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
                    doc:name="http-set-data" exchange-pattern="request-response" method="POST">
         <reconnect/>
     </http:endpoint>
-    <!-- TODO: the record location is hard-coded below but it should be a business rule -->
     <http:endpoint name="alfresco-move-to-record-folder"
                    address="http://${alfresco.host}:${alfresco.port}/${alfresco.contextRoot}/s/slingshot/doclib/action/move-to/site/rm/documentLibrary/${rma.root.folder}/#[flowVars['category-folder-name']]/#[flowVars['record-folder-name']]?alf_ticket=#[flowVars['alfTicket']]"
                    doc:name="alf-move-to-record-folder" exchange-pattern="request-response" method="POST">

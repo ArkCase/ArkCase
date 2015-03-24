@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -45,9 +46,9 @@ public class CloseCompaintRequestService
             String user,
             Date approvalDate) throws MuleException
     {
-        Complaint updatedComplaint = updateComplaintStatus(complaintId, user, approvalDate);
-
         CloseComplaintRequest updatedRequest = updateCloseComplaintRequestStatus(closeComplaintRequestId);
+
+        Complaint updatedComplaint = updateComplaintStatus(complaintId, updatedRequest.getDisposition());
 
         boolean shouldFullInvestigationBeOpened = shallWeOpenAFullInvestigation(updatedRequest);
         log.debug("Open a new investigation? " + shouldFullInvestigationBeOpened);
@@ -240,10 +241,12 @@ public class CloseCompaintRequestService
         return updated;
     }
 
-    private Complaint updateComplaintStatus(Long complaintId, String user, Date approvalDate)
+    private Complaint updateComplaintStatus(Long complaintId, Disposition disposition)
     {
         Complaint c = getComplaintDao().find(complaintId);
         c.setStatus("CLOSED");
+        c.setDisposition(disposition);
+
         c = getComplaintDao().save(c);
 
         return c;

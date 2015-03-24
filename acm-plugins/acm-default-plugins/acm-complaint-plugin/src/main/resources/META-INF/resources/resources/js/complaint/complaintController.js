@@ -90,6 +90,16 @@ Complaint.Controller = Complaint.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, complaintId, restriction);
     }
 
+    ,MODEL_RETRIEVED_TIMESHEETS               : "complaint-model-retrieved-timesheets"
+    ,modelRetrievedTimesheets : function(timesheets) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_TIMESHEETS, timesheets);
+    }
+
+    ,MODEL_RETRIEVED_COSTSHEETS               : "complaint-model-retrieved-costsheets"
+    ,modelRetrievedCostsheets : function(costsheets) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COSTSHEETS, costsheets);
+    }
+
     //----------------------------------------------------------------------------------
 
 

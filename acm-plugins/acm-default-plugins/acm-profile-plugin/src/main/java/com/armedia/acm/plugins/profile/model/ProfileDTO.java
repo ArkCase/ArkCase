@@ -32,6 +32,7 @@ public class ProfileDTO {
     private String title;
 
     private List<String> groups;
+    private Long userOrgId;
 
     public String getUserId() {
         return userId;
@@ -199,5 +200,15 @@ public class ProfileDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setUserOrgId(Long userOrgId)
+    {
+        this.userOrgId = userOrgId;
+    }
+
+    public Long getUserOrgId()
+    {
+        return userOrgId;
     }
 }

@@ -24,19 +24,19 @@ Profile.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_UPLOAD_IMAGE: "/api/latest/plugin/profile/img"
+        ,API_UPLOAD_IMAGE: "/api/latest/service/ecm/upload"
 
         ,_validateUploadInfo: function(data) {
+            // upload response is an array of EcmFile JSON
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.files)) {
+            if (!Acm.isArray(data))
+            {
                 return false;
             }
-            if (!Acm.isArray(data.files)) {
-                return false;
-            }
-            if (0 >= data.files.length) {
+
+            if (0 >= data.length) {
                 return false;
             }
             return true;

@@ -9,6 +9,8 @@ import java.util.Date;
  */
 public class FindComplaintByIdEvent extends AcmEvent
 {
+    private static final long serialVersionUID = -2912148000260551565L;
+
     public FindComplaintByIdEvent(Complaint source)
     {
         super(source);

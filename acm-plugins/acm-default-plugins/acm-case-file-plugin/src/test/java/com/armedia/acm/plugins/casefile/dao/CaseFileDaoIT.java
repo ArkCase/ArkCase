@@ -2,7 +2,8 @@ package com.armedia.acm.plugins.casefile.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -65,9 +65,12 @@ public class CaseFileDaoIT
         caseFile.setTitle("title");
         caseFile.setRestricted(true);
 
-        AcmContainerFolder folder = new AcmContainerFolder();
+        AcmContainer container = new AcmContainer();
+        AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFolderId");
-        caseFile.setContainerFolder(folder);
+        folder.setName("folderName");
+        container.setFolder(folder);
+        caseFile.setContainer(container);
 
         CaseFile saved = caseFileDao.save(caseFile);
 

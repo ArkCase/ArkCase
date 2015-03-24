@@ -8,6 +8,7 @@
     <bean id="costFactory" class="com.armedia.acm.form.cost.service.CostFactory">
     	<property name="acmCostDao" ref="acmCostDao" />
     	<property name="acmCostsheetDao" ref="acmCostsheetDao" />
+    	<property name="userDao" ref="userJpaDao" />
     </bean>
 
 </beans>

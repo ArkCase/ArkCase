@@ -8,6 +8,7 @@
     <bean id="timeFactory" class="com.armedia.acm.form.time.service.TimeFactory">
     	<property name="acmTimeDao" ref="acmTimeDao" />
     	<property name="acmTimesheetDao" ref="acmTimesheetDao" />
+    	<property name="userDao" ref="userJpaDao" />
     </bean>
 
 </beans>

@@ -1,6 +1,7 @@
 package com.armedia.acm.correspondence.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.slf4j.Logger;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Controller
@@ -31,18 +31,15 @@ public class GenerateCorrespondenceAPIController
             @RequestParam("templateName") String templateName,
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
-            @RequestParam("parentObjectName") String parentObjectName,
             @RequestParam("targetCmisFolderId") String targetCmisFolderId,
-            Authentication authentication,
-            HttpSession httpSession) throws AcmCreateObjectFailedException
+            Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         log.debug("User '" + authentication.getName() + "' is generating template '" + templateName + "'");
 
         try
         {
-            String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
             EcmFile retval = getCorrespondenceService().generate(authentication, templateName, parentObjectType, parentObjectId,
-                    parentObjectName, targetCmisFolderId, ipAddress);
+                    targetCmisFolderId);
             return retval;
         }
         catch ( AcmCreateObjectFailedException e )
