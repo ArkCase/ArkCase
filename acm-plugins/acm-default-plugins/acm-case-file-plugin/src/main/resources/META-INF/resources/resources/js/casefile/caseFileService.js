@@ -14,6 +14,8 @@ CaseFile.Service = {
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
+        if (CaseFile.Service.Time.create)   {CaseFile.Service.Time.create();}
+        if (CaseFile.Service.Cost.create)   {CaseFile.Service.Cost.create();}
     }
     ,onInitialized: function() {
         if (CaseFile.Service.Lookup.onInitialized) {CaseFile.Service.Lookup.onInitialized();}
@@ -23,6 +25,8 @@ CaseFile.Service = {
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
+        if (CaseFile.Service.Time.onInitialized)        {CaseFile.Service.Time.onInitialized();}
+        if (CaseFile.Service.Cost.onInitialized)        {CaseFile.Service.Cost.onInitialized();}
     }
 
     ,Lookup: {
@@ -970,7 +974,7 @@ CaseFile.Service = {
         }
 
         ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
-        ,API_UPLOAD_DOCUMENT: "/api/latest/plugin/casefile/file"
+        ,API_UPLOAD_DOCUMENT: "/api/latest/service/ecm/upload"
 
         ,_validateUploadInfo: function(data) {
             if (Acm.isEmpty(data)) {
@@ -1332,9 +1336,7 @@ CaseFile.Service = {
                 + "?templateName=" + templateName
                 + "&parentObjectType=" + CaseFile.Model.DOC_TYPE_CASE_FILE
                 + "&parentObjectId=" + caseFileIn.id
-                + "&parentObjectName=" + caseFileIn.caseNumber
-                + "&targetCmisFolderId=" + caseFileIn.containerFolder.cmisFolderId
-                ;
+                + "&targetCmisFolderId=" + caseFileIn.container.folder.cmisFolderId;
 
             Acm.Service.asyncPost(
                 function(response) {
@@ -1347,12 +1349,12 @@ CaseFile.Service = {
                             var caseFileId = caseFileIn.id;
 
                             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-                            if(CaseFile.Model.Detail.validateCaseFile(caseFile)){
+                            if(CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                                 var childObject = {};
                                 childObject.targetId = ecmFile.fileId;
                                 childObject.targetName = ecmFile.fileName;
-                                childObject.created = ecmFile.creator;
-                                childObject.creator = ecmFile.created;
+                                childObject.created = ecmFile.created;
+                                childObject.creator = ecmFile.creator;
                                 childObject.modified = ecmFile.modified;
                                 childObject.modifier = ecmFile.modifier;
                                 childObject.status = ecmFile.status;
@@ -1362,21 +1364,69 @@ CaseFile.Service = {
                                 caseFile.childObjects.push(childObject);
                                 //CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
                             }
-
-                            /*var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
-                            var document = {};
-                            document.id = ecmFile.fileId;
-                            document.name = ecmFile.fileName;
-                            document.status = ecmFile.status;
-                            document.creator = ecmFile.creator;
-                            document.created = ecmFile.created;
-                            document.targetType = CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE;
-                            document.category = CaseFile.Model.DOCUMENT_CATEGORY_CORRESPONDENCE;
-                            documents.push(document);
-                            CaseFile.Model.Documents.cacheDocuments.put(caseFileId, documents);
-*/
-
                             CaseFile.Controller.modelCreatedCorrespondence(caseFileId);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
+
+    ,Time: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_TIMESHEETS: "/api/v1/service/timesheet/"
+
+
+        ,retrieveTimesheets : function(caseFileId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_TIMESHEETS;
+            url += "objectId/" + caseFileId + "/";
+            url += "objectType/" + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedTimesheets(response);
+
+                    } else {
+                        if (CaseFile.Model.Time.validateTimesheets(response)) {
+                            var timesheets = response;
+                            CaseFile.Model.Time.cacheTimesheets.put(caseFileId, timesheets);
+                            CaseFile.Controller.modelRetrievedTimesheets(timesheets);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
+
+    ,Cost: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_COSTSHEETS: "/api/v1/service/costsheet/"
+
+
+        ,retrieveCostsheets : function(caseFileId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_COSTSHEETS;
+            url += "objectId/" + caseFileId + "/";
+            url += "objectType/" + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedCostsheets(response);
+
+                    } else {
+                        if (CaseFile.Model.Cost.validateCostsheets(response)) {
+                            var costsheets = response;
+                            CaseFile.Model.Cost.cacheCostsheets.put(caseFileId, costsheets);
+                            CaseFile.Controller.modelRetrievedCostsheets(costsheets);
                         }
                     }
                 }

@@ -210,5 +210,9 @@
             <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="case-file-15-rename-container-id" author="dmiller">
+        <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+    </changeSet>
     
 </databaseChangeLog>

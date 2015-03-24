@@ -51,7 +51,8 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
         if (null != complaint)
         {
         	Collection<ObjectAssociation> associations =  complaint.getChildObjects();
-        	
+
+            // TODO: lookup files the right way
         	if (null != associations && associations.size() > 0)
         	{
         		for (ObjectAssociation association : associations)
@@ -64,7 +65,7 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 	        				
 	        				AcmRecord record = new AcmRecord();
 	        				
-	        				record.setEcmFileId(file.getEcmFileId());
+	        				record.setEcmFileId(file.getFolder().getCmisFolderId());
 	        		        record.setCategoryFolder("Complaints");
 	        		        record.setOriginatorOrg("Armedia LLC");
 	        		        record.setOriginator(file.getModifier());

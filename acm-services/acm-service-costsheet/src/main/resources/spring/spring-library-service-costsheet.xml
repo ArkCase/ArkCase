@@ -16,10 +16,15 @@
     			<entry key="Submit" value="IN_APPROVAL" />
     		</map>
     	</property>
+    	<property name="executeSolrQuery" ref="executeSolrQuery" />
     </bean>
+    
+    <bean id="costsheetToSolrTransformer" class="com.armedia.acm.services.costsheet.service.CostsheetToSolrTransformer">
+		<property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+	</bean>
 
     <bean id="acmCostsheetPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Time Tracking Service Plugin"/>
+        <property name="pluginName" value="Cost Tracking Service Plugin"/>
         <property name="privileges">
             <list>
                 <ref bean="costsheetPrivilege"/>
@@ -38,6 +43,42 @@
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/costsheet/wizard"/>
                     <property name="requiredPrivilege" ref="costsheetCreatePrivilege"/>
+                </bean>
+                
+                <bean id="getCostsheetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/costsheet/{id}"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
+                </bean>
+                
+                <bean id="getCostsheetsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/costsheet"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
+                </bean>
+                
+                <bean id="getCostsheetsForUserUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/costsheet/user/{userId}"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
+                </bean>
+                
+                <bean id="getCostsheetsForObjectIdAndTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/costsheet/objectId/{objectId}/objectType/{objectType}"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
+                </bean>
+                
+                <bean id="saveCostsheetUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/costsheet"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
+                </bean>
+
+                <bean id="getCostsheetByIdUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/costsheet/{costsheetId}"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
                 </bean>
             </list>
         </property>

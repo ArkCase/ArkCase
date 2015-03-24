@@ -57,6 +57,8 @@ var App = App || {
     ,OBJTYPE_PEOPLE:    "PEOPLE"
     ,OBJTYPE_PERSON:    "PERSON"
     ,OBJTYPE_BUSINESS_PROCESS: "BUSINESS_PROCESS"
+    ,OBJTYPE_TIMESHEET:        "TIMESHEET"
+    ,OBJTYPE_COSTSHEET:        "COSTSHEET"
 
 
     //fix me: make it plugin independent

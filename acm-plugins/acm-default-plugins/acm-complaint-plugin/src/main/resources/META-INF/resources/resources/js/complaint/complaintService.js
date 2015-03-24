@@ -13,6 +13,8 @@ Complaint.Service = {
         if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
         if (Complaint.Service.Notes.create) {Complaint.Service.Notes.create();}
         if (Complaint.Service.Tasks.create) {Complaint.Service.Tasks.create();}
+        if (Complaint.Service.Time.create) {Complaint.Service.Time.create();}
+        if (Complaint.Service.Cost.create) {Complaint.Service.Cost.create();}
     }
     ,onInitialized: function() {
         if (Complaint.Service.Lookup.onInitialized) {Complaint.Service.Lookup.onInitialized();}
@@ -21,6 +23,8 @@ Complaint.Service = {
         if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
         if (Complaint.Service.Notes.onInitialized) {Complaint.Service.Notes.onInitialized();}
         if (Complaint.Service.Tasks.onInitialized) {Complaint.Service.Tasks.onInitialized();}
+        if (Complaint.Service.Time.onInitialized) {Complaint.Service.Time.onInitialized();}
+        if (Complaint.Service.Cost.onInitialized) {Complaint.Service.Cost.onInitialized();}
     }
 
     ,Lookup: {
@@ -976,7 +980,7 @@ Complaint.Service = {
         ,onInitialized: function(){
         }
 
-        ,API_UPLOAD_FILE            : "/api/latest/plugin/task/file"
+        ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
         ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
 
         ,uploadDocuments: function(formData) {
@@ -1191,5 +1195,66 @@ Complaint.Service = {
         }
     }
 
+    ,Time: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_TIMESHEETS: "/api/v1/service/timesheet/"
+
+
+        ,retrieveTimesheets : function(complaintId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_TIMESHEETS;
+            url += "objectId/" + complaintId + "/";
+            url += "objectType/" + Complaint.Model.DOC_TYPE_COMPLAINT;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Complaint.Controller.modelRetrievedTimesheets(response);
+
+                    } else {
+                        if (Complaint.Model.Time.validateTimesheets(response)) {
+                            var timesheets = response;
+                            Complaint.Model.Time.cacheTimesheets.put(complaintId, timesheets);
+                            Complaint.Controller.modelRetrievedTimesheets(timesheets);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
+
+    ,Cost: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_COSTSHEETS: "/api/v1/service/costsheet/"
+
+
+        ,retrieveCostsheets : function(complaintId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_COSTSHEETS;
+            url += "objectId/" + complaintId + "/";
+            url += "objectType/" + Complaint.Model.DOC_TYPE_COMPLAINT;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Complaint.Controller.modelRetrievedCostsheets(response);
+
+                    } else {
+                        if (Complaint.Model.Cost.validateCostsheets(response)) {
+                            var costsheets = response;
+                            Complaint.Model.Cost.cacheCostsheets.put(complaintId, costsheets);
+                            Complaint.Controller.modelRetrievedCostsheets(costsheets);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 };
 

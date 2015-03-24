@@ -9,7 +9,8 @@ Costsheet.View = {
         if (Costsheet.View.Navigator.create)            {Costsheet.View.Navigator.create();}
         if (Costsheet.View.Action.create)               {Costsheet.View.Action.create();}
         if (Costsheet.View.Detail.create)               {Costsheet.View.Detail.create();}
-        if (Costsheet.View.People.create)               {Costsheet.View.People.create();}
+        if (Costsheet.View.ParentDetail.create)         {Costsheet.View.ParentDetail.create();}
+        if (Costsheet.View.Person.create)               {Costsheet.View.Person.create();}
         if (Costsheet.View.CostSummary.create)          {Costsheet.View.CostSummary.create();}
     }
     ,onInitialized: function() {
@@ -17,8 +18,21 @@ Costsheet.View = {
         if (Costsheet.View.Navigator.onInitialized)      {Costsheet.View.Navigator.onInitialized();}
         if (Costsheet.View.Action.onInitialized)         {Costsheet.View.Action.onInitialized();}
         if (Costsheet.View.Detail.onInitialized)         {Costsheet.View.Detail.onInitialized();}
-        if (Costsheet.View.People.onInitialized)         {Costsheet.View.People.onInitialized();}
+        if (Costsheet.View.ParentDetail.onInitialized)   {Costsheet.View.ParentDetail.onInitialized();}
+        if (Costsheet.View.Person.onInitialized)         {Costsheet.View.Person.onInitialized();}
         if (Costsheet.View.CostSummary.onInitialized)    {Costsheet.View.CostSummary.onInitialized();}
+    }
+
+    ,getActiveCostsheetId: function() {
+        return ObjNav.View.Navigator.getActiveObjId();
+    }
+    ,getActiveCostsheet: function() {
+        var objId = ObjNav.View.Navigator.getActiveObjId();
+        var costsheet = null;
+        if (Acm.isNotEmpty(objId)) {
+            costsheet = ObjNav.Model.Detail.getCacheObject(Costsheet.Model.DOC_TYPE_COSTSHEET, objId);
+        }
+        return costsheet;
     }
 
     ,MicroData:{
@@ -114,19 +128,130 @@ Costsheet.View = {
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newCostsheetFormUrl)){
                 var newCostsheetFormUrl = Costsheet.View.MicroData.formUrls.newCostsheetFormUrl;
                 newCostsheetFormUrl = newCostsheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(newCostsheetFormUrl, "", 860, 700, function() {});
+                Acm.Dialog.openWindow(newCostsheetFormUrl, "", 860, 700, function() {
+                    Costsheet.Controller.viewClosedAddCostsheetWindow();
+                    if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())) {
+                        Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
+                    }
+                });
             }
         }
         ,onClickBtnEditCostsheetForm:function(event,ctrl){
             var formUrls = Costsheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editCostsheetFormUrl)){
                 var editCostsheetFormUrl = Costsheet.View.MicroData.formUrls.editCostsheetFormUrl;
-                //temporary ID, need to change later
-                var objectId = Costsheet.Model.getCostsheetId();
-                editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(objectId:'" + objectId + "',");
-                editCostsheetFormUrl = editCostsheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(editCostsheetFormUrl, "", 860, 700, function() {});
+                if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())){
+                    var objectId = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentId);
+                    var objectType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
+                    editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(objectId:'" + objectId + "',type:'" + objectType + "',");
+                    editCostsheetFormUrl = editCostsheetFormUrl.replace("embed", "popupform");
+                    Acm.Dialog.openWindow(editCostsheetFormUrl, "", 860, 700, function() {
+                        Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
+                    });
+                }
             }
+        }
+    }
+    ,ParentDetail: {
+        create : function() {
+            this.$divParentDetail          = $("#divParentDetail");
+
+            this.$lnkParentObjTitle          = $("#parentObjTitle");
+            this.$lnkParentObjNumber         = $("#parentObjNumber");
+            this.$lnkParentObjIncidentDate   = $("#parentObjIncidentDate");
+            this.$lnkParentObjPriority       = $("#parentObjPriority");
+            this.$lnkParentObjAssigned       = $("#parentObjAssignee");
+            this.$lnkParentObjSubjectType    = $("#parentObjSubjectType");
+            this.$lnkParentObjStatus         = $("#parentObjStatus");
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Costsheet.Controller.MODEL_RETRIEVED_PARENT_OBJECT  ,this.onModelRetrievedParentObject);
+
+        }
+        ,onInitialized: function() {
+        }
+        ,onViewSelectedObject: function(objType,objId) {
+            Costsheet.View.ParentDetail.resetParentDetail();
+            var costsheet = Costsheet.View.getActiveCostsheet();
+            if(Costsheet.Model.Detail.validateCostsheet(costsheet)) {
+                var objId = costsheet.parentId;
+                var objType = costsheet.parentType;
+                var parentObjData = Costsheet.Model.ParentDetail.cacheParentObject.get(objId + "." + objType);
+                if (Costsheet.Model.ParentDetail.validateUnifiedData(parentObjData)) {
+                    Costsheet.View.ParentDetail.updateParentDetail(parentObjData);
+                }
+            }
+        }
+        ,onModelRetrievedObject: function(costsheet) {
+            Costsheet.View.ParentDetail.resetParentDetail();
+            if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
+                var objId = costsheet.parentId;
+                var objType = costsheet.parentType;
+                var parentObjData = Costsheet.Model.ParentDetail.cacheParentObject.get(objId+"."+objType);
+                if(Costsheet.Model.ParentDetail.validateUnifiedData(parentObjData)){
+                    Costsheet.View.ParentDetail.updateParentDetail(parentObjData);
+                }
+            }
+        }
+        ,onModelRetrievedParentObject: function(parentObjData) {
+            Costsheet.View.ParentDetail.updateParentDetail(parentObjData);
+        }
+
+        ,updateParentDetail: function(parentObjData) {
+            if (Costsheet.Model.ParentDetail.validateUnifiedData(parentObjData)) {
+                this.setTextParentObjTitle(parentObjData.title);
+                this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
+                this.setTextLnkParentObjPriority(parentObjData.priority);
+                this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                this.setTextLnkParentObjStatus(parentObjData.status);
+                this.setTextLnkParentObjSubjectType(parentObjData.subjectType);
+                this.setTextLnkParentObjNumber(parentObjData.number);
+                this.setParentObjLink(parentObjData.id, parentObjData.objectType);
+                this.showDivParentDetail(true);
+            }
+        }
+        ,resetParentDetail: function() {
+            this.setTextParentObjTitle("");
+            this.setTextLnkParentObjIncidentDate("");
+            this.setTextLnkParentObjPriority("");
+            this.setTextLnkParentObjAssigned("");
+            this.setTextLnkParentObjStatus("");
+            this.setTextLnkParentObjSubjectType("");
+            this.setTextLnkParentObjNumber("");
+            this.setParentObjLink("");
+        }
+        ,setParentObjLink: function(parentId, parentType) {
+            if (Acm.isNotEmpty(parentId) && Acm.isNotEmpty(parentType)) {
+                var url = App.buildObjectUrl(Acm.goodValue(parentType), Acm.goodValue(parentId), "#");
+                this.$lnkParentObjTitle.prop("href", url);
+                this.$lnkParentObjNumber.prop("href", url);
+            }
+        }
+        
+        ,showDivParentDetail: function(show) {
+            Acm.Object.show(this.$divParentDetail, show);
+        }
+        ,setTextParentObjTitle: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjTitle, txt);
+        }
+        ,setTextLnkParentObjIncidentDate: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjIncidentDate, txt);
+        }
+        ,setTextLnkParentObjPriority: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjPriority, txt);
+        }
+        ,setTextLnkParentObjAssigned: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjAssigned, txt);
+        }
+        ,setTextLnkParentObjStatus: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjStatus, txt);
+        }
+        ,setTextLnkParentObjNumber: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjNumber, txt);
+        }
+        ,setTextLnkParentObjSubjectType: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjSubjectType, txt);
         }
     }
 
@@ -137,10 +262,41 @@ Costsheet.View = {
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail.on("click", function(e) {Costsheet.View.Detail.onClickBtnEditDetail(e, this);});
             this.$btnSaveDetail.on("click", function(e) {Costsheet.View.Detail.onClickBtnSaveDetail(e, this);});
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Costsheet.Controller.MODEL_SAVED_DETAIL            ,this.onModelSavedDetail);
         }
         ,onInitialized: function() {
 
         }
+        ,onViewSelectedObject: function(objType,objId) {
+            Costsheet.View.Detail.resetDetail();
+            var costsheet = Costsheet.View.getActiveCostsheet();
+            if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
+                Costsheet.View.Detail.populateDetail(costsheet);
+            }
+        }
+        ,onModelRetrievedObject: function(costsheet) {
+            Costsheet.View.Detail.resetDetail();
+            if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
+                Costsheet.View.Detail.populateDetail(costsheet);
+            }
+        }
+        ,onModelSavedDetail: function(costsheet, details) {
+            if (details.hasError) {
+                Costsheet.View.Detail.setHtmlDivDetail("(Error)");
+            }
+        }
+        ,populateDetail: function(costsheet){
+            if(Acm.isNotEmpty(costsheet.details)){
+                Costsheet.View.Detail.setHtmlDivDetail(costsheet.details);
+            }
+        }
+        ,resetDetail: function(costsheet) {
+            Costsheet.View.Detail.setHtmlDivDetail("");
+        }
+
         ,DIRTY_EDITING_DETAIL: "Editing Costsheet detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
             App.Object.Dirty.declare(Costsheet.View.Detail.DIRTY_EDITING_DETAIL);
@@ -148,7 +304,10 @@ Costsheet.View = {
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Costsheet.View.Detail.saveDivDetail();
-            App.Object.Dirty.clear(Costsheet.View.Detail.DIRTY_EDITING_DETAIL);
+            if(Acm.isNotEmpty(htmlDetail)){
+                Costsheet.Controller.viewSavedDetail(Costsheet.View.getActiveCostsheet(), htmlDetail);
+                App.Object.Dirty.clear(Costsheet.View.Detail.DIRTY_EDITING_DETAIL);
+            }
         }
         ,editDivDetail: function() {
             AcmEx.Object.SummerNote.edit(this.$divDetail);
@@ -156,64 +315,72 @@ Costsheet.View = {
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
+        ,getHtmlDivDetail: function() {
+            return AcmEx.Object.SummerNote.get(this.$divDetail);
+        }
+        ,setHtmlDivDetail: function(html) {
+            AcmEx.Object.SummerNote.set(this.$divDetail, html);
+        }
 
     }
 
-    ,People: {
+    ,Person: {
         create: function () {
-            this.$divPeople = $("#divPeople");
-            this.createJTablePerson(this.$divPeople);
+            this.$divPerson = $("#divPerson");
+            this.createJTablePerson(this.$divPerson);
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT, this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT, this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT            , this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT              , this.onViewSelectedObject);
         }
         , onInitialized: function () {
         }
 
-        , onModelRetrievedObject: function (objData) {
-            AcmEx.Object.JTable.load(Costsheet.View.People.$divPeople);
+        , onModelRetrievedObject: function (costsheet) {
+            AcmEx.Object.JTable.load(Costsheet.View.Person.$divPerson);
         }
         , onViewSelectedObject: function (objType, objId) {
-            AcmEx.Object.JTable.load(Costsheet.View.People.$divPeople);
+            AcmEx.Object.JTable.load(Costsheet.View.Person.$divPerson);
         }
 
-        , _makeJtData: function (people) {
+        , _makeJtData: function (person) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (Costsheet.Model.People.validatePeople(people)) {
-                for (var i = 0; i < people.length; i++) {
-                    var Record = {};
-                    Record.id = Acm.goodValue(people[i].id);
-                    Record.role = Acm.goodValue(people[i].role);
-                    Record.username = Acm.goodValue(people[i].username);
-                    Record.fullName = Acm.__FixMe__getUserFullName(people[i].username);
-                    jtData.Records.push(Record);
-                }
-                jtData.TotalRecordCount = people.length;
+            if (Costsheet.Model.Person.validatePerson(person)) {
+                var Record = {};
+                Record.role = Acm.goodValue(person.role);
+                Record.username = Acm.goodValue(person.userId);
+                Record.fullName = Acm.goodValue(person.fullName);
+                jtData.Records.push(Record);
             }
             return jtData;
         }
         , createJTablePerson: function ($jt) {
             var sortMap = {};
-            AcmEx.Object.JTable.usePaging($jt
+            AcmEx.Object.JTable.useBasic($jt
                 , {
                     title: 'Person'
-                    , multiselect: false
-                    , selecting: false
-                    , selectingCheckboxes: false
-                    , paging: true
                     , sorting: true
-                    , pageSize: 10 //Set page size (default: 10)
                     , actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            var costsheetId = parseInt(Costsheet.View.getActiveCostsheetId());
+                            if (0 >= costsheetId) {
+                                return rc;
+                            }
+                            else{
+                                var costsheet = Costsheet.View.getActiveCostsheet();
+                                if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
+                                    var person = costsheet.user;
+                                    rc = Costsheet.View.Person._makeJtData(person);
+                                }
+                                return rc;
+                            }
                         }
                     }
-
                     , fields: {
                         id: {
                             title: 'ID'
                             , key: true
-                            , list: true
+                            , list: false
                             , create: false
                             , edit: false
                             , sorting: true
@@ -233,6 +400,7 @@ Costsheet.View = {
                             title: 'Role'
                             , width: '10%'
                             , sorting: true
+                            ,list: false
                         }
                     } //end field
                 } //end arg
@@ -260,33 +428,45 @@ Costsheet.View = {
         }
         , _makeJtData: function (costRecords) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (Costsheet.Model.Hours.validateCostRecords(costRecords)) {
+            if (Costsheet.Model.CostSummary.validateCostRecords(costRecords)) {
                 for(var i = 0; i < costRecords.length; i++){
-                    var Record = {};
-                    Record.id = Acm.goodValue(costRecords[i].id);
-                    Record.parentId = Acm.goodValue(costRecords[i].parentId);
-                    Record.costs = Acm.goodValue(costRecords[i].costs);
-                    Record.description = Acm.goodValue(costRecords[i].description);
-                    jtData.Records.push(Record);
+                    if (Costsheet.Model.CostSummary.validateCostRecord(costRecords[i])) {
+                        var Record = {};
+                        Record.id = Acm.goodValue(costRecords[i].id);
+                        Record.parentId = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentId);
+                        Record.parentNumber = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentNumber);
+                        Record.parentType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
+                        Record.cost = Acm.goodValue(costRecords[i].value);
+                        Record.title = Acm.goodValue(costRecords[i].title);
+                        Record.description = Acm.goodValue(costRecords[i].description);
+                        jtData.Records.push(Record);
+                    }
                 }
-                jtData.TotalRecordCount = costRecords.length;
+                //jtData.TotalRecordCount = costRecords.length;
             }
             return jtData;
         }
         , createJTableCostSummary: function ($jt) {
             var sortMap = {};
-            AcmEx.Object.JTable.usePaging($jt
+            AcmEx.Object.JTable.useBasic($jt
                 , {
-                    title: 'Expenses'
-                    , multiselect: false
-                    , selecting: false
-                    , selectingCheckboxes: false
-                    , paging: true
+                    title: 'Hours Summary'
                     , sorting: true
-                    , pageSize: 10 //Set page size (default: 10)
                     , actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.JTable.getEmptyRecords();
+                            var costsheetId = Costsheet.View.getActiveCostsheetId();
+                            if (0 >= costsheetId) {
+                                return rc;
+                            }
+                            else{
+                                var costsheet = Costsheet.View.getActiveCostsheet();
+                                if (Costsheet.Model.Detail.validateCostsheet(costsheet)) {
+                                    var costRecords = costsheet.costs;
+                                    rc = Costsheet.View.CostSummary._makeJtData(costRecords);
+                                }
+                                return rc;
+                            }
                         }
                     }
 
@@ -304,14 +484,36 @@ Costsheet.View = {
                             title: 'Parent ID'
                             , width: '10%'
                             , sorting: true
+                            ,display: function(data) {
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.parentNumber) + "</a>");
+                                return $lnk;
+                            }
                         }
-                        , description: {
-                            title: 'Description'
+                        ,parentType: {
+                            title: 'Parent Type'
+                            , width: '10%'
+                            , sorting: true
+                            , list : true
+                        }
+                        ,parentNumber: {
+                            title: 'Parent Number'
+                            , width: '10%'
+                            , sorting: true
+                            , list : false
+                        }
+                        , cost: {
+                            title: 'Total Cost'
                             , width: '10%'
                             , sorting: true
                         }
-                        , costs: {
-                            title: 'Total Cost'
+                        , title: {
+                            title: 'Title'
+                            , width: '10%'
+                            , sorting: true
+                        }
+                        , description: {
+                            title: 'Description'
                             , width: '10%'
                             , sorting: true
                         }

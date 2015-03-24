@@ -2626,7 +2626,6 @@ Complaint.View = Complaint.View || {
                     }
                 }
             });
-
             $s.jtable('load');
         }
     }
@@ -2639,6 +2638,7 @@ Complaint.View = Complaint.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_TIMESHEETS     ,this.onModelRetrievedTimesheets);
         }
         ,onInitialized: function() {
         }
@@ -2649,58 +2649,89 @@ Complaint.View = Complaint.View || {
         ,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(Complaint.View.Time.$divTime);
         }
+        ,onModelRetrievedTimesheets: function(timesheet){
+            AcmEx.Object.JTable.load(Complaint.View.Time.$divTime);
+        }
 
-        ,_makeJtData: function(history) {
+        ,findTotalHours: function(timeRecords){
+            var totalHours = 0;
+            if(Acm.isArray(timeRecords) && Acm.isNotEmpty(timeRecords)) {
+                for (var i = 0; i < timeRecords.length; i++) {
+                    if (Complaint.Model.Time.validateTimeRecord(timeRecords[i])) {
+                        var timeRecord = timeRecords[i];
+                        if (Acm.isNotEmpty(timeRecord.objectId) && Acm.compare(Acm.goodValue(timeRecord.objectId), Complaint.View.getActiveComplaintId())) {
+                            totalHours += Acm.goodValue(timeRecord.value);
+                        }
+                    }
+                }
+            }
+            return totalHours;
+        }
+        ,_makeJtData: function(timesheets) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            for(var j = 0; j < timesheets.length; j++){
+                if(Complaint.Model.Time.validateTimesheet(timesheets[j])){
+                    var timesheet = timesheets[j];
+                    var Record = {};
+                    Record.id = Acm.goodValue(timesheet.id);
+                    Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.type = Complaint.Model.DOC_TYPE_TIMESHEET;
+                    Record.status = Acm.goodValue(timesheet.status);
+                    Record.username = Acm.goodValue(timesheet.creator);
+                    Record.hours = Acm.goodValue(Complaint.View.Time.findTotalHours(timesheet.times));
+                    Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    jtData.Records.push(Record);
+                }
+            }
             return jtData;
         }
         ,createJTableTime: function($jt) {
-            var sortMap = {};
-            sortMap["created"] = "created";
-
-            AcmEx.Object.JTable.usePaging($jt
-                ,{
+            AcmEx.Object.JTable.useBasic($jt
+                , {
                     title: 'Time Tracking'
-                    ,paging: true
-                    ,sorting: true
-                    ,pageSize: 10 //Set page size (default: 10)
-                    ,selecting: true
-                    ,multiselect: false
-                    ,selectingCheckboxes: false
-                    ,actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-
-                            }  //end else
+                    , sorting: true
+                    , actions: {
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            var timesheets = Complaint.Model.Time.cacheTimesheets.get(Complaint.View.getActiveComplaintId());
+                            if (Complaint.Model.Time.validateTimesheets(timesheets)) {
+                                rc = Complaint.View.Time._makeJtData(timesheets);
+                            }
+                            return rc;
                         }
-
-                    ,fields: {
+                    }
+                    , fields: {
                         id: {
                             title: 'ID'
-                            ,key: true
-                            ,list: false
-                            ,create: false
-                            ,edit: false
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
                         }, name: {
                             title: 'Form Name'
-                            ,width: '20%'
-                        }, user: {
+                            , width: '20%'
+                            ,display: function(data) {
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
+                                return $lnk;
+                            }
+                        }, username: {
                             title: 'Username'
-                            ,width: '10%'
+                            , width: '10%'
                         }, hours: {
                             title: 'Total Hours'
-                            ,width: '10%'
+                            , width: '10%'
                         }, modified: {
                             title: 'Modified Date'
-                            ,width: '10%'
+                            , width: '10%'
                         }, status: {
                             title: 'Status'
-                            ,width: '10%'
+                            , width: '10%'
                         }
                     } //end field
-                } //end arg
-                ,sortMap
+                } //end args
             );
+            $jt.jtable('load');
         }
     }
 
@@ -2712,6 +2743,8 @@ Complaint.View = Complaint.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_COSTSHEETS     ,this.onModelRetrievedCostsheets);
+
         }
         ,onInitialized: function() {
         }
@@ -2723,27 +2756,56 @@ Complaint.View = Complaint.View || {
             AcmEx.Object.JTable.load(Complaint.View.Cost.$divCost);
         }
 
-        ,_makeJtData: function(costData) {
+        ,onModelRetrievedCostsheets: function(costsheet){
+            AcmEx.Object.JTable.load(Complaint.View.Cost.$divCost);
+        }
+
+        ,findTotalCost: function(costRecords){
+            var totalCost = 0;
+            if(Acm.isArray(costRecords) && Acm.isNotEmpty(costRecords)){
+                for(var i = 0; i < costRecords.length; i++){
+                    if(Complaint.Model.Cost.validateCostRecord(costRecords[i])){
+                        var costRecord = costRecords[i];
+                        if(Acm.isNotEmpty(costRecord.value)){
+                            totalCost += Acm.goodValue(costRecord.value);
+                        }
+                    }
+                }
+            }
+            return totalCost;
+        }
+        ,_makeJtData: function(costsheets) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            for(var j = 0; j < costsheets.length; j++){
+                if(Complaint.Model.Cost.validateCostsheet(costsheets[j])){
+                    var costsheet = costsheets[j];
+                    var Record = {};
+                    Record.id = Acm.goodValue(costsheet.id);
+                    Record.name = "Costsheet " + Acm.goodValue(costsheet.parentNumber);
+                    Record.type = Complaint.Model.DOC_TYPE_COSTSHEET;
+                    Record.status = Acm.goodValue(costsheet.status);
+                    Record.username = Acm.goodValue(costsheet.creator);
+                    Record.cost = Acm.goodValue(Complaint.View.Cost.findTotalCost(costsheet.costs));
+                    Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    jtData.Records.push(Record);
+                }
+            }
             return jtData;
         }
         ,createJTableCost: function($jt) {
-            var sortMap = {};
-            sortMap["created"] = "created";
-
-            AcmEx.Object.JTable.usePaging($jt
+            AcmEx.Object.JTable.useBasic($jt
                 ,{
                     title: 'Cost Tracking'
-                    ,paging: true
                     ,sorting: true
-                    ,pageSize: 10 //Set page size (default: 10)
-                    ,selecting: true
-                    ,multiselect: false
-                    ,selectingCheckboxes: false
                     ,actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-                        }  //end else
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            var costsheets = Complaint.Model.Cost.cacheCostsheets.get(Complaint.View.getActiveComplaintId());
+                            if (Complaint.Model.Cost.validateCostsheets(costsheets)) {
+                                rc = Complaint.View.Cost._makeJtData(costsheets);
+                            }
+                            return rc;
+                        }
                     }
 
                     ,fields: {
@@ -2756,10 +2818,15 @@ Complaint.View = Complaint.View || {
                         }, name: {
                             title: 'Form Name'
                             ,width: '20%'
-                        }, user: {
+                            ,display: function(data) {
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
+                                return $lnk;
+                            }
+                        }, username: {
                             title: 'Username'
                             ,width: '10%'
-                        }, costs: {
+                        }, cost: {
                             title: 'Total Cost'
                             ,width: '10%'
                         }, modified: {
@@ -2771,11 +2838,8 @@ Complaint.View = Complaint.View || {
                         }
                     } //end field
                 } //end arg
-                ,sortMap
             );
         }
     }
-
-
 };
 

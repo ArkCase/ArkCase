@@ -38,9 +38,12 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
 	private Long id;
 	
 	@JsonIgnore
-    @ManyToOne(cascade = { CascadeType.ALL}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     @JoinColumn(name="cm_time_timesheet_id") 
     private AcmTimesheet timesheet;
+	
+	@Column(name = "cm_time_object_id")
+	private Long objectId;
 	
 	@Column(name = "cm_time_code")
 	private String code;
@@ -86,6 +89,14 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
 
 	public void setTimesheet(AcmTimesheet timesheet) {
 		this.timesheet = timesheet;
+	}
+
+	public Long getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Long objectId) {
+		this.objectId = objectId;
 	}
 
 	public String getCode() {
@@ -173,6 +184,7 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getObjectType() 
 	{
 		return TimeConstants.OBJECT_TYPE;

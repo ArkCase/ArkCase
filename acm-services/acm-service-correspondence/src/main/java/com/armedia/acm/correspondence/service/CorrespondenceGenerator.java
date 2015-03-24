@@ -1,6 +1,7 @@
 package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -53,7 +54,6 @@ public class CorrespondenceGenerator
      * @param user User who has caused the correspondence to be generated.
      * @param parentObjectType Parent object type, e.g. CASE_FILE, COMPLAINT, TASK.
      * @param parentObjectId Parent object ID
-     * @param parentObjectName Parent object name.
      * @param targetFolderCmisId CMIS object ID of the folder in which to file the correspondence; usually the folder
      *                           belonging to the parent object.
      * @param template Correspondence template (which stores information on the Word template file name, JPA query
@@ -73,12 +73,11 @@ public class CorrespondenceGenerator
             Authentication user,
             String parentObjectType,
             Long parentObjectId,
-            String parentObjectName,
             String targetFolderCmisId,
             CorrespondenceTemplate template,
             Object[] queryArguments,
             OutputStream correspondenceOutputStream,
-            InputStream correspondenceInputStream) throws IOException, AcmCreateObjectFailedException
+            InputStream correspondenceInputStream) throws IOException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         List<Object[]> results = query(template, queryArguments);
 
@@ -113,8 +112,7 @@ public class CorrespondenceGenerator
                 user,
                 targetFolderCmisId,
                 parentObjectType,
-                parentObjectId,
-                parentObjectName);
+                parentObjectId);
 
         return retval;
     }

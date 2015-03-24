@@ -115,7 +115,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		
 		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
-				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
+				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
 		
 		// Log the last user action
 		if (null != form && null != form.getId())
@@ -128,7 +128,12 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		if ( !"edit".equals(mode) )
 		{
 			CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-			workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule());
+			workflowListener.handleNewCaseFile(
+                    getCaseFile(),
+                    frevvoFiles,
+                    getActivitiRuntimeService(),
+                    getFileWorkflowBusinessRule(),
+                    this);
 		}
 
 		return true;
@@ -178,7 +183,8 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		
 		// Add id's and other information to the Frevvo form
 		form.setId(caseFile.getId());
-		form.setCmisFolderId(caseFile.getContainerFolder().getCmisFolderId());
+        String cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+        form.setCmisFolderId(cmisFolderId);
 		form.setNumber(caseFile.getCaseNumber());
 		
 		// Add Address History id's to the Frevvo form

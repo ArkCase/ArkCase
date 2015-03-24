@@ -3,8 +3,10 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerFolderDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -59,7 +61,7 @@ class ActivitiTaskDao implements TaskDao
     private ExtractAcmTaskFromEvent taskExtractor;
     private TaskBusinessRule taskBusinessRule;
     private EcmFileService fileService;
-    private AcmContainerFolderDao containerFolderDao;
+    private AcmContainerDao containerFolderDao;
 
     @Override
     @Transactional
@@ -585,8 +587,15 @@ class ActivitiTaskDao implements TaskDao
                     if ( historicTaskInstance.getAssignee() != null )
                     {
                         AcmUser user = getUserDao().findByUserId(historicTaskInstance.getAssignee());
-                        String participant = user.getFullName();
-                        workflowHistoryInstance.setParticipant(participant);
+                        if ( user != null )
+                        {
+                            String participant = user.getFullName();
+                            workflowHistoryInstance.setParticipant(participant);
+                        }
+                        else
+                        {
+                            workflowHistoryInstance.setParticipant("[unknown]");
+                        }
                     }
 	    			
 	    			retval.add(workflowHistoryInstance);
@@ -723,14 +732,17 @@ class ActivitiTaskDao implements TaskDao
         {
             String folderId = getFileService().createFolder(task.getEcmFolderPath());
 
-            AcmContainerFolder folder = new AcmContainerFolder();
-
+            AcmContainer container = new AcmContainer();
+            AcmFolder folder = new AcmFolder();
             folder.setCmisFolderId(folderId);
-            folder.setContainerObjectType(task.getObjectType());
-            folder.setContainerObjectId(task.getId());
+            folder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+            container.setFolder(folder);
+            container.setContainerObjectType(task.getObjectType());
+            container.setContainerObjectId(task.getId());
+            container.setContainerObjectTitle(task.getTitle());
 
-            folder = getContainerFolderDao().save(folder);
-            task.setContainerFolder(folder);
+            container = getContainerFolderDao().save(container);
+            task.setContainer(container);
 
             log.info("Created folder id '" + folderId + "' for task with ID " + task.getTaskId());
         }
@@ -1058,12 +1070,12 @@ class ActivitiTaskDao implements TaskDao
         this.fileService = fileService;
     }
 
-    public AcmContainerFolderDao getContainerFolderDao()
+    public AcmContainerDao getContainerFolderDao()
     {
         return containerFolderDao;
     }
 
-    public void setContainerFolderDao(AcmContainerFolderDao containerFolderDao)
+    public void setContainerFolderDao(AcmContainerDao containerFolderDao)
     {
         this.containerFolderDao = containerFolderDao;
     }

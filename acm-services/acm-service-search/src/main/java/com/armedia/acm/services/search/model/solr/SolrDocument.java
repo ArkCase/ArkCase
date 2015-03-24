@@ -42,6 +42,10 @@ public class SolrDocument implements SolrBaseDocument {
     //////////////////disposition id and type //////////////////////////////////////
     private String disposition_id_s;
     private String disposition_type_s;
+    
+    ////////////////// for Timesheet and other objects that have start/end date //////////////////////////////////////
+    private Date startDate_s;
+    private Date endDate_s;
 
     @Override
     public String getId() {
@@ -259,7 +263,23 @@ public class SolrDocument implements SolrBaseDocument {
         this.target_object_number_s = target_object_number_s;
     }
 
-    @Override
+    public Date getStartDate_s() {
+		return startDate_s;
+	}
+
+	public void setStartDate_s(Date startDate_s) {
+		this.startDate_s = startDate_s;
+	}
+
+	public Date getEndDate_s() {
+		return endDate_s;
+	}
+
+	public void setEndDate_s(Date endDate_s) {
+		this.endDate_s = endDate_s;
+	}
+
+	@Override
     public String toString() {
         return "SolrDocument{" +
                 "id='" + id + '\'' +
@@ -293,6 +313,8 @@ public class SolrDocument implements SolrBaseDocument {
                 ", parent_object_id_i=" + parent_object_id_i +
                 ", disposition_id_s='" + disposition_id_s + '\'' +
                 ", disposition_type_s='" + disposition_type_s + '\'' +
+                ", startDate_s='" + startDate_s + '\'' +
+                ", endDate_s='" + endDate_s + '\'' +
                 '}';
     }
 }

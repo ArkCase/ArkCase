@@ -74,6 +74,21 @@
                 deferrable="true"
                 initiallyDeferred="true"/>
     </changeSet>
+
+    <changeSet id="complaint-constraint-09-container-id" author="dmiller">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_complaint" columnName="cm_container_id"/>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_container_id"
+                                 constraintName="fk_cmpl_container_id"
+                                 referencedTableName="acm_container"
+                                 referencedColumnNames="cm_container_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+    </changeSet>
     
     
 </databaseChangeLog>

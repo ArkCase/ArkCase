@@ -4,6 +4,8 @@
 package com.armedia.acm.form.cost.service;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,12 +15,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,28 +31,29 @@ import com.google.gson.GsonBuilder;
  * @author riste.tutureski
  *
  */
-public class CostService extends FrevvoFormAbstractService {
+public class CostService extends FrevvoFormChargeAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private CostsheetService costsheetService;
 	private AcmCostsheetDao acmCostsheetDao;
 	private CostFactory costFactory;
+	private SearchResults searchResults;
 	
 	@Override
 	public Object init() 
 	{
 		Object result = "";
 		
-		String objectId = getRequest().getParameter("objectId");		
+		String objectId = getRequest().getParameter("objectId");	
+		String objectType = getRequest().getParameter("objectType");
 		String userId = getAuthentication().getName();
 		
 		CostForm form = new CostForm();
+		AcmCostsheet costsheet = null;
 			
 		if (objectId != null && !"".equals(objectId))
 		{			
-			AcmCostsheet costsheet = null;
-			
 			try
 			{
 				Long objectIdLong = Long.parseLong(objectId);
@@ -58,19 +63,19 @@ public class CostService extends FrevvoFormAbstractService {
 			catch(Exception e)
 			{
 				LOG.error("Cannot parse " + objectId + " to Long type. Empty form will be created.", e);
-			}
-			
-			if (costsheet != null)
-			{
-				form = getCostFactory().asFrevvoCostForm(costsheet);
-			}
-			else
-			{
-				form.setItems(Arrays.asList(new CostItem()));
-			}
-			
+			}			
 		}
 		
+		if (costsheet != null)
+		{
+			form = getCostFactory().asFrevvoCostForm(costsheet);
+		}
+		else
+		{
+			form.setItems(Arrays.asList(new CostItem()));
+		}
+		
+		form.setObjectType(objectType);
 		form.setUser(userId);
 		form.setBalanceTable(Arrays.asList(new String()));
 		
@@ -135,6 +140,10 @@ public class CostService extends FrevvoFormAbstractService {
 		form.setUser(userId);
 		form.setUserOptions(Arrays.asList(userId + "=" + user.getFullName()));
 		
+		// Init Types
+		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COST + ".types"), ",");
+		form.setObjectTypeOptions(types);
+		
 		// Init Statuses
 		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.COST + ".statuses"), ","));
 		
@@ -143,6 +152,10 @@ public class CostService extends FrevvoFormAbstractService {
 		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COST + ".titles"), ","));
 		form.setItems(Arrays.asList(item));
 		
+		// Set charge codes for each type
+		Map<String, List<String>> codeOptions = getCodeOptions(types);
+		form.setCodeOptions(codeOptions);
+		
 		// Create JSON and back to the Frevvo form
 		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(form);
@@ -150,6 +163,14 @@ public class CostService extends FrevvoFormAbstractService {
 		JSONObject json = new JSONObject(jsonString);
 
 		return json;
+	}
+	
+	@Override
+	public String getSolrResponse(String objectType)
+	{
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
+		
+		return jsonResults;
 	}
 
 	@Override
@@ -182,4 +203,11 @@ public class CostService extends FrevvoFormAbstractService {
 		this.costFactory = costFactory;
 	}
 
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
 }

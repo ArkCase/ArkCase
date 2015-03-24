@@ -3,7 +3,7 @@
  */
 package com.armedia.acm.services.costsheet.dao;
 
-import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Query;
 
@@ -31,7 +31,7 @@ public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet> {
 	{
 		Query selectQuery = getEm().createQuery("SELECT costsheet "
 											  + "FROM AcmCostsheet costsheet "
-											  + "WHERE costsheet.userId = :userId "
+											  + "WHERE costsheet.user.userId = :userId "
 											  + "AND costsheet.parentId = :objectId");
 		
 		selectQuery.setParameter("userId", userId);
@@ -48,6 +48,31 @@ public class AcmCostsheetDao extends AcmAbstractDao<AcmCostsheet> {
 		}
 		
 		return costsheet;
+	}
+	
+	public List<AcmCostsheet> findByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams)
+	{
+		String orderByQuery = "";
+		if (sortParams != null && !"".equals(sortParams))
+		{
+			orderByQuery = " ORDER BY costsheet." + sortParams;
+		}
+		
+		Query selectQuery = getEm().createQuery("SELECT costsheet "
+											  + "FROM AcmCostsheet costsheet "
+											  + "WHERE costsheet.parentId = :parentId "
+											  + "AND costsheet.parentType = :parentType"
+											  + orderByQuery);
+		
+		selectQuery.setParameter("parentId", objectId);
+		selectQuery.setParameter("parentType", objectType);
+		selectQuery.setFirstResult(startRow);
+		selectQuery.setMaxResults(maxRows);
+		
+		@SuppressWarnings("unchecked")
+		List<AcmCostsheet> costsheets = (List<AcmCostsheet>) selectQuery.getResultList();
+		
+		return costsheets;
 	}
 	
 }
