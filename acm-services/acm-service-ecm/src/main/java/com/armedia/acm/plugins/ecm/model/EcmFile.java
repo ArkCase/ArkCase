@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.services.tag.model.AcmTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -82,6 +83,10 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="file")
     private List<EcmFileVersion> versions = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="cm_file_id")
+    private List<AcmTag> tags = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -264,6 +269,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
     public void setContainer(AcmContainer container)
     {
         this.container = container;
+    }
+
+    public List<AcmTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<AcmTag> tags) {
+        this.tags = tags;
     }
 
     @JsonIgnore
