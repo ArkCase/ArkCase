@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,29 +32,32 @@ public class FolderListAPIController
     @RequestMapping(value = "/folder/{objectType}/{objectId}", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisFolder listFolderContents(
+            Authentication auth,
             @PathVariable("objectType") String objectType,
             @PathVariable("objectId") Long objectId,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection
     ) throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        AcmContainer containerFolder = getEcmFileService().getOrCreateContainerFolder(objectType, objectId);
+        // just to ensure a folder really exists
+        AcmContainer container = getEcmFileService().getOrCreateContainer(objectType, objectId);
 
-        if ( containerFolder.getFolder() == null )
+        if ( container.getFolder() == null )
         {
             // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
-            throw new IllegalStateException("Container '" + containerFolder.getId() + "' does not have a folder!");
+            throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
         }
 
         List<AcmCmisObject> children = getEcmFileService().listFolderContents(
-                containerFolder.getFolder().getCmisFolderId(),
+                auth,
+                container,
                 sortBy,
                 sortDirection);
 
         AcmCmisFolder retval = new AcmCmisFolder();
         retval.setContainerObjectId(objectId);
         retval.setContainerObjectType(objectType);
-        retval.setCmisFolderId(containerFolder.getFolder().getCmisFolderId());
+        retval.setCmisFolderId(container.getFolder().getCmisFolderId());
         retval.setChildren(children);
 
         return retval;

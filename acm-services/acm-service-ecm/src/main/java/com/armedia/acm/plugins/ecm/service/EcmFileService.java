@@ -83,9 +83,12 @@ public interface EcmFileService
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 
     @Transactional
-    AcmContainer getOrCreateContainerFolder(String objectType, Long objectId) throws
+    AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection) throws AcmListObjectsFailedException;
+    List<AcmCmisObject> listFolderContents(Authentication auth,
+                                           AcmContainer container,
+                                           String sortBy,
+                                           String sortDirection) throws AcmListObjectsFailedException;
 
 }

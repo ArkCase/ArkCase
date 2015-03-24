@@ -23,7 +23,6 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import com.armedia.acm.services.users.model.AcmUser;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +146,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         AcmContainer found = null;
         try
         {
-            found = getEcmFileService().getOrCreateContainerFolder(objectType, id);
+            found = getEcmFileService().getOrCreateContainer(objectType, id);
             return found.getFolder().getCmisFolderId();
         }
         catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
