@@ -87,6 +87,17 @@ CaseFile.Controller = CaseFile.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, caseFileId, restriction);
     }
 
+    ,MODEL_RETRIEVED_TIMESHEETS               : "case-model-retrieved-timesheets"
+    ,modelRetrievedTimesheets : function(timesheets) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_TIMESHEETS, timesheets);
+    }
+
+    ,MODEL_RETRIEVED_COSTSHEETS               : "case-model-retrieved-costsheets"
+    ,modelRetrievedCostsheets : function(costsheets) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COSTSHEETS, costsheets);
+    }
+
+
     ,MODEL_SAVED_CHILD_OBJECT              : "case-model-saved-childObject"            //param: caseFileId, childObject
     ,MODEL_ADDED_PARTICIPANT               : "case-model-added-participant"            //param: caseFileId, participant
     ,MODEL_UPDATED_PARTICIPANT             : "case-model-updated-participant"          //param: caseFileId, participant
