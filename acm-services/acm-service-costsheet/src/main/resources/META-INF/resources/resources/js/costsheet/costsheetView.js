@@ -140,7 +140,6 @@ Costsheet.View = {
             var formUrls = Costsheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editCostsheetFormUrl)){
                 var editCostsheetFormUrl = Costsheet.View.MicroData.formUrls.editCostsheetFormUrl;
-                var timesheet = Costsheet.View.getActiveCostsheet();
                 if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())){
                     var objectId = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentId);
                     var objectType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
@@ -260,12 +259,14 @@ Costsheet.View = {
 
         }
         ,onViewSelectedObject: function(objType,objId) {
+            Costsheet.View.Detail.resetDetail();
             var costsheet = Costsheet.View.getActiveCostsheet();
             if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
                 Costsheet.View.Detail.populateDetail(costsheet);
             }
         }
         ,onModelRetrievedObject: function(costsheet) {
+            Costsheet.View.Detail.resetDetail();
             if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
                 Costsheet.View.Detail.populateDetail(costsheet);
             }
@@ -276,7 +277,6 @@ Costsheet.View = {
             }
         }
         ,populateDetail: function(costsheet){
-            Costsheet.View.Detail.resetDetail();
             if(Acm.isNotEmpty(costsheet.details)){
                 Costsheet.View.Detail.setHtmlDivDetail(costsheet.details);
             }

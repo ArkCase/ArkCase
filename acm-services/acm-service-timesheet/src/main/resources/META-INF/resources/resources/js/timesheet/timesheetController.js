@@ -16,13 +16,13 @@ Timesheet.Controller = {
     ,modelSavedDetail: function(timesheet, details) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DETAIL, timesheet, details);
     }
-    ,VIEW_EDITTED_TIMESHEET               : "timesheet-view-editted-timesheet"
-    ,viewEdittedTimesheet: function(timesheet) {
-        Acm.Dispatcher.fireEvent(this.VIEW_EDITTED_TIMESHEET, timesheet);
+    ,VIEW_CLOSED_EDIT_TIMESHEET_WINDOW               : "timesheet-view-closed-edit-timesheet-window"
+    ,viewClosedEditTimesheetWindow: function(timesheet) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_EDIT_TIMESHEET_WINDOW, timesheet);
     }
-    ,VIEW_ADDED_TIMESHEET                 : "timesheet-view-added-timesheet"
-    ,viewAddedTimesheet: function(timesheet) {
-        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_TIMESHEET, timesheet);
+    ,VIEW_CLOSED_ADD_TIMESHEET_WINDOW                 : "timesheet-view-closed-add-timesheet-window"
+    ,viewClosedAddTimesheetWindow: function(timesheet) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_TIMESHEET_WINDOW, timesheet);
     }
 };
 

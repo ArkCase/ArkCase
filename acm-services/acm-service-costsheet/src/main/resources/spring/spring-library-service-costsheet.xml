@@ -74,6 +74,12 @@
                     <property name="url" value="/api/{version}/service/costsheet"/>
                     <property name="requiredPrivilege" ref="costsheetPrivilege"/>
                 </bean>
+
+                <bean id="getCostsheetByIdUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/costsheet/{costsheetId}"/>
+                    <property name="requiredPrivilege" ref="costsheetPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
