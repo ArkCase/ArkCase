@@ -8,6 +8,17 @@ Complaint.Controller = Complaint.Controller || {
     }
     ,onInitialized: function() {
     }
+//    ,Documents: {
+//        create : function() {
+//        }
+//        ,onInitialized: function() {
+//        }
+//
+//        ,VIEW_CHANGED_TREE: "document-view-changed-tree"
+//        ,viewChangedTree: function() {
+//            Acm.Dispatcher.fireEvent(Complaint.Controller.Documents.VIEW_CHANGED_TREE);
+//        }
+//    }
 
     ,MODEL_FOUND_ASSIGNEES                 : "complaint-model-found-assignees"
     ,modelFoundAssignees: function(assignees) {

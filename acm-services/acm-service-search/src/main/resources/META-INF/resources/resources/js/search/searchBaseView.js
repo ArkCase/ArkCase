@@ -16,6 +16,9 @@ SearchBase.View = {
     }
 
     ,showDialog: function(args) {
+        if (Acm.isEmpty(args.$dlgObjectPicker)) {
+            args.$dlgObjectPicker = $("#dlgObjectPicker");
+        }
         if (Acm.isNotEmpty(args.title)) {
             args.$dlgObjectPicker.find('.modal-title').text(args.title);
         }
@@ -403,10 +406,10 @@ SearchBase.View = {
         }
 
         ,_useJTable: function(jtArgs) {
-            var jtArgsToUse = this._getDefaultJtArgs();
-            for (var arg in jtArgs) {
-                jtArgsToUse[arg] = jtArgs[arg];
-            }
+                var jtArgsToUse = this._getDefaultJtArgs();
+                for (var arg in jtArgs) {
+                    jtArgsToUse[arg] = jtArgs[arg];
+                }
 
             var sortMap = {};
             sortMap["title"] = "title_parseable";
