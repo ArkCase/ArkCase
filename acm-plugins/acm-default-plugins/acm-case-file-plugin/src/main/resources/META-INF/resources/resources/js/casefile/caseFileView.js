@@ -3056,6 +3056,7 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_TIMESHEETS     ,this.onModelRetrievedTimesheets);
         }
         ,onInitialized: function() {
         }
@@ -3066,58 +3067,89 @@ CaseFile.View = CaseFile.View || {
         ,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(CaseFile.View.Time.$divTime);
         }
+        ,onModelRetrievedTimesheets: function(timesheet){
+            AcmEx.Object.JTable.load(CaseFile.View.Time.$divTime);
+        }
 
-        ,_makeJtData: function(timeData) {
+        ,findTotalHours: function(timeRecords){
+            var totalHours = 0;
+            if(Acm.isArray(timeRecords) && Acm.isNotEmpty(timeRecords)) {
+                for (var i = 0; i < timeRecords.length; i++) {
+                    if (CaseFile.Model.Time.validateTimeRecord(timeRecords[i])) {
+                        var timeRecord = timeRecords[i];
+                        if (Acm.isNotEmpty(timeRecord.objectId) && Acm.compare(Acm.goodValue(timeRecord.objectId), CaseFile.View.getActiveCaseFileId())) {
+                            totalHours += Acm.goodValue(timeRecord.value);
+                        }
+                    }
+                }
+            }
+            return totalHours;
+        }
+        ,_makeJtData: function(timesheets) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            for(var j = 0; j < timesheets.length; j++){
+                if(CaseFile.Model.Time.validateTimesheet(timesheets[j])){
+                    var timesheet = timesheets[j];
+                    var Record = {};
+                    Record.id = Acm.goodValue(timesheet.id);
+                    Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.type = CaseFile.Model.DOC_TYPE_TIMESHEET;
+                    Record.status = Acm.goodValue(timesheet.status);
+                    Record.username = Acm.goodValue(timesheet.creator);
+                    Record.hours = Acm.goodValue(CaseFile.View.Time.findTotalHours(timesheet.times));
+                    Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    jtData.Records.push(Record);
+                }
+            }
             return jtData;
         }
         ,createJTableTime: function($jt) {
-            var sortMap = {};
-            sortMap["created"] = "created";
-
-            AcmEx.Object.JTable.usePaging($jt
-                ,{
+            AcmEx.Object.JTable.useBasic($jt
+                , {
                     title: 'Time Tracking'
-                    ,paging: true
-                    ,sorting: true
-                    ,pageSize: 10 //Set page size (default: 10)
-                    ,selecting: true
-                    ,multiselect: false
-                    ,selectingCheckboxes: false
-                    ,actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-
-                        }  //end else
+                    , sorting: true
+                    , actions: {
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            var timesheets = CaseFile.Model.Time.cacheTimesheets.get(CaseFile.View.getActiveCaseFileId());
+                            if (CaseFile.Model.Time.validateTimesheets(timesheets)) {
+                                rc = CaseFile.View.Time._makeJtData(timesheets);
+                            }
+                            return rc;
+                        }
                     }
-
-                    ,fields: {
+                    , fields: {
                         id: {
                             title: 'ID'
-                            ,key: true
-                            ,list: false
-                            ,create: false
-                            ,edit: false
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
                         }, name: {
                             title: 'Form Name'
-                            ,width: '20%'
-                        }, user: {
+                            , width: '20%'
+                            ,display: function(data) {
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
+                                return $lnk;
+                            }
+                        }, username: {
                             title: 'Username'
-                            ,width: '10%'
+                            , width: '10%'
                         }, hours: {
                             title: 'Total Hours'
-                            ,width: '10%'
+                            , width: '10%'
                         }, modified: {
                             title: 'Modified Date'
-                            ,width: '10%'
+                            , width: '10%'
                         }, status: {
                             title: 'Status'
-                            ,width: '10%'
+                            , width: '10%'
                         }
                     } //end field
-                } //end arg
-                ,sortMap
+                } //end args
             );
+            $jt.jtable('load');
         }
     }
 
@@ -3129,6 +3161,8 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_COSTSHEETS     ,this.onModelRetrievedCostsheets);
+
         }
         ,onInitialized: function() {
         }
@@ -3140,27 +3174,56 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.load(CaseFile.View.Cost.$divCost);
         }
 
-        ,_makeJtData: function(costData) {
+        ,onModelRetrievedCostsheets: function(costsheet){
+            AcmEx.Object.JTable.load(CaseFile.View.Cost.$divCost);
+        }
+
+        ,findTotalCost: function(costRecords){
+            var totalCost = 0;
+            if(Acm.isArray(costRecords) && Acm.isNotEmpty(costRecords)){
+                for(var i = 0; i < costRecords.length; i++){
+                    if(CaseFile.Model.Cost.validateCostRecord(costRecords[i])){
+                        var costRecord = costRecords[i];
+                        if(Acm.isNotEmpty(costRecord.value)){
+                            totalCost += Acm.goodValue(costRecord.value);
+                        }
+                    }
+                }
+            }
+            return totalCost;
+        }
+        ,_makeJtData: function(costsheets) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            for(var j = 0; j < costsheets.length; j++){
+                if(CaseFile.Model.Cost.validateCostsheet(costsheets[j])){
+                    var costsheet = costsheets[j];
+                    var Record = {};
+                    Record.id = Acm.goodValue(costsheet.id);
+                    Record.name = "Costsheet " + Acm.goodValue(costsheet.parentNumber);
+                    Record.type = CaseFile.Model.DOC_TYPE_COSTSHEET;
+                    Record.status = Acm.goodValue(costsheet.status);
+                    Record.username = Acm.goodValue(costsheet.creator);
+                    Record.cost = Acm.goodValue(CaseFile.View.Cost.findTotalCost(costsheet.costs));
+                    Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    jtData.Records.push(Record);
+                }
+            }
             return jtData;
         }
         ,createJTableCost: function($jt) {
-            var sortMap = {};
-            sortMap["created"] = "created";
-
-            AcmEx.Object.JTable.usePaging($jt
+            AcmEx.Object.JTable.useBasic($jt
                 ,{
                     title: 'Cost Tracking'
-                    ,paging: true
                     ,sorting: true
-                    ,pageSize: 10 //Set page size (default: 10)
-                    ,selecting: true
-                    ,multiselect: false
-                    ,selectingCheckboxes: false
                     ,actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-                        }  //end else
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            var costsheets = CaseFile.Model.Cost.cacheCostsheets.get(CaseFile.View.getActiveCaseFileId());
+                            if (CaseFile.Model.Cost.validateCostsheets(costsheets)) {
+                                rc = CaseFile.View.Cost._makeJtData(costsheets);
+                            }
+                            return rc;
+                        }
                     }
 
                     ,fields: {
@@ -3173,10 +3236,15 @@ CaseFile.View = CaseFile.View || {
                         }, name: {
                             title: 'Form Name'
                             ,width: '20%'
-                        }, user: {
+                            ,display: function(data) {
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
+                                return $lnk;
+                            }
+                        }, username: {
                             title: 'Username'
                             ,width: '10%'
-                        }, costs: {
+                        }, cost: {
                             title: 'Total Cost'
                             ,width: '10%'
                         }, modified: {
@@ -3188,7 +3256,6 @@ CaseFile.View = CaseFile.View || {
                         }
                     } //end field
                 } //end arg
-                ,sortMap
             );
         }
     }
