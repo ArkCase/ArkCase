@@ -105,6 +105,8 @@ CaseFile.Model = CaseFile.Model || {
     ,DOC_TYPE_CASE_FILE  : "CASE_FILE"
     ,DOC_TYPE_FILE       : "FILE"
     ,DOC_CATEGORY_CORRESPONDENCE: "CORRESPONDENCE"
+    ,DOC_TYPE_TIMESHEET  : "TIMESHEET"
+    ,DOC_TYPE_COSTSHEET  : "COSTSHEET"
 
     ,getCaseFileId : function() {
         return ObjNav.Model.getObjectId();
@@ -668,15 +670,173 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Time: {
         create : function() {
+            this.cacheTimesheets = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
         }
         ,onInitialized: function() {
+        }
+
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.Service.Time.retrieveTimesheets(CaseFile.Model.getCaseFileId());
+        }
+
+        ,validateTimesheet: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user.userId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.startDate)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.endDate)) {
+                return false;
+            }
+            if (!Acm.isArray(data.times)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.status)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.modified)) {
+                return false;
+            }
+
+            return true;
+        }
+        ,validateTimeRecord: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.code)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.type)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.value)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.modified)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.date)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateTimesheets: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 
     ,Cost: {
         create : function() {
+            this.cacheCostsheets = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
         }
         ,onInitialized: function() {
+        }
+
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.Service.Cost.retrieveCostsheets(CaseFile.Model.getCaseFileId());
+        }
+
+        ,validateCostsheet: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user.userId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentNumber)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.costs)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.status)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateCostRecord: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.title)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.description)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.value)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.date)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.modified)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateCostsheets: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 
