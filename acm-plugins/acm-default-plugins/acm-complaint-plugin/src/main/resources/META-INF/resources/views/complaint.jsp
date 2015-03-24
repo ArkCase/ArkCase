@@ -35,6 +35,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/complaint/complaintService.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTree.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeService.js'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
@@ -54,6 +60,7 @@
 
     <!-- Fancy Tree -->
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
+
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_gridnav}'/>"></script>
@@ -76,11 +83,31 @@
         <%--border: 0px;--%>
     <%--}--%>
 <%--</style>--%>
+    <style type="text/css">
+        .ui-menu {
+            /*width: 180px;*/
+            /*font-size: 63%;*/
+            width: 240px;
+            font-size: 100%;
+        }
+        .ui-menu kbd { /* Keyboard shortcuts for ui-contextmenu titles */
+            float: right;
+        }
+    </style>
 //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
     <jsp:body>
         <section id="content">
+        <div class="modal-header" id="divEbErrorBoard" style="background-color:lightyellow;display:none;">
+            <button type="button" class="close" data-dismiss="modal" id="btnEbErrorClose">&times;<span class="sr-only">Close</span></button>
+            <div class="modal-title"><scan id="labEbErrorMsg">Error message goes here</scan><button type="button" id="btnEbErrorDetail" style="float: right; margin-right: 50px; padding: 0px;">More Detail ...</button></div>
+            <div id="divEbErrorDetail" style="display:none;">
+                <hr/>
+                <div class="modal-title" id="labEbErrorDetail">Detail error message goes here</div>
+            </div>
+        </div>
+
             <section class="vbox">
                 <section class="scrollable">
                     <section class="hbox stretch"><!-- /.aside -->

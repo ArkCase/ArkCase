@@ -14,7 +14,7 @@ Acm.Model = {
     }
 
     ,CacheFifo: function(maxSize) {
-        this.maxSize = (maxSize)? maxSize : this.DEFAULT_MAX_CACHE_SIZE;
+        this.maxSize = (Acm.isNotEmpty(maxSize))? maxSize : this.DEFAULT_MAX_CACHE_SIZE;
         this.reset();
     }
 }

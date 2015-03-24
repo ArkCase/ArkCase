@@ -481,6 +481,8 @@ Complaint.Model = Complaint.Model || {
 
     ,Documents: {
         create : function() {
+            this.cacheTree = new Acm.Model.CacheFifo();
+
             this.cacheDocuments = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {

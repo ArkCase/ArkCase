@@ -21,6 +21,18 @@ var Complaint = Complaint || {
             });
         }
 
+        if (DocTree.create) {
+            DocTree.create({name: "complaint"
+                ,parentType        : Complaint.Model.DOC_TYPE_COMPLAINT
+//                ,parentId          : null
+//                ,$tree            : Complaint.View.Documents.$tree
+//                ,treeArgs         : Complaint.View.Documents.getTreeArgs()
+//                ,getActiveObjId     : ObjNav.View.Navigator.getActiveObjId
+//                ,getPreviousObjId   : ObjNav.View.Navigator.getPreviousObjId
+//                ,getContextMenu     : Complaint.View.Documents.getContextMenu()
+            });
+        }
+
         if (SubscriptionOp.create) {
             SubscriptionOp.create({
                 getSubscriptionInfo: function() {
@@ -41,6 +53,7 @@ var Complaint = Complaint || {
         if (Complaint.View.onInitialized)       {Complaint.View.onInitialized();}
 
         if (ObjNav.onInitialized)               {ObjNav.onInitialized();}
+        if (DocTree.onInitialized)              {DocTree.onInitialized();}
         if (SubscriptionOp.onInitialized)       {SubscriptionOp.onInitialized();}
     }
 
