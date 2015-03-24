@@ -40,16 +40,20 @@
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="solrQuery" ref="executeSolrQuery"/>
         <property name="sortParameterNameToCmisFieldName">
             <map>
-                <entry key="created" value="cmis:creationDate"/>
-                <entry key="modified" value="cmis:lastModificationDate"/>
+                <entry key="name" value="name_lcs"/>
+                <entry key="type" value="type_s"/>
+                <entry key="created" value="create_tdt"/>
+                <entry key="author" value="author"/>
+                <entry key="version" value="version_s"/>
             </map>
         </property>
-        <property name="cmisBaseTypeToAcmType">
+        <property name="solrObjectTypeToAcmType">
             <map>
-                <entry key="CMIS_DOCUMENT" value="file"/>
-                <entry key="CMIS_FOLDER" value="folder"/>
+                <entry key="FILE" value="file"/>
+                <entry key="FOLDER" value="folder"/>
             </map>
         </property>
     </bean>
