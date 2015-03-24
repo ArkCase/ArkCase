@@ -9,6 +9,8 @@
 	    <title><spring:message code="costsheet.page.title" text="Cost Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
             <span itemprop="newCostsheetFormUrl">${newCostsheetFormUrl}</span>
+            <span itemprop="objType">COSTSHEET</span>
+            <span itemprop="objId">${objId}</span>
         </div>
 	</jsp:attribute>
 
