@@ -17,5 +17,12 @@ public interface EcmFileConstants
     String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
 
     String CONTAINER_FOLDER_NAME = "ROOT";
+    
+    /**
+	 * Regex for characters that are not allowed while creating folder name
+	 */
+	public final static String INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX = "[/?<>\\\\:*|\"^]";
+	
+	public final static String INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT = "_";
 
 }

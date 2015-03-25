@@ -15,32 +15,24 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.armedia.acm.form.config.Item;
-import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.time.model.TimeForm;
-import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.form.time.model.TimeItem;
-import com.armedia.acm.services.participants.dao.AcmParticipantDao;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.services.timesheet.dao.AcmTimeDao;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
 /**
  * @author riste.tutureski
  *
  */
-public class TimeFactory {
+public class TimeFactory extends FrevvoFormFactory{
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmTimeDao acmTimeDao;
 	private AcmTimesheetDao acmTimesheetDao;
-	private UserDao userDao;
-	private AcmParticipantDao acmParticipantDao;
 	
 	/**
 	 * Converting Frevvo TimeForm to AcmTimesheet
@@ -362,76 +354,6 @@ public class TimeFactory {
 		return item;
 	}
 	
-	private AcmUser getUser(String userId)
-	{	
-		AcmUser user = null;
-		
-		try
-		{
-			user = getUserDao().findByUserId(userId);			
-		}
-		catch(Exception e)
-		{
-			LOG.error("Could not retrive user.", e);
-		}
-		
-		return user;
-	}
-	
-	private List<AcmParticipant> asAcmParticipants(List<ApproverItem> items)
-    {
-    	List<AcmParticipant> participants = new ArrayList<>();
-        
-    	if ( items != null )
-    	{
-    		LOG.debug("# of incoming approvers: " + items.size());
-    		
-    		for ( Item item : items )
-    		{
-                AcmParticipant participant = null;
-                
-                if (item.getId() != null)
-                {
-                	participant = getAcmParticipantDao().find(item.getId());
-                }
-                
-                if (participant == null)
-                {
-                	participant = new AcmParticipant();
-                }
-                
-                participant.setId(item.getId());
-                participant.setParticipantLdapId(item.getValue());
-                participant.setParticipantType(TimeFormConstants.APPROVER);
-                participants.add(participant);
-    		}
-    	}
-    	
-    	return participants;
-    }
-	
-	private List<ApproverItem> asFrevvoApprovers(List<AcmParticipant> participants)
-	{
-		List<ApproverItem> items = new ArrayList<>();
-		
-		if (participants != null)
-		{
-			LOG.debug("# of incoming participants: " + participants.size());
-			
-			for (AcmParticipant participant : participants)
-			{
-				ApproverItem item = new ApproverItem();
-				
-				item.setId(participant.getId());
-				item.setValue(participant.getParticipantLdapId());
-				
-				items.add(item);
-			}
-		}
-		
-		return items;
-	}
-	
 	public Date getStartDate(Date period)
 	{
 		if (period != null)
@@ -483,21 +405,5 @@ public class TimeFactory {
 
 	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
 		this.acmTimesheetDao = acmTimesheetDao;
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-
-	public AcmParticipantDao getAcmParticipantDao() {
-		return acmParticipantDao;
-	}
-
-	public void setAcmParticipantDao(AcmParticipantDao acmParticipantDao) {
-		this.acmParticipantDao = acmParticipantDao;
 	}	
 }

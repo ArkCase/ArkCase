@@ -19,7 +19,5 @@ public interface CostFormConstants {
 	 */
 	public final static String SUBMIT = "Submit";
 	
-	public final static String APPROVER = "approver";
-	
 	public final static String APPROVER_PRIVILEGE = "acm-costsheet-approve";
 }
