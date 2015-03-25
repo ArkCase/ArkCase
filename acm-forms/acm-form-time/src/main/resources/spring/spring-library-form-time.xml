@@ -9,6 +9,7 @@
     	<property name="acmTimeDao" ref="acmTimeDao" />
     	<property name="acmTimesheetDao" ref="acmTimesheetDao" />
     	<property name="userDao" ref="userJpaDao" />
+    	<property name="acmParticipantDao" ref="acmParticipantDao" />
     </bean>
 
 </beans>

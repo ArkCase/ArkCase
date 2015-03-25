@@ -15,6 +15,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.frevvo.model.FrevvoForm;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
@@ -23,7 +25,6 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
-import com.armedia.acm.services.users.model.AcmUser;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,7 +211,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	
 	protected void updateXML(String xml, String formName, Long id, Authentication auth)
 	{
-		ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
+		ObjectAssociation association = getObjectAssociationDao().findChildOfType(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
 		
 		if (association != null)
 		{
@@ -427,6 +428,86 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		}
 		
 		return null;
+	}
+	
+	public FrevvoForm populateEditInformation(FrevvoForm form, AcmContainer container, String formName)
+	{		
+		Long containerId = null;
+		Long folderId = null;
+		
+		if (container != null)
+		{
+			containerId = container.getId();
+			
+			if (container.getFolder() != null)
+			{
+				folderId = container.getFolder().getId();
+			}
+		}
+		
+		// Set edit mode
+		form.setMode(FrevvoFormConstants.EDIT);
+		
+		if (containerId != null && folderId != null)
+		{
+			// Set xml id
+			EcmFile ecmFileXML = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName + "_xml");
+			
+			if (ecmFileXML != null && ecmFileXML.getId() != null)
+			{
+				form.setXmlId(ecmFileXML.getId().toString());
+			}
+			
+			// Set pdf id
+			EcmFile ecmFilePDF = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName);
+			
+			if (ecmFilePDF != null && ecmFilePDF.getId() != null)
+			{
+				form.setPdfId(ecmFilePDF.getId().toString());
+			}
+		}
+		
+		return form;
+	}
+	
+	public String getDocUriParameter(String parameterName)
+	{		
+		String docUriParameters = getRequest().getParameter(FrevvoFormConstants.DOC_URI_PARAMETERS_HOLDER_NAME);
+		
+		if (docUriParameters != null && parameterName != null)
+		{
+			String[] parameters = docUriParameters.split(FrevvoFormConstants.DOC_URI_PARAMETERS_DELIMITER);
+			
+			if (parameters != null)
+			{
+				for (String parameterNameValuePair : parameters)
+				{
+					String[] parameterArray = parameterNameValuePair.split(FrevvoFormConstants.DOC_URI_PARAMETER_DELIMITER);
+					
+					if (parameterArray != null && parameterArray.length > 0)
+					{
+						if (parameterName.equals(parameterArray[0]))
+						{
+							if (parameterArray.length > 1)
+							{
+								return parameterArray[1];
+							}
+							else
+							{
+								return "";
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return "";
+	}
+	
+	public String getDocUriParameters()
+	{		
+		return getRequest().getParameter(FrevvoFormConstants.DOC_URI_PARAMETERS_HOLDER_NAME);
 	}
 
     @Override
