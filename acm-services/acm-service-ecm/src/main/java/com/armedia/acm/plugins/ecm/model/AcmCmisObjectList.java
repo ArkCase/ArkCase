@@ -18,6 +18,10 @@ public class AcmCmisObjectList implements Serializable
     private List<AcmCmisObject> children = new ArrayList<>();
     private int totalChildren;
     private String category;
+    private String sortBy;
+    private String sortDirection;
+    private int startRow;
+    private int maxRows;
 
     public String getContainerObjectType()
     {
@@ -77,5 +81,45 @@ public class AcmCmisObjectList implements Serializable
     public String getCategory()
     {
         return category;
+    }
+
+    public void setSortBy(String sortBy)
+    {
+        this.sortBy = sortBy;
+    }
+
+    public String getSortBy()
+    {
+        return sortBy;
+    }
+
+    public void setSortDirection(String sortDirection)
+    {
+        this.sortDirection = sortDirection;
+    }
+
+    public String getSortDirection()
+    {
+        return sortDirection;
+    }
+
+    public void setStartRow(int startRow)
+    {
+        this.startRow = startRow;
+    }
+
+    public int getStartRow()
+    {
+        return startRow;
+    }
+
+    public void setMaxRows(int maxRows)
+    {
+        this.maxRows = maxRows;
+    }
+
+    public int getMaxRows()
+    {
+        return maxRows;
     }
 }

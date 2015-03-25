@@ -305,7 +305,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             JSONArray docs = getSearchResults().getDocuments(results);
             int numFound = getSearchResults().getNumFound(results);
 
-            AcmCmisObjectList retval = buildAcmCmisObjectList(container, category, numFound);
+            AcmCmisObjectList retval = buildAcmCmisObjectList(container, category, numFound, sortBy, sortDirection,
+                    startRow, maxRows);
 
             buildChildren(docs, retval);
 
@@ -335,7 +336,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound)
+    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound,
+                                                     String sortBy, String sortDirection, int startRow, int maxRows)
     {
         AcmCmisObjectList retval = new AcmCmisObjectList();
         retval.setContainerObjectId(container.getContainerObjectId());
@@ -343,6 +345,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         retval.setFolderId(container.getFolder().getId());
         retval.setTotalChildren(numFound);
         retval.setCategory(category == null ? "all" : category);
+        retval.setSortBy(sortBy);
+        retval.setSortDirection(sortDirection);
+        retval.setStartRow(startRow);
+        retval.setMaxRows(maxRows);
         return retval;
     }
 
@@ -350,32 +356,32 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         AcmCmisObject object = new AcmCmisObject();
 
-        String categoryText = getSearchResults().extractString(doc, "category_s");
+        String categoryText = getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CATEGORY);
         if ( categoryText != null && getCategoryMap().containsKey(categoryText.toLowerCase()) )
         {
             object.setCategory(getCategoryMap().get(categoryText.toLowerCase()));
         }
 
-        Date created = getSearchResults().extractDate(solrFormat, doc, "create_tdt");
+        Date created = getSearchResults().extractDate(solrFormat, doc, SearchConstants.PROPERTY_CREATED);
         object.setCreated(created);
 
-        String solrType = getSearchResults().extractString(doc, "object_type_s");
+        String solrType = getSearchResults().extractString(doc, SearchConstants.PROPERTY_OBJECT_TYPE);
         String objectType = getSolrObjectTypeToAcmType().get(solrType);
         object.setObjectType(objectType);
 
-        object.setCreator(getSearchResults().extractString(doc, "author"));
+        object.setCreator(getSearchResults().extractString(doc, SearchConstants.PROPERTY_CREATOR));
 
-        object.setModified(getSearchResults().extractDate(solrFormat, doc, "last_modified_tdt"));
+        object.setModified(getSearchResults().extractDate(solrFormat, doc, SearchConstants.PROPERTY_MODIFIED));
 
-        object.setName(getSearchResults().extractString(doc, "name"));
+        object.setName(getSearchResults().extractString(doc, SearchConstants.PROPERTY_NAME));
 
-        object.setObjectId(getSearchResults().extractLong(doc, "object_id_s"));
+        object.setObjectId(getSearchResults().extractLong(doc, SearchConstants.PROPERTY_OBJECT_ID_S));
 
-        object.setType(getSearchResults().extractString(doc, "type_s"));
+        object.setType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_TYPE));
 
-        object.setVersion(getSearchResults().extractString(doc, "version_s"));
+        object.setVersion(getSearchResults().extractString(doc, SearchConstants.PROPERTY_VERSION));
 
-        object.setModifier(getSearchResults().extractString(doc, "modifier_s"));
+        object.setModifier(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MODIFIER));
         return object;
     }
 
