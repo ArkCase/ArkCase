@@ -101,4 +101,10 @@
 	 	</addColumn>
 	 </changeSet>
      
+     <changeSet id="06-add-container-id-in-acm-costsheet-table" author="riste.tutureski">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_container_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
+     
 </databaseChangeLog>

@@ -203,7 +203,7 @@ public class FrevvoFormServiceFactory {
             return service;
 		}
 		
-		if (FrevvoFormName.TIME.equals(name))
+		if (FrevvoFormName.TIMESHEET.equals(name))
         {
             String contextPath = request.getServletContext().getContextPath();
 
@@ -222,11 +222,14 @@ public class FrevvoFormServiceFactory {
             service.setAcmTimesheetDao(frevvoFormController.getAcmTimesheetDao());
             service.setTimeFactory(frevvoFormController.getTimeFactory());
             service.setSearchResults(frevvoFormController.getSearchResults());
+            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             
             return service;
 		}
 		
-		if (FrevvoFormName.COST.equals(name))
+		if (FrevvoFormName.COSTSHEET.equals(name))
         {
             String contextPath = request.getServletContext().getContextPath();
 
@@ -245,6 +248,9 @@ public class FrevvoFormServiceFactory {
             service.setAcmCostsheetDao(frevvoFormController.getAcmCostsheetDao());
             service.setCostFactory(frevvoFormController.getCostFactory());
             service.setSearchResults(frevvoFormController.getSearchResults());
+            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             
             return service;
 		}
