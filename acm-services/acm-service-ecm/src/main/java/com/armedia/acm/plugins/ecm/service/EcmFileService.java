@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -86,9 +87,9 @@ public interface EcmFileService
     AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    List<AcmCmisObject> listFolderContents(Authentication auth,
-                                           AcmContainer container,
-                                           String sortBy,
-                                           String sortDirection) throws AcmListObjectsFailedException;
+    AcmCmisObjectList listFolderContents(Authentication auth,
+                                         AcmContainer container,
+                                         String category, String sortBy,
+                                         String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
 }

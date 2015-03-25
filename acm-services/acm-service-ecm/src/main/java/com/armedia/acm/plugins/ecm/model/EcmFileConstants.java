@@ -6,7 +6,6 @@ package com.armedia.acm.plugins.ecm.model;
 public interface EcmFileConstants
 {
     String MULE_ENDPOINT_CREATE_FOLDER = "vm://createFolder.in";
-    String MULE_ENDPOINT_LIST_FOLDER_CONTENTS = "vm://listFolderContents.in";
 
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 

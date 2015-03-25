@@ -52,6 +52,7 @@ public class SolrDocument implements SolrBaseDocument {
     private String version_s;
     private String name_lcs;
     private Long parent_folder_id_i;
+    private String category_s;
 
     @Override
     public String getId() {
@@ -345,6 +346,16 @@ public class SolrDocument implements SolrBaseDocument {
         return parent_folder_id_i;
     }
 
+    public void setCategory_s(String category_s)
+    {
+        this.category_s = category_s;
+    }
+
+    public String getCategory_s()
+    {
+        return category_s;
+    }
+
     @Override
     public String toString()
     {
@@ -388,6 +399,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", version_s='" + version_s + '\'' +
                 ", name_lcs='" + name_lcs + '\'' +
                 ", parent_folder_id_i=" + parent_folder_id_i +
+                ", category_s='" + category_s + '\'' +
                 '}';
     }
 }

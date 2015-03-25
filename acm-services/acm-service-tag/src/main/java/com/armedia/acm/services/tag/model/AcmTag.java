@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by marjan.stefanoski on 24.03.2015.
  */
 @Entity
-@Table(name = "acm_file")
+@Table(name = "acm_tag")
 public class AcmTag implements AcmEntity, Serializable, AcmObject {
 
     public static final String OBJECT_TYPE = "TAG";
@@ -28,8 +28,9 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     @Column(name = "cm_tag_text")
     private String tagText;
 
-    @Column(name = "cm_tag_type")
-    private String type;
+    // no cm_tag_type column yet
+//    @Column(name = "cm_tag_type")
+//    private String type;
 
     @Column(name = "cm_tag_creator", nullable = false, insertable = true, updatable = false)
     private String creator;
@@ -66,13 +67,13 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
         this.tagText = tagText;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
 
     @Override
     public String getCreator() {
