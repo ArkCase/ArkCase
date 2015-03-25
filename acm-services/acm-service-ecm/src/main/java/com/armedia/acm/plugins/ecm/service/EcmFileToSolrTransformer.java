@@ -47,7 +47,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setParent_type_s(in.getContainer().getObjectType());
         solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
-
         solr.setEcmFileId(in.getVersionSeriesId());
 
         List<String> tags = prepareTagList(in.getTags());
@@ -62,10 +61,40 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         return null;
     }
 
-    //No implementation needed
     @Override
     public SolrDocument toSolrQuickSearch(EcmFile in) {
-        return null;
+        SolrDocument doc = new SolrDocument();
+
+        // no access control on folders (yet)
+        doc.setPublic_doc_b(true);
+
+        doc.setAuthor_s(in.getCreator());
+        doc.setAuthor(in.getCreator());
+        doc.setObject_type_s(in.getObjectType());
+        doc.setObject_id_s("" + in.getId());
+        doc.setCreate_tdt(in.getCreated());
+        doc.setId(in.getId() + "-" + in.getObjectType());
+        doc.setLast_modified_tdt(in.getModified());
+        doc.setName(in.getFileName());
+        doc.setModifier_s(in.getModifier());
+
+        doc.setParent_object_id_i(in.getFolder().getId());
+        doc.setParent_object_id_s("" + in.getFolder().getId());
+        doc.setParent_object_type_s(in.getFolder().getObjectType());
+
+        doc.setTitle_parseable(in.getFileName());
+        doc.setTitle_t(in.getFileName());
+
+        doc.setParent_folder_id_i(in.getFolder().getId());
+
+        doc.setVersion_s(in.getActiveVersionTag());
+        doc.setType_s(in.getFileType());
+        doc.setCategory_s(in.getCategory());
+
+        // need an _lcs field for sorting
+        doc.setName_lcs(in.getFileName());
+
+        return doc;
     }
 
     @Override

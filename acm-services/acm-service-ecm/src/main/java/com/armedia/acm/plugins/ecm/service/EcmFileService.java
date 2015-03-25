@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -84,10 +85,13 @@ public interface EcmFileService
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 
     @Transactional
-    AcmContainer getOrCreateContainerFolder(String objectType, Long objectId) throws
+    AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection) throws AcmListObjectsFailedException;
+    AcmCmisObjectList listFolderContents(Authentication auth,
+                                         AcmContainer container,
+                                         String category, String sortBy,
+                                         String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
     /**
      * Replace all not allowed characters in folder name with underscore
