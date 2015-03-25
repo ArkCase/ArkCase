@@ -181,7 +181,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
     {
     	if (caseFile != null)
     	{    		
-    		CaseFileForm form = getCaseFileFactory().asFrevvoCaseFile(caseFile, null);
+    		CaseFileForm form = getCaseFileFactory().asFrevvoCaseFile(caseFile, this);
     		
     		if (form != null)
     		{
