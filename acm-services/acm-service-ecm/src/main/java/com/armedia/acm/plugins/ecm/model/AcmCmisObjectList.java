@@ -7,14 +7,17 @@ import java.util.List;
 /**
  * Created by armdev on 3/12/15.
  */
-public class AcmCmisFolder implements Serializable
+public class AcmCmisObjectList implements Serializable
 {
     private static final long serialVersionUID = -1305624697384553192L;
 
     private String containerObjectType;
     private Long containerObjectId;
-    private String cmisFolderId;
+    private Long folderId;
+
     private List<AcmCmisObject> children = new ArrayList<>();
+    private int totalChildren;
+    private String category;
 
     public String getContainerObjectType()
     {
@@ -36,14 +39,14 @@ public class AcmCmisFolder implements Serializable
         this.containerObjectId = containerObjectId;
     }
 
-    public String getCmisFolderId()
+    public Long getFolderId()
     {
-        return cmisFolderId;
+        return folderId;
     }
 
-    public void setCmisFolderId(String cmisFolderId)
+    public void setFolderId(Long folderId)
     {
-        this.cmisFolderId = cmisFolderId;
+        this.folderId = folderId;
     }
 
     public List<AcmCmisObject> getChildren()
@@ -54,5 +57,25 @@ public class AcmCmisFolder implements Serializable
     public void setChildren(List<AcmCmisObject> children)
     {
         this.children = children;
+    }
+
+    public void setTotalChildren(int totalChildren)
+    {
+        this.totalChildren = totalChildren;
+    }
+
+    public int getTotalChildren()
+    {
+        return totalChildren;
+    }
+
+    public void setCategory(String category)
+    {
+        this.category = category;
+    }
+
+    public String getCategory()
+    {
+        return category;
     }
 }

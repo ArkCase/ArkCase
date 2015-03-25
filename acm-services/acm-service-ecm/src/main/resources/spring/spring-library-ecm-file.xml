@@ -41,6 +41,7 @@
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="solrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
         <property name="sortParameterNameToCmisFieldName">
             <map>
                 <entry key="name" value="name_lcs"/>
@@ -48,12 +49,22 @@
                 <entry key="created" value="create_tdt"/>
                 <entry key="author" value="author"/>
                 <entry key="version" value="version_s"/>
+                <entry key="modified" value="last_modified_tdt"/>
+                <entry key="creator" value="author"/>
+                <entry key="modifier" value="modifier_s"/>
+                <entry key="category" value="category_s"/>
             </map>
         </property>
         <property name="solrObjectTypeToAcmType">
             <map>
                 <entry key="FILE" value="file"/>
                 <entry key="FOLDER" value="folder"/>
+            </map>
+        </property>
+        <property name="categoryMap">
+            <map>
+                <entry key="document" value="Document"/>
+                <entry key="correspondence" value="Correspondence"/>
             </map>
         </property>
     </bean>

@@ -47,7 +47,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setParent_type_s(in.getContainer().getObjectType());
         solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
-
         solr.setEcmFileId(in.getVersionSeriesId());
 
         List<String> tags = prepareTagList(in.getTags());
@@ -90,6 +89,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         doc.setVersion_s(in.getActiveVersionTag());
         doc.setType_s(in.getFileType());
+        doc.setCategory_s(in.getCategory());
 
         // need an _lcs field for sorting
         doc.setName_lcs(in.getFileName());
