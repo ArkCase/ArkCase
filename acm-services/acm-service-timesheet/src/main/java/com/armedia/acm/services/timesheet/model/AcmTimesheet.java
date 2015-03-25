@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -26,6 +27,8 @@ import javax.persistence.TemporalType;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -80,6 +83,14 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
     @Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_object_id")
+    private List<AcmParticipant> participants = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
+	
 	@PrePersist
     protected void beforeInsert()
     {
@@ -89,6 +100,21 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 			{
 				time.setTimesheet(this);
 			}
+		}
+		
+		if (getParticipants() != null)
+		{
+			for (AcmParticipant participant : getParticipants())
+			{
+				participant.setObjectId(getId());
+				participant.setObjectType(getObjectType());
+			}
+		}
+		
+		if (getContainer() != null)
+		{
+			getContainer().setContainerObjectId(getId());
+			getContainer().setContainerObjectType(getObjectType());
 		}
     }
 	
@@ -101,6 +127,21 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 			{
 				time.setTimesheet(this);
 			}
+		}
+		
+		if (getParticipants() != null)
+		{
+			for (AcmParticipant participant : getParticipants())
+			{
+				participant.setObjectId(getId());
+				participant.setObjectType(getObjectType());
+			}
+		}
+		
+		if (getContainer() != null)
+		{
+			getContainer().setContainerObjectId(getId());
+			getContainer().setContainerObjectType(getObjectType());
 		}
     }
 	
@@ -213,6 +254,22 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 	public void setModified(Date modified) 
 	{
 		this.modified = modified;
+	}
+
+	public List<AcmParticipant> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(List<AcmParticipant> participants) {
+		this.participants = participants;
+	}
+
+	public AcmContainer getContainer() {
+		return container;
+	}
+
+	public void setContainer(AcmContainer container) {
+		this.container = container;
 	}
 
 	@Override

@@ -38,4 +38,8 @@ public interface TimeFormConstants {
 	public final static String CASE_FILE = FrevvoFormName.CASE_FILE;
 	public final static String COMPLAINT = FrevvoFormName.COMPLAINT;
 	public final static String OTHER = "OTHER";
+	
+	public final static String APPROVER = "approver";
+	
+	public final static String APPROVER_PRIVILEGE = "acm-timesheet-approve";
 }

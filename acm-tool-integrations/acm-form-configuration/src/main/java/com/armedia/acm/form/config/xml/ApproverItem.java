@@ -13,6 +13,17 @@ import com.armedia.acm.form.config.Item;
  */
 public class ApproverItem extends Item{
 
+	@XmlElement(name="participantId")
+	@Override
+	public Long getId() {
+		return super.getId();
+	}
+
+	@Override
+	public void setId(Long id) {
+		super.setId(id);
+	}
+	
 	@XmlElement(name="approverId")
 	@Override
 	public String getValue() {

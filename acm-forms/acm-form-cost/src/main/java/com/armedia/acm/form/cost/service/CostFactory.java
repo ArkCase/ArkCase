@@ -9,12 +9,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.armedia.acm.form.config.Item;
+import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.cost.model.CostForm;
+import com.armedia.acm.form.cost.model.CostFormConstants;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.services.costsheet.dao.AcmCostDao;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -29,6 +34,7 @@ public class CostFactory {
 	private AcmCostDao acmCostDao;
 	private AcmCostsheetDao acmCostsheetDao;
 	private UserDao userDao;
+	private AcmParticipantDao acmParticipantDao;
 	
 	/**
 	 * Converting Frevvo CostForm to AcmCostsheet
@@ -61,6 +67,8 @@ public class CostFactory {
 			retval.setParentNumber(form.getObjectNumber());
 			retval.setStatus(form.getStatus());
 			retval.setCosts(asAcmCosts(form.getItems()));
+			retval.setDetails(form.getDetails());
+			retval.setParticipants(asAcmParticipants(form.getApprovers()));
 		}
 		else
 		{
@@ -100,6 +108,7 @@ public class CostFactory {
 			form.setObjectNumber(costsheet.getParentNumber());
 			form.setStatus(costsheet.getStatus());
 			form.setItems(asFrevvoCostItems(costsheet.getCosts()));
+			form.setApprovers(asFrevvoApprovers(costsheet.getParticipants()));
 		}
 		else
 		{
@@ -198,6 +207,60 @@ public class CostFactory {
 		
 		return user;
 	}
+	
+	private List<AcmParticipant> asAcmParticipants(List<ApproverItem> items)
+    {
+    	List<AcmParticipant> participants = new ArrayList<>();
+        
+    	if ( items != null )
+    	{
+    		LOG.debug("# of incoming approvers: " + items.size());
+    		
+    		for ( Item item : items )
+    		{
+                AcmParticipant participant = null;
+                
+                if (item.getId() != null)
+                {
+                	participant = getAcmParticipantDao().find(item.getId());
+                }
+                
+                if (participant == null)
+                {
+                	participant = new AcmParticipant();
+                }
+                
+                participant.setId(item.getId());
+                participant.setParticipantLdapId(item.getValue());
+                participant.setParticipantType(CostFormConstants.APPROVER);
+                participants.add(participant);
+    		}
+    	}
+    	
+    	return participants;
+    }
+	
+	private List<ApproverItem> asFrevvoApprovers(List<AcmParticipant> participants)
+	{
+		List<ApproverItem> items = new ArrayList<>();
+		
+		if (participants != null)
+		{
+			LOG.debug("# of incoming participants: " + participants.size());
+			
+			for (AcmParticipant participant : participants)
+			{
+				ApproverItem item = new ApproverItem();
+				
+				item.setId(participant.getId());
+				item.setValue(participant.getParticipantLdapId());
+				
+				items.add(item);
+			}
+		}
+		
+		return items;
+	}
 
 	public AcmCostsheetDao getAcmCostsheetDao() {
 		return acmCostsheetDao;
@@ -221,5 +284,14 @@ public class CostFactory {
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+
+	public AcmParticipantDao getAcmParticipantDao() {
+		return acmParticipantDao;
+	}
+
+	public void setAcmParticipantDao(AcmParticipantDao acmParticipantDao) {
+		this.acmParticipantDao = acmParticipantDao;
 	}	
+	
 }
