@@ -84,7 +84,7 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 	
 	public AcmContainer createContainer(String rootFolder, String userId, Long objectId, String objectType, String name) throws AcmCreateObjectFailedException
 	{
-		String path = rootFolder + "/" + userId + "/" + prepareForAlfrescoFolderName(name);
+		String path = rootFolder + "/" + userId + "/" + getEcmFileService().buildSafeFolderName(name);
 		AcmContainer container = getAcmContainerDao().findByObjectTypeAndIdOrCreate(objectType, objectId, path, name);
 		
 		if (container != null)
@@ -101,17 +101,6 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 		}
 		
 		return null;
-	}
-	
-	private String prepareForAlfrescoFolderName(String name)
-	{
-		if (name != null)
-		{
-			name = name.replace("-", "  ");
-			name = name.replace("/", "-");
-		}
-		
-		return name;
 	}
 	
 	public abstract String getSolrResponse(String objectType);

@@ -95,33 +95,17 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 	@PrePersist
     protected void beforeInsert()
     {
-		if (getCosts() != null)
-		{
-			for (AcmCost time : getCosts())
-			{
-				time.setCostsheet(this);
-			}
-		}
-		
-		if (getParticipants() != null)
-		{
-			for (AcmParticipant participant : getParticipants())
-			{
-				participant.setObjectId(getId());
-				participant.setObjectType(getObjectType());
-			}
-		}
-		
-		if (getContainer() != null)
-		{
-			getContainer().setContainerObjectId(getId());
-			getContainer().setContainerObjectType(getObjectType());
-		}
+		setChildPointers();
     }
 	
 	@PreUpdate
     protected void beforeUpdate()
     {
+		setChildPointers();
+    }
+	
+	private void setChildPointers()
+	{
 		if (getCosts() != null)
 		{
 			for (AcmCost time : getCosts())
@@ -144,7 +128,7 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 			getContainer().setContainerObjectId(getId());
 			getContainer().setContainerObjectType(getObjectType());
 		}
-    }
+	}
 	
 	@Override
 	public Long getId() 
