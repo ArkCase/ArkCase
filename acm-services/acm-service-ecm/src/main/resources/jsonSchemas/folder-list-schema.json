@@ -28,6 +28,25 @@
       "description": "What category of objects are included in the children array",
       "enum": [ "Document", "Correspondence", "all" ]
     },
+    "sortBy": {
+      "type": "string",
+      "description": "The requested sort field"
+    },
+    "sortDirection": {
+      "type": "string",
+      "description": "The requested sort direction",
+      "enum": [ "ASC", "DESC" ]
+    },
+    "startRow": {
+      "type": "integer",
+      "description": "Requested start row",
+      "minimum": 0
+    },
+    "maxRows": {
+      "type": "integer",
+      "description": "Requested number of rows",
+      "minimum": 0
+    },
     "children": {
       "type": "array",
       "description": "List of the immediate children of the requested folder",
@@ -80,5 +99,5 @@
       }
     }
   },
-  "required": [ "containerObjectType", "containerObjectId", "folderId", "children" ]
+  "required": [ "containerObjectType", "containerObjectId", "folderId", "children", "totalChildren", "category", "sortBy", "sortDirection", "startRow", "maxRows" ]
 }
