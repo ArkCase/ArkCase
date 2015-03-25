@@ -11,6 +11,7 @@
             <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
             <span itemprop="objType">TIMESHEET</span>
             <span itemprop="objId">${objId}</span>
+            <span itemprop="treeSort">${treeSort}</span>
         </div>
 	</jsp:attribute>
 
