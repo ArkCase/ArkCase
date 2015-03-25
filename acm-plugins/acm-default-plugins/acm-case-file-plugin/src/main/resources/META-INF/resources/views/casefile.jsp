@@ -326,13 +326,13 @@
 
                                 <div class="col-md-12" id="tabHistory" style="display:none;">
                                     <section class="panel b-a ">
-                                        <div id="divEvents" style="width:100%"></div>
+                                        <div id="divHistory" style="width:100%"></div>
                                     </section>
                                 </div>
 
-                                <div class="col-md-12" id="tabTemplates" style="display:none;">
+                                <div class="col-md-12" id="tabCorrespondence" style="display:none;">
                                     <section class="panel b-a ">
-                                        <div id="divTemplates" style="width:100%"></div>
+                                        <div id="divCorrespondence" style="width:100%"></div>
                                     </section>
                                 </div>
 

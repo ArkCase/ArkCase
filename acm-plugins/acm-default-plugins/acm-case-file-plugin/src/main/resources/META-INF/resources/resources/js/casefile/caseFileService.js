@@ -14,6 +14,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
+        if (CaseFile.Service.History.create) {CaseFile.Service.History.create();}
         if (CaseFile.Service.Time.create)   {CaseFile.Service.Time.create();}
         if (CaseFile.Service.Cost.create)   {CaseFile.Service.Cost.create();}
     }
@@ -25,6 +26,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
+        if (CaseFile.Service.History.onInitialized)        {CaseFile.Service.History.onInitialized();}
         if (CaseFile.Service.Time.onInitialized)        {CaseFile.Service.Time.onInitialized();}
         if (CaseFile.Service.Cost.onInitialized)        {CaseFile.Service.Cost.onInitialized();}
     }
@@ -1313,30 +1315,36 @@ CaseFile.Service = {
         ,onInitialized: function() {
         }
 
+        ,API_RETRIEVE_CORRESPONDENCE_      : "/api/latest/service/ecm/folder/"
         ,API_CREATE_CORRESPONDENCE_      : "/api/latest/service/correspondence"
 
-        ,_validateEcmFile: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.fileId)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.ecmFileId)) {
-                return false;
-            }
-            if (!Acm.isArray(data.parentObjects)) {
-                return false;
-            }
-            return true;
+        ,retrieveCorrespondenceDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + CaseFile.Service.Correspondence.API_RETRIEVE_CORRESPONDENCE_ + CaseFile.Model.DOC_TYPE_CASE_FILE;
+                    url += "/" + caseFileId + "?category=" + CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (CaseFile.Model.Correspondence.validateCorrespondences(data)) {
+                        var correspondences = data;
+                        CaseFile.Model.Correspondence.cacheCorrespondences.put(caseFileId + "." +jtParams.jtStartIndex, correspondences);
+                        jtData = callbackSuccess(correspondences);
+                    }
+                    return jtData;
+                }
+            );
         }
-        ,createCorrespondence : function(data, templateName) {
-            var caseFileIn = data;
+
+
+        ,createCorrespondence : function(caseFile, templateName) {
             var url = App.getContextPath() + this.API_CREATE_CORRESPONDENCE_
                 + "?templateName=" + templateName
                 + "&parentObjectType=" + CaseFile.Model.DOC_TYPE_CASE_FILE
-                + "&parentObjectId=" + caseFileIn.id
-                + "&targetCmisFolderId=" + caseFileIn.container.folder.cmisFolderId;
+                + "&parentObjectId=" + caseFile.id
+                + "&targetCmisFolderId=" + caseFile.container.folder.cmisFolderId;
 
             Acm.Service.asyncPost(
                 function(response) {
@@ -1344,32 +1352,55 @@ CaseFile.Service = {
                         CaseFile.Controller.modelCreatedCorrespondence(response);
 
                     } else {
-                        if (CaseFile.Service.Correspondence._validateEcmFile(response)) {
-                            var ecmFile = response;
-                            var caseFileId = caseFileIn.id;
-
-                            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-                            if(CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                                var childObject = {};
-                                childObject.targetId = ecmFile.fileId;
-                                childObject.targetName = ecmFile.fileName;
-                                childObject.created = ecmFile.created;
-                                childObject.creator = ecmFile.creator;
-                                childObject.modified = ecmFile.modified;
-                                childObject.modifier = ecmFile.modifier;
-                                childObject.status = ecmFile.status;
-                                childObject.targetType = CaseFile.Model.DOC_TYPE_FILE;
-                                childObject.category = CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE;
-
-                                caseFile.childObjects.push(childObject);
-                                //CaseFile.Model.Detail.cacheCaseFile.put(caseFileId, caseFile);
+                        if (CaseFile.Model.Correspondence.validateNewCorrespondence(response)) {
+                            //add to the top of the cache
+                            var correspondencesCache = CaseFile.Model.Correspondence.cacheCorrespondences.get(caseFile.id + "." + 0);
+                            if(CaseFile.Model.Correspondence.validateCorrespondences(correspondencesCache)) {
+                                var correspondences = correspondencesCache.children;
+                                var correspondence = {};
+                                correspondence.objectId = Acm.goodValue(response.fileId);
+                                correspondence.name = Acm.goodValue(response.fileName);
+                                correspondence.creator = Acm.goodValue(response.creator);
+                                correspondence.created = Acm.goodValue(response.created);
+                                correspondence.objectType = CaseFile.Model.DOC_TYPE_FILE_SM;
+                                correspondence.category = CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM;
+                                correspondencesCache.children.unshift(correspondence);
+                                correspondencesCache.totalChildren++;
                             }
-                            CaseFile.Controller.modelCreatedCorrespondence(caseFileId);
+                            CaseFile.Controller.modelCreatedCorrespondence(response);
                         }
                     }
                 }
                 ,url
             )
+        }
+    }
+
+    ,History: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+        ,API_CASE_FILE_HISTORY : "/api/latest/plugin/casefile/events/"
+
+        ,retrieveHistoryDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + CaseFile.Service.History.API_CASE_FILE_HISTORY;
+                    url += caseFileId;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (CaseFile.Model.History.validateHistory(data)) {
+                        var history = data;
+                        CaseFile.Model.History.cacheHistory.put(caseFileId + "." +jtParams.jtStartIndex, history);
+                        jtData = callbackSuccess(history);
+                    }
+                    return jtData;
+                }
+            );
         }
     }
 
