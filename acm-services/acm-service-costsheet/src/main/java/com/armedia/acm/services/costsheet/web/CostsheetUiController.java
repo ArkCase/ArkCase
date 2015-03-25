@@ -24,7 +24,7 @@ public class CostsheetUiController
         retval.setViewName("costsheet");
 
         // Frevvo form URLs
-        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COST));
+        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COSTSHEET));
         return retval;
     }
 
@@ -37,7 +37,7 @@ public class CostsheetUiController
 
 
         // Frevvo form URLs
-        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COST));
+        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COSTSHEET));
         return retval;
 
     }
@@ -49,7 +49,7 @@ public class CostsheetUiController
         retval.setViewName("costsheetWizard");
 
         // Frevvo form URLs
-        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COST));
+        retval.addObject("newCostsheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.COSTSHEET));
         return retval;
 
     }

@@ -3,20 +3,25 @@
  */
 package com.armedia.acm.services.timesheet.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
 /**
  * @author riste.tutureski
@@ -26,10 +31,22 @@ public class TimesheetServiceImpl implements TimesheetService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
+	private Properties properties;
 	private AcmTimesheetDao acmTimesheetDao;
 	private Map<String, String> submissionStatusesMap;
 	private ExecuteSolrQuery executeSolrQuery;
+	private List<String> startWorkflowEvents;
 	
+	@Override
+	public Properties getProperties()
+	{
+		return properties;
+	}
+	
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
 	@Override
 	public AcmTimesheet save(AcmTimesheet timesheet) 
 	{
@@ -135,6 +152,29 @@ public class TimesheetServiceImpl implements TimesheetService {
 		
 		return retval;
 	}
+	
+	@Override
+	public boolean checkWorkflowStartup(String type)
+	{
+		if (getStartWorkflowEvents() != null && getStartWorkflowEvents().contains(type))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public String createName(AcmTimesheet timesheet)
+	{
+		SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.TIMESHEET_DATE_FORMAT);
+		
+		String objectType =  StringUtils.capitalise(TimesheetConstants.OBJECT_TYPE.toLowerCase());
+		String startDate = formatter.format(timesheet.getStartDate());
+		String endDate = formatter.format(timesheet.getEndDate());
+		
+		return objectType + " " + startDate + "-" + endDate;
+	}
 
 	public AcmTimesheetDao getAcmTimesheetDao() {
 		return acmTimesheetDao;
@@ -158,5 +198,13 @@ public class TimesheetServiceImpl implements TimesheetService {
 
 	public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
 		this.executeSolrQuery = executeSolrQuery;
+	}
+
+	public List<String> getStartWorkflowEvents() {
+		return startWorkflowEvents;
+	}
+
+	public void setStartWorkflowEvents(List<String> startWorkflowEvents) {
+		this.startWorkflowEvents = startWorkflowEvents;
 	}
 }

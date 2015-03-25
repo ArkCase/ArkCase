@@ -45,15 +45,33 @@ title: ArkCase Document Management
       description: Get list of objects in the requested container. 
       queryParameters:
         s:
-          description: Sort order; can only sort by common properties between folders and documents
+          description: Sort order
           required: false
           default: name
-          enum: ["name", "created", "modified"]
+          enum: [ "author", "category", "created", "creator", "modified", "modifier", "name", "type", "version" ]
         dir:
           description: Sort direction (ascending or descending)
           required: false
           enum: ["ASC", "DESC"]
           default: asc   
+        start:
+          description: Paging support - the starting row.
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+        n:
+          description: Paging support - the number of rows
+          required: false
+          type: integer
+          default: 1000
+          minimum: 0
+        category:
+          description: Used to request only documents, only correspondence, or both; to request both documents and correspondence, do not send a category at all
+          required: false
+          default: null
+          type: string
+          enum: [ "Correspondence", "Document" ]
       responses:
         403:
           description: User is not authorized to read the requested object type

@@ -22,7 +22,7 @@ public class TimesheetUiController
         retval.setViewName("timesheet");
 
         // Frevvo form URLs
-        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIME));
+        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIMESHEET));
         return retval;
 
     }
@@ -34,7 +34,7 @@ public class TimesheetUiController
         retval.setViewName("timesheetWizard");
 
         // Frevvo form URLs
-        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIME));
+        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIMESHEET));
         return retval;
 
     }
@@ -48,7 +48,7 @@ public class TimesheetUiController
 
 
         // Frevvo form URLs
-        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIME));
+        retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIMESHEET));
         return retval;
 
     }

@@ -35,7 +35,9 @@ public interface TimeFormConstants {
 	/**
 	 * Time types
 	 */
-	public final static String CASE_FILE = FrevvoFormName.CASE_FILE;
-	public final static String COMPLAINT = FrevvoFormName.COMPLAINT;
+	public final static String CASE_FILE = FrevvoFormName.CASE_FILE.toUpperCase();
+	public final static String COMPLAINT = FrevvoFormName.COMPLAINT.toUpperCase();
 	public final static String OTHER = "OTHER";
+	
+	public final static String APPROVER_PRIVILEGE = "acm-timesheet-approve";
 }

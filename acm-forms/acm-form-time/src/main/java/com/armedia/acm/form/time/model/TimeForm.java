@@ -11,16 +11,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 
 /**
  * @author riste.tutureski
  *
  */
-@XmlRootElement(name="form_" + FrevvoFormName.TIME, namespace=FrevvoFormNamespace.TIME_NAMESPACE)
-public class TimeForm {
+@XmlRootElement(name="form_" + FrevvoFormName.TIMESHEET, namespace=FrevvoFormNamespace.TIMESHEET_NAMESPACE)
+public class TimeForm extends FrevvoForm {
 
 	private Long id;
 	private String user;
@@ -30,7 +32,8 @@ public class TimeForm {
 	private String status;
 	private List<String> statusOptions;
 	private String details;
-	private String initData;
+	private List<ApproverItem> approvers;
+	private List<String> approverOptions;
 	private List<String> totals;
 	
 	@XmlElement(name="id")
@@ -105,14 +108,23 @@ public class TimeForm {
 	public void setDetails(String details) {
 		this.details = details;
 	}
-
-	@XmlElement(name="initData")
-	public String getInitData() {
-		return initData;
+	
+	@XmlElement(name="approverItem")
+	public List<ApproverItem> getApprovers() {
+		return approvers;
 	}
 
-	public void setInitData(String initData) {
-		this.initData = initData;
+	public void setApprovers(List<ApproverItem> approvers) {
+		this.approvers = approvers;
+	}
+
+	@XmlTransient
+	public List<String> getApproverOptions() {
+		return approverOptions;
+	}
+
+	public void setApproverOptions(List<String> approverOptions) {
+		this.approverOptions = approverOptions;
 	}
 	
 	@XmlElement(name="totalTableItem")

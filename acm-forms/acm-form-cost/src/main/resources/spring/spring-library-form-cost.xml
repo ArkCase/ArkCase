@@ -9,6 +9,7 @@
     	<property name="acmCostDao" ref="acmCostDao" />
     	<property name="acmCostsheetDao" ref="acmCostsheetDao" />
     	<property name="userDao" ref="userJpaDao" />
+    	<property name="acmParticipantDao" ref="acmParticipantDao" />
     </bean>
 
 </beans>
