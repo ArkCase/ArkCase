@@ -51,134 +51,132 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section id="content">
-            <section class="vbox">
-                <section class="scrollable">
-                    <section class="hbox stretch"><!-- /.aside -->
+        <section class="vbox">
+            <section class="scrollable">
+                <section class="hbox stretch"><!-- /.aside -->
 
-                        <aside class="aside-lg bg-light lt">
-                            <section class="vbox animated fadeInLeft">
-                                <section class="scrollable">
-                                    <header class="dk header">
-                                        <h3 class="m-b-xs text-black pull-left"><spring:message code="timesheet.page.descShort" text="Time Tracking" /></h3>
+                    <aside class="aside-lg bg-light lt">
+                        <section class="vbox animated fadeInLeft">
+                            <section class="scrollable">
+                                <header class="dk header">
+                                    <h3 class="m-b-xs text-black pull-left"><spring:message code="timesheet.page.descShort" text="Time Tracking" /></h3>
 
-                                        <div class="btn-group inline select pull-right">
-                                            <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
-                                            <ul class="dropdown-menu text-left text-sm" id="ulSort"></ul>
+                                    <div class="btn-group inline select pull-right">
+                                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
+                                        <ul class="dropdown-menu text-left text-sm" id="ulSort"></ul>
+                                    </div>
+                                    <div class="btn-group select pull-right">
+                                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
+                                        <ul class="dropdown-menu text-left text-sm" id="ulFilter"></ul>
+                                    </div>
+                                </header>
+
+                                <div class="wrapper">
+                                    <div class="input-group">
+                                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row m-b">
+                                    <div class="col-sm-12">
+                                        <div id="tree"></div>
+                                    </div>
+                                </div>
+                            </section>
+                        </section>
+                    </aside>
+
+
+
+                    <aside id="email-content" class="bg-light lter">
+                        <section class="vbox">
+                            <section class="scrollable">
+                                <div class="wrapper dk  clearfix">
+                                    <div class="row" id="tabTop"  style="display:none;">
+                                        <div class="col-xs-12">
+                                            <div class="">
+                                                <div class=" clearfix">
+                                                    <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-title="Timesheet Name"></a> </div>
+                                                    <small class="text-muted"><a href="#" id="timesheetModifiedDate" ></a></small></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="btn-group select pull-right">
-                                            <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
-                                            <ul class="dropdown-menu text-left text-sm" id="ulFilter"></ul>
-                                        </div>
-                                    </header>
+                                    </div>
 
+
+                                    <div class="row" id="tabTopBlank">
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No timesheet is selected)</p>
+                                    </div>
+                                </div>
+
+                                <div>
                                     <div class="wrapper">
-                                        <div class="input-group">
-                                            <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-sm btn-default" type="button">Go!</button>
-                                            </span>
-                                        </div>
-                                    </div>
 
-                                    <div class="row m-b">
-                                        <div class="col-sm-12">
-                                            <div id="tree"></div>
-                                        </div>
-                                    </div>
-                                </section>
-                            </section>
-                        </aside>
-
-
-
-                        <aside id="email-content" class="bg-light lter">
-                            <section class="vbox">
-                                <section class="scrollable">
-                                    <div class="wrapper dk  clearfix">
-                                        <div class="row" id="tabTop"  style="display:none;">
-                                            <div class="col-xs-12">
-                                                <div class="">
-                                                    <div class=" clearfix">
-                                                        <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-title="Timesheet Name"></a> </div>
-                                                        <small class="text-muted"><a href="#" id="timesheetModifiedDate" ></a></small></div>
+                                        <div class="row" id="tabAction">
+                                            <div class="col-md-12">
+                                                <div class="pull-right inline">
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-default btn-sm" id = "btnNewTimesheetForm"> New Timesheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnEditTimesheetForm"> Edit Timesheet </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr/>
 
-
-                                        <div class="row" id="tabTopBlank">
-                                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No timesheet is selected)</p>
+                                        <div class="row" id="tabBlank" style="display:none;">
                                         </div>
-                                    </div>
 
-                                    <div>
-                                        <div class="wrapper">
-
-                                            <div class="row" id="tabAction">
-                                                <div class="col-md-12">
-                                                    <div class="pull-right inline">
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-default btn-sm" id = "btnNewTimesheetForm"> New Timesheet </button>
-                                                            <button class="btn btn-default btn-sm" id = "btnEditTimesheetForm"> Edit Timesheet </button>
-                                                        </div>
+                                        <div class="row" id="tabDetail" style="display:none;">
+                                            <div class="col-md-12">
+                                                <section class="panel b-a ">
+                                                    <div class="panel-heading b-b bg-info">
+                                                        <ul class="nav nav-pills pull-right">
+                                                            <li>
+                                                                <div class="btn-group padder-v2">
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                    <ul class="dropdown-menu pull-right">
+                                                                        <li><a href="#">Other menu items</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                            <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                        </ul>
+                                                        </span> <a href="#" class="font-bold">Details</a> </div>
+                                                    <div class="panel-body">
+                                                        <div class="divDetail"></div>
                                                     </div>
-                                                </div>
+                                                </section>
                                             </div>
-                                            <hr/>
-
-                                            <div class="row" id="tabBlank" style="display:none;">
-                                            </div>
-
-                                            <div class="row" id="tabDetail" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <section class="panel b-a ">
-                                                        <div class="panel-heading b-b bg-info">
-                                                            <ul class="nav nav-pills pull-right">
-                                                                <li>
-                                                                    <div class="btn-group padder-v2">
-                                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
-                                                                        <ul class="dropdown-menu pull-right">
-                                                                            <li><a href="#">Other menu items</a></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </li>
-                                                                <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                                            </ul>
-                                                            </span> <a href="#" class="font-bold">Details</a> </div>
-                                                        <div class="panel-body">
-                                                            <div class="divDetail"></div>
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
-                                            <div class="row" id="tabPerson" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <section class="panel b-a">
-                                                        <div id="divPerson" style="width:100%"></div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
-                                            <div class="row" id="tabTimeSummary" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <section class="panel b-a">
-                                                        <div id="divTimeSummary" style="width:100%"></div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
                                         </div>
+
+                                        <div class="row" id="tabPerson" style="display:none;">
+                                            <div class="col-md-12">
+                                                <section class="panel b-a">
+                                                    <div id="divPerson" style="width:100%"></div>
+                                                </section>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" id="tabTimeSummary" style="display:none;">
+                                            <div class="col-md-12">
+                                                <section class="panel b-a">
+                                                    <div id="divTimeSummary" style="width:100%"></div>
+                                                </section>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                </section>
+                                </div>
                             </section>
-                        </aside>
+                        </section>
+                    </aside>
 
 
-                    </section>
                 </section>
             </section>
         </section>
