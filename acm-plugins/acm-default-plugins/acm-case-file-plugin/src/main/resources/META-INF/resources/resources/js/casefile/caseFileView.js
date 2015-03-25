@@ -2071,7 +2071,10 @@ CaseFile.View = CaseFile.View || {
                                 var participant = c.participants[i];
                                 var record = {};
                                 record.id = Acm.goodValue(participant.id, 0);
-                                record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
+                                // Here I am not taking user full name. It will be automatically shown because now 
+                                // I am sending key-value object with key=username and value=fullname
+                                record.title = Acm.goodValue(participant.participantLdapId);
+                                //record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
                                 record.type = Acm.goodValue(participant.participantType);
                                 rc.Records.push(record);
                             }
@@ -2115,13 +2118,40 @@ CaseFile.View = CaseFile.View || {
                         ,create: false
                         ,edit: false
                     }
+	                ,type: {
+	                    title: 'Type'
+	                    ,width: '30%'
+	                    ,options: CaseFile.Model.Lookup.getParticipantTypes()
+	                    ,display: function (data) {
+                            if (data.record.type == '*') {
+                            	// Default user. This is needed to show default user in the table.
+                        		// I am setting it here, because i don't want to show it in the popup while
+                        		// creating new participant. If we set it in the popup, it should be removed from here.
+                        		// This is used only to recognize the * type.
+                            	return '*';
+                            } else {
+                            	var options = CaseFile.Model.Lookup.getParticipantTypes();
+                            	return options[data.record.type];
+                            }
+                        }
+	                }
                     ,title: {
                         title: 'Name'
                         ,width: '70%'
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '30%'
+                        ,dependsOn: 'type'
+                        ,options: function (data) {
+                        	if (data.dependedValues.type == '*') {
+                        		// Default user. This is needed to show default user in the table.
+                        		// I am setting it here, because i don't want to show it in the popup while
+                        		// creating new participant. If we set it in the popup, it should be removed from here.
+                        		// This is used only to recognize the * type.
+                        		return {"*": "*"}
+                        	}else if (data.dependedValues.type == 'owning group') {
+                        		return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups());
+                    		} else {
+                    			return Acm.createKeyValueObject(CaseFile.Model.Lookup.getUsers());
+                    		}
+                        }
                     }
                 }
                 ,recordAdded : function (event, data) {

@@ -857,6 +857,11 @@ Complaint.Model = Complaint.Model || {
         ,getAliasTypes : function() {
             return this._aliasTypes;
         }
+        
+        ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
+        ,getParticipantTypes : function() {
+            return this._participantTypes;
+        }
 
     }
 
