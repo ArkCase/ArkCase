@@ -148,7 +148,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         AcmContainer found = null;
         try
         {
-            found = getEcmFileService().getOrCreateContainerFolder(objectType, id);
+            found = getEcmFileService().getOrCreateContainer(objectType, id);
             return found.getFolder().getCmisFolderId();
         }
         catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)

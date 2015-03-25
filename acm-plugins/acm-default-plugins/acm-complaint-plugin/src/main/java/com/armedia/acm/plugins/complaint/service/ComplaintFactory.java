@@ -173,7 +173,7 @@ public class ComplaintFactory
             }
             else
             {
-                AcmContainer container = getFileService().getOrCreateContainerFolder(complaint.getObjectType(), complaint.getId());
+                AcmContainer container = getFileService().getOrCreateContainer(complaint.getObjectType(), complaint.getId());
                 complaintForm.setCmisFolderId(container.getFolder().getCmisFolderId());
             }
         }

@@ -52,7 +52,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throws MuleException
     {
         // by default, files are documents
-        String category = "DOCUMENT";
+        String category = "Document";
         EcmFile retval = addFileTransaction(authentication, fileType, category, fileInputStream, mimeType, fileName,
                 cmisFolderId, container);
 

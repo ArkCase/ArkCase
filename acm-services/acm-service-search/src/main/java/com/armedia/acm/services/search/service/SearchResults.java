@@ -1,6 +1,9 @@
 package com.armedia.acm.services.search.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -59,5 +62,27 @@ public class SearchResults
     	}
     	
     	return retval;
+    }
+
+    public String extractString(JSONObject doc, String stringField)
+    {
+        return doc.has(stringField) ? doc.getString(stringField) : null;
+    }
+
+    public Long extractLong(JSONObject doc, String longField)
+    {
+        String longText =  doc.has(longField) ? doc.getString(longField) : null;
+        return longText == null ? null : Long.valueOf(longText);
+    }
+
+    public Date extractDate(SimpleDateFormat solrFormat, JSONObject doc, String dateField) throws ParseException
+    {
+        if ( doc.has(dateField))
+        {
+            String dateText = doc.getString(dateField);
+            Date date = solrFormat.parse(dateText);
+            return date;
+        }
+        return null;
     }
 }
