@@ -44,7 +44,7 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 
     }
     
-    public ObjectAssociation findFrevvoXMLAssociation(String parentType, Long parentId, String targetSubtype)
+    public ObjectAssociation findChildOfType(String parentType, Long parentId, String targetSubtype)
     {
         Query selectQuery = getEm().createQuery(
                 "SELECT e " +

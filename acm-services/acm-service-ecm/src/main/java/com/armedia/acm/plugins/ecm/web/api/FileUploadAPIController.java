@@ -98,7 +98,7 @@ public class FileUploadAPIController
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
-        AcmContainer container = getEcmFileService().getOrCreateContainerFolder(parentObjectType, parentObjectId);
+        AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
         if ( container.getFolder() == null )
         {
             // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway

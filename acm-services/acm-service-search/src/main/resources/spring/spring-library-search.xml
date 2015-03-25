@@ -86,7 +86,6 @@
     </bean>
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
-        <!--<property name="muleClient" ref="muleClient"/>-->
         <lookup-method name="getMuleClient" bean="muleClient"/>
     </bean>
 

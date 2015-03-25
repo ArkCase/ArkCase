@@ -3,7 +3,9 @@ package com.armedia.acm.plugins.ecm.dao;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -38,6 +40,35 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         {
             throw new AcmObjectNotFoundException(objectType, objectId, e.getMessage(), e);
         }
+    }
+    
+    public AcmContainer findByObjectTypeAndIdOrCreate(String objectType, Long objectId, String name, String title)
+    {
+    	AcmContainer container = null;
+    	try
+    	{
+    		container = findFolderByObjectTypeAndId(objectType, objectId);
+    		log.info("Found existing folder " + container.getId() + " for object " + objectType + " id " + objectId);
+    	}
+    	catch (AcmObjectNotFoundException e)
+    	{
+    		log.debug("Container for object " + objectType + " id " + objectId + " is not found. The new object will be created.");
+    		
+    		container = new AcmContainer();
+    		container.setContainerObjectType(objectType);
+    		container.setContainerObjectTitle(title);
+    	}
+    	
+    	if (container.getFolder() == null)
+    	{
+    		name = name != null ? name : EcmFileConstants.CONTAINER_FOLDER_NAME;
+    		AcmFolder folder = new AcmFolder();    		
+    		folder.setName(name);
+    		
+    		container.setFolder(folder);
+    	}
+    	
+    	return container;
     }
 
     @Override
