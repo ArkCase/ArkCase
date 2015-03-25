@@ -327,8 +327,13 @@ SearchBase.View = {
                             ,sortMap
                             ,function(data) {
                                 var result = data;
-
-                                var title = si.total + ' results of "' + si.q + '"';
+                                var title;
+                                if(si.q == "*"){
+                                    title = si.total + ' results';
+                                }
+                                else{
+                                    title = si.total + ' results of "' + si.q + '"';
+                                }
                                 AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, title);
 
                                 return SearchBase.View.Results.jtDataMaker(result);
