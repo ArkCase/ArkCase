@@ -111,16 +111,7 @@ public class PentahoReportUrl implements ReportUrl{
 		StringBuilder builder = new StringBuilder();
 		
         String serverFormUrl = getReportsProperties().get(PENTAHO_SERVER_INTERNAL_URL).toString();
-        
-        String serverFormUser = getReportsProperties().get(PENTAHO_SERVER_USER).toString();
-        String serverFormPassword = getReportsProperties().get(PENTAHO_SERVER_PASSWORD).toString();
-        
-        if (serverFormUrl != null)
-        {
-        	serverFormUrl = serverFormUrl.replace("http://", "http://" + serverFormUser + ":" + serverFormPassword + "@");
-        	serverFormUrl = serverFormUrl.replace("https://", "https://" + serverFormUser + ":" + serverFormPassword + "@");
-        }
-        
+
         builder.append(serverFormUrl);
 
         String serverFormPort = getReportsProperties().get(PENTAHO_SERVER_INTERNAL_PORT).toString();
