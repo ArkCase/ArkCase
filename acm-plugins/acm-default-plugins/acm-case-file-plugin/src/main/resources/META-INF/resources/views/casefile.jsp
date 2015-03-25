@@ -69,7 +69,6 @@
 </jsp:attribute>
 
 <jsp:body>
-<section id="content">
     <section class="vbox">
         <section class="scrollable">
             <section class="hbox stretch"><!-- /.aside -->
@@ -357,6 +356,5 @@
             </section>
         </section>
     </section>
-</section>
 </jsp:body>
 </t:layout>

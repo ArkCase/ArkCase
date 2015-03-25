@@ -41,7 +41,6 @@
     </jsp:attribute>
 
     <jsp:body>
-        <section id="content">
         <section class="vbox">
             <section class="scrollable">
                 <section class="hbox stretch"><!-- /.aside -->
