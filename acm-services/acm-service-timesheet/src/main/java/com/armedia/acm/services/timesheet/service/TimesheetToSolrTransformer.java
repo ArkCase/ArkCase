@@ -24,6 +24,7 @@ import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTimesheet>{
 
 	private AcmTimesheetDao acmTimesheetDao;
+	private TimesheetService timesheetService;
 	
 	@Override
 	public List<AcmTimesheet> getObjectsModifiedSince(Date lastModified, int start, int pageSize) 
@@ -45,7 +46,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 		SolrDocument solr = new SolrDocument();
 		
 		solr.setId(in.getId() + "-" + TimesheetConstants.OBJECT_TYPE);
-		solr.setName(createName(in));
+		solr.setName(getTimesheetService().createName(in));
 		solr.setObject_id_s(Long.toString(in.getId()));
 		solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
 		solr.setAuthor(in.getUser().getUserId());
@@ -80,17 +81,6 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 		
 		return isSupported;
 	}
-	
-	private String createName(AcmTimesheet timesheet)
-	{
-		SimpleDateFormat formatter = new SimpleDateFormat(DateFormats.TIMESHEET_DATE_FORMAT);
-		
-		String objectType =  StringUtils.capitalise(TimesheetConstants.OBJECT_TYPE.toLowerCase());
-		String startDate = formatter.format(timesheet.getStartDate());
-		String endDate = formatter.format(timesheet.getEndDate());
-		
-		return objectType + " " + startDate + "-" + endDate;
-	}
 
 	public AcmTimesheetDao getAcmTimesheetDao() {
 		return acmTimesheetDao;
@@ -98,6 +88,14 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 
 	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
 		this.acmTimesheetDao = acmTimesheetDao;
+	}
+
+	public TimesheetService getTimesheetService() {
+		return timesheetService;
+	}
+
+	public void setTimesheetService(TimesheetService timesheetService) {
+		this.timesheetService = timesheetService;
 	}
 
 }

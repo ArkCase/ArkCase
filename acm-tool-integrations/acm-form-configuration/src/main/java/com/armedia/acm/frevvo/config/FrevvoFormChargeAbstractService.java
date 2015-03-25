@@ -10,6 +10,9 @@ import java.util.Map;
 
 import org.json.JSONArray;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 
@@ -20,6 +23,7 @@ import com.armedia.acm.services.search.service.SearchResults;
 public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstractService{
 
 	private SearchResults searchResults;
+	private AcmContainerDao AcmContainerDao;
 	
 	public Map<String, List<String>> getCodeOptions(List<String> types)
 	{
@@ -78,6 +82,27 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 		return codeOptions;
 	}
 	
+	public AcmContainer createContainer(String rootFolder, String userId, Long objectId, String objectType, String name) throws AcmCreateObjectFailedException
+	{
+		String path = rootFolder + "/" + userId + "/" + getEcmFileService().buildSafeFolderName(name);
+		AcmContainer container = getAcmContainerDao().findByObjectTypeAndIdOrCreate(objectType, objectId, path, name);
+		
+		if (container != null)
+		{
+			container.setContainerObjectId(objectId);
+			
+			if (container.getFolder() != null && container.getFolder().getCmisFolderId() == null)
+			{
+				String cmisFolderId = getEcmFileService().createFolder(path);
+				container.getFolder().setCmisFolderId(cmisFolderId);
+			}
+			
+			return container;
+		}
+		
+		return null;
+	}
+	
 	public abstract String getSolrResponse(String objectType);
 
 	public SearchResults getSearchResults() {
@@ -86,5 +111,13 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 
 	public void setSearchResults(SearchResults searchResults) {
 		this.searchResults = searchResults;
+	}
+
+	public AcmContainerDao getAcmContainerDao() {
+		return AcmContainerDao;
+	}
+
+	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
+		AcmContainerDao = acmContainerDao;
 	}	
 }

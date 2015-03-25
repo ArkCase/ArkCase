@@ -46,6 +46,7 @@
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="costFactory" ref="costFactory"/>
         <property name="searchResults" ref="searchResults"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
 	</bean>
 
 </beans>

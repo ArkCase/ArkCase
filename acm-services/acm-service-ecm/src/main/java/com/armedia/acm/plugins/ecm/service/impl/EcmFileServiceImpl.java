@@ -14,6 +14,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -327,6 +329,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         sortParam = sortParam + " " + sortDirection;
         return sortParam;
     }
+    
+    @Override
+    public String buildSafeFolderName(String folderName)
+	{    	
+		if (folderName != null)
+		{
+			String regex = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX;
+			String replacement = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT;
+			
+			folderName = folderName.replaceAll(regex, replacement);
+		}
+		
+		return folderName;
+	}
 
     public EcmFileTransaction getEcmFileTransaction()
     {

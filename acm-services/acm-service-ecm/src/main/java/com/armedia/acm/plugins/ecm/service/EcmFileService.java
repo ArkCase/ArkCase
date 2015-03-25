@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,4 +89,11 @@ public interface EcmFileService
 
     List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection) throws AcmListObjectsFailedException;
 
+    /**
+     * Replace all not allowed characters in folder name with underscore
+     * 
+     * @param name
+     * @return
+     */
+    String buildSafeFolderName(String name);
 }
