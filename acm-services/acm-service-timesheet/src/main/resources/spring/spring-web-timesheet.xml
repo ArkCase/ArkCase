@@ -6,6 +6,7 @@
 
     <bean id="timesheetUiController" class="com.armedia.acm.services.timesheet.web.TimesheetUiController">
         <property name="formUrl" ref="formResource" />
+        <property name="timesheetService" ref="timesheetService"/>
     </bean>
 
 </beans>

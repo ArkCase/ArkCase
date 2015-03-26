@@ -6,6 +6,7 @@
 
     <bean id="costsheetUiController" class="com.armedia.acm.services.costsheet.web.CostsheetUiController">
         <property name="formUrl" ref="formResource" />
+        <property name="costsheetService" ref="costsheetService"/>
     </bean>
 
 </beans>
