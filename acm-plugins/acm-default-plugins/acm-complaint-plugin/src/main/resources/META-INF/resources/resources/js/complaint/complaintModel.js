@@ -773,6 +773,8 @@ Complaint.Model = Complaint.Model || {
             this._assignees      = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_ASSIGNEES);
             this._complaintTypes = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_TYPES);
             this._priorities     = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_PRIORITIES);
+            this._groups    	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_GROUPS);
+            this._users    	 	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_USERS);
         }
         ,onInitialized: function() {
             var assignees = Complaint.Model.Lookup.getAssignees();
@@ -794,6 +796,20 @@ Complaint.Model = Complaint.Model || {
                 Complaint.Service.Lookup.retrievePriorities();
             } else {
                 Complaint.Controller.modelFoundPriorities(priorities);
+            }
+            
+            var groups = Complaint.Model.Lookup.getGroups();
+            if (Acm.isEmpty(groups)) {
+            	Complaint.Service.Lookup.retrieveGroups();
+            } else {
+            	Complaint.Controller.modelRetrievedGroups(groups);
+            }
+            
+            var users = Complaint.Model.Lookup.getUsers();
+            if (Acm.isEmpty(users)) {
+            	Complaint.Service.Lookup.retrieveUsers();
+            } else {
+            	Complaint.Controller.modelRetrievedUsers(users);
             }
         }
 
@@ -820,6 +836,18 @@ Complaint.Model = Complaint.Model || {
         }
         ,setPriorities: function(priorities) {
             this._priorities.set(priorities);
+        }
+        ,getGroups: function() {
+            return this._groups.get();
+        }
+        ,setGroups: function(groups) {
+            this._groups.set(groups);
+        }
+        ,getUsers: function() {
+            return this._users.get();
+        }
+        ,setUsers: function(users) {
+            this._users.set(users);
         }
 
         ,_personTypes : ['Initiator','Subject','Witness','Wrongdoer','Other']
