@@ -520,8 +520,13 @@ CaseFile.Model = CaseFile.Model || {
     ,Documents: {
         create : function() {
             //this.cacheDocuments = new Acm.Model.CacheFifo(4);
+        	
+        	Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);
         }
         ,onInitialized: function() {
+        }
+        ,onViewClosedAddDocumentWindow: function(caseFileId) {
+        	ObjNav.Service.Detail.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
         }
     }
     ,Correspondence: {

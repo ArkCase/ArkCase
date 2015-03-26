@@ -484,6 +484,8 @@ Complaint.Model = Complaint.Model || {
     ,Documents: {
         create : function() {
             this.cacheDocuments = new Acm.Model.CacheFifo();
+            
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);
         }
         ,onInitialized: function() {
         }
@@ -525,6 +527,9 @@ Complaint.Model = Complaint.Model || {
                 return false;
             }
             return true;
+        }
+        ,onViewClosedAddDocumentWindow: function(complaintId) {
+        	ObjNav.Service.Detail.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
         }
     }
 
