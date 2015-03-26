@@ -1946,7 +1946,9 @@ Complaint.View = Complaint.View || {
                     var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
                     if (Acm.isNotEmpty(url)) {
                         url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
-                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, this.onDone);
+                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, function() {
+                            Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
+                        });
                     }
                 }
             }

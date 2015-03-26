@@ -1774,7 +1774,7 @@ CaseFile.View = CaseFile.View || {
             if (caseFileId.hasError) {
                 ;
             } else {
-                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+                CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
             }
         }
         ,onModelCreatedCorrespondence: function(caseFileId) {
@@ -1819,7 +1819,7 @@ CaseFile.View = CaseFile.View || {
 
                         Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
                             ,function() {
-                                CaseFile.Controller.viewAddedDocument(caseFileId);
+                        		CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
                             }
                         );
                     }
