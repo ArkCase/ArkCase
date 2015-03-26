@@ -87,7 +87,7 @@ Complaint.Controller = Complaint.Controller || {
     ,MODEL_RETRIEVED_COSTSHEETS               : "complaint-model-retrieved-costsheets"
     ,modelRetrievedCostsheets : function(costsheets) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COSTSHEETS, costsheets);
-    }
+    }    
     
     ,MODEL_RETRIEVED_GROUPS                 : "complaint-model-retrieved-groups"
     ,modelRetrievedGroups: function(groups) {
@@ -97,6 +97,11 @@ Complaint.Controller = Complaint.Controller || {
     ,MODEL_RETRIEVED_USERS                 : "complaint-model-retrieved-users"
     ,modelRetrievedUsers: function(users) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, users);
+    }
+    
+    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "complaint-view-closed-add-document-window"
+	,viewClosedAddDocumentWindow: function(complaintId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, complaintId);
     }
 
     //----------------------------------------------------------------------------------
