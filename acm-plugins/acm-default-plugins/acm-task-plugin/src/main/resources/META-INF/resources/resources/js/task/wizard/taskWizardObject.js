@@ -293,7 +293,7 @@ TaskWizard.Object = {
         var data = {};
         var t = TaskOld.getTask();
         data.assignee = this.getSelectValueSelOwners();
-        if(data.assignee == null){data.assignee = App.getUserName();}
+        if(data.assignee == "null"){data.assignee = App.getUserName();}
         data.attachedToObjectType = t.attachedToObjectType;
         data.attachedToObjectName = this.getValueEdtComplaint();
         data.title = this.getValueEdtSubject();

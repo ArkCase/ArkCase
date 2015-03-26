@@ -40,6 +40,7 @@ Timesheet.View = {
             // edit form has same url as new form
             this.formUrls.editTimesheetFormUrl         = Acm.Object.MicroData.get("newTimesheetFormUrl");
 
+            this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
         }
         ,onInitialized: function() {
 
