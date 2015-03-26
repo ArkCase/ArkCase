@@ -2295,10 +2295,7 @@ Complaint.View = Complaint.View || {
                     ,pageSize: 10 //Set page size (default: 10)
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-
-                            //code for when the service is available
-                            /*var complaintId = Complaint.View.getActiveComplaintId();
+                            var complaintId = Complaint.View.getActiveComplaintId();
                             if (0 >= complaintId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
@@ -2325,7 +2322,7 @@ Complaint.View = Complaint.View || {
                                     ,function(error) {
                                     }
                                 );
-                            }*/  //end else
+                            }  //end else
                         }
                     }
                     , fields: {
