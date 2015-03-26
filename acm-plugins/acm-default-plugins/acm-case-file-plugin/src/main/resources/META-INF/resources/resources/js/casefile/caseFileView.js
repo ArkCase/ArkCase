@@ -1855,6 +1855,8 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='gr'>General Release</option>"
                 + "<option value='ev'>eDelivery</option>"
                 + "<option value='sig'>SF86 Signature</option>"
+                + "<option value='noi'>Notice of Investigation</option>"
+                + "<option value='wir'>Witness Interview Request</option>"
                 + "<option value='ot'>Other</option>"
                 + "</select>"
                 + "</span>";
@@ -2926,15 +2928,12 @@ CaseFile.View = CaseFile.View || {
         ,fillReportSelection: function() {
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-//                + "<option value='GR'>General Release</option>"
-//                + "<option value='MR'>Medical Release</option>"
-//                + "<option value='CG'>Clearance Granted</option>"
-//                + "<option value='CD'>Clearance Denied</option>"
                 + "<option value='GeneralRelease.docx'>General Release</option>"
                 + "<option value='MedicalRelease.docx'>Medical Release</option>"
                 + "<option value='ClearanceGranted.docx'>Clearance Granted</option>"
                 + "<option value='ClearanceDenied.docx'>Clearance Denied</option>"
                 + "<option value='NoticeofInvestigation.docx'>Notice of Investigation</option>"
+                + "<option value='InterviewRequest.docx'>Witness Interview Request</option>"
                 + "</select>"
                 + "</span>"
                 ;
