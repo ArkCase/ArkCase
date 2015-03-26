@@ -13,7 +13,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
         if (CaseFile.Model.Tasks.create)          {CaseFile.Model.Tasks.create();}
         if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
-        if (CaseFile.Model.Events.create)         {CaseFile.Model.Events.create();}
+        if (CaseFile.Model.History.create)         {CaseFile.Model.History.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
         if (CaseFile.Model.Time.create)           {CaseFile.Model.Time.create();}
         if (CaseFile.Model.Cost.create)           {CaseFile.Model.Cost.create();}
@@ -32,7 +32,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
         if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
         if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
-        if (CaseFile.Model.Events.onInitialized)         {CaseFile.Model.Events.onInitialized();}
+        if (CaseFile.Model.History.onInitialized)         {CaseFile.Model.History.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
         if (CaseFile.Model.Time.onInitialized)           {CaseFile.Model.Time.onInitialized();}
         if (CaseFile.Model.Cost.onInitialized)           {CaseFile.Model.Cost.onInitialized();}
@@ -105,8 +105,11 @@ CaseFile.Model = CaseFile.Model || {
     ,DOC_TYPE_CASE_FILE  : "CASE_FILE"
     ,DOC_TYPE_FILE       : "FILE"
     ,DOC_CATEGORY_CORRESPONDENCE: "CORRESPONDENCE"
+    ,DOC_CATEGORY_CORRESPONDENCE_SM : "Correspondence"
     ,DOC_TYPE_TIMESHEET  : "TIMESHEET"
     ,DOC_TYPE_COSTSHEET  : "COSTSHEET"
+    ,DOC_TYPE_FILE_SM       : "file"
+
 
     ,getCaseFileId : function() {
         return ObjNav.Model.getObjectId();
@@ -152,7 +155,7 @@ CaseFile.Model = CaseFile.Model || {
                         ,"tabDocs","tabParticipants"
                         ,"tabNotes","tabTasks"
                         ,"tabRefs","tabHistory"
-                        ,"tabTemplates"
+                        ,"tabCorrespondence"
                         ,"tabTime"
                         ,"tabCost"
                     ]
@@ -166,7 +169,7 @@ CaseFile.Model = CaseFile.Model || {
                 ,{nodeType: "p/CASE_FILE/t"      ,icon: "",tabIds: ["tabTasks"]}
                 ,{nodeType: "p/CASE_FILE/r"      ,icon: "",tabIds: ["tabRefs"]}
                 ,{nodeType: "p/CASE_FILE/h"      ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/CASE_FILE/tm"     ,icon: "",tabIds: ["tabTemplates"]}
+                ,{nodeType: "p/CASE_FILE/tm"     ,icon: "",tabIds: ["tabCorrespondence"]}
                 ,{nodeType: "p/CASE_FILE/time"   ,icon: "",tabIds: ["tabTime"]}
                 ,{nodeType: "p/CASE_FILE/cost"   ,icon: "",tabIds: ["tabCost"]}
             ]
@@ -523,18 +526,95 @@ CaseFile.Model = CaseFile.Model || {
     }
     ,Correspondence: {
         create : function() {
+            this.cacheCorrespondences = new Acm.Model.CacheFifo();
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_ADD_CORRESPONDENCE, this.onViewClickedAddCorrespondence);
         }
         ,onInitialized: function() {
         }
-
-
         ,onViewClickedAddCorrespondence: function(caseFileId, templateName) {
             //var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
             }
+        }
+
+        ,validateCorrespondences:function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.containerObjectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.folderId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.children)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalChildren)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.children)) {
+                return false;
+            }
+            if (!Acm.compare(data.category,CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateCorrespondence: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.name)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (!Acm.compare(data.objectType,CaseFile.Model.DOC_TYPE_FILE_SM)) {
+                return false;
+            }
+            if (!Acm.compare(data.category,CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateNewCorrespondence: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.category)) {
+                return false;
+            }
+            if (!Acm.compare(data.category, CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.fileName)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.fileType)) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -546,11 +626,47 @@ CaseFile.Model = CaseFile.Model || {
         }
     }
 
-    ,Events: {
+    ,History: {
         create : function() {
-            this.cacheEventList = new Acm.Model.CacheFifo(4);
+            this.cacheHistory = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
+        }
+        ,validateHistory: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.resultPage)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.resultPage)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalCount)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateEvent: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.eventDate)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.eventType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.userId)) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -560,6 +676,8 @@ CaseFile.Model = CaseFile.Model || {
             this._assignees    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_ASSIGNEES);
             this._subjectTypes = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_TYPES);
             this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
+            this._groups    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_GROUPS);
+            this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
         }
         ,onInitialized: function() {
             var assignees = CaseFile.Model.Lookup.getAssignees();
@@ -581,6 +699,20 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Service.Lookup.retrievePriorities();
             } else {
                 CaseFile.Controller.modelFoundPriorities(priorities);
+            }
+            
+            var groups = CaseFile.Model.Lookup.getGroups();
+            if (Acm.isEmpty(groups)) {
+                CaseFile.Service.Lookup.retrieveGroups();
+            } else {
+                CaseFile.Controller.modelRetrievedGroups(groups);
+            }
+            
+            var users = CaseFile.Model.Lookup.getUsers();
+            if (Acm.isEmpty(users)) {
+                CaseFile.Service.Lookup.retrieveUsers();
+            } else {
+                CaseFile.Controller.modelRetrievedUsers(users);
             }
         }
         
@@ -607,6 +739,18 @@ CaseFile.Model = CaseFile.Model || {
         }
         ,setPriorities: function(priorities) {
             this._priorities.set(priorities);
+        }
+        ,getGroups: function() {
+            return this._groups.get();
+        }
+        ,setGroups: function(groups) {
+            this._groups.set(groups);
+        }
+        ,getUsers: function() {
+            return this._users.get();
+        }
+        ,setUsers: function(users) {
+            this._users.set(users);
         }
 
 
@@ -665,6 +809,11 @@ CaseFile.Model = CaseFile.Model || {
         ,getCloseDispositions: function() {
             return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
             //return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
+        }
+        
+        ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
+        ,getParticipantTypes : function() {
+            return this._participantTypes;
         }
     }
 

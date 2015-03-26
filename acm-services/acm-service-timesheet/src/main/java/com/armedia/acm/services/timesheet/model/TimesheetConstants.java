@@ -20,4 +20,6 @@ public interface TimesheetConstants {
 	public final static String EVENT_TYPE = "com.armedia.acm." + OBJECT_TYPE.toLowerCase();
 	
 	public final static String ROOT_FOLDER_KEY = "root.folder";
+    public final static String SEARCH_TREE_SORT = "search.tree.sort";
+
 }

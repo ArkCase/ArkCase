@@ -96,6 +96,16 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelRetrievedCostsheets : function(costsheets) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COSTSHEETS, costsheets);
     }
+    
+    ,MODEL_RETRIEVED_GROUPS                 : "case-model-retrieved-groups"
+    ,modelRetrievedGroups: function(groups) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_GROUPS, groups);
+    }
+    
+    ,MODEL_RETRIEVED_USERS                 : "case-model-retrieved-users"
+    ,modelRetrievedUsers: function(users) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, users);
+    }
 
 
     ,MODEL_SAVED_CHILD_OBJECT              : "case-model-saved-childObject"            //param: caseFileId, childObject
@@ -241,8 +251,8 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelAddedDocument: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_DOCUMENT, caseFileId);
     }
-    ,modelCreatedCorrespondence: function(caseFileId) {
-        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, caseFileId);
+    ,modelCreatedCorrespondence: function(correspondence) {
+        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, correspondence);
     }
     ,modelSavedNote : function(note) {
         Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_NOTE, note);
