@@ -1661,7 +1661,7 @@ Task.View = Task.View || {
                         jtData.Records.push(Record);
                     }
                 }
-                jtData.TotalRecordCount = Acm.goodValue(totalDocuments);
+                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
             }
             return jtData;
         }
