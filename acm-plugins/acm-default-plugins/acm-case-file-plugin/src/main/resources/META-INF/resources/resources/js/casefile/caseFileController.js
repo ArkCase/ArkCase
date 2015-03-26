@@ -251,8 +251,8 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelAddedDocument: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_DOCUMENT, caseFileId);
     }
-    ,modelCreatedCorrespondence: function(caseFileId) {
-        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, caseFileId);
+    ,modelCreatedCorrespondence: function(correspondence) {
+        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, correspondence);
     }
     ,modelSavedNote : function(note) {
         Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_NOTE, note);

@@ -2291,38 +2291,39 @@ Complaint.View = Complaint.View || {
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
-                    ,selecting: true
-                    ,multiselect: false
-                    ,selectingCheckboxes: false
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var complaintId = Complaint.View.getActiveComplaintId();
+                            return AcmEx.Object.JTable.getEmptyRecords();
+
+                            //code for when the service is available
+                            /*var complaintId = Complaint.View.getActiveComplaintId();
                             if (0 >= complaintId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
-                            var history = Complaint.Model.History.cacheHistory.get(complaintId);
-                            if (Complaint.Model.History.validateHistory(history)) {
+                            var historyCache = Complaint.Model.History.cacheHistory.get(complaintId + "." + jtParams.jtStartIndex);
+                            if (Complaint.Model.History.validateHistory(historyCache)) {
+                                var history = {};
+                                history.events = historyCache.resultPage;
+                                history.totalEvents = historyCache.totalCount;
                                 return Complaint.View.History._makeJtData(history);
                             } else {
-//                                return Complaint.Service.History.retrieveHistoryDeferred(complaintId
-//                                 ,postData
-//                                 ,jtParams
-//                                 ,sortMap
-//                                 ,function(data) {
-//                                 if(Complaint.Model.History.validateHistory(data)){
-//                                 var history = {};
-//                                 history.events = data.resultPage;
-//                                 history.totalEvents = data.totalCount;
-//                                 return Complaint.View.History._makeJtData(history);
-//                                 }
-//                                 return AcmEx.Object.JTable.getEmptyRecords();
-//                                 }
-//                                 ,function(error) {
-//                                 }
-//                                 );
-                                return AcmEx.Object.JTable.getEmptyRecords();
-
-                            }  //end else
+                                return Complaint.Service.History.retrieveHistoryDeferred(complaintId
+                                    ,postData
+                                    ,jtParams
+                                    ,sortMap
+                                    ,function(data) {
+                                        if(Complaint.Model.History.validateHistory(data)){
+                                            var history = {};
+                                            history.events = data.resultPage;
+                                            history.totalEvents = data.totalCount;
+                                            return Complaint.View.History._makeJtData(history);
+                                        }
+                                        return AcmEx.Object.JTable.getEmptyRecords();
+                                    }
+                                    ,function(error) {
+                                    }
+                                );
+                            }*/  //end else
                         }
                     }
                     , fields: {
