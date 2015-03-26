@@ -2720,6 +2720,7 @@ Complaint.View = Complaint.View || {
                     ,type: {
                         title: 'Type'
                         ,width: '30%'
+                        ,options: Complaint.Model.Lookup.getParticipantTypes()
                     }
                 }
                 ,recordAdded : function (event, data) {

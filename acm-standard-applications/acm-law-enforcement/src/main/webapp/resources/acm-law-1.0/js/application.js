@@ -105,6 +105,8 @@ var Application = Application || {
     ,SESSION_DATA_CASE_FILE_ASSIGNEES   : "AcmCaseAssignees"
     ,SESSION_DATA_CASE_FILE_TYPES       : "AcmCaseTypes"
     ,SESSION_DATA_CASE_FILE_PRIORITIES  : "AcmCasePriorities"
+    ,SESSION_DATA_CASE_FILE_GROUPS		: "AcmCaseGroups"
+    ,SESSION_DATA_CASE_FILE_USERS		: "AcmCaseUsers"
     ,SESSION_DATA_QUICK_SEARCH_TERM     : "AcmQuickSearchTerm"
     ,SESSION_DATA_ASN_LIST              : "AcmAsnList"
     ,SESSION_DATA_ASN_DATA              : "AcmAsnData"

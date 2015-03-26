@@ -38,6 +38,8 @@ CaseFile.Service = {
         ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
         ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/casefile/caseTypes"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+        ,API_GET_GROUPS				   : "/api/latest/users/groups/get?n=1000&s=name asc"
+        ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
 
         ,_validateAssignees: function(data) {
             if (Acm.isEmpty(data)) {
@@ -118,6 +120,60 @@ CaseFile.Service = {
                 }
                 ,App.getContextPath() + this.API_GET_PRIORITIES
             )
+        }
+        
+        ,retrieveGroups : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedGroups(response);
+                    } else {
+                        if (response.response && response.response.docs && CaseFile.Service.Lookup._validateGroups(response.response.docs)) {
+                            var groups = response.response.docs;
+                            CaseFile.Model.Lookup.setGroups(groups);
+                            CaseFile.Controller.modelRetrievedGroups(groups);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_GROUPS
+            )
+        }
+        
+        ,_validateGroups: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,retrieveUsers : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedUsers(response);
+                    } else {
+                        if (response.response && response.response.docs && CaseFile.Service.Lookup._validateUsers(response.response.docs)) {
+                            var users = response.response.docs;
+                            CaseFile.Model.Lookup.setUsers(users);
+                            CaseFile.Controller.modelRetrievedUsers(users);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_USERS
+            )
+        }
+        
+        ,_validateUsers: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 

@@ -560,6 +560,8 @@ CaseFile.Model = CaseFile.Model || {
             this._assignees    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_ASSIGNEES);
             this._subjectTypes = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_TYPES);
             this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
+            this._groups    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_GROUPS);
+            this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
         }
         ,onInitialized: function() {
             var assignees = CaseFile.Model.Lookup.getAssignees();
@@ -581,6 +583,20 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Service.Lookup.retrievePriorities();
             } else {
                 CaseFile.Controller.modelFoundPriorities(priorities);
+            }
+            
+            var groups = CaseFile.Model.Lookup.getGroups();
+            if (Acm.isEmpty(groups)) {
+                CaseFile.Service.Lookup.retrieveGroups();
+            } else {
+                CaseFile.Controller.modelRetrievedGroups(groups);
+            }
+            
+            var users = CaseFile.Model.Lookup.getUsers();
+            if (Acm.isEmpty(users)) {
+                CaseFile.Service.Lookup.retrieveUsers();
+            } else {
+                CaseFile.Controller.modelRetrievedUsers(users);
             }
         }
         
@@ -607,6 +623,18 @@ CaseFile.Model = CaseFile.Model || {
         }
         ,setPriorities: function(priorities) {
             this._priorities.set(priorities);
+        }
+        ,getGroups: function() {
+            return this._groups.get();
+        }
+        ,setGroups: function(groups) {
+            this._groups.set(groups);
+        }
+        ,getUsers: function() {
+            return this._users.get();
+        }
+        ,setUsers: function(users) {
+            this._users.set(users);
         }
 
 
@@ -665,6 +693,11 @@ CaseFile.Model = CaseFile.Model || {
         ,getCloseDispositions: function() {
             return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
             //return ["Close Deposition1", "Close Deposition2", "Close Deposition3", "Close Deposition4"];
+        }
+        
+        ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
+        ,getParticipantTypes : function() {
+            return this._participantTypes;
         }
     }
 
