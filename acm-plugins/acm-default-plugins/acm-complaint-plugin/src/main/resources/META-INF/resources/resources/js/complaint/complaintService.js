@@ -38,6 +38,8 @@ Complaint.Service = {
         ,API_GET_APPROVERS             : "/api/latest/users/withPrivilege/acm-complaint-approve"
         ,API_GET_COMPLAINT_TYPES       : "/api/latest/plugin/complaint/types"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+        ,API_GET_GROUPS				   : "/api/latest/users/groups/get?n=1000&s=name asc"
+        ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
 
         ,_validateAssignees: function(data) {
             if (Acm.isEmpty(data)) {
@@ -118,6 +120,60 @@ Complaint.Service = {
                 }
                 ,App.getContextPath() + this.API_GET_PRIORITIES
             )
+        }
+        
+        ,retrieveGroups : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	Complaint.Controller.modelRetrievedGroups(response);
+                    } else {
+                        if (response.response && response.response.docs && Complaint.Service.Lookup._validateGroups(response.response.docs)) {
+                            var groups = response.response.docs;
+                            Complaint.Model.Lookup.setGroups(groups);
+                            Complaint.Controller.modelRetrievedGroups(groups);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_GROUPS
+            )
+        }
+        
+        ,_validateGroups: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,retrieveUsers : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	Complaint.Controller.modelRetrievedUsers(response);
+                    } else {
+                        if (response.response && response.response.docs && Complaint.Service.Lookup._validateUsers(response.response.docs)) {
+                            var users = response.response.docs;
+                            Complaint.Model.Lookup.setUsers(users);
+                            Complaint.Controller.modelRetrievedUsers(users);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_USERS
+            )
+        }
+        
+        ,_validateUsers: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 

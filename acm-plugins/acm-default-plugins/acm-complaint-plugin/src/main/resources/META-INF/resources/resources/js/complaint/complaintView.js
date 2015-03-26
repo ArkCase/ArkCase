@@ -2652,7 +2652,10 @@ Complaint.View = Complaint.View || {
                     if(Complaint.Model.Participants.validateParticipantRecord(participants[i])){
                         var record = {};
                         record.id = Acm.goodValue(participants[i].id, 0);
-                        record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participants[i].participantLdapId));
+                        // Here I am not taking user full name. It will be automatically shown because now 
+                        // I am sending key-value object with key=username and value=fullname
+                        record.title = Acm.goodValue(participants[i].participantLdapId);
+                        //record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participants[i].participantLdapId));
                         record.type = Acm.goodValue(participants[i].participantType);
                         jtData.Records.push(record);
                     }
@@ -2714,15 +2717,41 @@ Complaint.View = Complaint.View || {
                         ,create: false
                         ,edit: false
                     }
-                    ,title: {
-                        title: 'Name'
-                        ,width: '70%'
-                    }
-                    ,type: {
-                        title: 'Type'
-                        ,width: '30%'
-                        ,options: Complaint.Model.Lookup.getParticipantTypes()
-                    }
+	                ,type: {
+	                    title: 'Type'
+	                    ,width: '30%'
+	                    ,options: Complaint.Model.Lookup.getParticipantTypes()
+	                    ,display: function (data) {
+	                        if (data.record.type == '*') {
+	                        	// Default user. This is needed to show default user in the table.
+	                    		// I am setting it here, because i don't want to show it in the popup while
+	                    		// creating new participant. If we set it in the popup, it should be removed from here.
+	                    		// This is used only to recognize the * type.
+	                        	return '*';
+	                        } else {
+	                        	var options = Complaint.Model.Lookup.getParticipantTypes();
+	                        	return options[data.record.type];
+	                        }
+	                    }
+	                }
+	                ,title: {
+	                    title: 'Name'
+	                    ,width: '70%'
+	                    ,dependsOn: 'type'
+	                    ,options: function (data) {
+	                    	if (data.dependedValues.type == '*') {
+	                    		// Default user. This is needed to show default user in the table.
+	                    		// I am setting it here, because i don't want to show it in the popup while
+	                    		// creating new participant. If we set it in the popup, it should be removed from here.
+	                    		// This is used only to recognize the * type.
+	                    		return {"*": "*"}
+	                    	}else if (data.dependedValues.type == 'owning group') {
+	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups());
+	                		} else {
+	                			return Acm.createKeyValueObject(Complaint.Model.Lookup.getUsers());
+	                		}
+	                    }
+	                }
                 }
                 ,recordAdded : function (event, data) {
                     var record = data.record;
