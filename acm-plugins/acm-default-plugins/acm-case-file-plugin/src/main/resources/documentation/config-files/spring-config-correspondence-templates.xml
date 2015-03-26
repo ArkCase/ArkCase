@@ -3,154 +3,155 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="clearanceDenied" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="ClearanceDenied.docx"/>
-              <property name="documentType" value="Clearance Denied"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="clearanceDenied" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="ClearanceDenied.docx"/>
+        <property name="documentType" value="Clearance Denied"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT  cf.creator,
-       cf.caseNumber,
-       	   CURRENT_DATE
-       	   FROM   CaseFile cf
-       	   WHERE cf.id = ?1
+        cf.caseNumber,
+       	CURRENT_DATE
+FROM    CaseFile cf
+WHERE cf.id = ?1
                             ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="clearanceGranted" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="ClearanceGranted.docx"/>
-              <property name="documentType" value="Clearance Granted"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="clearanceGranted" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="ClearanceGranted.docx"/>
+        <property name="documentType" value="Clearance Granted"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT  cf.creator,
-       cf.caseNumber,
-       	   CURRENT_DATE
-       	   FROM   CaseFile cf
-       	   WHERE cf.id = ?1
+        cf.caseNumber,
+       	CURRENT_DATE
+FROM    CaseFile cf
+WHERE cf.id = ?1
                             ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="generalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="GeneralRelease.docx"/>
-              <property name="documentType" value="General Release"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="generalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="GeneralRelease.docx"/>
+        <property name="documentType" value="General Release"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT  cf.creator,
-       cf.caseNumber,
-       	   CURRENT_DATE
-       	   FROM   CaseFile cf
-       	   WHERE cf.id = ?1                           
+        cf.caseNumber,
+       	CURRENT_DATE
+FROM    CaseFile cf
+WHERE cf.id = ?1
        	                     ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="medicalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="MedicalRelease.docx"/>
-              <property name="documentType" value="Medical Release"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="medicalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="MedicalRelease.docx"/>
+        <property name="documentType" value="Medical Release"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT  cf.creator,
-       cf.caseNumber,
-       	   CURRENT_DATE
-       	   FROM   CaseFile cf
-       	   WHERE cf.id = ?1                           
+        cf.caseNumber,
+       	CURRENT_DATE
+FROM    CaseFile cf
+WHERE cf.id = ?1
        	   		   ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="noticeofInvestigation" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="NoticeofInvestigation.docx"/>
-              <property name="documentType" value="Notice of Investigation"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="noticeofInvestigation" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="NoticeofInvestigation.docx"/>
+        <property name="documentType" value="Notice of Investigation"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT  cf.creator,
-       	   CURRENT_DATE
-       	   FROM   CaseFile cf
-       	   WHERE cf.id = ?1                           
+       	CURRENT_DATE
+FROM    CaseFile cf
+WHERE cf.id = ?1
        	   		   ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
-       
-       <bean id="witnessInterviewRequest" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="InterviewRequest.docx"/>
-              <property name="documentType" value="Witness Interview Request"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="witnessInterviewRequest" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="InterviewRequest.docx"/>
+        <property name="documentType" value="Witness Interview Request"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT  au.fullName,
-       	   CURRENT_DATE,
-	   cf.caseNumber,
-	   cf.title
-       	   FROM   CaseFile cf, AcmUser au
-       	   WHERE cf.id = ?1 
-	   AND cf.creator = au.userId
+       	CURRENT_DATE,
+	    cf.caseNumber,
+	    cf.title
+FROM    CaseFile cf,
+        AcmUser au
+WHERE   cf.id = ?1
+AND     cf.creator = au.userId
        	   		   ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Date</value>
-			    <value>Case Number</value>
-			    <value>Case Title</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Date</value>
+                <value>Case Number</value>
+                <value>Case Title</value>
+            </list>
+        </property>
+    </bean>
 </beans>
