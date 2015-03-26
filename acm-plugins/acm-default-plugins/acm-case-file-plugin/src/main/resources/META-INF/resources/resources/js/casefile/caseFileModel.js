@@ -106,9 +106,11 @@ CaseFile.Model = CaseFile.Model || {
     ,DOC_TYPE_FILE       : "FILE"
     ,DOC_CATEGORY_CORRESPONDENCE: "CORRESPONDENCE"
     ,DOC_CATEGORY_CORRESPONDENCE_SM : "Correspondence"
+    ,DOC_CATEGORY_DOCUMENT_SM : "Document"
     ,DOC_TYPE_TIMESHEET  : "TIMESHEET"
     ,DOC_TYPE_COSTSHEET  : "COSTSHEET"
     ,DOC_TYPE_FILE_SM       : "file"
+    ,DOC_CATEGORY_FILE_SM   : "Document"
 
 
     ,getCaseFileId : function() {
@@ -519,7 +521,7 @@ CaseFile.Model = CaseFile.Model || {
     }
     ,Documents: {
         create : function() {
-            //this.cacheDocuments = new Acm.Model.CacheFifo(4);
+            this.cacheDocuments = new Acm.Model.CacheFifo(4);
         	
         	Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);
         }
@@ -527,6 +529,84 @@ CaseFile.Model = CaseFile.Model || {
         }
         ,onViewClosedAddDocumentWindow: function(caseFileId) {
         	ObjNav.Service.Detail.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+        }
+        ,validateDocuments:function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.containerObjectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.folderId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.children)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalChildren)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.children)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateDocument: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.name)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (!Acm.compare(data.objectType,CaseFile.Model.DOC_TYPE_FILE_SM)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateNewDocument: function(data) {
+            // data will be an array of new documents
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if ( Acm.isNotArray(data))
+            {
+                return false;
+            }
+            for ( var a = 0; a < data.length; a++ )
+            {
+                var f = data[a];
+                if (Acm.isEmpty(f.category)) {
+                    return false;
+                }
+                if (!Acm.compare(f.category, CaseFile.Model.DOC_CATEGORY_FILE_SM)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.created)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.creator)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileId)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileName)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileType)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
     ,Correspondence: {
