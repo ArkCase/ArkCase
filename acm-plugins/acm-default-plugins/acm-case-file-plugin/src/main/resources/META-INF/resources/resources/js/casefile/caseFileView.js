@@ -2860,10 +2860,7 @@ CaseFile.View = CaseFile.View || {
                     ,pageSize: 10 //Set page size (default: 10)
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-
-                            //code for when the service is available
-                            /*var caseFileId = CaseFile.View.getActiveCaseFileId();
+                            var caseFileId = CaseFile.View.getActiveCaseFileId();
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
@@ -2890,7 +2887,7 @@ CaseFile.View = CaseFile.View || {
                                     ,function(error) {
                                     }
                                 );
-                            }*/  //end else
+                            }  //end else
                         }
                     }
                     , fields: {

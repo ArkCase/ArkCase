@@ -122,6 +122,11 @@
                     <property name="url" value="/api/{version}/plugin/casefile/wizard"/>
                     <property name="requiredPrivilege" ref="caseFileCreatePrivilege"/>
                 </bean>
+                <bean id="caseFileListHistory" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/casefile/events/{caseFileId}"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
