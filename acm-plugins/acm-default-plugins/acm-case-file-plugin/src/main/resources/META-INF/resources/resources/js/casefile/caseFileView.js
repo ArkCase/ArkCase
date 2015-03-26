@@ -1870,164 +1870,105 @@ CaseFile.View = CaseFile.View || {
         ,getSelectReportText: function() {
             return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
         }
-
-        ,createJTableDocuments: function($s) {
-            AcmEx.Object.JTable.useBasic($s, {
+        ,_makeJtData: function(documents, totalDocuments) {
+            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+            if (Acm.isNotEmpty(documents)) {
+                for (var i = 0; i < documents.length; i++) {
+                    if(CaseFile.Model.Documents.validateDocument(documents[i])){
+                        var Record = {};
+                        Record.id = Acm.goodValue(documents[i].objectId)
+                        Record.title = Acm.goodValue(documents[i].name);
+                        Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        jtData.Records.push(Record);
+                    }
+                }
+                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
+            }
+            return jtData;
+        }
+        , createJTableDocuments: function ($s) {
+            AcmEx.Object.JTable.usePaging($s, {
                 title: 'Documents'
-                ,paging: true //fix me
-                ,sorting: true //fix me
+                ,paging: true
+                ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
-                ,messages: {
+                , messages: {
                     addNewRecord: 'Add Document'
                 }
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-//                        var caseFileId = CaseFile.View.getActiveCaseFileId();
-//                        if (0 >= caseFileId) {
-//                            return AcmEx.Object.JTable.getEmptyRecords();
-//                        }
-//
-//                        var rc = AcmEx.Object.JTable.getEmptyRecords();
-//                        var documents = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
-//
-//                        if(Acm.isArray(documents)){
-//                            for (var i = 0; i < documents.length; i++) {
-//                                var childObject = documents[i];
-//                                if (Acm.compare(CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE, childObject.targetType)) {
-//                                    var record = {};
-//                                    record.id = Acm.goodValue(childObject.id, 0);
-//                                    record.title = Acm.goodValue(childObject.name);
-//                                    record.created = Acm.getDateFromDatetime(childObject.created);
-//                                    record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(childObject.creator));
-//                                    record.status = Acm.goodValue(childObject.status);
-//                                    record.docType = Acm.goodValue(childObject.targetSubtype);
-//                                    rc.Records.push(record);
-//                                }
-//                            }
-//                            rc.TotalRecordCount = rc.Records.length;
-//                        }
-                        var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        //var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        var c = CaseFile.View.getActiveCaseFile();
-                        if(CaseFile.Model.Detail.validateCaseFile(c)){
-                            for (var i = 0; i < c.childObjects.length; i++) {
-                                var childObject = c.childObjects[i];
-                                if (Acm.compare(CaseFile.Model.DOC_TYPE_FILE, childObject.targetType)) {
-                                    var record = {};
-                                    if (!Acm.compare(CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE, childObject.category)) {
-                                        record.id = Acm.goodValue(childObject.targetId, 0);
-                                        record.title = Acm.goodValue(childObject.targetName);
-                                        record.created = Acm.getDateFromDatetime(childObject.created);
-                                        record.creator = Acm.goodValue(childObject.creator);
-                                        //record.status = Acm.goodValue(childObject.status);
-                                        record.docType = Acm.goodValue(childObject.targetSubtype);
-                                        rc.Records.push(record);
-                                    }
-                                }
-                            }
-                            rc.TotalRecordCount = rc.Records.length;
+                , actions: {
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        var caseId = CaseFile.View.getActiveCaseFileId();
+                        if ( ! caseId || 0 >= caseId )
+                        {
+                            return AcmEx.Object.JTable.getEmptyRecords();
                         }
-
-//                        var c = CaseFile.View.getActiveCaseFile();
-//                        if (c && Acm.isArray(c.childObjects)) {
-//                            for (var i = 0; i < c.childObjects.length; i++) {
-//                                var childObject = c.childObjects[i];
-//                                if (Acm.compare("FILE", childObject.targetType)) {
-//                                    var record = {};
-//                                    record.id = Acm.goodValue(childObject.targetId, 0);
-//                                    record.title = Acm.goodValue(childObject.targetName);
-//                                    record.created = Acm.getDateFromDatetime(childObject.created);
-//                                    record.creator = Acm.goodValue(childObject.creator);
-//                                    record.status = Acm.goodValue(childObject.status);
-//                                    rc.Records.push(record);
-//                                }
-//                            }
-//                            rc.TotalRecordCount = rc.Records.length;
-//                        }
-                        return rc;
-
-//for test
-//                        return {
-//                            "Result": "OK"
-//                            ,"Records": [
-//                                {"id": 11, "title": "Nick Name", "created": "01-02-03", "creator": "123 do re mi", "status": "JJ"}
-//                                ,{"id": 12, "title": "Some Name", "created": "14-05-15", "creator": "xyz abc", "status": "Ice Man"}
-//                            ]
-//                            ,"TotalRecordCount": 2
-//                        };
+                        var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + jtParams.jtStartIndex);
+                        if (CaseFile.Model.Documents.validateDocuments(documentsCache)) {
+                            var documents = documentsCache.children;
+                            var totalDocuments = documentsCache.totalChildren;
+                            return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
+                        } else {
+                            return CaseFile.Service.Documents.retrieveDocumentsDeferred(caseId
+                                ,postData
+                                ,jtParams
+                                ,sortMap
+                                ,function(data) {
+                                    if(CaseFile.Model.Documents.validateDocuments(data)){
+                                        var documents = data.children;
+                                        var totalDocuments = data.totalChildren;
+                                        return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
+                                    }
+                                    return AcmEx.Object.JTable.getEmptyRecords();
+                                }
+                                ,function(error) {
+                                }
+                            );
+                        }  //end else
                     }
                     ,createAction: function(postData, jtParams) {
-                        //custom web form creation takes over; this action should never be called
-                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:"", status:""}};
+                        //placeholder. this action should never be called
+                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
                         return rc;
                     }
-//not tested, disabled
-//                    ,updateAction: function(postData, jtParams) {
-//                        var record = Acm.urlToJson(postData);
-//                        var rc = AcmEx.Object.JTable.getEmptyRecord();
-//                        //id,created,creator is readonly
-//                        //rc.Record.id = record.id;
-//                        //rc.Record.created = record.created;
-//                        //rc.Record.creator = record.creator;
-//                        rc.Record.title = record.title;
-//                        rc.Record.status = record.status;
-//                        return rc;
-//                    }
                 }
-                ,fields: {
+                , fields: {
                     id: {
                         title: 'ID'
-                        ,key: true
-                        ,list: false
-                        ,create: false
-                        ,edit: false
+                        , key: true
+                        , list: false
+                        , create: false
+                        , edit: false
+                        , defaultvalue: 0
                     }
-                    ,title: {
+                    , title: {
                         title: 'Title'
-                        ,width: '30%'
+                        , width: '50%'
+                        , edit: false
+                        , create: false
                         ,display: function (commData) {
-                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
                                 + "'>" + commData.record.title + "</a>";
                             return $(a);
                         }
                     }
-                    ,docType: {
-                        title: 'Document Type'
-                        ,width: '15%'
-                        ,edit: false
-                    }
-                    ,created: {
+                    , created: {
                         title: 'Created'
-                        ,width: '15%'
-                        ,edit: false
+                        , width: '15%'
+                        , edit: false
+                        , create: false
                     }
-                    ,creator: {
+                    , creator: {
                         title: 'Creator'
-                        ,width: '15%'
-                        ,edit: false
-                    }
-                    ,status: {
-                        title: 'Status'
-                        ,width: '10%'
-                    }
-                }
-                ,recordUpdated : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var caseFileId = CaseFile.View.getActiveCaseFileId();
-                    var c = CaseFile.View.getActiveCaseFile();
-                    if (c && Acm.isArray(c.childObjects)) {
-                        var childObject = {};
-                        childObject.targetId = record.id;
-                        childObject.title = record.title;
-                        childObject.status = record.status;
-                        //childObject.parentId = record.parentId;
-                        CaseFile.Controller.viewChangedChildObject(caseFileId, childObject);
+                        , width: '15%'
+                        , edit: false
+                        , create: false
                     }
                 }
             });
         }
+
     }
 
     ,Participants: {

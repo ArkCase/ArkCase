@@ -1032,7 +1032,8 @@ CaseFile.Service = {
         }
 
         ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
-        ,API_UPLOAD_DOCUMENT: "/api/latest/service/ecm/upload"
+        ,API_UPLOAD_DOCUMENT         : "/api/latest/service/ecm/upload"
+        ,API_RETRIEVE_DOCUMENT_      : "/api/latest/service/ecm/folder/"
 
         ,_validateUploadInfo: function(data) {
             if (Acm.isEmpty(data)) {
@@ -1046,6 +1047,25 @@ CaseFile.Service = {
             }
             return true;
         }
+        ,retrieveDocumentsDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + CaseFile.Service.Documents.API_RETRIEVE_DOCUMENT_ + CaseFile.Model.DOC_TYPE_CASE_FILE;
+                    url += "/" + caseFileId + "?category=" + CaseFile.Model.DOC_CATEGORY_DOCUMENT_SM;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (CaseFile.Model.Documents.validateDocuments(data)) {
+                        var documents = data;
+                        CaseFile.Model.Documents.cacheDocuments.put(caseFileId + "." +jtParams.jtStartIndex, documents);
+                        jtData = callbackSuccess(documents);
+                    }
+                    return jtData;
+                }
+            );
+        }
         ,uploadDocument: function(formData) {
             var url = App.getContextPath() + this.API_UPLOAD_DOCUMENT;
             Acm.Service.ajax({
@@ -1058,26 +1078,28 @@ CaseFile.Service = {
                     if (response.hasError) {
                         CaseFile.Controller.modelAddedDocument(response);
                     } else {
-                        if (CaseFile.Service.Documents._validateUploadInfo(response)) {
-                            if(response!= null){
-                                var uploadInfo = response;
-                                //var caseFileId = CaseFile.Model.getCaseFileId();
-                                /*var prevAttachmentsList = CaseFile.Model.Documents.cacheDocuments.get(caseFileId);
-                                for(var i = 0; i < response.files.length; i++){
-                                    var attachment = {};
-                                    attachment.id = response.files[i].id;
-                                    attachment.name = response.files[i].name;
-                                    attachment.status = response.files[i].status;
-                                    attachment.creator = response.files[i].creator;
-                                    attachment.created = response.files[i].created;
-                                    attachment.targetSubtype = response.files[i].uploadFileType;
-                                    attachment.targetType = CaseFile.Model.DOCUMENT_TARGET_TYPE_FILE;
-                                    prevAttachmentsList.push(attachment);
-                                    //attachment.category = response.files[i].category;
+                        // the upload returns an array of documents, for when the user uploads multiple files.
+                        if (CaseFile.Model.Documents.validateNewDocument(response)) {
+                            //add to the top of the cache
+                            var caseId = CaseFile.View.getActiveCaseFileId();
+                            var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + 0);
+                            if(CaseFile.Model.Documents.validateDocuments(documentsCache)) {
+                                var documents = documentsCache.children;
+                                for ( var a = 0; a < response.length; a++ )
+                                {
+                                    var f = response[a];
+                                    var doc = {};
+                                    doc.objectId = Acm.goodValue(f.fileId);
+                                    doc.name = Acm.goodValue(f.fileName);
+                                    doc.creator = Acm.goodValue(f.creator);
+                                    doc.created = Acm.goodValue(f.created);
+                                    doc.objectType = CaseFile.Model.DOC_TYPE_FILE_SM;
+                                    doc.category = CaseFile.Model.DOC_CATEGORY_FILE_SM;
+                                    documentsCache.children.unshift(doc);
+                                    documents.totalChildren++;
                                 }
-                                CaseFile.Model.Documents.cacheDocuments.put(caseFileId, prevAttachmentsList);*/
-                                CaseFile.Controller.modelAddedDocument(uploadInfo);
                             }
+                            CaseFile.Controller.modelAddedDocument(response);
                         }
                     }
                 }
