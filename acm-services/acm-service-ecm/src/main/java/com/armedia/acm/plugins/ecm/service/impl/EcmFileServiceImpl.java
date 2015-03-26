@@ -256,6 +256,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
         path += "/" + objectId;
 
+
         String cmisFolderId = createFolder(path);
 
         log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
@@ -263,6 +264,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         AcmContainer newContainer = new AcmContainer();
         newContainer.setContainerObjectId(objectId);
         newContainer.setContainerObjectType(objectType);
+
+        // the container needs a container name, so we'll make one up here, just like we made up a CMIS folder path
+        String containerName = objectType + "-" + objectId;
+        newContainer.setContainerObjectTitle(containerName);
+
         AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
         newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);

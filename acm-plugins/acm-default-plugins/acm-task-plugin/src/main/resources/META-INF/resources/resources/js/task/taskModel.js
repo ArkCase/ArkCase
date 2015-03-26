@@ -98,6 +98,8 @@ Task.Model = Task.Model || {
     ,DOC_TYPE_CASE_FILE   : "CASE_FILE"
     ,DOC_TYPE_TASK        : "TASK"
     ,DOC_TYPE_ADHOC_TASK  : "ADHOC"
+    ,DOC_TYPE_FILE_SM     : "file"
+    ,DOC_CATEGORY_FILE_SM : "Document"
 
 //    ,getTaskId: function() {
 //        return ObjNav.Model.getObjectId();
@@ -615,23 +617,35 @@ Task.Model = Task.Model || {
             }
             return true;
         }
-        ,validateExistingAttachments: function(data) {
+        ,validateDocuments:function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.childObjects)) {
+            if (Acm.isEmpty(data.containerObjectId)) {
                 return false;
             }
-            if (Acm.isNotArray(data.childObjects)) {
+            if (Acm.isEmpty(data.folderId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.children)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalChildren)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.children)) {
                 return false;
             }
             return true;
         }
-        ,validateAttachmentRecord: function(data) {
-            if (Acm.isEmpty(data.targetId)) {
+        ,validateDocument: function(data){
+            if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.targetName)) {
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.name)) {
                 return false;
             }
             if (Acm.isEmpty(data.created)) {
@@ -640,11 +654,48 @@ Task.Model = Task.Model || {
             if (Acm.isEmpty(data.creator)) {
                 return false;
             }
-            if (Acm.isEmpty(data.status)) {
+            if (!Acm.compare(data.objectType,Task.Model.DOC_TYPE_FILE_SM)) {
                 return false;
             }
             return true;
         }
+        ,validateNewDocument: function(data) {
+            // data will be an array of new documents
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if ( Acm.isNotArray(data))
+            {
+                return false;
+            }
+            for ( var a = 0; a < data.length; a++ )
+            {
+                var f = data[a];
+                if (Acm.isEmpty(f.category)) {
+                    return false;
+                }
+                if (!Acm.compare(f.category, Task.Model.DOC_CATEGORY_FILE_SM)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.created)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.creator)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileId)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileName)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileType)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
     }
 
     ,DocumentUnderReview: {
