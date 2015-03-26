@@ -529,6 +529,7 @@ Complaint.Model = Complaint.Model || {
             return true;
         }
         ,onViewClosedAddDocumentWindow: function(complaintId) {
+        	Complaint.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo();
         	ObjNav.Service.Detail.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
         }
     }
