@@ -1887,6 +1887,11 @@ CaseFile.View = CaseFile.View || {
             }
             return jtData;
         }
+        , reloadDocs: function()
+        {
+            var divDocuments = $("#divDocs");
+            CaseFile.View.Documents.createJTableDocuments(divDocuments);
+        }
         , createJTableDocuments: function ($s) {
             AcmEx.Object.JTable.usePaging($s, {
                 title: 'Documents'
@@ -1903,12 +1908,12 @@ CaseFile.View = CaseFile.View || {
                         {
                             return AcmEx.Object.JTable.getEmptyRecords();
                         }
-                        var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + jtParams.jtStartIndex);
-                        if (CaseFile.Model.Documents.validateDocuments(documentsCache)) {
-                            var documents = documentsCache.children;
-                            var totalDocuments = documentsCache.totalChildren;
-                            return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
-                        } else {
+                        //var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + jtParams.jtStartIndex);
+                        //if (CaseFile.Model.Documents.validateDocuments(documentsCache)) {
+                        //    var documents = documentsCache.children;
+                        //    var totalDocuments = documentsCache.totalChildren;
+                        //    return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
+                        //} else {
                             return CaseFile.Service.Documents.retrieveDocumentsDeferred(caseId
                                 ,postData
                                 ,jtParams
@@ -1924,7 +1929,7 @@ CaseFile.View = CaseFile.View || {
                                 ,function(error) {
                                 }
                             );
-                        }  //end else
+                        //}  //end else
                     }
                     ,createAction: function(postData, jtParams) {
                         //placeholder. this action should never be called

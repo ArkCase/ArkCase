@@ -528,8 +528,9 @@ CaseFile.Model = CaseFile.Model || {
         ,onInitialized: function() {
         }
         ,onViewClosedAddDocumentWindow: function(caseFileId) {
-        	CaseFile.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo(4);
-        	ObjNav.Service.Detail.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+        	//CaseFile.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo(4);
+        	//ObjNav.Service.Detail.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+            setTimeout(CaseFile.View.Documents.reloadDocs, 5000);
         }
         ,validateDocuments:function(data){
             if (Acm.isEmpty(data)) {
