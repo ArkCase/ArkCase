@@ -65,7 +65,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public SolrDocument toSolrQuickSearch(EcmFile in) {
         SolrDocument doc = new SolrDocument();
 
-        // no access control on folders (yet)
+        // no access control on files (yet)
         doc.setPublic_doc_b(true);
 
         doc.setAuthor_s(in.getCreator());
@@ -78,9 +78,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         doc.setName(in.getFileName());
         doc.setModifier_s(in.getModifier());
 
-        doc.setParent_object_id_i(in.getFolder().getId());
-        doc.setParent_object_id_s("" + in.getFolder().getId());
-        doc.setParent_object_type_s(in.getFolder().getObjectType());
+        doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
+        doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
+        doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
 
         doc.setTitle_parseable(in.getFileName());
         doc.setTitle_t(in.getFileName());
@@ -93,6 +93,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         // need an _lcs field for sorting
         doc.setName_lcs(in.getFileName());
+
 
         return doc;
     }

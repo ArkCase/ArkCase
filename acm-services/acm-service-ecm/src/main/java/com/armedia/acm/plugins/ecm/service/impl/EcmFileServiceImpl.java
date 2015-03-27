@@ -279,6 +279,54 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return newContainer;
     }
 
+    @Override
+    public AcmCmisObjectList allFilesForContainer(Authentication auth,
+                                                  AcmContainer container)
+            throws AcmListObjectsFailedException
+    {
+
+        log.debug("All files for container " + container.getContainerObjectType() + " " + container.getContainerObjectId());
+        // This method is to search for all files that belong to a container, no matter where they are in the
+        // folder hierarchy.
+        String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" +
+                "CONTAINER AND parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery = "fq=object_type_s:FILE";
+
+        // search for 50 records at a time until we find them all
+        int start = 0;
+        int max = 50;
+        String sortBy = "created";
+        String sortDirection = "ASC";
+
+        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                start, max, sortBy, sortDirection);
+
+        int totalFiles = retval.getTotalChildren();
+        int foundSoFar = retval.getChildren().size();
+
+        log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+
+        while ( foundSoFar < totalFiles )
+        {
+            start += max;
+
+            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                    start, max, sortBy, sortDirection);
+            retval.getChildren().addAll(more.getChildren());
+
+            foundSoFar += more.getChildren().size();
+
+            log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+        }
+
+        retval.setMaxRows(totalFiles);
+
+        return retval;
+    }
+
 
     @Override
     public AcmCmisObjectList listFolderContents(Authentication auth,
@@ -290,22 +338,33 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                                                 int maxRows)
             throws AcmListObjectsFailedException
     {
+
+        // This method is to search for objects in the root of a container.  So we restrict the return list
+        // to those items whose parent folder ID is the container folder id.... Note, this query assumes
+        // only files and folders will have a "folder_id_i" attribute with a value that matches a container
+        // folder id
+        String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" +
+                "CONTAINER AND parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery =
+                category == null ? "" :
+                        "fq=category_s:" + category + " OR category_s:" + category.toUpperCase(); // in case some bad data gets through
+
+        return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
+
+
+    }
+
+    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, String category, String query,
+                                          String filterQuery, int startRow, int maxRows, String sortBy,
+                                          String sortDirection)
+            throws AcmListObjectsFailedException
+    {
         try
         {
             String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
-
-            // This method is to search for objects in the root of a container.  So we restrict the return list
-            // to those items whose parent folder ID is the container folder id.... Note, this query assumes
-            // only files and folders will have a "folder_id_i" attribute with a value that matches a container
-            // folder id
-            String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" +
-                    "CONTAINER AND parent_object_id_i:" +
-                    container.getContainerObjectId() + " AND parent_object_type_s:" +
-                    container.getContainerObjectType();
-
-            String filterQuery =
-                    category == null ? "" :
-                            "fq=category_s:" + category + " OR category_s:" + category.toUpperCase(); // in case some bad data gets through
 
             String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query,
                     startRow, maxRows, sortParam, filterQuery);
