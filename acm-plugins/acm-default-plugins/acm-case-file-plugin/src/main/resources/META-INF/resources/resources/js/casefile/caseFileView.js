@@ -1838,12 +1838,18 @@ CaseFile.View = CaseFile.View || {
 
                 var caseFileId = CaseFile.View.getActiveCaseFileId();
                 var caseFile = CaseFile.View.getActiveCaseFile();
+
                 if (caseFile) {
                     var url = CaseFile.View.MicroData.getFormUrls()[report];
                     if (Acm.isNotEmpty(url)) {
+                        // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
+                        // the Frevvo form will decode it.
+                        var caseTitle = Acm.goodValue(caseFile.title);
+                        caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+
                         url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                             + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                            + "',caseTitle:'" + Acm.goodValue(caseFile.title)
+                            + "',caseTitle:'" + caseTitle
                             + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                             + "',");
 
