@@ -5,7 +5,11 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
@@ -19,6 +23,7 @@ import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 /**
  * @author riste.tutureski
@@ -54,57 +59,48 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
         
         if (null != complaint)
         {
-        	Collection<ObjectAssociation> associations =  complaint.getChildObjects();
+			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
+			try
+			{
+				AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, complaint.getContainer());
 
-            // TODO: lookup files the right way
-        	if (null != associations && associations.size() > 0)
-        	{
-        		for (ObjectAssociation association : associations)
-        		{
-        			if ("FILE".equals(association.getTargetType()))
-        			{
-        				try
-        				{
-	        				EcmFile file = ecmFileDao.find(association.getTargetId());
-	        				
-	        				AcmRecord record = new AcmRecord();
-	        				
-	        				record.setEcmFileId(file.getFolder().getCmisFolderId());
-	        		        record.setCategoryFolder("Complaints");
-	        		        record.setOriginatorOrg("Armedia LLC");
-	        		        record.setOriginator(file.getModifier());
-	        		        record.setPublishedDate(new Date());
-	        		        record.setReceivedDate(event.getEventDate());
-	        		        record.setRecordFolder(association.getParentName());
-	        		        
-	        		        try
-	        		        {
-	        		            if ( LOG.isTraceEnabled() )
-	        		            {
-	        		                LOG.trace("Sending JMS message.");
-	        		            }
-	        		            
-	        		            getMuleClient().dispatch("jms://rmaRecord.in", record, null);
-	        		            
-	        		            if ( LOG.isTraceEnabled() )
-	        		            {
-	        		                LOG.trace("Done");
-	        		            }
+				for ( AcmCmisObject file : files.getChildren() )
+				{
+					AcmRecord record = new AcmRecord();
 
-	        		        }
-	        		        catch (MuleException e)
-	        		        {
-	        		            LOG.error("Could not create RMA folder: " + e.getMessage(), e);
-	        		        }
-	        		        
-        				}
-        				catch(Exception e)
-        				{
-        					LOG.error("Cannot finish Record Management Strategy for file with id=" + association.getTargetId(), e);
-        				}
-        			}
-        		}
-        	}
+					record.setEcmFileId(file.getCmisObjectId());
+					record.setCategoryFolder("Complaints");
+					record.setOriginatorOrg("Armedia LLC");
+					record.setOriginator(file.getModifier());
+					record.setPublishedDate(new Date());
+					record.setReceivedDate(event.getEventDate());
+					record.setRecordFolder(complaint.getComplaintNumber());
+
+					try
+					{
+						if ( LOG.isTraceEnabled() )
+						{
+							LOG.trace("Sending JMS message.");
+						}
+
+						getMuleClient().dispatch("jms://rmaRecord.in", record, null);
+
+						if ( LOG.isTraceEnabled() )
+						{
+							LOG.trace("Done");
+						}
+
+					}
+					catch (MuleException e)
+					{
+						LOG.error("Could not create RMA folder: " + e.getMessage(), e);
+					}
+				}
+			}
+			catch (AcmListObjectsFailedException e)
+			{
+				LOG.error("Cannot finish Record Management Strategy for complaint " + complaint.getId(), e);
+			}
         }
 		
 	}
