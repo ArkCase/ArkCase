@@ -452,6 +452,7 @@ CaseFile.View = CaseFile.View || {
             this.$lnkIncidentDate = $("#incident");
             this.$lnkPriority     = $("#priority");
             this.$lnkAssignee     = $("#assigned");
+            this.$lnkGroup 		  = $("#group");
             this.$lnkSubjectType  = $("#type");
             this.$lnkDueDate      = $("#dueDate");
             this.$lnkStatus       = $("#status");
@@ -479,11 +480,13 @@ CaseFile.View = CaseFile.View || {
 
             //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES         ,this.onModelFoundPriorities);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	           ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE       ,this.onModelSavedSubjectType);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
@@ -510,6 +513,22 @@ CaseFile.View = CaseFile.View || {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedAssignee(CaseFile.View.getActiveCaseFileId(), newValue);
+                }
+            });
+        }
+        ,onModelRetrievedGroups: function(groups) {
+            var choices = [];
+            $.each(groups, function(idx, val) {
+                var opt = {};
+                opt.value = val.object_id_s;
+                opt.text = val.name;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkGroup, {
+                source: choices
+                ,success: function(response, newValue) {
+                    CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
             });
         }
@@ -563,6 +582,11 @@ CaseFile.View = CaseFile.View || {
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (assginee.hasError) {
                 CaseFile.View.Detail.setTextLnkAssignee("(Error)");
+            }
+        }
+        ,onModelSavedGroup: function(caseFileId, group) {
+            if (group.hasError) {
+                CaseFile.View.Detail.setTextLnkGroup("(Error)");
             }
         }
         ,onModelSavedSubjectType: function(caseFileId, subjectType) {
@@ -620,6 +644,9 @@ CaseFile.View = CaseFile.View || {
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
+                
+                var group = CaseFile.Model.Detail.getGroup(c);
+                this.setTextLnkGroup(Acm.goodValue(group));
             }
         }
 
@@ -635,6 +662,9 @@ CaseFile.View = CaseFile.View || {
         }
         ,setTextLnkAssignee: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkAssignee, txt);
+        }
+        ,setTextLnkGroup: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkGroup, txt);
         }
         ,setTextLnkSubjectType: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkSubjectType, txt);
@@ -1983,6 +2013,7 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE    ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	    ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
@@ -1993,6 +2024,11 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (!assginee.hasError) {
+                AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+            }
+        }
+        ,onModelSavedGroup: function(caseFileId, group) {
+            if (!group.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
             }
         }

@@ -263,9 +263,12 @@ Complaint.View = Complaint.View || {
 
             this.$lnkPriority     = $("#priority");
             this.$lnkAssignee     = $("#assigned");
+            this.$lnkGroup 		  = $("#group");
             this.$lnkComplaintType  = $("#type");
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_FOUND_ASSIGNEES         ,this.onModelFoundAssignees);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_ASSIGNEE          ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_GROUPS        ,this.onModelRetrievedGroups);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_GROUP	           ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_FOUND_COMPLAINT_TYPES   ,this.onModelFoundComplaintTypes);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_COMPLAINT_TYPE    ,this.onModelSavedComplaintType);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_FOUND_PRIORITIES        ,this.onModelFoundPriorities);
@@ -310,6 +313,22 @@ Complaint.View = Complaint.View || {
                 source: choices
                 ,success: function(response, newValue) {
                     Complaint.Controller.viewChangedAssignee(Complaint.View.getActiveComplaintId(), newValue);
+                }
+            });
+        }
+        ,onModelRetrievedGroups: function(groups) {
+            var choices = [];
+            $.each(groups, function(idx, val) {
+                var opt = {};
+                opt.value = val.object_id_s;
+                opt.text = val.name;
+                choices.push(opt);
+            });
+
+            AcmEx.Object.XEditable.useEditable(Complaint.View.Detail.$lnkGroup, {
+                source: choices
+                ,success: function(response, newValue) {
+                    Complaint.Controller.viewChangedGroup(Complaint.View.getActiveComplaintId(), newValue);
                 }
             });
         }
@@ -361,6 +380,11 @@ Complaint.View = Complaint.View || {
                 Complaint.View.Detail.setTextLnkAssignee("(Error)");
             }
         }
+        ,onModelSavedGroup: function(complaintId, group) {
+            if (group.hasError) {
+                Complaint.View.Detail.setTextLnkGroup("(Error)");
+            }
+        }
         ,onModelSavedComplaintType: function(complaintId, subjectType) {
             if (subjectType.hasError) {
                 Complaint.View.Detail.setTextLnkComplaintType("(Error)");
@@ -393,6 +417,9 @@ Complaint.View = Complaint.View || {
             if (Complaint.Model.Detail.validateComplaint(c)) {
                 var assignee = Complaint.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
+                
+                var group = Complaint.Model.Detail.getGroup(c);
+                this.setTextLnkGroup(Acm.goodValue(group));
 
                 this.setTextLnkComplaintTitle(Acm.goodValue(c.complaintTitle));
                 this.setTextLabComplaintNumber(Acm.goodValue(c.complaintNumber));
@@ -427,6 +454,9 @@ Complaint.View = Complaint.View || {
         }
         ,setTextLnkAssignee: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkAssignee, txt);
+        }
+        ,setTextLnkGroup: function(txt) {
+            AcmEx.Object.XEditable.setValue(this.$lnkGroup, txt);
         }
         ,setTextLnkComplaintType: function(txt) {
             AcmEx.Object.XEditable.setValue(this.$lnkComplaintType, txt);
@@ -2680,6 +2710,7 @@ Complaint.View = Complaint.View || {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_ASSIGNEE         ,this.onModelSavedAssignee);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_SAVED_GROUP	    	  ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_PARTICIPANT      ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPDATED_PARTICIPANT    ,this.onModelModifiedParticipants);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DELETED_PARTICIPANT    ,this.onModelModifiedParticipants);
@@ -2695,6 +2726,11 @@ Complaint.View = Complaint.View || {
         }
         ,onModelSavedAssignee: function(complaintId, assginee) {
             if (!assginee.hasError) {
+                AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
+            }
+        }
+        ,onModelSavedGroup: function(complaintId, group) {
+            if (!group.hasError) {
                 AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
             }
         }

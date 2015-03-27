@@ -194,6 +194,7 @@ Complaint.Model = Complaint.Model || {
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TITLE     , this.onViewChangedComplaintTitle);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_GROUP            	  , this.onViewChangedGroup);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TYPE      , this.onViewChangedComplaintType);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_DETAIL              , this.onViewChangedDetail);
@@ -215,6 +216,9 @@ Complaint.Model = Complaint.Model || {
         }
         ,onViewChangedAssignee: function(complaintId, assignee) {
             Complaint.Service.Detail.saveAssignee(complaintId, assignee);
+        }
+        ,onViewChangedGroup: function(complaintId, group) {
+            Complaint.Service.Detail.saveGroup(complaintId, group);
         }
         ,onViewChangedComplaintType: function(complaintId, caseType) {
             Complaint.Service.Detail.saveComplaintType(complaintId, caseType);
@@ -260,6 +264,42 @@ Complaint.Model = Complaint.Model || {
                 var participant = {};
                 participant.participantType = "assignee";
                 participant.participantLdapId = assignee;
+                complaint.participants.push(participant);
+            }
+        }
+        
+        ,getGroup: function(complaint) {
+            var group = null;
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                if (Acm.isArray(complaint.participants)) {
+                    for (var i = 0; i < complaint.participants.length; i++) {
+                        var participant =  complaint.participants[i];
+                        if ("owning group" == participant.participantType) {
+                            group = participant.participantLdapId;
+                            break;
+                        }
+                    }
+                }
+            }
+            return group;
+        }
+        ,setGroup: function(complaint, group) {
+            if (complaint) {
+                if (!Acm.isArray(complaint.participants)) {
+                	complaint.participants = [];
+                }
+
+                for (var i = 0; i < complaint.participants.length; i++) {
+                    if ("owning group" == complaint.participants[i].participantType) {
+                    	complaint.participants[i].participantLdapId = group;
+                        return;
+                    }
+                }
+
+
+                var participant = {};
+                participant.participantType = "owning group";
+                participant.participantLdapId = group;
                 complaint.participants.push(participant);
             }
         }

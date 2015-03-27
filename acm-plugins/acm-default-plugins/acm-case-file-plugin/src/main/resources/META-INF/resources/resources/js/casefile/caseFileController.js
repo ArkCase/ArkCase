@@ -17,9 +17,17 @@ CaseFile.Controller = CaseFile.Controller || {
     ,viewChangedAssignee: function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, caseFileId, assignee);
     }
+    ,VIEW_CHANGED_GROUP                 : "case-view-changed-group"
+    ,viewChangedGroup: function(caseFileId, group) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_GROUP, caseFileId, group);
+    }
     ,MODEL_SAVED_ASSIGNEE                  : "case-model-saved-assignee"
     ,modelSavedAssignee : function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, caseFileId, assignee);
+    }
+    ,MODEL_SAVED_GROUP                  : "case-model-saved-group"
+    ,modelSavedGroup : function(caseFileId, group) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_GROUP, caseFileId, group);
     }
     ,MODEL_FOUND_SUBJECT_TYPES             : "case-model-found-subject-types"
     ,modelFoundSubjectTypes: function(subjectTypes) {
