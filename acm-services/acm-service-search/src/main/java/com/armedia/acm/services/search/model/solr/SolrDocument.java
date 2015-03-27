@@ -53,6 +53,7 @@ public class SolrDocument implements SolrBaseDocument {
     private String name_lcs;
     private Long parent_folder_id_i;
     private String category_s;
+    private String cmis_version_series_id_s;
 
     @Override
     public String getId() {
@@ -356,6 +357,16 @@ public class SolrDocument implements SolrBaseDocument {
         return category_s;
     }
 
+    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    {
+        this.cmis_version_series_id_s = cmis_version_series_id_s;
+    }
+
+    public String getCmis_version_series_id_s()
+    {
+        return cmis_version_series_id_s;
+    }
+
     @Override
     public String toString()
     {
@@ -400,6 +411,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", name_lcs='" + name_lcs + '\'' +
                 ", parent_folder_id_i=" + parent_folder_id_i +
                 ", category_s='" + category_s + '\'' +
+                ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
                 '}';
     }
 }

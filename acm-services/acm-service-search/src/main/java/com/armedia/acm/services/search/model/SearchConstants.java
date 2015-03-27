@@ -42,6 +42,7 @@ public interface SearchConstants
     String PROPERTY_MODIFIER = "modifier_s";
     String PROPERTY_OBJECT_TYPE = "object_type_s";
     String PROPERTY_VERSION = "version_s";
+    String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
 
     String USER = "${user}";
     /**
