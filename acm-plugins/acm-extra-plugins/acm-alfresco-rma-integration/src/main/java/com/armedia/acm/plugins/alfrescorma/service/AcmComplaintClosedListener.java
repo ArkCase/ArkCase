@@ -6,6 +6,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import java.util.Collection;
 import java.util.Date;
 
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 
 	private transient Logger LOG = LoggerFactory.getLogger(getClass());
 	private EcmFileDao ecmFileDao;
+	private EcmFileService ecmFileService;
 
 	@Override
 	public void onApplicationEvent(ComplaintClosedEvent event) {
@@ -47,6 +49,8 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
         }
         
         Complaint complaint = (Complaint) event.getSource();
+
+
         
         if (null != complaint)
         {
@@ -117,5 +121,14 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 	public void setEcmFileDao(EcmFileDao ecmFileDao) {
 		this.ecmFileDao = ecmFileDao;
 	}
-	
+
+	public EcmFileService getEcmFileService()
+	{
+		return ecmFileService;
+	}
+
+	public void setEcmFileService(EcmFileService ecmFileService)
+	{
+		this.ecmFileService = ecmFileService;
+	}
 }

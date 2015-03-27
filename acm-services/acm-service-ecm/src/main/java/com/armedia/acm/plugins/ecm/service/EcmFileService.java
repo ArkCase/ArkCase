@@ -88,6 +88,10 @@ public interface EcmFileService
     AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
 
+    AcmCmisObjectList allFilesForContainer(Authentication auth,
+                                           AcmContainer container)
+            throws AcmListObjectsFailedException;
+
     AcmCmisObjectList listFolderContents(Authentication auth,
                                          AcmContainer container,
                                          String category, String sortBy,
