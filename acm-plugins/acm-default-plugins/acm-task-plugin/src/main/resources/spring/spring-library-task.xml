@@ -334,6 +334,7 @@
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="fileDao" ref="ecmFileDao"/>
         <property name="taskBusinessRule" ref="taskBusinessRule"/>
         <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
         <property name="priorityLevelToNumberMap">
