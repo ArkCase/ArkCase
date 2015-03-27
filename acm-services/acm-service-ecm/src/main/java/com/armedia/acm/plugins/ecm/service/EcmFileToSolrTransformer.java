@@ -2,11 +2,10 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,10 +79,10 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         return isSupported;
     }
 
-    private List<String> prepareTagList(List<AcmTag> tagList) {
+    private List<String> prepareTagList(List<AcmAssociatedTag> tagList) {
         List<String> tagTextList = new ArrayList<>();
-        for(AcmTag tag: tagList){
-            tagTextList.add(tag.getTagText());
+        for(AcmAssociatedTag tag: tagList){
+            tagTextList.add(tag.getTag().getTagText());
         }
         return tagTextList;
     }
