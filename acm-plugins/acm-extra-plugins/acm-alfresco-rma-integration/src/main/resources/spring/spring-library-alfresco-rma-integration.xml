@@ -4,6 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
 
+    <bean id="alfrescoRmaPluginPropertiesForSpring"
+                 class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/alfrescoRmaPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+
     <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
         <lookup-method name="getMuleClient" bean="muleClient"/>
     </bean>
@@ -11,16 +21,19 @@
     <bean id="acmFileListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFileListener">
         <lookup-method name="getMuleClient" bean="muleClient"/>
     </bean>
+
+    <bean id="alfrescoRecordsService" class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoRecordsService">
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="alfrescoRmaProperties" ref="alfrescoRmaPluginPropertiesForSpring"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
+    </bean>
     
     <bean id="acmComplaintCloseListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintClosedListener">
-        <lookup-method name="getMuleClient" bean="muleClient"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
     
     <bean id="acmCaseFileStatusChangedListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileStatusChangedListener">
-        <lookup-method name="getMuleClient" bean="muleClient"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
 </beans>
