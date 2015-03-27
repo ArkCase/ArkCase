@@ -1040,7 +1040,27 @@ Complaint.Service = {
 
         ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
         ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_RETRIEVE_DOCUMENT_      : "/api/latest/service/ecm/folder/"
 
+        ,retrieveDocumentsDeferred : function(complaintId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + Complaint.Service.Documents.API_RETRIEVE_DOCUMENT_ + Complaint.Model.DOC_TYPE_COMPLAINT;
+                    url += "/" + complaintId + "?category=" + Complaint.Model.DOC_CATEGORY_FILE_SM;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (Complaint.Model.Documents.validateDocuments(data)) {
+                        var documents = data;
+                        Complaint.Model.Documents.cacheDocuments.put(complaintId + "." +jtParams.jtStartIndex, documents);
+                        jtData = callbackSuccess(documents);
+                    }
+                    return jtData;
+                }
+            );
+        }
         ,uploadDocuments: function(formData) {
             var url = App.getContextPath() + this.API_UPLOAD_FILE;
             Acm.Service.ajax({
@@ -1051,28 +1071,36 @@ Complaint.Service = {
                 ,type: 'POST'
                 ,success: function(response){
                     if (response.hasError) {
-                        Complaint.Controller.modelUploadedDocuments(response);
+                        Complaint.Controller.modelAddedDocument(response);
                     } else {
-                        if(Complaint.Model.Documents.validateUploadedDocuments(response)){
-                            var complaintId = Complaint.Model.getComplaintId();
-                            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
-                            if(Complaint.Model.Documents.validateExistingDocuments(complaint)){
-                                for(var i = 0; i < response.length; i++){
-                                    var attachment = {};
-                                    attachment.targetId = response[i].files[0].id;
-                                    attachment.targetName = response[i].files[0].name;
-                                    attachment.status = response[i].files[0].status;
-                                    attachment.creator = response[i].files[0].creator;
-                                    attachment.created = response[i].files[0].created;
-                                    complaint.childObjects.push(attachment);
+                        // the upload returns an array of documents, for when the user uploads multiple files.
+                        if (Complaint.Model.Documents.validateNewDocument(response)) {
+                            //add to the top of the cache
+                            var complaintId = Complaint.View.getActiveComplaintId();
+                            var documentsCache = Complaint.Model.Documents.cacheDocuments.get(complaintId + "." + 0);
+                            if(Complaint.Model.Documents.validateDocuments(documentsCache)) {
+                                var documents = documentsCache.children;
+                                for ( var a = 0; a < response.length; a++ )
+                                {
+                                    var f = response[a];
+                                    var doc = {};
+                                    doc.objectId = Acm.goodValue(f.fileId);
+                                    doc.name = Acm.goodValue(f.fileName);
+                                    doc.creator = Acm.goodValue(f.creator);
+                                    doc.created = Acm.goodValue(f.created);
+                                    doc.objectType = Complaint.Model.DOC_TYPE_FILE_SM;
+                                    doc.category = Complaint.Model.DOC_CATEGORY_FILE_SM;
+                                    documentsCache.children.unshift(doc);
+                                    documents.totalChildren++;
                                 }
                             }
+                            Complaint.Controller.modelAddedDocument(response);
                         }
-                        Complaint.Controller.modelUploadedDocuments(complaint);
                     }
                 }
             });
         }
+
     }
 
     ,Notes: {

@@ -63,8 +63,15 @@ Complaint.View = Complaint.View || {
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
             this.formUrls.formDocuments                  = Acm.Object.MicroData.get("formDocuments");
+
         }
         ,onInitialized: function() {
+        }
+        ,getToken: function() {
+            return this.token;
+        }
+        ,getFormUrls: function(){
+            return this.formUrls;
         }
     }
 
@@ -1534,14 +1541,15 @@ Complaint.View = Complaint.View || {
             this.$divDocuments = $("#divDocuments");
             this.createJTableDocuments(this.$divDocuments);
 
-            this.$treeDoc = $("#treeDoc");
-            this.createTreeDocuments(this.$treeDoc);
+            //this.$treeDoc = $("#treeDoc");
+            //this.createTreeDocuments(this.$treeDoc);
 
-            /*this.$btnAddNewDocument = $("#addNewDocuments");
-            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});*/
 
-            /*this.$formNewDocuments = $("#formDocuments");
-            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});*/
+            this.$btnAddNewDocument = $("#addDocument");
+            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
+
+            this.$formNewDocuments = $("#formAddDocument");
+            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
 
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddDocument);
             this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
@@ -1553,6 +1561,7 @@ Complaint.View = Complaint.View || {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPLOADED_DOCUMENTS    ,this.onModelUploadedDocuments);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
 
         }
         ,onInitialized: function() {
@@ -1929,6 +1938,14 @@ Complaint.View = Complaint.View || {
                 for (var i = 0; i < formDocuments.length; i ++) {
                     html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
                 }
+
+                html += "<option value='mr'>Medical Release</option>"
+                + "<option value='gr'>General Release</option>"
+                + "<option value='ev'>eDelivery</option>"
+                + "<option value='sig'>SF86 Signature</option>"
+                + "<option value='noi'>Notice of Investigation</option>"
+                + "<option value='wir'>Witness Interview Request</option>"
+                + "<option value='ot'>Other</option>";
             }
 
             html += "</select>"
@@ -1938,87 +1955,135 @@ Complaint.View = Complaint.View || {
         ,getSelectReport: function() {
             return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
         }
+        ,getSelectReportText: function() {
+            return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
+        }
         ,onClickSpanAddDocument: function(e) {
             var report = Complaint.View.Documents.getSelectReport();
-            if(Acm.isNotEmpty(report)){
-                var c = Complaint.View.getActiveComplaint();
-                if(Complaint.Model.Detail.validateComplaint(c)){
+
+            if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
+
+                var complaintId = Complaint.View.getActiveComplaintId();
+                var complaint = Complaint.View.getActiveComplaint();
+                if (Complaint.Model.Detail.validateComplaint(complaint) )
+                {
                     var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
                     if (Acm.isNotEmpty(url)) {
-                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + c.complaintId + "',complaintNumber:'" + c.complaintNumber + "',complaintTitle:'" + c.complaintTitle + "',complaintPriority:'" + c.priority + "',");
+                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + complaint.complaintNumber + "',complaintTitle:'" + complaint.complaintTitle + "',complaintPriority:'" + complaint.priority + "',");
                         Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, function() {
                             Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
                         });
                     }
                 }
             }
+            else if(report && report != ""){
+                Complaint.View.Documents.$btnAddNewDocument.click();
+            }
         }
+        ,onSubmitAddNewDocuments: function(event, ctrl) {
 
-     /*   ,onSubmitAddNewDocuments: function(event, ctrl) {
              event.preventDefault();
              var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
+             var report = Complaint.View.Documents.getSelectReportText();
+
              var fd = new FormData();
-             fd.append("complaintId", Complaint.View.getActiveComplaintId());
+             fd.append("fileType", report);
+             fd.append("parentObjectId", Complaint.View.getActiveComplaintId());
+             fd.append("parentObjectType", Complaint.Model.DOC_TYPE_COMPLAINT);
              for(var i = 0; i < count; i++ ) {
                  fd.append("files[]", Complaint.View.Documents.$btnAddNewDocument[0].files[i]);
              }
              Complaint.Service.Documents.uploadDocuments(fd);
              Complaint.View.Documents.$formNewDocuments[0].reset();
         }
-*/
-        ,_makeJtData: function(documents){
+        ,onModelAddedDocument: function(complaintId) {
+            if (complaintId.hasError) {
+                ;
+            } else {
+                Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
+            }
+        }
+        ,_makeJtData: function(documents, totalDocuments) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if(Acm.isNotEmpty(documents)){
+            if (Acm.isNotEmpty(documents)) {
                 for (var i = 0; i < documents.length; i++) {
-                    if(Complaint.Model.Documents.validateDocumentRecord(documents[i])){
-                        var record = {};
-                        record.id = Acm.goodValue(documents[i].targetId, 0);
-                        record.title = Acm.goodValue(documents[i].targetName);
-                        record.created = Acm.getDateFromDatetime(documents[i].created);
-                        record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(documents[i].creator));
-                        record.status = Acm.goodValue(documents[i].status);
-                        jtData.Records.push(record);
+                    if(Complaint.Model.Documents.validateDocument(documents[i])){
+                        var Record = {};
+                        Record.id = Acm.goodValue(documents[i].objectId)
+                        Record.title = Acm.goodValue(documents[i].name);
+                        Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        jtData.Records.push(Record);
                     }
                 }
-                jtData.TotalRecordCount = documents.length;
+                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
             }
             return jtData;
         }
-        ,createJTableDocuments: function($s) {
-            $s.jtable({
+        , reloadDocs: function()
+        {
+            var divDocuments = $("#divDocuments");
+            Complaint.View.Documents.createJTableDocuments(divDocuments);
+        }
+        , createJTableDocuments: function ($s) {
+            AcmEx.Object.JTable.usePaging($s, {
                 title: 'Documents'
                 ,paging: true
-                ,pageSize: 10 //Set page size (default: 10)
                 ,sorting: true
-                ,messages: {
+                ,pageSize: 10 //Set page size (default: 10)
+                , messages: {
                     addNewRecord: 'Add Document'
                 }
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        var complaint = Complaint.View.getActiveComplaint();
-                        if(Complaint.Model.Documents.validateExistingDocuments(complaint)){
-                            var documents = complaint.childObjects;
-                            return Complaint.View.Documents._makeJtData(documents);
+                , actions: {
+                    pagingListAction: function (postData, jtParams, sortMap) {
+                        var complaintId = Complaint.View.getActiveComplaintId();
+                        if ( ! complaintId || 0 >= complaintId )
+                        {
+                            return AcmEx.Object.JTable.getEmptyRecords();
                         }
-                        return AcmEx.Object.JTable.getEmptyRecords();
+                        //var documentsCache = Complaint.Model.Documents.cacheDocuments.get(complaintId + "." + jtParams.jtStartIndex);
+                        //if (Complaint.Model.Documents.validateDocuments(documentsCache)) {
+                        //    var documents = documentsCache.children;
+                        //    var totalDocuments = documentsCache.totalChildren;
+                        //    return Complaint.View.Documents._makeJtData(documents, totalDocuments);
+                        //} else {
+                            return Complaint.Service.Documents.retrieveDocumentsDeferred(complaintId
+                                ,postData
+                                ,jtParams
+                                ,sortMap
+                                ,function(data) {
+                                    if(Complaint.Model.Documents.validateDocuments(data)){
+                                        var documents = data.children;
+                                        var totalDocuments = data.totalChildren;
+                                        return Complaint.View.Documents._makeJtData(documents, totalDocuments);
+                                    }
+                                    return AcmEx.Object.JTable.getEmptyRecords();
+                                }
+                                ,function(error) {
+                                }
+                            );
+                        //}  //end else
                     }
-                    , createAction: function (postData, jtParams) {
-                        return {
-                           "Result": "OK"
-                        };
+                    ,createAction: function(postData, jtParams) {
+                        //placeholder. this action should never be called
+                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
+                        return rc;
                     }
                 }
-                ,fields: {
+                , fields: {
                     id: {
                         title: 'ID'
-                        ,key: true
-                        ,list: false
-                        ,create: false
-                        ,edit: false
+                        , key: true
+                        , list: false
+                        , create: false
+                        , edit: false
+                        , defaultvalue: 0
                     }
-                    ,title: {
+                    , title: {
                         title: 'Title'
-                        ,width: '30%'
+                        , width: '50%'
+                        , edit: false
+                        , create: false
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + Complaint.Service.Documents.API_DOWNLOAD_DOCUMENT
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -2026,24 +2091,20 @@ Complaint.View = Complaint.View || {
                             return $(a);
                         }
                     }
-                    ,created: {
+                    , created: {
                         title: 'Created'
-                        ,width: '15%'
-                        ,edit: false
+                        , width: '15%'
+                        , edit: false
+                        , create: false
                     }
-                    ,creator: {
-                        title: 'Author'
-                        ,width: '15%'
-                        ,edit: false
-                    }
-                    ,status: {
-                        title: 'Status'
-                        ,width: '10%'
+                    , creator: {
+                        title: 'Creator'
+                        , width: '15%'
+                        , edit: false
+                        , create: false
                     }
                 }
             });
-
-            $s.jtable('load');
         }
 
     }
