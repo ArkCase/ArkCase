@@ -720,19 +720,7 @@ Task.Model = Task.Model || {
             if (Acm.isEmpty(data.creator)) {
                 return false;
             }
-            if (Acm.isEmpty(data.parentObjects)) {
-                return false;
-            }
-            if (Acm.isNotArray(data.parentObjects)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.parentObjects[0].status)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.parentObjects[0].parentName)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.parentObjects[0].parentId)) {
+            if (Acm.isEmpty(data.status)) {
                 return false;
             }
             return true;

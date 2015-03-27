@@ -4,8 +4,10 @@ package com.armedia.acm.plugins.task.service.impl;
 import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
@@ -61,6 +63,7 @@ class ActivitiTaskDao implements TaskDao
     private ExtractAcmTaskFromEvent taskExtractor;
     private TaskBusinessRule taskBusinessRule;
     private EcmFileService fileService;
+    private EcmFileDao fileDao;
     private AcmContainerDao containerFolderDao;
 
     @Override
@@ -956,6 +959,12 @@ class ActivitiTaskDao implements TaskDao
             acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get("pdfRenditionId"));
             acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get("formXmlId"));
             acmTask.setReworkInstructions((String) activitiTask.getProcessVariables().get("REWORK_INSTRUCTIONS"));
+
+            if ( acmTask.getReviewDocumentPdfRenditionId() != null && acmTask.getReviewDocumentPdfRenditionId() > 0 )
+            {
+                EcmFile docUnderReview = getFileDao().find(acmTask.getReviewDocumentPdfRenditionId());
+                acmTask.setDocumentUnderReview(docUnderReview);
+            }
         }
     }
 
@@ -1078,5 +1087,15 @@ class ActivitiTaskDao implements TaskDao
     public void setContainerFolderDao(AcmContainerDao containerFolderDao)
     {
         this.containerFolderDao = containerFolderDao;
+    }
+
+    public EcmFileDao getFileDao()
+    {
+        return fileDao;
+    }
+
+    public void setFileDao(EcmFileDao fileDao)
+    {
+        this.fileDao = fileDao;
     }
 }
