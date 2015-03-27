@@ -20,6 +20,7 @@ public class AcmCmisObject implements Serializable
     private String modifier;
     private String type;
     private String category;
+    private String cmisObjectId;
 
     public Long getObjectId()
     {
@@ -119,5 +120,15 @@ public class AcmCmisObject implements Serializable
     public void setCategory(String category)
     {
         this.category = category;
+    }
+
+    public String getCmisObjectId()
+    {
+        return cmisObjectId;
+    }
+
+    public void setCmisObjectId(String cmisObjectId)
+    {
+        this.cmisObjectId = cmisObjectId;
     }
 }
