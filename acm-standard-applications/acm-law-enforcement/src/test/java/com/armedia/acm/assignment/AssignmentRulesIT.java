@@ -76,16 +76,18 @@ public class AssignmentRulesIT
 
         workingMemory.execute(c);
 
-        assertEquals(2, c.getParticipants().size());
+        assertEquals(3, c.getParticipants().size());
 
         assertEquals("samuel-acm", c.getParticipants().get(0).getParticipantLdapId());
         assertEquals("assignee", c.getParticipants().get(0).getParticipantType());
         assertEquals("*", c.getParticipants().get(1).getParticipantLdapId());
         assertEquals("*", c.getParticipants().get(1).getParticipantType());
+        assertEquals("owning group", c.getParticipants().get(2).getParticipantType());
+        assertEquals("ACM_INVESTIGATOR_DEV", c.getParticipants().get(2).getParticipantLdapId());
 
         // since we have participants now, if we run the rule again, it should not add any more
         workingMemory.execute(c);
-        assertEquals(2, c.getParticipants().size());
+        assertEquals(3, c.getParticipants().size());
 
     }
 
