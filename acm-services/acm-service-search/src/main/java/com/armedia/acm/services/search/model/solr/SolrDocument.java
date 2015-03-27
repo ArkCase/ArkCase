@@ -54,6 +54,7 @@ public class SolrDocument implements SolrBaseDocument {
     private Long parent_folder_id_i;
     private String category_s;
     private String cmis_version_series_id_s;
+    private String mime_type_s;
 
     @Override
     public String getId() {
@@ -367,7 +368,15 @@ public class SolrDocument implements SolrBaseDocument {
         return cmis_version_series_id_s;
     }
 
-    @Override
+    public String getMime_type_s() {
+		return mime_type_s;
+	}
+
+	public void setMime_type_s(String mime_type_s) {
+		this.mime_type_s = mime_type_s;
+	}
+
+	@Override
     public String toString()
     {
         return "SolrDocument{" +
@@ -412,6 +421,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", parent_folder_id_i=" + parent_folder_id_i +
                 ", category_s='" + category_s + '\'' +
                 ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
+                ", mime_type_s='" + mime_type_s + '\'' +
                 '}';
     }
 }
