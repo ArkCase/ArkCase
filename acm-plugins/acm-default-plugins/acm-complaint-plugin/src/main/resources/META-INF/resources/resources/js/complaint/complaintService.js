@@ -1258,13 +1258,14 @@ Complaint.Service = {
         }
         ,onInitialized: function() {
         }
-        ,API_COMPLAINT_HISTORY : "/api/latest/plugin/complaint/events/"
+        ,API_COMPLAINT_HISTORY : "/api/latest/plugin/audit"
 
         ,retrieveHistoryDeferred : function(complaintId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
                     url =  App.getContextPath() + Complaint.Service.History.API_COMPLAINT_HISTORY;
+                    url += '/' + Complaint.Model.DOC_TYPE_COMPLAINT + '/'
                     url += complaintId;
                     return url;
                 }
