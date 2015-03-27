@@ -119,6 +119,11 @@
                     <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
+                <bean id="containerListUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/ecm/container/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
                 <bean id="uploadFilePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/service/ecm/upload"/>
