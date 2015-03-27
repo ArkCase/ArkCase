@@ -571,8 +571,9 @@ Complaint.Model = Complaint.Model || {
         }
 
         ,onViewClosedAddDocumentWindow: function(complaintId) {
-        	Complaint.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo();
-        	ObjNav.Service.Detail.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+        	//Complaint.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo();
+        	//ObjNav.Service.Detail.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+            setTimeout(Complaint.View.Documents.reloadDocs, 5000);
         }
     }
 
