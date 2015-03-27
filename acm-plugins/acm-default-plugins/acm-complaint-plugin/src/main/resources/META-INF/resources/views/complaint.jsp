@@ -255,15 +255,21 @@
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divDocuments" style="width:100%"></div>
+                                                        <form id="formAddDocument" style="display:none;">
+                                                                <%--<input type="file" id="file" name="file">--%>
+                                                            <input id="addDocument" type="file" name="files[]" multiple/>
+                                                                <%--<input type="submit">--%>
+                                                        </form>
                                                         <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />--%>
                                                         <%--<input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />--%>
                                                         <%--<input id="formDocuments" type="hidden" value='${formDocuments}' />--%>
                                                     </section>
                                                 </div>
-                                            <%--</div>--%>
+                                            </div>
 
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
-                                            <%--<div class="row">--%>
+                                            <!-- hide folder tree for now, until it is all working -->
+                                            <div class="row" style="display:none;">
                                             <div class="col-md-12">
                                             <section class="panel b-a">
                                                 <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
