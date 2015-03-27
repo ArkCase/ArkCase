@@ -32,5 +32,4 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
     </bean>
 
-
 </beans>

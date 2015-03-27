@@ -28,9 +28,17 @@ Complaint.Controller = Complaint.Controller || {
     ,viewChangedAssignee: function(complaintId, assignee) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, complaintId, assignee);
     }
+    ,VIEW_CHANGED_GROUP                 : "complaint-view-changed-group"
+    ,viewChangedGroup: function(complaintId, group) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_GROUP, complaintId, group);
+    }
     ,MODEL_SAVED_ASSIGNEE                  : "complaint-model-saved-assignee"
     ,modelSavedAssignee : function(complaintId, assignee) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, complaintId, assignee);
+    }
+    ,MODEL_SAVED_GROUP                  : "complaint-model-saved-group"
+    ,modelSavedGroup : function(complaintId, group) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_GROUP, complaintId, group);
     }
     ,MODEL_FOUND_COMPLAINT_TYPES             : "complaint-model-found-complaint-types"
     ,modelFoundComplaintTypes: function(complaintTypes) {
@@ -98,6 +106,21 @@ Complaint.Controller = Complaint.Controller || {
     ,MODEL_RETRIEVED_COSTSHEETS               : "complaint-model-retrieved-costsheets"
     ,modelRetrievedCostsheets : function(costsheets) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COSTSHEETS, costsheets);
+    }    
+    
+    ,MODEL_RETRIEVED_GROUPS                 : "complaint-model-retrieved-groups"
+    ,modelRetrievedGroups: function(groups) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_GROUPS, groups);
+    }
+    
+    ,MODEL_RETRIEVED_USERS                 : "complaint-model-retrieved-users"
+    ,modelRetrievedUsers: function(users) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, users);
+    }
+    
+    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "complaint-view-closed-add-document-window"
+	,viewClosedAddDocumentWindow: function(complaintId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, complaintId);
     }
 
     //----------------------------------------------------------------------------------

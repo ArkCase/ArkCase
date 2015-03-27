@@ -42,6 +42,8 @@ Costsheet.View = {
             // edit form has same url as new form
             this.formUrls.editCostsheetFormUrl         = Acm.Object.MicroData.get("newCostsheetFormUrl");
 
+            this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
+
         }
         ,onInitialized: function() {
 

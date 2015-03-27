@@ -475,13 +475,14 @@ Task.Service = {
         }
         ,onInitialized: function() {
         }
-        ,API_TASK_HISTORY : "/api/latest/plugin/task/events/"
+        ,API_TASK_HISTORY : "/api/latest/plugin/audit"
 
         ,retrieveHistoryDeferred : function(taskId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
                     url =  App.getContextPath() + Task.Service.History.API_TASK_HISTORY;
+                    url += '/' + Task.Model.DOC_TYPE_TASK + '/'
                     url += taskId;
                     return url;
                 }
@@ -535,6 +536,27 @@ Task.Service = {
 
         ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
         ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_RETRIEVE_DOCUMENTS_      : "/api/latest/service/ecm/folder/"
+
+        ,retrieveDocumentsDeferred : function(taskId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + Task.Service.Attachments.API_RETRIEVE_DOCUMENTS_ + Task.Model.DOC_TYPE_TASK;
+                    url += "/" + taskId;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (Task.Model.Attachments.validateDocuments(data)) {
+                        var documents = data;
+                        Task.Model.Attachments.cacheAttachments.put(taskId + "." +jtParams.jtStartIndex, documents);
+                        jtData = callbackSuccess(documents);
+                    }
+                    return jtData;
+                }
+            );
+        }
 
         ,uploadAttachments: function(formData) {
             var url = App.getContextPath() + this.API_UPLOAD_FILE;
@@ -548,21 +570,29 @@ Task.Service = {
                     if (response.hasError) {
                         Task.Controller.modelUploadedAttachments(response);
                     } else {
-                        if(Task.Model.Attachments.validateUploadedAttachments(response)){
-                            var task = Task.View.getActiveTask();
-                            if(Task.Model.Attachments.validateExistingAttachments(task)){
-                                for(var i = 0; i < response.length; i++){
-                                    var attachment = {};
-                                    attachment.targetId = response[i].files[0].id;
-                                    attachment.targetName = response[i].files[0].name;
-                                    attachment.status = response[i].files[0].status;
-                                    attachment.creator = response[i].files[0].creator;
-                                    attachment.created = response[i].files[0].created;
-                                    task.childObjects.push(attachment);
+                        // the upload returns an array of documents, for when the user uploads multiple files.
+                        if (Task.Model.Attachments.validateNewDocument(response)) {
+                            //add to the top of the cache
+                            var taskId = Task.View.getActiveTask().taskId;
+                            var documentsCache = Task.Model.Attachments.cacheAttachments.get(taskId + "." + 0);
+                            if(Task.Model.Attachments.validateDocuments(documentsCache)) {
+                                var documents = documentsCache.children;
+                                for ( var a = 0; a < response.length; a++ )
+                                {
+                                    var f = response[a];
+                                    var doc = {};
+                                    doc.objectId = Acm.goodValue(f.fileId);
+                                    doc.name = Acm.goodValue(f.fileName);
+                                    doc.creator = Acm.goodValue(f.creator);
+                                    doc.created = Acm.goodValue(f.created);
+                                    doc.objectType = Task.Model.DOC_TYPE_FILE_SM;
+                                    doc.category = Task.Model.DOC_CATEGORY_FILE_SM;
+                                    documentsCache.children.unshift(doc);
+                                    documents.totalChildren++;
                                 }
                             }
+                            Task.Controller.modelUploadedAttachments(response);
                         }
-                        Task.Controller.modelUploadedAttachments(task);
                     }
                 }
             });
