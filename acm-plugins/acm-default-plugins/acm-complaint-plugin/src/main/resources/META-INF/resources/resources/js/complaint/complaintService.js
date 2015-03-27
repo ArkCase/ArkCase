@@ -219,6 +219,17 @@ Complaint.Service = {
                 );
             }
         }
+        ,saveGroup: function(complaintId, group) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                Complaint.Model.Detail.setGroup(complaint, group);
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedGroup(complaintId, Acm.Service.responseWrapper(data, group));
+                    }
+                );
+            }
+        }
         ,saveComplaintType: function(complaintId, complaintType) {
             var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
             if (Complaint.Model.Detail.validateComplaint(complaint)) {

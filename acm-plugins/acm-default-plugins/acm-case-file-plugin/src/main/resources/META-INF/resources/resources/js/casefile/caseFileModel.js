@@ -184,6 +184,7 @@ CaseFile.Model = CaseFile.Model || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE          , this.onViewChangedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_GROUP            	 , this.onViewChangedGroup);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_SUBJECT_TYPE        , this.onViewChangedSubjectType);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DUE_DATE            , this.onViewChangedDueDate);
@@ -205,6 +206,9 @@ CaseFile.Model = CaseFile.Model || {
         }
         ,onViewChangedAssignee: function(caseFileId, assignee) {
             CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
+        }
+        ,onViewChangedGroup: function(caseFileId, group) {
+            CaseFile.Service.Detail.saveGroup(caseFileId, group);
         }
         ,onViewChangedSubjectType: function(caseFileId, caseType) {
             CaseFile.Service.Detail.saveSubjectType(caseFileId, caseType);
@@ -258,6 +262,43 @@ CaseFile.Model = CaseFile.Model || {
                 caseFile.participants.push(participant);
             }
         }
+        
+        ,getGroup: function(caseFile) {
+            var group = null;
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                if (Acm.isArray(caseFile.participants)) {
+                    for (var i = 0; i < caseFile.participants.length; i++) {
+                        var participant =  caseFile.participants[i];
+                        if ("owning group" == participant.participantType) {
+                            group = participant.participantLdapId;
+                            break;
+                        }
+                    }
+                }
+            }
+            return group;
+        }
+        ,setGroup: function(caseFile, group) {
+            if (caseFile) {
+                if (!Acm.isArray(caseFile.participants)) {
+                    caseFile.participants = [];
+                }
+
+                for (var i = 0; i < caseFile.participants.length; i++) {
+                    if ("owning group" == caseFile.participants[i].participantType) {
+                        caseFile.participants[i].participantLdapId = group;
+                        return;
+                    }
+                }
+
+
+                var participant = {};
+                participant.participantType = "owning group";
+                participant.participantLdapId = group;
+                caseFile.participants.push(participant);
+            }
+        }
+        
         ,getCacheCaseFile: function(caseFileId) {
             if (0 >= caseFileId) {
                 return null;

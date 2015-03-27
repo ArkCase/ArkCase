@@ -221,6 +221,17 @@ CaseFile.Service = {
                 );
             }
         }
+        ,saveGroup: function(caseFileId, group) {
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                CaseFile.Model.Detail.setGroup(caseFile, group);
+                this._saveCaseFile(caseFileId, caseFile
+                    ,function(data) {
+                        CaseFile.Controller.modelSavedGroup(caseFileId, Acm.Service.responseWrapper(data, group));
+                    }
+                );
+            }
+        }
         ,saveSubjectType: function(caseFileId, caseType) {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
