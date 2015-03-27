@@ -1,9 +1,10 @@
-package com.armedia.acm.plugins.task.web.api;
+package com.armedia.acm.plugins.audit.web.api;
 
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -14,28 +15,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Created by manoj.dhungana on 11/24/2014.
+ * @author riste.tutureski
+ *
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/task", "/api/latest/plugin/task"})
-public class FindTaskEventsByIdAPIController {
-    private final Logger log = LoggerFactory.getLogger(getClass());
+@RequestMapping( { "/api/v1/plugin/audit", "/api/latest/plugin/audit"})
+public class GetAuditByObjectTypeAndObjectIdAPIController {
+	
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    
     private AuditDao auditDao;
-    @RequestMapping(value = "/events/{taskId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
-        public @ResponseBody
-    QueryResultPageWithTotalCount<AuditEvent> taskEvents(
-            @PathVariable(value = "taskId") Long taskId,
+    
+    @RequestMapping(value = "/{objectType}/{objectId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public QueryResultPageWithTotalCount<AuditEvent> getComplaintEventsById(
+    		@PathVariable(value = "objectType") String objectType,
+            @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication)
     {
-        if ( log.isDebugEnabled() )
+        if ( LOG.isDebugEnabled() )
         {
-            log.debug("Finding default access control; start row: " + startRow + "; max rows: " + maxRows);
+            LOG.debug("Finding audit for " + objectType + " with id "  + objectId + "; start row: " + startRow + "; max rows: " + maxRows);
         }
 
-        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(taskId,"TASK",startRow, maxRows);
-        int totalCount = getAuditDao().countAll(taskId,"TASK");
+        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows);
+        int totalCount = getAuditDao().countAll(objectId, objectType);
 
         QueryResultPageWithTotalCount<AuditEvent> retval = new QueryResultPageWithTotalCount<>();
         retval.setStartRow(startRow);

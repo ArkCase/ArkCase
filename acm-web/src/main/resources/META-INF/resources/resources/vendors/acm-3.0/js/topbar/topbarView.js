@@ -127,9 +127,10 @@ Topbar.View = {
             this.$ulAsn = $("ul.nav-user");
             this.$divAsnList = $('.list-group', this.$ulAsn);
             this.$lnkAsn = $("ul.nav-user a[data-toggle='dropdown']");
-            this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
+            //this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
             this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
 
+            // AFDP-931 we don't want the notification popups right now.
             //Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_SAVED_ASN                 ,this.onModelSavedAsn);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_ACTION        ,this.onModelUpdatedAsnAction);
