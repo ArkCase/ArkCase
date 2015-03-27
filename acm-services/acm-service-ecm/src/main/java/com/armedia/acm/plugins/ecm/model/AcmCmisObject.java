@@ -21,6 +21,8 @@ public class AcmCmisObject implements Serializable
     private String type;
     private String category;
     private String cmisObjectId;
+    private String mimeType;
+    private String status;
 
     public Long getObjectId()
     {
@@ -131,4 +133,20 @@ public class AcmCmisObject implements Serializable
     {
         this.cmisObjectId = cmisObjectId;
     }
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

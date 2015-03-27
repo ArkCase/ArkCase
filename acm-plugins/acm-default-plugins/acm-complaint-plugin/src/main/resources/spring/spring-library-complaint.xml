@@ -83,6 +83,8 @@
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
         <property name="saveCaseService" ref="saveCaseService"/>
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="closeComplaintRequestProcessEndHandler" class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestProcessEndHandler">
