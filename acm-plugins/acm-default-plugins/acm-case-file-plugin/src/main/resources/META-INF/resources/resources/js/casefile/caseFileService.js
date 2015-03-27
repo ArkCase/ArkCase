@@ -1459,13 +1459,14 @@ CaseFile.Service = {
         }
         ,onInitialized: function() {
         }
-        ,API_CASE_FILE_HISTORY : "/api/latest/plugin/casefile/events/"
+        ,API_CASE_FILE_HISTORY : "/api/latest/plugin/audit"
 
         ,retrieveHistoryDeferred : function(caseFileId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
                     url =  App.getContextPath() + CaseFile.Service.History.API_CASE_FILE_HISTORY;
+                    url += '/' + CaseFile.Model.DOC_TYPE_CASE_FILE + '/'
                     url += caseFileId;
                     return url;
                 }

@@ -32,8 +32,4 @@
         <property name="eventPublisher" ref="complaintEventPublisher"/>
     </bean>
 
-	<bean id="findComplaintEventsByIdAPIController" class="com.armedia.acm.plugins.complaint.web.api.FindComplaintEventsByIdAPIController">
-        <property name="auditDao" ref="auditDao"/>
-    </bean>
-
 </beans>

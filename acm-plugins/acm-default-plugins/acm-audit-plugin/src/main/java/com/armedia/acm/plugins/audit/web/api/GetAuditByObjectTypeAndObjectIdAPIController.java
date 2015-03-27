@@ -1,10 +1,9 @@
-package com.armedia.acm.plugins.casefile.web.api;
+package com.armedia.acm.plugins.audit.web.api;
 
 
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,28 +19,29 @@ import java.util.List;
  *
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
-public class FindCaseFileEventsByIdAPIController {
+@RequestMapping( { "/api/v1/plugin/audit", "/api/latest/plugin/audit"})
+public class GetAuditByObjectTypeAndObjectIdAPIController {
 	
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     
     private AuditDao auditDao;
     
-    @RequestMapping(value = "/events/{caseFileId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(value = "/{objectType}/{objectId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public QueryResultPageWithTotalCount<AuditEvent> getCaseFileEventsById(
-            @PathVariable(value = "caseFileId") Long caseFileId,
+    public QueryResultPageWithTotalCount<AuditEvent> getComplaintEventsById(
+    		@PathVariable(value = "objectType") String objectType,
+            @PathVariable(value = "objectId") Long objectId,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             Authentication authentication)
     {
         if ( LOG.isDebugEnabled() )
         {
-            LOG.debug("Finding case file events; start row: " + startRow + "; max rows: " + maxRows);
+            LOG.debug("Finding audit for " + objectType + " with id "  + objectId + "; start row: " + startRow + "; max rows: " + maxRows);
         }
 
-        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(caseFileId, CaseFileConstants.OBJECT_TYPE, startRow, maxRows);
-        int totalCount = getAuditDao().countAll(caseFileId, CaseFileConstants.OBJECT_TYPE);
+        List<AuditEvent> pagedResult = getAuditDao().findPagedResults(objectId, objectType, startRow, maxRows);
+        int totalCount = getAuditDao().countAll(objectId, objectType);
 
         QueryResultPageWithTotalCount<AuditEvent> retval = new QueryResultPageWithTotalCount<>();
         retval.setStartRow(startRow);
