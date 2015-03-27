@@ -29,8 +29,5 @@
     <bean id="getCaseTypesAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseTypesAPIController">
         <property name="caseFileProperties" ref="caseFilePluginProperties"/>
     </bean>
-    
-    <bean id="findCaseFileEventsByIdAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCaseFileEventsByIdAPIController">
-        <property name="auditDao" ref="auditDao"/>
-    </bean>
+
 </beans>

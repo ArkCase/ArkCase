@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.complaint.web.api;
+package com.armedia.acm.plugins.audit.api;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -6,6 +6,7 @@ import java.util.Date;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
+import com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.EasyMockSupport;
@@ -32,15 +33,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-complaint-plugin-test.xml"
+        "classpath:/spring/spring-library-audit-plugin-test.xml"
 })
-public class FindComplaintEventsByIdAPIControllerTest extends EasyMockSupport
+public class GetAuditByObjectTypeAndObjectIdAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
 
-    private FindComplaintEventsByIdAPIController unit;
+    private GetAuditByObjectTypeAndObjectIdAPIController unit;
 
     private AuditDao mockAuditDao;
     private Authentication mockAuthentication;
@@ -57,7 +57,7 @@ public class FindComplaintEventsByIdAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
-        unit = new FindComplaintEventsByIdAPIController();
+        unit = new GetAuditByObjectTypeAndObjectIdAPIController();
 
         unit.setAuditDao(mockAuditDao);
 
@@ -68,15 +68,15 @@ public class FindComplaintEventsByIdAPIControllerTest extends EasyMockSupport
     public void findComplaintEventsById() throws Exception
     {
         String ipAddress = "ipAddress";
-        Long complaintId = 500L;
-        String objectType = "COMPLAINT";
+        Long objectId = 500L;
+        String objectType = "OBJECT_TYPE";
         String eventResult = "eventResult";
         String fullEventType = "fullEventType";
         Date eventDate = new Date();
 
         AuditEvent auditEvent = new AuditEvent();
         
-        auditEvent.setObjectId(complaintId);
+        auditEvent.setObjectId(objectId);
         auditEvent.setObjectType(objectType);
         auditEvent.setIpAddress(ipAddress);
         auditEvent.setEventResult(eventResult);
@@ -91,8 +91,8 @@ public class FindComplaintEventsByIdAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockAuditDao.findPagedResults(complaintId, objectType, 0, 10)).andReturn(Arrays.asList(auditEvent));
-        expect(mockAuditDao.countAll(complaintId, objectType)).andReturn(1);
+        expect(mockAuditDao.findPagedResults(objectId, objectType, 0, 10)).andReturn(Arrays.asList(auditEvent));
+        expect(mockAuditDao.countAll(objectId, objectType)).andReturn(1);
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -100,7 +100,7 @@ public class FindComplaintEventsByIdAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/complaint/events/{complaintId}", complaintId)
+                get("/api/latest/plugin/audit/{objectType}/{objectId}", objectType, objectId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
