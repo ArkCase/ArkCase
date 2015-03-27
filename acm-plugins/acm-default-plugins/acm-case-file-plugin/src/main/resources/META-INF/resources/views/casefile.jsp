@@ -146,6 +146,9 @@
                                                     <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
                                                     <small class="text-muted">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                    <small class="text-muted">Owning Group</small></div>
+                                                <div class="col-xs-2 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
                                                     <small class="text-muted">Case Type</small></div>
                                                 <div class="col-xs-2 b-r">

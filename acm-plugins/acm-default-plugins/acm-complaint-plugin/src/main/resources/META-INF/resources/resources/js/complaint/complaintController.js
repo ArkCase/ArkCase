@@ -17,9 +17,17 @@ Complaint.Controller = Complaint.Controller || {
     ,viewChangedAssignee: function(complaintId, assignee) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, complaintId, assignee);
     }
+    ,VIEW_CHANGED_GROUP                 : "complaint-view-changed-group"
+    ,viewChangedGroup: function(complaintId, group) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_GROUP, complaintId, group);
+    }
     ,MODEL_SAVED_ASSIGNEE                  : "complaint-model-saved-assignee"
     ,modelSavedAssignee : function(complaintId, assignee) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, complaintId, assignee);
+    }
+    ,MODEL_SAVED_GROUP                  : "complaint-model-saved-group"
+    ,modelSavedGroup : function(complaintId, group) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_GROUP, complaintId, group);
     }
     ,MODEL_FOUND_COMPLAINT_TYPES             : "complaint-model-found-complaint-types"
     ,modelFoundComplaintTypes: function(complaintTypes) {
