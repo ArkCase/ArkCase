@@ -475,13 +475,14 @@ Task.Service = {
         }
         ,onInitialized: function() {
         }
-        ,API_TASK_HISTORY : "/api/latest/plugin/task/events/"
+        ,API_TASK_HISTORY : "/api/latest/plugin/audit"
 
         ,retrieveHistoryDeferred : function(taskId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
             return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
                 ,function() {
                     var url;
                     url =  App.getContextPath() + Task.Service.History.API_TASK_HISTORY;
+                    url += '/' + Task.Model.DOC_TYPE_TASK + '/'
                     url += taskId;
                     return url;
                 }
