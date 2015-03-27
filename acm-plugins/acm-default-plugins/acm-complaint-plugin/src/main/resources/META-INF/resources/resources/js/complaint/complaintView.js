@@ -1999,7 +1999,11 @@ Complaint.View = Complaint.View || {
                 {
                     var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
                     if (Acm.isNotEmpty(url)) {
-                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + complaint.complaintNumber + "',complaintTitle:'" + complaint.complaintTitle + "',complaintPriority:'" + complaint.priority + "',");
+                        // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
+                        // the Frevvo form will decode it.
+                        var complaintTitle = Acm.goodValue(complaint.complaintTitle);
+                        complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
                         Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, function() {
                             Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
                         });
