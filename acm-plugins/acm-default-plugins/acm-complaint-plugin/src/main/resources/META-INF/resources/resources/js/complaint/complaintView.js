@@ -1601,7 +1601,8 @@ Complaint.View = Complaint.View || {
             AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
         }
         ,onViewSelectedObject: function(nodeType, nodeId) {
-            DocTree.View.switchObject(nodeId);
+            DocTree.Controller.viewChangedParent(nodeType, nodeId);
+            //DocTree.View.switchObject(nodeId);
 
             AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
         }

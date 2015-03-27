@@ -6,21 +6,35 @@
 DocTree.Controller = DocTree.Controller || {
     create : function(args) {
         var name = Acm.goodValue(args.name, "doctree");
-        this.VIEW_CHANGED_TREE = name + "-view-changed-tree";
-        this.VIEW_ADDED_FOLDER = name + "-view-added-folder";
-        this.VIEW_ADDED_DOCUMENT = name + "-view-added-document";
-        this.VIEW_RENAMED_FOLDRE = name + "-view-renamed-folder";
-        this.VIEW_RENAMED_DOCUMENT = name + "-view-renamed-document";
+        this.VIEW_CHANGED_PARENT    = name + "-view-changed-parent";
+        this.VIEW_CHANGED_TREE      = name + "-view-changed-tree";
+        this.MODEL_UPLOADED_FILE     = name + "-model-uploaded-file";
 
-        this.MODEL_ADDED_FOLDER = name + "-model-added-folder";
-        this.MODEL_ADDED_DOCUMENT = name + "-model-added-document";
+        //-------
+
+        this.VIEW_ADDED_FOLDER      = name + "-view-added-folder";
+        this.VIEW_ADDED_DOCUMENT    = name + "-view-added-document";
+        this.VIEW_RENAMED_FOLDRE    = name + "-view-renamed-folder";
+        this.VIEW_RENAMED_DOCUMENT  = name + "-view-renamed-document";
+
+        this.MODEL_ADDED_FOLDER     = name + "-model-added-folder";
+        this.MODEL_ADDED_DOCUMENT   = name + "-model-added-document";
     }
     ,onInitialized: function() {
     }
 
+    ,viewChangedParent: function(objType, objId) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_PARENT, objType, objId);
+    }
     ,viewChangedTree: function() {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_TREE);
     }
+    ,modelUploadedFile: function(uploadInfo, key) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILE, uploadInfo, key);
+    }
+
+    //----------------
+
     ,viewAddedFolder: function(node, parentId, name) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_ADDED_FOLDER, node, parentId, name);
     }

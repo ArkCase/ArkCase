@@ -130,7 +130,7 @@ Topbar.View = {
             this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
             this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
 
-            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
+            //Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_SAVED_ASN                 ,this.onModelSavedAsn);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_ACTION        ,this.onModelUpdatedAsnAction);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_STATUS        ,this.onModelUpdatedAsnStatus);
