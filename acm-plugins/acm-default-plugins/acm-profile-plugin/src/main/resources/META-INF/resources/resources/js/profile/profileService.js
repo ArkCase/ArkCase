@@ -31,8 +31,7 @@ Profile.Service = {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (!Acm.isArray(data))
-            {
+            if (Acm.isNotArray(data)) {
                 return false;
             }
 

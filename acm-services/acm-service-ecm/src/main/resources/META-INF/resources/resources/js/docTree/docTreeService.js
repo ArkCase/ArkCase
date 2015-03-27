@@ -12,21 +12,68 @@ DocTree.Service = {
     }
 
     ,API_JSON: "/resources/ajax-sub2.json"
-    ,API_RETRIEVE_DOCUMENTS_        : "/api/latest/plugin/search/COMPLAINT"
-    ,retrieveDocumentsDeferred: function(objType, objId, folderId, callbackSuccess) {
-        var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_DOCUMENTS_;
+    //,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/plugin/search/COMPLAINT"
+    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"
+    ,API_UPLOAD_FILE: "/api/latest/service/ecm/upload"
+
+    ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callbackSuccess) {
+        var setting = DocTree.Model.Config.getSetting();
+        var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId + "?start=" + pageId;
+
         return Acm.Service.deferredGet(function(data) {
 
                 //save model
 
 //                var rc = [{title: "11",children: [{title: "t11"}, {title: "t12"}]}
 //                    ,{title: "22",children: [{title: "t21"}, {title: "t22"}]}];
+                if (DocTree.Model.validateFolderList(data)) {
+                    var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
+                    DocTree.Model.cacheFolder.put(cacheKey, data);
+                }
+
                 var rc = callbackSuccess(data);
                 return rc;
             }
             ,url
         );
 
+    }
+
+
+    ,_validateUploadInfo: function(data) {
+        // upload response is an array of EcmFile JSON
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isNotArray(data)) {
+            return false;
+        }
+
+        if (0 >= data.length) {
+            return false;
+        }
+        return true;
+    }
+    ,uploadFile: function(formData, key) {
+        var url = App.getContextPath() + this.API_UPLOAD_FILE;
+        Acm.Service.ajax({
+            url: url
+            ,data: formData
+            ,processData: false
+            ,contentType: false
+            ,type: 'POST'
+            ,success: function(response){
+                if (response.hasError) {
+                    DocTree.Controller.modelUploadedFile(response, key);
+                } else {
+                    if (DocTree.Service._validateUploadInfo(response)) {
+                        var uploadInfo = response;
+                        //DocTree.Model.setUploadInfo(uploadInfo);
+                        DocTree.Controller.modelUploadedFile(uploadInfo, key);
+                    }
+                }
+            }
+        });
     }
 
     ,testService: function(node, parentId, folder) {

@@ -307,7 +307,13 @@
 
 
 
-                                            <a href="#" class="font-bold">Documents </a> </div>
+                                            <a href="#" class="font-bold"><div>Documents5 <img id="imgFileLoading" src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ajax-loader.gif" class="dker" style="display:block;"></div> </a>
+                                            <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
+                                            <form id="formDoc" style="display:block;">
+                                                <input type="file" id="file" name="file">
+                                                    <input type="submit">
+                                            </form>
+                                        </div>
 
 
                                         <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
