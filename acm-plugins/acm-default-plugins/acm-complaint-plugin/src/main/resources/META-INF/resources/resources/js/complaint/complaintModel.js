@@ -87,10 +87,12 @@ Complaint.Model = Complaint.Model || {
         }
     }
 
-    ,DOC_TYPE_COMPLAINT  : "COMPLAINT"
-    ,DOC_TYPE_FILE       : "FILE"
-    ,DOC_TYPE_TIMESHEET  : "TIMESHEET"
-    ,DOC_TYPE_COSTSHEET  : "COSTSHEET"
+    ,DOC_TYPE_COMPLAINT     : "COMPLAINT"
+    ,DOC_TYPE_FILE          : "FILE"
+    ,DOC_TYPE_TIMESHEET     : "TIMESHEET"
+    ,DOC_TYPE_COSTSHEET     : "COSTSHEET"
+    ,DOC_TYPE_FILE_SM       : "file"
+    ,DOC_CATEGORY_FILE_SM   : "Document"
 
     ,getComplaintId : function() {
         return ObjNav.Model.getObjectId();
@@ -489,32 +491,35 @@ Complaint.Model = Complaint.Model || {
         }
         ,onInitialized: function() {
         }
-        ,validateUploadedDocuments: function(data){
+        ,validateDocuments:function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isNotArray(data)) {
+            if (Acm.isEmpty(data.containerObjectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.folderId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.children)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalChildren)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.children)) {
                 return false;
             }
             return true;
         }
-        ,validateExistingDocuments: function(data) {
+        ,validateDocument: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.childObjects)) {
+            if (Acm.isEmpty(data.objectId)) {
                 return false;
             }
-            if (Acm.isNotArray(data.childObjects)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateDocumentRecord: function(data) {
-            if (Acm.isEmpty(data.targetId)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.targetName)) {
+            if (Acm.isEmpty(data.name)) {
                 return false;
             }
             if (Acm.isEmpty(data.created)) {
@@ -523,11 +528,48 @@ Complaint.Model = Complaint.Model || {
             if (Acm.isEmpty(data.creator)) {
                 return false;
             }
-            if (Acm.isEmpty(data.status)) {
+            if (!Acm.compare(data.objectType,Complaint.Model.DOC_TYPE_FILE_SM)) {
                 return false;
             }
             return true;
         }
+        ,validateNewDocument: function(data) {
+            // data will be an array of new documents
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if ( Acm.isNotArray(data))
+            {
+                return false;
+            }
+            for ( var a = 0; a < data.length; a++ )
+            {
+                var f = data[a];
+                if (Acm.isEmpty(f.category)) {
+                    return false;
+                }
+                if (!Acm.compare(f.category, Complaint.Model.DOC_CATEGORY_FILE_SM)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.created)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.creator)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileId)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileName)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileType)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         ,onViewClosedAddDocumentWindow: function(complaintId) {
         	ObjNav.Service.Detail.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
         }
