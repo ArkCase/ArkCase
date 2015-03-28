@@ -18,9 +18,17 @@ public class SearchResults
 {
     public int getNumFound(String jsonResults)
     {
+    	int numFound = 0;
+    	
         JSONObject jsonResponseHeader = new JSONObject(jsonResults);
-        JSONObject jsonResponse = jsonResponseHeader.getJSONObject(SearchConstants.PROPERTY_RESPONSE);
-        int numFound = jsonResponse.getInt(SearchConstants.PROPERTY_NUMBER_FOUND);
+        if (jsonResponseHeader != null && jsonResponseHeader.has(SearchConstants.PROPERTY_RESPONSE))
+    	{
+        	JSONObject jsonResponse = jsonResponseHeader.getJSONObject(SearchConstants.PROPERTY_RESPONSE);
+        	if (jsonResponse != null && jsonResponse.has(SearchConstants.PROPERTY_NUMBER_FOUND))
+    		{
+        		numFound = jsonResponse.getInt(SearchConstants.PROPERTY_NUMBER_FOUND);
+    		}
+    	}
 
         return numFound;
     }

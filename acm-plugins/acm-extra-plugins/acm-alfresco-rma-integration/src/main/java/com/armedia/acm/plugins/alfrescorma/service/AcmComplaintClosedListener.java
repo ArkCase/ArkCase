@@ -3,22 +3,12 @@
  */
 package com.armedia.acm.plugins.alfrescorma.service;
 
-import java.util.Collection;
-import java.util.Date;
-
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
+import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-
-import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
-import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
-import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 /**
  * @author riste.tutureski
@@ -27,8 +17,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 public class AcmComplaintClosedListener implements ApplicationListener<ComplaintClosedEvent> {
 
 	private transient Logger LOG = LoggerFactory.getLogger(getClass());
-	private EcmFileDao ecmFileDao;
-	private EcmFileService ecmFileService;
+    private AlfrescoRecordsService alfrescoRecordsService;
 
 	@Override
 	public void onApplicationEvent(ComplaintClosedEvent event) {
@@ -54,81 +43,21 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
         
         if (null != complaint)
         {
-        	Collection<ObjectAssociation> associations =  complaint.getChildObjects();
-
-            // TODO: lookup files the right way
-        	if (null != associations && associations.size() > 0)
-        	{
-        		for (ObjectAssociation association : associations)
-        		{
-        			if ("FILE".equals(association.getTargetType()))
-        			{
-        				try
-        				{
-	        				EcmFile file = ecmFileDao.find(association.getTargetId());
-	        				
-	        				AcmRecord record = new AcmRecord();
-	        				
-	        				record.setEcmFileId(file.getFolder().getCmisFolderId());
-	        		        record.setCategoryFolder("Complaints");
-	        		        record.setOriginatorOrg("Armedia LLC");
-	        		        record.setOriginator(file.getModifier());
-	        		        record.setPublishedDate(new Date());
-	        		        record.setReceivedDate(event.getEventDate());
-	        		        record.setRecordFolder(association.getParentName());
-	        		        
-	        		        try
-	        		        {
-	        		            if ( LOG.isTraceEnabled() )
-	        		            {
-	        		                LOG.trace("Sending JMS message.");
-	        		            }
-	        		            
-	        		            getMuleClient().dispatch("jms://rmaRecord.in", record, null);
-	        		            
-	        		            if ( LOG.isTraceEnabled() )
-	        		            {
-	        		                LOG.trace("Done");
-	        		            }
-
-	        		        }
-	        		        catch (MuleException e)
-	        		        {
-	        		            LOG.error("Could not create RMA folder: " + e.getMessage(), e);
-	        		        }
-	        		        
-        				}
-        				catch(Exception e)
-        				{
-        					LOG.error("Cannot finish Record Management Strategy for file with id=" + association.getTargetId(), e);
-        				}
-        			}
-        		}
-        	}
+			UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
+            getAlfrescoRecordsService().declareAllContainerFilesAsRecords(auth, complaint.getContainer(),
+                    event.getEventDate(), complaint.getComplaintNumber());
         }
 		
 	}
-	
-	public MuleClient getMuleClient()
+
+    public AlfrescoRecordsService getAlfrescoRecordsService()
     {
-        return null;  // this method should be overridden by Spring method injection
+        return alfrescoRecordsService;
     }
 
-	public EcmFileDao getEcmFileDao() {
-		return ecmFileDao;
-	}
-
-	public void setEcmFileDao(EcmFileDao ecmFileDao) {
-		this.ecmFileDao = ecmFileDao;
-	}
-
-	public EcmFileService getEcmFileService()
-	{
-		return ecmFileService;
-	}
-
-	public void setEcmFileService(EcmFileService ecmFileService)
-	{
-		this.ecmFileService = ecmFileService;
-	}
+    public void setAlfrescoRecordsService(AlfrescoRecordsService alfrescoRecordsService)
+    {
+        this.alfrescoRecordsService = alfrescoRecordsService;
+    }
 }

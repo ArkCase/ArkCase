@@ -1885,8 +1885,8 @@ Task.View = Task.View || {
                     record.id = Acm.goodValue(documentsUnderReview.fileId, 0);
                     record.title = Acm.goodValue(documentsUnderReview.fileName);
                     record.created = Acm.getDateFromDatetime(documentsUnderReview.created);
-                    record.creator = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
-                    record.status = Acm.goodValue(documentsUnderReview.parentObjects[0].status);
+                    record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    record.status = Acm.goodValue(documentsUnderReview.status);
                     jtData.Records.push(record);
                 }
                 //jtData.TotalRecordCount = documentsUnderReview.length;
