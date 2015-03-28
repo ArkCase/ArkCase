@@ -35,10 +35,10 @@ Complaint.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_GET_APPROVERS             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_APPROVERS             : "/api/latest/service/functionalaccess/users/acm-complaint-approve"
         ,API_GET_COMPLAINT_TYPES       : "/api/latest/plugin/complaint/types"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
-        ,API_GET_GROUPS				   : "/api/latest/users/groups/get?n=1000&s=name asc"
+        ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
         ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
 
         ,_validateAssignees: function(data) {
@@ -51,6 +51,11 @@ Complaint.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
+        	var groupGetParameter = '';
+        	var groupName = Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint());
+        	if (groupName && groupName.length > 0) {
+        		groupGetParameter = '/' + groupName;
+        	}
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
@@ -64,7 +69,7 @@ Complaint.Service = {
                         }
                     }
                 }
-                ,App.getContextPath() + this.API_GET_APPROVERS
+                ,App.getContextPath() + this.API_GET_APPROVERS + groupGetParameter
             )
         }
 
