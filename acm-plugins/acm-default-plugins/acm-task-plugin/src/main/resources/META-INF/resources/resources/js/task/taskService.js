@@ -37,7 +37,7 @@ Task.Service = {
         ,onInitialized: function() {
         }
 
-        //,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        //,API_GET_ASSIGNEES             : "/api/latest/service/functionalaccess/users/acm-complaint-approve"
 
         ,API_GET_ASSIGNEES             : "/api/latest/plugin/search/USER"
 
