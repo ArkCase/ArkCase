@@ -37,10 +37,10 @@ CaseFile.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_GET_ASSIGNEES             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_ASSIGNEES             : "/api/latest/service/functionalaccess/users/acm-case-approve"
         ,API_GET_SUBJECT_TYPES         : "/api/latest/plugin/casefile/caseTypes"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
-        ,API_GET_GROUPS				   : "/api/latest/users/groups/get?n=1000&s=name asc"
+        ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
         ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
 
         ,_validateAssignees: function(data) {
@@ -53,6 +53,11 @@ CaseFile.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
+        	var groupGetParameter = '';
+        	var groupName = CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile());
+        	if (groupName && groupName.length > 0) {
+        		groupGetParameter = '/' + groupName;
+        	}
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
@@ -66,7 +71,7 @@ CaseFile.Service = {
                         }
                     }
                 }
-                ,App.getContextPath() + this.API_GET_ASSIGNEES
+                ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter
             )
         }
 

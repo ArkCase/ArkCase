@@ -94,6 +94,11 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         // need an _lcs field for sorting
         doc.setName_lcs(in.getFileName());
 
+        doc.setCmis_version_series_id_s(in.getVersionSeriesId());
+        
+        doc.setMime_type_s(in.getFileMimeType());
+        
+        doc.setStatus_s(in.getStatus());
 
         return doc;
     }

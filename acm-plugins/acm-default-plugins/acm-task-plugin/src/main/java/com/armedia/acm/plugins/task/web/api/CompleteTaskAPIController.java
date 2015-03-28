@@ -44,6 +44,10 @@ public class CompleteTaskAPIController
         {
             AcmTask completed = getTaskDao().completeTask(authentication, taskId);
 
+            //TODO after demo should be found appropriate solution in taskDao.
+            //this is a bug-926 fix (workaround)
+            completed.setStatus("CLOSED");
+
             publishTaskCompletedEvent(authentication, httpSession, completed, true);
 
             return completed;

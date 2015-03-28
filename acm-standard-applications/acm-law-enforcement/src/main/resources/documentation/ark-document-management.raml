@@ -3,6 +3,29 @@ title: ArkCase Document Management
 
 
 /api/v1/service/ecm:
+  /container/{objectType}/{objectId}:
+    description: User must be authenticated and must have 'read' access on the object identified by the object type and object id..
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of all files in the requested container; this could take some time if the container has many files.
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json
   /id/{fileId}:
     delete:
       description: Remove the requested file (both metadata and the content file itself)
@@ -42,7 +65,7 @@ title: ArkCase Document Management
         required: true
         minimum: 1
     get:
-      description: Get list of objects in the requested container. 
+      description: Get list of objects in the root folder of the requested container. 
       queryParameters:
         s:
           description: Sort order
