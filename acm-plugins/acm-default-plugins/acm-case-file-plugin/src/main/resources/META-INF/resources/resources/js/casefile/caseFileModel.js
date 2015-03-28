@@ -851,7 +851,7 @@ CaseFile.Model = CaseFile.Model || {
         ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
         ,getAssignees: function() {
-            return this._assignees.get();
+            return CaseFile.Service.Lookup.retrieveAssignees();
         }
         ,setAssignees: function(assignees) {
             this._assignees.set(assignees);
