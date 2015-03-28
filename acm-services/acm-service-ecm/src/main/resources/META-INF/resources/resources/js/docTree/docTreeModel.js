@@ -79,7 +79,21 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-
+    ,validateUploadInfo: function(data) {
+        if (Acm.isArrayEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data[0].folder)) {
+            return false;
+        }
+        if (Acm.isNotArray(data[0].versions)) {
+            return false;
+        }
+        if (Acm.isNotArray(data[0].tags)) {
+            return false;
+        }
+        return true;
+    }
 
     ,Key: {
         create: function(args) {

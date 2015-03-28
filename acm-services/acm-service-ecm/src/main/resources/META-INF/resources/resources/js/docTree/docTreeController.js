@@ -29,8 +29,8 @@ DocTree.Controller = DocTree.Controller || {
     ,viewChangedTree: function() {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_TREE);
     }
-    ,modelUploadedFile: function(uploadInfo, key) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILE, uploadInfo, key);
+    ,modelUploadedFile: function(uploadInfo, folderNode) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILE, uploadInfo, folderNode);
     }
 
     //----------------

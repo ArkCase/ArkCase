@@ -48,51 +48,62 @@ DocTree.View = DocTree.View || {
         DocTree.View.$formDoc.submit();
     }
 
-    ,_doAddFileNode: function(node, name) {
-        return node.addChildren({"title": name, "loadStatus": "loading", "action": DocTree.View.getHtmlActionDocument()});
+    ,_addFileNode: function(folderNode, name) {
+        var fileNode = folderNode.addChildren({"title": name, "loadStatus": "loading", "action": DocTree.View.getHtmlActionDocument()});
+        fileNode.setStatus("loading");
+        return fileNode;
+    }
+    ,_addingFileNode: function(folderNode, name) {
+        var deferred = $.Deferred();
+        if (folderNode.lazy && !folderNode.children) {
+            folderNode.setExpanded(true).always(function(){// Wait until expand finished, then do the paste
+                var fileNode = DocTree.View._addFileNode(folderNode, name);
+                deferred.resolve(fileNode);
+            });
+        } else {
+            var fileNode = DocTree.View._addFileNode(folderNode, name);
+            deferred.resolve(fileNode);
+        }
+        return deferred.promise();
+    }
+    ,onFailedAddingFileNode: function() {
+        var z = 1;
     }
     ,onSubmitFormDoc: function(event, ctrl) {
         event.preventDefault();
 
-        var _this = DocTree.View;
+        var folderNode = DocTree.View.uploadToFolderNode;
+        var name = DocTree.View.$fileInput[0].files[0].name;
+        var promiseAddNode = DocTree.View._addingFileNode(folderNode, name);
+        promiseAddNode.fail(DocTree.View.onFailedAddingFileNode);
+
         var fd = new FormData();
         fd.append("parentObjectType", DocTree.Model.getObjType());
         fd.append("parentObjectId", DocTree.Model.getObjId());
+        if (0 < folderNode.data.folderId) {
+            fd.append("parentFolderId", folderNode.data.folderId);
+        }
         fd.append("fileType", "other");
         fd.append("category", "Document");
-        fd.append("file", _this.$fileInput[0].files[0]);
-        DocTree.Service.uploadFile(fd, 0);
-        return;
+        fd.append("file", DocTree.View.$fileInput[0].files[0]);
+        var promiseUploadFile = DocTree.Service.uploadFile(fd, folderNode);
 
+        $.when(promiseUploadFile, promiseAddNode).done(function(uploadInfo, fileNode){
+            if (fileNode && DocTree.Model.validateUploadInfo(uploadInfo)) {
+                fileNode.setStatus("ok");
+                fileNode.title = uploadInfo[0].fileName;
+                fileNode.data.fileName = uploadInfo[0].fileName;
+                fileNode.data.id = uploadInfo[0].fileId;
+                fileNode.data.fileType = uploadInfo[0].fileType;
+                fileNode.data.type = uploadInfo[0].fileType;
+                fileNode.renderTitle();
+                //fileNode.render(true);
 
-        var _this = DocTree.View;
-        var name = _this.$fileInput[0].files[0].name;
-        var node = DocTree.View.uploadToFolderNode;
-        var child;
-        if (node.lazy && !node.children) {
-            node.setExpanded(true).always(function(){// Wait until expand finished, then do the paste
-                child = DocTree.View._doAddFileNode(node, name);
-                child.setStatus("loading");
-            });
-        } else {
-            child = DocTree.View._doAddFileNode(node, name);
-            child.setStatus("loading");
-        }
-
-        //var cacheKey = DocTree.Model.getCacheKey(node.data.folderId, node.data.startRow);
-        //DocTree.Model.cacheFolder.remove(cacheKey);
-
-        var fd = new FormData();
-        fd.append("parentObjectType", DocTree.Model.getObjType());
-        fd.append("parentObjectId", DocTree.Model.getObjId());
-        if (0 < node.data.folderId) {
-            fd.append("parentFolderId", node.data.folderId);
-        }
-        fd.append("fileType", "roi");
-        fd.append("category", "Document");
-        fd.append("file", _this.$fileInput[0].files[0]);
-        DocTree.Service.uploadFile(fd, node.key);
+            }
+            var z = 1;
+        });
     }
+
 
     ,showImgFileLoading: function(show) {
         Acm.Object.show(this.$imgFileLoading, show);
@@ -103,6 +114,30 @@ DocTree.View = DocTree.View || {
         DocTree.View.switchObject(objType, objId);
     }
     ,onViewChangedTree: function() {
+
+        //var $btnRootFolder = $("#btnRootFolder");
+//        DocTree.View.$tree.contextmenu({
+//            delegate: "button",
+//            menu: [
+//                {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
+//                {title: "----"},
+//                {title: "More", children: [
+//                    {title: "Sub 1", cmd: "sub1"},
+//                    {title: "Sub 2", cmd: "sub1"}
+//                ]}
+//            ],
+//            select: function(event, ui) {
+//                alert("select " + ui.cmd + " on " + ui.target.text());
+//            }
+//        });
+
+        return;
+
+        $btnRootFolder.on("click", function(e) {
+            alert("btnRootFolder");
+        });
+
+
         $("a[cmd]").on("click", function(e) {
             e.preventDefault();
             var cmd = $(this).attr("cmd");
@@ -115,9 +150,9 @@ DocTree.View = DocTree.View || {
             }
         });
     }
-    ,onModelUploadedFile: function(uploadInfo, key) {
-        var node = DocTree.View.tree.getNodeByKey(key);
-        if (node) {
+    ,onModelUploadedFile: function(uploadInfo, folderNode) {
+        //var node = DocTree.View.tree.getNodeByKey(key);
+        //if (node) {
             if (uploadInfo.hasError) {
                 //node.setStatus("error");
                 var z = 1;
@@ -126,7 +161,7 @@ DocTree.View = DocTree.View || {
                 var z = 2;
             }
 
-        }
+        //}
         var z = 3;
 
     }
@@ -223,7 +258,8 @@ DocTree.View = DocTree.View || {
             ,source: DocTree.View.source()
             ,lazyLoad: DocTree.View.lazyLoad
             ,edit: {
-                triggerStart: ["f2", "dblclick", "shift+click", "mac+enter"]
+                //triggerStart: ["f2", "dblclick", "shift+click", "mac+enter"]
+                triggerStart: ["f2", "shift+click", "mac+enter"]
                 ,beforeEdit: function(event, data){
                     if (data.node.data.root) {
                         return false;// Return false to prevent edit mode
@@ -344,9 +380,32 @@ DocTree.View = DocTree.View || {
         var $tree = this.$tree;
         $tree.fancytree(treeArgsToUse)
             .on("command", DocTree.View.onCommand)
-            .on("keydown", DocTree.View.onKeyDown);
+            .on("keydown", DocTree.View.onKeyDown)
+            //.on("dblclick", DocTree.View.onDblClick)
+        ;
 
         this.tree = $tree.fancytree("getTree");
+
+        $tree.contextmenu({
+            delegate: "button"
+            ,menu: []
+            ,beforeOpen: function(event, ui) {
+                var node = $.ui.fancytree.getNode(ui.target);
+                $tree.contextmenu("replaceMenu", DocTree.View.getContextMenu(node));
+                $tree.contextmenu("enableEntry", "paste", !!DocTree.View.CLIPBOARD);
+                node.setActive();
+            }
+            ,select: function(event, ui) {
+                var that = this;
+                //var node = $.ui.fancytree.getNode(ui.target);
+
+                // delay the event, so the menu can close and the click event does
+                // not interfere with the edit control
+                setTimeout(function(){
+                    $(that).trigger("command", {cmd: ui.cmd});
+                }, 100);
+            }
+        });
 
         $tree.contextmenu({
             delegate: "span.fancytree-node"
@@ -419,7 +478,7 @@ DocTree.View = DocTree.View || {
         return src;
     }
     ,getHtmlActionRoot: function() {
-        return "<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'>"
+        return "<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdownNot' id='btnRootFolder'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'>"
             + "<li><a href='#' cmd='newFolder'>New Folder</a></li>"
             + "<li><a href='#' cmd='newDocument'>New Document</a></li>"
             + "</ul></div>";
@@ -698,6 +757,9 @@ DocTree.View = DocTree.View || {
             case "history":
                 node.setStatus("ok");
                 break;
+            case "open":
+                node.setStatus("loading");
+                break;
             default:
                 Acm.log("Unhandled command: " + data.cmd);
                 return;
@@ -772,6 +834,10 @@ DocTree.View = DocTree.View || {
             // e.stopPropagation();
             return false;
         }
+    }
+    ,onDblClick: function(e) {
+        $(this).trigger("command", {cmd: "open"});
+        //return false;
     }
     ,getContextMenu: function(node) {
         var menu = [];

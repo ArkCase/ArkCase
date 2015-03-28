@@ -40,23 +40,36 @@ DocTree.Service = {
     }
 
 
-    ,_validateUploadInfo: function(data) {
-        // upload response is an array of EcmFile JSON
-        if (Acm.isEmpty(data)) {
-            return false;
-        }
-        if (Acm.isNotArray(data)) {
-            return false;
-        }
-
-        if (0 >= data.length) {
-            return false;
-        }
-        return true;
+    ,uploadFile: function(formData, folderNode) {
+        return $.Deferred(function($dfd){
+            var url = App.getContextPath() + DocTree.Service.API_UPLOAD_FILE;
+            Acm.Service.ajax({
+                url: url
+                ,data: formData
+                ,processData: false
+                ,contentType: false
+                ,type: 'POST'
+                ,success: function(response){
+                    if (response.hasError) {
+                        DocTree.Controller.modelUploadedFile(response, folderNode);
+                        $dfd.reject();
+                    } else {
+                        if (DocTree.Model.validateUploadInfo(response)) {
+                            var uploadInfo = response;
+                            //DocTree.Model.setUploadInfo(uploadInfo);
+                            DocTree.Controller.modelUploadedFile(uploadInfo, folderNode);
+                            $dfd.resolve(uploadInfo);
+                        } else {
+                            $dfd.reject();
+                        }
+                    }
+                }
+            });
+        });
     }
-    ,uploadFile: function(formData, key) {
+    ,uploadFile0: function(formData, key) {
         var url = App.getContextPath() + this.API_UPLOAD_FILE;
-        Acm.Service.ajax({
+        return Acm.Service.ajax({
             url: url
             ,data: formData
             ,processData: false
@@ -66,7 +79,7 @@ DocTree.Service = {
                 if (response.hasError) {
                     DocTree.Controller.modelUploadedFile(response, key);
                 } else {
-                    if (DocTree.Service._validateUploadInfo(response)) {
+                    if (DocTree.Model.validateUploadInfo(response)) {
                         var uploadInfo = response;
                         //DocTree.Model.setUploadInfo(uploadInfo);
                         DocTree.Controller.modelUploadedFile(uploadInfo, key);
