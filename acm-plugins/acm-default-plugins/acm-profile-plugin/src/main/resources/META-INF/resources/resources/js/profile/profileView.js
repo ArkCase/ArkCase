@@ -45,7 +45,9 @@ Profile.View = {
 
             var _this = Profile.View.Picture;
             var fd = new FormData();
-            fd.append("userId", App.getUserName());
+            fd.append("parentObjectId", Profile.Model.Info.getProfileInfo().userOrgId);
+            fd.append("parentObjectType", Profile.Model.DOC_TYPE_USER_PROFILE);
+            fd.append("fileType", "user_profile");
             fd.append("file", _this.$fileInput[0].files[0]);
             Profile.Service.Picture.uploadImage(fd);
             Profile.View.Picture.showImgPicLoading(true);
@@ -499,7 +501,18 @@ Profile.View = {
                 }
                 ,title: 'Subscriptions'
                 ,paging: true
-                ,pageSize: 10 //Set page size (default: 10)
+                ,selecting: true //Enable selecting
+                ,multiselect: true //Allow multiple selecting
+                ,selectingCheckboxes: true //Show checkboxes on first column                ,pageSize: 10 //Set page size (default: 10)
+                ,toolbar: {
+                    items: [{
+                        text: 'Unsubscribe Selected',
+                        click: function () {
+                            var $selectedRows = Profile.View.Subscription.$divSubscriptions.jtable('selectedRows');
+                            Profile.View.Subscription.$divSubscriptions.jtable('deleteRows', $selectedRows);
+                        }
+                    }]
+                }
                 ,actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
                         var subscriptions = Profile.Model.Subscription.cacheSubscription.get(App.getUserName());
@@ -531,7 +544,7 @@ Profile.View = {
                         ,key: true
                         ,create: false
                         ,edit: false
-                        ,list: true
+                        ,list: false
                     }
                     ,parentId: {
                         title: 'Object ID'

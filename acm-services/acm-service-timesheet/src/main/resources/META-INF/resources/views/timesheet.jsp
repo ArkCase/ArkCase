@@ -9,6 +9,9 @@
 	    <title><spring:message code="timesheet.page.title" text="Time Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
             <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
+            <span itemprop="objType">TIMESHEET</span>
+            <span itemprop="objId">${objId}</span>
+            <span itemprop="treeSort">${treeSort}</span>
         </div>
 	</jsp:attribute>
 
@@ -44,6 +47,7 @@
         <!-- X-Editable -->
         <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
         <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
+
 
     </jsp:attribute>
 
@@ -97,32 +101,8 @@
                                             <div class="col-xs-12">
                                                 <div class="">
                                                     <div class=" clearfix">
-
-                                                        <%--keep this for showing parent data --%>
-
-                                                        <%--<div class="col-xs-2 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
-                                                            <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
-                                                        <div class="col-xs-2 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                            <small class="text-muted">Create Date</small></div>
-                                                        <div class="col-xs-1 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                                            <small class="text-muted">Priority</small></div>
-                                                        <div class="col-xs-2 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                            <small class="text-muted">Assigned To</small></div>
-                                                        <div class="col-xs-2 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                            <small class="text-muted">Case Type</small></div>
-                                                        <div class="col-xs-2 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                                            <small class="text-muted">Due Date</small></div>
-                                                        <div class="col-xs-1">
-                                                            <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">State</small></div>--%>
-
-                                                        <div class="col-xs-2 b-r">
-                                                            <small class="text-muted">Parent Info</small></div>
+                                                        <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-title="Timesheet Name"></a> </div>
+                                                        <small class="text-muted"><a href="#" id="timesheetModifiedDate" ></a></small></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -176,10 +156,10 @@
                                                 </div>
                                             </div>
 
-                                            <div class="row" id="tabPeople" style="display:none;">
+                                            <div class="row" id="tabPerson" style="display:none;">
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
-                                                        <div id="divPeople" style="width:100%"></div>
+                                                        <div id="divPerson" style="width:100%"></div>
                                                     </section>
                                                 </div>
                                             </div>

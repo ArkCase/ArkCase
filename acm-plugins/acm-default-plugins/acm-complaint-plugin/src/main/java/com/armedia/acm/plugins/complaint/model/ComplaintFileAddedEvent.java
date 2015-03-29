@@ -8,6 +8,7 @@ import java.util.Date;
 public class ComplaintFileAddedEvent extends ComplaintPersistenceEvent {
 
     private static final String EVENT_TYPE = "com.armedia.acm.complaint.file.added";
+    private static final long serialVersionUID = -2343847954432215770L;
 
     public ComplaintFileAddedEvent( Complaint source ) {
 

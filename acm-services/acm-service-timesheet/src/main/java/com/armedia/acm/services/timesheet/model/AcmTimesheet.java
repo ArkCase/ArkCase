@@ -14,7 +14,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -23,6 +27,10 @@ import javax.persistence.TemporalType;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * @author riste.tutureski
@@ -39,8 +47,9 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "cm_timesheet_user_id")
-	private String userId;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "cm_timesheet_user_id")
+	private AcmUser user;
 	
 	@Column(name = "cm_timesheet_start_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,6 +65,10 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 	@Column(name = "cm_timesheet_status")
 	private String status;
 	
+	@Lob
+    @Column(name = "cm_timesheet_details")
+    private String details;
+	
 	@Column(name = "cm_timesheet_creator")
 	private String creator;
 	
@@ -70,21 +83,28 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
     @Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_object_id")
+    private List<AcmParticipant> participants = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
+	
 	@PrePersist
     protected void beforeInsert()
     {
-		if (getTimes() != null)
-		{
-			for (AcmTime time : getTimes())
-			{
-				time.setTimesheet(this);
-			}
-		}
+		setChildPointers();
     }
 	
 	@PreUpdate
     protected void beforeUpdate()
     {
+		setChildPointers();
+    }
+	
+	private void setChildPointers()
+	{
 		if (getTimes() != null)
 		{
 			for (AcmTime time : getTimes())
@@ -92,7 +112,22 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 				time.setTimesheet(this);
 			}
 		}
-    }
+		
+		if (getParticipants() != null)
+		{
+			for (AcmParticipant participant : getParticipants())
+			{
+				participant.setObjectId(getId());
+				participant.setObjectType(getObjectType());
+			}
+		}
+		
+		if (getContainer() != null)
+		{
+			getContainer().setContainerObjectId(getId());
+			getContainer().setContainerObjectType(getObjectType());
+		}
+	}
 	
 	@Override
 	public Long getId() 
@@ -105,16 +140,14 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 		this.id = id;
 	}
 	
-	public String getUserId() 
-	{
-		return userId;
+	public AcmUser getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) 
-	{
-		this.userId = userId;
+	public void setUser(AcmUser user) {
+		this.user = user;
 	}
-	
+
 	public Date getStartDate() 
 	{
 		return startDate;
@@ -149,6 +182,14 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 	public void setStatus(String status) 
 	{
 		this.status = status;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	@Override
@@ -199,7 +240,24 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity {
 		this.modified = modified;
 	}
 
+	public List<AcmParticipant> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(List<AcmParticipant> participants) {
+		this.participants = participants;
+	}
+
+	public AcmContainer getContainer() {
+		return container;
+	}
+
+	public void setContainer(AcmContainer container) {
+		this.container = container;
+	}
+
 	@Override
+	@JsonIgnore
 	public String getObjectType() 
 	{
 		return TimesheetConstants.OBJECT_TYPE;

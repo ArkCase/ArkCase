@@ -3,6 +3,29 @@ title: ArkCase Document Management
 
 
 /api/v1/service/ecm:
+  /container/{objectType}/{objectId}:
+    description: User must be authenticated and must have 'read' access on the object identified by the object type and object id..
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of all files in the requested container; this could take some time if the container has many files.
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json
   /id/{fileId}:
     delete:
       description: Remove the requested file (both metadata and the content file itself)
@@ -24,13 +47,63 @@ title: ArkCase Document Management
   /folder/{folderId}:
       delete:
         description: deletes the requested folder.  
-      get:
-        description: Get a tree view with folder and file metadata for the requested folder.  Normally the folder ID would be a container folder (case file folder, complaint folder, or task folder), but this is not required.  It could be any folder.
       /{newFolderName}:
         post:
           description: Rename the requested folder
         put:
           description: Create a new folder under the requested folder 
+  /folder/{objectType}/{objectId}:
+    description: User must be authenticated and must have 'read' access on the requested object.
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of objects in the root folder of the requested container. 
+      queryParameters:
+        s:
+          description: Sort order
+          required: false
+          default: name
+          enum: [ "author", "category", "created", "creator", "modified", "modifier", "name", "type", "version" ]
+        dir:
+          description: Sort direction (ascending or descending)
+          required: false
+          enum: ["ASC", "DESC"]
+          default: asc   
+        start:
+          description: Paging support - the starting row.
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+        n:
+          description: Paging support - the number of rows
+          required: false
+          type: integer
+          default: 1000
+          minimum: 0
+        category:
+          description: Used to request only documents, only correspondence, or both; to request both documents and correspondence, do not send a category at all
+          required: false
+          default: null
+          type: string
+          enum: [ "Correspondence", "Document" ]
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json    
   /moveToAnotherContainer:
     post:
       description: Move one or more files to another container
@@ -44,9 +117,15 @@ title: ArkCase Document Management
         multipart/form-data:
           formParameters:
             file:
-              description: The file to be added
+              description: Files to be added; file parts can have any name, so long as the MIME type indicates it is a file.  All files in the request will be added to the system.
               type: file
-              required: true
+              required: true  
+            category:
+              description: What kind of file is being uploaded.
+              type: string
+              enum: [ "Document", "Correspondence" ]
+              required: false
+              default: "Document"             
             fileType:
               description: The logical file type ("other", "roi", ...); not the MIME type.
               type: string
@@ -61,19 +140,97 @@ title: ArkCase Document Management
               description: Object ID for the parent object
               type: integer
               required: true
-            parentCmisFolderId:
-              description: CMIS object ID for the folder to contain the uploaded file.  If given, the folder must be within the parent object's folder tree; otherwise an exception is thrown.  The uploaded file will be placed in the requested folder.  If not given, the folder will be placed in the parent object's root folder.
+            parentFolderId:
+              description: Database object ID for the folder to contain the uploaded file.  If given, the folder must be within the parent object's folder tree; otherwise an exception is thrown.  The uploaded file will be placed in the requested folder.  If not given, the folder will be placed in the parent object's root folder.
               type: string
               required: false   
       responses:
         403:
           description: User is not authorized to add a file to the container object.
         200:
-          description: File successfully added.
+          description: File successfully added.  Body is an array of EcmFile objects.
           body:
             application/json:
-              schema:
-                !include ecm-file-schema.json    
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "title": "Array of files",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties":
+                    {
+                      "id": {
+                        "type": "integer",
+                        "description": "unique ID for this ECM file",
+                        "minimum": 1
+                      },
+                      "cmisVersionSeriesLabel": {
+                        "type": "string",
+                        "description": "CMIS Object ID representing every version of this file"
+                      },
+                      "activeVersionLabel": {
+                        "type": "string",
+                        "description": "Version tag of the active file version"
+                      },
+                      "fileType": {
+                        "type": "string",
+                        "description": "application-defined file type, e.g. other, roi, report"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "the MIME type of the active version; this convenience property is an alternative to iterating over the fileVersions to find the one with the activeVersionLabel"
+                      },
+                      "fileName": {
+                        "type": "string",
+                        "description": "The name of the file, e.g. MyFile.docx"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "File state, most files will be ACTIVE"
+                      },
+                      "participants": {
+                        "description": "List of file participants",
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "creator": {
+                        "type": "string",
+                        "description": "User id that created the file; could be a system user"
+                      },
+                      "modifier": {
+                        "type": "string",
+                        "description": "User id that last updated the file; could be a system user"
+                      },
+                      "created": {
+                        "type": "string",
+                        "description": "Date the file was added to the system",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+                      },
+                      "modified": {
+                        "type": "string",
+                        "description": "Date the file was last modified",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+                      },
+                      "objectType": {
+                        "type": "string",
+                        "description": "Object type for this object - the constant value FILE",
+                        "pattern": "^FILE$"
+                      },
+                      "fileVersions": {
+                        "description": "List of file versions",
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [ "fileType" ]
+                  }    
+                }
     /{fileId}:
       uriParameters:
         fileId:

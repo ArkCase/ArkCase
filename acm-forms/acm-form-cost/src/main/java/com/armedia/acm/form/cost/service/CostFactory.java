@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.services.costsheet.dao.AcmCostDao;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
@@ -20,7 +21,7 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
  * @author riste.tutureski
  *
  */
-public class CostFactory {
+public class CostFactory extends FrevvoFormFactory {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -52,12 +53,14 @@ public class CostFactory {
 		if (form != null)
 		{
 			retval.setId(form.getId());
-			retval.setUserId(form.getUser());
+			retval.setUser(getUser(form.getUser()));
 			retval.setParentId(form.getObjectId());
 			retval.setParentType(form.getObjectType());
 			retval.setParentNumber(form.getObjectNumber());
 			retval.setStatus(form.getStatus());
 			retval.setCosts(asAcmCosts(form.getItems()));
+			retval.setDetails(form.getDetails());
+			retval.setParticipants(asAcmParticipants(form.getApprovers()));
 		}
 		else
 		{
@@ -86,12 +89,18 @@ public class CostFactory {
 			form = new CostForm();
 			
 			form.setId(costsheet.getId());
-			form.setUser(costsheet.getUserId());
+			
+			if (costsheet.getUser() != null)
+			{
+				form.setUser(costsheet.getUser().getUserId());
+			}
+
 			form.setObjectId(costsheet.getParentId());
 			form.setObjectType(costsheet.getParentType());
 			form.setObjectNumber(costsheet.getParentNumber());
 			form.setStatus(costsheet.getStatus());
 			form.setItems(asFrevvoCostItems(costsheet.getCosts()));
+			form.setApprovers(asFrevvoApprovers(costsheet.getParticipants()));
 		}
 		else
 		{
@@ -190,4 +199,5 @@ public class CostFactory {
 	public void setAcmCostDao(AcmCostDao acmCostDao) {
 		this.acmCostDao = acmCostDao;
 	}	
+	
 }

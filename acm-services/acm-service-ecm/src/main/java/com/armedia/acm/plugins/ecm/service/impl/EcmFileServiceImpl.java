@@ -1,16 +1,27 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
-import com.armedia.acm.plugins.ecm.model.FileUpload;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
-
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -18,18 +29,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by armdev on 5/1/14.
@@ -42,48 +56,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     
     private EcmFileDao ecmFileDao;
 
+    private AcmContainerDao containerFolderDao;
+
     private ApplicationEventPublisher applicationEventPublisher;
+
+    private Map<String, String> sortParameterNameToCmisFieldName;
+
+    private Map<String, String> solrObjectTypeToAcmType;
+
+    private Properties ecmFileServiceProperties;
 
     private MuleClient muleClient;
 
-    @Override
-    public EcmFile upload(
-            String fileType,
-            InputStream fileContents,
-            String fileContentType,
-            String fileName,
-            Authentication authentication,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
-    {
-        if ( log.isInfoEnabled() )
-        {
-            log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
-        }
+    private ExecuteSolrQuery solrQuery;
+    private Map<String, String> categoryMap;
 
-        try
-        {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
-                    authentication,
-                    fileType,
-                    fileContents,
-                    fileContentType,
-                    fileName,
-                    targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
-
-            return uploaded;
-        }
-        catch (MuleException e)
-        {
-            log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(fileName, e.getMessage(), e);
-        }
-    }
+    private SearchResults searchResults;
 
     @Override
     public EcmFile upload(
@@ -95,14 +83,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
         }
 
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
@@ -113,9 +101,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     fileContentType,
                     fileName,
                     targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
+                    container);
 
             return uploaded;
         }
@@ -133,14 +119,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         if ( log.isInfoEnabled() )
         {
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + file.getOriginalFilename() + "'");
             log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
         }
+
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
 
         try
         {
@@ -151,9 +138,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     file.getContentType(),
                     file.getOriginalFilename(),
                     targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
+                    container);
 
             return uploaded;
         } catch (IOException | MuleException e)
@@ -164,57 +149,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
 
-    @Override
-    public ResponseEntity<? extends Object> upload(
-            String fileType,
-            MultipartFile file,
-            String acceptHeader,
-            String contextPath,
-            Authentication authentication,
-            String targetCmisFolderId,
-            String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
-    {
-
-        HttpHeaders responseHeaders = contentTypeFromAcceptHeader(acceptHeader);
-
-        try
-        {
-            EcmFile uploaded = upload(
-                    fileType,
-                    file,
-                    authentication,
-                    targetCmisFolderId,
-                    parentObjectType,
-                    parentObjectId,
-                    parentObjectName);
-
-            FileUpload fileUpload = fileUploadFromEcmFile(file, contextPath, uploaded);
-
-            Object retval;
-
-            if ( responseHeaders.getContentType().equals(MediaType.TEXT_PLAIN) )
-            {
-                // sending a string with text/plain for IE.
-                String json = constructJqueryFileUploadJson(fileUpload);
-                retval = json;
-            }
-            else
-            {
-                // Jackson will convert this map into proper JSON for non-IE browsers.
-                Map<String, List<FileUpload>> jsonMap = makeFileUploadMap(fileUpload);
-                retval = jsonMap;
-            }
-
-            return new ResponseEntity<>(retval, responseHeaders, HttpStatus.OK);
-        } catch (IOException  e)
-        {
-            log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(file.getOriginalFilename(), e.getMessage(), e);
-        }
-    }
-    
     @Override
 	public EcmFile update(EcmFile ecmFile, MultipartFile file,
 			Authentication authentication) throws AcmCreateObjectFailedException 
@@ -284,65 +218,272 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    public String constructJqueryFileUploadJson(FileUpload fileUpload) throws IOException
+    @Override
+    @Transactional
+    public AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
+            AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        Map<String, List<FileUpload>> retMap = makeFileUploadMap(fileUpload);
+        log.info("Finding folder for object " + objectType + " id " + objectId);
 
-        ObjectMapper om = new ObjectMapper();
-
-        return om.writeValueAsString(retMap);
-    }
-
-    public Map<String, List<FileUpload>> makeFileUploadMap(FileUpload fileUpload)
-    {
-        // construct JSON suitable for jQuery File Upload Plugin
-        List<FileUpload> retval = Collections.singletonList(fileUpload);
-        return Collections.singletonMap("files", retval);
-    }
-
-    public FileUpload fileUploadFromEcmFile(MultipartFile file, String contextPath, EcmFile uploaded)
-    {
-        FileUpload fileUpload = new FileUpload();
-
-        String baseUrl = contextPath + "/file/" + uploaded.getFileId();
-        fileUpload.setDeleteUrl(baseUrl);
-        fileUpload.setName(file.getOriginalFilename());
-        fileUpload.setSize(file.getSize());
-        fileUpload.setUrl(baseUrl);
-        fileUpload.setCreator(uploaded.getCreator());
-        fileUpload.setId(uploaded.getFileId());
-        fileUpload.setStatus(uploaded.getStatus());
-        fileUpload.setCreated(uploaded.getCreated());
-        fileUpload.setUploadFileType(uploaded.getFileType());
-        return fileUpload;
-    }
-
-    public String determineResponseContentType(String acceptHeader)
-    {
-        // since IE is broken we have to conditionally set the response content type
-        if ( acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE) || acceptHeader.contains("text/javascript"))
+        try
         {
-            // good browser, it can send files via AJAX, so it can get the answer as JSON
-            return MediaType.APPLICATION_JSON_VALUE;
+            AcmContainer retval = getContainerFolderDao().findFolderByObjectTypeAndId(objectType, objectId);
+            return retval;
         }
-        else
+        catch ( AcmObjectNotFoundException e)
         {
-            // bad browser, must send the files via normal HTML file upload, so must get the answer as a string,
-            // since if we send JSON response type, it will ask the user to download a JSON file.
-            return MediaType.TEXT_PLAIN_VALUE;
+            return createContainerFolder(objectType, objectId);
+        }
+        catch ( PersistenceException pe )
+        {
+            throw new AcmUserActionFailedException("Find container folder", objectType, objectId, pe.getMessage(), pe);
         }
     }
 
-    public HttpHeaders contentTypeFromAcceptHeader(String acceptType)
+    /**
+     * Objects should really have a folder already.  Since we got here the object does not actually have one.
+     * The application doesn't really care where the folder is, so we'll just create a folder in a sensible
+     * location.
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    private AcmContainer createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
     {
-        HttpHeaders responseHeaders = new HttpHeaders();
+        log.debug("Creating new folder for object " + objectType + " id " + objectId);
 
-        String responseMimeType = determineResponseContentType(acceptType);
+        String path = getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH);
+        path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
+        path += "/" + objectId;
 
-        responseHeaders.add("Content-Type", responseMimeType);
 
-        return responseHeaders;
+        String cmisFolderId = createFolder(path);
+
+        log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
+
+        AcmContainer newContainer = new AcmContainer();
+        newContainer.setContainerObjectId(objectId);
+        newContainer.setContainerObjectType(objectType);
+
+        // the container needs a container name, so we'll make one up here, just like we made up a CMIS folder path
+        String containerName = objectType + "-" + objectId;
+        newContainer.setContainerObjectTitle(containerName);
+
+        AcmFolder newFolder = new AcmFolder();
+        newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+        newContainer.setFolder(newFolder);
+
+        newContainer = getContainerFolderDao().save(newContainer);
+
+        return newContainer;
     }
+
+    @Override
+    public AcmCmisObjectList allFilesForContainer(Authentication auth,
+                                                  AcmContainer container)
+            throws AcmListObjectsFailedException
+    {
+
+        log.debug("All files for container " + container.getContainerObjectType() + " " + container.getContainerObjectId());
+        // This method is to search for all files that belong to a container, no matter where they are in the
+        // folder hierarchy.
+        String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" +
+                "CONTAINER AND parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery = "fq=object_type_s:FILE";
+
+        // search for 50 records at a time until we find them all
+        int start = 0;
+        int max = 50;
+        String sortBy = "created";
+        String sortDirection = "ASC";
+
+        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                start, max, sortBy, sortDirection);
+
+        int totalFiles = retval.getTotalChildren();
+        int foundSoFar = retval.getChildren().size();
+
+        log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+
+        while ( foundSoFar < totalFiles )
+        {
+            start += max;
+
+            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                    start, max, sortBy, sortDirection);
+            retval.getChildren().addAll(more.getChildren());
+
+            foundSoFar += more.getChildren().size();
+
+            log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+        }
+
+        retval.setMaxRows(totalFiles);
+
+        return retval;
+    }
+
+
+    @Override
+    public AcmCmisObjectList listFolderContents(Authentication auth,
+                                                AcmContainer container,
+                                                String category,
+                                                String sortBy,
+                                                String sortDirection,
+                                                int startRow,
+                                                int maxRows)
+            throws AcmListObjectsFailedException
+    {
+
+        // This method is to search for objects in the root of a container.  So we restrict the return list
+        // to those items whose parent folder ID is the container folder id.... Note, this query assumes
+        // only files and folders will have a "folder_id_i" attribute with a value that matches a container
+        // folder id
+        String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" +
+                "CONTAINER AND parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery =
+                category == null ? "" :
+                        "fq=category_s:" + category + " OR category_s:" + category.toUpperCase(); // in case some bad data gets through
+
+        return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
+
+
+    }
+
+    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, String category, String query,
+                                          String filterQuery, int startRow, int maxRows, String sortBy,
+                                          String sortDirection)
+            throws AcmListObjectsFailedException
+    {
+        try
+        {
+            String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
+
+            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query,
+                    startRow, maxRows, sortParam, filterQuery);
+            JSONArray docs = getSearchResults().getDocuments(results);
+            int numFound = getSearchResults().getNumFound(results);
+
+            AcmCmisObjectList retval = buildAcmCmisObjectList(container, category, numFound, sortBy, sortDirection,
+                    startRow, maxRows);
+
+            buildChildren(docs, retval);
+
+            return retval;
+        }
+        catch (Exception e)
+        {
+            log.error("Could not list folder contents: " + e.getMessage(), e);
+            throw new AcmListObjectsFailedException("Folder Contents", e.getMessage(), e);
+        }
+    }
+
+    private void buildChildren(JSONArray docs, AcmCmisObjectList retval) throws ParseException
+    {
+        List<AcmCmisObject> cmisObjects = new ArrayList<>();
+        retval.setChildren(cmisObjects);
+
+        int count = docs.length();
+        SimpleDateFormat solrFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
+        for ( int a = 0; a < count; a++ )
+        {
+            JSONObject doc = docs.getJSONObject(a);
+
+            AcmCmisObject object = buildAcmCmisObject(solrFormat, doc);
+
+            cmisObjects.add(object);
+        }
+    }
+
+    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound,
+                                                     String sortBy, String sortDirection, int startRow, int maxRows)
+    {
+        AcmCmisObjectList retval = new AcmCmisObjectList();
+        retval.setContainerObjectId(container.getContainerObjectId());
+        retval.setContainerObjectType(container.getContainerObjectType());
+        retval.setFolderId(container.getFolder().getId());
+        retval.setTotalChildren(numFound);
+        retval.setCategory(category == null ? "all" : category);
+        retval.setSortBy(sortBy);
+        retval.setSortDirection(sortDirection);
+        retval.setStartRow(startRow);
+        retval.setMaxRows(maxRows);
+        return retval;
+    }
+
+    private AcmCmisObject buildAcmCmisObject(SimpleDateFormat solrFormat, JSONObject doc) throws ParseException
+    {
+        AcmCmisObject object = new AcmCmisObject();
+
+        String categoryText = getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CATEGORY);
+        if ( categoryText != null && getCategoryMap().containsKey(categoryText.toLowerCase()) )
+        {
+            object.setCategory(getCategoryMap().get(categoryText.toLowerCase()));
+        }
+
+        Date created = getSearchResults().extractDate(solrFormat, doc, SearchConstants.PROPERTY_CREATED);
+        object.setCreated(created);
+
+        String solrType = getSearchResults().extractString(doc, SearchConstants.PROPERTY_OBJECT_TYPE);
+        String objectType = getSolrObjectTypeToAcmType().get(solrType);
+        object.setObjectType(objectType);
+
+        object.setCreator(getSearchResults().extractString(doc, SearchConstants.PROPERTY_CREATOR));
+
+        object.setModified(getSearchResults().extractDate(solrFormat, doc, SearchConstants.PROPERTY_MODIFIED));
+
+        object.setName(getSearchResults().extractString(doc, SearchConstants.PROPERTY_NAME));
+
+        object.setObjectId(getSearchResults().extractLong(doc, SearchConstants.PROPERTY_OBJECT_ID_S));
+
+        object.setType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_TYPE));
+
+        object.setVersion(getSearchResults().extractString(doc, SearchConstants.PROPERTY_VERSION));
+
+        object.setModifier(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MODIFIER));
+
+        object.setCmisObjectId(getSearchResults().extractString(doc, SearchConstants.PROPERTY_CMIS_VERSION_SERIES_ID));
+        
+        object.setMimeType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MIME_TYPE));
+        
+        object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
+        
+        return object;
+    }
+
+
+
+    private String listFolderContents_getSortSpec(String sortBy, String sortDirection)
+    {
+        String sortParam = EcmFileConstants.FOLDER_LIST_DEFAULT_SORT_PARAM;
+        if ( getSortParameterNameToCmisFieldName().containsKey(sortBy) )
+        {
+            sortParam = getSortParameterNameToCmisFieldName().get(sortBy);
+        }
+        sortParam = sortParam + " " + sortDirection;
+        return sortParam;
+    }
+    
+    @Override
+    public String buildSafeFolderName(String folderName)
+	{    	
+		if (folderName != null)
+		{
+			String regex = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX;
+			String replacement = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT;
+			
+			folderName = folderName.replaceAll(regex, replacement);
+		}
+		
+		return folderName;
+	}
 
     public EcmFileTransaction getEcmFileTransaction()
     {
@@ -376,5 +517,75 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setMuleClient(MuleClient muleClient)
     {
         this.muleClient = muleClient;
+    }
+
+    public Map<String, String> getSortParameterNameToCmisFieldName()
+    {
+        return sortParameterNameToCmisFieldName;
+    }
+
+    public void setSortParameterNameToCmisFieldName(Map<String, String> sortParameterNameToCmisFieldName)
+    {
+        this.sortParameterNameToCmisFieldName = sortParameterNameToCmisFieldName;
+    }
+
+    public Map<String, String> getSolrObjectTypeToAcmType()
+    {
+        return solrObjectTypeToAcmType;
+    }
+
+    public void setSolrObjectTypeToAcmType(Map<String, String> solrObjectTypeToAcmType)
+    {
+        this.solrObjectTypeToAcmType = solrObjectTypeToAcmType;
+    }
+
+    public AcmContainerDao getContainerFolderDao()
+    {
+        return containerFolderDao;
+    }
+
+    public void setContainerFolderDao(AcmContainerDao containerFolderDao)
+    {
+        this.containerFolderDao = containerFolderDao;
+    }
+
+    public Properties getEcmFileServiceProperties()
+    {
+        return ecmFileServiceProperties;
+    }
+
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
+    {
+        this.ecmFileServiceProperties = ecmFileServiceProperties;
+    }
+
+    public ExecuteSolrQuery getSolrQuery()
+    {
+        return solrQuery;
+    }
+
+    public void setSolrQuery(ExecuteSolrQuery solrQuery)
+    {
+        this.solrQuery = solrQuery;
+    }
+
+    public void setCategoryMap(Map<String, String> categoryMap)
+    {
+        this.categoryMap = categoryMap;
+    }
+
+    public Map<String, String> getCategoryMap()
+    {
+        return categoryMap;
+    }
+
+    public SearchResults getSearchResults()
+    {
+        return searchResults;
+    }
+
+    public void setSearchResults(SearchResults searchResults)
+    {
+        this.searchResults = searchResults;
     }
 }

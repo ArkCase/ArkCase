@@ -3,7 +3,10 @@
  */
 package com.armedia.acm.form.cost.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -11,14 +14,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.cost.model.CostForm;
+import com.armedia.acm.form.cost.model.CostFormConstants;
 import com.armedia.acm.form.cost.model.CostItem;
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.services.costsheet.model.CostsheetConstants;
+import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,56 +40,69 @@ import com.google.gson.GsonBuilder;
  * @author riste.tutureski
  *
  */
-public class CostService extends FrevvoFormAbstractService {
+public class CostService extends FrevvoFormChargeAbstractService {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private CostsheetService costsheetService;
 	private AcmCostsheetDao acmCostsheetDao;
 	private CostFactory costFactory;
+	private CostsheetEventPublisher costsheetEventPublisher;
+	private SearchResults searchResults;
+	private AcmPluginManager acmPluginManager;
+	private AcmContainerDao AcmContainerDao;
 	
 	@Override
 	public Object init() 
 	{
 		Object result = "";
 		
-		String objectId = getRequest().getParameter("objectId");		
+		if (getDocUriParameters() == null || "".equals(getDocUriParameters()))
+		{
+			return result;
+		}
+	
 		String userId = getAuthentication().getName();
+		String objectId = getDocUriParameter("objectId");
+		String objectType = getDocUriParameter("objectType");
 		
 		CostForm form = new CostForm();
+		AcmCostsheet costsheet = null;
 			
 		if (objectId != null && !"".equals(objectId))
 		{			
-			AcmCostsheet costsheet = null;
-			
 			try
 			{
 				Long objectIdLong = Long.parseLong(objectId);
-				costsheet = getAcmCostsheetDao().findByUserIdAndObjectId(userId, objectIdLong);
+				costsheet = getAcmCostsheetDao().findByUserIdObjectIdAndType(userId, objectIdLong, objectType);
 				form.setObjectId(objectIdLong);
 			}
 			catch(Exception e)
 			{
 				LOG.error("Cannot parse " + objectId + " to Long type. Empty form will be created.", e);
-			}
-			
-			if (costsheet != null)
-			{
-				form = getCostFactory().asFrevvoCostForm(costsheet);
-			}
-			else
-			{
-				form.setItems(Arrays.asList(new CostItem()));
-			}
-			
+			}			
 		}
 		
+		if (costsheet != null)
+		{
+			form = getCostFactory().asFrevvoCostForm(costsheet);
+			form = (CostForm) populateEditInformation(form, costsheet.getContainer(), FrevvoFormName.COSTSHEET.toLowerCase());
+		}
+		else
+		{
+			form.setItems(Arrays.asList(new CostItem()));
+		}
+		
+		form.setObjectType(objectType);
 		form.setUser(userId);
 		form.setBalanceTable(Arrays.asList(new String()));
 		
-		// Back initDate in the form. It will need Frevvo engine to recalculate init values after calling this method
-		JSONObject initData = (JSONObject) initFormData();
-		form.setInitData(initData.toString());
+		if (form.getApprovers() == null || form.getApprovers().size() == 0)
+		{
+			form.setApprovers(Arrays.asList(new ApproverItem()));
+		}
+		
+		form.setDocUriParameters(getDocUriParameters());
 		
 		result = convertFromObjectToXML(form);
 		
@@ -115,11 +141,31 @@ public class CostService extends FrevvoFormAbstractService {
 		}
 		
 		AcmCostsheet costsheet = getCostFactory().asAcmCostsheet(form);		
+		
+		// Create timesheet folder (if not exist)
+		String rootFolder = (String) getCostsheetService().getProperties().get(CostsheetConstants.ROOT_FOLDER_KEY);
+		AcmContainer container = createContainer(rootFolder, costsheet.getUser().getUserId(), costsheet.getId(), CostsheetConstants.OBJECT_TYPE, getCostsheetService().createName(costsheet));
+		costsheet.setContainer(container);
+		
 		AcmCostsheet saved = getCostsheetService().save(costsheet, submissionName);
 		
 		form = getCostFactory().asFrevvoCostForm(saved);
 		
-		// TODO: Add logic for approval workflow and save attachments
+		// Take user id and ip address
+		String userId = getAuthentication().getName();
+		String ipAddress = (String) getRequest().getSession().getAttribute("acm_ip_address");
+		
+		boolean startWorkflow = getCostsheetService().checkWorkflowStartup(CostsheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
+		
+		FrevvoUploadedFiles uploadedFiles = null;
+		if (startWorkflow)
+		{
+			uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
+		}
+		
+		// Raise event
+		// TODO: Finish the logic and uncomment line below
+		//getCostsheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
 		
 		return true;
 	}
@@ -135,13 +181,24 @@ public class CostService extends FrevvoFormAbstractService {
 		form.setUser(userId);
 		form.setUserOptions(Arrays.asList(userId + "=" + user.getFullName()));
 		
+		// Init Types
+		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".types"), ",");
+		form.setObjectTypeOptions(types);
+		
 		// Init Statuses
-		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.COST + ".statuses"), ","));
+		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".statuses"), ","));
 		
 		// Init Titles
 		CostItem item = new CostItem();
-		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COST + ".titles"), ","));
+		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".titles"), ","));
 		form.setItems(Arrays.asList(item));
+		
+		// Set charge codes for each type
+		Map<String, List<String>> codeOptions = getCodeOptions(types);
+		form.setCodeOptions(codeOptions);
+		
+		// Init possible approvers
+		form.setApproverOptions(getApproverOptions());
 		
 		// Create JSON and back to the Frevvo form
 		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
@@ -151,11 +208,41 @@ public class CostService extends FrevvoFormAbstractService {
 
 		return json;
 	}
+	
+	@Override
+	public String getSolrResponse(String objectType)
+	{
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
+		
+		return jsonResults;
+	}
+	
+	private List<String> getApproverOptions()
+	{
+		List<String> approverOptions = new ArrayList<>();
+		try
+		{
+			List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(CostFormConstants.APPROVER_PRIVILEGE);
+	        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
+	        
+	        if (users != null && users.size() > 0) {
+	        	for (int i = 0; i < users.size(); i++) {
+	        		approverOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+	        	}
+	        }
+		}
+		catch(Exception e)
+		{
+			LOG.warn("Cannot find users with privilege = " + CostFormConstants.APPROVER_PRIVILEGE + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
+		}
+		
+		return approverOptions;
+	}
 
 	@Override
 	public String getFormName() 
 	{
-		return FrevvoFormName.COST;
+		return FrevvoFormName.COSTSHEET;
 	}
 
 	public CostsheetService getCostsheetService() {
@@ -182,4 +269,36 @@ public class CostService extends FrevvoFormAbstractService {
 		this.costFactory = costFactory;
 	}
 
+	public CostsheetEventPublisher getCostsheetEventPublisher() {
+		return costsheetEventPublisher;
+	}
+
+	public void setCostsheetEventPublisher(
+			CostsheetEventPublisher costsheetEventPublisher) {
+		this.costsheetEventPublisher = costsheetEventPublisher;
+	}
+
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
+
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
+	}
+
+	public AcmContainerDao getAcmContainerDao() {
+		return AcmContainerDao;
+	}
+
+	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
+		AcmContainerDao = acmContainerDao;
+	}
 }

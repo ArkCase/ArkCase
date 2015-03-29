@@ -9,7 +9,7 @@ Timesheet.View = {
         if (Timesheet.View.Navigator.create)            {Timesheet.View.Navigator.create();}
         if (Timesheet.View.Action.create)               {Timesheet.View.Action.create();}
         if (Timesheet.View.Detail.create)               {Timesheet.View.Detail.create();}
-        if (Timesheet.View.People.create)               {Timesheet.View.People.create();}
+        if (Timesheet.View.Person.create)               {Timesheet.View.Person.create();}
         if (Timesheet.View.TimeSummary.create)          {Timesheet.View.TimeSummary.create();}
     }
     ,onInitialized: function() {
@@ -17,8 +17,20 @@ Timesheet.View = {
         if (Timesheet.View.Navigator.onInitialized)      {Timesheet.View.Navigator.onInitialized();}
         if (Timesheet.View.Action.onInitialized)         {Timesheet.View.Action.onInitialized();}
         if (Timesheet.View.Detail.onInitialized)         {Timesheet.View.Detail.onInitialized();}
-        if (Timesheet.View.People.onInitialized)         {Timesheet.View.People.onInitialized();}
+        if (Timesheet.View.Person.onInitialized)         {Timesheet.View.Person.onInitialized();}
         if (Timesheet.View.TimeSummary.onInitialized)    {Timesheet.View.TimeSummary.onInitialized();}
+    }
+
+    ,getActiveTimesheetId: function() {
+        return ObjNav.View.Navigator.getActiveObjId();
+    }
+    ,getActiveTimesheet: function() {
+        var objId = ObjNav.View.Navigator.getActiveObjId();
+        var timesheet = null;
+        if (Acm.isNotEmpty(objId)) {
+            timesheet = ObjNav.Model.Detail.getCacheObject(Timesheet.Model.DOC_TYPE_TIMESHEET, objId);
+        }
+        return timesheet;
     }
 
     ,MicroData:{
@@ -28,6 +40,7 @@ Timesheet.View = {
             // edit form has same url as new form
             this.formUrls.editTimesheetFormUrl         = Acm.Object.MicroData.get("newTimesheetFormUrl");
 
+            this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
         }
         ,onInitialized: function() {
 
@@ -114,16 +127,24 @@ Timesheet.View = {
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newTimesheetFormUrl)){
                 var newTimesheetFormUrl = Timesheet.View.MicroData.formUrls.newTimesheetFormUrl;
                 newTimesheetFormUrl = newTimesheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {});
+                Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {
+                    Timesheet.Controller.viewClosedAddTimesheetWindow();
+                    Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
+                });
             }
         }
         ,onClickBtnEditTimesheetForm:function(event,ctrl){
             var formUrls = Timesheet.View.MicroData.formUrls;
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.editTimesheetFormUrl)){
                 var editTimesheetFormUrl = Timesheet.View.MicroData.formUrls.editTimesheetFormUrl;
-                editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getCurrentDay() + "',");
-                editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {});
+                if(Timesheet.Model.Detail.validateTimesheet(Timesheet.View.getActiveTimesheet())){
+                    var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
+                    editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
+                    editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
+                    Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {
+                        Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
+                    });
+                }
             }
         }
     }
@@ -135,10 +156,54 @@ Timesheet.View = {
             this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
             this.$btnEditDetail.on("click", function(e) {Timesheet.View.Detail.onClickBtnEditDetail(e, this);});
             this.$btnSaveDetail.on("click", function(e) {Timesheet.View.Detail.onClickBtnSaveDetail(e, this);});
+
+            this.$timesheetName           = $("#timesheetName");
+            this.$timesheetModifiedDate   = $("#timesheetModifiedDate");
+
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Timesheet.Controller.MODEL_SAVED_DETAIL            ,this.onModelSavedDetail);
         }
         ,onInitialized: function() {
 
         }
+        ,onModelRetrievedObject: function(timesheet) {
+            Timesheet.View.Detail.resetDetail();
+            if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
+                Timesheet.View.Detail.populateDetail(timesheet);
+            }
+        }
+        ,onViewSelectedObject: function(objType, objId) {
+            Timesheet.View.Detail.resetDetail();
+            var timesheet = Timesheet.View.getActiveTimesheet();
+            if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
+                Timesheet.View.Detail.populateDetail(timesheet);
+            }
+        }
+        ,onModelSavedDetail: function(timesheet, details) {
+            if (details.hasError) {
+                Timesheet.View.Detail.setHtmlDivDetail("(Error)");
+            }
+        }
+        ,populateDetail: function(timesheet){
+            if(Acm.isNotEmpty(timesheet.details)){
+                Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
+            }
+            if(Acm.isNotEmpty(timesheet.startDate) && Acm.isNotEmpty(timesheet.endDate)){
+                var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " +  Acm.getDateFromDatetime(timesheet.endDate)
+                Timesheet.View.Detail.setTextTimesheetName(timesheetName);
+            }
+            if(Acm.isNotEmpty(timesheet.modified)){
+                Timesheet.View.Detail.setTextTimesheetModifiedDate("Last Modified " + Acm.getDateFromDatetime(timesheet.modified));
+            }
+        }
+        ,resetDetail: function(timesheet) {
+            Timesheet.View.Detail.setHtmlDivDetail("");
+            Timesheet.View.Detail.setTextTimesheetModifiedDate("");
+            Timesheet.View.Detail.setTextTimesheetName("");
+        }
+
         ,DIRTY_EDITING_DETAIL: "Editing Timesheet detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
             App.Object.Dirty.declare(Timesheet.View.Detail.DIRTY_EDITING_DETAIL);
@@ -146,7 +211,16 @@ Timesheet.View = {
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Timesheet.View.Detail.saveDivDetail();
-            App.Object.Dirty.clear(Timesheet.View.Detail.DIRTY_EDITING_DETAIL);
+            if(Acm.isNotEmpty(htmlDetail)){
+                Timesheet.Controller.viewSavedDetail(Timesheet.View.getActiveTimesheet(), htmlDetail);
+                App.Object.Dirty.clear(Timesheet.View.Detail.DIRTY_EDITING_DETAIL);
+            }
+        }
+        ,getHtmlDivDetail: function() {
+            return AcmEx.Object.SummerNote.get(this.$divDetail);
+        }
+        ,setHtmlDivDetail: function(html) {
+            AcmEx.Object.SummerNote.set(this.$divDetail, html);
         }
         ,editDivDetail: function() {
             AcmEx.Object.SummerNote.edit(this.$divDetail);
@@ -154,64 +228,72 @@ Timesheet.View = {
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
+        ,setTextTimesheetName: function(txt) {
+            Acm.Object.setText(this.$timesheetName, txt);
+        }
+        ,setTextTimesheetModifiedDate: function(txt) {
+            Acm.Object.setText(this.$timesheetModifiedDate, txt);
+        }
 
     }
 
-    ,People: {
+    ,Person: {
         create: function () {
-            this.$divPeople = $("#divPeople");
-            this.createJTablePerson(this.$divPeople);
+            this.$divPerson = $("#divPerson");
+            this.createJTablePerson(this.$divPerson);
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT, this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT, this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT            , this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT              , this.onViewSelectedObject);
         }
         , onInitialized: function () {
         }
 
-        , onModelRetrievedObject: function (objData) {
-            AcmEx.Object.JTable.load(Timesheet.View.People.$divPeople);
+        , onModelRetrievedObject: function (timesheet) {
+            AcmEx.Object.JTable.load(Timesheet.View.Person.$divPerson);
         }
         , onViewSelectedObject: function (objType, objId) {
-            AcmEx.Object.JTable.load(Timesheet.View.People.$divPeople);
+            AcmEx.Object.JTable.load(Timesheet.View.Person.$divPerson);
         }
 
-        , _makeJtData: function (people) {
+        , _makeJtData: function (person) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (Timesheet.Model.People.validatePeople(people)) {
-                for (var i = 0; i < people.length; i++) {
-                    var Record = {};
-                    Record.id = Acm.goodValue(people[i].id);
-                    Record.role = Acm.goodValue(people[i].role);
-                    Record.username = Acm.goodValue(people[i].username);
-                    Record.fullName = Acm.__FixMe__getUserFullName(people[i].username);
-                    jtData.Records.push(Record);
-                }
-                jtData.TotalRecordCount = people.length;
+            if (Timesheet.Model.Person.validatePerson(person)) {
+                var Record = {};
+                Record.role = Acm.goodValue(person.role);
+                Record.username = Acm.goodValue(person.userId);
+                Record.fullName = Acm.goodValue(person.fullName);
+                jtData.Records.push(Record);
             }
             return jtData;
         }
         , createJTablePerson: function ($jt) {
             var sortMap = {};
-            AcmEx.Object.JTable.usePaging($jt
+            AcmEx.Object.JTable.useBasic($jt
                 , {
                     title: 'Person'
-                    , multiselect: false
-                    , selecting: false
-                    , selectingCheckboxes: false
-                    , paging: true
                     , sorting: true
-                    , pageSize: 10 //Set page size (default: 10)
                     , actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            var timesheetId = parseInt(Timesheet.Model.getTimesheetId());
+                            if (0 >= timesheetId) {
+                                return rc;
+                            }
+                            else{
+                                var timesheet = Timesheet.Model.getTimesheet();
+                                if(Timesheet.Model.Detail.validateTimesheet(timesheet)){
+                                    var person = timesheet.user;
+                                    rc = Timesheet.View.Person._makeJtData(person);
+                                }
+                                return rc;
+                            }
                         }
                     }
-
                     , fields: {
                         id: {
                             title: 'ID'
                             , key: true
-                            , list: true
+                            , list: false
                             , create: false
                             , edit: false
                             , sorting: true
@@ -231,6 +313,7 @@ Timesheet.View = {
                             title: 'Role'
                             , width: '10%'
                             , sorting: true
+                            ,list: false
                         }
                     } //end field
                 } //end arg
@@ -249,8 +332,7 @@ Timesheet.View = {
         }
         , onInitialized: function () {
         }
-
-        , onModelRetrievedObject: function (objData) {
+        , onModelRetrievedObject: function (timesheet) {
             AcmEx.Object.JTable.load(Timesheet.View.TimeSummary.$divTimeSummary);
         }
         , onViewSelectedObject: function (objType, objId) {
@@ -258,34 +340,45 @@ Timesheet.View = {
         }
         , _makeJtData: function (timeRecords) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (Timesheet.Model.Hours.validateTimeRecords(timeRecords)) {
+            if (Timesheet.Model.TimeSummary.validateTimeRecords(timeRecords)) {
                 for(var i = 0; i < timeRecords.length; i++){
-                    var Record = {};
-                    Record.id = Acm.goodValue(timeRecords[i].id);
-                    Record.parentId = Acm.goodValue(timeRecords[i].parentId);
-                    Record.hours = Acm.goodValue(timeRecords[i].hours);
-                    Record.chargedDate = Acm.getDateTimeFromDatetime(timeRecords[i].chargedDate);
-                    Record.modifiedDate = Acm.getDateTimeFromDatetime(timeRecords[i].modified);
-                    jtData.Records.push(Record);
+                    if (Timesheet.Model.TimeSummary.validateTimeRecord(timeRecords[i])) {
+                        var Record = {};
+                        Record.id = Acm.goodValue(timeRecords[i].id);
+                        Record.parentId = Acm.goodValue(timeRecords[i].objectId);
+                        Record.code = Acm.goodValue(timeRecords[i].code);
+                        Record.parentType = Acm.goodValue(timeRecords[i].type);
+                        Record.hours = Acm.goodValue(timeRecords[i].value);
+                        Record.chargedDate = Acm.getDateFromDatetime(timeRecords[i].date);
+                        Record.modifiedDate = Acm.getDateFromDatetime(timeRecords[i].modified);
+                        jtData.Records.push(Record);
+                    }
                 }
-                jtData.TotalRecordCount = timeRecords.length;
+                //jtData.TotalRecordCount = timeRecords.length;
             }
             return jtData;
         }
         , createJTableTimeSummary: function ($jt) {
             var sortMap = {};
-            AcmEx.Object.JTable.usePaging($jt
+            AcmEx.Object.JTable.useBasic($jt
                 , {
                     title: 'Hours Summary'
-                    , multiselect: false
-                    , selecting: false
-                    , selectingCheckboxes: false
-                    , paging: true
                     , sorting: true
-                    , pageSize: 10 //Set page size (default: 10)
                     , actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
-                            return AcmEx.Object.JTable.getEmptyRecords();
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.JTable.getEmptyRecords();
+                            var timesheetId = Timesheet.View.getActiveTimesheetId();
+                            if (0 >= timesheetId) {
+                                return rc;
+                            }
+                            else{
+                                var timesheet = Timesheet.View.getActiveTimesheet();
+                                if (Timesheet.Model.Detail.validateTimesheet(timesheet)) {
+                                    var timeRecords = timesheet.times;
+                                    rc = Timesheet.View.TimeSummary._makeJtData(timeRecords);
+                                }
+                                return rc;
+                            }
                         }
                     }
 
@@ -303,6 +396,23 @@ Timesheet.View = {
                             title: 'Parent ID'
                             , width: '10%'
                             , sorting: true
+                            ,display: function(data) {
+                                var url = App.buildObjectUrl(Acm.goodValue(data.record.parentType), Acm.goodValue(data.record.parentId), "#");
+                                var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.code) + "</a>");
+                                return $lnk;
+                            }
+                        }
+                        ,parentType: {
+                            title: 'Parent Type'
+                            , width: '10%'
+                            , sorting: true
+                            , list : true
+                        }
+                        ,code: {
+                            title: 'Code'
+                            , width: '10%'
+                            , sorting: true
+                            , list : false
                         }
                         , hours: {
                             title: 'Total Hours'

@@ -21,6 +21,7 @@ import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -53,6 +54,7 @@ import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
@@ -109,6 +111,10 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private CostsheetService costsheetService;
 	private AcmCostsheetDao acmCostsheetDao;
 	private CostFactory costFactory;
+	
+	private SearchResults searchResults;
+	
+	private AcmContainerDao acmContainerDao;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -496,5 +502,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setCostFactory(CostFactory costFactory) {
 		this.costFactory = costFactory;
+	}
+
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
+
+	public AcmContainerDao getAcmContainerDao() {
+		return acmContainerDao;
+	}
+
+	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
+		this.acmContainerDao = acmContainerDao;
 	}
 }

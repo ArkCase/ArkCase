@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
@@ -18,9 +19,7 @@ public interface EcmFileTransaction
                 String mimeType,
                 String fileName,
                 String cmisFolderId,
-                String parentObjectType,
-                Long parentObjectId,
-                String parentObjectName)
+                AcmContainer container)
                 throws MuleException;
 
         EcmFile addFileTransaction(
@@ -31,9 +30,7 @@ public interface EcmFileTransaction
                 String mimeType,
                 String fileName,
                 String cmisFolderId,
-                String parentObjectType,
-                Long parentObjectId,
-                String parentObjectName)
+                AcmContainer container)
                 throws MuleException;
 
         EcmFile updateFileTransaction(

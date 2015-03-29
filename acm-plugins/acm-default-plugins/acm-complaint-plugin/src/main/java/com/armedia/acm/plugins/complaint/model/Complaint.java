@@ -4,13 +4,12 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -101,7 +100,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private PersonAssociation originator;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the containerFolder
+     * This field is only used when the complaint is created. Usually it will be null.  Use the container
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
@@ -111,8 +110,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
      * Container folder where the complaint's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumn(name = "cm_container_folder_id")
-    private AcmContainerFolder containerFolder = new AcmContainerFolder();
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id")
@@ -192,10 +191,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
             ap.setObjectType("COMPLAINT");
         }
 
-        if ( getContainerFolder() != null )
+        if ( getContainer() != null )
         {
-            getContainerFolder().setContainerObjectId(getComplaintId());
-            getContainerFolder().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectId(getComplaintId());
+            getContainer().setContainerObjectType(getObjectType());
+
+            log.debug("Setting container object title to: " + getComplaintNumber());
+            getContainer().setContainerObjectTitle(getComplaintNumber());
         }
     }
 
@@ -223,6 +225,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     public void setComplaintNumber(String complaintNumber)
     {
         this.complaintNumber = complaintNumber;
+
+        if ( getContainer() != null )
+        {
+            getContainer().setContainerObjectTitle(complaintNumber);
+        }
     }
 
     public String getComplaintType()
@@ -478,19 +485,19 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.restricted = restricted;
     }
 
-    public AcmContainerFolder getContainerFolder()
+    public AcmContainer getContainer()
     {
-        return containerFolder;
+        return container;
     }
 
-    public void setContainerFolder(AcmContainerFolder containerFolder)
+    public void setContainer(AcmContainer container)
     {
-        if ( containerFolder != null )
+        if ( container != null )
         {
-            containerFolder.setContainerObjectType(getObjectType());
+            container.setContainerObjectType(getObjectType());
         }
 
-        this.containerFolder = containerFolder;
+        this.container = container;
     }
 
     @Override
@@ -511,7 +518,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
                 ", status='" + status + '\'' +
                 ", originator=" + originator +
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
-                ", containerFolder=" + containerFolder +
+                ", container=" + container +
                 ", childObjects=" + childObjects +
                 ", approvers=" + approvers +
                 ", personAssociations=" + personAssociations +

@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -94,7 +94,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private List<String> approvers;
 
     /**
-     * This field is only used when the case file is created. Usually it will be null.  Use the containerFolder
+     * This field is only used when the case file is created. Usually it will be null.  Use the container
      * to get the CMIS object ID of the case file folder.
      */
     @Transient
@@ -129,8 +129,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
      * Container folder where the case file's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumn(name = "cm_container_folder_id")
-    private AcmContainerFolder containerFolder = new AcmContainerFolder();
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
 
     @PrePersist
     protected void beforeInsert()
@@ -166,10 +166,11 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             ap.setObjectType(getObjectType());
         }
 
-        if ( getContainerFolder() != null )
+        if ( getContainer() != null )
         {
-            getContainerFolder().setContainerObjectId(getId());
-            getContainerFolder().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectId(getId());
+            getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle(getCaseNumber());
         }
     }
 
@@ -200,14 +201,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         childObject.setParentId(getId());
     }
 
-    public AcmContainerFolder getContainerFolder()
+    public AcmContainer getContainer()
     {
-        return containerFolder;
+        return container;
     }
 
-    public void setContainerFolder(AcmContainerFolder containerFolder)
+    public void setContainer(AcmContainer container)
     {
-        this.containerFolder = containerFolder;
+        this.container = container;
     }
 
     public PersonAssociation getOriginator() {
@@ -381,49 +382,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.participants = participants;
     }
 
-    public void setAssignee(String assigneeUserId)
-    {
-        boolean found = false;
-        if ( participants != null )
-        {
-            for ( AcmParticipant p : participants )
-            {
-                if ( "assignee".equals(p.getParticipantType() ) )
-                {
-                    p.setParticipantLdapId(assigneeUserId);
-                    found = true;
-                    break;
-                }
-            }
-        }
-
-        if ( ! found && assigneeUserId != null )
-        {
-            AcmParticipant p = new AcmParticipant();
-            p.setParticipantLdapId(assigneeUserId);
-            p.setParticipantType("assignee");
-            p.setObjectType(getObjectType());
-            p.setObjectId(getId());
-            participants.add(p);
-        }
-    }
-
-    public String getAssignee()
-    {
-        if ( participants != null )
-        {
-            for ( AcmParticipant p : participants )
-            {
-                if ( "assignee".equals(p.getParticipantType() ) )
-                {
-                    return p.getParticipantLdapId();
-                }
-            }
-        }
-
-        return null;
-    }
-
     @JsonGetter
     public List<ObjectAssociation> getReferences()
     {
@@ -533,7 +491,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", originator=" + originator +
                 ", restricted=" + restricted +
                 ", childObjects=" + childObjects +
-                ", containerFolder=" + containerFolder +
+                ", container=" + container +
                 '}';
     }
 }

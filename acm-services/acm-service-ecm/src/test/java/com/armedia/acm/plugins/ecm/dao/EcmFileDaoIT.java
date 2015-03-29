@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,14 +27,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-mule-context-manager.xml",
-        "/spring/spring-library-cmis-configuration.xml",
-        "/spring/spring-library-activemq.xml",
-        "/spring/spring-library-search.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-activiti-actions.xml",
-        "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-event.xml"
+        "/spring/spring-library-search.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
@@ -62,16 +58,28 @@ public class EcmFileDaoIT
         EcmFile file = new EcmFile();
 
         file.setFileMimeType("text/plain");
-        file.setEcmFileId("cmisFileId");
+        file.setVersionSeriesId("cmisFileId");
         file.setFileName("testFileName");
 
-        ObjectAssociation parent = new ObjectAssociation();
-        parent.setParentId(12345L);
-        parent.setParentType("COMPLAINT");
-        parent.setParentName("Test Name");
-        parent.setCreator("tester");
-        parent.setModifier("testModifier");
-        file.addParentObject(parent);
+        EcmFileVersion version = new EcmFileVersion();
+        version.setCmisObjectId("cmisObjectId");
+        version.setVersionTag("versionTag");
+        file.getVersions().add(version);
+
+        file.setActiveVersionTag(version.getVersionTag());
+
+        AcmFolder folder = new AcmFolder();
+        folder.setCmisFolderId("cmisFolderId");
+        folder.setName("folderName");
+
+        AcmContainer container = new AcmContainer();
+        container.setFolder(folder);
+        container.setContainerObjectId(500L);
+        container.setContainerObjectType("containerObjectType");
+        container.setContainerObjectTitle("containerObjectTitle");
+
+        file.setFolder(folder);
+        file.setContainer(container);
 
         file = ecmFileDao.save(file);
 

@@ -105,8 +105,8 @@ public class SendDocumentsToSolr
     {
         try
         {
-            String json1 = mapper.writeValueAsString(solrDocument);
-            String json = prepareSolrStringForDelete(json1);
+            String json = mapper.writeValueAsString(solrDocument);
+//            String json = prepareSolrStringForDelete(json1);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Sending JSON to SOLR: " + json);

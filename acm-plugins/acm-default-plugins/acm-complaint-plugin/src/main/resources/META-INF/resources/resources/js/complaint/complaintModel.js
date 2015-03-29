@@ -87,8 +87,12 @@ Complaint.Model = Complaint.Model || {
         }
     }
 
-    ,DOC_TYPE_COMPLAINT  : "COMPLAINT"
-    ,DOC_TYPE_FILE       : "FILE"
+    ,DOC_TYPE_COMPLAINT     : "COMPLAINT"
+    ,DOC_TYPE_FILE          : "FILE"
+    ,DOC_TYPE_TIMESHEET     : "TIMESHEET"
+    ,DOC_TYPE_COSTSHEET     : "COSTSHEET"
+    ,DOC_TYPE_FILE_SM       : "file"
+    ,DOC_CATEGORY_FILE_SM   : "Document"
 
     ,getComplaintId : function() {
         return ObjNav.Model.getObjectId();
@@ -190,6 +194,7 @@ Complaint.Model = Complaint.Model || {
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TITLE     , this.onViewChangedComplaintTitle);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_GROUP            	  , this.onViewChangedGroup);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_COMPLAINT_TYPE      , this.onViewChangedComplaintType);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CHANGED_DETAIL              , this.onViewChangedDetail);
@@ -211,6 +216,9 @@ Complaint.Model = Complaint.Model || {
         }
         ,onViewChangedAssignee: function(complaintId, assignee) {
             Complaint.Service.Detail.saveAssignee(complaintId, assignee);
+        }
+        ,onViewChangedGroup: function(complaintId, group) {
+            Complaint.Service.Detail.saveGroup(complaintId, group);
         }
         ,onViewChangedComplaintType: function(complaintId, caseType) {
             Complaint.Service.Detail.saveComplaintType(complaintId, caseType);
@@ -256,6 +264,42 @@ Complaint.Model = Complaint.Model || {
                 var participant = {};
                 participant.participantType = "assignee";
                 participant.participantLdapId = assignee;
+                complaint.participants.push(participant);
+            }
+        }
+        
+        ,getGroup: function(complaint) {
+            var group = null;
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                if (Acm.isArray(complaint.participants)) {
+                    for (var i = 0; i < complaint.participants.length; i++) {
+                        var participant =  complaint.participants[i];
+                        if ("owning group" == participant.participantType) {
+                            group = participant.participantLdapId;
+                            break;
+                        }
+                    }
+                }
+            }
+            return group;
+        }
+        ,setGroup: function(complaint, group) {
+            if (complaint) {
+                if (!Acm.isArray(complaint.participants)) {
+                	complaint.participants = [];
+                }
+
+                for (var i = 0; i < complaint.participants.length; i++) {
+                    if ("owning group" == complaint.participants[i].participantType) {
+                    	complaint.participants[i].participantLdapId = group;
+                        return;
+                    }
+                }
+
+
+                var participant = {};
+                participant.participantType = "owning group";
+                participant.participantLdapId = group;
                 complaint.participants.push(participant);
             }
         }
@@ -482,35 +526,40 @@ Complaint.Model = Complaint.Model || {
     ,Documents: {
         create : function() {
             this.cacheDocuments = new Acm.Model.CacheFifo();
+            
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);
         }
         ,onInitialized: function() {
         }
-        ,validateUploadedDocuments: function(data){
+        ,validateDocuments:function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isNotArray(data)) {
+            if (Acm.isEmpty(data.containerObjectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.folderId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.children)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalChildren)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.children)) {
                 return false;
             }
             return true;
         }
-        ,validateExistingDocuments: function(data) {
+        ,validateDocument: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.childObjects)) {
+            if (Acm.isEmpty(data.objectId)) {
                 return false;
             }
-            if (Acm.isNotArray(data.childObjects)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateDocumentRecord: function(data) {
-            if (Acm.isEmpty(data.targetId)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.targetName)) {
+            if (Acm.isEmpty(data.name)) {
                 return false;
             }
             if (Acm.isEmpty(data.created)) {
@@ -519,10 +568,52 @@ Complaint.Model = Complaint.Model || {
             if (Acm.isEmpty(data.creator)) {
                 return false;
             }
-            if (Acm.isEmpty(data.status)) {
+            if (!Acm.compare(data.objectType,Complaint.Model.DOC_TYPE_FILE_SM)) {
                 return false;
             }
             return true;
+        }
+        ,validateNewDocument: function(data) {
+            // data will be an array of new documents
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if ( Acm.isNotArray(data))
+            {
+                return false;
+            }
+            for ( var a = 0; a < data.length; a++ )
+            {
+                var f = data[a];
+                if (Acm.isEmpty(f.category)) {
+                    return false;
+                }
+                if (!Acm.compare(f.category, Complaint.Model.DOC_CATEGORY_FILE_SM)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.created)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.creator)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileId)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileName)) {
+                    return false;
+                }
+                if (Acm.isEmpty(f.fileType)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        ,onViewClosedAddDocumentWindow: function(complaintId) {
+        	//Complaint.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo();
+        	//ObjNav.Service.Detail.retrieveObject(Complaint.Model.DOC_TYPE_COMPLAINT, complaintId);
+            setTimeout(Complaint.View.Documents.reloadDocs, 5000);
         }
     }
 
@@ -771,6 +862,8 @@ Complaint.Model = Complaint.Model || {
             this._assignees      = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_ASSIGNEES);
             this._complaintTypes = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_TYPES);
             this._priorities     = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_PRIORITIES);
+            this._groups    	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_GROUPS);
+            this._users    	 	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_USERS);
         }
         ,onInitialized: function() {
             var assignees = Complaint.Model.Lookup.getAssignees();
@@ -792,6 +885,20 @@ Complaint.Model = Complaint.Model || {
                 Complaint.Service.Lookup.retrievePriorities();
             } else {
                 Complaint.Controller.modelFoundPriorities(priorities);
+            }
+            
+            var groups = Complaint.Model.Lookup.getGroups();
+            if (Acm.isEmpty(groups)) {
+            	Complaint.Service.Lookup.retrieveGroups();
+            } else {
+            	Complaint.Controller.modelRetrievedGroups(groups);
+            }
+            
+            var users = Complaint.Model.Lookup.getUsers();
+            if (Acm.isEmpty(users)) {
+            	Complaint.Service.Lookup.retrieveUsers();
+            } else {
+            	Complaint.Controller.modelRetrievedUsers(users);
             }
         }
 
@@ -818,6 +925,18 @@ Complaint.Model = Complaint.Model || {
         }
         ,setPriorities: function(priorities) {
             this._priorities.set(priorities);
+        }
+        ,getGroups: function() {
+            return this._groups.get();
+        }
+        ,setGroups: function(groups) {
+            this._groups.set(groups);
+        }
+        ,getUsers: function() {
+            return this._users.get();
+        }
+        ,setUsers: function(users) {
+            this._users.set(users);
         }
 
         ,_personTypes : ['Initiator','Subject','Witness','Wrongdoer','Other']
@@ -855,20 +974,183 @@ Complaint.Model = Complaint.Model || {
         ,getAliasTypes : function() {
             return this._aliasTypes;
         }
+        
+        ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
+        ,getParticipantTypes : function() {
+            return this._participantTypes;
+        }
 
     }
 
     ,Time: {
         create : function() {
+            this.cacheTimesheets = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
         }
         ,onInitialized: function() {
+        }
+
+        ,onModelRetrievedObject: function(objData) {
+            Complaint.Service.Time.retrieveTimesheets(Complaint.Model.getComplaintId());
+        }
+
+        ,validateTimesheet: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user.userId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.startDate)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.endDate)) {
+                return false;
+            }
+            if (!Acm.isArray(data.times)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.status)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.modified)) {
+                return false;
+            }
+
+            return true;
+        }
+        ,validateTimeRecord: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.code)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.type)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.value)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.modified)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.date)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateTimesheets: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 
     ,Cost: {
         create : function() {
+            this.cacheCostsheets = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
         }
         ,onInitialized: function() {
+        }
+
+        ,onModelRetrievedObject: function(objData) {
+            Complaint.Service.Cost.retrieveCostsheets(Complaint.Model.getComplaintId());
+        }
+
+        ,validateCostsheet: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.user.userId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentNumber)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.costs)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.status)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateCostRecord: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.title)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.description)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.value)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.date)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.modified)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateCostsheets: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
         }
     }
 

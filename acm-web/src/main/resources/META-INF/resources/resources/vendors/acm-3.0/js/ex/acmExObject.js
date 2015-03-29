@@ -285,9 +285,17 @@ AcmEx.Object = {
     //
     ,XEditable: {
         useEditable: function($s, arg) {
-            arg.placement = Acm.goodValue(arg.placement, "bottom");
-            arg.emptytext = Acm.goodValue(arg.emptytext, "Unknown");
-            $s.editable(arg);
+            var hasSource = Acm.isNotEmpty(arg.source);
+            var wasCreated = $s.hasClass("editable");
+            if (hasSource && wasCreated) {
+                $s.editable("setValue", null);
+                $s.editable("option", "source", arg.source);
+
+            } else {
+                arg.placement = Acm.goodValue(arg.placement, "bottom");
+                arg.emptytext = Acm.goodValue(arg.emptytext, "Unknown");
+                $s.editable(arg);
+            }
         }
 
         ,useEditableDate: function($s, arg) {

@@ -11,8 +11,13 @@ TaskWizard.Event = {
 
     ,onClickBtnSave : function(e) {
         var data = TaskWizard.Object.getTaskData();
-        TaskWizard.Service.createAdhocTask(data);
-        e.preventDefault();
+        if(Acm.isEmpty(data.title)){
+            Acm.Dialog.info("Please enter a subject");
+        }
+        else{
+            TaskWizard.Service.createAdhocTask(data);
+            e.preventDefault();
+        }
     }
 
 

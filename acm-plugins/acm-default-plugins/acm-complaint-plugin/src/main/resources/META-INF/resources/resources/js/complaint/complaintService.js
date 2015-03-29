@@ -13,6 +13,9 @@ Complaint.Service = {
         if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
         if (Complaint.Service.Notes.create) {Complaint.Service.Notes.create();}
         if (Complaint.Service.Tasks.create) {Complaint.Service.Tasks.create();}
+        if (Complaint.Service.History.create) {Complaint.Service.History.create();}
+        if (Complaint.Service.Time.create) {Complaint.Service.Time.create();}
+        if (Complaint.Service.Cost.create) {Complaint.Service.Cost.create();}
     }
     ,onInitialized: function() {
         if (Complaint.Service.Lookup.onInitialized) {Complaint.Service.Lookup.onInitialized();}
@@ -21,6 +24,9 @@ Complaint.Service = {
         if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
         if (Complaint.Service.Notes.onInitialized) {Complaint.Service.Notes.onInitialized();}
         if (Complaint.Service.Tasks.onInitialized) {Complaint.Service.Tasks.onInitialized();}
+        if (Complaint.Service.History.onInitialized) {Complaint.Service.History.onInitialized();}
+        if (Complaint.Service.Time.onInitialized) {Complaint.Service.Time.onInitialized();}
+        if (Complaint.Service.Cost.onInitialized) {Complaint.Service.Cost.onInitialized();}
     }
 
     ,Lookup: {
@@ -29,9 +35,11 @@ Complaint.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_GET_APPROVERS             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+        ,API_GET_APPROVERS             : "/api/latest/service/functionalaccess/users/acm-complaint-approve"
         ,API_GET_COMPLAINT_TYPES       : "/api/latest/plugin/complaint/types"
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
+        ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
+        ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
 
         ,_validateAssignees: function(data) {
             if (Acm.isEmpty(data)) {
@@ -43,6 +51,11 @@ Complaint.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
+        	var groupGetParameter = '';
+        	var groupName = Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint());
+        	if (groupName && groupName.length > 0) {
+        		groupGetParameter = '/' + groupName;
+        	}
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
@@ -56,7 +69,7 @@ Complaint.Service = {
                         }
                     }
                 }
-                ,App.getContextPath() + this.API_GET_APPROVERS
+                ,App.getContextPath() + this.API_GET_APPROVERS + groupGetParameter
             )
         }
 
@@ -113,6 +126,60 @@ Complaint.Service = {
                 ,App.getContextPath() + this.API_GET_PRIORITIES
             )
         }
+        
+        ,retrieveGroups : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	Complaint.Controller.modelRetrievedGroups(response);
+                    } else {
+                        if (response.response && response.response.docs && Complaint.Service.Lookup._validateGroups(response.response.docs)) {
+                            var groups = response.response.docs;
+                            Complaint.Model.Lookup.setGroups(groups);
+                            Complaint.Controller.modelRetrievedGroups(groups);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_GROUPS
+            )
+        }
+        
+        ,_validateGroups: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        
+        ,retrieveUsers : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	Complaint.Controller.modelRetrievedUsers(response);
+                    } else {
+                        if (response.response && response.response.docs && Complaint.Service.Lookup._validateUsers(response.response.docs)) {
+                            var users = response.response.docs;
+                            Complaint.Model.Lookup.setUsers(users);
+                            Complaint.Controller.modelRetrievedUsers(users);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_GET_USERS
+            )
+        }
+        
+        ,_validateUsers: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
     }
 
     ,Detail: {
@@ -153,6 +220,17 @@ Complaint.Service = {
                 this._saveComplaint(complaintId, complaint
                     ,function(data) {
                         Complaint.Controller.modelSavedAssignee(complaintId, Acm.Service.responseWrapper(data, assignee));
+                    }
+                );
+            }
+        }
+        ,saveGroup: function(complaintId, group) {
+            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
+            if (Complaint.Model.Detail.validateComplaint(complaint)) {
+                Complaint.Model.Detail.setGroup(complaint, group);
+                this._saveComplaint(complaintId, complaint
+                    ,function(data) {
+                        Complaint.Controller.modelSavedGroup(complaintId, Acm.Service.responseWrapper(data, group));
                     }
                 );
             }
@@ -976,9 +1054,29 @@ Complaint.Service = {
         ,onInitialized: function(){
         }
 
-        ,API_UPLOAD_FILE            : "/api/latest/plugin/task/file"
+        ,API_UPLOAD_FILE            : "/api/latest/service/ecm/upload"
         ,API_DOWNLOAD_DOCUMENT      : "/api/v1/plugin/ecm/download/byId/"
+        ,API_RETRIEVE_DOCUMENT_      : "/api/latest/service/ecm/folder/"
 
+        ,retrieveDocumentsDeferred : function(complaintId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + Complaint.Service.Documents.API_RETRIEVE_DOCUMENT_ + Complaint.Model.DOC_TYPE_COMPLAINT;
+                    url += "/" + complaintId + "?category=" + Complaint.Model.DOC_CATEGORY_FILE_SM;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (Complaint.Model.Documents.validateDocuments(data)) {
+                        var documents = data;
+                        Complaint.Model.Documents.cacheDocuments.put(complaintId + "." +jtParams.jtStartIndex, documents);
+                        jtData = callbackSuccess(documents);
+                    }
+                    return jtData;
+                }
+            );
+        }
         ,uploadDocuments: function(formData) {
             var url = App.getContextPath() + this.API_UPLOAD_FILE;
             Acm.Service.ajax({
@@ -989,28 +1087,36 @@ Complaint.Service = {
                 ,type: 'POST'
                 ,success: function(response){
                     if (response.hasError) {
-                        Complaint.Controller.modelUploadedDocuments(response);
+                        Complaint.Controller.modelAddedDocument(response);
                     } else {
-                        if(Complaint.Model.Documents.validateUploadedDocuments(response)){
-                            var complaintId = Complaint.Model.getComplaintId();
-                            var complaint = Complaint.Model.Detail.getCacheComplaint(complaintId);
-                            if(Complaint.Model.Documents.validateExistingDocuments(complaint)){
-                                for(var i = 0; i < response.length; i++){
-                                    var attachment = {};
-                                    attachment.targetId = response[i].files[0].id;
-                                    attachment.targetName = response[i].files[0].name;
-                                    attachment.status = response[i].files[0].status;
-                                    attachment.creator = response[i].files[0].creator;
-                                    attachment.created = response[i].files[0].created;
-                                    complaint.childObjects.push(attachment);
+                        // the upload returns an array of documents, for when the user uploads multiple files.
+                        if (Complaint.Model.Documents.validateNewDocument(response)) {
+                            //add to the top of the cache
+                            var complaintId = Complaint.View.getActiveComplaintId();
+                            var documentsCache = Complaint.Model.Documents.cacheDocuments.get(complaintId + "." + 0);
+                            if(Complaint.Model.Documents.validateDocuments(documentsCache)) {
+                                var documents = documentsCache.children;
+                                for ( var a = 0; a < response.length; a++ )
+                                {
+                                    var f = response[a];
+                                    var doc = {};
+                                    doc.objectId = Acm.goodValue(f.fileId);
+                                    doc.name = Acm.goodValue(f.fileName);
+                                    doc.creator = Acm.goodValue(f.creator);
+                                    doc.created = Acm.goodValue(f.created);
+                                    doc.objectType = Complaint.Model.DOC_TYPE_FILE_SM;
+                                    doc.category = Complaint.Model.DOC_CATEGORY_FILE_SM;
+                                    documentsCache.children.unshift(doc);
+                                    documents.totalChildren++;
                                 }
                             }
+                            Complaint.Controller.modelAddedDocument(response);
                         }
-                        Complaint.Controller.modelUploadedDocuments(complaint);
                     }
                 }
             });
         }
+
     }
 
     ,Notes: {
@@ -1191,5 +1297,95 @@ Complaint.Service = {
         }
     }
 
+    ,History: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+        ,API_COMPLAINT_HISTORY : "/api/latest/plugin/audit"
+
+        ,retrieveHistoryDeferred : function(complaintId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + Complaint.Service.History.API_COMPLAINT_HISTORY;
+                    url += '/' + Complaint.Model.DOC_TYPE_COMPLAINT + '/'
+                    url += complaintId;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (Complaint.Model.History.validateHistory(data)) {
+                        var history = data;
+                        Complaint.Model.History.cacheHistory.put(complaintId + "." +jtParams.jtStartIndex, history);
+                        jtData = callbackSuccess(history);
+                    }
+                    return jtData;
+                }
+            );
+        }
+    }
+
+    ,Time: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_TIMESHEETS: "/api/v1/service/timesheet/"
+
+
+        ,retrieveTimesheets : function(complaintId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_TIMESHEETS;
+            url += "objectId/" + complaintId + "/";
+            url += "objectType/" + Complaint.Model.DOC_TYPE_COMPLAINT;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Complaint.Controller.modelRetrievedTimesheets(response);
+
+                    } else {
+                        if (Complaint.Model.Time.validateTimesheets(response)) {
+                            var timesheets = response;
+                            Complaint.Model.Time.cacheTimesheets.put(complaintId, timesheets);
+                            Complaint.Controller.modelRetrievedTimesheets(timesheets);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
+
+    ,Cost: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_COSTSHEETS: "/api/v1/service/costsheet/"
+
+
+        ,retrieveCostsheets : function(complaintId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_COSTSHEETS;
+            url += "objectId/" + complaintId + "/";
+            url += "objectType/" + Complaint.Model.DOC_TYPE_COMPLAINT;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Complaint.Controller.modelRetrievedCostsheets(response);
+
+                    } else {
+                        if (Complaint.Model.Cost.validateCostsheets(response)) {
+                            var costsheets = response;
+                            Complaint.Model.Cost.cacheCostsheets.put(complaintId, costsheets);
+                            Complaint.Controller.modelRetrievedCostsheets(costsheets);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 };
 

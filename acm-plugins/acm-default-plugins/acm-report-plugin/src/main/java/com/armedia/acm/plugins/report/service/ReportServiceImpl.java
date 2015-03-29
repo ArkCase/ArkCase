@@ -49,8 +49,18 @@ public class ReportServiceImpl implements ReportService{
 	public List<Report> getPentahoReports() throws Exception, MuleException
 	{
 		Reports reports = null;
-		
-		MuleMessage received = getMuleClient().send("vm://getPentahoReports.in", getReportUrl().getReportsUrl().replace("http://", "").replace("https://", ""), null);
+
+		String serverFormUser = getReportPluginProperties().get(PENTAHO_SERVER_USER);
+		String serverFormPassword = getReportPluginProperties().get(PENTAHO_SERVER_PASSWORD);
+
+
+		String reportListUrl = getReportUrl().getReportsUrl().replace("http://", "").replace("https://", "");
+		reportListUrl += "?userid=" + serverFormUser + "&password=" + serverFormPassword;
+
+		MuleMessage received = getMuleClient().send(
+				"vm://getPentahoReports.in",
+				reportListUrl,
+				null);
 		String xml = received.getPayload(String.class);
 		
 		MuleException e = received.getInboundProperty("getPantehoReportsException");
@@ -260,5 +270,4 @@ public class ReportServiceImpl implements ReportService{
     public void setReportPluginProperties(Map<String, String> reportPluginProperties) {
         this.reportPluginProperties = reportPluginProperties;
     }
-
 }

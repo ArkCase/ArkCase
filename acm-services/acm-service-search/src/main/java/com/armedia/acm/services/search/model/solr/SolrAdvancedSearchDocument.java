@@ -108,6 +108,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     /////////////////////// for content files /////////////////////////////////////////
     private String content_type;
     private String ecmFileId;
+    private List<String> tags_ss;
 
 /////////////////////// for notification /////////////////////////////////////////
 	private String state_lcs;
@@ -658,6 +659,15 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         this.allow_acl_ss = allow_acl_ss;
     }
 
+    public List<String> getTags_ss() {
+        return tags_ss;
+    }
+
+    public void setTags_ss(List<String> tags_ss) {
+        this.tags_ss = tags_ss;
+    }
+
+
     @Override
     public String toString() {
         return "SolrAdvancedSearchDocument{" +
@@ -713,9 +723,12 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", adhocTask_b=" + adhocTask_b +
                 ", owner_lcs='" + owner_lcs + '\'' +
                 ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
+                ", content_type='" + content_type + '\'' +
+                ", ecmFileId='" + ecmFileId + '\'' +
+                ", tags_ss=" + tags_ss +
                 ", state_lcs='" + state_lcs + '\'' +
-                ", action_lcs='" + action_lcs + '\'' +
                 ", data_lcs='" + data_lcs + '\'' +
+                ", action_lcs='" + action_lcs + '\'' +
                 '}';
     }
 }
