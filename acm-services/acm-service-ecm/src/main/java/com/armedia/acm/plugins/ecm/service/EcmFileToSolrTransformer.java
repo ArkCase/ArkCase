@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import com.armedia.acm.services.tag.model.AcmTag;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,23 +41,16 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setName(in.getFileName());
         solr.setContent_type(in.getFileMimeType());
+        solr.setStatus_lcs(in.getStatus());
 
+        solr.setParent_id_s(Long.toString(in.getContainer().getId()));
+        solr.setParent_type_s(in.getContainer().getObjectType());
+        solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
-        ObjectAssociation parent = null;
+        solr.setEcmFileId(in.getVersionSeriesId());
 
-        if ( in.getParentObjects() != null && !in.getParentObjects().isEmpty() ) {
-
-            for ( ObjectAssociation objectAssociation : in.getParentObjects() ) {
-                 parent = objectAssociation;
-                 break;
-            }
-
-            solr.setParent_id_s(Long.toString(parent.getParentId()));
-            solr.setParent_type_s(parent.getParentType());
-            solr.setParent_number_lcs(parent.getParentName());
-        }
-
-        solr.setEcmFileId(in.getEcmFileId());
+        List<String> tags = prepareTagList(in.getTags());
+        solr.setTags_ss(tags);
 
         return solr;
     }
@@ -67,10 +61,46 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         return null;
     }
 
-    //No implementation needed
     @Override
     public SolrDocument toSolrQuickSearch(EcmFile in) {
-        return null;
+        SolrDocument doc = new SolrDocument();
+
+        // no access control on files (yet)
+        doc.setPublic_doc_b(true);
+
+        doc.setAuthor_s(in.getCreator());
+        doc.setAuthor(in.getCreator());
+        doc.setObject_type_s(in.getObjectType());
+        doc.setObject_id_s("" + in.getId());
+        doc.setCreate_tdt(in.getCreated());
+        doc.setId(in.getId() + "-" + in.getObjectType());
+        doc.setLast_modified_tdt(in.getModified());
+        doc.setName(in.getFileName());
+        doc.setModifier_s(in.getModifier());
+
+        doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
+        doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
+        doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
+
+        doc.setTitle_parseable(in.getFileName());
+        doc.setTitle_t(in.getFileName());
+
+        doc.setParent_folder_id_i(in.getFolder().getId());
+
+        doc.setVersion_s(in.getActiveVersionTag());
+        doc.setType_s(in.getFileType());
+        doc.setCategory_s(in.getCategory());
+
+        // need an _lcs field for sorting
+        doc.setName_lcs(in.getFileName());
+
+        doc.setCmis_version_series_id_s(in.getVersionSeriesId());
+        
+        doc.setMime_type_s(in.getFileMimeType());
+        
+        doc.setStatus_s(in.getStatus());
+
+        return doc;
     }
 
     @Override
@@ -83,6 +113,14 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         boolean isSupported = objectNotNull && classNames;
 
         return isSupported;
+    }
+
+    private List<String> prepareTagList(List<AcmTag> tagList) {
+        List<String> tagTextList = new ArrayList<>();
+        for(AcmTag tag: tagList){
+            tagTextList.add(tag.getTagText());
+        }
+        return tagTextList;
     }
 
     public EcmFileDao getEcmFileDao() {

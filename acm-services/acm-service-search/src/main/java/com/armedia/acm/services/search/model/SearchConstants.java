@@ -30,10 +30,28 @@ public interface SearchConstants
 
     String PROPERTY_NUMBER_FOUND = "numFound";
     String PROPERTY_RESPONSE = "response";
+    String PROPERTY_DOCS = "docs";
+    String PROPERTY_NAME = "name";
+    String PROPERTY_OBJECT_ID_S = "object_id_s";
+
+    String PROPERTY_FILE_CATEGORY = "category_s";
+    String PROPERTY_FILE_TYPE = "type_s";
+    String PROPERTY_CREATED = "create_tdt";
+    String PROPERTY_MODIFIED = "last_modified_tdt";
+    String PROPERTY_CREATOR = "author";
+    String PROPERTY_MODIFIER = "modifier_s";
+    String PROPERTY_OBJECT_TYPE = "object_type_s";
+    String PROPERTY_VERSION = "version_s";
+    String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
+    String PROPERTY_MIME_TYPE = "mime_type_s";
+    String PROPERTY_STATUS = "status_s";
 
     String USER = "${user}";
     /**
      * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
      */
     String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    
+    String SORT_ASC = "ASC";
+    String SORT_DESC = "DESC";
 }

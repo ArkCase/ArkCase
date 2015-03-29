@@ -12,6 +12,8 @@ import java.util.Map;
 public class ComplaintApprovalWorkflowRequestedEvent extends AcmEvent
 {
 
+    private static final long serialVersionUID = 3245444955915156438L;
+
     public ComplaintApprovalWorkflowRequestedEvent(Complaint source)
     {
         super(source);

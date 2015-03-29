@@ -1,0 +1,45 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+        <changeSet id="01-tag-tables" author="marst">
+            <createTable tableName="acm_tag">
+                <column name="cm_tag_id" type="NUMBER(32,0)">
+                    <constraints primaryKey="true" primaryKeyName="pk_cm_tag_id"/>
+                </column>
+
+                <column name="cm_file_id" type="NUMBER(32,0)"/>
+
+                <column name="cm_tag_text" type="VARCHAR(256)">
+                    <constraints nullable = "false"/>
+                </column>
+
+                <column name="cm_tag_creator" type="VARCHAR(128)">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="cm_tag_modified" type="TIMESTAMP WITH TIME ZONE">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="cm_tag_modifier" type="VARCHAR(128)">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="cm_tag_created" type="TIMESTAMP WITH TIME ZONE">
+                    <constraints nullable="false"/>
+                </column>
+
+                <column name="cm_parent_object_id" type="NUMBER(32,0)">
+                    <constraints nullable = "false"/>
+                </column>
+
+                <column name="cm_parent_object_type" type="VARCHAR(128)">
+                    <constraints nullable = "false"/>
+                </column>
+            </createTable>
+        </changeSet>
+
+</databaseChangeLog>

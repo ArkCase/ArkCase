@@ -4,8 +4,6 @@
  */
 package com.armedia.acm.plugins.complaint.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Strings;
 
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -24,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.file.AcmMultipartFile;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -126,7 +124,11 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         // Update Frevvo XML (with object ids) after saving the object 
         updateXMLAttachment(attachments, FrevvoFormName.COMPLAINT, complaint);
         
-		saveAttachments(attachments, complaint.getCmisFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), complaint.getComplaintNumber());
+		saveAttachments(
+                attachments,
+                complaint.getCmisFolderId(),
+                FrevvoFormName.COMPLAINT.toUpperCase(),
+                complaint.getComplaintId());
 
 		if (null != complaint && null != complaint.getComplaintId())
 		{
@@ -139,6 +141,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     protected ComplaintForm saveComplaint(ComplaintForm complaint) throws MuleException
     {
     	getComplaintFactory().setPersonDao(getPersonDao());
+        getComplaintFactory().setFileService(getEcmFileService());
         Complaint acmComplaint = getComplaintFactory().asAcmComplaint(complaint);
 
         boolean isNew = acmComplaint.getComplaintId() == null;

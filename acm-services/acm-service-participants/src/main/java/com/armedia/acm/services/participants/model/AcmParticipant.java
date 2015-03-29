@@ -4,20 +4,7 @@ import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +49,7 @@ public class AcmParticipant implements Serializable, AcmEntity
     @Column(name = "cm_participant_modifier")
     private String modifier;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant", fetch = FetchType.EAGER)
     private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
 
     @PrePersist

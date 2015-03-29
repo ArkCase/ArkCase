@@ -54,8 +54,9 @@
                                 <option value="DRAFT">DRAFT</option>
                                 <option value="IN APPROVAL">IN APPROVAL</option>
                                 <option value="CLOSED">CLOSED</option>
-	                            <%--<option value="DRAFT">Draft</option>
-	                            <option value="IN APPROVAL">In Approval</option>   --%>
+                                <option value="INACTIVE">INACTIVE</option>
+	                            <option value="ACTIVE">ACTIVE</option>
+	                            <%--<option value="IN APPROVAL">In Approval</option>   &ndash;%&gt;--%>
 		<%--                                                 <c:forEach items="${caseStatusMap}" var="entry">
 		                            						<option title="${entry.key}" value="${entry.value}">${entry.key}</option>
 		                                            	</c:forEach>

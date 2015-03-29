@@ -55,6 +55,10 @@ public class CompleteTaskWithOutcomeAPIController
             AcmTask completed = getTaskDao().completeTask(authentication, in.getTaskId(), in.getOutcomeName(),
                     in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
 
+            //TODO after demo should be found appropriate solution in taskDkao.
+            //this is a bug-926 fix (workaround)
+            completed.setStatus("CLOSED");
+            
             publishTaskCompletedEvent(authentication, httpSession, completed, true);
 
             return completed;

@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
@@ -114,6 +116,14 @@ public class ComplaintFactory
         assignee.setParticipantLdapId("ann-acm");
 
         complaint.getParticipants().add(assignee);
+
+        AcmContainer container = new AcmContainer();
+        container.setContainerObjectType(complaint.getObjectType());
+        container.setContainerObjectId(complaint.getId());
+        AcmFolder folder = new AcmFolder();
+        folder.setName("folderName");
+        container.setFolder(folder);
+        complaint.setContainer(container);
 
         return complaint;
     }

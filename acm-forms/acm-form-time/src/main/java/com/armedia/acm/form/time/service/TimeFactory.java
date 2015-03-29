@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeItem;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.services.timesheet.dao.AcmTimeDao;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
@@ -26,7 +27,7 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheet;
  * @author riste.tutureski
  *
  */
-public class TimeFactory {
+public class TimeFactory extends FrevvoFormFactory{
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -58,11 +59,13 @@ public class TimeFactory {
 		if (form != null)
 		{
 			retval.setId(form.getId());
-			retval.setUserId(form.getUser());
+			retval.setUser(getUser(form.getUser()));
 			retval.setTimes(asAcmTimes(form));
 			retval.setStartDate(getStartDate(form.getPeriod()));
 			retval.setEndDate(getEndDate(form.getPeriod()));
 			retval.setStatus(form.getStatus());
+			retval.setDetails(form.getDetails());
+			retval.setParticipants(asAcmParticipants(form.getApprovers()));
 		}
 		else
 		{
@@ -91,13 +94,19 @@ public class TimeFactory {
 			form = new TimeForm();
 			
 			form.setId(timesheet.getId());
-			form.setUser(timesheet.getUserId());
+			
+			if (timesheet.getUser() != null)
+			{
+				form.setUser(timesheet.getUser().getUserId());
+			}
 			
 			// Doesn't matter which date - it should be one date between start and end date ... I am taking "startDate"
 			form.setPeriod(timesheet.getStartDate());
 			
 			form.setItems(asFrevvoTimeItems(timesheet));
 			form.setStatus(timesheet.getStatus());
+			form.setDetails(timesheet.getDetails());
+			form.setApprovers(asFrevvoApprovers(timesheet.getParticipants()));
 		}
 		else
 		{
@@ -222,6 +231,7 @@ public class TimeFactory {
 			time = new AcmTime();
 		}
 		
+		time.setObjectId(item.getObjectId());
 		time.setCode(item.getCode());
 		time.setType(item.getType());
 		
@@ -263,6 +273,7 @@ public class TimeFactory {
 					item = new TimeItem();
 				}
 				
+				item.setObjectId(time.getObjectId());
 				item.setCode(time.getCode());
 				item.setType(time.getType());
 
@@ -394,8 +405,5 @@ public class TimeFactory {
 
 	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
 		this.acmTimesheetDao = acmTimesheetDao;
-	}
-	
-	
-	
+	}	
 }

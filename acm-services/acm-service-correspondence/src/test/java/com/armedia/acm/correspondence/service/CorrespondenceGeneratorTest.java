@@ -1,9 +1,7 @@
 package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
-import com.armedia.acm.correspondence.service.CorrespondenceGenerator;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -14,12 +12,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -32,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 12/15/14.
@@ -138,8 +131,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
                 eq(mockAuthentication),
                 eq(targetFolderCmisId),
                 eq("CASE_FILE"),
-                eq(500L),
-                eq("caseNumber")
+                eq(500L)
         )).andReturn(null);
 
         replayAll();
@@ -148,7 +140,6 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
                 mockAuthentication,
                 "CASE_FILE",
                 500L,
-                "caseNumber",
                 targetFolderCmisId,
                 correspondenceTemplate,
                 queryArgs,

@@ -75,8 +75,8 @@ var Application = Application || {
         if ("undefined" != typeof Tag) {
             acmModules.push(Tag);
         }
-        if ("undefined" != typeof Document) {
-            acmModules.push(Document);
+        if ("undefined" != typeof AcmDocument) {
+            acmModules.push(AcmDocument);
         }
 
 
@@ -102,9 +102,13 @@ var Application = Application || {
     ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
     ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
     ,SESSION_DATA_COMPLAINT_PRIORITIES  : "AcmComplaintPriorities"
+	,SESSION_DATA_COMPLAINT_GROUPS		: "AcmComplaintGroups"
+    ,SESSION_DATA_COMPLAINT_USERS		: "AcmComplaintUsers"
     ,SESSION_DATA_CASE_FILE_ASSIGNEES   : "AcmCaseAssignees"
     ,SESSION_DATA_CASE_FILE_TYPES       : "AcmCaseTypes"
     ,SESSION_DATA_CASE_FILE_PRIORITIES  : "AcmCasePriorities"
+    ,SESSION_DATA_CASE_FILE_GROUPS		: "AcmCaseGroups"
+    ,SESSION_DATA_CASE_FILE_USERS		: "AcmCaseUsers"
     ,SESSION_DATA_QUICK_SEARCH_TERM     : "AcmQuickSearchTerm"
     ,SESSION_DATA_ASN_LIST              : "AcmAsnList"
     ,SESSION_DATA_ASN_DATA              : "AcmAsnData"
@@ -119,10 +123,14 @@ var Application = Application || {
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_TYPES, null);
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_PRIORITIES, null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_GROUPS, null);
+        sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_USERS, null);
 
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_ASSIGNEES, null);
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_TYPES, null);
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_PRIORITIES, null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_GROUPS, null);
+        sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_USERS, null);
 
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);

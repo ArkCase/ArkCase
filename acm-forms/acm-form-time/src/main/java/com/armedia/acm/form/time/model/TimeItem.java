@@ -18,6 +18,8 @@ public class TimeItem {
 	private String type;
 	private List<String> typeOptions;
 	
+	private Long objectId;
+	
 	private String code;
 	private Map<String, List<String>> codeOptions;
 	
@@ -58,6 +60,15 @@ public class TimeItem {
 
 	public void setTypeOptions(List<String> typeOptions) {
 		this.typeOptions = typeOptions;
+	}
+
+	@XmlElement(name="objectId")
+	public Long getObjectId() {
+		return objectId;
+	}
+
+	public void setObjectId(Long objectId) {
+		this.objectId = objectId;
 	}
 
 	@XmlElement(name="code")

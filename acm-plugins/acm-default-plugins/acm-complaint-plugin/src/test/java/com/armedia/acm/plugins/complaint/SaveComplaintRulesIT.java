@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.complaint;
 
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.ecm.model.AcmContainerFolder;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -89,13 +90,15 @@ public class SaveComplaintRulesIT
 
         log.info("folder path: " + complaint.getEcmFolderPath());
 
-        AcmContainerFolder folder = new AcmContainerFolder();
+        AcmContainer container = new AcmContainer();
+        AcmFolder folder = new AcmFolder();
         folder.setCmisFolderId("cmisFolderId");
-        complaint.setContainerFolder(folder);
+        container.setFolder(folder);
+        complaint.setContainer(container);
         complaint.setEcmFolderPath(null);
 
         workingMemory.execute(complaint);
         assertNull(complaint.getEcmFolderPath());
-        assertEquals("cmisFolderId", complaint.getContainerFolder().getCmisFolderId());
+        assertEquals("cmisFolderId", complaint.getContainer().getFolder().getCmisFolderId());
     }
 }

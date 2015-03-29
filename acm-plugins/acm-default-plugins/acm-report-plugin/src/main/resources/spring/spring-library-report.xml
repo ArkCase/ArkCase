@@ -106,7 +106,6 @@
         <property name="reportToGroupsMapPropertiesFileLocation" value="${user.home}/.acm/reportToGroupsMap.properties"/>
         <property name="reportPluginProperties" ref="reportPluginProperties"/>
         <property name="reportToGroupsMapProperties" ref="reportToGroupsMapProperties"/>
-
     </bean>
 
 </beans>

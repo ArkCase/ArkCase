@@ -4,32 +4,38 @@
 package com.armedia.acm.form.cost.model;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.FrevvoForm;
 
 /**
  * @author riste.tutureski
  *
  */
-@XmlRootElement(name="form_" + FrevvoFormName.COST, namespace=FrevvoFormNamespace.COST_NAMESPACE)
-public class CostForm {
+@XmlRootElement(name="form_" + FrevvoFormName.COSTSHEET, namespace=FrevvoFormNamespace.COSTSHEET_NAMESPACE)
+public class CostForm extends FrevvoForm {
 
 	private Long id;
 	private String user;
 	private List<String> userOptions;
 	private Long objectId;
+	private Map<String, List<String>> codeOptions;
 	private String objectType;
 	private List<String> objectTypeOptions;
 	private String objectNumber;
 	private List<CostItem> items;
 	private String status;
 	private List<String> statusOptions;
-	private String initData;
+	private String details;
+	private List<ApproverItem> approvers;
+	private List<String> approverOptions;
 	private List<String> balanceTable;
 	
 	@XmlElement(name="id")
@@ -68,6 +74,15 @@ public class CostForm {
 		this.objectId = objectId;
 	}
 	
+	@XmlTransient
+	public Map<String, List<String>> getCodeOptions() {
+		return codeOptions;
+	}
+
+	public void setCodeOptions(Map<String, List<String>> codeOptions) {
+		this.codeOptions = codeOptions;
+	}
+
 	@XmlElement(name="type")
 	public String getObjectType() {
 		return objectType;
@@ -122,13 +137,31 @@ public class CostForm {
 		this.statusOptions = statusOptions;
 	}
 
-	@XmlElement(name="initData")
-	public String getInitData() {
-		return initData;
+	@XmlElement(name="details")
+	public String getDetails() {
+		return details;
 	}
 
-	public void setInitData(String initData) {
-		this.initData = initData;
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
+	@XmlElement(name="approverItem")
+	public List<ApproverItem> getApprovers() {
+		return approvers;
+	}
+
+	public void setApprovers(List<ApproverItem> approvers) {
+		this.approvers = approvers;
+	}
+
+	@XmlTransient
+	public List<String> getApproverOptions() {
+		return approverOptions;
+	}
+
+	public void setApproverOptions(List<String> approverOptions) {
+		this.approverOptions = approverOptions;
 	}
 
 	@XmlElement(name="balanceTableItem")

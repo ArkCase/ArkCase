@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.objectonverter.json.validator.JsonSchemaValidator;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -26,9 +29,20 @@ public class EcmFileJsonSchemaValidTest
     }
 
     @Test
-    public void validateSchemas() throws Exception
+    public void validateEcmFileSchema() throws Exception
     {
-        Resource schemaResource = new ClassPathResource("/jsonSchemas/ecm-file-schema.json");
+        validate("/jsonSchemas/ecm-file-schema.json");
+    }
+
+    @Test
+    public void validateFolderListSchema() throws Exception
+    {
+        validate("/jsonSchemas/folder-list-schema.json");
+    }
+
+    private void validate(String path) throws IOException, ProcessingException
+    {
+        Resource schemaResource = new ClassPathResource(path);
         ProcessingReport report = jsonSchemaValidator.validate(schemaResource.getFile());
 
         log.debug("Schema Report: " + report);
