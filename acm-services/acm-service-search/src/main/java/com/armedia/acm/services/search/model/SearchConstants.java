@@ -34,6 +34,18 @@ public interface SearchConstants
     String PROPERTY_NAME = "name";
     String PROPERTY_OBJECT_ID_S = "object_id_s";
 
+    String PROPERTY_FILE_CATEGORY = "category_s";
+    String PROPERTY_FILE_TYPE = "type_s";
+    String PROPERTY_CREATED = "create_tdt";
+    String PROPERTY_MODIFIED = "last_modified_tdt";
+    String PROPERTY_CREATOR = "author";
+    String PROPERTY_MODIFIER = "modifier_s";
+    String PROPERTY_OBJECT_TYPE = "object_type_s";
+    String PROPERTY_VERSION = "version_s";
+    String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
+    String PROPERTY_MIME_TYPE = "mime_type_s";
+    String PROPERTY_STATUS = "status_s";
+
     String USER = "${user}";
     /**
      * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.

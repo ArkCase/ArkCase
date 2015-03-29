@@ -21,6 +21,7 @@ import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -112,6 +113,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private CostFactory costFactory;
 	
 	private SearchResults searchResults;
+	
+	private AcmContainerDao acmContainerDao;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -507,5 +510,13 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setSearchResults(SearchResults searchResults) {
 		this.searchResults = searchResults;
+	}
+
+	public AcmContainerDao getAcmContainerDao() {
+		return acmContainerDao;
+	}
+
+	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
+		this.acmContainerDao = acmContainerDao;
 	}
 }

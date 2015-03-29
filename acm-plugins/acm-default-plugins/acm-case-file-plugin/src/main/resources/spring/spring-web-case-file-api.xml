@@ -29,4 +29,5 @@
     <bean id="getCaseTypesAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseTypesAPIController">
         <property name="caseFileProperties" ref="caseFilePluginProperties"/>
     </bean>
+
 </beans>

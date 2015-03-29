@@ -17,16 +17,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.model.TimesheetConstants;
+import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.gson.Gson;
@@ -42,8 +48,10 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 	
 	private TimesheetService timesheetService;
 	private AcmTimesheetDao acmTimesheetDao;
+	private TimesheetEventPublisher timesheetEventPublisher;
 	private TimeFactory timeFactory;
 	private SearchResults searchResults;
+	private AcmPluginManager acmPluginManager;
 	
 	@Override
 	public Object init() 
@@ -82,6 +90,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 			if (timesheet != null)
 			{
 				form = getTimeFactory().asFrevvoTimeForm(timesheet);
+				form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), FrevvoFormName.TIMESHEET.toLowerCase());
 			}
 			else
 			{
@@ -94,9 +103,10 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		form.setUser(userId);
 		form.setTotals(Arrays.asList(new String()));
 		
-		// Back initDate in the form. It will need Frevvo engine to recalculate init values after calling this method
-		JSONObject initData = (JSONObject) initFormData();
-		form.setInitData(initData.toString());
+		if (form.getApprovers() == null || form.getApprovers().size() == 0)
+		{
+			form.setApprovers(Arrays.asList(new ApproverItem()));
+		}
 		
 		result = convertFromObjectToXML(form);
 		
@@ -136,11 +146,31 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		
 		// Convert Frevvo form to Acm timesheet
 		AcmTimesheet timesheet = getTimeFactory().asAcmTimesheet(form);
+		
+		// Create timesheet folder (if not exist)
+		String rootFolder = (String) getTimesheetService().getProperties().get(TimesheetConstants.ROOT_FOLDER_KEY);
+		AcmContainer container = createContainer(rootFolder, timesheet.getUser().getUserId(), timesheet.getId(), TimesheetConstants.OBJECT_TYPE, getTimesheetService().createName(timesheet));
+		timesheet.setContainer(container);
+		
 		AcmTimesheet saved = getTimesheetService().save(timesheet, submissionName);
 		
 		form = getTimeFactory().asFrevvoTimeForm(saved);
 		
-		// TODO: Add logic for approval workflow and save attachemtns
+		// Take user id and ip address
+		String userId = getAuthentication().getName();
+		String ipAddress = (String) getRequest().getSession().getAttribute("acm_ip_address");
+		
+		boolean startWorkflow = getTimesheetService().checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
+		
+		FrevvoUploadedFiles uploadedFiles = null;
+		if (startWorkflow)
+		{
+			uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
+		}
+		
+		// Raise event
+		// TODO: Finish the logic and uncomment below line
+		//getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
 		
 		return true;
 	}
@@ -159,7 +189,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		// Set period (now)
 		form.setPeriod(new Date());
 		
-		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIME + ".types"), ",");
+		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".types"), ",");
 		
 		// Set charge codes for each type
 		Map<String, List<String>> codeOptions = getCodeOptions(types);
@@ -169,7 +199,10 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		form.setItems(Arrays.asList(item));
 		
 		// Init Statuses
-		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIME + ".statuses"), ","));
+		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".statuses"), ","));
+		
+		// Init possible approvers
+		form.setApproverOptions(getApproverOptions());
 		
 		// Create JSON and back to the Frevvo form
 		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
@@ -187,7 +220,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		
 		if (TimeFormConstants.OTHER.toUpperCase().equals(type))
 		{
-			options = convertToList((String) getProperties().get(FrevvoFormName.TIME + ".type.other"), ",");
+			options = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".type.other"), ",");
 		}
 		else
 		{
@@ -204,11 +237,33 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		
 		return jsonResults;
 	}
+	
+	private List<String> getApproverOptions()
+	{
+		List<String> approverOptions = new ArrayList<>();
+		try
+		{
+			List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(TimeFormConstants.APPROVER_PRIVILEGE);
+	        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
+	        
+	        if (users != null && users.size() > 0) {
+	        	for (int i = 0; i < users.size(); i++) {
+	        		approverOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+	        	}
+	        }
+		}
+		catch(Exception e)
+		{
+			LOG.warn("Cannot find users with privilege = " + TimeFormConstants.APPROVER_PRIVILEGE + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
+		}
+		
+		return approverOptions;
+	}
 
 	@Override
 	public String getFormName() 
 	{
-		return FrevvoFormName.TIME;
+		return FrevvoFormName.TIMESHEET;
 	}
 	
 	public TimesheetService getTimesheetService() {
@@ -227,6 +282,15 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		this.acmTimesheetDao = acmTimesheetDao;
 	}
 
+	public TimesheetEventPublisher getTimesheetEventPublisher() {
+		return timesheetEventPublisher;
+	}
+
+	public void setTimesheetEventPublisher(
+			TimesheetEventPublisher timesheetEventPublisher) {
+		this.timesheetEventPublisher = timesheetEventPublisher;
+	}
+
 	public TimeFactory getTimeFactory() {
 		return timeFactory;
 	}
@@ -241,5 +305,13 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 
 	public void setSearchResults(SearchResults searchResults) {
 		this.searchResults = searchResults;
+	}
+
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
 	}
 }

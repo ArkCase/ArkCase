@@ -17,9 +17,17 @@ CaseFile.Controller = CaseFile.Controller || {
     ,viewChangedAssignee: function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ASSIGNEE, caseFileId, assignee);
     }
+    ,VIEW_CHANGED_GROUP                 : "case-view-changed-group"
+    ,viewChangedGroup: function(caseFileId, group) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_GROUP, caseFileId, group);
+    }
     ,MODEL_SAVED_ASSIGNEE                  : "case-model-saved-assignee"
     ,modelSavedAssignee : function(caseFileId, assignee) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASSIGNEE, caseFileId, assignee);
+    }
+    ,MODEL_SAVED_GROUP                  : "case-model-saved-group"
+    ,modelSavedGroup : function(caseFileId, group) {
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_GROUP, caseFileId, group);
     }
     ,MODEL_FOUND_SUBJECT_TYPES             : "case-model-found-subject-types"
     ,modelFoundSubjectTypes: function(subjectTypes) {
@@ -86,6 +94,32 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelSavedRestriction : function(caseFileId, restriction) {
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_RESTRICTION, caseFileId, restriction);
     }
+
+    ,MODEL_RETRIEVED_TIMESHEETS               : "case-model-retrieved-timesheets"
+    ,modelRetrievedTimesheets : function(timesheets) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_TIMESHEETS, timesheets);
+    }
+
+    ,MODEL_RETRIEVED_COSTSHEETS               : "case-model-retrieved-costsheets"
+    ,modelRetrievedCostsheets : function(costsheets) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_COSTSHEETS, costsheets);
+    }
+    
+    ,MODEL_RETRIEVED_GROUPS                 : "case-model-retrieved-groups"
+    ,modelRetrievedGroups: function(groups) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_GROUPS, groups);
+    }
+    
+    ,MODEL_RETRIEVED_USERS                 : "case-model-retrieved-users"
+    ,modelRetrievedUsers: function(users) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, users);
+    }
+    
+    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "case-view-closed-add-document-window"
+	,viewClosedAddDocumentWindow: function(caseFileId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, caseFileId);
+    }
+
 
     ,MODEL_SAVED_CHILD_OBJECT              : "case-model-saved-childObject"            //param: caseFileId, childObject
     ,MODEL_ADDED_PARTICIPANT               : "case-model-added-participant"            //param: caseFileId, participant
@@ -230,8 +264,8 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelAddedDocument: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_DOCUMENT, caseFileId);
     }
-    ,modelCreatedCorrespondence: function(caseFileId) {
-        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, caseFileId);
+    ,modelCreatedCorrespondence: function(correspondence) {
+        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_CORRESPONDENCE, correspondence);
     }
     ,modelSavedNote : function(note) {
         Acm.Dispatcher.fireEvent(this.MODEL_UPDATED_NOTE, note);

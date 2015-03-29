@@ -529,7 +529,7 @@ Task.View = Task.View || {
         ,onClickBtnOutcome : function(event,ctrl) {
             var clicked = event.target.id;
             if (clicked == "SEND_FOR_REWORK") {
-                var reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkInstructions);
+                var reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
                 if (reworkInstructions == null || reworkInstructions == "") {
                     Acm.Dialog.info("Must enter rework details");
                 }
@@ -1648,59 +1648,86 @@ Task.View = Task.View || {
             Task.Service.Attachments.uploadAttachments(fd);
             Task.View.Attachments.$formNewAttachments[0].reset();
         }
-        ,_makeJtData: function(attachments){
+        ,_makeJtData: function(documents, totalDocuments) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if(Acm.isNotEmpty(attachments)){
-                for (var i = 0; i < attachments.length; i++) {
-                    if(Task.Model.Attachments.validateAttachmentRecord(attachments[i])){
-                        var record = {};
-                        record.id = Acm.goodValue(attachments[i].targetId, 0);
-                        record.title = Acm.goodValue(attachments[i].targetName);
-                        record.created = Acm.getDateFromDatetime(attachments[i].created);
-                        record.creator = Acm.__FixMe__getUserFullName(Acm.goodValue(attachments[i].creator));
-                        record.status = Acm.goodValue(attachments[i].status);
-                        jtData.Records.push(record);
+            if (Acm.isNotEmpty(documents)) {
+                for (var i = 0; i < documents.length; i++) {
+                    if(Task.Model.Attachments.validateDocument(documents[i])){
+                        var Record = {};
+                        Record.id = Acm.goodValue(documents[i].objectId)
+                        Record.title = Acm.goodValue(documents[i].name);
+                        Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        jtData.Records.push(Record);
                     }
                 }
-                jtData.TotalRecordCount = attachments.length;
+                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
             }
             return jtData;
         }
-        ,createJTableAttachments: function($s) {
-            $s.jtable({
+        , createJTableAttachments: function ($s) {
+            AcmEx.Object.JTable.usePaging($s, {
                 title: 'Attachments'
                 ,paging: true
-                ,pageSize: 10 //Set page size (default: 10)
                 ,sorting: true
-                ,messages: {
-                    addNewRecord: 'Add Attachment'
+                ,pageSize: 10 //Set page size (default: 10)
+                , messages: {
+                    addNewRecord: 'Add Document'
                 }
-                ,actions: {
-                    listAction: function(postData, jtParams) {
+                , actions: {
+                    pagingListAction: function (postData, jtParams, sortMap) {
                         var task = Task.View.getActiveTask();
-                        if(Task.Model.Attachments.validateExistingAttachments(task)){
-                            var attachments = task.childObjects;
-                            return Task.View.Attachments._makeJtData(attachments);
+                        if ( ! task )
+                        {
+                            return AcmEx.Object.JTable.getEmptyRecords();
                         }
-                        return AcmEx.Object.JTable.getEmptyRecords();
+                        var taskId = task.taskId;
+                        if (0 >= taskId) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+                        var documentsCache = Task.Model.Attachments.cacheAttachments.get(taskId + "." + jtParams.jtStartIndex);
+                        if (Task.Model.Attachments.validateDocuments(documentsCache)) {
+                            var documents = documentsCache.children;
+                            var totalDocuments = documentsCache.totalChildren;
+                            return Task.View.Attachments._makeJtData(documents, totalDocuments);
+                        } else {
+                            return Task.Service.Attachments.retrieveDocumentsDeferred(taskId
+                                ,postData
+                                ,jtParams
+                                ,sortMap
+                                ,function(data) {
+                                    if(Task.Model.Attachments.validateDocuments(data)){
+                                        var documents = data.children;
+                                        var totalDocuments = data.totalChildren;
+                                        return Task.View.Attachments._makeJtData(documents, totalDocuments);
+                                    }
+                                    return AcmEx.Object.JTable.getEmptyRecords();
+                                }
+                                ,function(error) {
+                                }
+                            );
+                        }  //end else
                     }
-                    , createAction: function (postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
+                    ,createAction: function(postData, jtParams) {
+                        //placeholder. this action should never be called
+                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
+                        return rc;
                     }
                 }
-                ,fields: {
+                , fields: {
                     id: {
                         title: 'ID'
-                        ,key: true
-                        ,list: false
-                        ,create: false
-                        ,edit: false
+                        , key: true
+                        , list: false
+                        , create: false
+                        , edit: false
+                        , defaultvalue: 0
                     }
-                    ,title: {
+                    , title: {
                         title: 'Title'
-                        ,width: '30%'
+                        , width: '50%'
+                        , edit: false
+                        , create: false
                         ,display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + Task.Service.Attachments.API_DOWNLOAD_DOCUMENT
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
@@ -1708,24 +1735,20 @@ Task.View = Task.View || {
                             return $(a);
                         }
                     }
-                    ,created: {
+                    , created: {
                         title: 'Created'
-                        ,width: '15%'
-                        ,edit: false
+                        , width: '15%'
+                        , edit: false
+                        , create: false
                     }
-                    ,creator: {
-                        title: 'Author'
-                        ,width: '15%'
-                        ,edit: false
-                    }
-                    ,status: {
-                        title: 'Status'
-                        ,width: '10%'
+                    , creator: {
+                        title: 'Creator'
+                        , width: '15%'
+                        , edit: false
+                        , create: false
                     }
                 }
             });
-
-            $s.jtable('load');
         }
 
     }
@@ -1862,8 +1885,8 @@ Task.View = Task.View || {
                     record.id = Acm.goodValue(documentsUnderReview.fileId, 0);
                     record.title = Acm.goodValue(documentsUnderReview.fileName);
                     record.created = Acm.getDateFromDatetime(documentsUnderReview.created);
-                    record.creator = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
-                    record.status = Acm.goodValue(documentsUnderReview.parentObjects[0].status);
+                    record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    record.status = Acm.goodValue(documentsUnderReview.status);
                     jtData.Records.push(record);
                 }
                 //jtData.TotalRecordCount = documentsUnderReview.length;

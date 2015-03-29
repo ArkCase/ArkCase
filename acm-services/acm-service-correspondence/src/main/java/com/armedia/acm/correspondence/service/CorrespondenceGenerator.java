@@ -45,7 +45,7 @@ public class CorrespondenceGenerator
 
     protected static final String WORD_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-    protected static final String CORRESPONDENCE_CATEGORY = "CORRESPONDENCE";
+    protected static final String CORRESPONDENCE_CATEGORY = "Correspondence";
 
     /**
      * Generate correspondence based on the supplied template, and store the correspondence in the ECM repository

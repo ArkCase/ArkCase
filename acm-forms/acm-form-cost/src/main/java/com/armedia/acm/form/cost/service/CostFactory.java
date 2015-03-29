@@ -11,24 +11,22 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.services.costsheet.dao.AcmCostDao;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
 /**
  * @author riste.tutureski
  *
  */
-public class CostFactory {
+public class CostFactory extends FrevvoFormFactory {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmCostDao acmCostDao;
 	private AcmCostsheetDao acmCostsheetDao;
-	private UserDao userDao;
 	
 	/**
 	 * Converting Frevvo CostForm to AcmCostsheet
@@ -61,6 +59,8 @@ public class CostFactory {
 			retval.setParentNumber(form.getObjectNumber());
 			retval.setStatus(form.getStatus());
 			retval.setCosts(asAcmCosts(form.getItems()));
+			retval.setDetails(form.getDetails());
+			retval.setParticipants(asAcmParticipants(form.getApprovers()));
 		}
 		else
 		{
@@ -100,6 +100,7 @@ public class CostFactory {
 			form.setObjectNumber(costsheet.getParentNumber());
 			form.setStatus(costsheet.getStatus());
 			form.setItems(asFrevvoCostItems(costsheet.getCosts()));
+			form.setApprovers(asFrevvoApprovers(costsheet.getParticipants()));
 		}
 		else
 		{
@@ -182,22 +183,6 @@ public class CostFactory {
 		
 		return retval;
 	}
-	
-	private AcmUser getUser(String userId)
-	{	
-		AcmUser user = null;
-		
-		try
-		{
-			user = getUserDao().findByUserId(userId);			
-		}
-		catch(Exception e)
-		{
-			LOG.error("Could not retrive user.", e);
-		}
-		
-		return user;
-	}
 
 	public AcmCostsheetDao getAcmCostsheetDao() {
 		return acmCostsheetDao;
@@ -213,13 +198,6 @@ public class CostFactory {
 
 	public void setAcmCostDao(AcmCostDao acmCostDao) {
 		this.acmCostDao = acmCostDao;
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
 	}	
+	
 }

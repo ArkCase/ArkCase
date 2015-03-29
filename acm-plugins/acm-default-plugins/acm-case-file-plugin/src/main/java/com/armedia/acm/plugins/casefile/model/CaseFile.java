@@ -382,49 +382,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.participants = participants;
     }
 
-    public void setAssignee(String assigneeUserId)
-    {
-        boolean found = false;
-        if ( participants != null )
-        {
-            for ( AcmParticipant p : participants )
-            {
-                if ( "assignee".equals(p.getParticipantType() ) )
-                {
-                    p.setParticipantLdapId(assigneeUserId);
-                    found = true;
-                    break;
-                }
-            }
-        }
-
-        if ( ! found && assigneeUserId != null )
-        {
-            AcmParticipant p = new AcmParticipant();
-            p.setParticipantLdapId(assigneeUserId);
-            p.setParticipantType("assignee");
-            p.setObjectType(getObjectType());
-            p.setObjectId(getId());
-            participants.add(p);
-        }
-    }
-
-    public String getAssignee()
-    {
-        if ( participants != null )
-        {
-            for ( AcmParticipant p : participants )
-            {
-                if ( "assignee".equals(p.getParticipantType() ) )
-                {
-                    return p.getParticipantLdapId();
-                }
-            }
-        }
-
-        return null;
-    }
-
     @JsonGetter
     public List<ObjectAssociation> getReferences()
     {
