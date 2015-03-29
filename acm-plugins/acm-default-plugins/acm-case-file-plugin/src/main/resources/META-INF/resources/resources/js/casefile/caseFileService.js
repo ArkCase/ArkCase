@@ -69,6 +69,7 @@ CaseFile.Service = {
                             CaseFile.Model.Lookup.setAssignees(assignees);
                             CaseFile.Controller.modelFoundAssignees(assignees);
                         }
+                        return assignees;
                     }
                 }
                 ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter
