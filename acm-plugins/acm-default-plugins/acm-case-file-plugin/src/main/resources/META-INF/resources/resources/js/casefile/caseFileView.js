@@ -2036,6 +2036,7 @@ CaseFile.View = CaseFile.View || {
         ,onModelSavedGroup: function(caseFileId, group) {
             if (!group.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                CaseFile.Service.Lookup.retrieveAssignees();
             }
         }
         ,onViewSelectedObject: function(objType, objId) {
