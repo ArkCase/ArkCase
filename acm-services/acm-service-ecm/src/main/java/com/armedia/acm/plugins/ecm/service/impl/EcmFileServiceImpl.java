@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -14,9 +15,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.ItemIterable;
-import org.apache.chemistry.opencmis.commons.enums.BaseTypeId;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -29,10 +34,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -54,11 +62,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private Map<String, String> sortParameterNameToCmisFieldName;
 
-    private Map<BaseTypeId, String> cmisBaseTypeToAcmType;
+    private Map<String, String> solrObjectTypeToAcmType;
 
     private Properties ecmFileServiceProperties;
 
     private MuleClient muleClient;
+
+    private ExecuteSolrQuery solrQuery;
+    private Map<String, String> categoryMap;
+
+    private SearchResults searchResults;
 
     @Override
     public EcmFile upload(
@@ -77,7 +90,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.info("The user '" + authentication.getName() + "' uploaded file: '" + fileName + "'");
         }
 
-        AcmContainer container = getOrCreateContainerFolder(parentObjectType, parentObjectId);
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
@@ -114,7 +127,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.info("File size: " + file.getSize() + "; content type: " + file.getContentType());
         }
 
-        AcmContainer container = getOrCreateContainerFolder(parentObjectType, parentObjectId);
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
 
         try
         {
@@ -207,7 +220,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Transactional
-    public AcmContainer getOrCreateContainerFolder(String objectType, Long objectId) throws
+    public AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         log.info("Finding folder for object " + objectType + " id " + objectId);
@@ -243,6 +256,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         path += getEcmFileServiceProperties().getProperty(EcmFileConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE + objectType);
         path += "/" + objectId;
 
+
         String cmisFolderId = createFolder(path);
 
         log.info("Created new folder " + cmisFolderId + "for object " + objectType + " id " + objectId);
@@ -250,6 +264,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         AcmContainer newContainer = new AcmContainer();
         newContainer.setContainerObjectId(objectId);
         newContainer.setContainerObjectType(objectType);
+
+        // the container needs a container name, so we'll make one up here, just like we made up a CMIS folder path
+        String containerName = objectType + "-" + objectId;
+        newContainer.setContainerObjectTitle(containerName);
+
         AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
         newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
@@ -260,62 +279,186 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return newContainer;
     }
 
+    @Override
+    public AcmCmisObjectList allFilesForContainer(Authentication auth,
+                                                  AcmContainer container)
+            throws AcmListObjectsFailedException
+    {
+
+        log.debug("All files for container " + container.getContainerObjectType() + " " + container.getContainerObjectId());
+        // This method is to search for all files that belong to a container, no matter where they are in the
+        // folder hierarchy.
+        String query = "{!join from=parent_object_id_i to=parent_object_id_i}object_type_s:" +
+                "CONTAINER AND parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery = "fq=object_type_s:FILE";
+
+        // search for 50 records at a time until we find them all
+        int start = 0;
+        int max = 50;
+        String sortBy = "created";
+        String sortDirection = "ASC";
+
+        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                start, max, sortBy, sortDirection);
+
+        int totalFiles = retval.getTotalChildren();
+        int foundSoFar = retval.getChildren().size();
+
+        log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+
+        while ( foundSoFar < totalFiles )
+        {
+            start += max;
+
+            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                    start, max, sortBy, sortDirection);
+            retval.getChildren().addAll(more.getChildren());
+
+            foundSoFar += more.getChildren().size();
+
+            log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+        }
+
+        retval.setMaxRows(totalFiles);
+
+        return retval;
+    }
+
 
     @Override
-    public List<AcmCmisObject> listFolderContents(String folderId, String sortBy, String sortDirection)
+    public AcmCmisObjectList listFolderContents(Authentication auth,
+                                                AcmContainer container,
+                                                String category,
+                                                String sortBy,
+                                                String sortDirection,
+                                                int startRow,
+                                                int maxRows)
+            throws AcmListObjectsFailedException
+    {
+
+        // This method is to search for objects in the root of a container.  So we restrict the return list
+        // to those items whose parent folder ID is the container folder id.... Note, this query assumes
+        // only files and folders will have a "folder_id_i" attribute with a value that matches a container
+        // folder id
+        String query = "{!join from=folder_id_i to=parent_folder_id_i}object_type_s:" +
+                "CONTAINER AND parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery =
+                category == null ? "" :
+                        "fq=category_s:" + category + " OR category_s:" + category.toUpperCase(); // in case some bad data gets through
+
+        return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
+
+
+    }
+
+    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, String category, String query,
+                                          String filterQuery, int startRow, int maxRows, String sortBy,
+                                          String sortDirection)
             throws AcmListObjectsFailedException
     {
         try
         {
             String sortParam = listFolderContents_getSortSpec(sortBy, sortDirection);
-            Map<String, Object> messageProperties = new HashMap<>();
-            messageProperties.put("orderBy", sortParam);
 
-            MuleMessage message = getMuleClient().send(
-                    EcmFileConstants.MULE_ENDPOINT_LIST_FOLDER_CONTENTS,
-                    folderId,
-                    messageProperties);
-            Object children = message.getPayload();
-            log.debug("children type: '" + children.getClass().getName());
+            String results = getSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query,
+                    startRow, maxRows, sortParam, filterQuery);
+            JSONArray docs = getSearchResults().getDocuments(results);
+            int numFound = getSearchResults().getNumFound(results);
 
-            ItemIterable<CmisObject> cmisChildren = (ItemIterable<CmisObject>) children;
+            AcmCmisObjectList retval = buildAcmCmisObjectList(container, category, numFound, sortBy, sortDirection,
+                    startRow, maxRows);
 
-            log.debug(cmisChildren.getTotalNumItems() + " items found");
-
-            List<AcmCmisObject> retval = new ArrayList<>();
-            for ( CmisObject cmisObject : cmisChildren )
-            {
-                AcmCmisObject acmCmisObject = fromCmisObject(cmisObject);
-                if (acmCmisObject != null)
-                {
-                    retval.add(acmCmisObject);
-                }
-            }
+            buildChildren(docs, retval);
 
             return retval;
         }
-        catch (MuleException e)
+        catch (Exception e)
         {
             log.error("Could not list folder contents: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("Folder Contents", e.getMessage(), e);
         }
     }
 
-    private AcmCmisObject fromCmisObject(CmisObject cmisObject)
+    private void buildChildren(JSONArray docs, AcmCmisObjectList retval) throws ParseException
     {
-        if ( ! getCmisBaseTypeToAcmType().containsKey(cmisObject.getBaseTypeId()) )
+        List<AcmCmisObject> cmisObjects = new ArrayList<>();
+        retval.setChildren(cmisObjects);
+
+        int count = docs.length();
+        SimpleDateFormat solrFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
+        for ( int a = 0; a < count; a++ )
         {
-            log.info("Child object is not a document or a folder, skipping");
-            return null;
+            JSONObject doc = docs.getJSONObject(a);
+
+            AcmCmisObject object = buildAcmCmisObject(solrFormat, doc);
+
+            cmisObjects.add(object);
+        }
+    }
+
+    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound,
+                                                     String sortBy, String sortDirection, int startRow, int maxRows)
+    {
+        AcmCmisObjectList retval = new AcmCmisObjectList();
+        retval.setContainerObjectId(container.getContainerObjectId());
+        retval.setContainerObjectType(container.getContainerObjectType());
+        retval.setFolderId(container.getFolder().getId());
+        retval.setTotalChildren(numFound);
+        retval.setCategory(category == null ? "all" : category);
+        retval.setSortBy(sortBy);
+        retval.setSortDirection(sortDirection);
+        retval.setStartRow(startRow);
+        retval.setMaxRows(maxRows);
+        return retval;
+    }
+
+    private AcmCmisObject buildAcmCmisObject(SimpleDateFormat solrFormat, JSONObject doc) throws ParseException
+    {
+        AcmCmisObject object = new AcmCmisObject();
+
+        String categoryText = getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_CATEGORY);
+        if ( categoryText != null && getCategoryMap().containsKey(categoryText.toLowerCase()) )
+        {
+            object.setCategory(getCategoryMap().get(categoryText.toLowerCase()));
         }
 
-        AcmCmisObject acmCmisObject = new AcmCmisObject();
-        acmCmisObject.setCmisObjectId(cmisObject.getId());
-        acmCmisObject.setName(cmisObject.getName());
-        acmCmisObject.setObjectType(getCmisBaseTypeToAcmType().get(cmisObject.getBaseTypeId()));
+        Date created = getSearchResults().extractDate(solrFormat, doc, SearchConstants.PROPERTY_CREATED);
+        object.setCreated(created);
 
-        return acmCmisObject;
+        String solrType = getSearchResults().extractString(doc, SearchConstants.PROPERTY_OBJECT_TYPE);
+        String objectType = getSolrObjectTypeToAcmType().get(solrType);
+        object.setObjectType(objectType);
+
+        object.setCreator(getSearchResults().extractString(doc, SearchConstants.PROPERTY_CREATOR));
+
+        object.setModified(getSearchResults().extractDate(solrFormat, doc, SearchConstants.PROPERTY_MODIFIED));
+
+        object.setName(getSearchResults().extractString(doc, SearchConstants.PROPERTY_NAME));
+
+        object.setObjectId(getSearchResults().extractLong(doc, SearchConstants.PROPERTY_OBJECT_ID_S));
+
+        object.setType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_FILE_TYPE));
+
+        object.setVersion(getSearchResults().extractString(doc, SearchConstants.PROPERTY_VERSION));
+
+        object.setModifier(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MODIFIER));
+
+        object.setCmisObjectId(getSearchResults().extractString(doc, SearchConstants.PROPERTY_CMIS_VERSION_SERIES_ID));
+        
+        object.setMimeType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MIME_TYPE));
+        
+        object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
+        
+        return object;
     }
+
+
 
     private String listFolderContents_getSortSpec(String sortBy, String sortDirection)
     {
@@ -327,6 +470,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         sortParam = sortParam + " " + sortDirection;
         return sortParam;
     }
+    
+    @Override
+    public String buildSafeFolderName(String folderName)
+	{    	
+		if (folderName != null)
+		{
+			String regex = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX;
+			String replacement = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT;
+			
+			folderName = folderName.replaceAll(regex, replacement);
+		}
+		
+		return folderName;
+	}
 
     public EcmFileTransaction getEcmFileTransaction()
     {
@@ -372,14 +529,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.sortParameterNameToCmisFieldName = sortParameterNameToCmisFieldName;
     }
 
-    public Map<BaseTypeId, String> getCmisBaseTypeToAcmType()
+    public Map<String, String> getSolrObjectTypeToAcmType()
     {
-        return cmisBaseTypeToAcmType;
+        return solrObjectTypeToAcmType;
     }
 
-    public void setCmisBaseTypeToAcmType(Map<BaseTypeId, String> cmisBaseTypeToAcmType)
+    public void setSolrObjectTypeToAcmType(Map<String, String> solrObjectTypeToAcmType)
     {
-        this.cmisBaseTypeToAcmType = cmisBaseTypeToAcmType;
+        this.solrObjectTypeToAcmType = solrObjectTypeToAcmType;
     }
 
     public AcmContainerDao getContainerFolderDao()
@@ -400,5 +557,35 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
     {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
+    }
+
+    public ExecuteSolrQuery getSolrQuery()
+    {
+        return solrQuery;
+    }
+
+    public void setSolrQuery(ExecuteSolrQuery solrQuery)
+    {
+        this.solrQuery = solrQuery;
+    }
+
+    public void setCategoryMap(Map<String, String> categoryMap)
+    {
+        this.categoryMap = categoryMap;
+    }
+
+    public Map<String, String> getCategoryMap()
+    {
+        return categoryMap;
+    }
+
+    public SearchResults getSearchResults()
+    {
+        return searchResults;
+    }
+
+    public void setSearchResults(SearchResults searchResults)
+    {
+        this.searchResults = searchResults;
     }
 }

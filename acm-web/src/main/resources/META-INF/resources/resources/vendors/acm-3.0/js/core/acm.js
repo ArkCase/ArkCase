@@ -486,6 +486,18 @@ var Acm = Acm || {
     	
     	return false;
     }
+    
+    ,createKeyValueObject: function(quickSearchSolrResponse) {
+    	var retval = {};
+    	
+    	if (Acm.isNotEmpty(quickSearchSolrResponse) && Acm.isArray(quickSearchSolrResponse)) {
+    		for (var i = 0; i < quickSearchSolrResponse.length; i++) {
+    			retval[quickSearchSolrResponse[i].object_id_s] = quickSearchSolrResponse[i].name;
+    		}
+    	}
+    	
+    	return retval;
+    }
 
 };
 

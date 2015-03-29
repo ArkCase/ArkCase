@@ -154,6 +154,10 @@
                                                             <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
                                                             <small class="text-muted">Assigned To</small></div>
                                                         <div class="col-xs-2 b-r">
+                                                                <%--<div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-url="/post" data-title="Enter Owning Group"></a></div>--%>
+                                                            <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                            <small class="text-muted">Owning Group</small></div>
+                                                        <div class="col-xs-2 b-r">
                                                                 <%--<div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>--%>
                                                             <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
                                                             <small class="text-muted">Incident Category</small></div>
@@ -255,15 +259,21 @@
                                                 <div class="col-md-12">
                                                     <section class="panel b-a">
                                                         <div id="divDocuments" style="width:100%"></div>
+                                                        <form id="formAddDocument" style="display:none;">
+                                                                <%--<input type="file" id="file" name="file">--%>
+                                                            <input id="addDocument" type="file" name="files[]" multiple/>
+                                                                <%--<input type="submit">--%>
+                                                        </form>
                                                         <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />--%>
                                                         <%--<input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />--%>
                                                         <%--<input id="formDocuments" type="hidden" value='${formDocuments}' />--%>
                                                     </section>
                                                 </div>
-                                            <%--</div>--%>
+                                            </div>
 
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
-                                            <%--<div class="row">--%>
+                                            <!-- hide folder tree for now, until it is all working -->
+                                            <div class="row" style="display:none;">
                                             <div class="col-md-12">
                                             <section class="panel b-a">
                                                 <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">

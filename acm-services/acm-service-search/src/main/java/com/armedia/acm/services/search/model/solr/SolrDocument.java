@@ -46,6 +46,15 @@ public class SolrDocument implements SolrBaseDocument {
     ////////////////// for Timesheet and other objects that have start/end date //////////////////////////////////////
     private Date startDate_s;
     private Date endDate_s;
+    private Long folder_id_i;
+    private String folder_name_s;
+    private String type_s;
+    private String version_s;
+    private String name_lcs;
+    private Long parent_folder_id_i;
+    private String category_s;
+    private String cmis_version_series_id_s;
+    private String mime_type_s;
 
     @Override
     public String getId() {
@@ -279,8 +288,97 @@ public class SolrDocument implements SolrBaseDocument {
 		this.endDate_s = endDate_s;
 	}
 
+    public void setFolder_id_i(Long folder_id_i)
+    {
+        this.folder_id_i = folder_id_i;
+    }
+
+    public Long getFolder_id_i()
+    {
+        return folder_id_i;
+    }
+
+    public void setFolder_name_s(String folder_name_s)
+    {
+        this.folder_name_s = folder_name_s;
+    }
+
+    public String getFolder_name_s()
+    {
+        return folder_name_s;
+    }
+
+    public void setType_s(String type_s)
+    {
+        this.type_s = type_s;
+    }
+
+    public String getType_s()
+    {
+        return type_s;
+    }
+
+    public void setVersion_s(String version_s)
+    {
+        this.version_s = version_s;
+    }
+
+    public String getVersion_s()
+    {
+        return version_s;
+    }
+
+    public void setName_lcs(String name_lcs)
+    {
+        this.name_lcs = name_lcs;
+    }
+
+    public String getName_lcs()
+    {
+        return name_lcs;
+    }
+
+    public void setParent_folder_id_i(Long parent_folder_id_i)
+    {
+        this.parent_folder_id_i = parent_folder_id_i;
+    }
+
+    public Long getParent_folder_id_i()
+    {
+        return parent_folder_id_i;
+    }
+
+    public void setCategory_s(String category_s)
+    {
+        this.category_s = category_s;
+    }
+
+    public String getCategory_s()
+    {
+        return category_s;
+    }
+
+    public void setCmis_version_series_id_s(String cmis_version_series_id_s)
+    {
+        this.cmis_version_series_id_s = cmis_version_series_id_s;
+    }
+
+    public String getCmis_version_series_id_s()
+    {
+        return cmis_version_series_id_s;
+    }
+
+    public String getMime_type_s() {
+		return mime_type_s;
+	}
+
+	public void setMime_type_s(String mime_type_s) {
+		this.mime_type_s = mime_type_s;
+	}
+
 	@Override
-    public String toString() {
+    public String toString()
+    {
         return "SolrDocument{" +
                 "id='" + id + '\'' +
                 ", status_s='" + status_s + '\'' +
@@ -313,8 +411,17 @@ public class SolrDocument implements SolrBaseDocument {
                 ", parent_object_id_i=" + parent_object_id_i +
                 ", disposition_id_s='" + disposition_id_s + '\'' +
                 ", disposition_type_s='" + disposition_type_s + '\'' +
-                ", startDate_s='" + startDate_s + '\'' +
-                ", endDate_s='" + endDate_s + '\'' +
+                ", startDate_s=" + startDate_s +
+                ", endDate_s=" + endDate_s +
+                ", folder_id_i=" + folder_id_i +
+                ", folder_name_s='" + folder_name_s + '\'' +
+                ", type_s='" + type_s + '\'' +
+                ", version_s='" + version_s + '\'' +
+                ", name_lcs='" + name_lcs + '\'' +
+                ", parent_folder_id_i=" + parent_folder_id_i +
+                ", category_s='" + category_s + '\'' +
+                ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
+                ", mime_type_s='" + mime_type_s + '\'' +
                 '}';
     }
 }

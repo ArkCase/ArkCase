@@ -42,6 +42,8 @@ Costsheet.View = {
             // edit form has same url as new form
             this.formUrls.editCostsheetFormUrl         = Acm.Object.MicroData.get("newCostsheetFormUrl");
 
+            this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
+
         }
         ,onInitialized: function() {
 
@@ -172,6 +174,7 @@ Costsheet.View = {
         ,onInitialized: function() {
         }
         ,onViewSelectedObject: function(objType,objId) {
+            Costsheet.View.ParentDetail.resetParentDetail();
             var costsheet = Costsheet.View.getActiveCostsheet();
             if(Costsheet.Model.Detail.validateCostsheet(costsheet)) {
                 var objId = costsheet.parentId;
@@ -183,6 +186,7 @@ Costsheet.View = {
             }
         }
         ,onModelRetrievedObject: function(costsheet) {
+            Costsheet.View.ParentDetail.resetParentDetail();
             if(Costsheet.Model.Detail.validateCostsheet(costsheet)){
                 var objId = costsheet.parentId;
                 var objType = costsheet.parentType;
@@ -208,6 +212,16 @@ Costsheet.View = {
                 this.setParentObjLink(parentObjData.id, parentObjData.objectType);
                 this.showDivParentDetail(true);
             }
+        }
+        ,resetParentDetail: function() {
+            this.setTextParentObjTitle("");
+            this.setTextLnkParentObjIncidentDate("");
+            this.setTextLnkParentObjPriority("");
+            this.setTextLnkParentObjAssigned("");
+            this.setTextLnkParentObjStatus("");
+            this.setTextLnkParentObjSubjectType("");
+            this.setTextLnkParentObjNumber("");
+            this.setParentObjLink("");
         }
         ,setParentObjLink: function(parentId, parentType) {
             if (Acm.isNotEmpty(parentId) && Acm.isNotEmpty(parentType)) {

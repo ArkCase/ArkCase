@@ -17,24 +17,22 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeItem;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.services.timesheet.dao.AcmTimeDao;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 
 /**
  * @author riste.tutureski
  *
  */
-public class TimeFactory {
+public class TimeFactory extends FrevvoFormFactory{
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmTimeDao acmTimeDao;
 	private AcmTimesheetDao acmTimesheetDao;
-	private UserDao userDao;
 	
 	/**
 	 * Converting Frevvo TimeForm to AcmTimesheet
@@ -67,6 +65,7 @@ public class TimeFactory {
 			retval.setEndDate(getEndDate(form.getPeriod()));
 			retval.setStatus(form.getStatus());
 			retval.setDetails(form.getDetails());
+			retval.setParticipants(asAcmParticipants(form.getApprovers()));
 		}
 		else
 		{
@@ -107,6 +106,7 @@ public class TimeFactory {
 			form.setItems(asFrevvoTimeItems(timesheet));
 			form.setStatus(timesheet.getStatus());
 			form.setDetails(timesheet.getDetails());
+			form.setApprovers(asFrevvoApprovers(timesheet.getParticipants()));
 		}
 		else
 		{
@@ -354,22 +354,6 @@ public class TimeFactory {
 		return item;
 	}
 	
-	private AcmUser getUser(String userId)
-	{	
-		AcmUser user = null;
-		
-		try
-		{
-			user = getUserDao().findByUserId(userId);			
-		}
-		catch(Exception e)
-		{
-			LOG.error("Could not retrive user.", e);
-		}
-		
-		return user;
-	}
-	
 	public Date getStartDate(Date period)
 	{
 		if (period != null)
@@ -421,14 +405,5 @@ public class TimeFactory {
 
 	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
 		this.acmTimesheetDao = acmTimesheetDao;
-	}
-
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-	
+	}	
 }

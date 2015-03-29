@@ -40,22 +40,45 @@
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="solrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
         <property name="sortParameterNameToCmisFieldName">
             <map>
-                <entry key="created" value="cmis:creationDate"/>
-                <entry key="modified" value="cmis:lastModificationDate"/>
+                <entry key="name" value="name_lcs"/>
+                <entry key="type" value="type_s"/>
+                <entry key="created" value="create_tdt"/>
+                <entry key="author" value="author"/>
+                <entry key="version" value="version_s"/>
+                <entry key="modified" value="last_modified_tdt"/>
+                <entry key="creator" value="author"/>
+                <entry key="modifier" value="modifier_s"/>
+                <entry key="category" value="category_s"/>
             </map>
         </property>
-        <property name="cmisBaseTypeToAcmType">
+        <property name="solrObjectTypeToAcmType">
             <map>
-                <entry key="CMIS_DOCUMENT" value="file"/>
-                <entry key="CMIS_FOLDER" value="folder"/>
+                <entry key="FILE" value="file"/>
+                <entry key="FOLDER" value="folder"/>
+            </map>
+        </property>
+        <property name="categoryMap">
+            <map>
+                <entry key="document" value="Document"/>
+                <entry key="correspondence" value="Correspondence"/>
             </map>
         </property>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
+    <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
+        <property name="dao" ref="acmContainerFolderDao"/>
+    </bean>
+
+    <bean id="acmFolderToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmFolderToSolrTransformer">
+        <property name="dao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule">
@@ -94,6 +117,11 @@
                 <bean id="folderListUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="containerListUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/ecm/container/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="uploadFilePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

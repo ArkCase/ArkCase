@@ -256,11 +256,6 @@
                     <property name="url" value="/api/{version}/plugin/task/history/{id}/{adhoc}"/>
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/task/events/{taskId}"/>
-                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
-                </bean>
             </list>
         </property>
     </bean>
@@ -339,6 +334,7 @@
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
         <property name="containerFolderDao" ref="acmContainerFolderDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="fileDao" ref="ecmFileDao"/>
         <property name="taskBusinessRule" ref="taskBusinessRule"/>
         <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
         <property name="priorityLevelToNumberMap">

@@ -499,7 +499,7 @@ TaskList.JTable = {
                             , function () {
                                 var taskId = TaskList.getTaskId();
                                 var url;
-                                url = App.getContextPath() + TaskList.Service.API_TASK_EVENTS + taskId;
+                                url = App.getContextPath() + TaskList.Service.API_TASK_EVENTS + '/TASK/' + taskId;
                                 return url;
                             }
                             , function (data) {

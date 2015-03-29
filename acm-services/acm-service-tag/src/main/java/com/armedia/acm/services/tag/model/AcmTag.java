@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_tag")
-public class AcmTag  implements AcmEntity, Serializable, AcmObject {
+public class AcmTag implements AcmEntity, Serializable, AcmObject {
 
     public static final String OBJECT_TYPE = "TAG";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
