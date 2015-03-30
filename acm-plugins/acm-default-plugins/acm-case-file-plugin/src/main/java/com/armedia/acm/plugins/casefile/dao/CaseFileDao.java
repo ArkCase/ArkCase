@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.TimePeriod;
 
 import javax.persistence.Query;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
@@ -87,8 +89,8 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
                         "     AcmParticipant ap " +
                         "WHERE " +
                         "     cf.id = ap.objectId " +
-                        "AND  ap.objectType = 'CASE_FILE' " +
-                        "AND  ap.participantType = 'assignee' " +
+                        "AND  ap.objectType = '" + CaseFileConstants.OBJECT_TYPE + "' " +
+                        "AND  ap.participantType = '" + ParticipantTypes.ASSIGNEE + "' " +
                         "AND  ap.participantLdapId = :user " +
                         "AND  cf.status <> :statusName " +
                         "ORDER BY " +
