@@ -81,8 +81,18 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         return retval;
     }
     public List<CaseFile> getNotClosedCaseFilesByUser(String user) throws AcmObjectNotFoundException{
-        String queryText = "SELECT cf FROM CaseFile cf " +
-                "WHERE cf.creator = :user AND cf.status<>:statusName";
+        String queryText =
+                "SELECT cf " +
+                        "FROM CaseFile cf, " +
+                        "     AcmParticipant ap " +
+                        "WHERE " +
+                        "     cf.id = ap.objectId " +
+                        "AND  ap.objectType = 'CASE_FILE' " +
+                        "AND  ap.participantType = 'assignee' " +
+                        "AND  ap.participantLdapId = :user " +
+                        "AND  cf.status <> :statusName " +
+                        "ORDER BY " +
+                        "     cf.dueDate ASC";
         Query casesByUser = getEm().createQuery(queryText);
         casesByUser.setParameter("user",user);
         casesByUser.setParameter("statusName","CLOSED");
