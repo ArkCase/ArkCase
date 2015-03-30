@@ -70,7 +70,7 @@ CaseFile.Service = {
                     } else {
                         if (CaseFile.Service.Lookup._validateAssignees(response)) {
                             var assignees = response;
-                            CaseFile.Model.Lookup.setAssignees(assignees);
+                            CaseFile.Model.Lookup.setAssignees(CaseFile.View.getActiveCaseFileId(), assignees);
                             CaseFile.Controller.modelFoundAssignees(assignees);
                         }
                         return assignees;
@@ -142,7 +142,7 @@ CaseFile.Service = {
                     } else {
                         if (response.response && response.response.docs && CaseFile.Service.Lookup._validateGroups(response.response.docs)) {
                             var groups = response.response.docs;
-                            CaseFile.Model.Lookup.setGroups(groups);
+                            CaseFile.Model.Lookup.setGroups(CaseFile.View.getActiveCaseFileId(), groups);
                             CaseFile.Controller.modelRetrievedGroups(groups);
                         }
                     }

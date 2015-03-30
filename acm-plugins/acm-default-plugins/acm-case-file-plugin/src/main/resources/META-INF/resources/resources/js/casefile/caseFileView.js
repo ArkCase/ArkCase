@@ -514,6 +514,7 @@ CaseFile.View = CaseFile.View || {
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedAssignee(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
+            	,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
             });
         }
         ,onModelRetrievedGroups: function(groups) {
@@ -530,6 +531,7 @@ CaseFile.View = CaseFile.View || {
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
+            	,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
             });
         }
         ,onModelFoundSubjectTypes: function(subjectTypes) {
@@ -1912,7 +1914,7 @@ CaseFile.View = CaseFile.View || {
                 for (var i = 0; i < documents.length; i++) {
                     if(CaseFile.Model.Documents.validateDocument(documents[i])){
                         var Record = {};
-                        Record.id = Acm.goodValue(documents[i].objectId);
+                        Record.id = Acm.goodValue(documents[i].objectId)
                         Record.title = Acm.goodValue(documents[i].name);
                         Record.created = Acm.getDateFromDatetime(documents[i].created);
                         Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
@@ -1988,7 +1990,7 @@ CaseFile.View = CaseFile.View || {
                         , edit: false
                         , create: false
                         ,display: function (commData) {
-                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
                                 + "'>" + commData.record.title + "</a>";
                             return $(a);

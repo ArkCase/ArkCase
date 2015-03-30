@@ -808,6 +808,7 @@ CaseFile.Model = CaseFile.Model || {
             this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
             
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         	// Do not do getAssignees() here. It should call after the object is loaded.
@@ -953,6 +954,10 @@ CaseFile.Model = CaseFile.Model || {
         }
         
         ,onModelRetrievedObject: function(objData) {
+        	CaseFile.Model.Lookup.refreshAssigneesAndGroups();
+        }
+        
+        ,onViewSelectedObject: function(objType, objId) {
         	CaseFile.Model.Lookup.refreshAssigneesAndGroups();
         }
         

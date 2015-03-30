@@ -288,9 +288,13 @@ AcmEx.Object = {
             var hasSource = Acm.isNotEmpty(arg.source);
             var wasCreated = $s.hasClass("editable");
             if (hasSource && wasCreated) {
-                $s.editable("setValue", null);
+            	var currentValue = null;
+            	if (Acm.isNotEmpty(arg.currentValue)) {
+            		currentValue = arg.currentValue;
+            	}
                 $s.editable("option", "source", arg.source);
-
+                $s.editable("option", "success", arg.success);
+                $s.editable("setValue", currentValue);
             } else {
                 arg.placement = Acm.goodValue(arg.placement, "bottom");
                 arg.emptytext = Acm.goodValue(arg.emptytext, "Unknown");
