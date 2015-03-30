@@ -53,8 +53,12 @@ CaseFile.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
+        	var caseFile = CaseFile.View.getActiveCaseFile();
+        	if (caseFile == null) {
+        		return null;
+        	}
         	var groupGetParameter = '';
-        	var groupName = CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile());
+        	var groupName = CaseFile.Model.Detail.getGroup(caseFile);
         	if (groupName && groupName.length > 0) {
         		groupGetParameter = '/' + groupName;
         	}
