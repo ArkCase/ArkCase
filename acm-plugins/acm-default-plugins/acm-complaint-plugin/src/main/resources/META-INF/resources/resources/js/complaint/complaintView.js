@@ -314,6 +314,7 @@ Complaint.View = Complaint.View || {
                 ,success: function(response, newValue) {
                     Complaint.Controller.viewChangedAssignee(Complaint.View.getActiveComplaintId(), newValue);
                 }
+            	,currentValue: Complaint.Model.Detail.getAssignee(Complaint.View.getActiveComplaint())
             });
         }
         ,onModelRetrievedGroups: function(groups) {
@@ -330,6 +331,7 @@ Complaint.View = Complaint.View || {
                 ,success: function(response, newValue) {
                     Complaint.Controller.viewChangedGroup(Complaint.View.getActiveComplaintId(), newValue);
                 }
+            	,currentValue: Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint())
             });
         }
         ,onModelFoundComplaintTypes: function(complaintTypes) {
@@ -2736,6 +2738,7 @@ Complaint.View = Complaint.View || {
         ,onModelSavedGroup: function(complaintId, group) {
             if (!group.hasError) {
                 AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
+                Complaint.Service.Lookup.retrieveAssignees();
             }
         }
         ,onModelModifiedParticipants: function(complaint) {

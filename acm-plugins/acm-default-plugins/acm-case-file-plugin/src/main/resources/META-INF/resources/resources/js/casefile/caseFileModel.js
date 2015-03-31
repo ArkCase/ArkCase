@@ -801,19 +801,25 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Lookup: {
         create: function() {
-            this._assignees    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_ASSIGNEES);
+            this._assignees    =  new Acm.Model.CacheFifo();
             this._subjectTypes = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_TYPES);
             this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
-            this._groups    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_GROUPS);
+            this._groups    =  new Acm.Model.CacheFifo();
             this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
+            
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
-            var assignees = CaseFile.Model.Lookup.getAssignees();
+        	// Do not do getAssignees() here. It should call after the object is loaded.
+        	// This will help in the first loading to be retrieved correct users
+        	// The place for calling this now is onModelRetrievedObject(...) in this file
+            /*var assignees = CaseFile.Model.Lookup.getAssignees();
             if (Acm.isEmpty(assignees)) {
                 CaseFile.Service.Lookup.retrieveAssignees();
             } else {
                 CaseFile.Controller.modelFoundAssignees(assignees);
-            }
+            }*/
 
             var subjectTypes = CaseFile.Model.Lookup.getSubjectTypes();
             if (Acm.isEmpty(subjectTypes)) {
@@ -829,12 +835,15 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Controller.modelFoundPriorities(priorities);
             }
             
-            var groups = CaseFile.Model.Lookup.getGroups();
+            // Do not do getGroups() here. It should call after the object is loaded.
+        	// This will help in the first loading to be retrieved correct groups
+        	// The place for calling this now is onModelRetrievedObject(...) in this file
+            /*var groups = CaseFile.Model.Lookup.getGroups();
             if (Acm.isEmpty(groups)) {
                 CaseFile.Service.Lookup.retrieveGroups();
             } else {
                 CaseFile.Controller.modelRetrievedGroups(groups);
-            }
+            }*/
             
             var users = CaseFile.Model.Lookup.getUsers();
             if (Acm.isEmpty(users)) {
@@ -850,11 +859,11 @@ CaseFile.Model = CaseFile.Model || {
         ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
         ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
-        ,getAssignees: function() {
-            return CaseFile.Service.Lookup.retrieveAssignees();
+        ,getAssignees: function(caseFileId) {
+            return this._assignees.get(caseFileId);
         }
-        ,setAssignees: function(assignees) {
-            this._assignees.set(assignees);
+        ,setAssignees: function(caseFileId, assignees) {
+            this._assignees.put(caseFileId, assignees);
         }
         ,getSubjectTypes: function() {
             return this._subjectTypes.get();
@@ -868,11 +877,11 @@ CaseFile.Model = CaseFile.Model || {
         ,setPriorities: function(priorities) {
             this._priorities.set(priorities);
         }
-        ,getGroups: function() {
-            return this._groups.get();
+        ,getGroups: function(caseFileId) {
+            return this._groups.get(caseFileId);
         }
-        ,setGroups: function(groups) {
-            this._groups.set(groups);
+        ,setGroups: function(caseFileId, groups) {
+            this._groups.put(caseFileId, groups);
         }
         ,getUsers: function() {
             return this._users.get();
@@ -942,6 +951,32 @@ CaseFile.Model = CaseFile.Model || {
         ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
         ,getParticipantTypes : function() {
             return this._participantTypes;
+        }
+        
+        ,onModelRetrievedObject: function(objData) {
+        	CaseFile.Model.Lookup.refreshAssigneesAndGroups();
+        }
+        
+        ,onViewSelectedObject: function(objType, objId) {
+        	CaseFile.Model.Lookup.refreshAssigneesAndGroups();
+        }
+        
+        ,refreshAssigneesAndGroups: function() {
+        	var caseFileId = CaseFile.View.getActiveCaseFileId();
+        	
+        	var assignees = CaseFile.Model.Lookup.getAssignees(caseFileId);
+            if (Acm.isEmpty(assignees)) {
+                CaseFile.Service.Lookup.retrieveAssignees();
+            } else {
+                CaseFile.Controller.modelFoundAssignees(assignees);
+            }
+            
+            var groups = CaseFile.Model.Lookup.getGroups(caseFileId);
+            if (Acm.isEmpty(groups)) {
+                CaseFile.Service.Lookup.retrieveGroups();
+            } else {
+                CaseFile.Controller.modelRetrievedGroups(groups);
+            }
         }
     }
 
