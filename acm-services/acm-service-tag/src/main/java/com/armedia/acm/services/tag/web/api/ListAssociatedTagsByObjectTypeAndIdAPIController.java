@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.tag.dao.AssociatedTagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.service.AssociatedTagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -25,35 +26,45 @@ import java.util.List;
 @RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
 public class ListAssociatedTagsByObjectTypeAndIdAPIController {
 
-    private AssociatedTagDao associatedTagDao;
+    private AssociatedTagService associatedTagService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value="/{objectId}/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmAssociatedTag> listAssociatedTaqsBy(
+    public List<AcmTag> listAssociatedTaqsBy(
             @PathVariable("objectId") Long objectId,
             @PathVariable("objectType") String objectType,
             Authentication auth) throws AcmUserActionFailedException, AcmObjectNotFoundException {
         if ( log.isInfoEnabled() ) {
             log.info("Listing assigned tags for objectId: "+objectId+" and object type: "+objectType);
         }
-        List<AcmAssociatedTag> acmAssociatedTags = null;
+        List<AcmAssociatedTag> acmAssociatedTags;
+        List<AcmTag> acmTags;
         try {
-            acmAssociatedTags = getAssociatedTagDao().getAcmAssociatedTagsByObjectIdAndType(objectId,objectType);
+            acmAssociatedTags = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(objectId,objectType);
+            acmTags = retrieveTagList(acmAssociatedTags);
         } catch (AcmObjectNotFoundException e) {
             if (log.isDebugEnabled())
                 log.debug("No Associated Tags are Found for objectId: "+ objectId+" and objectType: "+objectType, e);
             return new ArrayList<>();
         }
-        return acmAssociatedTags;
+        return acmTags;
     }
 
-    public AssociatedTagDao getAssociatedTagDao() {
-        return associatedTagDao;
+    private List<AcmTag> retrieveTagList(List<AcmAssociatedTag> acmAssociatedTags){
+        List<AcmTag> acmTags = new ArrayList<>();
+        for( AcmAssociatedTag acmAssociatedTag : acmAssociatedTags ){
+            acmTags.add(acmAssociatedTag.getTag());
+        }
+        return  acmTags;
     }
 
-    public void setAssociatedTagDao(AssociatedTagDao associatedTagDao) {
-        this.associatedTagDao = associatedTagDao;
+    public AssociatedTagService getAssociatedTagService() {
+        return associatedTagService;
+    }
+
+    public void setAssociatedTagService(AssociatedTagService associatedTagService) {
+        this.associatedTagService = associatedTagService;
     }
 }

@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.service.TagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,7 +23,8 @@ import java.util.List;
 @RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
 public class ListAllTagsAPIController {
 
-    private TagDao tagDao;
+    private TagService tagService;
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -31,14 +33,14 @@ public class ListAllTagsAPIController {
         if ( log.isInfoEnabled() ) {
             log.info("List all tags");
         }
-        return getTagDao().findAll();
+        return getTagService().getAllTags();
     }
 
-    public TagDao getTagDao() {
-        return tagDao;
+    public TagService getTagService() {
+        return tagService;
     }
 
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
 }

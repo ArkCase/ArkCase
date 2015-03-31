@@ -7,9 +7,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import com.armedia.acm.services.tag.model.AcmTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -64,5 +67,10 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         }
 
         return result;
+    }
+
+    @Transactional
+    public EcmFile updateEcmFile(EcmFile file) throws SQLException {
+        return getEm().merge(file);
     }
 }

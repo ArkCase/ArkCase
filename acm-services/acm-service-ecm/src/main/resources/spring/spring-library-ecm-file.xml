@@ -85,6 +85,10 @@
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
+    <bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileTagChangeListener">
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+    </bean>
+
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
         <property name="privileges">

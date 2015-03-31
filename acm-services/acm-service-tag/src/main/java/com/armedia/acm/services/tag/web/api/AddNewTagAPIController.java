@@ -8,6 +8,7 @@ import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.TagEventPublisher;
+import com.armedia.acm.services.tag.service.TagService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.util.List;
 @RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
 public class AddNewTagAPIController {
 
-    private TagDao tagDao;
+    private TagService tagService;
     private TagEventPublisher tagEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -42,34 +43,26 @@ public class AddNewTagAPIController {
         if ( log.isInfoEnabled() ) {
             log.info("Creating new tag with text:"+text+" description: " + desc + "and name: "+name );
         }
-            AcmTag returnedTag = getTagDao().getTagByTextOrDescOrName(text, desc, name);
+            AcmTag returnedTag = getTagService().getTagByTextOrDescOrName(text, desc, name);
 
         if(returnedTag !=null) {
             if (log.isDebugEnabled()) {
                 log.debug("Tag with id: " + returnedTag.getId() + " name: " + name + " or description: " + desc + " or text:" + text + " already exists");
             }
             throw new AcmCreateObjectFailedException(AcmTag.OBJECT_TYPE, "Tag with Name: " + name + " or Description: " + desc + " or Text: " + text + " already exists in the DB, pls try to delete or update existing one", null);
-        }else {
-            AcmTag newTag = prepareNewTag(name, desc, text);
+        } else {
+            AcmTag addedTag = null;
             try {
-                AcmTag addedTag = getTagDao().save(newTag);
+                addedTag = getTagService().saveTag(name, desc, text);
                 getTagEventPublisher().publishTagCreatedEvent(addedTag, authentication, true);
                 return addedTag;
             } catch (Exception e) {
                 if (log.isErrorEnabled())
                     log.error("Exception occurred while trying to insert new Tag into DB with name: " + name + " and Description: " + desc + " and Text: " + text, e);
-                getTagEventPublisher().publishTagCreatedEvent(newTag, authentication, false);
+                getTagEventPublisher().publishTagCreatedEvent(addedTag, authentication, false);
                 throw new AcmCreateObjectFailedException(AcmTag.OBJECT_TYPE, "Tag with Name: " + name + " or Description: " + desc + " or Text: " + text + " was not inserted into DB due to exception", e);
             }
         }
-    }
-
-    private AcmTag prepareNewTag(String name,String desc, String value) {
-        AcmTag newTag = new AcmTag();
-        newTag.setTagText(value);
-        newTag.setTagName(name);
-        newTag.setTagDescription(desc);
-        return newTag;
     }
 
     public TagEventPublisher getTagEventPublisher() {
@@ -80,11 +73,12 @@ public class AddNewTagAPIController {
         this.tagEventPublisher = tagEventPublisher;
     }
 
-    public TagDao getTagDao() {
-        return tagDao;
+    public TagService getTagService() {
+        return tagService;
     }
 
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
+
 }

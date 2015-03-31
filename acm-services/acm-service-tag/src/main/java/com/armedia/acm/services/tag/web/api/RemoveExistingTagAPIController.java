@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.TagEventPublisher;
+import com.armedia.acm.services.tag.service.TagService;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.sql.SQLException;
 @RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
 public class RemoveExistingTagAPIController {
 
-    private TagDao tagDao;
+    private TagService tagService;
     private TagEventPublisher tagEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -46,9 +47,9 @@ public class RemoveExistingTagAPIController {
             log.info("Removing tag with tagId: " + tagId);
         }
         try {
-            AcmTag tag = tagDao.find(tagId);
+            AcmTag tag = tagService.findTag(tagId);
             if (tag != null) {
-                getTagDao().deleteTag(tagId);
+                getTagService().removeTag(tag);
                 if (log.isDebugEnabled())
                     log.debug("Tag with tagId:" + tagId + "  successfully removed");
                 getTagEventPublisher().publishTagDeletedEvent(tag, authentication, true);
@@ -59,7 +60,7 @@ public class RemoveExistingTagAPIController {
                 getTagEventPublisher().publishTagDeletedEvent(tag, authentication, false);
                 return prepareJsonReturnMsg(SUCCESS_MSG, tagId);
             }
-        } catch (SQLException e) {
+        } catch ( SQLException e ) {
             if (log.isErrorEnabled())
             log.error("SQL Exception was thrown while deleting tag with tagId: "+ tagId);
             throw new AcmUserActionFailedException(USER_ACTION,AcmTag.OBJECT_TYPE,tagId,"SQL Exception was thrown while deleting tag",e);
@@ -76,12 +77,12 @@ public class RemoveExistingTagAPIController {
         return objectToReturn;
     }
 
-    public TagDao getTagDao() {
-        return tagDao;
+    public TagService getTagService() {
+        return tagService;
     }
 
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
 
     public TagEventPublisher getTagEventPublisher() {
