@@ -225,6 +225,7 @@ public class FrevvoFormServiceFactory {
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
             
             return service;
 		}
@@ -251,6 +252,7 @@ public class FrevvoFormServiceFactory {
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setAcmContainerDao(frevvoFormController.getAcmContainerDao());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setCostsheetEventPublisher(frevvoFormController.getCostsheetEventPublisher());
             
             return service;
 		}
