@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="casefile-sql-01-populate-container-folder-id" author="dmiller">
+    <changeSet id="casefile-sql-01-populate-container-folder-id" author="dmiller" failOnError="false">
         <preConditions>
             <and>
                 <tableExists tableName="acm_container_folder"/>
