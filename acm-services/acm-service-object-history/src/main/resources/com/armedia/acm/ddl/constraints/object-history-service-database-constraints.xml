@@ -31,14 +31,14 @@
         <dropIndex tableName="acm_object_history" indexName="idx_object_history_object_type"/>
     </changeSet>
 
-    <changeSet id="05-create-object-history-index" author="riste.tutureski">
+    <changeSet id="05-create-object-history-index" author="riste.tutureski" logicalFilePath="/com/armedia/acm/ddl/tables/object-history-service-database-tables.xml">
         <createIndex tableName="acm_object_history" indexName="idx_object_history_id_type">
             <column name="cm_object_id"/>
             <column name="cm_object_type"/>
         </createIndex>
     </changeSet>
 
-    <changeSet id="03-remove-nullable-for-newasignee-in-assignment-table" author="riste.tutureski">
+    <changeSet id="07-remove-nullable-for-newasignee-in-assignment-table" author="riste.tutureski" logicalFilePath="/com/armedia/acm/ddl/tables/object-history-service-database-tables.xml">
         <dropNotNullConstraint tableName="acm_assignment" columnName="cm_assignment_new_assignee"/>
     </changeSet>
 
