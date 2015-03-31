@@ -6,6 +6,8 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.tag.dao.AssociatedTagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.service.AssociatedTagEventPublisher;
+import com.armedia.acm.services.tag.service.AssociatedTagService;
+import com.armedia.acm.services.tag.service.TagService;
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,27 +34,27 @@ public class RemoveTagAssociationAPIController {
 
     private final static int NO_ROW_DELETED = 0;
 
-    private AssociatedTagDao associatedTagDao;
+
+    private AssociatedTagService associatedTagService;
     private AssociatedTagEventPublisher associatedTagEventPublisher;
 
-    @RequestMapping(value = "/{userId}/{objectId}/{objectType}/{tagId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{objectId}/{objectType}/{tagId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteTag(
-            @PathVariable("userId") String userId,
             @PathVariable("objectId") Long objectId,
             @PathVariable("objectType") String objectType,
             @PathVariable("tagId") Long tagId,
             Authentication authentication ) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, SQLException {
 
-        int resultFromDeleteAction = 0;
+        int resultFromDeleteAction;
 
-        AcmAssociatedTag source = getAssociatedTagDao().getAssociatedTagByTagIdAndObjectIdAndType(tagId,objectId,objectType);
-        resultFromDeleteAction = getAssociatedTagDao().deleteAssociateTag(tagId, objectId, objectType);
+        AcmAssociatedTag source = getAssociatedTagService().getAssociatedTagByTagIdAndObjectIdAndType(tagId,objectId,objectType);
+        resultFromDeleteAction = getAssociatedTagService().removeAssociatedTag(source);
 
         if ( resultFromDeleteAction == NO_ROW_DELETED ) {
             if( log.isDebugEnabled() )
                 log.debug("Associated Tag with tagId:"+tagId+"  on object['" + objectType + "]:[" + objectId + "] not found in the DB");
-            getAssociatedTagEventPublisher().publishAssociatedTagDeletedEvent(source,authentication, false);
+            getAssociatedTagEventPublisher().publishAssociatedTagDeletedEvent(source, authentication, false);
             return prepareJsonReturnMsg( SUCCESS_MSG, source.getId() );
         } else {
             log.debug("Associated Tag with tagId:"+tagId+"  on object['" + objectType + "]:[" + objectId + "] successfully removed");
@@ -78,11 +80,11 @@ public class RemoveTagAssociationAPIController {
         this.associatedTagEventPublisher = associatedTagEventPublisher;
     }
 
-    public AssociatedTagDao getAssociatedTagDao() {
-        return associatedTagDao;
+    public AssociatedTagService getAssociatedTagService() {
+        return associatedTagService;
     }
 
-    public void setAssociatedTagDao(AssociatedTagDao associatedTagDao) {
-        this.associatedTagDao = associatedTagDao;
+    public void setAssociatedTagService(AssociatedTagService associatedTagService) {
+        this.associatedTagService = associatedTagService;
     }
 }

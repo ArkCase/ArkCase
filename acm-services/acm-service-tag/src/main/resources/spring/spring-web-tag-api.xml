@@ -9,37 +9,37 @@
     </bean>
 
     <bean id="listAllTagsAPIController" class="com.armedia.acm.services.tag.web.api.ListAllTagsAPIController">
-        <property name="tagDao" ref="tagDao"/>
+        <property name="tagService" ref="tagService"/>
     </bean>
 
     <bean id="associateTagAPIController" class="com.armedia.acm.services.tag.web.api.AssociateTagAPIController">
-        <property name="tagDao" ref="tagDao"/>
-        <property name="associatedTagDao" ref="associatedTagDao"/>
         <property name="associatedTagEventPublisher" ref="associatedTagEventPublisher"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
+        <property name="tagService" ref="tagService" />
     </bean>
 
     <bean id="addNewTagAPIController" class="com.armedia.acm.services.tag.web.api.AddNewTagAPIController">
-        <property name="tagDao" ref="tagDao"/>
         <property name="tagEventPublisher" ref="tagEventPublisher"/>
+        <property name="tagService" ref="tagService"/>
     </bean>
 
     <bean id="removeExistingTagAPIController" class="com.armedia.acm.services.tag.web.api.RemoveExistingTagAPIController">
-        <property name="tagDao" ref="tagDao"/>
+        <property name="tagService" ref="tagService" />
         <property name="tagEventPublisher" ref="tagEventPublisher"/>
     </bean>
 
     <bean id="updateTagAPIController" class="com.armedia.acm.services.tag.web.api.UpdateTagAPIController">
-        <property name="tagDao" ref="tagDao"/>
+        <property name="tagService" ref="tagService"/>
         <property name="tagEventPublisher" ref="tagEventPublisher"/>
     </bean>
 
     <bean id="removeTagAssociationAPIController" class="com.armedia.acm.services.tag.web.api.RemoveTagAssociationAPIController">
         <property name="associatedTagEventPublisher" ref="associatedTagEventPublisher"/>
-        <property name="associatedTagDao" ref="associatedTagDao"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
 
     <bean id="listAssociatedTagsByObjectTypeAndIdAPIController" class="com.armedia.acm.services.tag.web.api.ListAssociatedTagsByObjectTypeAndIdAPIController">
-        <property  name="associatedTagDao" ref="associatedTagDao"/>
+        <property name="associatedTagService" ref="associatedTagService" />
     </bean>
 
 </beans>

@@ -49,7 +49,8 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "tag")
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tag")
     private List<AcmAssociatedTag> associatedTags;
 
     public String getTagText() {

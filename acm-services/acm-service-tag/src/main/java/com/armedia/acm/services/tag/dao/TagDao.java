@@ -25,19 +25,51 @@ public class TagDao extends AcmAbstractDao<AcmTag> {
         Query query = getEm().createQuery(
                 "SELECT tag FROM AcmTag tag " +
                         "WHERE tag.tagText =:text " +
-                        "OR tag.tagName =: name " +
-                        "OR tag.tagDescription =: desc ");
+                        "OR tag.tagName =:name " +
+                        "OR tag.tagDescription =:desc ");
         query.setParameter("text", text);
         query.setParameter("name", name);
         query.setParameter("desc", desc);
-        AcmTag result = (AcmTag) query.getResultList().get(0);
-        return result;
+
+        List<AcmTag> results = query.getResultList();
+        AcmTag existingTag = null;
+        if(!results.isEmpty()) {
+            existingTag = results.get(0);
+        }
+        return existingTag;
     }
 
+    public AcmTag getTagByText(String tagText) {
 
+        Query query = getEm().createQuery(
+                "SELECT tag FROM AcmTag tag " +
+                        "WHERE tag.tagText =:tagText ");
+        query.setParameter("tagText", tagText);
+
+        List<AcmTag> results = query.getResultList();
+        AcmTag tag = null;
+        if(!results.isEmpty()) {
+            tag = results.get(0);
+        }
+        return tag;
+    }
+
+    public AcmTag getTagByName(String tagName) {
+
+        Query query = getEm().createQuery(
+                "SELECT tag FROM AcmTag tag " +
+                        "WHERE tag.tagName =:tagName ");
+        query.setParameter("tagName", tagName);
+        List<AcmTag> results = query.getResultList();
+        AcmTag tag = null;
+        if(!results.isEmpty()) {
+            tag = results.get(0);
+        }
+        return tag;
+    }
     @Transactional
-    public void deleteTag(Long tagId) throws SQLException {
-            getEm().remove(tagId);
+    public void deleteTag(AcmTag tag) throws SQLException {
+        getEm().remove(tag);
     }
 
     @Transactional

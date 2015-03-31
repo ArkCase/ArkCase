@@ -39,16 +39,19 @@ public class AssociatedTagDao extends AcmAbstractDao<AcmAssociatedTag> {
     public AcmAssociatedTag getAssociatedTagByTagIdAndObjectIdAndType (Long tagId, Long objectId, String objectType){
         Query selectQuery = getEm().createQuery("SELECT assTag FROM AcmAssociatedTag assTag " +
                 "WHERE assTag.tag.id =:tagId " +
-                "AND assTag.objectId=:objectId " +
-                "AND assTag.subscriptionObjectType=:objectType");
+                "AND assTag.parentId=:objectId " +
+                "AND assTag.parentType=:objectType");
 
         selectQuery.setParameter("tagId",tagId);
         selectQuery.setParameter("objectId",objectId);
         selectQuery.setParameter("objectType",objectType);
 
-        AcmAssociatedTag result;
+        AcmAssociatedTag result = null;
 
-        result = (AcmAssociatedTag) selectQuery.getResultList().get(0);
+        List<AcmAssociatedTag>  results = selectQuery.getResultList();
+        if(!results.isEmpty()){
+            result = results.get(0);
+        }
         return  result;
     }
 
@@ -57,7 +60,7 @@ public class AssociatedTagDao extends AcmAbstractDao<AcmAssociatedTag> {
     public int deleteAssociateTag( Long tagId, Long objectId, String objectType ) throws SQLException {
         AcmAssociatedTag result = getAssociatedTagByTagIdAndObjectIdAndType(tagId,objectId,objectType);
         int rowCount = 0;
-        if(result!=null){;
+        if(result!=null){
             getEm().remove(result);
             rowCount = 1;
         }
@@ -77,7 +80,7 @@ public class AssociatedTagDao extends AcmAbstractDao<AcmAssociatedTag> {
 
 
         if( resultList.isEmpty()){
-            throw new AcmObjectNotFoundException("ASSOCIATED-TAG", null, "No Associated Tags are found", null);
+            throw new AcmObjectNotFoundException("ASSOCIATED-TAG", null, "Associated Tags not found", null);
         }
 
 

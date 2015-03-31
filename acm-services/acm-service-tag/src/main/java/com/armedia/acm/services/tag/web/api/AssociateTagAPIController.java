@@ -8,6 +8,8 @@ import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagEventPublisher;
+import com.armedia.acm.services.tag.service.AssociatedTagService;
+import com.armedia.acm.services.tag.service.TagService;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,66 +31,56 @@ import java.util.List;
 @RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
 public class AssociateTagAPIController {
 
-    private AssociatedTagDao associatedTagDao;
-    private TagDao tagDao;
+    private AssociatedTagService associatedTagService;
+    private TagService tagService;
     private AssociatedTagEventPublisher associatedTagEventPublisher;
 
     private final static int ZERO = 0;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/{userId}/{objectId}/{objectType}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{objectId}/{objectType}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmAssociatedTag associateTag(
-            @PathVariable("userId") String userId,
             @PathVariable("objectId") Long objectId,
             @PathVariable("objectType") String objectType,
             @PathVariable("tagId") Long tagId,
             Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException {
 
         if ( log.isInfoEnabled() ) {
-            log.info("Creating new tag association for user:"+userId+" on object['" + objectType + "]:[" + objectId + "] and tagId: "+tagId );
+            log.info("Creating new tag association on object['" + objectType + "]:[" + objectId + "] and tagId: "+tagId );
         }
-        //TODO check if exists objectId with objcetType if not throw exception
 
-           AcmTag tagForAssociating = getTagDao().find(tagId);
-           AcmAssociatedTag newAssociatedTag = prepareAcmAssociateTag(objectType,objectId,tagForAssociating);
+           AcmTag tagForAssociating = getTagService().findTag(tagId);
+           AcmAssociatedTag newAssociatedTag = null;
            try{
-               AcmAssociatedTag returnedAssociatedTag  = getAssociatedTagDao().save(newAssociatedTag);
+               AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag(objectType, objectId, tagForAssociating);
                getAssociatedTagEventPublisher().publishAssociatedTagCreatedEvent(returnedAssociatedTag,authentication,true);
                newAssociatedTag = returnedAssociatedTag;
            } catch ( Exception e ) {
                Throwable t =  ExceptionUtils.getRootCause(e);
                if ( t instanceof SQLIntegrityConstraintViolationException) {
                    if (log.isDebugEnabled())
-                       log.debug("Tag associated on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
+                       log.debug("Tag associated on object['" + objectType + "]:[" + objectId + "] and tagId: " + tagId + " already exists", e);
 
-                   List<AcmAssociatedTag> associatedTagList = getAssociatedTagDao().getAcmAssociatedTagByTagIdAndObjectIdAndType(tagId, objectId, objectType);
+                   List<AcmAssociatedTag> associatedTagList = getAssociatedTagService().getAcmAssociatedTagByTagIdAndObjectIdAndType(tagId, objectId, objectType);
                    if(associatedTagList.isEmpty()){
                        if(log.isErrorEnabled())
-                           log.error("Constraint Violation Exception occurred while trying to assign a tag with tagId: "+tagId+ "  on object[" + objectType + "]:[" + objectId + "] for user: " + userId,e);
-                       throw new AcmCreateObjectFailedException(objectType,"Tag Association for user: "+userId+" on object [" + objectType + "]:[" + objectId + "] and tagId: " +tagId+" was not inserted into the DB",e);
+                           log.error("Constraint Violation Exception occurred while trying to assign a tag with tagId: "+tagId+ "  on object[" + objectType + "]:[" + objectId + "]",e);
+                       throw new AcmCreateObjectFailedException(objectType,"Tag Association  on object [" + objectType + "]:[" + objectId + "] and tagId: " +tagId+" was not inserted into the DB",e);
                    } else {
                        newAssociatedTag = associatedTagList.get(ZERO);
                    }
                } else {
                    if(log.isErrorEnabled())
-                       log.error("Exception occurred while trying to associate tag with tagId: "+tagId+ " on object[" + objectType + "]:[" + objectId + "] for user: " + userId,e);
+                       log.error("Exception occurred while trying to associate tag with tagId: "+tagId+ " on object[" + objectType + "]:[" + objectId + "]",e);
 
                    getAssociatedTagEventPublisher().publishAssociatedTagCreatedEvent(newAssociatedTag,authentication,false);
 
-                   throw new AcmCreateObjectFailedException(objectType,"Subscription for user: "+userId+" on object [" + objectType + "]:[" + objectId + "] was not inserted into the DB",e);
+                   throw new AcmCreateObjectFailedException(objectType,"Tag Association on object [" + objectType + "]:[" + objectId + "] was not inserted into the DB",e);
                }
            }
            return newAssociatedTag;
-    }
-
-    private AcmAssociatedTag prepareAcmAssociateTag(String objectType, Long objectId, AcmTag tag) {
-        AcmAssociatedTag acmAssociatedTag = new AcmAssociatedTag();
-        acmAssociatedTag.setParentType(objectType);
-        acmAssociatedTag.setParentId(objectId);
-        acmAssociatedTag.setTag(tag);
-        return acmAssociatedTag;
     }
 
     public AssociatedTagEventPublisher getAssociatedTagEventPublisher() {
@@ -99,19 +91,20 @@ public class AssociateTagAPIController {
         this.associatedTagEventPublisher = associatedTagEventPublisher;
     }
 
-    public TagDao getTagDao() {
-        return tagDao;
+    public AssociatedTagService getAssociatedTagService() {
+        return associatedTagService;
     }
 
-    public void setTagDao(TagDao tagDao) {
-        this.tagDao = tagDao;
+    public void setAssociatedTagService(AssociatedTagService associatedTagService) {
+        this.associatedTagService = associatedTagService;
     }
 
-    public AssociatedTagDao getAssociatedTagDao() {
-        return associatedTagDao;
+    public TagService getTagService() {
+        return tagService;
     }
 
-    public void setAssociatedTagDao(AssociatedTagDao associatedTagDao) {
-        this.associatedTagDao = associatedTagDao;
+    public void setTagService(TagService tagService) {
+        this.tagService = tagService;
     }
+
 }

@@ -25,6 +25,7 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cm_tag_id")
@@ -87,21 +88,26 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject {
         return tag;
     }
 
+    public Long getTagId() {return tag.getId();}
+
     public void setTag(AcmTag tag) {
         this.tag = tag;
     }
 
+    @JsonIgnore
     @Override
     public String getModifier() {
         // Not used. Modifier not exist in the database
         return null;
     }
 
+
     @Override
     public void setModifier(String modifier) {
         // Not used. Modifier not exist in the database
     }
 
+    @JsonIgnore
     @Override
     public Date getModified() {
         // Not used. Modified not exist in the database
