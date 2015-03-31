@@ -1,35 +1,35 @@
 /**
  * 
  */
-package com.armedia.acm.services.timesheet.service;
+package com.armedia.acm.objectchangestatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.services.timesheet.model.AcmTimesheet;
-import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
+import com.armedia.acm.objectchangestatus.model.AcmObjectStatus;
+import com.armedia.acm.objectchangestatus.model.AcmObjectStatusEvent;
 
 /**
  * @author riste.tutureski
  *
  */
-public class TimesheetEventPublisher implements ApplicationEventPublisherAware{
+public class ChangeObjectStatusEventPublisher implements ApplicationEventPublisherAware {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private ApplicationEventPublisher applicationEventPublisher;
 
-	public void publishEvent(AcmTimesheet source, String userId, String ipAddress, boolean succeeded, String type, FrevvoUploadedFiles frevvoUploadedFiles, boolean startWorkflow)
+	public void publishEvent(AcmObjectStatus source, String userId, boolean succeeded)
 	{
-		LOG.debug("Publishing AcmTimesheet event.");
+		LOG.debug("Publishing AcmObjectStatus event.");
 		
-		AcmTimesheetEvent event = new AcmTimesheetEvent(source, userId, ipAddress, succeeded, type, frevvoUploadedFiles, startWorkflow);
+		AcmObjectStatusEvent event = new AcmObjectStatusEvent(source, userId, succeeded);
 		
 		getApplicationEventPublisher().publishEvent(event);
 	}
+			
 	
 	public ApplicationEventPublisher getApplicationEventPublisher() {
 		return applicationEventPublisher;
@@ -39,6 +39,5 @@ public class TimesheetEventPublisher implements ApplicationEventPublisherAware{
 	public void setApplicationEventPublisher(
 			ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
-	}
-	
+	}	
 }
