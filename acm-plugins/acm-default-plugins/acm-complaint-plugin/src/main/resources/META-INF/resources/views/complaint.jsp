@@ -261,19 +261,19 @@
 
 
                                     <div class="row" id="tabDocuments" style="display:none;">
-                                        <div class="col-md-12">
-                                            <section class="panel b-a">
-                                                <div id="divDocuments" style="width:100%"></div>
-                                                <form id="formAddDocument" style="display:none;">
-                                                        <%--<input type="file" id="file" name="file">--%>
-                                                    <input id="addDocument" type="file" name="files[]" multiple/>
-                                                        <%--<input type="submit">--%>
-                                                </form>
-                                                    <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />--%>
-                                                    <%--<input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />--%>
-                                                    <%--<input id="formDocuments" type="hidden" value='${formDocuments}' />--%>
-                                            </section>
-                                        </div>
+                                        <%--<div class="col-md-12">--%>
+                                            <%--<section class="panel b-a">--%>
+                                                <%--<div id="divDocuments" style="width:100%"></div>--%>
+                                                <%--<form id="formAddDocument" style="display:none;">--%>
+                                                        <%--&lt;%&ndash;<input type="file" id="file" name="file">&ndash;%&gt;--%>
+                                                    <%--<input id="addDocument" type="file" name="files[]" multiple/>--%>
+                                                        <%--&lt;%&ndash;<input type="submit">&ndash;%&gt;--%>
+                                                <%--</form>--%>
+                                                    <%--&lt;%&ndash;<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" />&ndash;%&gt;--%>
+                                                    <%--&lt;%&ndash;<input id="electronicCommunicationFormUrl" type="hidden" value="${electronicCommunicationFormUrl}" />&ndash;%&gt;--%>
+                                                    <%--&lt;%&ndash;<input id="formDocuments" type="hidden" value='${formDocuments}' />&ndash;%&gt;--%>
+                                            <%--</section>--%>
+                                        <%--</div>--%>
                                     <%--</div>--%>
 
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
@@ -282,19 +282,11 @@
                                     <section class="panel b-a">
                                         <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
                                             <li style="margin-right:5px"></li>
-                                            <li>
-                                                <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>
-
-
-
-
-
-
-
-
-                                                </div>
-                                            </li>
+                                            <%--<li>--%>
+                                                <%--<div class="btn-group padder-v2">--%>
+                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
+                                                <%--</div>--%>
+                                            <%--</li>--%>
                                             <li>
                                                 <div class="btn-group padder-v2">
                                                     <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> Email</button>
@@ -315,11 +307,11 @@
 
 
 
-                                            <a href="#" class="font-bold"><div>Documents5 <img id="imgFileLoading" src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ajax-loader.gif" class="dker" style="display:block;"></div> </a>
-                                            <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
-                                            <form id="formDoc" style="display:block;">
+                                            <a href="#" class="font-bold"><div>Documents</div> </a>
+                                            <form id="formUploadDoc" style="display:none;">
                                                 <input type="file" id="file" name="file">
-                                                    <input type="submit">
+                                            </form>
+                                            <form action="#" id="formDownloadDoc" style="display:none;">
                                             </form>
                                         </div>
 
@@ -372,18 +364,17 @@
                                         </div>
 
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
-
                                             <thead>
                                             <tr>
-                                                <th><span class='fancytree-checkbox'></span></th>
-                                                <th>ID</th>
-                                                <th width="40%">Title</th>
-                                                <th>Type</th>
-                                                <th>Created</th>
-                                                <th>Author</th>
-                                                <th>Version</th>
-                                                <th>Status</th>
-                                                <th colspan="2"></th>
+                                                <th width2="6%"><span class='fancytree-checkbox'></span></th>
+                                                <th width2="4%">ID</th>
+                                                <th width="35%">Title</th>
+                                                <th width="12%">Type</th>
+                                                <th width="10%">Created</th>
+                                                <th width="16%">Author</th>
+                                                <th width="6%">Version</th>
+                                                <th width="8%">Status</th>
+                                                <%--<th width2="6%" colspan="2"></th>--%>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -396,7 +387,7 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <td></td>
+                                                <%--<td></td>--%>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -408,7 +399,8 @@
                                     <%--<h3>Additional Action Examples</h3>--%>
                                     <%--<p>I added these modal window examples below to save time (it takes longer for me to code it into the FancyTree).</p>--%>
 
-
+<!-- 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333 -->
+<!--
                                     <button class="btn btn-default" data-toggle="modal" data-target="#createsubfolder">
 
                                         <span class="text">Create Subfolder</span>
@@ -606,7 +598,7 @@
                                         </ul>
                                     </div>
 
-
+-->
 
                                     </div>
                                     </div>
