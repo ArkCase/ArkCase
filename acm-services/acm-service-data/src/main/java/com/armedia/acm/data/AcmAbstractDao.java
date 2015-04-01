@@ -67,6 +67,16 @@ public abstract class AcmAbstractDao<T>
 
 
     protected abstract Class<T> getPersistenceClass();
+    
+    /**
+     * This method should be implemented under appropriate DAO. It should return OBJECT_TYPE
+     * 
+     * @return
+     */
+    public String getSupportedObjectType()
+    {
+    	return null;
+    }
 
     public EntityManager getEm()
     {
