@@ -84,7 +84,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
     private List<EcmFileVersion> versions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="cm_parent_id")
+    @JoinColumn(name="cm_parent_object_id")
     private List<AcmAssociatedTag> tags = new ArrayList<>();
 
     @PrePersist
