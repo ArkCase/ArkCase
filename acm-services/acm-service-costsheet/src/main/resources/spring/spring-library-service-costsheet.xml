@@ -44,11 +44,6 @@
 		<property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
 		<property name="activitiRuntimeService" ref="activitiRuntimeService"/>
 	</bean>
-	
-	<bean id="costsheetChangeStatusListener" class="com.armedia.acm.services.costsheet.service.CostsheetChangeStatusListener">
-		<property name="changeObjectStatusService" ref="changeObjectStatusService"/>
-		<property name="costsheetService" ref="costsheetService"/>
-	</bean>
     
     <bean id="costsheetToSolrTransformer" class="com.armedia.acm.services.costsheet.service.CostsheetToSolrTransformer">
 		<property name="acmCostsheetDao" ref="acmCostsheetDao"/>

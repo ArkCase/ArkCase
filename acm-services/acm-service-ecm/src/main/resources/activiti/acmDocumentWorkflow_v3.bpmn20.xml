@@ -41,9 +41,9 @@
     <sequenceFlow id="reworkToReview" name="Submit Rework" sourceRef="reworkOutcome" targetRef="approverReviewsDocument">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${reworkOutcome == 'RESUBMIT'}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="setObjectApprovedStatus" name="Set Object Approved Status" activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'APPROVED', 'ACTIVITI_SYSTEM')}"></serviceTask>
+    <serviceTask id="setObjectApprovedStatus" name="Set Object Approved Status" activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'APPROVED')}"></serviceTask>
     <sequenceFlow id="flow1" sourceRef="setObjectApprovedStatus" targetRef="endDocumentApprovalWorkflow"></sequenceFlow>
-    <serviceTask id="setObjectDraftStatus" name="Set Object Draft Status" activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'DRAFT', 'ACTIVITI_SYSTEM')}"></serviceTask>
+    <serviceTask id="setObjectDraftStatus" name="Set Object Draft Status" activiti:expression="#{changeObjectStatusService.change(OBJECT_ID, OBJECT_TYPE, 'DRAFT')}"></serviceTask>
     <sequenceFlow id="flow2" sourceRef="setObjectDraftStatus" targetRef="endDocumentApprovalWorkflow"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_acmDocumentWorkflow">
