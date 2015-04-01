@@ -158,7 +158,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager().createQuery(
-                "UPDATE AcmUser au set au.userState = :state, au.userModified = :now WHERE au.userDirectoryName = :directoryName"
+                "UPDATE AcmUser au set au.userState = :state, au.modified = :now WHERE au.userDirectoryName = :directoryName"
         );
         markInvalid.setParameter("state", "INVALID");
         markInvalid.setParameter("now", new Date());
