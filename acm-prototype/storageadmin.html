@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Locks | ACM | Armedia Case Management</title>
+<title>Storage Facilities Admin | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -15,13 +15,13 @@
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
   <![endif]-->
-  
+
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.table2.js"></script>
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
-
-
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
 <section class="vbox">
@@ -86,7 +86,7 @@
               <!-- nav -->
               <nav class="nav-primary hidden-xs">
                 <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
-               <ul class="nav nav-main" data-ride="collapse">
+                <ul class="nav nav-main" data-ride="collapse">
                   <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span></a></li>
                   <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span></a></li>
                   <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span></a></li>
@@ -95,11 +95,12 @@
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span></a></li>
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
-                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li><li class="active"> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
+                  <li class="active"> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
-              <!-- / nav -->
+              <!-- / nav --> 
             </div>
           </section>
           <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i></a></footer>
@@ -108,19 +109,15 @@
       <!-- /.aside -->
       <section id="content">
         <section class="vbox">
-        
-        
           <section class="scrollable">
-            <section class="hbox stretch"><!-- /.aside --> 
-        
-         <aside class="aside-lg bg-light lt">
+            <section class="hbox stretch"><!-- /.aside -->
+              
+              <aside class="aside-lg bg-light lt">
                 <section class="vbox animated fadeInLeft">
                   <section class="scrollable">
                     <header class="dk header">
                       <h3 class="m-b-xs text-black pull-left">Administration</h3>
-                   
                     </header>
-                    
                     <div class="row m-b">
                       <div class="col-sm-12">
                         <div id="tree"></div>
@@ -129,124 +126,118 @@
                   </section>
                 </section>
               </aside>
-        
-        
-        <aside id="email-content" class="bg-light lter">
-                <section class="vbox">
-        
-        
-          <section class="scrollable padder">
-            <section class="row m-b-md">
-              <div class="col-sm-12">
-                <h3 class="m-b-xs text-black">Locks</h3>
-              </div>
+              <aside id="email-content" class="bg-light lter">
+                <section class="scrollable padder">
+                  <section class="row m-b-md">
+                    <div class="col-sm-12">
+                      <h3 class="m-b-xs text-black">Storage Facilities </h3>
+                    </div>
+                  </section>
+                  <section class="panel b-a">
+                    <div class="panel-heading b-b bg-info">
+                      <ul class="nav nav-pills pull-right">
+                        <li style="margin-right:5px"></li>
+                        <li>
+                          <div class="btn-group padder-v2">
+                            <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Location</button>
+                          </div>
+                        </li>
+                        <li> </li>
+                      </ul>
+                      <a href="#" class="font-bold">Storage Facilities </a> </div>
+                    <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">New Location</h4>
+                          </div>
+                          <div class="modal-body">
+                            <p>Enter a name for the folder you would like to create:</p>
+                            <label for="folderName2">Storage Location</label>
+                            <br/>
+                            <input type="text" id="folderName2" placeholder="Storage Location" />
+                            <br/>
+                            <label for="folderName2">Description</label>
+                            <br/>
+                            <input type="text" id="folderName2" placeholder="Description" />
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">New Location</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <table id="treetable" class="table table-striped th-sortable table-hover">
+                      <thead>
+                        <tr>
+                          <th width="10"><span class='fancytree-checkbox'></span></th>
+                          <th width="10">ID</th>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>Location</th>
+                          <th>Type</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </section>
+                </section>
+              </aside>
             </section>
-            <section class="panel panel-default">
-              <div class="row wrapper">
-                <div class="col-sm-4">
-                  <label for="subjectType"  class="label">Type</label>
-                  <select name="subjectType" class="form-control">
-                    <option>Choose Type</option>
-                  </select>
-                  <label class="label">ID</label>
-                  <input type="text" class="form-control" placeholder="Enter ID">
-                  <br/>
-                  <button class="btn btn-sm btn-default" type="button">Search</button>
-                </div>
-                <div class="col-sm-4">
-                  <label class="label">Title</label>
-                  <input type="text" class="form-control" placeholder="Enter Title">
-                  <label class="label">Lock Owner</label>
-                  <input type="text" class="form-control" placeholder="Enter Username">
-                </div>
-                <div class="col-sm-4">
-                  <label class="label">Date Locked</label>
-                  <div class="clear"></div>
-                  <label class="label col-sm-2">From</label>
-                  <div class="col-sm-10">
-                    <input class="datepicker-input form-control" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                  </div>
-                  <label class="label col-sm-2">To</label>
-                  <div class="col-sm-10">
-                    <input class="datepicker-input form-control " type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
-                  </div>
-                </div>
-              </div>
-              </div>
-            </section>
-            <section class="panel panel-default">
-              <div class="row wrapper">
-                <div class="col-sm-4 m-b-xs">
-                  <select class="input-sm form-control input-s-sm inline v-middle">
-                    <option value="0">Action</option>
-                    <option value="1">Release Locks</option>
-                  </select>
-                  <button class="btn btn-sm btn-default">Apply</button>
-                </div>
-                <div class="col-sm-5 m-b-xs"> </div>
-                <div class="col-sm-3"> </div>
-              </div>
-              <div class="table-responsive">
-                <table class="table table-striped b-t b-light">
-                  <thead>
-                    <tr>
-                      <th width="20"><label class="checkbox m-n i-checks">
-                          <input type="checkbox">
-                          <i></i></label></th>
-                      <th>Type</th>
-                      <th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th class="th-sortable" data-toggle="class">User <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                      <th>Locked On</th>
-                      <th width="120">Release Lock</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><label class="checkbox m-n i-checks">
-                          <input type="checkbox" name="post[]">
-                          <i></i></label></td>
-                      <td>Complaint</td>
-                      <td>123456</td>
-                      <td>Title example</td>
-                      <td>Username</td>
-                      <td>4/23/2014 12:00:00</td>
-                      <td><a href="#" class="active" data-toggle="class"><i class="fa fa-lock text-danger text-active"> Unlock</i><i class="fa fa-unlock text-success text"> Lock</i> </a></td>
-                    </tr>
-                      </tr>
-                    
-                  </tbody>
-                </table>
-              </div>
-              <footer class="panel-footer">
-                <div class="row">
-                  <div class="col-sm-8 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>
-                  <div class="col-sm-4 text-right text-center-xs">
-                    <ul class="pagination pagination-sm m-t-none m-b-none">
-                      <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
-                      <li><a href="#">1</a></li>
-                      <li><a href="#">2</a></li>
-                      <li><a href="#">3</a></li>
-                      <li><a href="#">4</a></li>
-                      <li><a href="#">5</a></li>
-                      <li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </footer>
-              </section>
-            
-            </section></section></aside>
           </section>
         </section>
       </section>
     </section>
   </section>
 </section>
-</section>
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
+	
+		
+	   $("#treetable").fancytree({
+			extensions: ["table"],
+			checkbox: true,
+			table: {
+        indentation: 10,      // indent 20px per node level
+        nodeColumnIdx: 1,     // render the node title into the 2nd column
+        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+      },
+	  renderColumns: function(event, data) {
+        var node = data.node,
+        $tdList = $(node.tr).find(">td");
+        // (index #0 is rendered by fancytree by adding the checkbox)
+        $tdList.eq(1).text("[ID]");
+		$tdList.eq(3).text(node.data.description);
+		$tdList.eq(4).text(node.data.location);
+		$tdList.eq(5).text(node.data.storagetype);
+		$tdList.eq(6).html(node.data.action);
+      },
+        source: [
+	{"title": "Folder 1", "description": "[Description]", "location": "[Location]", "storagetype": "Storage Room", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Location</a></li><li><a href='#'>Delete Location</a></li></ul></div>",  "children": [
+		
+			{"title": "Document 1", "description": "[Description]", "location": "[Location]", "storagetype": "Bin","action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Delete</a></li></ul></div>"},
+			{"title": "Document 2", "description": "[Description]", "location": "[Location]", "storagetype": "Bin", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Delete</a></li></ul></div>"},
+			{"title": "Document 3", "description": "[Description]", "location": "[Location]", "storagetype": "Bin", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Delete</a></li></ul></div>"},
+			{"title": "Document 4", "description": "[Description]", "location": "[Location]", "storagetype": "Bin", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Delete</a></li></ul></div>"}
+	]}
+]
+    });
+
+
     $("#tree").fancytree({
 
 activate: function(event, data) {
