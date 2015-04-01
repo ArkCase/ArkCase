@@ -396,10 +396,25 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             JSONObject doc = docs.getJSONObject(a);
 
-            AcmCmisObject object = buildAcmCmisObject(solrFormat, doc);
+            if (!isFrevvoXMLFile(doc))
+            {
+            	AcmCmisObject object = buildAcmCmisObject(solrFormat, doc);
 
-            cmisObjects.add(object);
+            	cmisObjects.add(object);
+            }
         }
+    }
+    
+    private boolean isFrevvoXMLFile(JSONObject doc)
+    {
+    	String mimeType = getSearchResults().extractString(doc, SearchConstants.PROPERTY_MIME_TYPE);
+    	
+    	if (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
+    	{
+    		return true;
+    	}
+    	
+    	return false;
     }
 
     private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound,
