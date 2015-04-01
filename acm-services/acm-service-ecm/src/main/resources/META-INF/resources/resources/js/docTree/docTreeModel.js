@@ -62,12 +62,12 @@ DocTree.Model = DocTree.Model || {
 
     ,getCacheKey: function(folderId, pageId) {
         var setting = DocTree.Model.Config.getSetting();
-        var key = this.getObjType() + "." + this.getObjType();
+        var key = this.getObjType() + "." + this.getObjId();
         key += "." + Acm.goodValue(folderId, 0);    //for root folder, folderId is 0 or undefined
         key += "." + Acm.goodValue(pageId, 0);
-        key += "." + Acm.goodValue(setting.sortBy);
-        key += "." + Acm.goodValue(setting.sortDirection);
-        key += "." + Acm.goodValue(setting.maxRows, 0);
+        key += "." + DocTree.Model.Config.getSortBy();
+        key += "." + DocTree.Model.Config.getSortDirection();
+        key += "." + DocTree.Model.Config.getMaxRows();
         return key;
     }
     ,validateFolderList: function(data) {
@@ -81,6 +81,9 @@ DocTree.Model = DocTree.Model || {
     }
     ,validateUploadInfo: function(data) {
         if (Acm.isArrayEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data[0].fileId)) {
             return false;
         }
         if (Acm.isEmpty(data[0].folder)) {
@@ -139,12 +142,14 @@ DocTree.Model = DocTree.Model || {
         ,onInitialized: function() {
         }
 
-
+        ,DEFAULT_MAX_ROWS: 1000
+        ,DEFAULT_SORT_BY: "name"
+        ,DEFAULT_SORT_DIRECTION: "ASC"
         ,_setting: {
 //            objType: null
 //            ,objId: 0
 //            ,category: "Document"
-            maxRows: 4
+            maxRows: 1000
             ,sortBy: null
             ,sortDirection: null
             //,folderId: 0
@@ -153,6 +158,15 @@ DocTree.Model = DocTree.Model || {
         }
         ,getSetting: function() {
             return this._setting;
+        }
+        ,getMaxRows: function() {
+            return Acm.goodValue(this._setting.maxRows, this.DEFAULT_MAX_ROWS);
+        }
+        ,getSortBy: function() {
+            return Acm.goodValue(this._setting.sortBy, this.DEFAULT_SORT_BY);
+        }
+        ,getSortDirection: function() {
+            return Acm.goodValue(this._setting.sortDirection, this.DEFAULT_SORT_DIRECTION);
         }
     }
 

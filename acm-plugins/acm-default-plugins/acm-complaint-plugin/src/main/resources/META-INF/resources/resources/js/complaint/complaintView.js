@@ -62,7 +62,15 @@ Complaint.View = Complaint.View || {
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
-            this.formUrls.formDocuments                  = Acm.Object.MicroData.get("formDocuments");
+            this.formUrls.formDocuments                  = Acm.Object.MicroData.getJson("formDocuments");
+            this.fileTypes = [{"value": "ar", "label": "Medical Release"}
+                ,{"value": "gr", "label": "General Release"}
+                ,{"value": "ev", "label": "eDelivery"}
+                ,{"value": "sig", "label": "SF86 Signature"}
+                ,{"value": "noi", "label": "Notice of Investigation"}
+                ,{"value": "wir", "label": "Witness Interview Request"}
+                ,{"value": "ot", "label": "Other"}
+            ];
 
         }
         ,onInitialized: function() {
@@ -1597,30 +1605,30 @@ Complaint.View = Complaint.View || {
 
     ,Documents:{
         create : function() {
-            this.$tree = $("#treeDoc");
+//            this.$tree = $("#treeDoc");
+//
+//            this.$divDocuments = $("#divDocuments");
+//            this.createJTableDocuments(this.$divDocuments);
+//
+//            this.$btnAddNewDocument = $("#addDocument");
+//            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
+//
+//            this.$formNewDocuments = $("#formAddDocument");
+//            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
+//
+//            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddDocument);
+//            this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+//            Complaint.View.Documents.fillReportSelection();
+//            //AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
 
-            this.$divDocuments = $("#divDocuments");
-            this.createJTableDocuments(this.$divDocuments);
-
-            this.$btnAddNewDocument = $("#addDocument");
-            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
-
-            this.$formNewDocuments = $("#formAddDocument");
-            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
-
-            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddDocument);
-            this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-            Complaint.View.Documents.fillReportSelection();
-            //AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
 
 
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
 
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPLOADED_DOCUMENTS    ,this.onModelUploadedDocuments);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
+//            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
+//            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPLOADED_DOCUMENTS    ,this.onModelUploadedDocuments);
+//            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
 
         }
         ,onInitialized: function() {
@@ -1632,23 +1640,21 @@ Complaint.View = Complaint.View || {
                 DocTree.View.expandTopNode();
             }
         }
-
-        ,onModelRetrievedObject: function(complaint) {
-            //Complaint.View.Documents.tree.reload();
-            //Complaint.View.Documents.tree.reload(Complaint.View.Documents.source());
-            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
-        }
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
-            //DocTree.View.switchObject(nodeId);
-
-            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
         }
 
 
         //----------------------------------------------------------------
 
 
+//        ,onViewSelectedObject: function(nodeType, nodeId) {
+//            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
+//        }
+
+        ,onModelRetrievedObject: function(complaint) {
+            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
+        }
 
         ,onModelUploadedDocuments: function(documents) {
             if (documents.hasError) {
@@ -1668,16 +1674,17 @@ Complaint.View = Complaint.View || {
         }
         ,fillReportSelection: function() {
 
-            try {
-                var formDocuments = JSON.parse(Complaint.View.MicroData.formUrls.formDocuments);
-            }catch(e) {
-
-            }
+//            try {
+//                var formDocuments = JSON.parse(Complaint.View.MicroData.formUrls.formDocuments);
+//            }catch(e) {
+//
+//            }
+            var formDocuments = Complaint.View.MicroData.formUrls.formDocuments;
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle'>"
                 + "<option value=''>Document Type</option>";
 
-            if (Acm.isNotEmpty(formDocuments) && formDocuments.length > 0) {
+            if (!Acm.isArrayEmpty(formDocuments)) {
                 for (var i = 0; i < formDocuments.length; i ++) {
                     html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
                 }
@@ -1701,34 +1708,35 @@ Complaint.View = Complaint.View || {
         ,getSelectReportText: function() {
             return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
         }
+        ,uploadForm: function(report, onCloseForm) {
+            var complaintId = Complaint.View.getActiveComplaintId();
+            var complaint = Complaint.View.getActiveComplaint();
+            if (Complaint.Model.Detail.validateComplaint(complaint) )
+            {
+                var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
+                if (Acm.isNotEmpty(url)) {
+                    // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
+                    // the Frevvo form will decode it.
+                    var complaintTitle = Acm.goodValue(complaint.complaintTitle);
+                    complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                }
+            }
+        }
         ,onClickSpanAddDocument: function(e) {
             var report = Complaint.View.Documents.getSelectReport();
 
             if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
-
-                var complaintId = Complaint.View.getActiveComplaintId();
-                var complaint = Complaint.View.getActiveComplaint();
-                if (Complaint.Model.Detail.validateComplaint(complaint) )
-                {
-                    var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
-                    if (Acm.isNotEmpty(url)) {
-                        // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
-                        // the Frevvo form will decode it.
-                        var complaintTitle = Acm.goodValue(complaint.complaintTitle);
-                        complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
-                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, function() {
-                            Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
-                        });
-                    }
-                }
+                 this.uploadForm(report, function() {
+                     Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
+                 });
             }
             else if(report && report != ""){
                 Complaint.View.Documents.$btnAddNewDocument.click();
             }
         }
         ,onSubmitAddNewDocuments: function(event, ctrl) {
-
              event.preventDefault();
              var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
              var report = Complaint.View.Documents.getSelectReportText();

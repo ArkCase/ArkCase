@@ -68,8 +68,10 @@
 <c:set var="js_jquery"             scope="session" value="jquery-1.11.0.js"/>
 
 <c:set var="vd_jquery_ui"          scope="session" value="jquery-ui-1.10.3"/>
-<c:set var="js_jquery_ui"          scope="session" value="jquery-ui-1.10.3.custom.min.js"/>
-<c:set var="css_jquery_ui"         scope="session" value="jquery-ui-1.10.3.custom.min.css"/>
+<%--<c:set var="js_jquery_ui"          scope="session" value="jquery-ui-1.10.3.custom.min.js"/>--%>
+<%--<c:set var="css_jquery_ui"         scope="session" value="jquery-ui-1.10.3.custom.min.css"/>--%>
+<c:set var="js_jquery_ui"          scope="session" value="jquery-ui-1.10.3.custom.js"/>
+<c:set var="css_jquery_ui"         scope="session" value="jquery-ui-1.10.3.custom.css"/>
 
 <c:set var="vd_jtable"             scope="session" value="jtable-2.4.0"/>
 <c:set var="js_jtable"             scope="session" value="jquery.jtable.js"/>
