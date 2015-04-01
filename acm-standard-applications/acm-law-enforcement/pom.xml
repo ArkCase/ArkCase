@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.0.23-SNAPSHOT</version>
+        <version>3.0.24-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -287,6 +287,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-form</groupId>
             <artifactId>acm-form-cost</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-object-change-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
         

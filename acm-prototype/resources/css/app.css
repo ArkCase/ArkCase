@@ -1,3 +1,5 @@
+/* @override http://www.armedia.com/demos/acm3/resources/css/app.css */
+
 /* @override http://localhost/~aj/acm3/resources/css/app.css */
 
 /* @override http://localhost/~aj/acm3/resources/css/app.css */
@@ -1596,13 +1598,14 @@ ul.nav.nav-main li.active {
   .nav-xs .slimScrollDiv,
   .nav-xs .slim-scroll {
     overflow: visible !important;
+    
   }
   .nav-xs .slimScrollBar,
   .nav-xs .slimScrollRail {
     display: none !important;
   }
   .nav-xs .scrollable {
-    overflow: visible;
+    overflow: scroll;
   }
   .nav-xs .nav-primary > ul > li > a {
     position: relative;

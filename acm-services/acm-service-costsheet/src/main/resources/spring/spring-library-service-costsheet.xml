@@ -38,6 +38,8 @@
     	<property name="startWorkflowEvents" ref="startWorkflowEventsForCostsheet" />
     </bean>
     
+    <bean id="costsheetEventPublisher" class="com.armedia.acm.services.costsheet.service.CostsheetEventPublisher" />
+    
     <bean id="costsheetWorkflowListener" class="com.armedia.acm.services.costsheet.service.CostsheetWorkflowListener">
 		<property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
 		<property name="activitiRuntimeService" ref="activitiRuntimeService"/>

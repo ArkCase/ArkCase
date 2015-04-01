@@ -51,8 +51,12 @@ Complaint.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
+        	var complaint = Complaint.View.getActiveComplaint();
+        	if (complaint == null) {
+        		return null;
+        	}
         	var groupGetParameter = '';
-        	var groupName = Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint());
+        	var groupName = Complaint.Model.Detail.getGroup(complaint);
         	if (groupName && groupName.length > 0) {
         		groupGetParameter = '/' + groupName;
         	}
@@ -64,9 +68,10 @@ Complaint.Service = {
                     } else {
                         if (Complaint.Service.Lookup._validateAssignees(response)) {
                             var assignees = response;
-                            Complaint.Model.Lookup.setAssignees(assignees);
+                            Complaint.Model.Lookup.setAssignees(Complaint.View.getActiveComplaintId(), assignees);
                             Complaint.Controller.modelFoundAssignees(assignees);
                         }
+                        return assignees;
                     }
                 }
                 ,App.getContextPath() + this.API_GET_APPROVERS + groupGetParameter
@@ -135,7 +140,7 @@ Complaint.Service = {
                     } else {
                         if (response.response && response.response.docs && Complaint.Service.Lookup._validateGroups(response.response.docs)) {
                             var groups = response.response.docs;
-                            Complaint.Model.Lookup.setGroups(groups);
+                            Complaint.Model.Lookup.setGroups(Complaint.View.getActiveComplaintId(), groups);
                             Complaint.Controller.modelRetrievedGroups(groups);
                         }
                     }
