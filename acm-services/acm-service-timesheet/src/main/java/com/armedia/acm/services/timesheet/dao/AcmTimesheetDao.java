@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 
 /**
  * @author riste.tutureski
@@ -83,6 +84,12 @@ public class AcmTimesheetDao extends AcmAbstractDao<AcmTimesheet> {
 		List<AcmTimesheet> timesheets = (List<AcmTimesheet>) selectQuery.getResultList();
 		
 		return timesheets;
+	}
+	
+	@Override
+	public String getSupportedObjectType()
+	{
+		return TimesheetConstants.OBJECT_TYPE;
 	}
 
 }
