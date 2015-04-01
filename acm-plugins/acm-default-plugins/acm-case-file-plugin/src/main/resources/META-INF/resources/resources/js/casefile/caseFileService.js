@@ -53,8 +53,12 @@ CaseFile.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
+        	var caseFile = CaseFile.View.getActiveCaseFile();
+        	if (caseFile == null) {
+        		return null;
+        	}
         	var groupGetParameter = '';
-        	var groupName = CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile());
+        	var groupName = CaseFile.Model.Detail.getGroup(caseFile);
         	if (groupName && groupName.length > 0) {
         		groupGetParameter = '/' + groupName;
         	}
@@ -66,9 +70,10 @@ CaseFile.Service = {
                     } else {
                         if (CaseFile.Service.Lookup._validateAssignees(response)) {
                             var assignees = response;
-                            CaseFile.Model.Lookup.setAssignees(assignees);
+                            CaseFile.Model.Lookup.setAssignees(CaseFile.View.getActiveCaseFileId(), assignees);
                             CaseFile.Controller.modelFoundAssignees(assignees);
                         }
+                        return assignees;
                     }
                 }
                 ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter
@@ -137,7 +142,7 @@ CaseFile.Service = {
                     } else {
                         if (response.response && response.response.docs && CaseFile.Service.Lookup._validateGroups(response.response.docs)) {
                             var groups = response.response.docs;
-                            CaseFile.Model.Lookup.setGroups(groups);
+                            CaseFile.Model.Lookup.setGroups(CaseFile.View.getActiveCaseFileId(), groups);
                             CaseFile.Controller.modelRetrievedGroups(groups);
                         }
                     }

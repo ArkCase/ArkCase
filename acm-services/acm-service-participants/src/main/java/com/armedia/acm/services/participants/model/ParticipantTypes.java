@@ -9,6 +9,7 @@ package com.armedia.acm.services.participants.model;
  */
 public interface ParticipantTypes {
 
-	public final static String APPROVER = "approver";
-	
+	String APPROVER = "approver";
+	String ASSIGNEE = "assignee";
+
 }

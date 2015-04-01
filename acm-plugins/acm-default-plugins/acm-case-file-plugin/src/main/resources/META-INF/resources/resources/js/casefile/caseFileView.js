@@ -514,6 +514,7 @@ CaseFile.View = CaseFile.View || {
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedAssignee(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
+            	,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
             });
         }
         ,onModelRetrievedGroups: function(groups) {
@@ -530,6 +531,7 @@ CaseFile.View = CaseFile.View || {
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
+            	,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
             });
         }
         ,onModelFoundSubjectTypes: function(subjectTypes) {
@@ -1988,7 +1990,7 @@ CaseFile.View = CaseFile.View || {
                         , edit: false
                         , create: false
                         ,display: function (commData) {
-                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT
+                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
                                 + "'>" + commData.record.title + "</a>";
                             return $(a);
@@ -2036,6 +2038,7 @@ CaseFile.View = CaseFile.View || {
         ,onModelSavedGroup: function(caseFileId, group) {
             if (!group.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                CaseFile.Service.Lookup.retrieveAssignees();
             }
         }
         ,onViewSelectedObject: function(objType, objId) {
