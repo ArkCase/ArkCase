@@ -26,6 +26,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -38,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "acm_costsheet")
-public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
+public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity {
 
 	private static final long serialVersionUID = 6290288826480329085L;
 
@@ -181,11 +182,13 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity {
 		this.costs = costs;
 	}
 
+	@Override
 	public String getStatus() 
 	{
 		return status;
 	}
 
+	@Override
 	public void setStatus(String status) 
 	{
 		this.status = status;

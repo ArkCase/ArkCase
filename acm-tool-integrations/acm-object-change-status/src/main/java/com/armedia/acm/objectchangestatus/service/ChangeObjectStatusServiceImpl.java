@@ -3,8 +3,9 @@
  */
 package com.armedia.acm.objectchangestatus.service;
 
-import com.armedia.acm.objectchangestatus.model.AcmObjectStatus;
-import com.armedia.acm.objectchangestatus.model.AcmObjectStatusEvent;
+import com.armedia.acm.core.AcmStatefulEntity;
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.data.service.AcmDataService;
 
 /**
  * @author riste.tutureski
@@ -12,41 +13,30 @@ import com.armedia.acm.objectchangestatus.model.AcmObjectStatusEvent;
  */
 public class ChangeObjectStatusServiceImpl implements ChangeObjectStatusService {
 
-	private ChangeObjectStatusEventPublisher changeObjectStatusEventPublisher;
+	private AcmDataService acmDataService;
 	
 	@Override
-	public void change(Long objectId, String objectType, String status, String userId) 
+	public void change(Long objectId, String objectType, String status) 
 	{
-		AcmObjectStatus acmObjectStatus = new AcmObjectStatus(objectId, objectType, status);
+		AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
 		
-		getChangeObjectStatusEventPublisher().publishEvent(acmObjectStatus, userId, true);
-	}
-	
-	@Override
-	public boolean isRequiredObject(AcmObjectStatusEvent event, String objectType)
-	{
-		if (event != null && event.getSource() != null && objectType != null)
+		if (dao != null)
 		{
-			AcmObjectStatus acmObjectStatus = (AcmObjectStatus) event.getSource();
+			AcmStatefulEntity entity = dao.find(objectId);
 			
-			if (objectType.equals(acmObjectStatus.getObjectType()))
+			if (entity != null)
 			{
-				return true;
+				entity.setStatus(status);
+				dao.save(entity);
 			}
 		}
-		
-		return false;
 	}
 
-	public ChangeObjectStatusEventPublisher getChangeObjectStatusEventPublisher() {
-		return changeObjectStatusEventPublisher;
+	public AcmDataService getAcmDataService() {
+		return acmDataService;
 	}
 
-	public void setChangeObjectStatusEventPublisher(
-			ChangeObjectStatusEventPublisher changeObjectStatusEventPublisher) {
-		this.changeObjectStatusEventPublisher = changeObjectStatusEventPublisher;
+	public void setAcmDataService(AcmDataService acmDataService) {
+		this.acmDataService = acmDataService;
 	}
-	
-	
-
 }
