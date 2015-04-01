@@ -349,7 +349,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 container.getContainerObjectType();
 
         String filterQuery =
-                category == null ? "" :
+                category == null ? "fq=hidden_b:false" :
                         "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
         return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
