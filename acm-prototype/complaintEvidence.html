@@ -19,7 +19,7 @@
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
-
+<script src="resources/js/fancytree/jquery.fancytree.table.js"></script>
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
@@ -76,7 +76,6 @@
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
-                    
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -92,10 +91,10 @@
                   <li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
                   <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
-                  
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
-<li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
-                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li><li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
+<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
@@ -169,8 +168,8 @@
                                 <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
                                 <small class="text-muted">Incident Date</small></div>
                               <div class="col-xs-1 b-r">
-                                <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
-                                <small class="text-muted">Priority</small></div>
+                                <div class="h4 font-bold"><a href="#" id="version" data-type="select" data-pk="1" data-url="/post" data-title="Enter version">High</a></div>
+                                <small class="text-muted">version</small></div>
                               <div class="col-xs-2 b-r">
                                 <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
                                 <small class="text-muted">Assigned To</small></div>
@@ -178,11 +177,13 @@
                                 <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
                                 <small class="text-muted">Subject Type</small></div>
                               <div class="col-xs-1">
-                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div> <small class="text-muted">Status</small></div>
+                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
+                                <small class="text-muted">Status</small></div>
                             </div>
                           </div>
                         </div>
-                    </div></div>
+                      </div>
+                    </div>
                     <div>
                       <div class="wrapper">
                         <div class="row">
@@ -190,48 +191,41 @@
                             <section class="panel b-a">
                               <div class="panel-heading b-b bg-info">
                                 <ul class="nav nav-pills pull-right">
-                                  <li style="margin-right:5px">
-                                    <div class="btn-group" style="margin-top:4px;">
-                                      <ul class="dropdown-menu dropdown-select">
-                                        <li><a href="#">
-                                          <input type="radio" name="b">
-                                        Filter 1</a></li>
-                                        <li><a href="#">
-                                          <input type="radio" name="b">
-                                          Filter 2</a></li>
-                                        <li><a href="#">
-                                          <input type="radio" name="b">
-                                          Filter 3</a></li>
-                                      </ul>
-                                    </div>
-                                  </li>
+                                  <li style="margin-right:5px"></li>
                                   <li>
                                     <div class="btn-group padder-v2">
                                       <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
                                     </div>
                                   </li>
-                                  <li>&nbsp;</li>
+                                  <li> </li>
                                 </ul>
-                                <a href="#" class="font-bold">Notes</a></div>
+                                <a href="#" class="font-bold">Evidence</a></div>
                               <div class="panel-body max-200 no-padder">
                                 <table class="table table-striped th-sortable table-hover">
                                   <thead>
                                     <tr>
-                                      <th width="68%">Note</th>
-                                      <th width="12%">Created</th>
-                                      <th width="10%">Author</th>
+                                      <th>ID</th>
+                                      <th>Location</th>
+                                     
+                                       <th>Title</th>
+                                      <th>Added</th>
+                                      <th>Type</th>
+                                      <th>Collected By</th>
                                       <th width="10%">Action</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr class="odd gradeA">
-                                      <td>[Note]</td>
-                                      <td>[Created]</td>
-                                      <td>[Author]</td>
-                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                      <td>[ID]</td>
+                                      <td>[Location]</td>
+                                      
+                                      <td><a href="evidence.html" target="_blank">[Title]</a></td>
+                                      <td>[Added]</td>
+                                      <td>[Type]</td>
+                                      <td>[Collected By]</td>
+                                      <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
                                         <option value="0">Choose Action</option>
-                                        <option value="1">Delete</option>
-                                        
+                                        <option value="1">Charge Out</option>
                                       </select></td>
                                     </tr>
                                   </tbody>
@@ -255,9 +249,14 @@
     </section>
   </section>
 </section>
+
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
+	
+	
+	
+	
     $("#tree").fancytree({
 
 activate: function(event, data) {
@@ -352,7 +351,7 @@ var save = function() {
 <script>
 $.fn.editable.defaults.url = '/post';
 $(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); }); 
-$(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,    
+$(document).ready(function() { $('#version').editable({placement: 'left', value: 2,    
         source: [
               {value: 1, text: 'Low'},
               {value: 2, text: 'Medium'},
