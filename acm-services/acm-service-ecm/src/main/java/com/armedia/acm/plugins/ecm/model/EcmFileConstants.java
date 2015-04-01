@@ -26,4 +26,6 @@ public interface EcmFileConstants
 	
 	String INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT = "_";
 
+    String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
+
 }
