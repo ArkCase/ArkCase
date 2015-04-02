@@ -19,10 +19,10 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subscriptionEventId;
 
-    @Column(name="cm_event_object_type")
+    @Column(name="cm_event_object_type", insertable = true, updatable = false)
     private String eventObjectType;
 
-    @Column(name="cm_event_object_id")
+    @Column(name="cm_event_object_id", insertable = true, updatable = false)
     private Long eventObjectId;
 
     @Column(name="cm_event_user")
