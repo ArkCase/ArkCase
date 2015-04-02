@@ -56,6 +56,17 @@ Task.View = Task.View || {
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.changeCaseStatusFormUrl        = Acm.Object.MicroData.get("changeCaseStatusFormUrl");
+
+            this.formDocuments = [];
+
+            this.fileTypes = [{"value": "ar", "label": "Medical Release"}
+                ,{"value": "gr", "label": "General Release"}
+                ,{"value": "ev", "label": "eDelivery"}
+                ,{"value": "sig", "label": "SF86 Signature"}
+                ,{"value": "noi", "label": "Notice of Investigation"}
+                ,{"value": "wir", "label": "Witness Interview Request"}
+                ,{"value": "ot", "label": "Other"}
+            ];
         }
         ,onInitialized: function() {
         }
@@ -289,7 +300,6 @@ Task.View = Task.View || {
             Acm.Object.setText(this.$lnkParentObjSubjectType, txt);
         }
     }
-
 
     ,Action: {
         create: function() {
@@ -1597,7 +1607,25 @@ Task.View = Task.View || {
         }
     }
 
-    ,Attachments:{
+    ,Attachments: {
+        create: function() {
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedTreeNode: function(key) {
+            var lastKeyPart = ObjNav.Model.Tree.Key.getLastKeyPart(key);
+            if (Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS == lastKeyPart) {
+                DocTree.View.expandTopNode();
+            }
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            DocTree.Controller.viewChangedParent(Task.Model.DOC_TYPE_TASK, nodeId);
+        }
+    }
+    ,Attachments_JTable_To_Retire:{
         create : function() {
             this.$divAttachments = $("#divAttachments");
             this.createJTableAttachments(this.$divAttachments);

@@ -10,7 +10,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Lookup.create) {CaseFile.Service.Lookup.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
         if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
-        if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
+        //if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
@@ -22,7 +22,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Lookup.onInitialized) {CaseFile.Service.Lookup.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
         if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
-        if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
+        //if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
@@ -1046,7 +1046,7 @@ CaseFile.Service = {
         }
     }
 
-    ,Documents: {
+    ,Documents_JTable_Retire: {
         create: function() {
         }
         ,onInitialized: function() {
