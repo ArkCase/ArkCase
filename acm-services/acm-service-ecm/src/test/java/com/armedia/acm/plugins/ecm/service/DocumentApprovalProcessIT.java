@@ -1,22 +1,24 @@
 package com.armedia.acm.plugins.ecm.service;
 
 
+import com.armedia.acm.plugins.ecm.service.impl.MockChangeObjectStatusService;
 import org.activiti.bpmn.BpmnAutoLayout;
-import org.activiti.bpmn.model.*;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.FormProperty;
+import org.activiti.bpmn.model.FormValue;
 import org.activiti.bpmn.model.Process;
+import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.bpmn.model.StartEvent;
+import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricDetail;
 import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.repository.Deployment;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.runtime.ExecutionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.io.FileUtils;
@@ -27,7 +29,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -63,6 +65,10 @@ public class DocumentApprovalProcessIT
     @Autowired
     private HistoryService hs;
 
+    @Autowired
+    @Qualifier(value = "changeObjectStatusService")
+    private MockChangeObjectStatusService changeObjectStatusService;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private List<String> reviewers;
@@ -75,7 +81,7 @@ public class DocumentApprovalProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/acmDocumentWorkflow.bpmn20.xml")
+                .addClasspathResource("activiti/acmDocumentWorkflow_v3.bpmn20.xml")
                 .deploy();
 
         Map<String, Object> pvars = new HashMap<>();
@@ -87,8 +93,14 @@ public class DocumentApprovalProcessIT
         pvars.put("reviewers", reviewers);
         pvars.put("taskName", taskName);
         pvars.put("documentAuthor", documentAuthor);
+        pvars.put("OBJECT_ID", 500L);
+        pvars.put("OBJECT_TYPE", "OBJECT_TYPE");
 
         pi = createWorkflowProcess(pvars);
+
+        changeObjectStatusService.setTimesCalled(0);
+
+
 
     }
 
@@ -130,6 +142,8 @@ public class DocumentApprovalProcessIT
             }
 
         }
+
+        assertEquals(1, changeObjectStatusService.getTimesCalled());
     }
 
     @Test
@@ -169,6 +183,8 @@ public class DocumentApprovalProcessIT
         ProcessInstance piShouldBeNull =
                 rt.createProcessInstanceQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         assertNull(piShouldBeNull);
+
+        assertEquals(1, changeObjectStatusService.getTimesCalled());
     }
 
     @Test
@@ -204,6 +220,8 @@ public class DocumentApprovalProcessIT
 
         List<Task> postReworkReviewTasks = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
         assertEquals(reviewers.size(), postReworkReviewTasks.size());
+
+        assertEquals(0, changeObjectStatusService.getTimesCalled());
 
     }
 
