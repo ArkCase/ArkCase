@@ -646,7 +646,9 @@ CaseFile.View = CaseFile.View || {
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
+                if(!Acm.compare(assignee ,App.getUserName())){
+                    CaseFile.View.Detail.$chkRestrict.prop('disabled', true);
+                }
                 var group = CaseFile.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
             }
@@ -740,16 +742,25 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelAddedPersonAssociation: function(personAssociation) {
             if (personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
+            }
+            else{
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
         }
         ,onModelUpdatedPersonAssociation: function(personAssociation) {
             if (personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
+            }
+            else{
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
         }
         ,onModelDeletedPersonAssociation: function(personAssociationId) {
             if (personAssociationId.hasError) {
+                Acm.Dialog.info(personAssociationId.errorMsg);
+            }
+            else{
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
             }
         }
