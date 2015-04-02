@@ -58,14 +58,33 @@ CaseFile.View = CaseFile.View || {
             this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             this.token      = Acm.Object.MicroData.get("token");
             
-            this.formUrls = {}; //new Object();
-            this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
-            this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
-            this.formUrls["roiFormUrl"]                = Acm.Object.MicroData.get("urlRoiForm");
-            this.formUrls["electronicCommunicationFormUrl"]  = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
-            this.formUrls["enable_frevvo_form_engine"] = Acm.Object.MicroData.get("enableFrevvoFormEngine");
-            this.formUrls["change_case_status"]        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
-            this.formUrls["edit_change_case_status"]   = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
+//            this.formUrls = {}; //new Object();
+//            this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
+//            this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
+//            this.formUrls["roiFormUrl"]                = Acm.Object.MicroData.get("urlRoiForm");
+//            this.formUrls["electronicCommunicationFormUrl"]  = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
+//            this.formUrls["enable_frevvo_form_engine"] = Acm.Object.MicroData.get("enableFrevvoFormEngine");
+//            this.formUrls["change_case_status"]        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
+//            this.formUrls["edit_change_case_status"]   = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
+
+            this.formUrls = {};
+            this.formUrls.urlEditCaseFileForm            = Acm.Object.MicroData.get("urlEditCaseFileForm");
+            this.formUrls.urlReinvestigateCaseFileForm   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
+            this.formUrls.urlRoiForm                     = Acm.Object.MicroData.get("urlRoiForm");
+            this.formUrls.urlElectronicCommunicationForm = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
+            this.formUrls.enableFrevvoFormEngine         = Acm.Object.MicroData.get("enableFrevvoFormEngine");
+            this.formUrls.urlChangeCaseStatusForm        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
+            this.formUrls.urlEditChangeCaseStatusForm    = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
+            this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
+
+            this.fileTypes = [{"value": "ar", "label": "Medical Release"}
+                ,{"value": "gr", "label": "General Release"}
+                ,{"value": "ev", "label": "eDelivery"}
+                ,{"value": "sig", "label": "SF86 Signature"}
+                ,{"value": "noi", "label": "Notice of Investigation"}
+                ,{"value": "wir", "label": "Witness Interview Request"}
+                ,{"value": "ot", "label": "Other"}
+            ];
         }
         ,onInitialized: function() {
         }
@@ -73,9 +92,9 @@ CaseFile.View = CaseFile.View || {
         ,getToken: function() {
             return this.token;
         }
-        ,getFormUrls: function(){
-        	return this.formUrls;
-        }
+//        ,getFormUrls: function(){
+//        	return this.formUrls;
+//        }
     }
 
     ,Navigator: {
@@ -254,7 +273,7 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,onClickBtnEditCaseFile: function(event, ctrl) {
-        	var urlEditCaseFileForm = CaseFile.View.MicroData.getFormUrls()['edit_case_file'];
+        	var urlEditCaseFileForm = CaseFile.View.MicroData.formUrls.urlEditCaseFileForm;
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
@@ -292,7 +311,7 @@ CaseFile.View = CaseFile.View || {
         
         ,onClickBtnChangeCaseStatus: function() {
             CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
-                var urlChangeCaseStatusForm = CaseFile.View.MicroData.getFormUrls()['change_case_status'];
+                var urlChangeCaseStatusForm = CaseFile.View.MicroData.formUrls.urlChangeCaseStatusForm;
                 var caseFileId = CaseFile.View.getActiveCaseFileId();
                 //var objType = ObjNav.View.Navigator.getActiveObjType();
                 //var c = ObjNav.Model.Detail.getCacheObject(objType, caseFileId);
@@ -346,7 +365,7 @@ CaseFile.View = CaseFile.View || {
             });
         }
         ,onClickBtnReinvestigateCaseFile: function() {
-        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.getFormUrls()['reinvestigate_case_file'];
+        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
@@ -1770,6 +1789,49 @@ CaseFile.View = CaseFile.View || {
 
     ,Documents: {
         create: function() {
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedTreeNode: function(key) {
+            var lastKeyPart = ObjNav.Model.Tree.Key.getLastKeyPart(key);
+            if (CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS == lastKeyPart) {
+                DocTree.View.expandTopNode();
+            }
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            DocTree.Controller.viewChangedParent(nodeType, nodeId);
+        }
+
+        ,uploadForm: function(report, onCloseForm) {
+            //var token = CaseFile.View.MicroData.getToken();
+            var caseFileId = CaseFile.View.getActiveCaseFileId();
+            var caseFile = CaseFile.View.getActiveCaseFile();
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                var url = Acm.goodValue(CaseFile.View.MicroData.formUrls[report]);
+
+                if (Acm.isNotEmpty(url)) {
+                    // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
+                    // the Frevvo form will decode it.
+                    var caseTitle = Acm.goodValue(caseFile.title);
+                    caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+
+                    url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
+                        + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
+                        + "',caseTitle:'" + caseTitle
+                        + "',casePriority:'" + Acm.goodValue(caseFile.priority)
+                        + "',"
+                    );
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                }
+            }
+        }
+    }
+
+    ,Documents_JTable_To_Retire: {
+        create: function() {
             //for cases frevvo form is disabled in the properties file
             this.$formAddDocument = $("#formAddDocument");
             this.$btnAddDocument = $("#addDocument")
@@ -1842,7 +1904,7 @@ CaseFile.View = CaseFile.View || {
 
 
         ,onClickSpanAddDocument: function(event, ctrl) {
-            var enableFrevvoFormEngine = CaseFile.View.MicroData.getFormUrls()['enable_frevvo_form_engine'];
+            var enableFrevvoFormEngine = CaseFile.View.MicroData.formUrls.enableFrevvoFormEngine;
             var report = CaseFile.View.Documents.getSelectReport();
             var reportext = CaseFile.View.Documents.getSelectReportText();
 

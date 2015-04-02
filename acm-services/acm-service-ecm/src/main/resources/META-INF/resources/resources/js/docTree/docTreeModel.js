@@ -11,7 +11,7 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDRE          ,this.onViewRenamedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_DOCUMENT        ,this.onViewRenamedDocument);
 
         if (DocTree.Model.Config.create)           {DocTree.Model.Config.create(args);}
@@ -45,7 +45,7 @@ DocTree.Model = DocTree.Model || {
     }
 
 
-    ,_objIType: null
+    ,_objType: null
     ,getObjType: function() {
         return this._objType;
     }
