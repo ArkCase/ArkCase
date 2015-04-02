@@ -117,11 +117,11 @@ Complaint.Controller = Complaint.Controller || {
     ,modelRetrievedUsers: function(users) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, users);
     }
-    
-    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "complaint-view-closed-add-document-window"
-	,viewClosedAddDocumentWindow: function(complaintId) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, complaintId);
-    }
+//to retire
+//    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "complaint-view-closed-add-document-window"
+//	,viewClosedAddDocumentWindow: function(complaintId) {
+//        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, complaintId);
+//    }
 
     //----------------------------------------------------------------------------------
 

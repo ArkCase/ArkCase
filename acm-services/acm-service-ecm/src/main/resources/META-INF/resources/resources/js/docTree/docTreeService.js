@@ -43,7 +43,26 @@ DocTree.Service = {
 
     }
 
-
+    ,_findFolderNode: function(folderNode, fileId) {
+        var found = -1;
+        for (var j = folderNode.children.length - 1; 0 <= j; j--) {
+            if (folderNode.children[j].data.objectId == fileId) {
+                found = j;
+                break;
+            }
+        }
+        return found;
+    }
+    ,_findEmptyNode: function(folderNode) {
+        var nodeNotInFd = -1;
+        for (var i = folderNode.children.length - 1; 0 <= i; i--) {
+            if (Acm.isEmpty(folderNode.children[i].data.objectId)) {
+                nodeNotInFd = i;
+                break;
+            }
+        }
+        return nodeNotInFd;
+    }
     ,checkUploadForm: function(objType, objId, folderId, pageId, folderNode) {
         return DocTree.Service.retrieveFolderListDeferred(objType, objId, folderId, pageId, function(fd) {
 //            var mock = {};
@@ -65,26 +84,28 @@ DocTree.Service = {
             if (Acm.isArray(fd.children) && Acm.isArray(folderNode.children)) {
                 var fdNotInNode = -1;
                 for (var i = fd.children.length - 1; 0 <= i; i--) {
-                    var found = -1;
-                    for (var j = folderNode.children.length - 1; 0 <= j; j--) {
-                        if (folderNode.children[j].data.objectId == fd.children[i].objectId) {
-                            found = j;
-                            break;
-                        }
-                    }
+//                    var found = -1;
+//                    for (var j = folderNode.children.length - 1; 0 <= j; j--) {
+//                        if (folderNode.children[j].data.objectId == fd.children[i].objectId) {
+//                            found = j;
+//                            break;
+//                        }
+//                    }
+                    var found = DocTree.Service._findFolderNode(folderNode, fd.children[i].objectId);
                     if (0 > found) { //not found in the tree node, must be newly created
                         fdNotInNode = i;
                         break;
                     }
                 }
 
-                var nodeNotInFd = -1;
-                for (var i = folderNode.children.length - 1; 0 <= i; i--) {
-                    if (Acm.isEmpty(folderNode.children[i].data.objectId)) {
-                        nodeNotInFd = i;
-                        break;
-                    }
-                }
+//                var nodeNotInFd = -1;
+//                for (var i = folderNode.children.length - 1; 0 <= i; i--) {
+//                    if (Acm.isEmpty(folderNode.children[i].data.objectId)) {
+//                        nodeNotInFd = i;
+//                        break;
+//                    }
+//                }
+                var nodeNotInFd = DocTree.Service._findEmptyNode(folderNode);
 
                 if (0 <= nodeNotInFd && 0 <= fdNotInNode) {
                     //if ("file" == fd.children[fdNotInNode].objectType && folderNode.children[nodeNotInFd].data.type == fd.children[fdNotInNode].type) { //double check to be sure the new doc is what we expected

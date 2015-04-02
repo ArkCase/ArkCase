@@ -38,6 +38,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTree.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeService.js'/>"></script>
+
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
@@ -47,11 +53,14 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
-
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_table}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_gridnav}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_edit}'/>"></script>
+    <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree_dnd}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
+
 
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
@@ -292,15 +301,126 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabDocs" style="display:none;">
-                                    <section class="panel b-a ">
-                                        <div id="divDocs" style="width:100%"></div>
-                                        <form id="formAddDocument" style="display:none;">
-                                                <%--<input type="file" id="file" name="file">--%>
-                                            <input id="addDocument" type="file" name="files[]" multiple/>
-                                                <%--<input type="submit">--%>
-                                        </form>
+                                    <%--<section class="panel b-a ">--%>
+                                        <%--<div id="divDocs" style="width:100%"></div>--%>
+                                        <%--<form id="formAddDocument" style="display:none;">--%>
+                                                <%--&lt;%&ndash;<input type="file" id="file" name="file">&ndash;%&gt;--%>
+                                            <%--<input id="addDocument" type="file" name="files[]" multiple/>--%>
+                                                <%--&lt;%&ndash;<input type="submit">&ndash;%&gt;--%>
+                                        <%--</form>--%>
+                                    <%--</section>--%>
+
+
+                                    <section class="panel b-a">
+                                        <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
+                                            <li style="margin-right:5px"></li>
+                                                <%--<li>--%>
+                                                <%--<div class="btn-group padder-v2">--%>
+                                                <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
+                                                <%--</div>--%>
+                                                <%--</li>--%>
+                                            <%--<li>--%>
+                                                <%--<div class="btn-group padder-v2">--%>
+                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> Email</button>--%>
+                                                <%--</div>--%>
+                                            <%--</li>--%>
+                                            <%--<li>--%>
+                                                <%--<div class="btn-group padder-v2">--%>
+                                                    <%--<button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> Print</button>--%>
+                                                <%--</div>--%>
+                                            <%--</li>--%>
+                                            <li> </li>
+                                        </ul>
+
+
+                                            <a href="#" class="font-bold"><div>Documents</div> </a>
+                                            <form id="formUploadDoc" style="display:none;">
+                                                <input type="file" id="file" name="file">
+                                            </form>
+                                            <form action="#" id="formDownloadDoc" style="display:none;">
+                                            </form>
+                                        </div>
+
+
+                                        <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel">Create Folder</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <p>Enter a name for the folder you would like to create:</p>
+
+                                                        <label for="folderName2">Folder Name</label><br/>
+                                                        <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-primary">Create Folder<</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <p>Where would you like to email this file?</p>
+
+                                                        <label for="emailaddy">Email Address</label><br/>
+                                                        <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" />
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-primary">Send Email</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <table id="treeDoc" class="table table-striped th-sortable table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th width2="6%"><span class='fancytree-checkbox'></span></th>
+                                                <th width2="4%">ID</th>
+                                                <th width="35%">Title</th>
+                                                <th width="12%">Type</th>
+                                                <th width="10%">Created</th>
+                                                <th width="16%">Author</th>
+                                                <th width="6%">Version</th>
+                                                <th width="8%">Status</th>
+                                                    <%--<th width2="6%" colspan="2"></th>--%>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                    <%--<td></td>--%>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
                                     </section>
                                 </div>
+
 
                                 <div class="col-md-12" id="tabParticipants" style="display:none;">
                                     <section class="panel b-a ">
