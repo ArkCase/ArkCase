@@ -67,6 +67,7 @@
                 <entry key="correspondence" value="Correspondence"/>
             </map>
         </property>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
@@ -131,6 +132,11 @@
                 <bean id="uploadFilePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/service/ecm/upload"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="addNewFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/ecm"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
             </list>

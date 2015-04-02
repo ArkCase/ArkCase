@@ -4,10 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;
@@ -84,6 +81,8 @@ public interface EcmFileService
      */
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 
+
+
     @Transactional
     AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
@@ -104,4 +103,7 @@ public interface EcmFileService
      * @return
      */
     String buildSafeFolderName(String name);
+
+
+    public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException;
 }

@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
@@ -57,6 +58,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EcmFileDao ecmFileDao;
 
     private AcmContainerDao containerFolderDao;
+
+    private AcmFolderDao folderDao;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -238,6 +241,26 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmUserActionFailedException("Find container folder", objectType, objectId, pe.getMessage(), pe);
         }
+    }
+
+    public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException {
+
+        if( log.isInfoEnabled() ) {
+            log.info("Creating new folder into  " + parentFolderPath + " with name " + folderName);
+        }
+        String path = parentFolderPath + "/" + folderName;
+
+        String cmisFolderId = createFolder(path);
+
+        if( log.isInfoEnabled() ){
+            log.info("Created new folder " + cmisFolderId + "with name: " + folderName);
+        }
+
+        AcmFolder newFolder = new AcmFolder();
+        newFolder.setCmisFolderId(cmisFolderId);
+        newFolder.setName(folderName);
+
+        return getFolderDao().save(newFolder);
     }
 
     /**
@@ -587,5 +610,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
+    }
+
+    public AcmFolderDao getFolderDao() {
+        return folderDao;
+    }
+
+    public void setFolderDao(AcmFolderDao folderDao) {
+        this.folderDao = folderDao;
     }
 }

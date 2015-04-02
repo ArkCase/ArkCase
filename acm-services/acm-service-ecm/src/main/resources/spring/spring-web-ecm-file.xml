@@ -22,4 +22,8 @@
     <bean id="containerListAPIController" class="com.armedia.acm.plugins.ecm.web.api.ContainerListAPIController">
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
+
+    <bean id="addNewFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.AddNewFolderAPIController">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 </beans>
