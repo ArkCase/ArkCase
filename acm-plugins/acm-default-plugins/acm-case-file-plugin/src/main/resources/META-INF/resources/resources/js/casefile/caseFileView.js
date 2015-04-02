@@ -2213,7 +2213,8 @@ CaseFile.View = CaseFile.View || {
                         		// This is used only to recognize the * type.
                         		return {"*": "*"}
                         	}else if (data.dependedValues.type == 'owning group') {
-                        		return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups());
+                        		var caseFileId = CaseFile.View.getActiveCaseFileId();
+                        		return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups(caseFileId));
                     		} else {
                     			return Acm.createKeyValueObject(CaseFile.Model.Lookup.getUsers());
                     		}
