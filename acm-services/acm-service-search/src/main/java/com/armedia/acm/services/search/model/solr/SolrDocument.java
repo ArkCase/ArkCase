@@ -55,6 +55,8 @@ public class SolrDocument implements SolrBaseDocument {
     private String category_s;
     private String cmis_version_series_id_s;
     private String mime_type_s;
+    
+    private boolean hidden_b;
 
     @Override
     public String getId() {
@@ -376,6 +378,14 @@ public class SolrDocument implements SolrBaseDocument {
 		this.mime_type_s = mime_type_s;
 	}
 
+	public boolean isHidden_b() {
+		return hidden_b;
+	}
+
+	public void setHidden_b(boolean hidden_b) {
+		this.hidden_b = hidden_b;
+	}
+
 	@Override
     public String toString()
     {
@@ -422,6 +432,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", category_s='" + category_s + '\'' +
                 ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
                 ", mime_type_s='" + mime_type_s + '\'' +
+                ", hidden_b='" + hidden_b + '\'' +
                 '}';
     }
 }

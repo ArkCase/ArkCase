@@ -26,8 +26,10 @@
     <section>
         <section class="hbox stretch">
             <%@include file="/WEB-INF/tagf/sidebar.tagf"%>
-
-            <jsp:doBody/>
+            <section id="content">
+                <%@include file="/WEB-INF/tagf/msgBoard.tagf"%>
+                <jsp:doBody/>
+            </section>
         </section>
     </section>
     <%@include file="/WEB-INF/tagf/footer.tagf"%>

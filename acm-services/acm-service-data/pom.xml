@@ -13,6 +13,17 @@
     <description>Common interfaces and classes for storing and retrieving ACM data.</description>
 
     <dependencies>
+    	<dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-context-holder</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-core-object-model</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+    
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>javax.persistence</artifactId>
