@@ -349,8 +349,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 container.getContainerObjectType();
 
         String filterQuery =
-                category == null ? "" :
-                        "fq=category_s:" + category + " OR category_s:" + category.toUpperCase(); // in case some bad data gets through
+                category == null ? "fq=hidden_b:false" :
+                        "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
         return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
 
@@ -396,9 +396,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             JSONObject doc = docs.getJSONObject(a);
 
-            AcmCmisObject object = buildAcmCmisObject(solrFormat, doc);
+        	AcmCmisObject object = buildAcmCmisObject(solrFormat, doc);
 
-            cmisObjects.add(object);
+        	cmisObjects.add(object);
         }
     }
 

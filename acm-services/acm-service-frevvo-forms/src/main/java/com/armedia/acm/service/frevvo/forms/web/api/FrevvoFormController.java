@@ -53,9 +53,11 @@ import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
+import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
+import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -115,6 +117,9 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private SearchResults searchResults;
 	
 	private AcmContainerDao acmContainerDao;
+	
+	private TimesheetEventPublisher timesheetEventPublisher;
+	private CostsheetEventPublisher costsheetEventPublisher;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -518,5 +523,23 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
 		this.acmContainerDao = acmContainerDao;
+	}
+
+	public TimesheetEventPublisher getTimesheetEventPublisher() {
+		return timesheetEventPublisher;
+	}
+
+	public void setTimesheetEventPublisher(
+			TimesheetEventPublisher timesheetEventPublisher) {
+		this.timesheetEventPublisher = timesheetEventPublisher;
+	}
+
+	public CostsheetEventPublisher getCostsheetEventPublisher() {
+		return costsheetEventPublisher;
+	}
+
+	public void setCostsheetEventPublisher(
+			CostsheetEventPublisher costsheetEventPublisher) {
+		this.costsheetEventPublisher = costsheetEventPublisher;
 	}
 }

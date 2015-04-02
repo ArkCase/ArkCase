@@ -168,9 +168,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 			uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
 		}
 		
-		// Raise event
-		// TODO: Finish the logic and uncomment below line
-		//getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
+		getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
 		
 		return true;
 	}

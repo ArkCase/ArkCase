@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     
-    <changeSet id="01-create-object-history-table" author="riste.tutureski">
+    <changeSet id="01-create-object-history-table" author="riste.tutureski" failOnError="false">
         <createTable tableName="acm_object_history">
             <column name="cm_id" type="NUMBER(32,0)">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
@@ -47,32 +47,7 @@
                                  deferrable="true"
                                  initiallyDeferred="true"/>
     </changeSet>
-    
-    <changeSet id="02-create-object-history-index" author="riste.tutureski">
-    	<createIndex tableName="acm_object_history" indexName="idx_object_history_object_id">
-           <column name="cm_object_id"/>
-       </createIndex>
-       <createIndex tableName="acm_object_history" indexName="idx_object_history_object_type">
-           <column name="cm_object_type"/>
-       </createIndex>
-    </changeSet>
-    
-    <changeSet id="03-remove-object-history-foreign-key" author="riste.tutureski">
-  		<dropForeignKeyConstraint baseTableName="acm_object_history" constraintName="fk_object_history_user_id"/>
-    </changeSet>
-    
-    <changeSet id="04-remove-object-history-indexes" author="riste.tutureski">
-    	<dropIndex tableName="acm_object_history" indexName="idx_object_history_object_id"/>
-    	<dropIndex tableName="acm_object_history" indexName="idx_object_history_object_type"/>
-    </changeSet>
-    
-    <changeSet id="05-create-object-history-index" author="riste.tutureski">
-    	<createIndex tableName="acm_object_history" indexName="idx_object_history_id_type">
-           <column name="cm_object_id"/>
-           <column name="cm_object_type"/>
-       </createIndex>
-    </changeSet>
-    
+
     <changeSet id="06-create-assignment-table" author="riste.tutureski">
         <createTable tableName="acm_assignment">
             <column name="cm_assignment_id" type="NUMBER(32,0)">
@@ -110,8 +85,5 @@
             </column>
         </createTable>
     </changeSet>
-    
-    <changeSet id="07-remove-nullable-for-newasignee-in-assignment-table" author="riste.tutureski">
-    	<dropNotNullConstraint tableName="acm_assignment" columnName="cm_assignment_new_assignee"/>
-    </changeSet>   
+
 </databaseChangeLog>

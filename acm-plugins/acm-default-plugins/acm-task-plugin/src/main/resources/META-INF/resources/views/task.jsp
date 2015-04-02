@@ -57,337 +57,335 @@
 </jsp:attribute>
 
 <jsp:body>
-<section id="content">
-<section class="vbox">
-<section class="scrollable">
-<section class="hbox stretch">
-<aside class="aside-lg" id="email-list">
-    <section class="vbox animated fadeInLeft">
-        <section class="scrollable">
-            <header class="dk header">
-                <h3 class="m-b-xs text-black pull-left">Tasks</h3>
-                <div class="btn-group inline select pull-right">
-                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
-                    <ul class="dropdown-menu text-left text-sm" id="ulSort">
-                        <%--<li><a href="#">Sort Date Ascending</a></li>--%>
-                        <%--<li><a href="#">Sort Date Descending</a></li>--%>
-                        <%--<li><a href="#">Sort Task ID Ascending</a></li>--%>
-                        <%--<li><a href="#">Sort Task ID Ascending</a></li>--%>
-                    </ul>
-                </div>
-                <div class="btn-group select pull-right">
-                    <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span></button>
-                    <ul class="dropdown-menu text-left text-sm" id="ulFilter">
-                        <%--<li><a href="#">All Open Task</a></li>--%>
-                        <%--<li><a href="#">Tasks I've Opened</a></li>--%>
-                        <%--<li><a href="#">Unapproved Tasks</a></li>--%>
-                        <%--<li><a href="#">Approved Tasks</a></li>--%>
-                        <%--<li><a href="#">Tasks From Group</a></li>--%>
-                        <%--<li><a href="#">Closed or Expired Tasks</a></li>--%>
-                        <%--<li><a href="#">New Tasks</a></li>--%>
-                    </ul>
-                </div>
-            </header>
-            <div class="wrapper">
-                <div class="input-group">
-                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
-                        <span class="input-group-btn">
-                          <button class="btn btn-sm btn-default" type="button">Go!</button>
-                        </span></div>
-            </div>
-            <div class="row m-b">
-                <div class="col-sm-12">
-                    <div id="tree"></div>
-                </div>
-            </div>
-        </section>
-    </section>
-</aside>
-<!-- /.aside -->
-<!-- .aside -->
-
-
-
-
-<aside class="bg-light lter">
     <section class="vbox">
-        <%--<h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>--%>
-        <section id="taskDetailView" class="scrollable">
-            <div id="tabTop"  style="display:none;">
-                <div class="wrapper dk  clearfix" id="divParentDetail" style="display:none;">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="">
-                                <div class=" clearfix">
-                                    <div class="col-xs-4 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Task Title"></a></div>
-                                        <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                        <small class="text-muted">Incident Date</small></div>
-                                    <div class="col-xs-1 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                        <small class="text-muted">Priority</small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
-                                        <small class="text-muted">Assigned To</small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
-                                        <small class="text-muted">Subject Type</small></div>
-                                    <div class="col-xs-1">
-                                        <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
-                                        <small class="text-muted">State</small></div>
+    <section class="scrollable">
+    <section class="hbox stretch">
+    <aside class="aside-lg" id="email-list">
+        <section class="vbox animated fadeInLeft">
+            <section class="scrollable">
+                <header class="dk header">
+                    <h3 class="m-b-xs text-black pull-left">Tasks</h3>
+                    <div class="btn-group inline select pull-right">
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
+                        <ul class="dropdown-menu text-left text-sm" id="ulSort">
+                            <%--<li><a href="#">Sort Date Ascending</a></li>--%>
+                            <%--<li><a href="#">Sort Date Descending</a></li>--%>
+                            <%--<li><a href="#">Sort Task ID Ascending</a></li>--%>
+                            <%--<li><a href="#">Sort Task ID Ascending</a></li>--%>
+                        </ul>
+                    </div>
+                    <div class="btn-group select pull-right">
+                        <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span></button>
+                        <ul class="dropdown-menu text-left text-sm" id="ulFilter">
+                            <%--<li><a href="#">All Open Task</a></li>--%>
+                            <%--<li><a href="#">Tasks I've Opened</a></li>--%>
+                            <%--<li><a href="#">Unapproved Tasks</a></li>--%>
+                            <%--<li><a href="#">Approved Tasks</a></li>--%>
+                            <%--<li><a href="#">Tasks From Group</a></li>--%>
+                            <%--<li><a href="#">Closed or Expired Tasks</a></li>--%>
+                            <%--<li><a href="#">New Tasks</a></li>--%>
+                        </ul>
+                    </div>
+                </header>
+                <div class="wrapper">
+                    <div class="input-group">
+                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                            <span class="input-group-btn">
+                              <button class="btn btn-sm btn-default" type="button">Go!</button>
+                            </span></div>
+                </div>
+                <div class="row m-b">
+                    <div class="col-sm-12">
+                        <div id="tree"></div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </aside>
+    <!-- /.aside -->
+    <!-- .aside -->
+
+
+
+
+    <aside class="bg-light lter">
+        <section class="vbox">
+            <%--<h4 id="noTaskFoundMeassge" class="m-n">No task assigned to you was found.</h4>--%>
+            <section id="taskDetailView" class="scrollable">
+                <div id="tabTop"  style="display:none;">
+                    <div class="wrapper dk  clearfix" id="divParentDetail" style="display:none;">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="">
+                                    <div class=" clearfix">
+                                        <div class="col-xs-4 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Task Title"></a></div>
+                                            <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                            <small class="text-muted">Incident Date</small></div>
+                                        <div class="col-xs-1 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                            <small class="text-muted">Priority</small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
+                                            <small class="text-muted">Assigned To</small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
+                                            <small class="text-muted">Subject Type</small></div>
+                                        <div class="col-xs-1">
+                                            <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
+                                            <small class="text-muted">State</small></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="wrapper bg-empty  clearfix">
-                    <div class="pull-right inline">
-                        <div class="btn-group-task">
-                            <!-- TODO: when data-toggle is modal, the tooltip won't come up
-                            -->
-                            <%--<button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>--%>
-
-                            <!-- from the mockup -->
-                            <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
-                            <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
-                            <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
-                            <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
-
-
-                            <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
-                            <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
-
-                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> Subscribe</button>
-                        </div>
-
-                    </div>
-                        <%--
-                                        <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
-                        --%>
-                    <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"></a></h4>
-                    <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
-
-                <hr/>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="">
-                                <div class=" clearfix">
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
-                                        <small class="text-muted">% of Completion</small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-title="Enter Owner"></a></div>
-                                        <small class="text-muted">Assignee</small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
-                                        <small class="text-muted">Priority</small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
-                                        <small class="text-muted">Start Date</small></div>
-                                    <div class="col-xs-2 b-r">
-                                        <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                        <small class="text-muted">Due Date</small></div>
-                                    <div class="col-xs-2">
-                                        <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
-                                        <small class="text-muted">State</small></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row" id="tabTopBlank">
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No task data)</p>
-            </div>
-
-            <div class="wrapper">
-                <div class="row" id="tabBlank" style="display:none;">
-                    <p>tabBlank</p>
-                </div>
-
-                <div class="row" id="tabDetails" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a ">
-                            <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                    <li>
-                                        <div class="btn-group padder-v2">
-                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="#">Other menu items</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                </ul>
-                                </span> <a href="#" class="font-bold">Task Details</a> </div>
-                            <div class="panel-body">
-                                <div class="divDetail"></div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-
-                <div class="row" id="tabReworkInstructions" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a ">
-                            <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                    <li>
-                                        <div class="btn-group padder-v2">
-                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="#">Other menu items</a></li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                </ul>
-                                </span> <a href="#" class="font-bold">Rework Details</a> </div>
-                            <div class="panel-body">
-                                <div class="taskReworkInstructions" data-field=""></div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-                
-              	<div class="row" id="tabRejectComments" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divRejectComments" style="width:100%"></div>
-                        </section>
-                    </div>
-                </div>
-
-                <div class="row" id="tabDocuments" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divDocuments" style="width:100%"></div>
-                            <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />--%>
-                        </section>
-                    </div>
-                </div>
-
-
-                <div class="row" id="tabAttachments" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divAttachments" style="width:100%"></div>
-                        </section>
-                    </div>
-                </div>
-
-
-                <div class="row" id="tabNotes" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divNotes" style="width:100%"></div>
-                        </section>
-                    </div>
-                </div>
-
-
-                <div class="row" id="tabWorkflowOverview" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divWorkflowOverview" style="width:100%"></div>
-                        </section>
-                    </div>
-                </div>
-
-                <div class="row" id="tabHistory" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divHistory" style="width:100%"></div>
-                        </section>
-                    </div>
-                </div>
-
-
-                <div class="row" id="tabCloseComplaintButton" style="display:none;">
-                    <div class="col-md-12">
+                    <div class="wrapper bg-empty  clearfix">
                         <div class="pull-right inline">
-                            <div class="btn-group">
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
-                                <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
-                                <%--<input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />--%>
-                                <%--<input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />--%>
-                                <form id="formAttachments" style="display:none;">
-                                            <%--<input type="file" id="file" name="file">--%>
-                                        <input id="addNewAttachments" type="file" name="files[]" multiple/>
+                            <div class="btn-group-task">
+                                <!-- TODO: when data-toggle is modal, the tooltip won't come up
+                                -->
+                                <%--<button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>--%>
 
-                                        <%--<input type="submit">--%>
-                                </form>
+                                <!-- from the mockup -->
+                                <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
+                                <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
+                                <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
+                                <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
+
+
+                                <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
+                                <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
+
+                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> Subscribe</button>
+                            </div>
+
+                        </div>
+                            <%--
+                                            <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
+                            --%>
+                        <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"></a></h4>
+                        <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
+
+                    <hr/>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="">
+                                    <div class=" clearfix">
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
+                                            <small class="text-muted">% of Completion</small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-title="Enter Owner"></a></div>
+                                            <small class="text-muted">Assignee</small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
+                                            <small class="text-muted">Priority</small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
+                                            <small class="text-muted">Start Date</small></div>
+                                        <div class="col-xs-2 b-r">
+                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
+                                            <small class="text-muted">Due Date</small></div>
+                                        <div class="col-xs-2">
+                                            <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
+                                            <small class="text-muted">State</small></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row" id="tabSignature" style="display:none;">
-                    <div class="col-md-12">
-                        <section class="panel b-a ">
-                            <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                    <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                                </ul>
-                                <a href="#" class="font-bold">Electronic Signatures</a> </div>
-                            <div class="panel-body max-200 no-padder">
-                                <table class="table table-striped th-sortable table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Signed By</th>
-                                        <th>Date</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="signatureList" >
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-                    </div>
+                <div class="row" id="tabTopBlank">
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No task data)</p>
                 </div>
 
+                <div class="wrapper">
+                    <div class="row" id="tabBlank" style="display:none;">
+                        <p>tabBlank</p>
+                    </div>
 
-            </div>
+                    <div class="row" id="tabDetails" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a ">
+                                <div class="panel-heading b-b bg-info">
+                                    <ul class="nav nav-pills pull-right">
+                                        <li>
+                                            <div class="btn-group padder-v2">
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li><a href="#">Other menu items</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                    </ul>
+                                    </span> <a href="#" class="font-bold">Task Details</a> </div>
+                                <div class="panel-body">
+                                    <div class="divDetail"></div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row" id="tabReworkInstructions" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a ">
+                                <div class="panel-heading b-b bg-info">
+                                    <ul class="nav nav-pills pull-right">
+                                        <li>
+                                            <div class="btn-group padder-v2">
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li><a href="#">Other menu items</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                    </ul>
+                                    </span> <a href="#" class="font-bold">Rework Details</a> </div>
+                                <div class="panel-body">
+                                    <div class="taskReworkInstructions" data-field=""></div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row" id="tabRejectComments" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divRejectComments" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row" id="tabDocuments" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divDocuments" style="width:100%"></div>
+                                <%--<input id="roiFormUrl" type="hidden" value="${roiFormUrl}" style="width:100% display:none;" />--%>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <div class="row" id="tabAttachments" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divAttachments" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <div class="row" id="tabNotes" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divNotes" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <div class="row" id="tabWorkflowOverview" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divWorkflowOverview" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row" id="tabHistory" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divHistory" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <div class="row" id="tabCloseComplaintButton" style="display:none;">
+                        <div class="col-md-12">
+                            <div class="pull-right inline">
+                                <div class="btn-group">
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
+                                    <%--<input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />--%>
+                                    <%--<input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />--%>
+                                    <form id="formAttachments" style="display:none;">
+                                                <%--<input type="file" id="file" name="file">--%>
+                                            <input id="addNewAttachments" type="file" name="files[]" multiple/>
+
+                                            <%--<input type="submit">--%>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="tabSignature" style="display:none;">
+                        <div class="col-md-12">
+                            <section class="panel b-a ">
+                                <div class="panel-heading b-b bg-info">
+                                    <ul class="nav nav-pills pull-right">
+                                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                    </ul>
+                                    <a href="#" class="font-bold">Electronic Signatures</a> </div>
+                                <div class="panel-body max-200 no-padder">
+                                    <table class="table table-striped th-sortable table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Signed By</th>
+                                            <th>Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="signatureList" >
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>
         </section>
-    </section>
-</aside>
-<!-- /.aside -->
+    </aside>
+    <!-- /.aside -->
 
-<aside class="aside bg-light lt hide" id="chat">
-    <section class="vbox animated fadeInLeft">
-        <section class="scrollable">
-            <header class="dk header">
-                <p>Approvers</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
-            <header class="dk header">
-                <p>Collaborators</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
-            <header class="dk header">
-                <p>Watchers</p>
-            </header>
-            <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+    <aside class="aside bg-light lt hide" id="chat">
+        <section class="vbox animated fadeInLeft">
+            <section class="scrollable">
+                <header class="dk header">
+                    <p>Approvers</p>
+                </header>
+                <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+                <header class="dk header">
+                    <p>Collaborators</p>
+                </header>
+                <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+                <header class="dk header">
+                    <p>Watchers</p>
+                </header>
+                <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
+            </section>
+            <footer class="footer text-center">
+                <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
+            </footer>
         </section>
-        <footer class="footer text-center">
-            <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
-        </footer>
+    </aside>
+
+
+
     </section>
-</aside>
-
-
-
-</section>
-</section>
-</section>
-</section>
+    </section>
+    </section>
 </jsp:body>
 </t:layout>
 
