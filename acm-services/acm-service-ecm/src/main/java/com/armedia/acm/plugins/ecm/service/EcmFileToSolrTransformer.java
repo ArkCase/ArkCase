@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -98,6 +99,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         doc.setMime_type_s(in.getFileMimeType());
         
         doc.setStatus_s(in.getStatus());
+        
+        doc.setHidden_b(isHidden(in));
 
         return doc;
     }
@@ -120,6 +123,21 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
             tagTextList.add(tag.getTag().getTagText());
         }
         return tagTextList;
+    }
+    
+    private boolean isHidden(EcmFile file)
+    {
+    	if (file != null)
+    	{
+	    	String mimeType = file.getFileMimeType();
+	    	
+	    	if (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML) && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
+	    	{
+	    		return true;
+	    	}
+    	}
+    	
+    	return false;
     }
 
     public EcmFileDao getEcmFileDao() {

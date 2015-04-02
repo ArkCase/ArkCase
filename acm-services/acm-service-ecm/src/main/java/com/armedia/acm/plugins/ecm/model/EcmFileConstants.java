@@ -25,6 +25,12 @@ public interface EcmFileConstants
 	String INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX = "[/?<>\\\\:*|\"^]";
 	
 	String INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT = "_";
+	
+	/**
+	 * These two properties we need for searching them in mimeType property for the file
+	 */
+	String MIME_TYPE_XML = "text/xml";
+	String MIME_TYPE_FREVVO_URL = "www.frevvo.com";
 
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
 
