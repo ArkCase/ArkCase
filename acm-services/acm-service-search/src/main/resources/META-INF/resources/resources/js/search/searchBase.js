@@ -20,9 +20,6 @@ var SearchBase = SearchBase || {
     }
 
     ,showSearchDialog: function(args) {
-        if (Acm.isEmpty(args.$dlgObjectPicker)) {
-            args.$dlgObjectPicker = $("#dlgObjectPicker");
-        }
         if (Acm.isEmpty(args.$edtSearch)) {
             args.$edtSearch = $("#edtPoSearch");
         }
