@@ -69,7 +69,7 @@ public class TagService {
         tagForUpdate.setTagName(name);
         tagForUpdate.setTagText(text);
         tagForUpdate.setTagDescription(desc);
-        return getTagDao().updateTag(tagForUpdate);
+        return getTagDao().save(tagForUpdate);
     }
 
     private List<AcmTag> prepareTagsFromPropertiesFile(){
