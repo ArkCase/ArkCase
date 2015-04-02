@@ -31,6 +31,7 @@ TaskWizard.Event = {
 
     ,_tryInitOwners: function() {
         var data = TaskWizard.getAssignees();
+        data.sort(TaskWizard.Object.sortAssignees);
         if (Acm.isNotEmpty(data)) {
             TaskWizard.Object.initOwners(data);
             return true;

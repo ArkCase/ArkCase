@@ -1602,7 +1602,8 @@ ul.nav.nav-main li.active {
     display: none !important;
   }
   .nav-xs .scrollable {
-    overflow: visible;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
   .nav-xs .nav-primary > ul > li > a {
     position: relative;
@@ -1618,6 +1619,7 @@ ul.nav.nav-main li.active {
     vertical-align: middle;
     height: 50px;
     width: 70px;
+    display:none;
   }
   .nav-xs .nav-primary > ul > li > a span.pull-right {
     display: none !important;
@@ -1625,7 +1627,7 @@ ul.nav.nav-main li.active {
   .nav-xs .nav-primary > ul > li > a i {
     width: auto;
     float: none;
-    display: block;
+    display: inline;
     font-size: 16px;
     margin: 0;
     line-height: 50px;
@@ -4304,3 +4306,14 @@ h3.m-b-xs.text-black {
 
 #cloud { padding: 2px; line-height: 3em; text-align: center; } #cloud a { padding: 0px; }
 #cloud { margin: 0; } #cloud li { display: inline; }
+
+
+.ui-menu {
+    /*width: 180px;*/
+    /*font-size: 63%;*/
+    width: 240px;
+    font-size: 100%;
+}
+.ui-menu kbd { /* Keyboard shortcuts for ui-contextmenu titles */
+    float: right;
+}
