@@ -38,12 +38,12 @@ Acm.Service = {
                 arg.success({hasError:true,errorMsg:xhr.responseText});
             };
         }
-        jQuery.ajax(arg);
+        return jQuery.ajax(arg);
     }
 
 
     ,asyncGet : function(callback, url, param) {
-        this.ajax({url: url
+        return this.ajax({url: url
             ,data: param
             ,success: function(response) {
                 callback(response);
@@ -52,7 +52,7 @@ Acm.Service = {
     }
 
     ,asyncPost : function(callback, url, param) {
-        this.ajax({type: 'POST'
+        return this.ajax({type: 'POST'
             ,url: url
             ,data: param
             ,success: function(response) {
@@ -66,7 +66,7 @@ Acm.Service = {
      */
     ,asyncPostForm : function(callback, url, form) {
 	    var postData = $(form).serializeArray();
-        this.ajax({type: 'POST'
+        return this.ajax({type: 'POST'
             ,url: url
             ,data : postData
             ,contentType: "application/x-www-form-urlencoded; charset=UTF-8"
@@ -77,7 +77,7 @@ Acm.Service = {
     }
 
     ,asyncPut : function(callback, url, param) {
-        jQuery.ajax({type: 'PUT'
+        return jQuery.ajax({type: 'PUT'
             ,url: url
             ,data: param
             ,success: function(response) {
@@ -87,7 +87,7 @@ Acm.Service = {
     }
 
     ,asyncDelete : function(callback, url) {
-        jQuery.ajax({type: 'DELETE'
+        return jQuery.ajax({type: 'DELETE'
             ,url: url
             ,success: function(response) {
                 callback(response);

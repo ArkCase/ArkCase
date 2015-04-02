@@ -315,6 +315,16 @@ ObjNav.Model = {
                 }
                 return pageId;
             }
+            ,getLastKeyPart: function(key) {
+                var part = "";
+                if (Acm.isNotEmpty(key)) {
+                    var arr = key.split(this.KEY_SEPARATOR);
+                    if (0 < arr.length) {
+                        part = arr[arr.length-1];
+                    }
+                }
+                return part;
+            }
 
             //keyParts format: [{type: "t", id: "123"}, ....]
             //Integer ID works as well: [{type: "t", id: 123}, ....]
