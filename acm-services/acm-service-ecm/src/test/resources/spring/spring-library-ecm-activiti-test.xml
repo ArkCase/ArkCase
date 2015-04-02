@@ -63,6 +63,10 @@
     <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
     <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
 
+    <!-- the approval business process calls this bean, so we provide a mock that just records the number of times
+        the method was called -->
+    <bean id="changeObjectStatusService" class="com.armedia.acm.plugins.ecm.service.impl.MockChangeObjectStatusService"/>
+
 
 
 

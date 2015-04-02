@@ -68,6 +68,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         String user = message.getInboundProperty("acmUser") == null ? null :
                           message.getInboundProperty("acmUser").name;
                         payload.ecmFolderPath = "/Sites/acm/documentLibrary/User Profile/"+user;
+                        payload.container.folder.name = user;
                     }
 
                     return payload;
