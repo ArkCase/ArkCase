@@ -56,6 +56,13 @@ TaskWizard.Object = {
             Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.object_id_s, val.name);
 	    });
 	}
+    ,sortAssignees: function (previous,next) {
+        if (previous.name < next.name)
+            return -1;
+        if (previous.name > next.name)
+            return 1;
+        return 0;
+    }
 
 	/**
 	 * Get the assignee field value
