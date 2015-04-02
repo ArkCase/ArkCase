@@ -1602,7 +1602,8 @@ ul.nav.nav-main li.active {
     display: none !important;
   }
   .nav-xs .scrollable {
-    overflow: visible;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
   .nav-xs .nav-primary > ul > li > a {
     position: relative;
@@ -1618,6 +1619,7 @@ ul.nav.nav-main li.active {
     vertical-align: middle;
     height: 50px;
     width: 70px;
+    display:none;
   }
   .nav-xs .nav-primary > ul > li > a span.pull-right {
     display: none !important;
@@ -1625,7 +1627,7 @@ ul.nav.nav-main li.active {
   .nav-xs .nav-primary > ul > li > a i {
     width: auto;
     float: none;
-    display: block;
+    display: inline;
     font-size: 16px;
     margin: 0;
     line-height: 50px;

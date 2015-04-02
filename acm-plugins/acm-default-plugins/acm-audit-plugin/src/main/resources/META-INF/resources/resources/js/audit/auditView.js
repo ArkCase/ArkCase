@@ -31,7 +31,8 @@ Audit.View = Audit.View || {
             var pageUrl = Audit.View.MicroData.auditReportUrl
                 + "&startDate=" + auditFieldsValues.startDate
                 + "&endDate=" + auditFieldsValues.endDate
-                + "&objectType=" + auditFieldsValues.objectType;
+                + "&objectType=" + auditFieldsValues.objectType
+                + "&objectId=" + auditFieldsValues.objectId;
 
             window.open(pageUrl, 'audit_iframe');
         }
@@ -69,20 +70,20 @@ Audit.View = Audit.View || {
             var fieldsValues = {};
             for (var i = 0; i < Audit.View.MicroData.auditCriteria[0].inputs.length; i++) {
                 var field = Audit.View.MicroData.auditCriteria[0].inputs[i];
-                if (field.name && field.type) {
+                if (Acm.isNotEmpty(field) && Acm.isNotEmpty(field.name) && Acm.isNotEmpty(field.type)) {
                     if("select" == field.type){
                         fieldsValues.objectType = Audit.View.AuditCriteria.getSelectValue($("#" + field.name));
                     }
                     else if("dateRange" == field.type){
-                        if(field.nameStartDate){
+                        if(Acm.isNotEmpty(field.nameStartDate)){
                             fieldsValues.startDate = Audit.View.AuditCriteria.getDate(($("#" + field.nameStartDate)));
                         }
-                        if(field.nameEndDate){
+                        if(Acm.isNotEmpty(field.nameEndDate)){
                             fieldsValues.endDate = Audit.View.AuditCriteria.getDate(($("#" + field.nameEndDate)));
                         }
                     }
                     else if("text"== field.type){
-                        fieldsValues.info = Audit.View.AuditCriteria.getText(($("#" + field.name)));
+                        fieldsValues.objectId = Audit.View.AuditCriteria.getText(($("#" + field.name)));
                     }
                 }
             }
@@ -114,8 +115,8 @@ Audit.View = Audit.View || {
                             + "<div class='col-sm-12'>"
                             + "<input type='text' class='form-control"
                             + "' id='" + Acm.goodValue(field.name)
-                            + "' value='" + Acm.goodValue(field.value)
-                            + "' placeholder='" + Acm.goodValue(field.desc) + "'>"
+                            + "' value='" + Acm.goodValue(field.value) + "'>"
+                            //+ "' placeholder='" + Acm.goodValue(field.desc) + "'>"
                             +"</div>";
 
                         }
