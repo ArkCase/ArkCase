@@ -525,6 +525,8 @@ Complaint.Model = Complaint.Model || {
 
     ,Documents: {
         create : function() {
+            this.cacheTree = new Acm.Model.CacheFifo();
+
             this.cacheDocuments = new Acm.Model.CacheFifo();
             
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);

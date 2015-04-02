@@ -4307,3 +4307,13 @@ h3.m-b-xs.text-black {
 
 #cloud { padding: 2px; line-height: 3em; text-align: center; } #cloud a { padding: 0px; }
 #cloud { margin: 0; } #cloud li { display: inline; }
+
+.ui-menu {
+    /*width: 180px;*/
+    /*font-size: 63%;*/
+    width: 240px;
+    font-size: 100%;
+}
+.ui-menu kbd { /* Keyboard shortcuts for ui-contextmenu titles */
+    float: right;
+}

@@ -134,7 +134,7 @@ public class TimesheetServiceImpl implements TimesheetService {
 		String authorQuery = "";
 		if (userId != null)
 		{
-			authorQuery = " AND author:" + userId;
+			authorQuery = " AND author_s:" + userId;
 		}
 		
 		String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
