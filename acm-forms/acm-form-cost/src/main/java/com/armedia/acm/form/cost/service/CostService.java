@@ -163,9 +163,7 @@ public class CostService extends FrevvoFormChargeAbstractService {
 			uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.COSTSHEET.toUpperCase(), saved.getId());
 		}
 		
-		// Raise event
-		// TODO: Finish the logic and uncomment line below
-		//getCostsheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
+		getCostsheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
 		
 		return true;
 	}
