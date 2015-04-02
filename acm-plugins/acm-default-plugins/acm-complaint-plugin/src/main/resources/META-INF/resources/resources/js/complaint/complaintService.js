@@ -10,7 +10,7 @@ Complaint.Service = {
         if (Complaint.Service.Lookup.create) {Complaint.Service.Lookup.create();}
         if (Complaint.Service.Detail.create) {Complaint.Service.Detail.create();}
         if (Complaint.Service.People.create) {Complaint.Service.People.create();}
-        if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
+        //if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
         if (Complaint.Service.Notes.create) {Complaint.Service.Notes.create();}
         if (Complaint.Service.Tasks.create) {Complaint.Service.Tasks.create();}
         if (Complaint.Service.History.create) {Complaint.Service.History.create();}
@@ -21,7 +21,7 @@ Complaint.Service = {
         if (Complaint.Service.Lookup.onInitialized) {Complaint.Service.Lookup.onInitialized();}
         if (Complaint.Service.Detail.onInitialized) {Complaint.Service.Detail.onInitialized();}
         if (Complaint.Service.People.onInitialized) {Complaint.Service.People.onInitialized();}
-        if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
+        //if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
         if (Complaint.Service.Notes.onInitialized) {Complaint.Service.Notes.onInitialized();}
         if (Complaint.Service.Tasks.onInitialized) {Complaint.Service.Tasks.onInitialized();}
         if (Complaint.Service.History.onInitialized) {Complaint.Service.History.onInitialized();}
@@ -1053,7 +1053,7 @@ Complaint.Service = {
         }
     }
 
-    ,Documents: {
+    ,Documents_JTable_To_Retire: {
         create: function(){
         }
         ,onInitialized: function(){

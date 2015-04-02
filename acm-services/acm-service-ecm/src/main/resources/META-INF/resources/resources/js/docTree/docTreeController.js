@@ -14,7 +14,7 @@ DocTree.Controller = DocTree.Controller || {
 
         this.VIEW_ADDED_FOLDER      = name + "-view-added-folder";
         this.VIEW_ADDED_DOCUMENT    = name + "-view-added-document";
-        this.VIEW_RENAMED_FOLDRE    = name + "-view-renamed-folder";
+        this.VIEW_RENAMED_FOLDER    = name + "-view-renamed-folder";
         this.VIEW_RENAMED_DOCUMENT  = name + "-view-renamed-document";
 
         this.MODEL_ADDED_FOLDER     = name + "-model-added-folder";
@@ -48,7 +48,7 @@ DocTree.Controller = DocTree.Controller || {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_ADDED_DOCUMENT, node, parentId, document);
     }
     ,viewRenamedFolder: function(node, id, parentId, name) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FOLDRE, node, id, parentId, name);
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FOLDER, node, id, parentId, name);
     }
     ,viewRenamedDocument: function(node, id, parentId, name) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_DOCUMENT, node, id, parentId, name);
