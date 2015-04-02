@@ -58,7 +58,7 @@ public class CloseComplaintRequestFactory
         {
             disposition.setReferExternalContactPersonName(form.getReferExternal().getPerson());
             disposition.setReferExternalOrganizationName(form.getReferExternal().getAgency());
-            disposition.setReferExternalContactMethod(form.getReferExternal().getContact());
+            disposition.setReferExternalContactMethod(form.getReferExternal().getContact().returnBase());
         }
     }
     
