@@ -34,38 +34,38 @@ public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "cm_object_id")
+	@Column(name = "cm_object_id", insertable = true, updatable = false)
 	private Long objectId;
 	
-	@Column(name = "cm_object_type")
+	@Column(name = "cm_object_type", insertable = true, updatable = false)
 	private String objectType;
 	
 	@Lob
-	@Column(name = "cm_object_string")
+	@Column(name = "cm_object_string", insertable = true, updatable = false)
 	private String objectString;
 	
-	@Column(name = "cm_user_id")
+	@Column(name = "cm_user_id", insertable = true, updatable = false)
 	private String userId;
 	
-	@Column(name = "cm_date")
+	@Column(name = "cm_date", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
-	@Column(name = "cm_type")
+	@Column(name = "cm_type", insertable = true, updatable = false)
 	private String type;
 	
-	@Column(name = "cm_created")
+	@Column(name = "cm_created", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
 	
-	@Column(name = "cm_creator")
+	@Column(name = "cm_creator", insertable = true, updatable = false)
 	private String creator;
 	
-	@Column(name = "cm_modified")
+	@Column(name = "cm_modified", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 	
-	@Column(name = "cm_modifier")
+	@Column(name = "cm_modifier", insertable = true, updatable = false)
 	private String modifier;
 	
 	public Long getId() {

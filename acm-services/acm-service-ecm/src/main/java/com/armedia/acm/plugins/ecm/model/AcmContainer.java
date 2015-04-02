@@ -45,10 +45,10 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_container_modifier")
     private String modifier;
 
-    @Column(name = "cm_object_type")
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String containerObjectType;
 
-    @Column(name = "cm_object_id")
+    @Column(name = "cm_object_id", insertable = true, updatable = false)
     private Long containerObjectId;
 
     @Column(name = "cm_object_title")

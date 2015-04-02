@@ -33,38 +33,38 @@ public class AcmHistory implements Serializable, AcmEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "cm_history_person_id")
+	@Column(name = "cm_history_person_id", insertable = true, updatable = false)
 	private Long personId;
 	
-	@Column(name = "cm_history_person_type")
+	@Column(name = "cm_history_person_type", insertable = true, updatable = false)
 	private String personType;
 	
-	@Column(name = "cm_history_object_id")
+	@Column(name = "cm_history_object_id", insertable = true, updatable = false)
 	private Long objectId;
 	
-	@Column(name = "cm_history_object_type")
+	@Column(name = "cm_history_object_type", insertable = true, updatable = false)
 	private String objectType;
 	
-	@Column(name = "cm_history_start_date")
+	@Column(name = "cm_history_start_date", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
 	
-	@Column(name = "cm_history_end_date")
+	@Column(name = "cm_history_end_date", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 	
-	@Column(name = "cm_history_created")
+	@Column(name = "cm_history_created", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
 	
-	@Column(name = "cm_history_creator")
+	@Column(name = "cm_history_creator", insertable = true, updatable = false)
 	private String creator;
-	
-	@Column(name = "cm_history_modified")
+
+	@Column(name = "cm_history_modified", insertable = true, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
 	
-	@Column(name = "cm_history_modifier")
+	@Column(name = "cm_history_modifier", insertable = true, updatable = false)
 	private String modifier;
 
 	public Long getId() {
