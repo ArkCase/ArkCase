@@ -38,9 +38,6 @@
 </jsp:attribute>
 
 <jsp:body>
-
-<!-- /.aside -->
-<section id="content">
     <section class="vbox">
         <section class="scrollable padder">
             <section class="row m-b-md">
@@ -137,8 +134,6 @@
         </footer>
 
     </section>
-</section>
-</section>
 </jsp:body>
 </t:layout>
 

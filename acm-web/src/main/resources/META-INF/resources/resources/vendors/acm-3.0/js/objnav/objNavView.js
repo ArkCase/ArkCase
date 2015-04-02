@@ -81,7 +81,14 @@ ObjNav.View = {
             } else {
                 var objId = ObjNav.Model.Tree.Key.getObjIdByKey(node.key);
                 var objType = ObjNav.Model.Tree.Key.getObjTypeByKey(node.key);
-                ObjNav.Controller.viewSelectedObject(objType, objId);
+
+                var previousKey = ObjNav.View.Navigator.getPreviousKey();
+                var previousObjId = ObjNav.Model.Tree.Key.getObjIdByKey(previousKey);
+                var previousObjType = ObjNav.Model.Tree.Key.getObjTypeByKey(previousKey);
+
+                if (objId != previousObjId || objType != previousObjType) {
+                    ObjNav.Controller.viewSelectedObject(objType, objId);
+                }
             }
 
             ObjNav.Controller.viewSelectedTreeNode(node.key);
@@ -176,28 +183,30 @@ ObjNav.View = {
         }
 
         ,useFancyTree: function($tree, arg) {
-            this._activateHandler = null;
+            this.activateOrig = null;
             if (arg.activate) {
-                this._activateHandler = arg.activate;
+                this.activateOrig = arg.activate;
             }
             arg.activate = function(event, data) {
-                ObjNav.View.Navigator._activeKey = data.node.key;
-                if (ObjNav.View.Navigator._activateHandler) {
-                    ObjNav.View.Navigator._activateHandler(event, data);
+                var activeKey = ObjNav.View.Navigator.getActiveKey();
+                ObjNav.View.Navigator.setPreviousKey(activeKey);
+                ObjNav.View.Navigator.setActiveKey(data.node.key);
+                if (ObjNav.View.Navigator.activateOrig) {
+                    ObjNav.View.Navigator.activateOrig(event, data);
                 }
             };
 
-            this._beforeActivateHandler = null;
+            this.beforeActivateOrig = null;
             if (arg.beforeActivate) {
-                this._beforeActivateHandler = arg.beforeActivate;
+                this.beforeActivateOrig = arg.beforeActivate;
             }
             arg.beforeActivate = function(event, data) {
                 if (App.Object.Dirty.isDirty()) {
                     var node = data.node;
                     var key = node.key;
-                    if (key == ObjNav.View.Navigator._activeKey) {
-                        if (ObjNav.View.Navigator._beforeActivateHandler) {
-                            return ObjNav.View.Navigator._beforeActivateHandler(event, data);
+                    if (key == ObjNav.View.Navigator.getActiveKey()) {
+                        if (ObjNav.View.Navigator.beforeActivateOrig) {
+                            return ObjNav.View.Navigator.beforeActivateOrig(event, data);
                         } else {
                             return true;
                         }
@@ -263,9 +272,27 @@ ObjNav.View = {
             }
         }
 
+        ,_previousKey: null
+        ,getPreviousKey: function() {
+            return this._previousKey;
+        }
+        ,setPreviousKey: function(previousKey) {
+            this._previousKey = previousKey;
+        }
+        ,getPreviousObjId: function() {
+            var objId = ObjNav.Model.Tree.Key.getObjIdByKey(this._previousKey);
+            return objId;
+        }
+        ,getPreviousObjType: function() {
+            var objType = ObjNav.Model.Tree.Key.getObjTypeByKey(this._previousKey);
+            return objType;
+        }
         ,_activeKey: null
         ,getActiveKey: function() {
             return this._activeKey;
+        }
+        ,setActiveKey: function(activeKey) {
+            this._activeKey = activeKey;
         }
         ,getActiveObjId: function() {
             var objId = ObjNav.Model.Tree.Key.getObjIdByKey(this._activeKey);

@@ -6,10 +6,12 @@
 App.View = {
     create : function() {
         if (App.View.MicroData.create)          {App.View.MicroData.create();}
+        if (App.View.ErrorBoard.create)          {App.View.ErrorBoard.create();}
         if (App.View.Dirty.create)              {App.View.Dirty.create();}
     }
     ,onInitialized: function() {
         if (App.View.MicroData.onInitialized)   {App.View.MicroData.onInitialized();}
+        if (App.View.ErrorBoard.onInitialized)   {App.View.ErrorBoard.onInitialized();}
         if (App.View.Dirty.onInitialized)       {App.View.Dirty.onInitialized();}
     }
 
@@ -46,6 +48,75 @@ App.View = {
             }
             return ot;
         }
+    }
+
+    ,ErrorBoard: {
+        create : function() {
+            this.$divBoard  = $("#divEbErrorBoard");
+            this.$divDetail = $("#divEbErrorDetail");
+            this.$btnClose  = $("#btnEbErrorClose");
+            this.$btnDetail = $("#btnEbErrorDetail");
+            this.$labMsg    = $("#labEbErrorMsg");
+            this.$labDetail = $("#labEbErrorDetail");
+
+            this.$btnClose.unbind("click").on("click", function(e) {App.View.ErrorBoard.onClickBtnClose(e, this);});
+            this.$btnDetail.unbind("click").on("click", function(e) {App.View.ErrorBoard.onClickBtnDetail(e, this);});
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onClickBtnClose: function(event, ctrl) {
+            App.View.ErrorBoard.showDivBoard(false);
+        }
+        ,onClickBtnDetail: function(event, ctrl) {
+            App.View.ErrorBoard.showDivDetail(!App.View.ErrorBoard.isDetailShown());
+        }
+        ,show: function(msg, detail) {
+            App.View.ErrorBoard.setTextLabMsg(msg);
+
+            if (Acm.isNotEmpty(detail)) {
+                App.View.ErrorBoard.setTextLabDetail(detail);
+                App.View.ErrorBoard.showBtnDetail(true);
+            } else {
+                App.View.ErrorBoard.showBtnDetail(false);
+            }
+            App.View.ErrorBoard.showDivDetail(false);
+
+            App.View.ErrorBoard.showDivBoard(true);
+        }
+//        ,close: function() {
+//            App.View.ErrorBoard.showDivBoard(false);
+//        }
+        ,setTextLabMsg: function(text) {
+            Acm.Object.setText(this.$labMsg, text);
+        }
+        ,setTextLabDetail: function(text) {
+            Acm.Object.setText(this.$labDetail, text);
+        }
+        ,showBtnDetail: function(show) {
+            Acm.Object.show(this.$btnDetail, show);
+        }
+        ,showDivBoard: function(show) {
+            if (show) {
+                this.$divBoard.slideDown("slow");
+            } else {
+                this.$divBoard.slideUp("slow");
+            }
+        }
+
+        ,_isDetailShown: false
+        ,isDetailShown: function() {
+            return this._isDetailShown;
+        }
+        ,showDivDetail: function(show) {
+            if (show) {
+                this.$divDetail.slideDown("slow");
+            } else {
+                this.$divDetail.slideUp("slow");
+            }
+            this._isDetailShown = show;
+        }
+
     }
 
     ,Dirty: {
