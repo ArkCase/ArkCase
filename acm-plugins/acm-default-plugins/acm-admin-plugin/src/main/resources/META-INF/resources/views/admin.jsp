@@ -79,224 +79,221 @@
     //////////////////////////////////////////////////////////////////////
 </jsp:attribute>
 
-    <jsp:body>
+<jsp:body>
+    <section class="vbox">
+        <section class="scrollable">
+            <section class="hbox stretch">
+                <aside class="aside-lg bg-light lt">
+                    <section class="vbox animated fadeInLeft">
+                        <section class="scrollable">
+                            <header class="dk header">
+                                <h3 class="m-b-xs text-black pull-left"><spring:message code="admin.page.descLong" text="Administration" /></h3>
+                            </header>
 
-        <section id="content">
-            <section class="vbox">
-                <section class="scrollable">
-                    <section class="hbox stretch">
-                        <aside class="aside-lg bg-light lt">
-                            <section class="vbox animated fadeInLeft">
-                                <section class="scrollable">
-                                    <header class="dk header">
-                                        <h3 class="m-b-xs text-black pull-left"><spring:message code="admin.page.descLong" text="Administration" /></h3>
-                                    </header>
+                            <div class="row m-b">
+                                <div class="col-sm-12">
+                                    <div id="tree"></div>
+                                </div>
+                            </div>
+                        </section>
+                    </section>
+                </aside>
 
-                                    <div class="row m-b">
+                <aside id="email-content" class="bg-light lter">
+                    <section class="vbox">
+                        <section class="scrollable padder">
+                            <section class="scrollable padder">
+                                <%--Main Page table--%>
+                                <div class="row" id="tabMainPage">
+                                    <h3><i class="fa fa-long-arrow-left"></i> Configure settings in the application.</h3>
+                                </div>
+
+                                <%--Blank table--%>
+                                <div class="row" id="tabBlank" style="display:none;">
+                                </div>
+
+                                <%--JTable - Access Control Policy--%>
+                                <div class="row" id="tabACP" style="display:none;">
+                                    <div class="col-md-12">
+                                        <h3>Data Access Control </h3>
+                                        <section class="panel panel-default">
+                                            <div id="divACP" style="width:100%"></div>
+                                        </section>
+                                    </div>
+                                </div>
+
+                                <%--Functional Access control--%>
+                                <div class="row" id="tabFunctionalAccessControl" style="display:none;">
+                                    <section class="row m-b-md">
                                         <div class="col-sm-12">
-                                            <div id="tree"></div>
+                                            <h3><spring:message code="adminFunctionalAccess.page.descShort" text="Functional Access Configuration" /></h3>
+                                        </div>
+                                    </section>
+
+                                    <section class="panel panel-default">
+                                        <div class="wrapper">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="col-xs-3 b-r"><label>Choose Application Role</label>
+                                                        <select id="selectRoles" size="10" class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                    <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                        <select id="selectNotAuthorized" size="10" multiple class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+                                                        <button id="btnMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                        <button id="btnMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                    </div>
+                                                    <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                        <select id="selectAuthorized" size="10" multiple  class="form-control">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <%--Organization hierarchy--%>
+                                <div class="row" id="tOrganization" style="display:none;">
+                                    <div class="pull-left m-t-md">
+                                        <div class="btn-group">
+                                            <!-- button group -->
+                                            <button class="btn btn-default btn-sm" id="btnCreateAdHoc" title="Create Ad-Hoc Group" data-toggle="modal" data-target="#createAdHoc">
+                                                Create Ad-Hoc Group
+                                            </button>
                                         </div>
                                     </div>
-                                </section>
-                            </section>
-                        </aside>
 
-                        <aside id="email-content" class="bg-light lter">
-                            <section class="vbox">
-                                <section class="scrollable padder">
-                                    <section class="scrollable padder">
-                                        <%--Main Page table--%>
-                                        <div class="row" id="tabMainPage">
-                                            <h3><i class="fa fa-long-arrow-left"></i> Configure settings in the application.</h3>
+                                    <table id="treeOrganization">
+                                        <thead>
+                                        <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th></th><th>   Actions </th></tr>
+
+                                        <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th><th>  </th></tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <%--Dashboard Control Table--%>
+                                <div class="row" id="tabDashboard" ng-app="config" style="display:none;">
+                                    <section class="row m-b-md">
+                                        <div class="col-sm-12">
+                                            <h3>Dashboard Configuration</h3>
                                         </div>
-
-                                        <%--Blank table--%>
-                                        <div class="row" id="tabBlank" style="display:none;">
-                                        </div>
-
-                                        <%--JTable - Access Control Policy--%>
-                                        <div class="row" id="tabACP" style="display:none;">
-                                            <div class="col-md-12">
-                                                <h3>Data Access Control </h3>
-                                                <section class="panel panel-default">
-                                                    <div id="divACP" style="width:100%"></div>
-                                                </section>
-                                            </div>
-                                        </div>
-
-                                        <%--Functional Access control--%>
-                                        <div class="row" id="tabFunctionalAccessControl" style="display:none;">
-                                            <section class="row m-b-md">
-                                                <div class="col-sm-12">
-                                                    <h3><spring:message code="adminFunctionalAccess.page.descShort" text="Functional Access Configuration" /></h3>
-                                                </div>
-                                            </section>
-
-                                            <section class="panel panel-default">
-                                                <div class="wrapper">
-                                                    <div class="row">
-                                                        <div class="col-xs-12">
-                                                            <div class="col-xs-3 b-r"><label>Choose Application Role</label>
-                                                                <select id="selectRoles" size="10" class="form-control">
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                            <div class="col-xs-3 b-r"><label>Not Authorized</label>
-                                                                <select id="selectNotAuthorized" size="10" multiple class="form-control">
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
-                                                                <button id="btnMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                                <button id="btnMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
-                                                            </div>
-                                                            <div class="col-xs-4 b-r"><label>Authorized</label>
-                                                                <select id="selectAuthorized" size="10" multiple  class="form-control">
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                        </div>
-
-                                        <%--Organization hierarchy--%>
-                                        <div class="row" id="tOrganization" style="display:none;">
-                                            <div class="pull-left m-t-md">
-                                                <div class="btn-group">
-                                                    <!-- button group -->
-                                                    <button class="btn btn-default btn-sm" id="btnCreateAdHoc" title="Create Ad-Hoc Group" data-toggle="modal" data-target="#createAdHoc">
-                                                        Create Ad-Hoc Group
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <table id="treeOrganization">
-                                                <thead>
-                                                <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th></th><th>   Actions </th></tr>
-
-                                                <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th><th>  </th></tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                        </div>
-
-                                        <%--Dashboard Control Table--%>
-                                        <div class="row" id="tabDashboard" ng-app="config" style="display:none;">
-                                            <section class="row m-b-md">
-                                                <div class="col-sm-12">
-                                                    <h3>Dashboard Configuration</h3>
-                                                </div>
-                                            </section>
-
-                                            <section class="panel panel-default">
-                                                <div class="wrapper">
-                                                    <div ng-controller="DemoCtrl">
-                                                        <div class="row">
-                                                            <div class="col-xs-12">
-                                                                <div class="col-xs-3 b-r"><label>Choose Dashboard Widgets</label>
-                                                                    <select ng-model="selectedWidget" ng-change="indexSelections()" ng-options="w as w.name for w in allWidgets track by w.name" name="" size="10" class="form-control">
-                                                                    </select></div>
-                                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" ng-click="select()"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                                <div class="col-xs-3 b-r"><label>Not Authorized</label>
-                                                                    <select ng-model="selectedNotAuthorized" ng-options="na as na.name for na in notAuthorized"  name="" size="10" multiple class="form-control">
-                                                                    </select></div>
-                                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" ng-click="moveRight()"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                                    <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" ng-click="moveLeft()"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/></div>
-                                                                <div class="col-xs-4 b-r"><label>Authorized</label>
-                                                                    <select ng-model="selectedAuthorized" ng-options="a as a.name for a in authorized" size="10" multiple  class="form-control">
-                                                                    </select></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </section>
-                                            </div>
-
-                                            <%--Reports Configuration Table--%>
-                                            <div class="row" id="tabReports" style="display:none;">
-                                                <section class="row m-b-md">
-                                                    <div class="col-sm-12">
-                                                        <h3>Reports Configuration</h3>
-                                                    </div>
-                                                </section>
-
-                                                <section class="panel panel-default">
-                                                    <div class="wrapper">
-                                                        <div class="row">
-                                                            <div class="col-xs-12">
-                                                                <div class="col-xs-3 b-r"><label>Choose Report</label>
-                                                                    <select id="selectReport" size="10" class="form-control">
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnSelectReport" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                                <div class="col-xs-3 b-r"><label>Not Authorized</label>
-                                                                    <select id="selectNotAuthorizedReport" size="10" multiple class="form-control">
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
-                                                                    <button id="btnAuthorize" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Authorize"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                                    <button id="btnUnauthorize" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Unauthorize"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
-                                                                </div>
-                                                                <div class="col-xs-4 b-r"><label>Authorized</label>
-                                                                    <select id="selectAuthorizedReport" size="10" multiple  class="form-control">
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </section>
-                                            </div>
-
-                                            <%--Workflow Configuration Table--%>
-                                            <div class="row" id="tabWorkflowConfiguration" style="display:none;">
-                                                <div class="col-sm-12">
-                                                    <div class="pull-right  m-t-md">
-                                                        <button class="btn btn-default btn-sm">
-                                                            <i class="fa fa-sitemap text"></i>
-                                                            <span class="text">Create New Model</span>
-                                                        </button>
-
-                                                        <button class="btn btn-default btn-sm" id="btnUploadBPMN" title="Upload New BPMN" data-toggle="modal" data-target="#uploadBPMNModal">
-                                                            <i class="fa fa-cloud-upload text"></i>
-                                                            <span class="text">Upload New BPMN</span>
-                                                        </button>
-                                                    </div>
-                                                    <h3>Workflow Configuration</h3>
-                                                </div>
-
-                                                <div class="col-md-12">
-                                                    <section class="panel panel-default">
-                                                        <div id="divWorkflowConfiguration" style="width:100%">
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
-                                            <%--JTable - Correspondence--%>
-                                            <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
-                                                <div class="col-md-12">
-                                                    <h3>Correspondence Templates </h3>
-                                                    <section class="panel panel-default">
-                                                        <div id="divCorrespondenceTemplates" style="width:100%">
-                                                            <form id="formAddNewTemplate" style="display:none;">
-                                                                <input id="addNewTemplate" type="file" name="files[]" multiple/>
-                                                            </form>
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                            </div>
-
                                     </section>
-                                </section>
-                            </section>
-                        </aside>
 
+                                    <section class="panel panel-default">
+                                        <div class="wrapper">
+                                            <div ng-controller="DemoCtrl">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="col-xs-3 b-r"><label>Choose Dashboard Widgets</label>
+                                                            <select ng-model="selectedWidget" ng-change="indexSelections()" ng-options="w as w.name for w in allWidgets track by w.name" name="" size="10" class="form-control">
+                                                            </select></div>
+                                                        <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" ng-click="select()"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                        <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                            <select ng-model="selectedNotAuthorized" ng-options="na as na.name for na in notAuthorized"  name="" size="10" multiple class="form-control">
+                                                            </select></div>
+                                                        <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" ng-click="moveRight()"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                            <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" ng-click="moveLeft()"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/></div>
+                                                        <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                            <select ng-model="selectedAuthorized" ng-options="a as a.name for a in authorized" size="10" multiple  class="form-control">
+                                                            </select></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                    <%--Reports Configuration Table--%>
+                                    <div class="row" id="tabReports" style="display:none;">
+                                        <section class="row m-b-md">
+                                            <div class="col-sm-12">
+                                                <h3>Reports Configuration</h3>
+                                            </div>
+                                        </section>
+
+                                        <section class="panel panel-default">
+                                            <div class="wrapper">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <div class="col-xs-3 b-r"><label>Choose Report</label>
+                                                            <select id="selectReport" size="10" class="form-control">
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnSelectReport" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                        <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                            <select id="selectNotAuthorizedReport" size="10" multiple class="form-control">
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+                                                            <button id="btnAuthorize" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Authorize"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                            <button id="btnUnauthorize" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Unauthorize"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                            <select id="selectAuthorizedReport" size="10" multiple  class="form-control">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+
+                                    <%--Workflow Configuration Table--%>
+                                    <div class="row" id="tabWorkflowConfiguration" style="display:none;">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button class="btn btn-default btn-sm">
+                                                    <i class="fa fa-sitemap text"></i>
+                                                    <span class="text">Create New Model</span>
+                                                </button>
+
+                                                <button class="btn btn-default btn-sm" id="btnUploadBPMN" title="Upload New BPMN" data-toggle="modal" data-target="#uploadBPMNModal">
+                                                    <i class="fa fa-cloud-upload text"></i>
+                                                    <span class="text">Upload New BPMN</span>
+                                                </button>
+                                            </div>
+                                            <h3>Workflow Configuration</h3>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <section class="panel panel-default">
+                                                <div id="divWorkflowConfiguration" style="width:100%">
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <%--JTable - Correspondence--%>
+                                    <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
+                                        <div class="col-md-12">
+                                            <h3>Correspondence Templates </h3>
+                                            <section class="panel panel-default">
+                                                <div id="divCorrespondenceTemplates" style="width:100%">
+                                                    <form id="formAddNewTemplate" style="display:none;">
+                                                        <input id="addNewTemplate" type="file" name="files[]" multiple/>
+                                                    </form>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                            </section>
+                        </section>
                     </section>
-                </section>
+                </aside>
+
             </section>
         </section>
-    </jsp:body>
+    </section>
+</jsp:body>
 </t:layout>
 
 <div class="modal fade" id="uploadBPMNModal" tabindex="-1" role="dialog" aria-labelledby="uploadBPMNModalLabel" aria-hidden="true">

@@ -24,10 +24,10 @@ public class AcmMilestone implements Serializable, AcmEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cm_milestone_object_id")
+    @Column(name = "cm_milestone_object_id", insertable = true, updatable = false)
     private Long objectId;
 
-    @Column(name = "cm_milestone_object_type")
+    @Column(name = "cm_milestone_object_type", insertable = true, updatable = false)
     private String objectType;
 
     @Column(name = "cm_milestone_achieved_date")

@@ -20,10 +20,10 @@ public class Signature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long signatureId;
     
-    @Column(name = "cm_object_id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "cm_object_id", nullable = false, insertable = true, updatable = false)
     private Long objectId;
     
-    @Column(name = "cm_object_type", nullable = false, insertable = true, updatable = true)
+    @Column(name = "cm_object_type", nullable = false, insertable = true, updatable = false)
     private String objectType;
     
     @Column(name = "cm_signature_datetime", nullable = false, insertable = true, updatable = false)
