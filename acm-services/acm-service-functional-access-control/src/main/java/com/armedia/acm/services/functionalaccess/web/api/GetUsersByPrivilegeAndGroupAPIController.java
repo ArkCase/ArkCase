@@ -1,7 +1,7 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.services.functionalaccess.model.FunctionalAccessConstatns;
+import com.armedia.acm.services.functionalaccess.model.FunctionalAccessConstants;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -120,7 +120,7 @@ public class GetUsersByPrivilegeAndGroupAPIController
             log.debug("Looking for users for privilege '" + privilege + "', group " + group + " plus current assignee '" + currentAssignee + "'");
         }
         
-        if (FunctionalAccessConstatns.ALL_GROUPS.equals(group))
+        if (FunctionalAccessConstants.ALL_GROUPS.equals(group))
         {
         	// This will avoid taking users only for specific group
         	group = null;

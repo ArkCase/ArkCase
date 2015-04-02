@@ -7,7 +7,7 @@ package com.armedia.acm.services.functionalaccess.model;
  * @author riste.tutureski
  *
  */
-public interface FunctionalAccessConstatns {
+public interface FunctionalAccessConstants {
 
 	/**
 	 * All group indicator
