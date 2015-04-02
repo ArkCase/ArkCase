@@ -32,7 +32,6 @@
 </jsp:attribute>
 
 <jsp:body>
-<section id="content">
 <header class="header bg-white b-b clearfix">
     <div class="row m-t-sm">
         <div class="col-sm-12 m-b-xs">
@@ -316,7 +315,6 @@
         </section>
     </section>
 </aside>
-</section>
 </section>
 </jsp:body>
 </t:detail>
