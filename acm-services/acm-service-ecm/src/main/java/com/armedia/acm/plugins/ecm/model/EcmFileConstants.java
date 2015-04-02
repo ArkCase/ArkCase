@@ -32,4 +32,6 @@ public interface EcmFileConstants
 	String MIME_TYPE_XML = "text/xml";
 	String MIME_TYPE_FREVVO_URL = "www.frevvo.com";
 
+    String OBJECT_FILE_TYPE = "FILE";
+
 }
