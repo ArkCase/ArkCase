@@ -24,21 +24,18 @@
 </jsp:attribute>
 
 <jsp:body>
-    <section id="content">
-        <section class="hbox stretch">
-            <aside class="aside-md bg-light dker b-r" id="subNav">
-                <section class="scrollable">
-                    <div class="wrapper">
-                        <button class='btn btn-default btn-sm center-block' type='button' id='generateReport'>Generate Audit Report</button>
-                    </div>
-                </section>
-            </aside>
-            <aside>
-                <iframe src="" name="audit_iframe" style="width:100%; height:100%;" frameborder="0"></iframe>
-            </aside>
-        </section>
+    <section class="hbox stretch">
+        <aside class="aside-md bg-light dker b-r" id="subNav">
+            <section class="scrollable">
+                <div class="wrapper">
+                    <button class='btn btn-default btn-sm center-block' type='button' id='generateReport'>Generate Audit Report</button>
+                </div>
+            </section>
+        </aside>
+        <aside>
+            <iframe src="" name="audit_iframe" style="width:100%; height:100%;" frameborder="0"></iframe>
+        </aside>
     </section>
-
 </jsp:body>
 </t:layout>
 
