@@ -52,6 +52,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 		solr.setState_lcs(in.getState());
 		solr.setAction_lcs(in.getAction());
 		solr.setData_lcs(in.getData());
+        solr.setNotification_type_lcs(in.getType());
 		
 		solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
@@ -79,7 +80,9 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setCreate_tdt(in.getCreated());
         solr.setModifier_s(in.getModifier());
         solr.setLast_modified_tdt(in.getModified());
-        
+
+        solr.setNotification_type_s(in.getType());
+
         solr.setStatus_s(in.getStatus());
 
 		return solr;
