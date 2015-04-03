@@ -3,7 +3,7 @@
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
-      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core"
       version="CE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
@@ -11,9 +11,9 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
 
-    <flow name="renameFile" doc:name="Update the existing file with new version">
+    <flow name="renameFile" doc:name="Rename File">
         <description>
-            The incoming payload is EcmFile that should be updated. The return payload is the updated CMIS document.
+            The incoming payload is EcmFile that should be renamed. The return payload is the renamed CMIS document.
             If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
         </description>
 
@@ -27,16 +27,24 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <timer-interceptor/>
 
-		<enricher target="#[flowVars['object']]">
-		        <cmis:check-out  documentId="#[message.inboundProperties.ecmFileId]"/>
+        <!--//This will return the document content stream-->
+        <enricher target="#[flowVars['stream']]">
+            <cmis:get-content-stream objectId="#[message.inboundProperties.ecmFileId]"/>
+        </enricher>
+
+        <!--//This will return objectId and will create PWC (private working copy of the documenet)-->
+        <enricher target="#[flowVars['object']]">
+		        <cmis:check-out documentId="#[message.inboundProperties.ecmFileId]"/>
 		</enricher>
-		
-		<cmis:check-in filename="#[message.payload['newFileName']"
+
+
+		<!-- This will check-in the PWC of the document into Alfresco with new name and same content-->
+		<cmis:check-in filename="#[message.inboundProperties.newFileName"
 		               documentId="#[flowVars['object'].id]"
-					   content-ref="#[message.inboundProperties.inputStream]" 
-					   checkinComment="Updating file with new version"
+					   content-ref="#[flowVars['stream'].contentStream]"
+					   checkinComment="Renaming file"
 					   major="true"
-					   mimeType="#[message.inboundProperties.mimeType]"/>
+					   mimeType="#[[flowVars['object'].mimeType"/>
 
         <cmis:get-object-by-id objectId="#[payload.id]"/>
 					   

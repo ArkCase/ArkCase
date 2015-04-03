@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="renameFolder" doc:name="Rename Folder">
+        <description>
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://renameFolder.in"
+                exchange-pattern="request-response"
+                doc:name="Rename Folder">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+        <!--<timer-interceptor/>-->
+
+
+        <!--<enricher target="#[flowVars:parentFolderId]">-->
+            <!--<cmis:get-parent-folders objectId="#[message.inboundProperties.acmFolderId]"/>-->
+        <!--</enricher>-->
+
+        <!--<enricher target="#[flowVars:newFolderId]">-->
+            <!--<cmis:create-folder folderName="#[message.inboundProperties.newFolderName]" parentObjectId="[flowVars:parentFolderId]"/>-->
+        <!--</enricher>-->
+
+
+        <!--&lt;!&ndash;Get all cmisObjects in folder that we are going to rename&ndash;&gt;-->
+        <!--<enricher target="#[flowVars:objectsInTheFolder]">-->
+            <!--<cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>-->
+        <!--</enricher>-->
+
+            <!--&lt;!&ndash;Move all folder children objects to the new folder &ndash;&gt;-->
+         <!--<foreach collection="#[flowVars:objectsInTheFolder]">-->
+             <!--<cmis:move-object objectId="#[payload]"-->
+                               <!--sourceFolderId="#[message.inboundProperties.acmFolderId]"-->
+                               <!--targetFolderId="#[flowVars:newFolderId"/>-->
+         <!--</foreach>-->
+
+
+        <cmis:update-object-properties objectId="#[message.inboundProperties.acmFolderId]">
+            <cmis:properties>
+                <cmis:property key="name">
+                    #[message.inboundProperties.newFolderName]
+                </cmis:property>
+            </cmis:properties>
+        </cmis:update-object-properties>
+
+		<catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="updateException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

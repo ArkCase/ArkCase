@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
-public class RenameFileOrFolderAPIController {
+public class RenameFolderAPIController {
 
     private EcmFileService ecmFileService;
 
