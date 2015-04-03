@@ -19,6 +19,7 @@
         <span itemprop="roiFormUrl">${roiFormUrl}</span>
         <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
         <span itemprop="formDocuments">${formDocuments}</span>
+        <span itemprop="fileTypes">${fileTypes}</span>
     </div>
 </jsp:attribute>
 
