@@ -107,6 +107,9 @@ Topbar.Model = {
             }
         }
 
+        ,OBJECT_TYPE      : "NOTIFICATION"
+        ,SORT_ORDER       : "desc"
+        ,SORT_FIELD       : "create_tdt"
         ,STATUS_AUTO     : "Auto"
         ,STATUS_NEW      : "New"
         ,STATUS_UNMARKED : "Unmarked"
