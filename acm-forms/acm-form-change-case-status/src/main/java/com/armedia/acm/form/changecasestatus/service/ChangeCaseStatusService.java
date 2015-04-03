@@ -171,6 +171,10 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 				}
 			}
 		}
+
+		String caseResolutions = (String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".resolutions");
+		List<String> resolutions = convertToList(caseResolutions, ",");
+		changeCaseStatus.setResolutions(resolutions);
 		
 		changeCaseStatus.setInformation(information);
 		changeCaseStatus.setApproverOptions(approverOptions);

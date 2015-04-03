@@ -49,7 +49,7 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 		solr.setName(getTimesheetService().createName(in));
 		solr.setObject_id_s(Long.toString(in.getId()));
 		solr.setObject_type_s(TimesheetConstants.OBJECT_TYPE);
-		solr.setAuthor(in.getUser().getUserId());
+		solr.setAuthor_s(in.getUser().getUserId());
 		solr.setStartDate_s(in.getStartDate());
 		solr.setEndDate_s(in.getEndDate());
 		

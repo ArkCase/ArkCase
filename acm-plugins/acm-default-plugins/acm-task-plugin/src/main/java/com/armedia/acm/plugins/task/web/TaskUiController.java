@@ -44,25 +44,25 @@ public class TaskUiController
         return mv;
     }
 
-    private ModelAndView initModelAndView(ModelAndView mv) {
-        Map<String, Object> props = getPlugin().getPluginProperties();
+    private void addJsonArrayProp(ModelAndView mv, Map<String, Object> props, String propName, String attrName) {
         if (null != props) {
             try {
-                Object propFilter = props.get("search.tree.filter");
-                if (null != propFilter) {
-                    JSONArray treeFilter = new JSONArray(propFilter.toString());
-                    mv.addObject("treeFilter", treeFilter);
-                }
-                Object propSort = props.get("search.tree.sort");
-                if (null != propSort) {
-                    JSONArray treeSort = new JSONArray(propSort.toString());
-                    mv.addObject("treeSort", treeSort);
+                Object prop = props.get(propName);
+                if (null != prop) {
+                    JSONArray ar = new JSONArray(prop.toString());
+                    mv.addObject(attrName, ar);
                 }
 
             } catch (JSONException e) {
                 log.error(e.getMessage());
             }
         }
+    }
+    private ModelAndView initModelAndView(ModelAndView mv) {
+        Map<String, Object> props = getPlugin().getPluginProperties();
+        addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
+        addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
+        addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
 
         //frevvo form URLs
         mv.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));

@@ -41,20 +41,19 @@
 </jsp:attribute>
 
 <jsp:body>
-<section id="content">
-<section class="vbox">
-<section class="scrollable">
+    <section class="vbox">
+        <section class="scrollable">
 
-    <div class="container" ng-app="sample" style="width:100%">
-        <div ng-view />
-    </div>
+            <div class="container" ng-app="sample" style="width:100%">
+                <div ng-view />
+            </div>
 
-<%--</section>--%>
-<footer class="footer bg-white b-t b-light">
-    <p>Powered by ArkCase</p>
-</footer>
-</section>
-</section>
+            <%--</section>--%>
+            <footer class="footer bg-white b-t b-light">
+                <p>Powered by ArkCase</p>
+            </footer>
+        </section>
+    </section>
 </jsp:body>
 </t:layout>
 

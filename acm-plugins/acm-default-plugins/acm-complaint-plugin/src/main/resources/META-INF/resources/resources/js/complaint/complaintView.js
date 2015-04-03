@@ -62,16 +62,49 @@ Complaint.View = Complaint.View || {
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
-            this.formUrls.formDocuments                  = Acm.Object.MicroData.get("formDocuments");
+            this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
+
+            this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    var form =this.fileTypes[i].form;
+                    if (Acm.isNotEmpty(form)) {
+                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
+                        var formDocument = this.findFormDocumentByForm(form);
+                        if (formDocument) {
+                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
+                        }
+                    }
+                }
+            }
 
         }
         ,onInitialized: function() {
         }
-        ,getToken: function() {
-            return this.token;
+
+        ,findFormDocumentByForm: function(form) {
+            var fd = null;
+            if (Acm.isArray(this.formDocuments)) {
+                for (var i = 0; i < this.formDocuments.length; i++) {
+                    if (form == this.formDocuments[i].value) {
+                        fd = this.formDocuments[i];
+                        break;
+                    }
+                }
+            }
+            return fd;
         }
-        ,getFormUrls: function(){
-            return this.formUrls;
+        ,findFileTypeByType: function(type) {
+            var ft = null;
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    if (type == this.fileTypes[i].type) {
+                        ft = this.fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
     }
 
@@ -201,7 +234,36 @@ Complaint.View = Complaint.View || {
         ,onInitialized: function() {
         }
 
+        //---- demo how to use document tree picker ----
+        ,onPickDocumentDemo: function() {
+            DocTree.showDocumentDialog({name: "demoDialog"
+                ,title: "My Dialog Title"
+                ,btnOkText: "Select"
+                ,btnCancelText: "Away"
+                ,folderOnly: false
+                ,onClickBtnPrimary : function(event, ctrl) {
+                    var a1 = DocTree.View.getSelectedNodes();
+
+//                    SearchBase.View.Results.getSelectedRows().each(function () {
+//                        var record = $(this).data('record');
+//
+//                        var z = 1;
+//                        alert("ok");
+//                    });
+                    alert("ok");
+                }
+                ,onClickBtnDefault : function(event, ctrl) {
+                    alert("cancel");
+                }
+            });
+        }
+        //---------------------------------------
+
         ,onClickBtnComplaintClose: function(event, ctrl) {
+//borrow it to test document picker dialog
+//            this.onPickDocumentDemo();
+//            return;
+
             var url = Complaint.View.MicroData.formUrls.closeComplaintFormUrl;
             var c = Complaint.View.getActiveComplaint();
             if (Complaint.Model.Detail.validateComplaint(c) && Acm.isNotEmpty(url)) {
@@ -314,6 +376,7 @@ Complaint.View = Complaint.View || {
                 ,success: function(response, newValue) {
                     Complaint.Controller.viewChangedAssignee(Complaint.View.getActiveComplaintId(), newValue);
                 }
+            	,currentValue: Complaint.Model.Detail.getAssignee(Complaint.View.getActiveComplaint())
             });
         }
         ,onModelRetrievedGroups: function(groups) {
@@ -330,6 +393,7 @@ Complaint.View = Complaint.View || {
                 ,success: function(response, newValue) {
                     Complaint.Controller.viewChangedGroup(Complaint.View.getActiveComplaintId(), newValue);
                 }
+            	,currentValue: Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint())
             });
         }
         ,onModelFoundComplaintTypes: function(complaintTypes) {
@@ -1568,372 +1632,98 @@ Complaint.View = Complaint.View || {
 
     ,Documents:{
         create : function() {
-            this.$divDocuments = $("#divDocuments");
-            this.createJTableDocuments(this.$divDocuments);
-
-            //this.$treeDoc = $("#treeDoc");
-            //this.createTreeDocuments(this.$treeDoc);
-
-
-            this.$btnAddNewDocument = $("#addDocument");
-            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
-
-            this.$formNewDocuments = $("#formAddDocument");
-            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
-
-            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddDocument);
-            this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-            Complaint.View.Documents.fillReportSelection();
-            //AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
-
-
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPLOADED_DOCUMENTS    ,this.onModelUploadedDocuments);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedTreeNode: function(key) {
+            var lastKeyPart = ObjNav.Model.Tree.Key.getLastKeyPart(key);
+            if (Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS == lastKeyPart) {
+                DocTree.View.expandTopNode();
+            }
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            DocTree.Controller.viewChangedParent(nodeType, nodeId);
+        }
+
+        ,uploadForm: function(type, onCloseForm) {
+            var complaintId = Complaint.View.getActiveComplaintId();
+            var complaint = Complaint.View.getActiveComplaint();
+            if (Complaint.Model.Detail.validateComplaint(complaint) )
+            {
+                //var url = Acm.goodValue(Complaint.View.MicroData.formUrls[report]);
+                var url = null;
+                var fileType = Complaint.View.MicroData.findFileTypeByType(type);
+                if (fileType) {
+                    url = Acm.goodValue(fileType.url);
+                }
+                if (Acm.isNotEmpty(url)) {
+                    // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
+                    // the Frevvo form will decode it.
+                    var complaintTitle = Acm.goodValue(complaint.complaintTitle);
+                    complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                }
+            }
+        }
+    }
+
+    ,Documents_JTable_To_Retire:{
+        create : function() {
+//            this.$tree = $("#treeDoc");
+//
+//            this.$divDocuments = $("#divDocuments");
+//            this.createJTableDocuments(this.$divDocuments);
+//
+//            this.$btnAddNewDocument = $("#addDocument");
+//            this.$btnAddNewDocument.on("change", function(e) {Complaint.View.Documents.onChangeFileInput(e, this);});
+//
+//            this.$formNewDocuments = $("#formAddDocument");
+//            this.$formNewDocuments.submit(function(e) {Complaint.View.Documents.onSubmitAddNewDocuments(e, this);});
+//
+//            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddDocument);
+//            this.$spanAddDocument   = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+//            Complaint.View.Documents.fillReportSelection();
+//            //AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments,this.onClickSpanAddNewDocuments);
+
+
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+
+//            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
+//            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_UPLOADED_DOCUMENTS    ,this.onModelUploadedDocuments);
+//            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
 
         }
         ,onInitialized: function() {
         }
 
-        ,CLIPBOARD : null
-        ,createTreeDocuments: function($t) {
-            $t.fancytree({
-
-                extensions: ["table", "gridnav", "edit", "dnd"]
-                ,checkbox: true
-                ,table: {
-                    indentation: 10,      // indent 20px per node level
-                    nodeColumnIdx: 2,     // render the node title into the 2nd column
-                    checkboxColumnIdx: 0  // render the checkboxes into the 1st column
-                }
-                ,gridnav: {
-                    autofocusInput: false,
-                    handleCursorKeys: true
-                }
-                ,renderColumns: function(event, data) {
-                    var node = data.node,
-                        $tdList = $(node.tr).find(">td");
-                    // (index #0 is rendered by fancytree by adding the checkbox)
-                    $tdList.eq(1).text(node.data.id);
-
-
-                    $tdList.eq(3).text(node.data.type);
-                    $tdList.eq(4).text(node.data.created);
-                    $tdList.eq(5).text(node.data.author);
-                    $tdList.eq(6).text(node.data.version);
-                    $tdList.eq(7).text(node.data.status);
-                    $tdList.eq(8).html(node.data.action);
-
-
-
-                    // (index #2 is rendered by fancytree)
-                    //$tdList.eq(3).text(node.key);
-                    //$tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
-                }
-
-                ,source: Complaint.View.Documents.getSource()
-                ,edit: {
-                    triggerStart: ["f2", "dblclick", "shift+click", "mac+enter"]
-                    ,beforeEdit: function(event, data){
-                        // Return false to prevent edit mode
-                    }
-                    ,edit: function(event, data){
-                        // Editor was opened (available as data.input)
-                    }
-                    ,beforeClose: function(event, data){
-                        // Return false to prevent cancel/save (data.input is available)
-                    }
-                    ,save: function(event, data){
-                        // Save data.input.val() or return false to keep editor open
-                        console.log("save...", this, data);
-                        // Simulate to start a slow ajax request...
-                        setTimeout(function(){
-                            $(data.node.span).removeClass("pending");
-                            // Let's pretend the server returned a slightly modified
-                            // title:
-                            data.node.setTitle(data.node.title + "!");
-                        }, 2000);
-                        // We return true, so ext-edit will set the current user input
-                        // as title
-                        return true;
-                    }
-                    ,close: function(event, data){
-                        // Editor was removed
-                        if( data.save ) {
-                            // Since we started an async request, mark the node as preliminary
-                            $(data.node.span).addClass("pending");
-                        }
-                    }
-                }
-                ,dnd: {
-                    autoExpandMS: 400,
-                    focusOnClick: true,
-                    preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
-                    preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
-                    dragStart: function(node, data) {
-//                     This function MUST be defined to enable dragging for the tree.
-//                     Return false to cancel dragging of node.
-
-                        return true;
-                    },
-                    dragEnter: function(node, data) {
-//                     data.otherNode may be null for non-fancytree droppables.
-//                     Return false to disallow dropping on node. In this case
-//                     dragOver and dragLeave are not called.
-//                     Return 'over', 'before, or 'after' to force a hitMode.
-//                     Return ['before', 'after'] to restrict available hitModes.
-//                     Any other return value will calc the hitMode from the cursor position.
-
-//                    // Prevent dropping a parent below another parent (only sort
-//                    // nodes under the same parent)
-//                        if(node.parent !== data.otherNode.parent){
-//                            return false;
-//                        }
-//
-                        if (data.node.folder) {
-                            return true;
-                        } else {
-                            return ["before", "after"];  // Don't allow dropping *over* a document node (would create a child)
-                        }
-                    },
-                    dragDrop: function(node, data) {
-//                     This function MUST be defined to enable dropping of items on the tree.
-
-                        data.otherNode.moveTo(node, data.hitMode);
-                    }
-                }
-
-            }).on("command", Complaint.View.Documents.onCommand)
-            .on("keydown", Complaint.View.Documents.onKeyDown);
-
-            $t.contextmenu({
-                delegate: "span.fancytree-node"
-                ,menu: []
-                ,beforeOpen: function(event, ui) {
-                    var node = $.ui.fancytree.getNode(ui.target);
-                    $t.contextmenu("replaceMenu", Complaint.View.Documents.getContextMenu(node));
-                    $t.contextmenu("enableEntry", "paste", !!Complaint.View.Documents.CLIPBOARD);
-                    node.setActive();
-
-                }
-                ,select: function(event, ui) {
-                    var that = this;
-                    //var node = $.ui.fancytree.getNode(ui.target);
-
-                    // delay the event, so the menu can close and the click event does
-                    // not interfere with the edit control
-                    setTimeout(function(){
-                        $(that).trigger("command", {cmd: ui.cmd});
-                    }, 100);
-                }
-            });
-
-        }
-        ,getSource: function() {
-            var src = [{"id":"root", "title": "/", "expanded": true, "folder": true, "action":"",  "children": [
-                {"id":"f1", "title": "Folder 1", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Subfolder</a></li><li><a href='#'>Add Document</a></li><li><a href='#'>Delete Subfolder</a></li></ul></div>",  "children": [
-                    {"id":"d1", "title": "Document 1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                    {"id":"d2", "title": "Document 2", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                    {"id":"d3", "title": "Document 3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                    {"id":"d4", "title": "Document 4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
-                ]}
-                ,{"id":"f2", "title": "Folder 2", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Subfolder</a></li><li><a href='#'>Add Document</a></li><li><a href='#'>Delete Subfolder</a></li></ul></div>",  "children": [
-                    {"id":"d2.1", "title": "Document 2.1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                    {"id":"f2.2", "title": "Folder 2.2", "folder":true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>", "children": [
-                        {"id":"d2.2.1", "title": "Document 2.2.1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                        {"id":"d2.2.2", "title": "Document 2.2.2", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                        {"id":"d2.2.3", "title": "Document 2.2.3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                        {"id":"d2.2.4", "title": "Document 2.2.4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
-                    ]},
-                    {"id":"d2.3", "title": "Document 2.3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
-                    {"id":"d2.4", "title": "Document 2.4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
-                ]}
-                ]}];
-            return src;
-        }
-        ,onCommand: function(event, data){
-            // Custom event handler that is triggered by keydown-handler and
-            // context menu:
-            var refNode, moveMode,
-                tree = $(this).fancytree("getTree"),
-                node = tree.getActiveNode();
-
-            switch( data.cmd ) {
-                case "moveUp":
-                    refNode = node.getPrevSibling();
-                    if( refNode ) {
-                        node.moveTo(refNode, "before");
-                        node.setActive();
-                    }
-                    break;
-                case "moveDown":
-                    refNode = node.getNextSibling();
-                    if( refNode ) {
-                        node.moveTo(refNode, "after");
-                        node.setActive();
-                    }
-                    break;
-                case "indent":
-                    refNode = node.getPrevSibling();
-                    if( refNode ) {
-                        node.moveTo(refNode, "child");
-                        refNode.setExpanded();
-                        node.setActive();
-                    }
-                    break;
-                case "outdent":
-                    if( !node.isTopLevel() ) {
-                        node.moveTo(node.getParent(), "after");
-                        node.setActive();
-                    }
-                    break;
-                case "rename":
-                    node.editStart();
-                    break;
-                case "remove":
-                    refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                    node.remove();
-                    if( refNode ) {
-                        refNode.setActive();
-                    }
-                    break;
-                case "addChild":
-                    node.editCreateNode("child", "");
-                    break;
-                case "addSibling":
-                    node.editCreateNode("after", "");
-                    break;
-                case "newFolder":
-                    node.editCreateNode("child", "New Folder");
-                    break;
-                case "newDocument":
-                    node.editCreateNode("child", "New Document");
-                    break;
-
-                case "cut":
-                    Complaint.View.Documents.CLIPBOARD = {mode: data.cmd, data: node};
-                    break;
-                case "copy":
-                    Complaint.View.Documents.CLIPBOARD = {
-                        mode: data.cmd,
-                        data: node.toDict(function(n){
-                            delete n.key;
-                        })
-                    };
-                    break;
-                case "clear":
-                    Complaint.View.Documents.CLIPBOARD = null;
-                    break;
-                case "paste":
-                    if( Complaint.View.Documents.CLIPBOARD.mode === "cut" ) {
-                        // refNode = node.getPrevSibling();
-                        Complaint.View.Documents.CLIPBOARD.data.moveTo(node, "child");
-                        Complaint.View.Documents.CLIPBOARD.data.setActive();
-                    } else if( Complaint.View.Documents.CLIPBOARD.mode === "copy" ) {
-                        node.addChildren(Complaint.View.Documents.CLIPBOARD.data).setActive();
-                    }
-                    break;
-                default:
-                    alert("Unhandled command: " + data.cmd);
-                    return;
+        ,onViewSelectedTreeNode: function(key) {
+            var lastKeyPart = ObjNav.Model.Tree.Key.getLastKeyPart(key);
+            if (Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS == lastKeyPart) {
+                DocTree.View.expandTopNode();
             }
         }
-        ,onKeyDown: function(e){
-            var cmd = null;
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            DocTree.Controller.viewChangedParent(nodeType, nodeId);
+        }
 
-            // console.log(e.type, $.ui.fancytree.eventToString(e));
-            switch( $.ui.fancytree.eventToString(e) ) {
-                case "ctrl+shift+n":
-                case "meta+shift+n": // mac: cmd+shift+n
-                    cmd = "addChild";
-                    break;
-                case "ctrl+c":
-                case "meta+c": // mac
-                    cmd = "copy";
-                    break;
-                case "ctrl+v":
-                case "meta+v": // mac
-                    cmd = "paste";
-                    break;
-                case "ctrl+x":
-                case "meta+x": // mac
-                    cmd = "cut";
-                    break;
-                case "ctrl+n":
-                case "meta+n": // mac
-                    cmd = "addSibling";
-                    break;
-                case "del":
-                case "meta+backspace": // mac
-                    cmd = "remove";
-                    break;
-                // case "f2":  // already triggered by ext-edit pluging
-                //   cmd = "rename";
-                //   break;
-                case "ctrl+up":
-                    cmd = "moveUp";
-                    break;
-                case "ctrl+down":
-                    cmd = "moveDown";
-                    break;
-                case "ctrl+right":
-                case "ctrl+shift+right": // mac
-                    cmd = "indent";
-                    break;
-                case "ctrl+left":
-                case "ctrl+shift+left": // mac
-                    cmd = "outdent";
-            }
-            if( cmd ){
-                $(this).trigger("command", {cmd: cmd});
-                // e.preventDefault();
-                // e.stopPropagation();
-                return false;
-            }
-        }
-        ,getContextMenu: function(node) {
-            var menu = [];
-            if (node) {
-                if (node.folder) {
-                    menu = [
-                        {title: "New sibling <kbd>[Ctrl+N]</kbd>", cmd: "addSibling", uiIcon: "ui-icon-plus" }
-                        ,{title: "New child <kbd>[Ctrl+Shift+N]</kbd>", cmd: "addChild", uiIcon: "ui-icon-arrowreturn-1-e" }
-                        ,{title: "New Folder <kbd>[Ctrl+N]</kbd>", cmd: "newFolder", uiIcon: "ui-icon-plus" }
-                        ,{title: "New Document <kbd>[Ctrl+Shift+N]</kbd>", cmd: "newDocument", uiIcon: "ui-icon-arrowreturn-1-e" }
-                        ,{title: "----" }
-                        ,{title: "Rename <kbd>[F2]</kbd>", cmd: "rename", uiIcon: "ui-icon-pencil" }
-                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
-                        ,{title: "----" }
-                        ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
-                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
-                        ,{title: "Paste as child<kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
-                    ];
-                } else {
-                    menu = [
-                        {title: "Rename <kbd>[F2]</kbd>", cmd: "rename", uiIcon: "ui-icon-pencil" }
-                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
-                        ,{title: "----" }
-                        ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
-                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
-                        ,{title: "Paste as child<kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
-                        ,{title: "----" }
-                        ,{title: "Download <kbd>[Del]</kbd>", cmd: "download", uiIcon: "ui-icon-trash" }
-                        ,{title: "Replace <kbd>[Del]</kbd>", cmd: "replace", uiIcon: "ui-icon-trash" }
-                        ,{title: "History <kbd>[Del]</kbd>", cmd: "history", uiIcon: "ui-icon-trash" }
-                    ];
-                }
-            }
-            return menu;
-        }
+
         //----------------------------------------------------------------
+
+
+//        ,onViewSelectedObject: function(nodeType, nodeId) {
+//            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
+//        }
+
         ,onModelRetrievedObject: function(complaint) {
             AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
         }
-        ,onViewSelectedObject: function(nodeType, nodeId) {
-            AcmEx.Object.JTable.load(Complaint.View.Documents.$divDocuments);
-        }
+
         ,onModelUploadedDocuments: function(documents) {
             if (documents.hasError) {
                 Acm.Dialog.info(documents.errorMsg);
@@ -1950,21 +1740,19 @@ Complaint.View = Complaint.View || {
         ,beforeSpanAddDocument: function(html) {
             Complaint.View.Documents.$spanAddDocument.before(html);
         }
-        ,getSelectReport: function() {
-            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
-        }
         ,fillReportSelection: function() {
 
-            try {
-                var formDocuments = JSON.parse(Complaint.View.MicroData.formUrls.formDocuments);
-            }catch(e) {
-
-            }
+//            try {
+//                var formDocuments = JSON.parse(Complaint.View.MicroData.formUrls.formDocuments);
+//            }catch(e) {
+//
+//            }
+            var formDocuments = Complaint.View.MicroData.formDocuments;
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle'>"
                 + "<option value=''>Document Type</option>";
 
-            if (Acm.isNotEmpty(formDocuments) && formDocuments.length > 0) {
+            if (!Acm.isArrayEmpty(formDocuments)) {
                 for (var i = 0; i < formDocuments.length; i ++) {
                     html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
                 }
@@ -1988,34 +1776,35 @@ Complaint.View = Complaint.View || {
         ,getSelectReportText: function() {
             return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
         }
+        ,uploadForm: function(report, onCloseForm) {
+            var complaintId = Complaint.View.getActiveComplaintId();
+            var complaint = Complaint.View.getActiveComplaint();
+            if (Complaint.Model.Detail.validateComplaint(complaint) )
+            {
+                var url = Acm.goodValue(Complaint.View.MicroData.formUrls[report]);
+                if (Acm.isNotEmpty(url)) {
+                    // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
+                    // the Frevvo form will decode it.
+                    var complaintTitle = Acm.goodValue(complaint.complaintTitle);
+                    complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                }
+            }
+        }
         ,onClickSpanAddDocument: function(e) {
             var report = Complaint.View.Documents.getSelectReport();
 
             if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
-
-                var complaintId = Complaint.View.getActiveComplaintId();
-                var complaint = Complaint.View.getActiveComplaint();
-                if (Complaint.Model.Detail.validateComplaint(complaint) )
-                {
-                    var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
-                    if (Acm.isNotEmpty(url)) {
-                        // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
-                        // the Frevvo form will decode it.
-                        var complaintTitle = Acm.goodValue(complaint.complaintTitle);
-                        complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-                        url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
-                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, function() {
-                            Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
-                        });
-                    }
-                }
+                 this.uploadForm(report, function() {
+                     Complaint.Controller.viewClosedAddDocumentWindow(Complaint.View.getActiveComplaintId());
+                 });
             }
             else if(report && report != ""){
                 Complaint.View.Documents.$btnAddNewDocument.click();
             }
         }
         ,onSubmitAddNewDocuments: function(event, ctrl) {
-
              event.preventDefault();
              var count = Complaint.View.Documents.$btnAddNewDocument[0].files.length;
              var report = Complaint.View.Documents.getSelectReportText();
@@ -2736,6 +2525,7 @@ Complaint.View = Complaint.View || {
         ,onModelSavedGroup: function(complaintId, group) {
             if (!group.hasError) {
                 AcmEx.Object.JTable.load(Complaint.View.Participants.$divParticipants);
+                Complaint.Service.Lookup.retrieveAssignees();
             }
         }
         ,onModelModifiedParticipants: function(complaint) {
@@ -2846,7 +2636,8 @@ Complaint.View = Complaint.View || {
 	                    		// This is used only to recognize the * type.
 	                    		return {"*": "*"}
 	                    	}else if (data.dependedValues.type == 'owning group') {
-	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups());
+	                    		var complaintId = Complaint.View.getActiveComplaintId();
+	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups(complaintId));
 	                		} else {
 	                			return Acm.createKeyValueObject(Complaint.Model.Lookup.getUsers());
 	                		}

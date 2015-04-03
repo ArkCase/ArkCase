@@ -23,7 +23,10 @@
 <section class="vbox">
     <section>
         <section class="hbox stretch">
-            <jsp:doBody/>
+            <section id="content">
+                <%@include file="/WEB-INF/tagf/msgBoard.tagf"%>
+                <jsp:doBody/>
+            </section>
         </section>
     </section>
 </section>

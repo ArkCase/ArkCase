@@ -47,6 +47,9 @@
         <property name="costFactory" ref="costFactory"/>
         <property name="searchResults" ref="searchResults"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="timesheetEventPublisher" ref="timesheetEventPublisher"/>
+        <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
+        <property name="functionalAccessService" ref="functionalAccessService"/>
 	</bean>
 
 </beans>

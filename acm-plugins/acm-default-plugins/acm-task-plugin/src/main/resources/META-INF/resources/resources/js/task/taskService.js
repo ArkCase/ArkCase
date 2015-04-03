@@ -14,7 +14,7 @@ Task.Service = {
         if (Task.Service.Notes.create)               {Task.Service.Notes.create();}
         if (Task.Service.History.create)             {Task.Service.History.create();}
         if (Task.Service.WorkflowOverview.create)    {Task.Service.WorkflowOverview.create();}
-        if (Task.Service.Attachments.create)         {Task.Service.Attachments.create();}
+        //if (Task.Service.Attachments.create)         {Task.Service.Attachments.create();}
         if (Task.Service.DocumentUnderReview.create) {Task.Service.DocumentUnderReview.create();}
         if (Task.Service.RejectComments.create)      {Task.Service.RejectComments.create();}
     }
@@ -26,7 +26,7 @@ Task.Service = {
         if (Task.Service.Notes.onInitialized)               {Task.Service.Notes.onInitialized();}
         if (Task.Service.History.onInitialized)             {Task.Service.History.onInitialized();}
         if (Task.Service.WorkflowOverview.onInitialized)    {Task.Service.WorkflowOverview.onInitialized();}
-        if (Task.Service.Attachments.onInitialized)         {Task.Service.Attachments.onInitialized();}
+        //if (Task.Service.Attachments.onInitialized)         {Task.Service.Attachments.onInitialized();}
         if (Task.Service.DocumentUnderReview.onInitialized) {Task.Service.DocumentUnderReview.onInitialized();}
         if (Task.Service.RejectComments.onInitialized)      {Task.Service.RejectComments.onInitialized();}
     }

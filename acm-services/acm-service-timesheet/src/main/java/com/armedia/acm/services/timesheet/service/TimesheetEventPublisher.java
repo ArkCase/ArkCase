@@ -6,6 +6,7 @@ package com.armedia.acm.services.timesheet.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
@@ -15,7 +16,7 @@ import com.armedia.acm.services.timesheet.model.AcmTimesheetEvent;
  * @author riste.tutureski
  *
  */
-public class TimesheetEventPublisher {
+public class TimesheetEventPublisher implements ApplicationEventPublisherAware{
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -34,6 +35,7 @@ public class TimesheetEventPublisher {
 		return applicationEventPublisher;
 	}
 
+	@Override
 	public void setApplicationEventPublisher(
 			ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
