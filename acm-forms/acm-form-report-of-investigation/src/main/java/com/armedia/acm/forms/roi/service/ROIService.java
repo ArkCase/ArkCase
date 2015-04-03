@@ -3,15 +3,21 @@
  */
 package com.armedia.acm.forms.roi.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +45,7 @@ public class ROIService extends FrevvoFormAbstractService {
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
 	private UserActionDao userActionDao;
+	private ApplicationEventPublisher applicationEventPublisher;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -80,6 +87,8 @@ public class ROIService extends FrevvoFormAbstractService {
 		}
 		
 		String type = roiForm.getReportDetails().getType();
+		String forObjectType = null;
+		String forObjectNumber = null;
 		
 		if ("complaint".equals(type)){
 			Complaint complaint = complaintDao.find(roiForm.getReportDetails().getComplaintId());
@@ -88,6 +97,9 @@ public class ROIService extends FrevvoFormAbstractService {
 				LOG.warn("Cannot find complaint by given complaintId=" + roiForm.getReportDetails().getComplaintId());
 				return false;
 			}
+
+			forObjectType = "Complaint";
+			forObjectNumber = complaint.getComplaintNumber();
 			
 			cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
@@ -103,6 +115,9 @@ public class ROIService extends FrevvoFormAbstractService {
 				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
 				return false;
 			}
+			forObjectType = "Case File";
+			forObjectNumber = caseFile.getCaseNumber();
+
             cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
@@ -111,7 +126,12 @@ public class ROIService extends FrevvoFormAbstractService {
 			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
-		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
+		FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
+
+		ReportOfInvestigationFormEvent event = new ReportOfInvestigationFormEvent(forObjectType, forObjectNumber,
+				roiForm, uploadedFiles, getAuthentication().getName(), getUserIpAddress(), true);
+
+		getApplicationEventPublisher().publishEvent(event);
 		
 		return true;
 	}
@@ -129,6 +149,24 @@ public class ROIService extends FrevvoFormAbstractService {
 		reportInformation.setDate(new Date());
 		
 		roiForm.setReportInformation(reportInformation);
+
+		// Get Approvers
+		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
+
+		List<String> approverOptions = new ArrayList<String>();
+		if (acmUsers != null && acmUsers.size() > 0)
+		{
+			for (AcmUser acmUser : acmUsers)
+			{
+				// Add only users that are not the logged user
+				if (!acmUser.getUserId().equals(getAuthentication().getName()) )
+				{
+					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
+				}
+			}
+		}
+
+		roiForm.setApproverOptions(approverOptions);
 		
 		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 		String jsonString = gson.toJson(roiForm);
@@ -138,7 +176,17 @@ public class ROIService extends FrevvoFormAbstractService {
 		return json;
 	}
 
-    @Override
+	public ApplicationEventPublisher getApplicationEventPublisher()
+	{
+		return applicationEventPublisher;
+	}
+
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+	{
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	@Override
     public String getFormName()
     {
         return FrevvoFormName.ROI;
