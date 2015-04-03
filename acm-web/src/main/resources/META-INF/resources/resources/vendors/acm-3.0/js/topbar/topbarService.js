@@ -49,24 +49,30 @@ Topbar.Service = {
         }
 
         //,API_RETRIEVE_ASN_LIST_       : "/resources/asn.json"
-        ,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
+        //,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
+        //for now we need 5 recent notifications in descending order by date
+        ,API_RETRIEVE_ASN_LIST_       : "/api/v1/plugin/search/quickSearch"
         ,API_SAVE_ASN                 : "/api/latest/plugin/notification"
         ,API_DELETE_ASN_              : "/api/latest/plugin/notification/"
 
-        ,retrieveAsnList: function(user) {
+        ,retrieveAsnList: function(user,n) {
+            var url = App.getContextPath() + this.API_RETRIEVE_ASN_LIST_;
+            url+= "?q=" + Topbar.Model.Asn.OBJECT_TYPE;
+            url+= "&n=" + n;
+            url+= "&s=" + Topbar.Model.Asn.SORT_FIELD + " " + Topbar.Model.Asn.SORT_ORDER;
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
                         Topbar.Controller.Asn.modelRetrievedAsnList(response);
                     } else {
-                        if (Topbar.Model.Asn.validateAsnList(response)) {
-                            var asnList = response;
+                        if (Acm.Validator.validateSolrData(response)) {
+                            var asnList = response.response.docs;
                             Topbar.Model.Asn.setAsnList(asnList);
                             Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
                         }
                     }
                 }
-                ,App.getContextPath() + this.API_RETRIEVE_ASN_LIST_ + user
+                ,url
             )
         }
 

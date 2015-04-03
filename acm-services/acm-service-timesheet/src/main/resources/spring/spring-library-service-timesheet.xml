@@ -38,6 +38,8 @@
 		<property name="startWorkflowEvents" ref="startWorkflowEventsForTimesheet" />
 	</bean>
 	
+	<bean id="timesheetEventPublisher" class="com.armedia.acm.services.timesheet.service.TimesheetEventPublisher" />
+	
 	<bean id="timesheetWorkflowListener" class="com.armedia.acm.services.timesheet.service.TimesheetWorkflowListener">
 		<property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
 		<property name="activitiRuntimeService" ref="activitiRuntimeService"/>

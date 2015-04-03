@@ -21,6 +21,12 @@ var Task = Task || {
             });
         }
 
+        if (DocTree.create) {
+            DocTree.create({name: "task"
+                ,fileTypes: Task.View.MicroData.fileTypes
+            });
+        }
+
         if (SubscriptionOp.create) {
             SubscriptionOp.create({
                 getSubscriptionInfo: function() {

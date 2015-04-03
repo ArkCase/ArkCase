@@ -56,8 +56,49 @@ Task.View = Task.View || {
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.changeCaseStatusFormUrl        = Acm.Object.MicroData.get("changeCaseStatusFormUrl");
+
+            this.formDocuments = [];
+
+            this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    var form =this.fileTypes[i].form;
+                    if (Acm.isNotEmpty(form)) {
+                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
+                        var formDocument = this.findFormDocumentByForm(form);
+                        if (formDocument) {
+                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
+                        }
+                    }
+                }
+            }
         }
         ,onInitialized: function() {
+        }
+
+        ,findFormDocumentByForm: function(form) {
+            var fd = null;
+            if (Acm.isArray(this.formDocuments)) {
+                for (var i = 0; i < this.formDocuments.length; i++) {
+                    if (form == this.formDocuments[i].value) {
+                        fd = this.formDocuments[i];
+                        break;
+                    }
+                }
+            }
+            return fd;
+        }
+        ,findFileTypeByType: function(type) {
+            var ft = null;
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    if (type == this.fileTypes[i].type) {
+                        ft = this.fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
 
     }
@@ -289,7 +330,6 @@ Task.View = Task.View || {
             Acm.Object.setText(this.$lnkParentObjSubjectType, txt);
         }
     }
-
 
     ,Action: {
         create: function() {
@@ -1597,7 +1637,25 @@ Task.View = Task.View || {
         }
     }
 
-    ,Attachments:{
+    ,Attachments: {
+        create: function() {
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedTreeNode: function(key) {
+            var lastKeyPart = ObjNav.Model.Tree.Key.getLastKeyPart(key);
+            if (Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS == lastKeyPart) {
+                DocTree.View.expandTopNode();
+            }
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            DocTree.Controller.viewChangedParent(Task.Model.DOC_TYPE_TASK, nodeId);
+        }
+    }
+    ,Attachments_JTable_To_Retire:{
         create : function() {
             this.$divAttachments = $("#divAttachments");
             this.createJTableAttachments(this.$divAttachments);

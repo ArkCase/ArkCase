@@ -13,7 +13,7 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.create)                {Complaint.Model.Action.create();}
         if (Complaint.Model.Detail.create)                {Complaint.Model.Detail.create();}
         if (Complaint.Model.People.create)                {Complaint.Model.People.create();}
-        if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
+        //if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
         if (Complaint.Model.Notes.create)                 {Complaint.Model.Notes.create();}
         if (Complaint.Model.References.create)            {Complaint.Model.References.create();}
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
@@ -31,7 +31,7 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.onInitialized)         {Complaint.Model.Action.onInitialized();}
         if (Complaint.Model.Detail.onInitialized)         {Complaint.Model.Detail.onInitialized();}
         if (Complaint.Model.People.onInitialized)         {Complaint.Model.People.onInitialized();}
-        if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
+        //if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
         if (Complaint.Model.Notes.onInitialized)          {Complaint.Model.Notes.onInitialized();}
         if (Complaint.Model.References.onInitialized)     {Complaint.Model.References.onInitialized();}
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
@@ -523,8 +523,10 @@ Complaint.Model = Complaint.Model || {
 
     }
 
-    ,Documents: {
+    ,Documents_JTable_To_Retire: {
         create : function() {
+            this.cacheTree = new Acm.Model.CacheFifo();
+
             this.cacheDocuments = new Acm.Model.CacheFifo();
             
             Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);
@@ -859,19 +861,25 @@ Complaint.Model = Complaint.Model || {
 
     ,Lookup: {
         create: function() {
-            this._assignees      = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_ASSIGNEES);
+        	this._assignees    =  new Acm.Model.CacheFifo();
             this._complaintTypes = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_TYPES);
             this._priorities     = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_PRIORITIES);
-            this._groups    	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_GROUPS);
+            this._groups    =  new Acm.Model.CacheFifo();
             this._users    	 	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_USERS);
+            
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
-            var assignees = Complaint.Model.Lookup.getAssignees();
+        	// Do not do getAssignees() here. It should call after the object is loaded.
+        	// This will help in the first loading to be retrieved correct users
+        	// The place for calling this now is onModelRetrievedObject(...) in this file
+            /*var assignees = Complaint.Model.Lookup.getAssignees();
             if (Acm.isEmpty(assignees)) {
                 Complaint.Service.Lookup.retrieveAssignees();
             } else {
                 Complaint.Controller.modelFoundAssignees(assignees);
-            }
+            }*/
 
             var complaintTypes = Complaint.Model.Lookup.getComplaintTypes();
             if (Acm.isEmpty(complaintTypes)) {
@@ -887,12 +895,15 @@ Complaint.Model = Complaint.Model || {
                 Complaint.Controller.modelFoundPriorities(priorities);
             }
             
-            var groups = Complaint.Model.Lookup.getGroups();
+            // Do not do getGroups() here. It should call after the object is loaded.
+        	// This will help in the first loading to be retrieved correct groups
+        	// The place for calling this now is onModelRetrievedObject(...) in this file
+            /*var groups = Complaint.Model.Lookup.getGroups();
             if (Acm.isEmpty(groups)) {
             	Complaint.Service.Lookup.retrieveGroups();
             } else {
             	Complaint.Controller.modelRetrievedGroups(groups);
-            }
+            }*/
             
             var users = Complaint.Model.Lookup.getUsers();
             if (Acm.isEmpty(users)) {
@@ -908,11 +919,11 @@ Complaint.Model = Complaint.Model || {
         ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
         ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
-        ,getAssignees: function() {
-            return this._assignees.get();
+        ,getAssignees: function(complaintId) {
+            return this._assignees.get(complaintId);
         }
-        ,setAssignees: function(assignees) {
-            this._assignees.set(assignees);
+        ,setAssignees: function(complaintId, assignees) {
+            this._assignees.put(complaintId, assignees);
         }
         ,getComplaintTypes: function() {
             return this._complaintTypes.get();
@@ -926,11 +937,11 @@ Complaint.Model = Complaint.Model || {
         ,setPriorities: function(priorities) {
             this._priorities.set(priorities);
         }
-        ,getGroups: function() {
-            return this._groups.get();
+        ,getGroups: function(complaintId) {
+            return this._groups.get(complaintId);
         }
-        ,setGroups: function(groups) {
-            this._groups.set(groups);
+        ,setGroups: function(complaintId, groups) {
+            this._groups.put(complaintId, groups);
         }
         ,getUsers: function() {
             return this._users.get();
@@ -978,6 +989,32 @@ Complaint.Model = Complaint.Model || {
         ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
         ,getParticipantTypes : function() {
             return this._participantTypes;
+        }
+        
+        ,onModelRetrievedObject: function(objData) {
+        	Complaint.Model.Lookup.refreshAssigneesAndGroups();
+        }
+        
+        ,onViewSelectedObject: function(objType, objId) {
+        	Complaint.Model.Lookup.refreshAssigneesAndGroups();
+        }
+        
+        ,refreshAssigneesAndGroups: function() {
+        	var complaintId = Complaint.View.getActiveComplaintId();
+        	
+        	var assignees = Complaint.Model.Lookup.getAssignees(complaintId);
+            if (Acm.isEmpty(assignees)) {
+            	Complaint.Service.Lookup.retrieveAssignees();
+            } else {
+            	Complaint.Controller.modelFoundAssignees(assignees);
+            }
+            
+            var groups = Complaint.Model.Lookup.getGroups(complaintId);
+            if (Acm.isEmpty(groups)) {
+            	Complaint.Service.Lookup.retrieveGroups();
+            } else {
+            	Complaint.Controller.modelRetrievedGroups(groups);
+            }
         }
 
     }

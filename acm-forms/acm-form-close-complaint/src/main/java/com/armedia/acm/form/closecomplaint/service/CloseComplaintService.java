@@ -6,10 +6,13 @@ package com.armedia.acm.form.closecomplaint.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
@@ -31,6 +34,9 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
@@ -47,6 +53,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
 	private ApplicationEventPublisher applicationEventPublisher;
+	private AcmPluginManager acmPluginManager;
+	private FunctionalAccessService functionalAccessService;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -174,15 +182,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
 
 		// Get Approvers
-		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
+		String privilege = (String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".approve.privilege");
+		
+		List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
+		Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+		
+		// Get owning group
+		String group = getOwningGroup();
+		
+		Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
+        
+		List<AcmUser> acmUsers = new ArrayList<>(usersSet);
 		
 		List<String> approverOptions = new ArrayList<String>();
 		if (acmUsers != null && acmUsers.size() > 0){
 			for (AcmUser acmUser : acmUsers) {
-				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "edit".equals(mode)){
-					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-				}
+				approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
 			}
 		}
 		
@@ -205,6 +220,36 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		JSONObject json = new JSONObject(jsonString);
 
 		return json;
+	}
+	
+	private String getOwningGroup()
+	{
+		String complaintIdString = getRequest().getParameter("complaintId");
+		if (complaintIdString != null && !complaintIdString.isEmpty())
+		{
+			try
+			{
+				Long complaintId = Long.parseLong(complaintIdString);
+				Complaint complaint = getComplaintDao().find(complaintId);
+				
+				if (complaint != null && complaint.getParticipants() != null)
+				{
+					for (AcmParticipant participant : complaint.getParticipants())
+					{
+						if ("owning group".equals(participant.getParticipantType()))
+						{
+							return participant.getParticipantLdapId();
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				LOG.warn("Cannot retrieve Complaint. The users for all groups will be returned.");
+			}
+		}
+		
+		return null;
 	}
 	
 	private Object searchApprovers(String keyword){
@@ -319,5 +364,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
 		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
+	}
+
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
 	}
 }

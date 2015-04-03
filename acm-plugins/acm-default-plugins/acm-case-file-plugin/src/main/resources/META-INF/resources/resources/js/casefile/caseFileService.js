@@ -10,7 +10,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Lookup.create) {CaseFile.Service.Lookup.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
         if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
-        if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
+        //if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
@@ -22,7 +22,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Lookup.onInitialized) {CaseFile.Service.Lookup.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
         if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
-        if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
+        //if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
@@ -53,11 +53,20 @@ CaseFile.Service = {
             return true;
         }
         ,retrieveAssignees : function() {
-        	var groupGetParameter = '';
-        	var groupName = CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile());
-        	if (groupName && groupName.length > 0) {
-        		groupGetParameter = '/' + groupName;
+        	var caseFile = CaseFile.View.getActiveCaseFile();
+        	if (caseFile == null) {
+        		return null;
         	}
+        	
+        	var groupGetParameter = CaseFile.Service.Lookup._createGroupGetParameter(caseFile);
+        	var currentAssigneeGetParameter = CaseFile.Service.Lookup._createCurrentAssigneeGetParameter(caseFile);
+        	
+        	if (currentAssigneeGetParameter !== '' && groupGetParameter === '') {
+        		// only if current assignee is not empty but the group is empty, then add /* for group, to be able to
+        		// rich the required request method and return all users
+        		groupGetParameter = '/*'
+        	}
+        	
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
@@ -66,14 +75,33 @@ CaseFile.Service = {
                     } else {
                         if (CaseFile.Service.Lookup._validateAssignees(response)) {
                             var assignees = response;
-                            CaseFile.Model.Lookup.setAssignees(assignees);
+                            CaseFile.Model.Lookup.setAssignees(CaseFile.View.getActiveCaseFileId(), assignees);
                             CaseFile.Controller.modelFoundAssignees(assignees);
                         }
                         return assignees;
                     }
                 }
-                ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter
+                ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter + currentAssigneeGetParameter
             )
+        }
+        
+        ,_createGroupGetParameter: function(caseFile){
+        	var groupGetParameter = '';
+        	var groupName = CaseFile.Model.Detail.getGroup(caseFile);
+        	if (groupName && groupName.length > 0) {
+        		groupGetParameter = '/' + groupName;
+        	}
+        	
+        	return groupGetParameter;
+        }
+        ,_createCurrentAssigneeGetParameter: function(caseFile){
+        	var currentAssigneeGetParameter = '';
+        	var currentAssignee = CaseFile.Model.Detail.getAssignee(caseFile);
+        	if (currentAssignee && currentAssignee.length > 0) {
+        		currentAssigneeGetParameter = '/' + currentAssignee;
+        	}
+        	
+        	return currentAssigneeGetParameter;
         }
 
         ,_validateSubjectTypes: function(data) {
@@ -138,7 +166,7 @@ CaseFile.Service = {
                     } else {
                         if (response.response && response.response.docs && CaseFile.Service.Lookup._validateGroups(response.response.docs)) {
                             var groups = response.response.docs;
-                            CaseFile.Model.Lookup.setGroups(groups);
+                            CaseFile.Model.Lookup.setGroups(CaseFile.View.getActiveCaseFileId(), groups);
                             CaseFile.Controller.modelRetrievedGroups(groups);
                         }
                     }
@@ -1042,7 +1070,7 @@ CaseFile.Service = {
         }
     }
 
-    ,Documents: {
+    ,Documents_JTable_Retire: {
         create: function() {
         }
         ,onInitialized: function() {
