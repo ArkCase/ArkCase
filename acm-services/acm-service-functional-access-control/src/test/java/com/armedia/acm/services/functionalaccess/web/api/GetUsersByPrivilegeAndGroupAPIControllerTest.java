@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -54,10 +56,13 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 	private MockMvc mockMvc;
 	private GetUsersByPrivilegeAndGroupAPIController unit;
 	private Authentication mockAuthentication;
-	private FunctionalAccessService mockFunctionalAccessService;
+	private FunctionalAccessServiceImpl functionalAccessService;
 	private AcmPluginManager mockPluginManager;
 	private UserDao mockUserDao;
 	private AcmGroupDao mockAcmGroupDao;
+	
+	@Resource(name="applicationRolesToGroupsTestData")
+	private Map<String, String> applicationRolesToGroupsTestData;
 	
 	@Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -68,23 +73,24 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		unit = new GetUsersByPrivilegeAndGroupAPIController();
 		mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 		mockAuthentication = createMock(Authentication.class);
-		mockFunctionalAccessService = createMock(FunctionalAccessService.class);
 		mockPluginManager = createMock(AcmPluginManager.class);
 		mockUserDao = createMock(UserDao.class);
 		mockAcmGroupDao = createMock(AcmGroupDao.class);
 		
-		unit.setFunctionalAccessService(mockFunctionalAccessService);
+		functionalAccessService = new FunctionalAccessServiceImpl();
+		unit.setFunctionalAccessService(functionalAccessService);
 		unit.setPluginManager(mockPluginManager);
-		unit.setUserDao(mockUserDao);
-		unit.setAcmGroupDao(mockAcmGroupDao);
+		functionalAccessService.setUserDao(mockUserDao);
+		functionalAccessService.setAcmGroupDao(mockAcmGroupDao);
+		functionalAccessService.setApplicationRolesToGroupsProperties(applicationRolesToGroupsTestData);
     }
 	
 	@Test
     public void usersByPrivilegeTest() throws Exception {
 		
 		String privilege = "acm-privilege";
-		String role1 = "ROLE1";
-		String role2 = "ROLE2";
+		String role1 = "ROLE_ADMINISTRATOR";
+		String role2 = "ROLE_INVESTIGATOR_SUPERVISOR";
 		
 		
 		
@@ -101,7 +107,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup1.addAll(Arrays.asList(user1, user2));
 		
 		AcmGroup group1 = new AcmGroup();
-		group1.setName("GROUP1");
+		group1.setName("acm_administrator_dev");
 		group1.setMembers(membersGroup1);
 		
 		
@@ -119,7 +125,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup2.addAll(Arrays.asList(user3, user4));
 		
 		AcmGroup group2 = new AcmGroup();
-		group2.setName("GROUP2");
+		group2.setName("acm_supervisor_dev");
 		group2.setMembers(membersGroup2);
 		
 		
@@ -141,7 +147,6 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		expect(mockAuthentication.getName()).andReturn("user");
 		expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
-		expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
 		expect(mockAcmGroupDao.findByName(group1.getName())).andReturn(group1);
 		expect(mockAcmGroupDao.findByName(group2.getName())).andReturn(group2);
 		
@@ -175,8 +180,8 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
     public void usersByPrivilegeAndGroupTest() throws Exception {
 		
 		String privilege = "acm-privilege";
-		String role1 = "ROLE1";
-		String role2 = "ROLE2";
+		String role1 = "ROLE_ADMINISTRATOR";
+		String role2 = "ROLE_INVESTIGATOR_SUPERVISOR";
 		
 		
 		
@@ -193,7 +198,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup1.addAll(Arrays.asList(user1, user2));
 		
 		AcmGroup group1 = new AcmGroup();
-		group1.setName("GROUP1");
+		group1.setName("acm_administrator_dev");
 		group1.setMembers(membersGroup1);
 		
 		
@@ -211,7 +216,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup2.addAll(Arrays.asList(user3, user4));
 		
 		AcmGroup group2 = new AcmGroup();
-		group2.setName("GROUP2");
+		group2.setName("acm_supervisor_dev");
 		group2.setMembers(membersGroup2);
 		
 		
@@ -233,7 +238,6 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		expect(mockAuthentication.getName()).andReturn("user");
 		expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
-		expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
 		expect(mockAcmGroupDao.findByName(group1.getName())).andReturn(group1);
 		
 		replayAll();
@@ -264,8 +268,8 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
     public void usersByPrivilegeAndGroupPlusCurrentAssigneeTest() throws Exception {
 		
 		String privilege = "acm-privilege";
-		String role1 = "ROLE1";
-		String role2 = "ROLE2";
+		String role1 = "ROLE_ADMINISTRATOR";
+		String role2 = "ROLE_INVESTIGATOR_SUPERVISOR";
 		
 		
 		// Current assignee
@@ -285,7 +289,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup1.addAll(Arrays.asList(user1, user2));
 		
 		AcmGroup group1 = new AcmGroup();
-		group1.setName("GROUP1");
+		group1.setName("acm_administrator_dev");
 		group1.setMembers(membersGroup1);
 		
 		
@@ -303,7 +307,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup2.addAll(Arrays.asList(user3, user4));
 		
 		AcmGroup group2 = new AcmGroup();
-		group2.setName("GROUP2");
+		group2.setName("acm_supervisor_dev");
 		group2.setMembers(membersGroup2);
 		
 		
@@ -325,7 +329,6 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		expect(mockAuthentication.getName()).andReturn("user");
 		expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
-		expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
 		expect(mockAcmGroupDao.findByName(group1.getName())).andReturn(group1);
 		expect(mockUserDao.findByUserId(currentAssignee.getUserId())).andReturn(currentAssignee);
 		
@@ -358,8 +361,8 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
     public void usersByPrivilegeAndAllGroupsPlusCurrentAssigneeTest() throws Exception {
 		
 		String privilege = "acm-privilege";
-		String role1 = "ROLE1";
-		String role2 = "ROLE2";
+		String role1 = "ROLE_ADMINISTRATOR";
+		String role2 = "ROLE_INVESTIGATOR_SUPERVISOR";
 		
 		
 		// Current assignee
@@ -379,7 +382,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup1.addAll(Arrays.asList(user1, user2));
 		
 		AcmGroup group1 = new AcmGroup();
-		group1.setName("GROUP1");
+		group1.setName("acm_administrator_dev");
 		group1.setMembers(membersGroup1);
 		
 		
@@ -397,7 +400,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		membersGroup2.addAll(Arrays.asList(user3, user4));
 		
 		AcmGroup group2 = new AcmGroup();
-		group2.setName("GROUP2");
+		group2.setName("acm_supervisor_dev");
 		group2.setMembers(membersGroup2);
 		
 		
@@ -419,7 +422,6 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		expect(mockAuthentication.getName()).andReturn("user");
 		expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
-		expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
 		expect(mockAcmGroupDao.findByName(group1.getName())).andReturn(group1);
 		expect(mockAcmGroupDao.findByName(group2.getName())).andReturn(group2);
 		expect(mockUserDao.findByUserId(currentAssignee.getUserId())).andReturn(currentAssignee);
