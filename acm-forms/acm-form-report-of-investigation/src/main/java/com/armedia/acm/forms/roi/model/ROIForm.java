@@ -1,10 +1,18 @@
 package com.armedia.acm.forms.roi.model;
 
+import com.armedia.acm.form.config.Item;
+import com.armedia.acm.form.config.xml.ApproverItem;
+
+import javax.xml.bind.annotation.XmlElement;
+import java.util.List;
+
 public class ROIForm {
 	
 	private ReportInformation reportInformation;
 	private ReportDetails reportDetails;
-	
+	private List<Item> approvers;
+	private List<String> approverOptions;
+
 	/**
 	 * @return the reportInformation
 	 */
@@ -32,6 +40,24 @@ public class ROIForm {
 	public void setReportDetails(ReportDetails reportDetails) {
 		this.reportDetails = reportDetails;
 	}
-	
-	
+
+	@XmlElement(name="approverItem", type=ApproverItem.class)
+	public List<Item> getApprovers() {
+		return approvers;
+	}
+
+	public void setApprovers(List<Item> approvers)
+	{
+		this.approvers = approvers;
+	}
+
+	public void setApproverOptions(List<String> approverOptions)
+	{
+		this.approverOptions = approverOptions;
+	}
+
+	public List<String> getApproverOptions()
+	{
+		return approverOptions;
+	}
 }

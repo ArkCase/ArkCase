@@ -114,11 +114,11 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelRetrievedUsers: function(users) {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_USERS, users);
     }
-    
-    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "case-view-closed-add-document-window"
-	,viewClosedAddDocumentWindow: function(caseFileId) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, caseFileId);
-    }
+//to retire
+//    ,VIEW_CLOSED_ADD_DOCUMENT_WINDOW                 : "case-view-closed-add-document-window"
+//	,viewClosedAddDocumentWindow: function(caseFileId) {
+//        Acm.Dispatcher.fireEvent(this.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, caseFileId);
+//    }
 
 
     ,MODEL_SAVED_CHILD_OBJECT              : "case-model-saved-childObject"            //param: caseFileId, childObject

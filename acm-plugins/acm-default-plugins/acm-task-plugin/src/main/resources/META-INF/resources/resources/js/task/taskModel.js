@@ -15,7 +15,7 @@ Task.Model = Task.Model || {
         if (Task.Model.Notes.create)                                {Task.Model.Notes.create();}
         if (Task.Model.History.create)                              {Task.Model.History.create();}
         if (Task.Model.WorkflowOverview.create)                     {Task.Model.WorkflowOverview.create();}
-        if (Task.Model.Attachments.create)                          {Task.Model.Attachments.create();}
+        //if (Task.Model.Attachments.create)                          {Task.Model.Attachments.create();}
         if (Task.Model.DocumentUnderReview.create)                  {Task.Model.DocumentUnderReview.create();}
         if (Task.Model.RejectComments.create)                       {Task.Model.RejectComments.create();}
     }
@@ -30,7 +30,7 @@ Task.Model = Task.Model || {
         if (Task.Model.Notes.onInitialized)                         {Task.Model.Notes.onInitialized();}
         if (Task.Model.History.onInitialized)                       {Task.Model.History.onInitialized();}
         if (Task.Model.WorkflowOverview.onInitialized)              {Task.Model.WorkflowOverview.onInitialized();}
-        if (Task.Model.Attachments.onInitialized)                   {Task.Model.Attachments.onInitialized();}
+        //if (Task.Model.Attachments.onInitialized)                   {Task.Model.Attachments.onInitialized();}
         if (Task.Model.DocumentUnderReview.onInitialized)           {Task.Model.DocumentUnderReview.onInitialized();}
         if (Task.Model.RejectComments.onInitialized)                {Task.Model.RejectComments.onInitialized();}
     }
