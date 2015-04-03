@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_file")
-public class EcmFile implements AcmEntity, Serializable, AcmObject
+public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity
 {
     private static final long serialVersionUID = -5177153023458655846L;
     private static final String OBJECT_TYPE = "FILE";
@@ -122,11 +123,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject
         this.fileId = fileId;
     }
 
+    @Override
     public String getStatus()
     {
         return status;
     }
 
+    @Override
     public void setStatus(String status)
     {
         this.status = status;

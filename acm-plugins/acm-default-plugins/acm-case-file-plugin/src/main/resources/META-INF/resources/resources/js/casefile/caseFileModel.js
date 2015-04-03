@@ -7,7 +7,7 @@ CaseFile.Model = CaseFile.Model || {
     create : function() {
         if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
-        if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
+        //if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
         if (CaseFile.Model.People.create)         {CaseFile.Model.People.create();}
         if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
@@ -27,7 +27,7 @@ CaseFile.Model = CaseFile.Model || {
     ,onInitialized: function() {
         if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
-        if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
+        //if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
         if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
         if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
         if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
@@ -560,7 +560,7 @@ CaseFile.Model = CaseFile.Model || {
             CaseFile.Service.Tasks.retrieveTask();
         }
     }
-    ,Documents: {
+    ,Documents_JTable_To_Retire: {
         create : function() {
             this.cacheDocuments = new Acm.Model.CacheFifo(4);
         	

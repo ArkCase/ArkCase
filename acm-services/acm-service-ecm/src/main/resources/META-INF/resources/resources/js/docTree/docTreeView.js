@@ -14,6 +14,7 @@ DocTree.View = DocTree.View || {
         this.fileTypes  = args.fileTypes;
         this.formTypes  = args.formTypes;
         this.doUploadForm = args.uploadForm;
+        this.docSubMenu = this.makeDocSubMenu(this.formTypes, this.fileTypes);
 
         this.$formDownloadDoc = (args.$formDownloadDoc)? args.$formDownloadDoc : $("#formDownloadDoc");
         this.$formUploadDoc   = (args.$formUploadDoc)  ? args.$formUploadDoc   : $("#formUploadDoc");
@@ -46,9 +47,11 @@ DocTree.View = DocTree.View || {
     ,uploadForm: function(node, formType) {
         DocTree.View.uploadToFolderNode = node;
         DocTree.View.uploadFileType = formType;
-        DocTree.View.doUploadForm(formType, function() {
-            DocTree.View.onLoadingFrevvoForm();
-        });
+        if (DocTree.View.doUploadForm) {
+            DocTree.View.doUploadForm(formType, function() {
+                DocTree.View.onLoadingFrevvoForm();
+            });
+        }
     }
 
     ,_addFileNode: function(folderNode, name, type) {
@@ -466,8 +469,8 @@ DocTree.View = DocTree.View || {
     }
     ,source: function() {
         var src = [];
-        var containerObjectType = (this.parentType)? this.parentType : ObjNav.View.Navigator.getActiveObjType();
-        var containerObjectId   = (this.parentId)  ? this.parentId   : ObjNav.View.Navigator.getActiveObjId();
+        var containerObjectType = (this.parentType)? this.parentType : DocTree.Model.getObjType();
+        var containerObjectId   = (this.parentId)  ? this.parentId   : DocTree.Model.getObjId();
         if (Acm.isNotEmpty(containerObjectType) && Acm.isNotEmpty(containerObjectId)) {
             src = AcmEx.FancyTreeBuilder
                 .reset()
@@ -871,17 +874,7 @@ DocTree.View = DocTree.View || {
             if (node.data.root) {
                 menu = [
                     {title: "New Folder <kbd>[Ctrl+N]</kbd>", cmd: "newFolder", uiIcon: "ui-icon-plus" }
-                    ,{title: "New Document</kbd>", children:[
-                        {title: "Electronic Communication", cmd: "form/electronicCommunicationFormUrl"}
-                        ,{title: "Report of Investigation", cmd: "form/roiFormUrl"}
-                        ,{title: "Medical Release", cmd: "file/mr"}
-                        ,{title: "General Release", cmd: "file/gr"}
-                        ,{title: "eDelivery", cmd: "file/ev"}
-                        ,{title: "SF86 Signature", cmd: "file/sig"}
-                        ,{title: "Notice of Investigation", cmd: "file/noi"}
-                        ,{title: "Witness Interview Request", cmd: "file/wir"}
-                        ,{title: "Other", cmd: "file/other"}
-                    ]}
+                    ,{title: "New Document</kbd>", children: DocTree.View.docSubMenu}
                     ,{title: "----" }
                     ,{title: "Paste <kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
                 ];
@@ -891,17 +884,7 @@ DocTree.View = DocTree.View || {
                     //,{title: "New child <kbd>[Ctrl+Shift+N]</kbd>", cmd: "addChild", uiIcon: "ui-icon-arrowreturn-1-e" }
                     {title: "New Folder <kbd>[Ctrl+N]</kbd>", cmd: "newFolder", uiIcon: "ui-icon-plus" }
                     //,{title: "New Document <kbd>[Ctrl+Shift+N]</kbd>", cmd: "newDocument", uiIcon: "ui-icon-arrowreturn-1-e" }
-                    ,{title: "New Document</kbd>", children:[
-                        {title: "Electronic Communication", cmd: "form/electronicCommunicationFormUrl"}
-                        ,{title: "Report of Investigation", cmd: "form/roiFormUrl"}
-                        ,{title: "Medical Release", cmd: "file/mr"}
-                        ,{title: "General Release", cmd: "file/gr"}
-                        ,{title: "eDelivery", cmd: "file/ev"}
-                        ,{title: "SF86 Signature", cmd: "file/sig"}
-                        ,{title: "Notice of Investigation", cmd: "file/noi"}
-                        ,{title: "Witness Interview Request", cmd: "file/wir"}
-                        ,{title: "Other", cmd: "file/other"}
-                    ]}
+                    ,{title: "New Document</kbd>", children: DocTree.View.docSubMenu}
                     ,{title: "----" }
                     ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                     ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
@@ -912,8 +895,8 @@ DocTree.View = DocTree.View || {
                 ];
             } else {
                 menu = [
-                    {title: "Open <kbd>[F2]</kbd>", cmd: "open", uiIcon: "ui-icon-folder-open" }
-                    ,{title: "Edit <kbd>[Del]</kbd>", cmd: "edit", uiIcon: "ui-icon-pencil" }
+                    {title: "Open", cmd: "open", uiIcon: "ui-icon-folder-open" }
+                    ,{title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil" }
                     ,{title: "----" }
                     ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                     ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
@@ -922,7 +905,7 @@ DocTree.View = DocTree.View || {
                     ,{title: "Rename <kbd>[F2]</kbd>", cmd: "rename", uiIcon: "ui-icon-pencil" }
                     ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
                     ,{title: "----" }
-                    ,{title: "Download", cmd: "download", uiIcon: "ui-icon-arrowstop-1-s" }
+                    ,{title: "Download", cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
                     ,{title: "Replace", cmd: "replace", uiIcon: "" }
                     ,{title: "History", cmd: "history", uiIcon: "" }
                 ];
@@ -930,6 +913,45 @@ DocTree.View = DocTree.View || {
         }
         return menu;
     }
+
+
+    // To create a menu like this:
+    //        var menu = [
+    //            {title: "Electronic Communication", cmd: "form/electronicCommunicationFormUrl"}
+    //            ,{title: "Report of Investigation", cmd: "form/roiFormUrl"}
+    //            ,{title: "Medical Release", cmd: "file/mr"}
+    //            ,{title: "General Release", cmd: "file/gr"}
+    //            ,{title: "eDelivery", cmd: "file/ev"}
+    //            ,{title: "SF86 Signature", cmd: "file/sig"}
+    //            ,{title: "Notice of Investigation", cmd: "file/noi"}
+    //            ,{title: "Witness Interview Request", cmd: "file/wir"}
+    //            ,{title: "Other", cmd: "file/other"}
+    //        ];
+    ,makeDocSubMenu: function(formTypes, fileTypes) {
+        var menu = [], item;
+        if (Acm.isArray(formTypes)) {
+            for (var i = 0; i < formTypes.length; i++) {
+                item = {};
+                if (Acm.isNotEmpty(formTypes[i].label) && Acm.isNotEmpty(formTypes[i].value)) {
+                    item.title = formTypes[i].label;
+                    item.cmd = "form/" + formTypes[i].value;
+                }
+                menu.push(item);
+            }
+        }
+        if (Acm.isArray(fileTypes)) {
+            for (var i = 0; i < fileTypes.length; i++) {
+                item = {};
+                if (Acm.isNotEmpty(fileTypes[i].label) && Acm.isNotEmpty(fileTypes[i].value)) {
+                    item.title = fileTypes[i].label;
+                    item.cmd = "file/" + fileTypes[i].value;
+                }
+                menu.push(item);
+            }
+        }
+        return menu;
+    }
+
     ,getTopNode: function() {
         var topNode = null;
         if (DocTree.View.tree) {

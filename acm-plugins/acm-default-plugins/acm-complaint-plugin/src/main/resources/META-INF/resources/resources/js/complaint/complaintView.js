@@ -62,7 +62,8 @@ Complaint.View = Complaint.View || {
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
-            this.formUrls.formDocuments                  = Acm.Object.MicroData.getJson("formDocuments");
+            this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
+
             this.fileTypes = [{"value": "ar", "label": "Medical Release"}
                 ,{"value": "gr", "label": "General Release"}
                 ,{"value": "ev", "label": "eDelivery"}
@@ -1607,6 +1608,25 @@ Complaint.View = Complaint.View || {
 
     ,Documents:{
         create : function() {
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedTreeNode: function(key) {
+            var lastKeyPart = ObjNav.Model.Tree.Key.getLastKeyPart(key);
+            if (Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS == lastKeyPart) {
+                DocTree.View.expandTopNode();
+            }
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            DocTree.Controller.viewChangedParent(nodeType, nodeId);
+        }
+    }
+
+    ,Documents_JTable_To_Retire:{
+        create : function() {
 //            this.$tree = $("#treeDoc");
 //
 //            this.$divDocuments = $("#divDocuments");
@@ -1681,7 +1701,7 @@ Complaint.View = Complaint.View || {
 //            }catch(e) {
 //
 //            }
-            var formDocuments = Complaint.View.MicroData.formUrls.formDocuments;
+            var formDocuments = Complaint.View.MicroData.formDocuments;
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle'>"
                 + "<option value=''>Document Type</option>";
@@ -1715,7 +1735,7 @@ Complaint.View = Complaint.View || {
             var complaint = Complaint.View.getActiveComplaint();
             if (Complaint.Model.Detail.validateComplaint(complaint) )
             {
-                var url = Complaint.View.MicroData.formUrls != null ? Acm.goodValue(Complaint.View.MicroData.formUrls[report]) : '';
+                var url = Acm.goodValue(Complaint.View.MicroData.formUrls[report]);
                 if (Acm.isNotEmpty(url)) {
                     // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
                     // the Frevvo form will decode it.
@@ -2570,7 +2590,8 @@ Complaint.View = Complaint.View || {
 	                    		// This is used only to recognize the * type.
 	                    		return {"*": "*"}
 	                    	}else if (data.dependedValues.type == 'owning group') {
-	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups());
+	                    		var complaintId = Complaint.View.getActiveComplaintId();
+	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups(complaintId));
 	                		} else {
 	                			return Acm.createKeyValueObject(Complaint.Model.Lookup.getUsers());
 	                		}

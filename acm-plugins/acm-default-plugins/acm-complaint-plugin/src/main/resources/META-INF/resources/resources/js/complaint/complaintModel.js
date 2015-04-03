@@ -13,7 +13,7 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.create)                {Complaint.Model.Action.create();}
         if (Complaint.Model.Detail.create)                {Complaint.Model.Detail.create();}
         if (Complaint.Model.People.create)                {Complaint.Model.People.create();}
-        if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
+        //if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
         if (Complaint.Model.Notes.create)                 {Complaint.Model.Notes.create();}
         if (Complaint.Model.References.create)            {Complaint.Model.References.create();}
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
@@ -31,7 +31,7 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.onInitialized)         {Complaint.Model.Action.onInitialized();}
         if (Complaint.Model.Detail.onInitialized)         {Complaint.Model.Detail.onInitialized();}
         if (Complaint.Model.People.onInitialized)         {Complaint.Model.People.onInitialized();}
-        if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
+        //if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
         if (Complaint.Model.Notes.onInitialized)          {Complaint.Model.Notes.onInitialized();}
         if (Complaint.Model.References.onInitialized)     {Complaint.Model.References.onInitialized();}
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
@@ -523,7 +523,7 @@ Complaint.Model = Complaint.Model || {
 
     }
 
-    ,Documents: {
+    ,Documents_JTable_To_Retire: {
         create : function() {
             this.cacheTree = new Acm.Model.CacheFifo();
 

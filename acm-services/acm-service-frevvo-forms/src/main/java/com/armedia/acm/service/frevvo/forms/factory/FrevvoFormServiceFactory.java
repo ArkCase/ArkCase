@@ -70,6 +70,7 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
             
             return service;
 		}
