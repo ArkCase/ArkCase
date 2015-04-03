@@ -27,9 +27,7 @@
 	
 	<bean id="getUsersByPrivilegeAndGroupAPIController" class="com.armedia.acm.services.functionalaccess.web.api.GetUsersByPrivilegeAndGroupAPIController">
 		<property name="pluginManager" ref="acmPluginManager"/>
-        <property name="userDao" ref="userJpaDao"/>
 		<property name="functionalAccessService" ref="functionalAccessService"/>
-		<property name="acmGroupDao" ref="groupDao"/>
 	</bean>
     
 </beans>

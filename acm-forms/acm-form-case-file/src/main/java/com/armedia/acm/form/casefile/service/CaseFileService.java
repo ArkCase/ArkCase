@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
@@ -43,6 +44,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
@@ -66,6 +68,8 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private RuntimeService activitiRuntimeService;
 
 	private CaseFile caseFile;
+	
+	private FunctionalAccessService functionalAccessService;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -286,8 +290,17 @@ public class CaseFileService extends FrevvoFormAbstractService {
 					try
 					{
 						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
-				        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
+						Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+						
+						String group = null;
+						if (privilege.equals("acm-case-approve"))
+						{
+							group = "ACM_INVESTIGATOR_DEV";
+						}
+						
+						Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
 				        
+						List<AcmUser> users = new ArrayList<>(usersSet);
 				        if (users != null && users.size() > 0) {
 				        	List<String> options = new ArrayList<>();
 				        	for (int i = 0; i < users.size(); i++) {
@@ -504,5 +517,14 @@ public class CaseFileService extends FrevvoFormAbstractService {
 
 	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
 		this.acmPluginManager = acmPluginManager;
+	}
+
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
 	}
 }
