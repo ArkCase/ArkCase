@@ -11,10 +11,9 @@ DocTree.View = DocTree.View || {
         this.$tree = (args.$tree)? args.$tree : $("#treeDoc");
         this.createDocTree(args.treeArgs);
 
-        this.fileTypes  = args.fileTypes;
-        this.formTypes  = args.formTypes;
         this.doUploadForm = args.uploadForm;
-        this.docSubMenu = this.makeDocSubMenu(this.formTypes, this.fileTypes);
+        this.fileTypes  = args.fileTypes;
+        this.docSubMenu = this.makeDocSubMenu(this.fileTypes);
 
         this.$formDownloadDoc = (args.$formDownloadDoc)? args.$formDownloadDoc : $("#formDownloadDoc");
         this.$formUploadDoc   = (args.$formUploadDoc)  ? args.$formUploadDoc   : $("#formUploadDoc");
@@ -927,24 +926,18 @@ DocTree.View = DocTree.View || {
     //            ,{title: "Witness Interview Request", cmd: "file/wir"}
     //            ,{title: "Other", cmd: "file/other"}
     //        ];
-    ,makeDocSubMenu: function(formTypes, fileTypes) {
+    ,makeDocSubMenu: function(fileTypes) {
         var menu = [], item;
-        if (Acm.isArray(formTypes)) {
-            for (var i = 0; i < formTypes.length; i++) {
-                item = {};
-                if (Acm.isNotEmpty(formTypes[i].label) && Acm.isNotEmpty(formTypes[i].value)) {
-                    item.title = formTypes[i].label;
-                    item.cmd = "form/" + formTypes[i].value;
-                }
-                menu.push(item);
-            }
-        }
         if (Acm.isArray(fileTypes)) {
             for (var i = 0; i < fileTypes.length; i++) {
                 item = {};
-                if (Acm.isNotEmpty(fileTypes[i].label) && Acm.isNotEmpty(fileTypes[i].value)) {
+                if (Acm.isNotEmpty(fileTypes[i].label) && Acm.isNotEmpty(fileTypes[i].type)) {
                     item.title = fileTypes[i].label;
-                    item.cmd = "file/" + fileTypes[i].value;
+                    if (Acm.isNotEmpty(fileTypes[i].form)) {
+                        item.cmd = "form/" + fileTypes[i].type;
+                    } else {
+                        item.cmd = "file/" + fileTypes[i].type;
+                    }
                 }
                 menu.push(item);
             }

@@ -70,27 +70,56 @@ CaseFile.View = CaseFile.View || {
             this.formUrls = {};
             this.formUrls.urlEditCaseFileForm            = Acm.Object.MicroData.get("urlEditCaseFileForm");
             this.formUrls.urlReinvestigateCaseFileForm   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
-            this.formUrls.urlRoiForm                     = Acm.Object.MicroData.get("urlRoiForm");
-            this.formUrls.urlElectronicCommunicationForm = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
             this.formUrls.enableFrevvoFormEngine         = Acm.Object.MicroData.get("enableFrevvoFormEngine");
             this.formUrls.urlChangeCaseStatusForm        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
             this.formUrls.urlEditChangeCaseStatusForm    = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
+            this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
+            this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
             this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
 
-            this.fileTypes = [{"value": "ar", "label": "Medical Release"}
-                ,{"value": "gr", "label": "General Release"}
-                ,{"value": "ev", "label": "eDelivery"}
-                ,{"value": "sig", "label": "SF86 Signature"}
-                ,{"value": "noi", "label": "Notice of Investigation"}
-                ,{"value": "wir", "label": "Witness Interview Request"}
-                ,{"value": "ot", "label": "Other"}
-            ];
+            this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    var form =this.fileTypes[i].form;
+                    if (Acm.isNotEmpty(form)) {
+                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
+                        var formDocument = this.findFormDocumentByForm(form);
+                        if (formDocument) {
+                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
+                        }
+                    }
+                }
+            }
         }
         ,onInitialized: function() {
         }
 
         ,getToken: function() {
             return this.token;
+        }
+        ,findFormDocumentByForm: function(form) {
+            var fd = null;
+            if (Acm.isArray(this.formDocuments)) {
+                for (var i = 0; i < this.formDocuments.length; i++) {
+                    if (form == this.formDocuments[i].value) {
+                        fd = this.formDocuments[i];
+                        break;
+                    }
+                }
+            }
+            return fd;
+        }
+        ,findFileTypeByType: function(type) {
+            var ft = null;
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    if (type == this.fileTypes[i].type) {
+                        ft = this.fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
 //        ,getFormUrls: function(){
 //        	return this.formUrls;
@@ -1805,13 +1834,17 @@ CaseFile.View = CaseFile.View || {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
 
-        ,uploadForm: function(report, onCloseForm) {
-            //var token = CaseFile.View.MicroData.getToken();
+        ,uploadForm: function(type, onCloseForm) {
+            //var token = CaseFile.View.MicroData.token;
             var caseFileId = CaseFile.View.getActiveCaseFileId();
             var caseFile = CaseFile.View.getActiveCaseFile();
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                var url = Acm.goodValue(CaseFile.View.MicroData.formUrls[report]);
-
+                //var url = Acm.goodValue(CaseFile.View.MicroData.formUrls[report]);
+                var url = null;
+                var fileType = CaseFile.View.MicroData.findFileTypeByType(type);
+                if (fileType) {
+                    url = Acm.goodValue(fileType.url);
+                }
                 if (Acm.isNotEmpty(url)) {
                     // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
                     // the Frevvo form will decode it.
