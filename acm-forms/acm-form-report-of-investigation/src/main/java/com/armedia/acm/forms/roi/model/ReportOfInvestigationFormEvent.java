@@ -5,6 +5,7 @@ package com.armedia.acm.forms.roi.model;
 
 import com.armedia.acm.event.AcmEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 
 import java.util.Date;
 
@@ -36,7 +37,7 @@ public class ReportOfInvestigationFormEvent extends AcmEvent {
 		
 		setIpAddress(ipAddress);
         setObjectId(files.getPdfRendition().getId());
-        setObjectType("FILE");
+        setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
         
         setSucceeded(succeeded);
 
