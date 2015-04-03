@@ -57,15 +57,14 @@ Topbar.Service = {
 
         ,retrieveAsnList: function(user,n) {
             var url = App.getContextPath() + this.API_RETRIEVE_ASN_LIST_;
-            url+= "?q=NOTIFICATION";
+            url+= "?q=" + Topbar.Model.Asn.OBJECT_TYPE;
             url+= "&n=" + n;
-            url+= "&s=create_tdt desc";
+            url+= "&s=" + Topbar.Model.Asn.SORT_FIELD + " " + Topbar.Model.Asn.SORT_ORDER;
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
                         Topbar.Controller.Asn.modelRetrievedAsnList(response);
                     } else {
-                        //if (Topbar.Model.Asn.validateAsnList(response)) {
                         if (Acm.Validator.validateSolrData(response)) {
                             var asnList = response.response.docs;
                             Topbar.Model.Asn.setAsnList(asnList);
