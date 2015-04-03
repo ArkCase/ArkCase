@@ -55,6 +55,7 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
@@ -120,6 +121,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private TimesheetEventPublisher timesheetEventPublisher;
 	private CostsheetEventPublisher costsheetEventPublisher;
+	
+	private FunctionalAccessService functionalAccessService;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -541,5 +544,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setCostsheetEventPublisher(
 			CostsheetEventPublisher costsheetEventPublisher) {
 		this.costsheetEventPublisher = costsheetEventPublisher;
+	}
+	
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+	
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
 	}
 }
