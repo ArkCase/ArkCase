@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,12 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     protected Class<EcmFile> getPersistenceClass()
     {
         return EcmFile.class;
+    }
+
+    @Override
+    public String getSupportedObjectType()
+    {
+        return EcmFileConstants.OBJECT_FILE_TYPE;
     }
 
     public List<EcmFile> findForContainer(Long containerId)

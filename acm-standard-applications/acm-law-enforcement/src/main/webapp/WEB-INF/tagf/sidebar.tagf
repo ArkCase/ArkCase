@@ -20,7 +20,7 @@
                             <span class="arrow top hidden-nav-xs"></span>
                             <li> <a href="<c:url value='/plugin/profile'/>">My Profile</a> </li>
                             <%--<li> <a href="#">Switch User</a> </li>--%>
-                            <li> <a href="<c:url value='https://collaboration.armedia.com/sites/Projects/ACM3Framework/SitePages/Home.aspx'/>" target="_blank">Help</a> </li>
+                            <li> <a href="<c:url value='http://internal.armedia.com/confluence/display/ARK/Using+ArkCase'/>" target="_blank">Help</a> </li>
 
                             <li class="divider"></li>
                             <li> <a href="<c:url value='/logout'/>">Logout</a> </li>
@@ -36,7 +36,7 @@
                             <c:set var="requiredPrivilege" value="${navTab.requiredPrivilege}" scope="page"/>
                             <c:if test="${acm_privileges[requiredPrivilege]}">
                                 <li class="">
-                                    <a href="<c:url value='${navTab.url}' />" class="auto">
+                                    <a href="<c:url value='${navTab.url}' />" title="${navTab.actionName}" class="auto">
                                         <i class="<c:url value='${navTab.iconName}' /> icon"> </i>
                                         <span class="font-bold">${navTab.actionName}</span>
                                     </a>

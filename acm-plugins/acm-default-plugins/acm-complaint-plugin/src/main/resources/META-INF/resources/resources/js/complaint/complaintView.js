@@ -2607,7 +2607,8 @@ Complaint.View = Complaint.View || {
 	                    		// This is used only to recognize the * type.
 	                    		return {"*": "*"}
 	                    	}else if (data.dependedValues.type == 'owning group') {
-	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups());
+	                    		var complaintId = Complaint.View.getActiveComplaintId();
+	                    		return Acm.createKeyValueObject(Complaint.Model.Lookup.getGroups(complaintId));
 	                		} else {
 	                			return Acm.createKeyValueObject(Complaint.Model.Lookup.getUsers());
 	                		}

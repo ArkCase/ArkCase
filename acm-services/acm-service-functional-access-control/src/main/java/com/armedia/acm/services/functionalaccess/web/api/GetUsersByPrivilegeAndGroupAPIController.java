@@ -1,6 +1,7 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.services.functionalaccess.model.FunctionalAccessConstants;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
@@ -98,6 +99,62 @@ public class GetUsersByPrivilegeAndGroupAPIController
         			// Passing group to the "getUsers" will retrieve users for specific group in "groupNames"
         			users.addAll(getUsers(group, groupNames));
         		}
+        	}
+        }
+        
+        retval.addAll(users);
+
+        return retval;
+    }
+    
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/users/{privilege}/{group}/{currentAssignee}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<AcmUser> usersByPrivilegeAndGroupPlusCurrentAssignee(@PathVariable(value = "privilege") String privilege, 
+    																			   @PathVariable(value = "group") String group,
+    																			   @PathVariable(value = "currentAssignee") String currentAssignee)
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Looking for users for privilege '" + privilege + "', group " + group + " plus current assignee '" + currentAssignee + "'");
+        }
+        
+        if (FunctionalAccessConstants.ALL_GROUPS.equals(group))
+        {
+        	// This will avoid taking users only for specific group
+        	group = null;
+        }
+
+        List<AcmUser> retval = new ArrayList<>();
+        
+        List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
+        Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+
+        // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
+        Set<AcmUser> users = new HashSet<>();
+        if (rolesForPrivilege != null && rolesToGroups != null)
+        {
+        	for (String role : rolesForPrivilege)
+        	{
+        		List<String> groupNames = rolesToGroups.get(role);
+        		
+        		if (groupNames != null)
+        		{
+        			// Passing group to the "getUsers" will retrieve users for specific group in "groupNames"
+        			users.addAll(getUsers(group, groupNames));
+        		}
+        	}
+        }
+        
+        // Get current user and add to the list
+        if (currentAssignee != null)
+        {
+        	AcmUser currentUser = getUserDao().findByUserId(currentAssignee);
+        	
+        	if (currentUser != null)
+        	{
+        		users.add(currentUser);
         	}
         }
         

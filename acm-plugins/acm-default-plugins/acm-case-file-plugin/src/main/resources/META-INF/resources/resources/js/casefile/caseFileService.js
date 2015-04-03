@@ -57,11 +57,16 @@ CaseFile.Service = {
         	if (caseFile == null) {
         		return null;
         	}
-        	var groupGetParameter = '';
-        	var groupName = CaseFile.Model.Detail.getGroup(caseFile);
-        	if (groupName && groupName.length > 0) {
-        		groupGetParameter = '/' + groupName;
+        	
+        	var groupGetParameter = CaseFile.Service.Lookup._createGroupGetParameter(caseFile);
+        	var currentAssigneeGetParameter = CaseFile.Service.Lookup._createCurrentAssigneeGetParameter(caseFile);
+        	
+        	if (currentAssigneeGetParameter !== '' && groupGetParameter === '') {
+        		// only if current assignee is not empty but the group is empty, then add /* for group, to be able to
+        		// rich the required request method and return all users
+        		groupGetParameter = '/*'
         	}
+        	
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
@@ -76,8 +81,27 @@ CaseFile.Service = {
                         return assignees;
                     }
                 }
-                ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter
+                ,App.getContextPath() + this.API_GET_ASSIGNEES + groupGetParameter + currentAssigneeGetParameter
             )
+        }
+        
+        ,_createGroupGetParameter: function(caseFile){
+        	var groupGetParameter = '';
+        	var groupName = CaseFile.Model.Detail.getGroup(caseFile);
+        	if (groupName && groupName.length > 0) {
+        		groupGetParameter = '/' + groupName;
+        	}
+        	
+        	return groupGetParameter;
+        }
+        ,_createCurrentAssigneeGetParameter: function(caseFile){
+        	var currentAssigneeGetParameter = '';
+        	var currentAssignee = CaseFile.Model.Detail.getAssignee(caseFile);
+        	if (currentAssignee && currentAssignee.length > 0) {
+        		currentAssigneeGetParameter = '/' + currentAssignee;
+        	}
+        	
+        	return currentAssigneeGetParameter;
         }
 
         ,_validateSubjectTypes: function(data) {
