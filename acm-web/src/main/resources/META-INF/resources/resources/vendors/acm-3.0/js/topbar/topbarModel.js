@@ -87,11 +87,12 @@ Topbar.Model = {
         }
 
         ,_pullInterval: 16
+        ,_rows: 5
         ,_pull: function(interval) {
             Acm.Timer.registerListener("AsnWatch"
                 ,interval
                 ,function() {
-                    Topbar.Service.Asn.retrieveAsnList(App.getUserName());
+                    Topbar.Service.Asn.retrieveAsnList(App.getUserName(),Topbar.Model.Asn._rows);
                     return true;
                 }
             );
