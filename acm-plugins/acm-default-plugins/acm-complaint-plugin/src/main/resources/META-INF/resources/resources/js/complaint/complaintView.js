@@ -64,23 +64,47 @@ Complaint.View = Complaint.View || {
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
             this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
 
-            this.fileTypes = [{"value": "ar", "label": "Medical Release"}
-                ,{"value": "gr", "label": "General Release"}
-                ,{"value": "ev", "label": "eDelivery"}
-                ,{"value": "sig", "label": "SF86 Signature"}
-                ,{"value": "noi", "label": "Notice of Investigation"}
-                ,{"value": "wir", "label": "Witness Interview Request"}
-                ,{"value": "ot", "label": "Other"}
-            ];
+            this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    var form =this.fileTypes[i].form;
+                    if (Acm.isNotEmpty(form)) {
+                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
+                        var formDocument = this.findFormDocumentByForm(form);
+                        if (formDocument) {
+                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
+                        }
+                    }
+                }
+            }
 
         }
         ,onInitialized: function() {
         }
-        ,getToken: function() {
-            return this.token;
+
+        ,findFormDocumentByForm: function(form) {
+            var fd = null;
+            if (Acm.isArray(this.formDocuments)) {
+                for (var i = 0; i < this.formDocuments.length; i++) {
+                    if (form == this.formDocuments[i].value) {
+                        fd = this.formDocuments[i];
+                        break;
+                    }
+                }
+            }
+            return fd;
         }
-        ,getFormUrls: function(){
-            return this.formUrls;
+        ,findFileTypeByType: function(type) {
+            var ft = null;
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    if (type == this.fileTypes[i].type) {
+                        ft = this.fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
     }
 
@@ -1622,6 +1646,28 @@ Complaint.View = Complaint.View || {
         }
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
+        }
+
+        ,uploadForm: function(type, onCloseForm) {
+            var complaintId = Complaint.View.getActiveComplaintId();
+            var complaint = Complaint.View.getActiveComplaint();
+            if (Complaint.Model.Detail.validateComplaint(complaint) )
+            {
+                //var url = Acm.goodValue(Complaint.View.MicroData.formUrls[report]);
+                var url = null;
+                var fileType = Complaint.View.MicroData.findFileTypeByType(type);
+                if (fileType) {
+                    url = Acm.goodValue(fileType.url);
+                }
+                if (Acm.isNotEmpty(url)) {
+                    // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
+                    // the Frevvo form will decode it.
+                    var complaintTitle = Acm.goodValue(complaint.complaintTitle);
+                    complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                }
+            }
         }
     }
 
