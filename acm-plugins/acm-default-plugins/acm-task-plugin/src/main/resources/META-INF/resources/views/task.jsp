@@ -17,6 +17,7 @@
         <span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>
         <span itemprop="roiFormUrl">${roiFormUrl}</span>
         <span itemprop="changeCaseStatusFormUrl">${changeCaseStatusFormUrl}</span>
+        <span itemprop="fileTypes">${fileTypes}</span>
 
     </div>
 </jsp:attribute>
