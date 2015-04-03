@@ -11,23 +11,20 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
 
-    <flow name="moveFile" doc:name="Move a file from one folder location to other">
+    <flow name="deleteFile" doc:name="Delete a file">
         <description>
-            The incoming payload is EcmFile that should be updated. The return payload is the updated CMIS document.
-            If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
+            The file will be deleted. There will be no payload only inboundProperties where ecmFileId will be passed to the flow.
         </description>
 
         <vm:inbound-endpoint
-                address="vm://moveFile.in"
+                address="vm://deleteFile.in"
                 exchange-pattern="request-response"
-                doc:name="Move File">
+                doc:name="Delte File">
         </vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
-        <cmis:move-object objectId="#[message.inboundProperties.cmisObjectId]"
-                          sourceFolderId="#[message.inboundProperties.srcFolderId]"
-                          targetFolderId="#[message.inboundProperties.dstFolderId]"  />
+        <cmis:delete objectId="#[message.inboundProperties.ecmFileId]"/>
 
 
 		<catch-exception-strategy>

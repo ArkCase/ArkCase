@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="copyFile" doc:name="Copy file to a new location">
+        <description>
+            The incoming payload is EcmFile that should be copied. The return payload is the copy of the original object CMIS document.
+            If the object ID does not represent a new copied CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://copyFile.in"
+                exchange-pattern="request-response"
+                doc:name="Copy File">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+        <timer-interceptor/>
+
+
+        <!--Get the content stream of a target file-->
+		<enricher target="#[flowVars['stream']]">
+		        <cmis:get-content-stream  objectId="#[message.inboundProperties.ecmFileId]"/>
+		</enricher>
+
+        <!--Get the parent folderID of the file-->
+        <enricher target="#flowVars['parentFolderId']">
+            <cmis:get-parent-folders objectId="#[message.inboundProperties.ecmFileId]"/>
+        </enricher>
+
+
+        <!--create new document -->
+            <cmis:create-document-by-id folderId="#[message.inboundProperties.dstFolderId]"
+                                    filename="#[payload.fileName]"
+                                    mimeType="#[payload.fileMimeType]"
+                                    versioningState="MAJOR"
+                                    objectType="#[payload.fileType]"
+                                    content-ref="#[flowVars['stream']]" />
+
+        <cmis:get-object-by-id objectId="#[payload.id]"/>
+					   
+		<catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="updateException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

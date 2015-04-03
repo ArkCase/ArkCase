@@ -105,5 +105,5 @@ public interface EcmFileService
     String buildSafeFolderName(String name);
 
 
-    public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException;
+
 }
