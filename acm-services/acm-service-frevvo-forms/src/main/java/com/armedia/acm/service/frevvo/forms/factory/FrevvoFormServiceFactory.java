@@ -49,6 +49,7 @@ public class FrevvoFormServiceFactory {
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setPersonDao(frevvoFormController.getPersonDao());
             service.setComplaintEventPublisher(frevvoFormController.getComplaintEventPublisher());
+            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
             
             return service;
 		}
@@ -120,6 +121,8 @@ public class FrevvoFormServiceFactory {
             service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             service.setMuleClient(frevvoFormController.getMuleClient());
+            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
             
             return service;
 		}
@@ -150,6 +153,7 @@ public class FrevvoFormServiceFactory {
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
             service.setCaseFileFactory(frevvoFormController.getCaseFileFactory());
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
             
             return service;
 		}
