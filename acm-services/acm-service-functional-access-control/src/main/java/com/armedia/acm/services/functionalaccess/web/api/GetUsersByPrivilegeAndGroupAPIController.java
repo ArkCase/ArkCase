@@ -3,10 +3,8 @@ package com.armedia.acm.services.functionalaccess.web.api;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.model.FunctionalAccessConstants;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,9 +26,7 @@ public class GetUsersByPrivilegeAndGroupAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmPluginManager pluginManager;
-    private UserDao userDao;
     private FunctionalAccessService functionalAccessService;
-    private AcmGroupDao acmGroupDao;
 
     @RequestMapping(
             method = RequestMethod.GET,
@@ -50,20 +45,7 @@ public class GetUsersByPrivilegeAndGroupAPIController
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
-        Set<AcmUser> users = new HashSet<>();
-        if (rolesForPrivilege != null && rolesToGroups != null)
-        {
-        	for (String role : rolesForPrivilege)
-        	{
-        		List<String> groupNames = rolesToGroups.get(role);
-        		
-        		if (groupNames != null)
-        		{
-        			// Passing null to the "getUsers" will retrieve users for all groups in "groupNames"
-        			users.addAll(getUsers(null, groupNames));
-        		}
-        	}
-        }
+        Set<AcmUser> users = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, null, null);
         
         retval.addAll(users);
 
@@ -87,20 +69,7 @@ public class GetUsersByPrivilegeAndGroupAPIController
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
-        Set<AcmUser> users = new HashSet<>();
-        if (rolesForPrivilege != null && rolesToGroups != null)
-        {
-        	for (String role : rolesForPrivilege)
-        	{
-        		List<String> groupNames = rolesToGroups.get(role);
-        		
-        		if (groupNames != null)
-        		{
-        			// Passing group to the "getUsers" will retrieve users for specific group in "groupNames"
-        			users.addAll(getUsers(group, groupNames));
-        		}
-        	}
-        }
+        Set<AcmUser> users = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
         
         retval.addAll(users);
 
@@ -132,52 +101,11 @@ public class GetUsersByPrivilegeAndGroupAPIController
         Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
 
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
-        Set<AcmUser> users = new HashSet<>();
-        if (rolesForPrivilege != null && rolesToGroups != null)
-        {
-        	for (String role : rolesForPrivilege)
-        	{
-        		List<String> groupNames = rolesToGroups.get(role);
-        		
-        		if (groupNames != null)
-        		{
-        			// Passing group to the "getUsers" will retrieve users for specific group in "groupNames"
-        			users.addAll(getUsers(group, groupNames));
-        		}
-        	}
-        }
-        
-        // Get current user and add to the list
-        if (currentAssignee != null)
-        {
-        	AcmUser currentUser = getUserDao().findByUserId(currentAssignee);
-        	
-        	if (currentUser != null)
-        	{
-        		users.add(currentUser);
-        	}
-        }
+        Set<AcmUser> users = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, currentAssignee);
         
         retval.addAll(users);
 
         return retval;
-    }
-    
-    private Set<AcmUser> getUsers(String group, List<String> groupNames)
-    {
-    	Set<AcmUser> retval = new HashSet<>();
-    	
-    	for (String groupName : groupNames)
-		{
-			if (groupName.equals(group) || group == null)
-			{
-				AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
-				
-				retval.addAll(acmGroup.getMembers());
-			}
-		}
-    	
-    	return retval;
     }
 
     public void setPluginManager(AcmPluginManager pluginManager)
@@ -190,16 +118,6 @@ public class GetUsersByPrivilegeAndGroupAPIController
         return pluginManager;
     }
 
-    public void setUserDao(UserDao userDao)
-    {
-        this.userDao = userDao;
-    }
-
-    public UserDao getUserDao()
-    {
-        return userDao;
-    }
-
 	public FunctionalAccessService getFunctionalAccessService() {
 		return functionalAccessService;
 	}
@@ -207,13 +125,5 @@ public class GetUsersByPrivilegeAndGroupAPIController
 	public void setFunctionalAccessService(
 			FunctionalAccessService functionalAccessService) {
 		this.functionalAccessService = functionalAccessService;
-	}
-
-	public AcmGroupDao getAcmGroupDao() {
-		return acmGroupDao;
-	}
-
-	public void setAcmGroupDao(AcmGroupDao acmGroupDao) {
-		this.acmGroupDao = acmGroupDao;
 	}
 }

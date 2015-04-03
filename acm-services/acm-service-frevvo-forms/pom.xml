@@ -84,6 +84,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-functional-access-control</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring security -->
         <dependency>
