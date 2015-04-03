@@ -55,11 +55,16 @@ Complaint.Service = {
         	if (complaint == null) {
         		return null;
         	}
-        	var groupGetParameter = '';
-        	var groupName = Complaint.Model.Detail.getGroup(complaint);
-        	if (groupName && groupName.length > 0) {
-        		groupGetParameter = '/' + groupName;
+        	
+        	var groupGetParameter = Complaint.Service.Lookup._createGroupGetParameter(complaint);
+        	var currentAssigneeGetParameter = Complaint.Service.Lookup._createCurrentAssigneeGetParameter(complaint);
+        	
+        	if (currentAssigneeGetParameter !== '' && groupGetParameter === '') {
+        		// only if current assignee is not empty but the group is empty, then add /* for group, to be able to
+        		// rich the required request method and return all users
+        		groupGetParameter = '/*'
         	}
+        	
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
@@ -74,8 +79,27 @@ Complaint.Service = {
                         return assignees;
                     }
                 }
-                ,App.getContextPath() + this.API_GET_APPROVERS + groupGetParameter
+                ,App.getContextPath() + this.API_GET_APPROVERS + groupGetParameter + currentAssigneeGetParameter
             )
+        }
+        
+        ,_createGroupGetParameter: function(complaint){
+        	var groupGetParameter = '';
+        	var groupName = Complaint.Model.Detail.getGroup(complaint);
+        	if (groupName && groupName.length > 0) {
+        		groupGetParameter = '/' + groupName;
+        	}
+        	
+        	return groupGetParameter;
+        }
+        ,_createCurrentAssigneeGetParameter: function(complaint){
+        	var currentAssigneeGetParameter = '';
+        	var currentAssignee = Complaint.Model.Detail.getAssignee(complaint);
+        	if (currentAssignee && currentAssignee.length > 0) {
+        		currentAssigneeGetParameter = '/' + currentAssignee;
+        	}
+        	
+        	return currentAssigneeGetParameter;
         }
 
         ,_validateComplaintTypes: function(data) {
