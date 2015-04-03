@@ -1623,6 +1623,23 @@ Complaint.View = Complaint.View || {
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
+
+        ,uploadForm: function(report, onCloseForm) {
+            var complaintId = Complaint.View.getActiveComplaintId();
+            var complaint = Complaint.View.getActiveComplaint();
+            if (Complaint.Model.Detail.validateComplaint(complaint) )
+            {
+                var url = Acm.goodValue(Complaint.View.MicroData.formUrls[report]);
+                if (Acm.isNotEmpty(url)) {
+                    // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
+                    // the Frevvo form will decode it.
+                    var complaintTitle = Acm.goodValue(complaint.complaintTitle);
+                    complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
+                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                }
+            }
+        }
     }
 
     ,Documents_JTable_To_Retire:{
