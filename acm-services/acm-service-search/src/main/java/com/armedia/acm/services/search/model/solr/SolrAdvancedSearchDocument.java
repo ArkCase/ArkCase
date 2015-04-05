@@ -114,6 +114,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 	private String state_lcs;
 	private String data_lcs;
 	private String action_lcs;
+    private String notification_type_lcs;
 
     @JsonIgnore
     public String getEcmFileId() {
@@ -620,6 +621,16 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 		this.action_lcs = action_lcs;
 	}
 
+    public String getNotification_type_lcs()
+    {
+        return notification_type_lcs;
+    }
+
+    public void setNotification_type_lcs(String notification_type_lcs)
+    {
+        this.notification_type_lcs = notification_type_lcs;
+    }
+
 	@Override
     public void setPublic_doc_b(boolean public_doc_b)
     {
@@ -729,6 +740,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", state_lcs='" + state_lcs + '\'' +
                 ", data_lcs='" + data_lcs + '\'' +
                 ", action_lcs='" + action_lcs + '\'' +
+                ", notification_type_lcs='" + notification_type_lcs + '\'' +
                 '}';
     }
 }
