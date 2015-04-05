@@ -6,7 +6,7 @@
 DocTree.Model = DocTree.Model || {
     create : function(args) {
         this.cacheTree = new Acm.Model.CacheFifo();
-        this.cacheFolder = new Acm.Model.CacheFifo();
+        this.cacheFolderList = new Acm.Model.CacheFifo();
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
@@ -83,16 +83,27 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isArrayEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data[0].fileId)) {
+        for (var i = 0; i < data.length; i++) {
+            if (!this.validateUploadInfoItem(data[0])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    ,validateUploadInfoItem: function(data) {
+        if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data[0].folder)) {
+        if (Acm.isEmpty(data.fileId)) {
             return false;
         }
-        if (Acm.isNotArray(data[0].versions)) {
+        if (Acm.isEmpty(data.folder)) {
             return false;
         }
-        if (Acm.isNotArray(data[0].tags)) {
+        if (Acm.isNotArray(data.versions)) {
+            return false;
+        }
+        if (Acm.isNotArray(data.tags)) {
             return false;
         }
         return true;

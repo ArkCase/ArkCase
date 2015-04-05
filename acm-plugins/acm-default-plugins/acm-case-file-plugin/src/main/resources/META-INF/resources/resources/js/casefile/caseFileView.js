@@ -53,19 +53,9 @@ CaseFile.View = CaseFile.View || {
 
     ,MicroData: {
         create : function() {
-            //this.objId      = Acm.Object.MicroData.get("objId");
             this.treeFilter = Acm.Object.MicroData.getJson("treeFilter");
             this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             this.token      = Acm.Object.MicroData.get("token");
-            
-//            this.formUrls = {}; //new Object();
-//            this.formUrls["edit_case_file"]            = Acm.Object.MicroData.get("urlEditCaseFileForm");
-//            this.formUrls["reinvestigate_case_file"]   = Acm.Object.MicroData.get("urlReinvestigateCaseFileForm");
-//            this.formUrls["roiFormUrl"]                = Acm.Object.MicroData.get("urlRoiForm");
-//            this.formUrls["electronicCommunicationFormUrl"]  = Acm.Object.MicroData.get("urlElectronicCommunicationForm");
-//            this.formUrls["enable_frevvo_form_engine"] = Acm.Object.MicroData.get("enableFrevvoFormEngine");
-//            this.formUrls["change_case_status"]        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
-//            this.formUrls["edit_change_case_status"]   = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
 
             this.formUrls = {};
             this.formUrls.urlEditCaseFileForm            = Acm.Object.MicroData.get("urlEditCaseFileForm");
@@ -75,15 +65,24 @@ CaseFile.View = CaseFile.View || {
             this.formUrls.urlEditChangeCaseStatusForm    = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
-            this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
 
+            var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
+            var mapDocForms = {};
+            if (Acm.isArray(formDocuments)) {
+                for (var i = 0; i < formDocuments.length; i++) {
+                    var form = Acm.goodValue(formDocuments[i].value);
+                    if (Acm.isNotEmpty(form)) {
+                        mapDocForms[form] = formDocuments[i];
+                    }
+                }
+            }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
             if (Acm.isArray(this.fileTypes)) {
                 for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form =this.fileTypes[i].form;
+                    var form = this.fileTypes[i].form;
                     if (Acm.isNotEmpty(form)) {
                         this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = this.findFormDocumentByForm(form);
+                        var formDocument = mapDocForms[form];
                         if (formDocument) {
                             this.fileTypes[i].label = Acm.goodValue(formDocument.label);
                         }
@@ -97,18 +96,7 @@ CaseFile.View = CaseFile.View || {
         ,getToken: function() {
             return this.token;
         }
-        ,findFormDocumentByForm: function(form) {
-            var fd = null;
-            if (Acm.isArray(this.formDocuments)) {
-                for (var i = 0; i < this.formDocuments.length; i++) {
-                    if (form == this.formDocuments[i].value) {
-                        fd = this.formDocuments[i];
-                        break;
-                    }
-                }
-            }
-            return fd;
-        }
+
         ,findFileTypeByType: function(type) {
             var ft = null;
             if (Acm.isArray(this.fileTypes)) {
@@ -121,9 +109,6 @@ CaseFile.View = CaseFile.View || {
             }
             return ft;
         }
-//        ,getFormUrls: function(){
-//        	return this.formUrls;
-//        }
     }
 
     ,Navigator: {
