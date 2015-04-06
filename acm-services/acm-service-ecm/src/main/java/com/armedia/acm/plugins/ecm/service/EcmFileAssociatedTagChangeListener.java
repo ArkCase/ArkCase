@@ -101,7 +101,7 @@ public class EcmFileAssociatedTagChangeListener implements ApplicationListener<A
         EcmFile file = getEcmFileDao().find(fileId);
         file.setModified(new Date());
         file.setModifier(modifier);
-        getEcmFileDao().updateEcmFile(file);
+        getEcmFileDao().save(file);
     }
 
     public EcmFileDao getEcmFileDao() {

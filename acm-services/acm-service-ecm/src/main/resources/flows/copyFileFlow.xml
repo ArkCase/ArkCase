@@ -38,9 +38,12 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             <cmis:get-parent-folders objectId="#[message.inboundProperties.ecmFileId]"/>
         </enricher>
 
+        <enricher target="#flowVars['dstFolderObject']">
+            <cmis:get-object-by-path path="#[message.inboundProperties.dstFolderPath]"/>
+        </enricher>
 
-        <!--create new document -->
-            <cmis:create-document-by-id folderId="#[message.inboundProperties.dstFolderId]"
+            <!--create new document -->
+            <cmis:create-document-by-id folderId="#flowVars['dstFolderObject'].id"
                                     filename="#[payload.fileName]"
                                     mimeType="#[payload.fileMimeType]"
                                     versioningState="MAJOR"

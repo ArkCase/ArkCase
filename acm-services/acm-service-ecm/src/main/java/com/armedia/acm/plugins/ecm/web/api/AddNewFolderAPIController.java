@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import java.io.IOException;
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
 public class AddNewFolderAPIController {
 
-    private EcmFileService ecmFileService;
+    private AcmFolderService folderService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -36,14 +37,30 @@ public class AddNewFolderAPIController {
             @RequestParam(value = "folderName", required = true ) String folderName,
             Authentication authentication) throws AcmCreateObjectFailedException {
 
-        return getEcmFileService().addNewFolder(parentFolderPath, folderName);
+        if( log.isInfoEnabled() ) {
+            log.info("Creating new folder into  " + parentFolderPath + " with name " + folderName);
+        }
+
+        try {
+            AcmFolder newFolder =   getFolderService().addNewFolder(parentFolderPath, folderName);
+            if( log.isInfoEnabled() ){
+                log.info("Created new folder " + newFolder.getId() + "with name: " + folderName);
+            }
+            return newFolder;
+        } catch ( AcmCreateObjectFailedException e) {
+            if( log.isErrorEnabled() ){
+                log.error("Exception occurred while trying to create new folder "+folderName,e);
+            }
+            throw e;
+        }
     }
 
-    public EcmFileService getEcmFileService() {
-        return ecmFileService;
+    public AcmFolderService getFolderService() {
+        return folderService;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
-        this.ecmFileService = ecmFileService;
+    public void setFolderService(AcmFolderService folderService) {
+        this.folderService = folderService;
     }
 }
+

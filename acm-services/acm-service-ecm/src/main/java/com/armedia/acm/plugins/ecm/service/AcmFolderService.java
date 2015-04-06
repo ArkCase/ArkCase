@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 public interface AcmFolderService {
 
     public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException;
-    public void renameFolder(String cmisObjectId, String newFolderName) throws AcmUserActionFailedException;
+
+    public AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException;
 
 }

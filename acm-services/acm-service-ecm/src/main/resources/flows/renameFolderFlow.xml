@@ -3,7 +3,7 @@
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
-      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       version="CE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
@@ -48,17 +48,19 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
          <!--</foreach>-->
 
 
-        <cmis:update-object-properties objectId="#[message.inboundProperties.acmFolderId]">
+        <enricher target="#[flowVars:alfrescoObject]">
+            <cmis:get-object-by-id objectId="#[message.inboundProperties.acmFolderId]"/>
+        </enricher>
+
+        <cmis:update-object-properties objectId="#[flowVars:alfrescoObject].id">
             <cmis:properties>
-                <cmis:property key="name">
-                    #[message.inboundProperties.newFolderName]
-                </cmis:property>
+                <cmis:property key="name" value-ref="#[message.inboundProperties.newFolderName]"/>
             </cmis:properties>
         </cmis:update-object-properties>
 
 		<catch-exception-strategy>
-            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
-            <set-property propertyName="updateException" value="#[exception]"/>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception renaming: #[exception.message]"/>
+            <set-property propertyName="renameFolderException" value="#[exception]"/>
         </catch-exception-strategy>
 
     </flow>

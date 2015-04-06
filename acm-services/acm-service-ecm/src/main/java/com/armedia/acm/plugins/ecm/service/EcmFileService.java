@@ -104,6 +104,14 @@ public interface EcmFileService
      */
     String buildSafeFolderName(String name);
 
+    EcmFile copyFile(Long fileId, String pathForTheNewCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    EcmFile moveFile(Long fileId, String pathForTheNewFileLocation) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException;
+
+    EcmFile findById(Long fileId);
 
 }
