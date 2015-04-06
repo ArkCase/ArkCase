@@ -62,34 +62,34 @@ DocTree.Service = {
     //
     ,checkUploadForm: function(objType, objId, folderId, pageId, folderNode, fileType) {
         return DocTree.Service.retrieveFolderListDeferred(objType, objId, folderId, pageId, folderNode, function(folderListLatest) {
-            var mock = {};
-            var i = folderListLatest.children.length - 1;
-            mock.objectId   = folderListLatest.children[i].objectId + 1001;
-            mock.objectType = folderListLatest.children[i].objectType;
-            mock.created    = folderListLatest.children[i].created;
-            mock.creator    = folderListLatest.children[i].creator;
-            mock.modified   = folderListLatest.children[i].modified;
-            mock.modifier   = folderListLatest.children[i].modifier;
-            mock.name       = "Mock";
-            mock.type       = fileType;
-            mock.status     = folderListLatest.children[i].status;
-            mock.version    = folderListLatest.children[i].version;
-            mock.category   = folderListLatest.children[i].category;
-            folderListLatest.children.push(mock);
-            mock = {};
-            i = folderListLatest.children.length - 1;
-            mock.objectId   = folderListLatest.children[i].objectId + 1002;
-            mock.objectType = folderListLatest.children[i].objectType;
-            mock.created    = folderListLatest.children[i].created;
-            mock.creator    = folderListLatest.children[i].creator;
-            mock.modified   = folderListLatest.children[i].modified;
-            mock.modifier   = folderListLatest.children[i].modifier;
-            mock.name       = "Mock2";
-            mock.type       = fileType;
-            mock.status     = folderListLatest.children[i].status;
-            mock.version    = folderListLatest.children[i].version;
-            mock.category   = folderListLatest.children[i].category;
-            folderListLatest.children.push(mock);
+//            var mock = {};
+//            var i = folderListLatest.children.length - 1;
+//            mock.objectId   = folderListLatest.children[i].objectId + 1001;
+//            mock.objectType = folderListLatest.children[i].objectType;
+//            mock.created    = folderListLatest.children[i].created;
+//            mock.creator    = folderListLatest.children[i].creator;
+//            mock.modified   = folderListLatest.children[i].modified;
+//            mock.modifier   = folderListLatest.children[i].modifier;
+//            mock.name       = "Mock";
+//            mock.type       = fileType;
+//            mock.status     = folderListLatest.children[i].status;
+//            mock.version    = folderListLatest.children[i].version;
+//            mock.category   = folderListLatest.children[i].category;
+//            folderListLatest.children.push(mock);
+//            mock = {};
+//            i = folderListLatest.children.length - 1;
+//            mock.objectId   = folderListLatest.children[i].objectId + 1002;
+//            mock.objectType = folderListLatest.children[i].objectType;
+//            mock.created    = folderListLatest.children[i].created;
+//            mock.creator    = folderListLatest.children[i].creator;
+//            mock.modified   = folderListLatest.children[i].modified;
+//            mock.modifier   = folderListLatest.children[i].modifier;
+//            mock.name       = "Mock2";
+//            mock.type       = fileType;
+//            mock.status     = folderListLatest.children[i].status;
+//            mock.version    = folderListLatest.children[i].version;
+//            mock.category   = folderListLatest.children[i].category;
+//            folderListLatest.children.push(mock);
 
             var uploadedFiles = null;
             if (DocTree.Model.validateFolderList(folderListLatest)) {
@@ -154,7 +154,6 @@ DocTree.Service = {
                                 uploadedFiles = [];
                                 for (var i = 0; i < uploadInfo.length; i++) {
                                     var uploadedFile = {};
-                                    uploadedFile.category   = Acm.goodValue(uploadInfo[i].category);
                                     uploadedFile.objectId   = Acm.goodValue(uploadInfo[i].fileId);
                                     uploadedFile.objectType = "file";
                                     uploadedFile.created    = Acm.goodValue(uploadInfo[i].created);
@@ -165,6 +164,7 @@ DocTree.Service = {
                                     uploadedFile.type       = Acm.goodValue(uploadInfo[i].fileType);
                                     uploadedFile.status     = Acm.goodValue(uploadInfo[i].status);
                                     uploadedFile.version    = Acm.goodValue(uploadInfo[i].activeVersionTag);
+                                    uploadedFile.category   = Acm.goodValue(uploadInfo[i].category);
                                     uploadedFiles.push(uploadedFile);
                                     folderList.children.push(uploadedFile);
                                     folderList.totalChildren++;
