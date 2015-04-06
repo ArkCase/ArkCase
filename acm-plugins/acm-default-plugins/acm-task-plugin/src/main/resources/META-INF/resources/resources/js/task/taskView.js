@@ -260,8 +260,8 @@ Task.View = Task.View || {
         ,updateParentDetail: function(task) {
             this.showDivParentDetail(false);
             if (Task.Model.Detail.validateTask(task)) {
-                if(Acm.isNotEmpty(task.attachedToObjectId) && Acm.isNotEmpty(task.attachedToObjectType)){
-                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.attachedToObjectId);
+                if(Acm.isNotEmpty(task.parentObjectId) && Acm.isNotEmpty(task.parentObjectType)){
+                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
                         this.setTextParentObjTitle(parentObjData.title);
                         this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));

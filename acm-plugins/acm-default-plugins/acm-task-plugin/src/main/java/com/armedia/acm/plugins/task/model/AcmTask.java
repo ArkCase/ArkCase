@@ -55,6 +55,8 @@ public class AcmTask implements AcmAssignedObject, Serializable
      * to create the right folder.  For existing tasks, container has the folderId.
      */
     private transient String ecmFolderPath;
+    private Long parentObjectId;
+    private String parentObjectType;
 
     public AcmContainer getContainer()
     {
@@ -424,5 +426,25 @@ public class AcmTask implements AcmAssignedObject, Serializable
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
+    }
+
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
+    }
+
+    public Long getParentObjectId()
+    {
+        return parentObjectId;
+    }
+
+    public void setParentObjectType(String parentObjectType)
+    {
+        this.parentObjectType = parentObjectType;
+    }
+
+    public String getParentObjectType()
+    {
+        return parentObjectType;
     }
 }
