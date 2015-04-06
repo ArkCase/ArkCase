@@ -3028,6 +3028,9 @@ CaseFile.View = CaseFile.View || {
         }
         , onInitialized: function () {
         }
+
+        ,API_DOWNLOAD_DOCUMENT_      : "/api/latest/plugin/ecm/download/byId/"
+
         , onModelRetrievedObject: function (objData) {
             AcmEx.Object.JTable.load(CaseFile.View.Correspondence.$divCorrespondence);
         }
@@ -3145,7 +3148,7 @@ CaseFile.View = CaseFile.View || {
                         , edit: false
                         , create: false
                         ,display: function (commData) {
-                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+                            var a = "<a href='" + App.getContextPath() + CaseFile.View.Correspondence.API_DOWNLOAD_DOCUMENT_
                                 + ((0 >= commData.record.id)? "#" : commData.record.id)
                                 + "'>" + commData.record.title + "</a>";
                             return $(a);

@@ -58,6 +58,9 @@ public class SolrDocument implements SolrBaseDocument {
     
     private boolean hidden_b;
 
+    ///////////////for ASN /////////////////
+    private String notification_type_s;
+
     @Override
     public String getId() {
         return id;
@@ -386,6 +389,14 @@ public class SolrDocument implements SolrBaseDocument {
 		this.hidden_b = hidden_b;
 	}
 
+    public String getNotification_type_s() {
+        return notification_type_s;
+    }
+
+    public void setNotification_type_s(String notification_type_s) {
+        this.notification_type_s = notification_type_s;
+    }
+
 	@Override
     public String toString()
     {
@@ -433,6 +444,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
                 ", mime_type_s='" + mime_type_s + '\'' +
                 ", hidden_b='" + hidden_b + '\'' +
+                ", notification_type_s='" + notification_type_s + '\'' +
                 '}';
     }
 }
