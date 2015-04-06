@@ -41,4 +41,19 @@ public interface FrevvoFormConstants {
 	 */
 	public final static String DOC_URI_PARAMETER_DELIMITER = ":";
 	
+	/**
+	 * This key is used in the maps for participants information that Frevvo need to show in the dropdowns.
+	 * Frevvo participant information should be in the following format:
+	 * 
+	 * Map<type, Map<key, List<option>>
+	 * 
+	 * Where:
+	 * - type is the type of the participant: owning group, assignee, follower ... etc ...
+	 * - key is the '*' (DEFAULT_KEY from below) for showing all users or groups in the dropdowns or 'group id' that keep specific
+	 * users provided 'group id'
+	 * - option is the string in the format 'value=label' for users and groups
+	 * 
+	 */
+	public final static String DEFAULT_KEY = "*";
+	
 }

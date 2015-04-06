@@ -25,6 +25,7 @@
         <property name="eventPublisher" ref="functionalAccessEventPublisher" />
         <property name="acmGroupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
+		<property name="muleClient" ref="muleClient"/>
 	</bean>
 	
     

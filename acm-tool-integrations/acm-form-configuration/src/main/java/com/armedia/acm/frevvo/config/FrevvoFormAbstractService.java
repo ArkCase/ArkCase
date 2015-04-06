@@ -7,10 +7,14 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,13 +22,17 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import org.json.JSONArray;
+import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +46,12 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 
 /**
@@ -63,6 +75,9 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private AcmUserActionExecutor userActionExecutor;
     private MuleClient muleClient;
     private ObjectAssociationDao objectAssociationDao;
+    private FunctionalAccessService functionalAccessService;
+    private SearchResults searchResults;
+	private AcmPluginManager acmPluginManager;
 
     @Override
 	public Object init() {
@@ -509,6 +524,201 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	{		
 		return getRequest().getParameter(FrevvoFormConstants.DOC_URI_PARAMETERS_HOLDER_NAME);
 	}
+	
+	/**
+	 * This method will return map that need Frevvo form for participant section
+	 * 
+	 * @param participantTypes
+	 * @param formName
+	 * @param approvePrivilege
+	 * @return
+	 */
+	public Map<String, Map<String, Strings>> getParticipants(List<String> participantTypes, String formName, String approvePrivilege)
+	{
+		Map<String, String> groups = null;
+		
+		if (participantTypes != null && participantTypes.size() > 0)
+		{
+			Map<String, Map<String, Strings>> participantsOptions = new HashMap<>();
+			for (String participantType : participantTypes)
+			{
+				String type = "";
+				String[] participantTypeArray = participantType.split("=");
+				if (participantTypeArray != null && participantTypeArray.length == 2)
+				{
+					type = participantTypeArray[0];
+					String privilege = (String) getProperties().get(formName + "." + type.replace(" ", "_") + ".privilege");
+					
+					try
+					{
+						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
+						Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+						
+						if (privilege.equals(approvePrivilege))
+						{
+							if (groups == null)
+							{
+								groups = getGroups(rolesForPrivilege, rolesToGroups, 0, 1000, "name ASC", getAuthentication());
+							}
+							
+							if (groups != null)
+							{
+								Map<String, Strings> optionsMap = new HashMap<>();
+								if (!"owning group".equals(type))
+								{
+									optionsMap = getGroupUsersMap(groups, rolesForPrivilege, rolesToGroups);
+								}
+								else
+								{
+									optionsMap = getGroupsMap(groups);
+								}
+								participantsOptions.put(type, optionsMap);
+							}
+						}
+						else
+						{
+							Map<String, Strings> optionsMap = getUsersMap(FrevvoFormConstants.DEFAULT_KEY, null, rolesForPrivilege, rolesToGroups);
+							participantsOptions.put(type, optionsMap);
+						}
+					}
+					catch(Exception e)
+					{
+						LOG.warn("Cannot find users with privilege = " + type + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
+					}
+				}
+			}
+			
+			return participantsOptions;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * This method will return information which users belong in which group. In other words, this is map
+	 * between group and users. '*' is special key (which means all users)
+	 * 
+	 * @param groups
+	 * @param rolesForPrivilege
+	 * @param rolesToGroups
+	 * @return
+	 */
+	private Map<String, Strings> getGroupUsersMap(Map<String, String> groups, List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups)
+	{
+		Map<String, Strings> optionsMap = new HashMap<>();
+		
+		// Update optionsMap for each group
+		for (Entry<String, String> entry : groups.entrySet())
+		{
+			String groupId = entry.getKey();
+			
+			optionsMap = getUsersMap(groupId, optionsMap, rolesForPrivilege, rolesToGroups);
+		}
+		
+		return optionsMap;
+	}
+	
+	/**
+	 * This method will return updated map (add users to the map 'source') for given key (which can be group id or special key '*')
+	 * 
+	 * @param key
+	 * @param source
+	 * @param rolesForPrivilege
+	 * @param rolesToGroups
+	 * @return
+	 */
+	private Map<String, Strings> getUsersMap(String key, Map<String, Strings> source, List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups)
+	{
+		if (source == null)
+		{
+			source = new HashMap<String, Strings>();
+		}
+		
+		String group = null;
+		if (!FrevvoFormConstants.DEFAULT_KEY.equals(key))
+		{
+			group = key;
+		}
+		
+		Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
+        
+		List<AcmUser> users = new ArrayList<>(usersSet);
+        
+        if (users != null && users.size() > 0) {
+        	Strings options = new Strings();
+        	for (int i = 0; i < users.size(); i++) {
+        		options.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
+        	}
+        	
+        	source.put(key, options);
+        }
+		
+		return source;
+	}
+	
+	/**
+	 * This method will return all groups in map that need Frevvo with special key "*", which means all groups
+	 * 
+	 * @param groups
+	 * @return
+	 */
+	private Map<String, Strings> getGroupsMap(Map<String, String> groups)
+	{
+		Map<String, Strings> optionsMap = new HashMap<>();
+		Strings options = new Strings();
+		
+		if (groups != null)
+		{
+			for (Entry<String, String> entry : groups.entrySet())
+			{
+				String groupId = entry.getKey();
+				String groupName = entry.getValue();
+		        
+		        options.add(groupId + "=" + groupName);
+			}
+		}
+		
+		optionsMap.put(FrevvoFormConstants.DEFAULT_KEY, options);
+		
+		return optionsMap;
+	}
+	
+	/**
+	 * This method will return the groups in id-name format
+	 * 
+	 * @param roles
+	 * @param rolesToGroups
+	 * @param startRow
+	 * @param maxRows
+	 * @param sort
+	 * @param auth
+	 * @return
+	 * @throws MuleException
+	 */
+	private Map<String, String> getGroups(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+	{
+		Map<String, String> groups = new HashMap<>();
+		
+		String groupsFromSolr = getFunctionalAccessService().getGroupsByPrivilege(roles, rolesToGroups, startRow, maxRows, sort, auth);
+		
+		if (groupsFromSolr != null)
+		{
+			JSONArray docs = getSearchResults().getDocuments(groupsFromSolr);
+			
+			if (docs != null)
+			{
+				for (int i = 0; i < docs.length(); i++)
+				{
+					String key = getSearchResults().extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_OBJECT_ID_S);
+					String value = getSearchResults().extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME);
+					
+					groups.put(key, value);
+				}
+			}
+		}
+		
+		return groups;
+	}
 
     @Override
     public String getUserIpAddress()
@@ -564,6 +774,31 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 
 	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
 		this.objectAssociationDao = objectAssociationDao;
+	}
+
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
+	}
+
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
+
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
 	}
 	
 }

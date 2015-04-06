@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
@@ -32,7 +33,7 @@ public class CaseFileForm {
 	private String caseDescription;
 	private String cmisFolderId;
 	private List<ParticipantItem> participants;
-	private Map<String, List<String>> participantsOptions;
+	private Map<String, Map<String, Strings>> participantsOptions;
 	private List<String> participantsTypeOptions;
 	private Person initiator;
 	private List<Person> people;
@@ -110,11 +111,11 @@ public class CaseFileForm {
 	}
 
 	@XmlTransient
-	public Map<String, List<String>> getParticipantsOptions() {
+	public Map<String, Map<String, Strings>> getParticipantsOptions() {
 		return participantsOptions;
 	}
 
-	public void setParticipantsOptions(Map<String, List<String>> participantsOptions) {
+	public void setParticipantsOptions(Map<String, Map<String, Strings>> participantsOptions) {
 		this.participantsOptions = participantsOptions;
 	}
 
