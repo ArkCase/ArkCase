@@ -1,19 +1,19 @@
 package com.armedia.acm.plugins.ecm.dao;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
-import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
+import java.beans.Transient;
 import java.util.List;
 
 /**
@@ -76,8 +76,22 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return result;
     }
 
-    @Transactional
-    public EcmFile updateEcmFile(EcmFile file) throws SQLException {
-        return getEm().merge(file);
+    public EcmFile findByCmisFileId(String cmisFileId) {
+
+        String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("cmisFileId", cmisFileId);
+
+        EcmFile file = query.getSingleResult();
+
+        return file;
     }
+
+    @Transactional
+    public void deleteFile(EcmFile file) {
+        getEm().remove(file);
+    }
+
 }

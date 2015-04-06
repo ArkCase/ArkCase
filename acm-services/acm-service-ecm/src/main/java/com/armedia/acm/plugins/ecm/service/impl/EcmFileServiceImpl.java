@@ -40,11 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by armdev on 5/1/14.
@@ -508,6 +504,128 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 		return folderName;
 	}
 
+
+    @Override
+    public EcmFile copyFile(Long fileId, String pathForTheNewCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put("ecmFileId",file.getVersionSeriesId());
+        props.put("dstFolderPath",pathForTheNewCopy);
+
+        EcmFile fileCopy;
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            String newFileId = cmisObject.getId();
+            file.setVersionSeriesId(newFileId);
+            fileCopy = getEcmFileDao().save(file);
+            return fileCopy;
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        }
+    }
+
+    @Override
+    public EcmFile moveFile(Long fileId, String pathForTheNewFileLocation) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+
+        EcmFile file = getEcmFileDao().find(fileId);
+
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put("cmisObjectId", file.getVersionSeriesId());
+        props.put("dstFolderId", pathForTheNewFileLocation);
+        props.put("srcFolderId", file.getFolder().getCmisFolderId());
+
+        EcmFile movedFile;
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            String cmisObjectId = cmisObject.getId();
+
+            file.setVersionSeriesId(cmisObjectId);
+
+            //TODO find a way to return newFolderId from mule flow
+//            file.getFolder().setCmisFolderId("");
+            movedFile = getEcmFileDao().save(file);
+            return movedFile;
+        } catch (MuleException e) {
+            if(log.isErrorEnabled()){
+                log.error("Could not move file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not move file",e);
+        }
+    }
+
+    @Override
+    public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(objectId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put("ecmFileId", file.getVersionSeriesId());
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+
+            getEcmFileDao().deleteFile(file);
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not delete file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not delete file",e);
+
+        }
+    }
+
+    @Override
+    public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException {
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        Map<String,Object> props = new HashMap<>();
+        props.put("ecmFileId", file.getVersionSeriesId());
+        props.put("newFileName",newFileName);
+
+
+        EcmFile renamedFile;
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
+            file.setFileName(newFileName);
+            renamedFile = getEcmFileDao().save(file);
+            return renamedFile;
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not rename file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not rename file",e);
+
+        }
+    }
+
+    @Override
+    public EcmFile findById(Long fileId) {
+        return getEcmFileDao().find(fileId);
+    }
+
     public EcmFileTransaction getEcmFileTransaction()
     {
         return ecmFileTransaction;
@@ -618,5 +736,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     public void setFolderDao(AcmFolderDao folderDao) {
         this.folderDao = folderDao;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher() {
+        return applicationEventPublisher;
     }
 }

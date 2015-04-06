@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -15,9 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by marjan.stefanoski on 03.04.2015.
  */
+
 public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventPublisherAware {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -29,16 +34,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     @Override
     public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException {
 
-        if( log.isInfoEnabled() ) {
-            log.info("Creating new folder into  " + parentFolderPath + " with name " + folderName);
-        }
         String path = parentFolderPath + "/" + folderName;
-
         String cmisFolderId = createFolder(path);
-
-        if( log.isInfoEnabled() ){
-            log.info("Created new folder " + cmisFolderId + "with name: " + folderName);
-        }
 
         AcmFolder newFolder = new AcmFolder();
         newFolder.setCmisFolderId(cmisFolderId);
@@ -59,12 +56,39 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         catch (MuleException e)
         {
             log.error("Could not create folder: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException("Folder", e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(AcmFolderConstants.OBJECT_FOLDER_TYPE, e.getMessage(), e);
         }
     }
 
     @Override
-    public void renameFolder(String cmisObjectId, String newFolderName) throws AcmUserActionFailedException {
+    public AcmFolder renameFolder( Long folderId, String newFolderName ) throws AcmUserActionFailedException {
+
+        AcmFolder folder = getFolderDao().find(folderId);
+
+        AcmFolder renamedFolder;
+
+        Map<String,Object> properties = new HashMap<>();
+        properties.put("acmFolderId",folder.getCmisFolderId());
+        properties.put("newFolderName",newFolderName);
+
+        try{
+            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_RENAME_FOLDER,folder,properties);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+
+            folder.setName(newFolderName);
+
+            renamedFolder = getFolderDao().save(folder);
+
+            if (log.isDebugEnabled()) {
+               log.debug("Folder name is changed to "+ cmisObject.getName());
+            }
+            return renamedFolder;
+        }  catch ( MuleException e ) {
+            if ( log.isErrorEnabled() ){
+                log.error("Folder "+folder.getName()+" was not renamed successfully" + e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_RENAME_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder "+folder.getName()+" was not renamed successfully",e);
+        }
 
     }
 

@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <vm:inbound-endpoint
                 address="vm://deleteFile.in"
                 exchange-pattern="request-response"
-                doc:name="Delte File">
+                doc:name="Delete File">
         </vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>

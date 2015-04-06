@@ -3,7 +3,7 @@
 <mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
-      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       version="CE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
@@ -27,30 +27,40 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <timer-interceptor/>
 
-        <!--//This will return the document content stream-->
-        <enricher target="#[flowVars['stream']]">
-            <cmis:get-content-stream objectId="#[message.inboundProperties.ecmFileId]"/>
+        <!--&lt;!&ndash;//This will return the document content stream&ndash;&gt;-->
+        <!--<enricher target="#[flowVars['stream']]">-->
+            <!--<cmis:get-content-stream objectId="#[message.inboundProperties.ecmFileId]"/>-->
+        <!--</enricher>-->
+
+        <!--&lt;!&ndash;//This will return objectId and will create PWC (private working copy of the documenet)&ndash;&gt;-->
+        <!--<enricher target="#[flowVars['object']]">-->
+		        <!--<cmis:check-out documentId="#[message.inboundProperties.ecmFileId]"/>-->
+		<!--</enricher>-->
+
+
+		<!--&lt;!&ndash; This will check-in the PWC of the document into Alfresco with new name and same content&ndash;&gt;-->
+		<!--<cmis:check-in filename="#[message.inboundProperties.newFileName"-->
+		               <!--documentId="#[flowVars['object'].id]"-->
+					   <!--content-ref="#[flowVars['stream'].contentStream]"-->
+					   <!--checkinComment="Renaming file"-->
+					   <!--major="true"-->
+					   <!--mimeType="#[[flowVars['object'].mimeType"/>-->
+
+        <!--<cmis:get-object-by-id objectId="#[payload.id]"/>-->
+					   <!---->
+
+        <enricher target="#[flowVars:alfrescoObject]">
+            <cmis:get-object-by-id objectId="#[message.inboundProperties.ecmFileId]"/>
         </enricher>
 
-        <!--//This will return objectId and will create PWC (private working copy of the documenet)-->
-        <enricher target="#[flowVars['object']]">
-		        <cmis:check-out documentId="#[message.inboundProperties.ecmFileId]"/>
-		</enricher>
-
-
-		<!-- This will check-in the PWC of the document into Alfresco with new name and same content-->
-		<cmis:check-in filename="#[message.inboundProperties.newFileName"
-		               documentId="#[flowVars['object'].id]"
-					   content-ref="#[flowVars['stream'].contentStream]"
-					   checkinComment="Renaming file"
-					   major="true"
-					   mimeType="#[[flowVars['object'].mimeType"/>
-
-        <cmis:get-object-by-id objectId="#[payload.id]"/>
-					   
+        <cmis:update-object-properties objectId="#[flowVars:alfrescoObject].id">
+            <cmis:properties>
+                <cmis:property key="name" value-ref="#[message.inboundProperties.newFileName]"/>
+            </cmis:properties>
+        </cmis:update-object-properties>
 		<catch-exception-strategy>
-            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
-            <set-property propertyName="updateException" value="#[exception]"/>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception renaming: #[exception.message]"/>
+            <set-property propertyName="renameException" value="#[exception]"/>
         </catch-exception-strategy>
 
     </flow>

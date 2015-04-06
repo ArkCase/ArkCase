@@ -24,6 +24,10 @@
     </bean>
 
     <bean id="addNewFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.AddNewFolderAPIController">
-        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="folderService" ref="acmFolderService"/>
+    </bean>
+
+    <bean id="renameFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.RenameFileAPIController">
+        <property name="folderService" ref="acmFolderService"/>
     </bean>
 </beans>
