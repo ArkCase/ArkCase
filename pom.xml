@@ -82,6 +82,8 @@
         <spring.version>3.2.13.RELEASE</spring.version>
         <springframework-addons.version>0.1</springframework-addons.version>
         <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
+        <asm.version>5.0.3</asm.version>
+        <org.apache.poi.version>3.10.1</org.apache.poi.version>
     </properties>
 
     <organization>
@@ -704,13 +706,13 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
-                <version>3.10.1</version>
+                <version>${org.apache.poi.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm</artifactId>
-                <version>5.0.3</version>
+                <version>${asm.version}</version>
             </dependency>
 
             <!-- mule -->
