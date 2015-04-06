@@ -210,7 +210,8 @@ public class CostService extends FrevvoFormChargeAbstractService {
 	@Override
 	public String getSolrResponse(String objectType)
 	{
-		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50,
+				SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
 		
 		return jsonResults;
 	}
