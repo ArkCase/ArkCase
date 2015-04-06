@@ -59,16 +59,46 @@ Task.View = Task.View || {
 
             this.formDocuments = [];
 
-            this.fileTypes = [{"value": "ar", "label": "Medical Release"}
-                ,{"value": "gr", "label": "General Release"}
-                ,{"value": "ev", "label": "eDelivery"}
-                ,{"value": "sig", "label": "SF86 Signature"}
-                ,{"value": "noi", "label": "Notice of Investigation"}
-                ,{"value": "wir", "label": "Witness Interview Request"}
-                ,{"value": "ot", "label": "Other"}
-            ];
+            this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    var form =this.fileTypes[i].form;
+                    if (Acm.isNotEmpty(form)) {
+                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
+                        var formDocument = this.findFormDocumentByForm(form);
+                        if (formDocument) {
+                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
+                        }
+                    }
+                }
+            }
         }
         ,onInitialized: function() {
+        }
+
+        ,findFormDocumentByForm: function(form) {
+            var fd = null;
+            if (Acm.isArray(this.formDocuments)) {
+                for (var i = 0; i < this.formDocuments.length; i++) {
+                    if (form == this.formDocuments[i].value) {
+                        fd = this.formDocuments[i];
+                        break;
+                    }
+                }
+            }
+            return fd;
+        }
+        ,findFileTypeByType: function(type) {
+            var ft = null;
+            if (Acm.isArray(this.fileTypes)) {
+                for (var i = 0; i < this.fileTypes.length; i++) {
+                    if (type == this.fileTypes[i].type) {
+                        ft = this.fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
 
     }
@@ -230,8 +260,8 @@ Task.View = Task.View || {
         ,updateParentDetail: function(task) {
             this.showDivParentDetail(false);
             if (Task.Model.Detail.validateTask(task)) {
-                if(Acm.isNotEmpty(task.attachedToObjectId) && Acm.isNotEmpty(task.attachedToObjectType)){
-                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.attachedToObjectId);
+                if(Acm.isNotEmpty(task.parentObjectId) && Acm.isNotEmpty(task.parentObjectType)){
+                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
                         this.setTextParentObjTitle(parentObjData.title);
                         this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));

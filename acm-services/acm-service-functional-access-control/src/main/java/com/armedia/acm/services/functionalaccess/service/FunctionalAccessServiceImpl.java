@@ -3,9 +3,11 @@ package com.armedia.acm.services.functionalaccess.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -13,6 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 
 /**
  * @author riste.tutureski
@@ -27,6 +33,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 	private PropertyFileManager propertyFileManager;
 	private String rolesToGroupsPropertyFileLocation;
 	private FunctionalAccessEventPublisher eventPublisher;
+	private AcmGroupDao acmGroupDao;
+	private UserDao userDao;
 	
 	@Override
 	public List<String> getApplicationRoles() 
@@ -75,6 +83,56 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		
 		return success;
 	}
+	
+	@Override
+	public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group, String currentAssignee) 
+	{
+		// Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
+		Set<AcmUser> users = new HashSet<>();
+		if (roles != null && rolesToGroups != null)
+		{
+			for (String role : roles)
+			{
+				List<String> groupNames = rolesToGroups.get(role);
+				
+				if (groupNames != null)
+				{
+					// Passing null to the "getUsers" will retrieve users for all groups in "groupNames"
+					users.addAll(getUsers(group, groupNames));
+				}
+			}
+		}
+        
+	    // Get current user and add to the list
+		if (currentAssignee != null)
+		{
+			AcmUser currentUser = getUserDao().findByUserId(currentAssignee);
+			
+			if (currentUser != null)
+			{
+				users.add(currentUser);
+			}
+		}
+        
+		return users;
+	}
+	
+	private Set<AcmUser> getUsers(String group, List<String> groupNames)
+    {
+    	Set<AcmUser> retval = new HashSet<>();
+    	
+    	for (String groupName : groupNames)
+		{
+			if (groupName.equals(group) || group == null)
+			{
+				AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
+				
+				retval.addAll(acmGroup.getMembers());
+			}
+		}
+    	
+    	return retval;
+    }
 	
 	private Map<String, String> prepareRoleToGroupsForSaving(Map<String, List<String>> rolesToGroups)
 	{
@@ -157,6 +215,22 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 	public void setEventPublisher(FunctionalAccessEventPublisher eventPublisher) 
 	{
 		this.eventPublisher = eventPublisher;
+	}
+
+	public AcmGroupDao getAcmGroupDao() {
+		return acmGroupDao;
+	}
+
+	public void setAcmGroupDao(AcmGroupDao acmGroupDao) {
+		this.acmGroupDao = acmGroupDao;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 }
