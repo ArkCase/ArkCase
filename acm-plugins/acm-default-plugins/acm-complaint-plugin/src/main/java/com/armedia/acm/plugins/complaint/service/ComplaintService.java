@@ -9,12 +9,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.Strings;
 
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -37,6 +37,7 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 import com.google.gson.Gson;
@@ -57,6 +58,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private ComplaintEventPublisher complaintEventPublisher;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
+    
+    private FunctionalAccessService functionalAccessService;
 
     public ComplaintService() {
 		
@@ -201,7 +204,17 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 					try
 					{
 						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
-				        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
+						Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+						
+						String group = null;
+						if (privilege.equals("acm-complaint-approve"))
+						{
+							group = "ACM_INVESTIGATOR_DEV";
+						}
+						
+						Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
+				        
+						List<AcmUser> users = new ArrayList<>(usersSet);
 				        
 				        if (users != null && users.size() > 0) {
 				        	Strings options = new Strings();
@@ -549,5 +562,14 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	public void setComplaintEventPublisher(
 			ComplaintEventPublisher complaintEventPublisher) {
 		this.complaintEventPublisher = complaintEventPublisher;
+	}
+
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
 	}
 }

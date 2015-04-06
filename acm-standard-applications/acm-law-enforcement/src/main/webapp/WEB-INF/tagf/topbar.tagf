@@ -48,9 +48,11 @@
             <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up count">0</span> </a>
                 <section class="dropdown-menu aside-xl animated flipInY">
                     <section class="panel bg-white">
-                        <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
+                        <%--<header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>--%>
                         <div class="list-group list-group-alt"> </div>
-                        <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+                        <footer class="panel-footer text-sm"> <a href="#" class="pull-right"></a>
+                            <a href="<c:url value='/plugin/notification'/>">See all notifications</a>
+                        </footer>
                     </section>
                 </section>
             </li>

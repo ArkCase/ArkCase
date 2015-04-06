@@ -129,7 +129,8 @@ public class ROIService extends FrevvoFormAbstractService {
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
 
 		ReportOfInvestigationFormEvent event = new ReportOfInvestigationFormEvent(forObjectType, forObjectNumber,
-				roiForm, uploadedFiles, getAuthentication().getName(), getUserIpAddress(), true);
+				parentObjectType, parentObjectId, roiForm, uploadedFiles, getAuthentication().getName(),
+				getUserIpAddress(), true);
 
 		getApplicationEventPublisher().publishEvent(event);
 		
