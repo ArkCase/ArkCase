@@ -117,20 +117,25 @@ DocTree.View = DocTree.View || {
         }, 5000);
 
     }
-    ,_fileDataToNodeData: function(fileData, fileNode) {
-        if (fileData && DocTree.View.validateNode(fileNode)) {
-            fileNode.key            = Acm.goodValue(fileData.objectId, 0);
-            fileNode.title          = Acm.goodValue(fileData.name);
-            fileNode.data.name      = Acm.goodValue(fileData.name);
-            fileNode.data.type      = Acm.goodValue(fileData.type);
-            fileNode.data.objectId  = Acm.goodValue(fileData.objectId, 0);
-            fileNode.data.created   = Acm.goodValue(fileData.created);
-            fileNode.data.creator   = Acm.goodValue(fileData.creator);
-            fileNode.data.status    = Acm.goodValue(fileData.status);
-            fileNode.data.version   = Acm.goodValue(fileData.version);
-            fileNode.data.category  = Acm.goodValue(fileData.category);
+    ,_fileDataToNodeData: function(fileData, nodeData) {
+        if (fileData && nodeData) {
+            if (!nodeData.data) {
+                nodeData.data = {};
+            }
+            nodeData.key             = Acm.goodValue(fileData.objectId, 0);
+            nodeData.title           = Acm.goodValue(fileData.name);
+            nodeData.tooltip         = Acm.goodValue(fileData.name);
+            nodeData.data.name       = Acm.goodValue(fileData.name);
+            nodeData.data.type       = Acm.goodValue(fileData.type);
+            nodeData.data.objectId   = Acm.goodValue(fileData.objectId, 0);
+            nodeData.data.objectType = Acm.goodValue(fileData.objectType);
+            nodeData.data.created    = Acm.goodValue(fileData.created);
+            nodeData.data.creator    = Acm.goodValue(fileData.creator);
+            nodeData.data.status     = Acm.goodValue(fileData.status);
+            nodeData.data.version    = Acm.goodValue(fileData.version);
+            nodeData.data.category   = Acm.goodValue(fileData.category);
         }
-        return fileNode;
+        return nodeData;
     }
     ,_findEmptyNode: function(folderNode, fileType) {
         var node = null;
@@ -363,20 +368,73 @@ DocTree.View = DocTree.View || {
                 handleCursorKeys: true
             }
             ,renderColumns: function(event, data) {
-                var node = data.node,
-                    $tdList = $(node.tr).find(">td");
+                var node = data.node;
+                var $tdList = $(node.tr).find(">td");
                 // (index #0 is rendered by fancytree by adding the checkbox)
                 //$tdList.eq(1).text(node.data.objectId);
                 $tdList.eq(1).html(DocTree.View.getHtmlDocLink(node.data.objectId));
                 // (index #2 is rendered by fancytree)
 
-                $tdList.eq(3).text(node.data.type);
-                $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
-                $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
-                $tdList.eq(6).text(node.data.version);
-                $tdList.eq(7).text(node.data.status);
-                //$tdList.eq(8).html(node.data.action);
+                if (node.folder) {
+//                    var html =  '<div class="jtable-main-container">'
+//                        +'<div class="jtable-bottom-panel">'
+//                        +'    <div class="jtable-left-area">'
+//                        +'        <span class="jtable-page-list">'
+//                        +'            <span class="jtable-page-number-first jtable-page-number-disabled">&lt;&lt;</span>'
+//                        +'            <span class="jtable-page-number-previous jtable-page-number-disabled">&lt;</span>'
+//                        +'            <span class="jtable-page-number">1</span>'
+//                        +'            <span class="jtable-page-number">2</span>'
+//                        +'            <span class="jtable-page-number-space">...</span>'
+//                        +'            <span class="jtable-page-number">4</span>'
+//                        +'            <span class="jtable-page-number jtable-page-number-active jtable-page-number-disabled">5</span>'
+//                        +'            <span class="jtable-page-number">6</span>'
+//                        +'            <span class="jtable-page-number-space">...</span>'
+//                        +'            <span class="jtable-page-number">152</span>'
+//                        +'            <span class="jtable-page-number">153</span>'
+//                        +'            <span class="jtable-page-number-next jtable-page-number-disabled">&gt;</span>'
+//                        +'            <span class="jtable-page-number-last jtable-page-number-disabled">&gt;&gt;</span>'
+//                        +'            </span>'
+//                        +'        <span class="jtable-goto-page" style="display: inline;">'
+//                        +'            <span>Go to page: </span>'
+//                        +'               <select>'
+//                        +'                  <option value="1">1</option>'
+//                        +'                  <option value="2">2</option>'
+//                        +'                  <option value="3">3</option>'
+//                        +'                  <option value="4">4</option>'
+//                        +'                  <option value="5">5</option>'
+//                        +'                  <option value="6">6</option>'
+//                        +'                  <option value="7">7</option>'
+//                        +'                  <option value="8">8</option>'
+//                        +'                  <option value="9">9</option>'
+//                        +'                  <option value="10">10</option>'
+//                        +'               </select>'
+//                        +'            </span>'
+//                        +'        <span class="jtable-page-size-change">'
+//                        +'            <span>Row count: </span>'
+//                        +'            <select>'
+//                        +'                <option value="10">10</option>'
+//                        +'                <option value="25">25</option>'
+//                        +'                <option value="50">50</option>'
+//                        +'                <option value="100">100</option>'
+//                        +'                <option value="250">250</option>'
+//                        +'                <option value="500">500</option>'
+//                        +'            </select>'
+//                        +'        </span>'
+//                        +'    </div>'
+//                        +'    <div class="jtable-right-area">'
+//                        +'        <span class="jtable-page-info">Showing 1-1 of 1</span>'
+//                        +'    </div>'
+//                        +'</div></div>';
+//                    $tdList.eq(3).html(html);
+                } else {
+                    $tdList.eq(3).text(node.data.type);
+                    $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
+                    $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
+                    $tdList.eq(6).text(node.data.version);
+                    $tdList.eq(7).text(node.data.status);
+                    //$tdList.eq(8).html(node.data.action);
 //                $tdList.eq(8).html(DocTree.View.getHtmlAction());
+                }
 
 
                 //$tdList.eq(3).text(node.key);
@@ -387,6 +445,16 @@ DocTree.View = DocTree.View || {
             }
             ,expand: function(event, data) {
                 var z=1;
+            }
+            ,createNode: function(event, data) {
+//                var node = data.node;
+//                if (node.folder) {
+//                    var $tdEq3 = $(node.tr).find(">td:eq(3)");
+//                    var $tdGt3 = $(node.tr).find(">td:gt(3)");
+//                    $tdEq3.attr("colspan", 5);
+//                    $tdGt3.remove();
+//                }
+                var z = 1;
             }
             ,source: DocTree.View.source()
             ,lazyLoad: DocTree.View.lazyLoad
@@ -584,7 +652,7 @@ DocTree.View = DocTree.View || {
                     //,folderId: 0
                     ,containerObjectType: containerObjectType
                     ,containerObjectId: containerObjectId
-                    //,totalChildren: -1
+                    ,totalChildren: -1
 //            doc.objectId = uploadInfo.fileId;
 //            doc.objectType = "file";
 //            doc.created = uploadInfo.created;
@@ -616,6 +684,16 @@ DocTree.View = DocTree.View || {
     ,_makeChildNodes: function(folderList) {
         var builder = AcmEx.FancyTreeBuilder.reset();
         if (DocTree.Model.validateFolderList(folderList)) {
+//            //if (0 < folderList.startRow) {
+//                builder.addLeaf({key: Acm.goodValue(folderList.folderId, 0) + ".prev"
+//                    ,title: Acm.goodValue(folderList.startRow, 0) + " items above..."
+//                    ,tooltip: "Review previous items"
+//                    ,expanded: false
+//                    ,folder: false
+//                    ,objectType: "prev"
+//                });
+//            //}
+
             for (var i = 0; i < folderList.children.length; i++) {
                 var child = folderList.children[i];
                 if ("folder" == Acm.goodValue(child.objectType)) {
@@ -627,24 +705,46 @@ DocTree.View = DocTree.View || {
                         , lazy: true
                         , cache: false
                         , "id":"f1"
+                        ,totalChildren: -1
                         , "action": DocTree.View.getHtmlAction()
                     });
 
                 } if ("file" == Acm.goodValue(child.objectType)) {
-                    builder.addLeaf({"key": Acm.goodValue(child.objectId, 0)
-                        , "title":    Acm.goodValue(child.name)
-                        , toolTip:    Acm.goodValue(child.name)
-                        , "folder":   false
-                        , "objectId": Acm.goodValue(child.objectId, 0)
-                        , "type":     Acm.goodValue(child.type)
-                        , "created":  Acm.goodValue(child.created)
-                        , "creator":  Acm.goodValue(child.creator)
-                        , "version":  Acm.goodValue(child.version)
-                        , "status":   Acm.goodValue(child.status)
-                        , "action":   DocTree.View.getHtmlAction()
-                    });
+                    var nodeData = {};
+                    DocTree.View._fileDataToNodeData(child, nodeData);
+                    nodeData.folder = false;
+                    nodeData.action = DocTree.View.getHtmlAction();
+                    builder.addLeaf(nodeData);
+
+//                    builder.addLeaf({"key": Acm.goodValue(child.objectId, 0)
+//                        , "title":    Acm.goodValue(child.name)
+//                        , toolTip:    Acm.goodValue(child.name)
+//                        , "folder":   false
+//                        , "objectId": Acm.goodValue(child.objectId, 0)
+//                        , "type":     Acm.goodValue(child.type)
+//                        , "created":  Acm.goodValue(child.created)
+//                        , "creator":  Acm.goodValue(child.creator)
+//                        , "version":  Acm.goodValue(child.version)
+//                        , "status":   Acm.goodValue(child.status)
+//                        , "action":   DocTree.View.getHtmlAction()
+//                    });
                 }
             }
+            //builder.makeLast();
+
+
+//            if ((0 > folderList.total)                                    //unknown size
+//                || (folderList.total - folderList.n > folderList.startRow)) {    //more page
+//                var title = (0 > treeInfo.total)? "More items..."
+//                    : (treeInfo.total - treeInfo.start - treeInfo.n) + " more items...";
+//                builder.addLeafLast({key: Acm.goodValue(folderList.folderId, 0) + ".next"
+//                    ,title: title
+//                    ,tooltip: "Load more items"
+//                    ,expanded: false
+//                    ,folder: false
+//                    ,objectType: "next"
+//                });
+//            }
         }
 
 //        builder.addLeaf({"key":"f1"
@@ -693,6 +793,7 @@ DocTree.View = DocTree.View || {
         } else {
             data.result = DocTree.Service.retrieveFolderListDeferred(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, pageId, data.node
                 ,function(folderList) {
+                    data.node.data.totalChildren = folderList.totalChildren;
                     var rc = DocTree.View._makeChildNodes(folderList);
                     setTimeout(function() {
                         DocTree.Controller.viewChangedTree();

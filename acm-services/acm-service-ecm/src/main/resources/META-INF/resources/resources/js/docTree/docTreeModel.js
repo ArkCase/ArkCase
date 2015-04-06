@@ -84,7 +84,7 @@ DocTree.Model = DocTree.Model || {
             return false;
         }
         for (var i = 0; i < data.length; i++) {
-            if (!this.validateUploadInfoItem(data[0])) {
+            if (!this.validateUploadInfoItem(data[i])) {
                 return false;
             }
         }
