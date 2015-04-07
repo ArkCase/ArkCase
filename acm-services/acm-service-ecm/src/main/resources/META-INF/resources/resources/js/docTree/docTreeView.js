@@ -29,6 +29,7 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT           ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_TREE             ,this.onViewChangedTree);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_UPLOADED_FILE           ,this.onModelUploadedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST    ,this.onModelRetrievedFolderList);
 
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_FOLDER            ,this.onModelAddedFolder);
@@ -54,20 +55,28 @@ DocTree.View = DocTree.View || {
     }
 
     ,_addFileNode: function(folderNode, name, type) {
-        var fileNode = folderNode.addChildren({"title": name, "type": type, "loadStatus": "loading", "action": DocTree.View.getHtmlAction()});
+        var fileNode = folderNode.addChildren({"title": "Uploading " + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.getHtmlAction()});
         fileNode.setStatus("loading");
         return fileNode;
     }
-    ,_addingFileNode: function(folderNode, name, type) {
+    ,_addingFileNodes: function(folderNode, names, type) {
         var deferred = $.Deferred();
         if (folderNode.lazy && !folderNode.children) {
             folderNode.setExpanded(true).always(function(){// Wait until expand finished, then do the paste
-                var fileNode = DocTree.View._addFileNode(folderNode, name, type);
-                deferred.resolve(fileNode);
+                var fileNodes = [];
+                for (var i = 0; i < names.length; i++) {
+                    var fileNode = DocTree.View._addFileNode(folderNode, names[i], type);
+                    fileNodes.push(fileNode);
+                }
+                deferred.resolve(fileNodes);
             });
         } else {
-            var fileNode = DocTree.View._addFileNode(folderNode, name, type);
-            deferred.resolve(fileNode);
+            var fileNodes = [];
+            for (var i = 0; i < names.length; i++) {
+                var fileNode = DocTree.View._addFileNode(folderNode, names[i], type);
+                fileNodes.push(fileNode);
+            }
+            deferred.resolve(fileNodes);
         }
         return deferred.promise();
     }
@@ -77,37 +86,80 @@ DocTree.View = DocTree.View || {
     ,onLoadingFrevvoForm: function() {
         var folderNode = DocTree.View.uploadToFolderNode;
         var fileType = DocTree.View.uploadFileType;
-        var name = "Form " + fileType;
-        var promiseAddNode = DocTree.View._addingFileNode(folderNode, "Uploading " + name + "...", fileType);
+        var names = [fileType + " form"];
+        var promiseAddNode = DocTree.View._addingFileNodes(folderNode, names, fileType);
 
         setTimeout(function(){
-            var promiseUploadFile = DocTree.Service.checkUploadForm(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderNode.data.objectId, folderNode.data.startRow, folderNode);
-            $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFile, fileNode){
-                if (DocTree.View.validateFolderNode(fileNode) && uploadedFile) {
-                    fileNode.setStatus("ok");
-                    fileNode.key            = Acm.goodValue(uploadedFile.objectId, 0);
-                    fileNode.title          = Acm.goodValue(uploadedFile.name);
-                    fileNode.data.name      = Acm.goodValue(uploadedFile.name);
-                    fileNode.data.objectId  = Acm.goodValue(uploadedFile.objectId, 0);
-                    fileNode.data.created   = Acm.goodValue(uploadedFile.created);
-                    fileNode.data.creator   = Acm.goodValue(uploadedFile.creator);
-                    fileNode.data.type      = Acm.goodValue(uploadedFile.type);
-                    fileNode.data.status    = Acm.goodValue(uploadedFile.status);
-                    fileNode.data.version   = Acm.goodValue(uploadedFile.version);
-                    fileNode.data.category  = Acm.goodValue(uploadedFile.category);
-                    fileNode.renderTitle();
+            var promiseUploadFile = DocTree.Service.checkUploadForm(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderNode.data.objectId, folderNode.data.startRow, folderNode, fileType);
+            $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFiles, fileNodes){
+                if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateNodes(fileNodes)) {
+                    for (var i = 0; i < uploadedFiles.length; i++) {
+                        var uploadedFile = uploadedFiles[i];
+                        var emptyNode = null;
+                        if (0 == i) {
+                            emptyNode = DocTree.View._findEmptyNode(folderNode, fileType);
+                            if (emptyNode) {
+                                DocTree.View._fileDataToNodeData(uploadedFile, emptyNode);
+                                emptyNode.renderTitle();
+                                emptyNode.setStatus("ok");
+                            }
+                        }
+
+
+                        if (!emptyNode) {
+                            var fileNode = folderNode.addChildren({"title": Acm.goodValue(uploadedFile.name), "action": DocTree.View.getHtmlAction()});
+                            DocTree.View._fileDataToNodeData(uploadedFile, fileNode);
+                            fileNode.renderTitle();
+                        }
+                    }
                 }
             });
         }, 5000);
 
+    }
+    ,_fileDataToNodeData: function(fileData, nodeData) {
+        if (fileData && nodeData) {
+            if (!nodeData.data) {
+                nodeData.data = {};
+            }
+            nodeData.key             = Acm.goodValue(fileData.objectId, 0);
+            nodeData.title           = Acm.goodValue(fileData.name);
+            nodeData.tooltip         = Acm.goodValue(fileData.name);
+            nodeData.data.name       = Acm.goodValue(fileData.name);
+            nodeData.data.type       = Acm.goodValue(fileData.type);
+            nodeData.data.objectId   = Acm.goodValue(fileData.objectId, 0);
+            nodeData.data.objectType = Acm.goodValue(fileData.objectType);
+            nodeData.data.created    = Acm.goodValue(fileData.created);
+            nodeData.data.creator    = Acm.goodValue(fileData.creator);
+            nodeData.data.status     = Acm.goodValue(fileData.status);
+            nodeData.data.version    = Acm.goodValue(fileData.version);
+            nodeData.data.category   = Acm.goodValue(fileData.category);
+        }
+        return nodeData;
+    }
+    ,_findEmptyNode: function(folderNode, fileType) {
+        var node = null;
+        for (var i = folderNode.children.length - 1; 0 <= i; i--) {
+            if (fileType == folderNode.children[i].data.type) {
+                if (Acm.isEmpty(folderNode.children[i].data.objectId)) {
+                    node = folderNode.children[i];
+                    break;
+                }
+            }
+        }
+        return node;
     }
     ,onSubmitFormUploadFile: function(event, ctrl) {
         event.preventDefault();
 
         var folderNode = DocTree.View.uploadToFolderNode;
         var fileType = DocTree.View.uploadFileType;
-        var name = DocTree.View.$fileInput[0].files[0].name;
-        var promiseAddNode = DocTree.View._addingFileNode(folderNode, "Uploading " + name + "...", fileType);
+        var files = DocTree.View.$fileInput[0].files;
+        var names = [];
+        for(var i = 0; i < files.length; i++ ){
+            names.push(files[i].name);
+        }
+        var promiseAddNode = DocTree.View._addingFileNodes(folderNode, names, fileType);
 
         var fd = new FormData();
         fd.append("parentObjectType", DocTree.Model.getObjType());
@@ -117,29 +169,62 @@ DocTree.View = DocTree.View || {
         }
         fd.append("fileType", fileType);
         fd.append("category", "Document");
-        fd.append("file", DocTree.View.$fileInput[0].files[0]);
+        for(var i = 0; i < files.length; i++ ){
+            fd.append("files[]", files[i]);
+        }
+
         var folderId = (folderNode.data.root)? 0 : folderNode.data.objectId;
         var pageId = folderNode.data.startRow;
         var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
         var promiseUploadFile = DocTree.Service.uploadFile(fd, cacheKey, folderNode);
-        $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFile, fileNode){
-            if (DocTree.View.validateFolderNode(fileNode) && uploadedFile) {
-                fileNode.setStatus("ok");
-                fileNode.key            = Acm.goodValue(uploadedFile.objectId, 0);
-                fileNode.title          = Acm.goodValue(uploadedFile.name);
-                fileNode.data.name      = Acm.goodValue(uploadedFile.name);
-                fileNode.data.objectId  = Acm.goodValue(uploadedFile.objectId, 0);
-                fileNode.data.created   = Acm.goodValue(uploadedFile.created);
-                fileNode.data.creator   = Acm.goodValue(uploadedFile.creator);
-                fileNode.data.type      = Acm.goodValue(uploadedFile.type);
-                fileNode.data.status    = Acm.goodValue(uploadedFile.status);
-                fileNode.data.version   = Acm.goodValue(uploadedFile.version);
-                fileNode.data.category  = Acm.goodValue(uploadedFile.category);
-                fileNode.renderTitle();
+        $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFiles, fileNodes){
+            if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateNodes(fileNodes)) {
+                for (var i = 0; i < uploadedFiles.length; i++) {
+                    var uploadedFile = uploadedFiles[i];
+                    var type = Acm.goodValue(uploadedFile.type);
+                    var name = Acm.goodValue(uploadedFile.name);
+                    var fileNode = DocTree.View._matchFileNode(type, name, fileNodes);
+                    if (fileNode) {
+                        DocTree.View._fileDataToNodeData(uploadedFile, fileNode);
+                        fileNode.renderTitle();
+                        fileNode.setStatus("ok");
+                    }
+                } //end for
             }
         });
     }
+    ,_getNameOrig: function(name) {
+        if (Acm.isEmpty(name)) {
+            return name;
+        }
 
+        var nameOrig = "";
+        var und_parts = name.split("_");
+        if (und_parts && 2 <= und_parts.length) {
+            nameOrig += name.substring(0, name.length - und_parts[und_parts.length - 1].length - 1);
+        } else {
+            return name;
+        }
+        var dot_parts = und_parts[und_parts.length - 1].split(".");
+        if (dot_parts && 2 <= dot_parts.length) {
+            nameOrig += "." + dot_parts[dot_parts.length - 1];
+        }
+        if (Acm.isEmpty(nameOrig)) {
+            nameOrig = name;
+        }
+        return nameOrig;
+    }
+    ,_matchFileNode: function(type, name, fileNodes) {
+        var fileNode = null;
+        for (var i = 0; i < fileNodes.length; i++) {
+            var nameOrig = this._getNameOrig(name);
+            if (fileNodes[i].data.name == nameOrig && fileNodes[i].data.type == type) {
+                fileNode = fileNodes[i];
+                break;
+            }
+        }
+        return fileNode;
+    }
 
     ,onViewChangedParent: function(objType, objId) {
         DocTree.View.switchObject(objType, objId);
@@ -179,14 +264,31 @@ DocTree.View = DocTree.View || {
             //node.setStatus("error");
             var z = 1;
         } else {
-            if (DocTree.Model.validateUploadInfo(uploadInfo) && DocTree.View.validateFolderNode(folderNode)) {
+            if (DocTree.Model.validateUploadInfo(uploadInfo) && DocTree.View.validateNode(folderNode)) {
 
             }
             //folderNode.data.
         }
-
     }
-    ,validateFolderNode: function(data) {
+    ,onModelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, folderNode) {
+        if (DocTree.Model.validateFolderList(folderList) && DocTree.View.validateNode(folderNode)) {
+            folderNode.data.objectId = folderList.folderId;
+            folderNode.data.totalChildren = folderList.totalChildren;
+            folderNode.renderTitle();
+        }
+    }
+    ,validateNodes: function(data) {
+        if (Acm.isNotArray(data)) {
+            return false;
+        }
+        for (var i = 0; i < data.length; i++) {
+            if (!this.validateNode(data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    ,validateNode: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
         }
@@ -266,20 +368,73 @@ DocTree.View = DocTree.View || {
                 handleCursorKeys: true
             }
             ,renderColumns: function(event, data) {
-                var node = data.node,
-                    $tdList = $(node.tr).find(">td");
+                var node = data.node;
+                var $tdList = $(node.tr).find(">td");
                 // (index #0 is rendered by fancytree by adding the checkbox)
                 //$tdList.eq(1).text(node.data.objectId);
                 $tdList.eq(1).html(DocTree.View.getHtmlDocLink(node.data.objectId));
                 // (index #2 is rendered by fancytree)
 
-                $tdList.eq(3).text(node.data.type);
-                $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
-                $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
-                $tdList.eq(6).text(node.data.version);
-                $tdList.eq(7).text(node.data.status);
-                //$tdList.eq(8).html(node.data.action);
+                if (node.folder) {
+//                    var html =  '<div class="jtable-main-container">'
+//                        +'<div class="jtable-bottom-panel">'
+//                        +'    <div class="jtable-left-area">'
+//                        +'        <span class="jtable-page-list">'
+//                        +'            <span class="jtable-page-number-first jtable-page-number-disabled">&lt;&lt;</span>'
+//                        +'            <span class="jtable-page-number-previous jtable-page-number-disabled">&lt;</span>'
+//                        +'            <span class="jtable-page-number">1</span>'
+//                        +'            <span class="jtable-page-number">2</span>'
+//                        +'            <span class="jtable-page-number-space">...</span>'
+//                        +'            <span class="jtable-page-number">4</span>'
+//                        +'            <span class="jtable-page-number jtable-page-number-active jtable-page-number-disabled">5</span>'
+//                        +'            <span class="jtable-page-number">6</span>'
+//                        +'            <span class="jtable-page-number-space">...</span>'
+//                        +'            <span class="jtable-page-number">152</span>'
+//                        +'            <span class="jtable-page-number">153</span>'
+//                        +'            <span class="jtable-page-number-next jtable-page-number-disabled">&gt;</span>'
+//                        +'            <span class="jtable-page-number-last jtable-page-number-disabled">&gt;&gt;</span>'
+//                        +'            </span>'
+//                        +'        <span class="jtable-goto-page" style="display: inline;">'
+//                        +'            <span>Go to page: </span>'
+//                        +'               <select>'
+//                        +'                  <option value="1">1</option>'
+//                        +'                  <option value="2">2</option>'
+//                        +'                  <option value="3">3</option>'
+//                        +'                  <option value="4">4</option>'
+//                        +'                  <option value="5">5</option>'
+//                        +'                  <option value="6">6</option>'
+//                        +'                  <option value="7">7</option>'
+//                        +'                  <option value="8">8</option>'
+//                        +'                  <option value="9">9</option>'
+//                        +'                  <option value="10">10</option>'
+//                        +'               </select>'
+//                        +'            </span>'
+//                        +'        <span class="jtable-page-size-change">'
+//                        +'            <span>Row count: </span>'
+//                        +'            <select>'
+//                        +'                <option value="10">10</option>'
+//                        +'                <option value="25">25</option>'
+//                        +'                <option value="50">50</option>'
+//                        +'                <option value="100">100</option>'
+//                        +'                <option value="250">250</option>'
+//                        +'                <option value="500">500</option>'
+//                        +'            </select>'
+//                        +'        </span>'
+//                        +'    </div>'
+//                        +'    <div class="jtable-right-area">'
+//                        +'        <span class="jtable-page-info">Showing 1-1 of 1</span>'
+//                        +'    </div>'
+//                        +'</div></div>';
+//                    $tdList.eq(3).html(html);
+                } else {
+                    $tdList.eq(3).text(node.data.type);
+                    $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
+                    $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
+                    $tdList.eq(6).text(node.data.version);
+                    $tdList.eq(7).text(node.data.status);
+                    //$tdList.eq(8).html(node.data.action);
 //                $tdList.eq(8).html(DocTree.View.getHtmlAction());
+                }
 
 
                 //$tdList.eq(3).text(node.key);
@@ -290,6 +445,16 @@ DocTree.View = DocTree.View || {
             }
             ,expand: function(event, data) {
                 var z=1;
+            }
+            ,createNode: function(event, data) {
+//                var node = data.node;
+//                if (node.folder) {
+//                    var $tdEq3 = $(node.tr).find(">td:eq(3)");
+//                    var $tdGt3 = $(node.tr).find(">td:gt(3)");
+//                    $tdEq3.attr("colspan", 5);
+//                    $tdGt3.remove();
+//                }
+                var z = 1;
             }
             ,source: DocTree.View.source()
             ,lazyLoad: DocTree.View.lazyLoad
@@ -487,7 +652,7 @@ DocTree.View = DocTree.View || {
                     //,folderId: 0
                     ,containerObjectType: containerObjectType
                     ,containerObjectId: containerObjectId
-                    //,totalChildren: -1
+                    ,totalChildren: -1
 //            doc.objectId = uploadInfo.fileId;
 //            doc.objectType = "file";
 //            doc.created = uploadInfo.created;
@@ -516,11 +681,21 @@ DocTree.View = DocTree.View || {
         return "<div class='btn-group'><button type='button'> <i class='fa fa-cog'></i> </button></div>";
     }
 
-    ,_makeChildNodes: function(fd) {
+    ,_makeChildNodes: function(folderList) {
         var builder = AcmEx.FancyTreeBuilder.reset();
-        if (DocTree.Model.validateFolderList(fd)) {
-            for (var i = 0; i < fd.children.length; i++) {
-                var child = fd.children[i];
+        if (DocTree.Model.validateFolderList(folderList)) {
+//            //if (0 < folderList.startRow) {
+//                builder.addLeaf({key: Acm.goodValue(folderList.folderId, 0) + ".prev"
+//                    ,title: Acm.goodValue(folderList.startRow, 0) + " items above..."
+//                    ,tooltip: "Review previous items"
+//                    ,expanded: false
+//                    ,folder: false
+//                    ,objectType: "prev"
+//                });
+//            //}
+
+            for (var i = 0; i < folderList.children.length; i++) {
+                var child = folderList.children[i];
                 if ("folder" == Acm.goodValue(child.objectType)) {
                     builder.addLeaf({"key":"f1"
                         , "title": "Folder 1"
@@ -530,24 +705,46 @@ DocTree.View = DocTree.View || {
                         , lazy: true
                         , cache: false
                         , "id":"f1"
+                        ,totalChildren: -1
                         , "action": DocTree.View.getHtmlAction()
                     });
 
                 } if ("file" == Acm.goodValue(child.objectType)) {
-                    builder.addLeaf({"key": Acm.goodValue(child.objectId, 0)
-                        , "title":    Acm.goodValue(child.name)
-                        , toolTip:    Acm.goodValue(child.name)
-                        , "folder":   false
-                        , "objectId": Acm.goodValue(child.objectId, 0)
-                        , "type":     Acm.goodValue(child.type)
-                        , "created":  Acm.goodValue(child.created)
-                        , "creator":  Acm.goodValue(child.creator)
-                        , "version":  Acm.goodValue(child.version)
-                        , "status":   Acm.goodValue(child.status)
-                        , "action":   DocTree.View.getHtmlAction()
-                    });
+                    var nodeData = {};
+                    DocTree.View._fileDataToNodeData(child, nodeData);
+                    nodeData.folder = false;
+                    nodeData.action = DocTree.View.getHtmlAction();
+                    builder.addLeaf(nodeData);
+
+//                    builder.addLeaf({"key": Acm.goodValue(child.objectId, 0)
+//                        , "title":    Acm.goodValue(child.name)
+//                        , toolTip:    Acm.goodValue(child.name)
+//                        , "folder":   false
+//                        , "objectId": Acm.goodValue(child.objectId, 0)
+//                        , "type":     Acm.goodValue(child.type)
+//                        , "created":  Acm.goodValue(child.created)
+//                        , "creator":  Acm.goodValue(child.creator)
+//                        , "version":  Acm.goodValue(child.version)
+//                        , "status":   Acm.goodValue(child.status)
+//                        , "action":   DocTree.View.getHtmlAction()
+//                    });
                 }
             }
+            //builder.makeLast();
+
+
+//            if ((0 > folderList.total)                                    //unknown size
+//                || (folderList.total - folderList.n > folderList.startRow)) {    //more page
+//                var title = (0 > treeInfo.total)? "More items..."
+//                    : (treeInfo.total - treeInfo.start - treeInfo.n) + " more items...";
+//                builder.addLeafLast({key: Acm.goodValue(folderList.folderId, 0) + ".next"
+//                    ,title: title
+//                    ,tooltip: "Load more items"
+//                    ,expanded: false
+//                    ,folder: false
+//                    ,objectType: "next"
+//                });
+//            }
         }
 
 //        builder.addLeaf({"key":"f1"
@@ -586,21 +783,18 @@ DocTree.View = DocTree.View || {
         }
         var pageId = nodeData.startRow;
         var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-        var fd = DocTree.Model.cacheFolder.get(cacheKey);
-        if (DocTree.Model.validateFolderList(fd)) {
-            data.result = DocTree.View._makeChildNodes(fd);
+        var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+        if (DocTree.Model.validateFolderList(folderList)) {
+            data.result = DocTree.View._makeChildNodes(folderList);
             setTimeout(function() {
                 DocTree.Controller.viewChangedTree();
             }, 500);
 
         } else {
-            data.result = DocTree.Service.retrieveFolderListDeferred(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, pageId
-                ,function(fd) {
-                    if (DocTree.Model.validateFolderList(fd)) {
-                        nodeData.objectId = fd.folderId;
-                        nodeData.totalChildren = fd.totalChildren;
-                    }
-                    var rc = DocTree.View._makeChildNodes(fd);
+            data.result = DocTree.Service.retrieveFolderListDeferred(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, pageId, data.node
+                ,function(folderList) {
+                    data.node.data.totalChildren = folderList.totalChildren;
+                    var rc = DocTree.View._makeChildNodes(folderList);
                     setTimeout(function() {
                         DocTree.Controller.viewChangedTree();
                     }, 500);
@@ -620,33 +814,11 @@ DocTree.View = DocTree.View || {
             var fileType =  data.cmd.substring(5);
             DocTree.View.uploadForm(node, fileType);
             return;
-//            switch(data.cmd) {
-//                case "form/electronicCommunicationFormUrl":
-//                    break;
-//                case "form/roiFormUrl":
-//                    break;
-//            }
         }
         if (0 == data.cmd.indexOf("file/")) {
             var fileType =  data.cmd.substring(5);
             DocTree.View.uploadFile(node, fileType);
             return;
-//            switch(data.cmd) {
-//                case "file/mr":
-//                    break;
-//                case "file/gr":
-//                    break;
-//                case "file/ev":
-//                    break;
-//                case "file/sig":
-//                    break;
-//                case "file/noi":
-//                    break;
-//                case "file/wir":
-//                    break;
-//                case "file/ot":
-//                    break;
-//            }
         }
         switch( data.cmd ) {
             case "moveUp":

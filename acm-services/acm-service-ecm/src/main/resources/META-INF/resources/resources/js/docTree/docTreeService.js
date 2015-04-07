@@ -15,7 +15,7 @@ DocTree.Service = {
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
     ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
 
-    ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callbackSuccess) {
+    ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
         var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId + "?start=" + pageId;
         url += "&n=" + DocTree.Model.Config.getMaxRows();
@@ -24,18 +24,20 @@ DocTree.Service = {
         }
 
         return Acm.Service.deferredGet(function(data) {
+                var folderList = null;
                 if (DocTree.Model.validateFolderList(data)) {
-                    var fd = data;
+                    folderList = data;
                     var setting = DocTree.Model.Config.getSetting();
-                    setting.maxRows = Acm.goodValue(fd.maxRows, 0);
-                    setting.sortBy = Acm.goodValue(fd.sortBy);
-                    setting.sortDirection = Acm.goodValue(fd.sortDirection);
+                    setting.maxRows = Acm.goodValue(folderList.maxRows, 0);
+                    setting.sortBy = Acm.goodValue(folderList.sortBy);
+                    setting.sortDirection = Acm.goodValue(folderList.sortDirection);
 
                     var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-                    DocTree.Model.cacheFolder.put(cacheKey, fd);
+                    DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                 }
 
-                var rc = callbackSuccess(fd);
+                var rc = callbackSuccess(folderList);
+                DocTree.Controller.modelRetrievedFolderList(folderList, objType, objId, folderId, pageId, callerData);
                 return rc;
             }
             ,url
@@ -44,89 +46,87 @@ DocTree.Service = {
     }
 
     ,_findFolderNode: function(folderNode, fileId) {
-        var found = -1;
+        var node = null;
         for (var j = folderNode.children.length - 1; 0 <= j; j--) {
             if (folderNode.children[j].data.objectId == fileId) {
-                found = j;
+                node = folderNode.children[j];
                 break;
             }
         }
-        return found;
+        return node;
     }
-    ,_findEmptyNode: function(folderNode) {
-        var nodeNotInFd = -1;
-        for (var i = folderNode.children.length - 1; 0 <= i; i--) {
-            if (Acm.isEmpty(folderNode.children[i].data.objectId)) {
-                nodeNotInFd = i;
-                break;
-            }
-        }
-        return nodeNotInFd;
-    }
-    ,checkUploadForm: function(objType, objId, folderId, pageId, folderNode) {
-        return DocTree.Service.retrieveFolderListDeferred(objType, objId, folderId, pageId, function(fd) {
-//            var mock = {};
-//            var i = fd.children.length - 1;
-//            mock.objectId   = fd.children[i].objectId + 1000;
-//            mock.objectType = fd.children[i].objectType;
-//            mock.created    = fd.children[i].created;
-//            mock.creator    = fd.children[i].creator;
-//            mock.modified   = fd.children[i].modified;
-//            mock.modifier   = fd.children[i].modifier;
-//            mock.name       = "Mock";
-//            mock.type       = fd.children[i].type;
-//            mock.status     = fd.children[i].status;
-//            mock.version    = fd.children[i].version;
-//            mock.category   = fd.children[i].category;
-//            fd.children.push(mock);
 
-            var newDoc = null;
-            if (Acm.isArray(fd.children) && Acm.isArray(folderNode.children)) {
-                var fdNotInNode = -1;
-                for (var i = fd.children.length - 1; 0 <= i; i--) {
-//                    var found = -1;
-//                    for (var j = folderNode.children.length - 1; 0 <= j; j--) {
-//                        if (folderNode.children[j].data.objectId == fd.children[i].objectId) {
-//                            found = j;
-//                            break;
-//                        }
-//                    }
-                    var found = DocTree.Service._findFolderNode(folderNode, fd.children[i].objectId);
-                    if (0 > found) { //not found in the tree node, must be newly created
-                        fdNotInNode = i;
-                        break;
+    //
+    // folderNode is a concept in View, Model should not use any View object.
+    // This is a hack for now until we find way to get Frevvo to pass data back uploaded files to UI
+    //
+    ,checkUploadForm: function(objType, objId, folderId, pageId, folderNode, fileType) {
+        return DocTree.Service.retrieveFolderListDeferred(objType, objId, folderId, pageId, folderNode, function(folderListLatest) {
+//            var mock = {};
+//            var i = folderListLatest.children.length - 1;
+//            mock.objectId   = folderListLatest.children[i].objectId + 1001;
+//            mock.objectType = folderListLatest.children[i].objectType;
+//            mock.created    = folderListLatest.children[i].created;
+//            mock.creator    = folderListLatest.children[i].creator;
+//            mock.modified   = folderListLatest.children[i].modified;
+//            mock.modifier   = folderListLatest.children[i].modifier;
+//            mock.name       = "Mock";
+//            mock.type       = fileType;
+//            mock.status     = folderListLatest.children[i].status;
+//            mock.version    = folderListLatest.children[i].version;
+//            mock.category   = folderListLatest.children[i].category;
+//            folderListLatest.children.push(mock);
+//            mock = {};
+//            i = folderListLatest.children.length - 1;
+//            mock.objectId   = folderListLatest.children[i].objectId + 1002;
+//            mock.objectType = folderListLatest.children[i].objectType;
+//            mock.created    = folderListLatest.children[i].created;
+//            mock.creator    = folderListLatest.children[i].creator;
+//            mock.modified   = folderListLatest.children[i].modified;
+//            mock.modifier   = folderListLatest.children[i].modifier;
+//            mock.name       = "Mock2";
+//            mock.type       = fileType;
+//            mock.status     = folderListLatest.children[i].status;
+//            mock.version    = folderListLatest.children[i].version;
+//            mock.category   = folderListLatest.children[i].category;
+//            folderListLatest.children.push(mock);
+
+            var uploadedFiles = null;
+            if (DocTree.Model.validateFolderList(folderListLatest)) {
+                var newChildren = [];
+                for (var i = folderListLatest.children.length - 1; 0 <= i; i--) {
+                    if (folderListLatest.children[i].type == fileType) {
+                        if (!DocTree.Service._findFolderNode(folderNode, folderListLatest.children[i].objectId)) { //not found in the tree node, must be newly created
+                            newChildren.push(folderListLatest.children[i]);
+                        }
                     }
                 }
-
-//                var nodeNotInFd = -1;
-//                for (var i = folderNode.children.length - 1; 0 <= i; i--) {
-//                    if (Acm.isEmpty(folderNode.children[i].data.objectId)) {
-//                        nodeNotInFd = i;
-//                        break;
-//                    }
-//                }
-                var nodeNotInFd = DocTree.Service._findEmptyNode(folderNode);
-
-                if (0 <= nodeNotInFd && 0 <= fdNotInNode) {
-                    //if ("file" == fd.children[fdNotInNode].objectType && folderNode.children[nodeNotInFd].data.type == fd.children[fdNotInNode].type) { //double check to be sure the new doc is what we expected
-                    newDoc = {};
-                    var i = fdNotInNode;
-                    newDoc.objectId   = Acm.goodValue(fd.children[i].objectId, 0);
-                    newDoc.objectType = Acm.goodValue(fd.children[i].objectType, "file");
-                    newDoc.created    = Acm.goodValue(fd.children[i].created);
-                    newDoc.creator    = Acm.goodValue(fd.children[i].creator);
-                    newDoc.modified   = Acm.goodValue(fd.children[i].modified);
-                    newDoc.modifier   = Acm.goodValue(fd.children[i].modifier);
-                    newDoc.name       = Acm.goodValue(fd.children[i].name);
-                    newDoc.type       = Acm.goodValue(fd.children[i].type);
-                    newDoc.status     = Acm.goodValue(fd.children[i].status);
-                    newDoc.version    = Acm.goodValue(fd.children[i].version);
-                    newDoc.category   = Acm.goodValue(fd.children[i].category);
-                    //}
-                }
+                if (!Acm.isArrayEmpty(newChildren)) {
+                    var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
+                    var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                    if (DocTree.Model.validateFolderList(folderList)) {
+                        uploadedFiles = [];
+                        for (var i = 0; i < newChildren.length; i++) {
+                            var uploadedFile = {};
+                            uploadedFile.objectId   = Acm.goodValue(newChildren[i].objectId, 0);
+                            uploadedFile.objectType = Acm.goodValue(newChildren[i].objectType, "file");
+                            uploadedFile.created    = Acm.goodValue(newChildren[i].created);
+                            uploadedFile.creator    = Acm.goodValue(newChildren[i].creator);
+                            uploadedFile.modified   = Acm.goodValue(newChildren[i].modified);
+                            uploadedFile.modifier   = Acm.goodValue(newChildren[i].modifier);
+                            uploadedFile.name       = Acm.goodValue(newChildren[i].name);
+                            uploadedFile.type       = Acm.goodValue(newChildren[i].type);
+                            uploadedFile.status     = Acm.goodValue(newChildren[i].status);
+                            uploadedFile.version    = Acm.goodValue(newChildren[i].version);
+                            uploadedFile.category   = Acm.goodValue(newChildren[i].category);
+                            uploadedFiles.push(uploadedFile);
+                            folderList.children.push(uploadedFile);
+                            folderList.totalChildren++;
+                        }
+                    } //end if validateFolderList
+                } //end if (!Acm.isArrayEmpty(newChildren))
             }
-
-            return newDoc;
+            return uploadedFiles;
         });
     }
 
@@ -145,36 +145,35 @@ DocTree.Service = {
                         DocTree.Controller.modelUploadedFile(response, callerData);
                         $dfd.reject();
                     } else {
-                        var uploadedFile = null;
+                        var uploadedFiles = null;
                         if (DocTree.Model.validateUploadInfo(response)) {
                             var uploadInfo = response;
 
-                            var fd = DocTree.Model.cacheFolder.get(cacheKey);
-                            if (DocTree.Model.validateFolderList(fd)) {
-                                uploadedFile = {};
-                                uploadedFile.category  = Acm.goodValue(uploadInfo[0].category);
-                                uploadedFile.objectId   = Acm.goodValue(uploadInfo[0].fileId);
-                                uploadedFile.objectType = "file";
-                                uploadedFile.created    = Acm.goodValue(uploadInfo[0].created);
-                                uploadedFile.creator    = Acm.goodValue(uploadInfo[0].creator);
-                                uploadedFile.modified   = Acm.goodValue(uploadInfo[0].modified);
-                                uploadedFile.modifier   = Acm.goodValue(uploadInfo[0].modifier);
-                                uploadedFile.name       = Acm.goodValue(uploadInfo[0].fileName);
-                                uploadedFile.type       = Acm.goodValue(uploadInfo[0].fileType);
-                                uploadedFile.status     = Acm.goodValue(uploadInfo[0].status);
-                                uploadedFile.version    = Acm.goodValue(uploadInfo[0].activeVersionTag);
-//                                uploadedFile.version = "";
-//                                if (!Acm.isArrayEmpty(uploadInfo[0].versions)) {
-//                                    uploadedFile.version = uploadInfo[0].versions[0].versionTag;
-//                                }
-                                //uploadInfo.tags
-                                fd.children.push(uploadedFile);
-                                DocTree.Model.cacheFolder.put(cacheKey, fd);
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                uploadedFiles = [];
+                                for (var i = 0; i < uploadInfo.length; i++) {
+                                    var uploadedFile = {};
+                                    uploadedFile.objectId   = Acm.goodValue(uploadInfo[i].fileId);
+                                    uploadedFile.objectType = "file";
+                                    uploadedFile.created    = Acm.goodValue(uploadInfo[i].created);
+                                    uploadedFile.creator    = Acm.goodValue(uploadInfo[i].creator);
+                                    uploadedFile.modified   = Acm.goodValue(uploadInfo[i].modified);
+                                    uploadedFile.modifier   = Acm.goodValue(uploadInfo[i].modifier);
+                                    uploadedFile.name       = Acm.goodValue(uploadInfo[i].fileName);
+                                    uploadedFile.type       = Acm.goodValue(uploadInfo[i].fileType);
+                                    uploadedFile.status     = Acm.goodValue(uploadInfo[i].status);
+                                    uploadedFile.version    = Acm.goodValue(uploadInfo[i].activeVersionTag);
+                                    uploadedFile.category   = Acm.goodValue(uploadInfo[i].category);
+                                    uploadedFiles.push(uploadedFile);
+                                    folderList.children.push(uploadedFile);
+                                    folderList.totalChildren++;
+                                }
+                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
 
                                 DocTree.Controller.modelUploadedFile(uploadInfo, callerData);
-                                $dfd.resolve(uploadedFile);
+                                $dfd.resolve(uploadedFiles);
                             }
-
                         }
 
                         if (!uploadedFile) {
