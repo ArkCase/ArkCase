@@ -1,7 +1,7 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
 import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.ArrayList;
@@ -92,9 +92,6 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		String role1 = "ROLE_ADMINISTRATOR";
 		String role2 = "ROLE_INVESTIGATOR_SUPERVISOR";
 		
-		
-		
-		
 		// Group 1
 		Set<AcmUser> membersGroup1 = new HashSet<>();
 		
@@ -109,9 +106,6 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		AcmGroup group1 = new AcmGroup();
 		group1.setName("acm_administrator_dev");
 		group1.setMembers(membersGroup1);
-		
-		
-		
 		
 		// Group 2
 		Set<AcmUser> membersGroup2 = new HashSet<>();
@@ -128,22 +122,12 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		group2.setName("acm_supervisor_dev");
 		group2.setMembers(membersGroup2);
 		
-		
-		
-		
-		List<AcmUser> expectedUserList = Arrays.asList(user2, user1, user4, user3);
-		
-		
-		
-		
+		List<AcmUser> expectedUserList = Arrays.asList(user1, user2, user3, user4);
+
 		List<String> rolesForPrivilege = Arrays.asList(role1, role2);
 		Map<String, List<String>> rolesToGroups = new HashMap<>();
 		rolesToGroups.put(role1, Arrays.asList(group1.getName()));
 		rolesToGroups.put(role2, Arrays.asList(group2.getName()));
-		
-		
-		
-		
 		
 		expect(mockAuthentication.getName()).andReturn("user");
 		expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
@@ -169,11 +153,11 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 		assertEquals(expectedUserList.size(), resultUserList.size());
-		assertEquals(expectedUserList.get(0).getUserId(), resultUserList.get(0).getUserId());
-		assertEquals(expectedUserList.get(1).getUserId(), resultUserList.get(1).getUserId());
-		assertEquals(expectedUserList.get(2).getUserId(), resultUserList.get(2).getUserId());
-		assertEquals(expectedUserList.get(3).getUserId(), resultUserList.get(3).getUserId());
-		
+		for ( AcmUser expected : expectedUserList )
+		{
+			assertTrue(resultUserList.contains(expected));
+		}
+
 	}
 	
 	@Test
@@ -222,7 +206,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		
 		
-		List<AcmUser> expectedUserList = Arrays.asList(user2, user1);
+		List<AcmUser> expectedUserList = Arrays.asList(user1, user2);
 		
 		
 		
@@ -259,9 +243,11 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 		assertEquals(expectedUserList.size(), resultUserList.size());
-		assertEquals(expectedUserList.get(0).getUserId(), resultUserList.get(0).getUserId());
-		assertEquals(expectedUserList.get(1).getUserId(), resultUserList.get(1).getUserId());
-		
+		for ( AcmUser expected : expectedUserList )
+		{
+			assertTrue(resultUserList.contains(expected));
+		}
+
 	}
 	
 	@Test
@@ -313,7 +299,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		
 		
-		List<AcmUser> expectedUserList = Arrays.asList(user2, user1, currentAssignee);
+		List<AcmUser> expectedUserList = Arrays.asList(user1, user2, currentAssignee);
 		
 		
 		
@@ -351,9 +337,10 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 		assertEquals(expectedUserList.size(), resultUserList.size());
-		assertEquals(expectedUserList.get(0).getUserId(), resultUserList.get(0).getUserId());
-		assertEquals(expectedUserList.get(1).getUserId(), resultUserList.get(1).getUserId());
-		assertEquals(expectedUserList.get(2).getUserId(), resultUserList.get(2).getUserId());
+		for ( AcmUser expected : expectedUserList )
+		{
+			assertTrue(resultUserList.contains(expected));
+		}
 		
 	}
 	
@@ -406,7 +393,7 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		
 		
-		List<AcmUser> expectedUserList = Arrays.asList(user2, user1, user4, user3, currentAssignee);
+		List<AcmUser> expectedUserList = Arrays.asList(user1, user2, currentAssignee, user3, user4 );
 		
 		
 		
@@ -445,11 +432,10 @@ private Logger LOG = LoggerFactory.getLogger(getClass());
 		
 		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 		assertEquals(expectedUserList.size(), resultUserList.size());
-		assertEquals(expectedUserList.get(0).getUserId(), resultUserList.get(0).getUserId());
-		assertEquals(expectedUserList.get(1).getUserId(), resultUserList.get(1).getUserId());
-		assertEquals(expectedUserList.get(2).getUserId(), resultUserList.get(2).getUserId());
-		assertEquals(expectedUserList.get(3).getUserId(), resultUserList.get(3).getUserId());
-		assertEquals(expectedUserList.get(4).getUserId(), resultUserList.get(4).getUserId());
+		for ( AcmUser expected : expectedUserList )
+		{
+			assertTrue(resultUserList.contains(expected));
+		}
 		
 	}
 	
