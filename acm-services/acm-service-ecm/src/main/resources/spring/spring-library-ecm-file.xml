@@ -95,6 +95,10 @@
         <property name="muleClient" ref="muleClient"/>
     </bean>
 
+    <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
+
+    <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>
+
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
         <property name="privileges">
