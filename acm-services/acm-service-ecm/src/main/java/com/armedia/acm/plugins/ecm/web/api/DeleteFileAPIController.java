@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class DeleteFileAPIController {
 
     private EcmFileService fileService;
-    private FileEventPublisher eventPublisher;
+    private FileEventPublisher fileEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     @RequestMapping(value = "/{objectId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,17 +36,19 @@ public class DeleteFileAPIController {
         if(log.isInfoEnabled()) {
             log.info("File with id: "+objectId+" will be deleted");
         }
-        EcmFile file = getFileService().findById(objectId);
+        EcmFile source = getFileService().findById(objectId);
         try {
             getFileService().deleteFile(objectId);
             if(log.isInfoEnabled()) {
                 log.info("File with id: "+objectId+" successfully deleted");
             }
+            getFileEventPublisher().publishFileDeletedEvent(source,authentication,true);
             return prepareJsonReturnMsg( EcmFileConstants.SUCCESS_DELETE_MSG,objectId );
         } catch ( AcmUserActionFailedException e ) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to delete file with id: " + objectId);
             }
+            getFileEventPublisher().publishFileDeletedEvent(source,authentication,false);
             throw e;
         } catch ( AcmObjectNotFoundException e ) {
             if( log.isErrorEnabled() ){
@@ -64,12 +66,12 @@ public class DeleteFileAPIController {
         return objectToReturn;
     }
 
-    public FileEventPublisher getEventPublisher() {
-        return eventPublisher;
+    public FileEventPublisher getFileEventPublisher() {
+        return fileEventPublisher;
     }
 
-    public void setEventPublisher(FileEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
+        this.fileEventPublisher = fileEventPublisher;
     }
 
     public EcmFileService getFileService() {

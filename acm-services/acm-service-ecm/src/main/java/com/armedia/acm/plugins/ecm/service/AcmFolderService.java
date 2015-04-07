@@ -13,4 +13,6 @@ public interface AcmFolderService {
 
     public AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException;
 
+    public AcmFolder findById(Long folderId);
+
 }

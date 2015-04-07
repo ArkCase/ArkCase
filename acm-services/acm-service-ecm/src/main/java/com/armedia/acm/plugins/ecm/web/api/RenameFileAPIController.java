@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import org.activiti.engine.impl.util.json.JSONObject;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpSession;
 public class RenameFileAPIController {
 
     private EcmFileService fileService;
+    private FileEventPublisher fileEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -39,21 +41,30 @@ public class RenameFileAPIController {
         if( log.isInfoEnabled() ) {
             log.info("Renaming file, fileId: " + objectId + " with name " + newName);
         }
-
+        EcmFile source = getFileService().findById(objectId);
         try {
             EcmFile renamedFile = getFileService().renameFile(objectId, newName);
             if(log.isInfoEnabled()) {
                 log.info("File with id: "+objectId+" successfully renamed to: " +newName);
             }
+            getFileEventPublisher().publishFileRenamedEvent(renamedFile,authentication,true);
             return renamedFile;
         } catch (AcmUserActionFailedException e) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to rename file with id: " + objectId);
             }
+            getFileEventPublisher().publishFileRenamedEvent(source,authentication,false);
             throw e;
         }
     }
 
+    public FileEventPublisher getFileEventPublisher() {
+        return fileEventPublisher;
+    }
+
+    public void setFileEventPublisher(FileEventPublisher fileEventPublisher) {
+        this.fileEventPublisher = fileEventPublisher;
+    }
 
     public EcmFileService getFileService() {
         return fileService;

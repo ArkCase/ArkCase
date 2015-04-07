@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpSession;
 public class RenameFolderAPIController {
 
     private AcmFolderService folderService;
+    private FolderEventPublisher folderEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -40,19 +42,29 @@ public class RenameFolderAPIController {
         if( log.isInfoEnabled() ) {
             log.info("Renaming folder, folderId: " + objectId + " with name " + newName);
         }
-
+        AcmFolder source = getFolderService().findById(objectId);
         try {
             AcmFolder renamedFile = getFolderService().renameFolder(objectId, newName);
-            if(log.isInfoEnabled()) {
+            if( log.isInfoEnabled() ) {
                 log.info("Folder with id: "+objectId+" successfully renamed to: " +newName);
             }
+            getFolderEventPublisher().publishFolderRenamedEvent(renamedFile,authentication,true);
             return renamedFile;
-        } catch (AcmUserActionFailedException e) {
+        } catch ( AcmUserActionFailedException e ) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to rename folder with id: " + objectId);
             }
+            getFolderEventPublisher().publishFolderRenamedEvent(source,authentication,false);
             throw e;
         }
+    }
+
+    public FolderEventPublisher getFolderEventPublisher() {
+        return folderEventPublisher;
+    }
+
+    public void setFolderEventPublisher(FolderEventPublisher folderEventPublisher) {
+        this.folderEventPublisher = folderEventPublisher;
     }
 
     public AcmFolderService getFolderService() {
