@@ -618,7 +618,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups, Map<String, String> groups,
 			String type, String privilege, String formName)
 	{
-		if (onlyUsers(formName, type))
+		if (!onlyUsers(formName, type))
 		{			
 			if (groups != null)
 			{
