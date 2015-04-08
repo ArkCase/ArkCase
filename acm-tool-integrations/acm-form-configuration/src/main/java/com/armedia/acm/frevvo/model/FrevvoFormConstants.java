@@ -56,4 +56,8 @@ public interface FrevvoFormConstants {
 	 */
 	public final static String DEFAULT_KEY = "*";
 	
+	public final static String GROUP = "group";
+	public final static String USER = "user";
+	public final static String GROUP_USER = "group-user";
+	
 }

@@ -269,7 +269,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		form.setParticipantsTypeOptions(participantTypes);
 		
 		// Init Participants
-		form.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.CASE_FILE, "acm-case-approve"));
+		form.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.CASE_FILE));
 		
 		JSONObject json = createResponse(form);
 		

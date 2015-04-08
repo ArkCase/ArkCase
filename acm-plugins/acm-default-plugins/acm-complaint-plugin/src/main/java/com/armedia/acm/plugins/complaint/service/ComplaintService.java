@@ -193,7 +193,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".participantTypes"), ",");
 		complaint.setParticipantsTypeOptions(participantTypes);
 
-		complaint.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.COMPLAINT, "acm-complaint-approve"));
+		complaint.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.COMPLAINT));
 		
 		JSONObject json = createResponse(complaint);
 		
