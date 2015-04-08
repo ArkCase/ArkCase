@@ -75,8 +75,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @Column(name = "cm_case_priority")
     private String priority;
 
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType;
+
     @OneToMany (cascade = {CascadeType.ALL})
-    @JoinColumn(name = "cm_object_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -164,6 +170,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+
+        if(objectType == null){
+            objectType = getObjectType();
         }
 
         if ( getContainer() != null )
@@ -461,6 +471,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     public String getObjectType()
     {
         return OBJECT_TYPE;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 
     @Override

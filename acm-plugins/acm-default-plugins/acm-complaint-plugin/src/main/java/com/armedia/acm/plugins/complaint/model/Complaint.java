@@ -14,24 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -128,8 +111,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType;
+
     @OneToMany (cascade = {CascadeType.ALL})
-    @JoinColumn(name = "cm_object_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -177,6 +166,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
 
     private void setupChildPointers()
     {
+        if(objectType == null){
+            objectType = getObjectType();
+        }
         for ( ObjectAssociation childObject : childObjects )
         {
             childObject.setParentId(complaintId);
@@ -391,6 +383,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         return "COMPLAINT";
     }
 
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
 
     @Override
     @JsonIgnore

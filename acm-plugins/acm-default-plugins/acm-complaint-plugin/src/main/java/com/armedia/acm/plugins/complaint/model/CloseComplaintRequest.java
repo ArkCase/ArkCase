@@ -5,20 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,8 +32,14 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_close_complaint_status")
     private String status = "IN APPROVAL";
 
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType;
+
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_object_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_close_complaint_created", nullable = false, insertable = true, updatable = false)
@@ -71,6 +64,10 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     private void setupChildPointers()
     {
+        if(objectType == null){
+            objectType = getObjectType();
+        }
+
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
@@ -186,5 +183,9 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     public String getObjectType()
     {
         return "CloseComplaintRequest";
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 }
