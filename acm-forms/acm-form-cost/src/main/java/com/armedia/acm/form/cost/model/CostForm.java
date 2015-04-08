@@ -13,7 +13,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoForm;
+import com.armedia.acm.frevvo.model.Options;
 
 /**
  * @author riste.tutureski
@@ -26,7 +28,8 @@ public class CostForm extends FrevvoForm {
 	private String user;
 	private List<String> userOptions;
 	private Long objectId;
-	private Map<String, List<String>> codeOptions;
+	private Map<String, Options> codeOptions;
+	private Map<String, Map<String, Details>> codeDetails;
 	private String objectType;
 	private List<String> objectTypeOptions;
 	private String objectNumber;
@@ -73,14 +76,23 @@ public class CostForm extends FrevvoForm {
 	public void setObjectId(Long objectId) {
 		this.objectId = objectId;
 	}
-	
+
 	@XmlTransient
-	public Map<String, List<String>> getCodeOptions() {
+	public Map<String, Options> getCodeOptions() {
 		return codeOptions;
 	}
 
-	public void setCodeOptions(Map<String, List<String>> codeOptions) {
+	public void setCodeOptions(Map<String, Options> codeOptions) {
 		this.codeOptions = codeOptions;
+	}
+
+	@XmlTransient
+	public Map<String, Map<String, Details>> getCodeDetails() {
+		return codeDetails;
+	}
+
+	public void setCodeDetails(Map<String, Map<String, Details>> codeDetails) {
+		this.codeDetails = codeDetails;
 	}
 
 	@XmlElement(name="type")
