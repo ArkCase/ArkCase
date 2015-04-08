@@ -20,7 +20,11 @@ import com.armedia.acm.form.cost.model.CostFormConstants;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.Options;
+import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -188,9 +192,14 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".titles"), ","));
 		form.setItems(Arrays.asList(item));
 		
-		// Set charge codes for each type
-		Map<String, List<String>> codeOptions = getCodeOptions(types);
+		// Set charge codes for each type and details for them
+		OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.COSTSHEET, types);
+				
+		Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
+		Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
+		
 		form.setCodeOptions(codeOptions);
+		form.setCodeDetails(codeOptionsDetails);
 		
 		// Init possible approvers
 		form.setApproverOptions(getApproverOptions());

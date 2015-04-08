@@ -9,6 +9,9 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.armedia.acm.frevvo.model.Details;
+import com.armedia.acm.frevvo.model.Options;
+
 /**
  * @author riste.tutureski
  *
@@ -21,7 +24,8 @@ public class TimeItem {
 	private Long objectId;
 	
 	private String code;
-	private Map<String, List<String>> codeOptions;
+	private Map<String, Options> codeOptions;
+	private Map<String, Map<String, Details>> codeDetails;
 	
 	private Long sundayId;
 	private Double sunday;
@@ -79,14 +83,23 @@ public class TimeItem {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
 	@XmlTransient
-	public Map<String, List<String>> getCodeOptions() {
+	public Map<String, Options> getCodeOptions() {
 		return codeOptions;
 	}
 
-	public void setCodeOptions(Map<String, List<String>> codeOptions) {
+	public void setCodeOptions(Map<String, Options> codeOptions) {
 		this.codeOptions = codeOptions;
+	}
+
+	@XmlTransient
+	public Map<String, Map<String, Details>> getCodeDetails() {
+		return codeDetails;
+	}
+
+	public void setCodeDetails(Map<String, Map<String, Details>> codeDetails) {
+		this.codeDetails = codeDetails;
 	}
 
 	@XmlElement(name="sundayId")
