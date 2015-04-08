@@ -35,8 +35,6 @@ import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -203,10 +201,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		form.setApproverOptions(getApproverOptions());
 		
 		// Create JSON and back to the Frevvo form
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(form);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(form);
 
 		return json;
 	}
