@@ -10,7 +10,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -39,8 +38,6 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -407,10 +404,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		caseFileForm.setAddressHistory(addressHistoryList);
 		caseFileForm.setEmploymentHistory(employmentHistoryList);
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(caseFileForm);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(caseFileForm);
 
 		return json;
 	}

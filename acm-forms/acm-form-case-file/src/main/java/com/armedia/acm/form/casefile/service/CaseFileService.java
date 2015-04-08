@@ -10,7 +10,6 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -43,8 +42,6 @@ import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -217,10 +214,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Init People information
 		caseFileForm.setPeople(initPeople());
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(caseFileForm);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(caseFileForm);
 
 		return json;
 	}
@@ -277,10 +271,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Init Participants
 		form.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.CASE_FILE, "acm-case-approve"));
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(form);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(form);
 		
 		return json;
 	}
