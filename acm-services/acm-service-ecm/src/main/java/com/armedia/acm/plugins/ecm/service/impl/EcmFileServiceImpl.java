@@ -21,6 +21,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Relationship;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -34,6 +35,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.Relation;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
@@ -518,16 +520,40 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put("ecmFileId",file.getVersionSeriesId());
         props.put("dstFolderPath",pathForTheNewCopy);
 
-        EcmFile fileCopy;
+        EcmFile result;
 
         try {
             MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
+
+            String dstFolderId = message.getInboundProperty(EcmFileConstants.DESTINATION_FOLDER_PROPERTY);
+
             String newFileId = cmisObject.getId();
-            file.setVersionSeriesId(newFileId);
-            fileCopy = getEcmFileDao().save(file);
-            return fileCopy;
+
+            AcmFolder folder = getFolderDao().findByCmisFolderId(dstFolderId);
+
+            AcmContainer container = getOrCreateContainer(folder.getObjectType(),folder.getId());
+
+            EcmFile fileCopy = new EcmFile();
+
+            fileCopy.setVersionSeriesId(newFileId);
+            fileCopy.setFileType(file.getFileType());
+            fileCopy.setActiveVersionTag(file.getActiveVersionTag());
+            fileCopy.setFileName(cmisObject.getName());
+            fileCopy.setFolder(folder);
+            fileCopy.setContainer(container);
+            fileCopy.setStatus(file.getStatus());
+            fileCopy.setCategory(file.getCategory());
+            fileCopy.setFileMimeType(file.getFileMimeType());
+
+            result = getEcmFileDao().save(fileCopy);
+            return result;
         } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        } catch (AcmCreateObjectFailedException e) {
             if(log.isErrorEnabled()){
                 log.error("Could not copy file "+e.getMessage(),e);
             }
@@ -558,10 +584,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String cmisObjectId = cmisObject.getId();
 
+            String dstFolderId = message.getInboundProperty(EcmFileConstants.DESTINATION_FOLDER_PROPERTY);
+
             file.setVersionSeriesId(cmisObjectId);
 
-            //TODO find a way to return newFolderId from mule flow
-//            file.getFolder().setCmisFolderId("");
+            AcmFolder newFolder = getFolderDao().findByCmisFolderId(dstFolderId);
+
+            file.setFolder(newFolder);
+
             movedFile = getEcmFileDao().save(file);
             return movedFile;
         } catch (MuleException e) {
@@ -587,7 +617,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try {
             MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
-            getEcmFileDao().deleteFile(file);
+            getEcmFileDao().deleteFile(objectId);
         } catch ( MuleException e ) {
             if(log.isErrorEnabled()){
                 log.error("Could not delete file "+e.getMessage(),e);
@@ -598,9 +628,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException {
+    public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException {
         EcmFile file = getEcmFileDao().find(fileId);
 
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
         Map<String,Object> props = new HashMap<>();
         props.put("ecmFileId", file.getVersionSeriesId());
         props.put("newFileName",newFileName);

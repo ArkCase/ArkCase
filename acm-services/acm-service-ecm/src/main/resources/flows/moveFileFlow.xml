@@ -25,15 +25,16 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
-        <enricher target="#[flowVars.dstFolderId]">
+        <enricher target="#[flowVars['dstFolderObject']]">
             <cmis:get-object-by-path path="#[message.inboundProperties.dstFolderId]"/>
         </enricher>
-        <cmis:get-object-by-path path="#[message.inboundProperties.dstFolderId]"/>
+
 
         <cmis:move-object objectId="#[message.inboundProperties.cmisObjectId]"
                           sourceFolderId="#[message.inboundProperties.srcFolderId]"
-                          targetFolderId="#[flowVars.dstFolderId]"/>
+                          targetFolderId="#[flowVars['dstFolderObject'].id]"/>
 
+        <set-property  propertyName="dstFolderId" value="#[flowVars['dstFolderObject'].id]"/>
 
 		<catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>

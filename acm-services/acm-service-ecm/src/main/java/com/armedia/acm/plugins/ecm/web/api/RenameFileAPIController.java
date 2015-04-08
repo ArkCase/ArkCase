@@ -1,14 +1,11 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.*;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
-import org.activiti.engine.impl.util.json.JSONObject;
-import org.activiti.engine.impl.util.json.JSONString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 
 /**
  * Created by marjan.stefanoski on 02.04.2015.
@@ -31,12 +27,15 @@ public class RenameFileAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/file/{objectId}/{newName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/file/{objectId}/{newName}/{extension}",  method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile renameFile(
             @PathVariable("objectId") Long objectId,
-            @PathVariable("newName") String newName,
+            @PathVariable("newName") String name,
+            @PathVariable("extension") String extension,
             Authentication authentication) throws AcmUserActionFailedException  {
+
+        String newName = name +"."+extension;
 
         if( log.isInfoEnabled() ) {
             log.info("Renaming file, fileId: " + objectId + " with name " + newName);
@@ -49,12 +48,18 @@ public class RenameFileAPIController {
             }
             getFileEventPublisher().publishFileRenamedEvent(renamedFile,authentication,true);
             return renamedFile;
-        } catch (AcmUserActionFailedException e) {
+        } catch ( AcmUserActionFailedException e ) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to rename file with id: " + objectId);
             }
             getFileEventPublisher().publishFileRenamedEvent(source,authentication,false);
             throw e;
+        } catch ( AcmObjectNotFoundException e ) {
+            if ( log.isErrorEnabled() ) {
+                log.debug("File with id: " + objectId + " not found in the DB");
+            }
+            getFileEventPublisher().publishFileMovedEvent(source,authentication,false);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found.",e);
         }
     }
 

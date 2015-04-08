@@ -27,37 +27,14 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <timer-interceptor/>
 
-        <!--&lt;!&ndash;//This will return the document content stream&ndash;&gt;-->
-        <!--<enricher target="#[flowVars['stream']]">-->
-            <!--<cmis:get-content-stream objectId="#[message.inboundProperties.ecmFileId]"/>-->
-        <!--</enricher>-->
 
-        <!--&lt;!&ndash;//This will return objectId and will create PWC (private working copy of the documenet)&ndash;&gt;-->
-        <!--<enricher target="#[flowVars['object']]">-->
-		        <!--<cmis:check-out documentId="#[message.inboundProperties.ecmFileId]"/>-->
-		<!--</enricher>-->
-
-
-		<!--&lt;!&ndash; This will check-in the PWC of the document into Alfresco with new name and same content&ndash;&gt;-->
-		<!--<cmis:check-in filename="#[message.inboundProperties.newFileName"-->
-		               <!--documentId="#[flowVars['object'].id]"-->
-					   <!--content-ref="#[flowVars['stream'].contentStream]"-->
-					   <!--checkinComment="Renaming file"-->
-					   <!--major="true"-->
-					   <!--mimeType="#[[flowVars['object'].mimeType"/>-->
-
-        <!--<cmis:get-object-by-id objectId="#[payload.id]"/>-->
-					   <!---->
-
-        <enricher target="#[flowVars:alfrescoObject]">
-            <cmis:get-object-by-id objectId="#[message.inboundProperties.ecmFileId]"/>
-        </enricher>
-
-        <cmis:update-object-properties objectId="#[flowVars:alfrescoObject].id">
+        <cmis:update-object-properties objectId="#[message.inboundProperties.ecmFileId]">
             <cmis:properties>
-                <cmis:property key="name" value-ref="#[message.inboundProperties.newFileName]"/>
+                <cmis:property key="cmis:name" value-ref="#[message.inboundProperties.newFileName]"/>
             </cmis:properties>
         </cmis:update-object-properties>
+
+
 		<catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception renaming: #[exception.message]"/>
             <set-property propertyName="renameException" value="#[exception]"/>

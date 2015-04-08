@@ -110,7 +110,7 @@ public interface EcmFileService
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException;
+    EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile findById(Long fileId);
 

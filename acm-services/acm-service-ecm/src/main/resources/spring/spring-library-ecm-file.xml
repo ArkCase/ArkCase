@@ -155,12 +155,12 @@
                 </bean>
                 <bean id="renameFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/file/{objectId}/{newName}"/>
+                    <property name="url" value="/api/{version}/service/ecm/file/{objectId}/{newName}/{extension}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="deleteFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/ecm/{objectId}"/>
+                    <property name="url" value="/api/{version}/service/ecm/del/{objectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="moveFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -171,6 +171,11 @@
                 <bean id="copyFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/service/ecm/copy"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="replaceFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/ecm/replace"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
             </list>
