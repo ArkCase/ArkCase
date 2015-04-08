@@ -27,7 +27,8 @@ public class DeleteFileAPIController {
     private FileEventPublisher fileEventPublisher;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    @RequestMapping(value = "/{objectId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @RequestMapping(value = "/del/{objectId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String deleteFile(
             @PathVariable("objectId") Long objectId,
             Authentication authentication
@@ -43,7 +44,7 @@ public class DeleteFileAPIController {
                 log.info("File with id: "+objectId+" successfully deleted");
             }
             getFileEventPublisher().publishFileDeletedEvent(source,authentication,true);
-            return prepareJsonReturnMsg( EcmFileConstants.SUCCESS_DELETE_MSG,objectId );
+            return prepareJsonReturnMsg( EcmFileConstants.SUCCESS_DELETE_MSG,objectId, source.getFileName() );
         } catch ( AcmUserActionFailedException e ) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to delete file with id: " + objectId);
@@ -57,6 +58,16 @@ public class DeleteFileAPIController {
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG,objectId);
         }
     }
+
+    private String prepareJsonReturnMsg(String msg, Long fileId, String fileName) {
+        JSONObject objectToReturnJSON = new JSONObject();
+        objectToReturnJSON.put("deletedFileId", fileId);
+        objectToReturnJSON.put("name: ",fileName);
+        objectToReturnJSON.put("Message", msg);
+        String objectToReturn;
+        objectToReturn = objectToReturnJSON.toString();
+        return objectToReturn;
+    }
     private String prepareJsonReturnMsg(String msg, Long fileId) {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedFileId", fileId);
@@ -65,6 +76,7 @@ public class DeleteFileAPIController {
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;
     }
+
 
     public FileEventPublisher getFileEventPublisher() {
         return fileEventPublisher;

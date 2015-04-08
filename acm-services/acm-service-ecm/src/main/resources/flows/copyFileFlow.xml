@@ -33,24 +33,34 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 		        <cmis:get-content-stream  objectId="#[message.inboundProperties.ecmFileId]"/>
 		</enricher>
 
-        <!--Get the parent folderID of the file-->
-        <enricher target="#flowVars['parentFolderId']">
-            <cmis:get-parent-folders objectId="#[message.inboundProperties.ecmFileId]"/>
-        </enricher>
 
-        <enricher target="#flowVars['dstFolderObject']">
+        <enricher target="#[flowVars['dstFolderObject']]">
             <cmis:get-object-by-path path="#[message.inboundProperties.dstFolderPath]"/>
         </enricher>
 
-            <!--create new document -->
-            <cmis:create-document-by-id folderId="#flowVars['dstFolderObject'].id"
-                                    filename="#[payload.fileName]"
-                                    mimeType="#[payload.fileMimeType]"
-                                    versioningState="MAJOR"
-                                    objectType="#[payload.fileType]"
-                                    content-ref="#[flowVars['stream']]" />
+
+        <!--HOW TO CHECK IF FILE WITH SAME NAME ALREADY EXISTS IN THIS FOLDER??-->
+        <!--TODO check if file exists with same name!-->
+
+        <!--create new copy document -->
+        <cmis:create-document-by-id-from-content folderId="#[flowVars['dstFolderObject'].id]"
+                                filename="#[message.payload.fileName]"
+                                mimeType="#[message.payload.fileMimeType]"
+                                versioningState="MAJOR"
+                                objectType="cmis:document"
+                                content-ref="#[flowVars['stream'].stream]" />
+
+        <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="#[flowVars['dstFolderObject'].id]"/>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm" message="NATASHA: New Document created"/>
+
+        <set-property  propertyName="dstFolderId" value="#[flowVars['dstFolderObject'].id]"/>
+
+        <!---->
+
 
         <cmis:get-object-by-id objectId="#[payload.id]"/>
+
 					   
 		<catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>

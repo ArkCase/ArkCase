@@ -56,5 +56,6 @@ public interface EcmFileConstants
 
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
 
+    String DESTINATION_FOLDER_PROPERTY = "dstFolderId";
 
 }

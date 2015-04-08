@@ -13,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by marjan.stefanoski on 02.04.2015.
@@ -32,8 +29,9 @@ public class CopyFileAPIController {
 
     @RequestMapping(value = "/copy", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile copyFile(@RequestParam MoveCopyFileDto in,
-                            Authentication authentication
+    public EcmFile copyFile(
+            @RequestBody MoveCopyFileDto in,
+            Authentication authentication
     ) throws AcmUserActionFailedException {
 
         if (log.isInfoEnabled()) {

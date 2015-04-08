@@ -90,7 +90,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     }
 
     @Transactional
-    public void deleteFile(EcmFile file) {
+    public void deleteFile(Long id) {
+        EcmFile file = getEm().find(getPersistenceClass(),id);
         getEm().remove(file);
     }
 

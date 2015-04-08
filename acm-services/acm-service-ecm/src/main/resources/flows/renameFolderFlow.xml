@@ -21,42 +21,16 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
                 doc:name="Rename Folder">
         </vm:inbound-endpoint>
 
+        <timer-interceptor/>
+
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
-        <!--<timer-interceptor/>-->
-
-
-        <!--<enricher target="#[flowVars:parentFolderId]">-->
-            <!--<cmis:get-parent-folders objectId="#[message.inboundProperties.acmFolderId]"/>-->
-        <!--</enricher>-->
-
-        <!--<enricher target="#[flowVars:newFolderId]">-->
-            <!--<cmis:create-folder folderName="#[message.inboundProperties.newFolderName]" parentObjectId="[flowVars:parentFolderId]"/>-->
-        <!--</enricher>-->
-
-
-        <!--&lt;!&ndash;Get all cmisObjects in folder that we are going to rename&ndash;&gt;-->
-        <!--<enricher target="#[flowVars:objectsInTheFolder]">-->
-            <!--<cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>-->
-        <!--</enricher>-->
-
-            <!--&lt;!&ndash;Move all folder children objects to the new folder &ndash;&gt;-->
-         <!--<foreach collection="#[flowVars:objectsInTheFolder]">-->
-             <!--<cmis:move-object objectId="#[payload]"-->
-                               <!--sourceFolderId="#[message.inboundProperties.acmFolderId]"-->
-                               <!--targetFolderId="#[flowVars:newFolderId"/>-->
-         <!--</foreach>-->
-
-
-        <enricher target="#[flowVars:alfrescoObject]">
-            <cmis:get-object-by-id objectId="#[message.inboundProperties.acmFolderId]"/>
-        </enricher>
-
-        <cmis:update-object-properties objectId="#[flowVars:alfrescoObject].id">
+        <cmis:update-object-properties objectId="#[message.inboundProperties.acmFolderId]">
             <cmis:properties>
-                <cmis:property key="name" value-ref="#[message.inboundProperties.newFolderName]"/>
+                <cmis:property key="cmis:name" value-ref="#[message.inboundProperties.newFolderName]"/>
             </cmis:properties>
         </cmis:update-object-properties>
+
 
 		<catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception renaming: #[exception.message]"/>

@@ -72,6 +72,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         properties.put("newFolderName",newFolderName);
 
         try{
+
             MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_RENAME_FOLDER,folder,properties);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
 
@@ -79,7 +80,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             renamedFolder = getFolderDao().save(folder);
 
-            if (log.isDebugEnabled()) {
+            if ( log.isDebugEnabled() ) {
                log.debug("Folder name is changed to "+ cmisObject.getName());
             }
             return renamedFolder;
