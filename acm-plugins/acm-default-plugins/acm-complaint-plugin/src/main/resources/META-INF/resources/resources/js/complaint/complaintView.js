@@ -62,15 +62,24 @@ Complaint.View = Complaint.View || {
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
-            this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
 
+            var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
+            var mapDocForms = {};
+            if (Acm.isArray(formDocuments)) {
+                for (var i = 0; i < formDocuments.length; i++) {
+                    var form = Acm.goodValue(formDocuments[i].value);
+                    if (Acm.isNotEmpty(form)) {
+                        mapDocForms[form] = formDocuments[i];
+                    }
+                }
+            }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
             if (Acm.isArray(this.fileTypes)) {
                 for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form =this.fileTypes[i].form;
+                    var form = this.fileTypes[i].form;
                     if (Acm.isNotEmpty(form)) {
                         this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = this.findFormDocumentByForm(form);
+                        var formDocument = mapDocForms[form];
                         if (formDocument) {
                             this.fileTypes[i].label = Acm.goodValue(formDocument.label);
                         }
@@ -82,18 +91,6 @@ Complaint.View = Complaint.View || {
         ,onInitialized: function() {
         }
 
-        ,findFormDocumentByForm: function(form) {
-            var fd = null;
-            if (Acm.isArray(this.formDocuments)) {
-                for (var i = 0; i < this.formDocuments.length; i++) {
-                    if (form == this.formDocuments[i].value) {
-                        fd = this.formDocuments[i];
-                        break;
-                    }
-                }
-            }
-            return fd;
-        }
         ,findFileTypeByType: function(type) {
             var ft = null;
             if (Acm.isArray(this.fileTypes)) {
