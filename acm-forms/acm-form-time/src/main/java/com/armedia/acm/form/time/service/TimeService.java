@@ -23,7 +23,10 @@ import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.Options;
+import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
 import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -189,11 +192,16 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		
 		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".types"), ",");
 		
-		// Set charge codes for each type
-		Map<String, List<String>> codeOptions = getCodeOptions(types);
+		// Set charge codes for each type and details for them
+		OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.TIMESHEET, types);
+		
+		Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
+		Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
+		
 		TimeItem item = new TimeItem();
 		item.setTypeOptions(types);
 		item.setCodeOptions(codeOptions);
+		item.setCodeDetails(codeOptionsDetails);
 		form.setItems(Arrays.asList(item));
 		
 		// Init Statuses
@@ -212,17 +220,18 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 	}
 	
 	@Override
-	public List<String> getOptions(String type)
+	public Options getOptions(String type, String source)
 	{		
-		List<String> options = new ArrayList<>();
+		Options options = new Options();
 		
 		if (TimeFormConstants.OTHER.toUpperCase().equals(type))
 		{
-			options = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".type.other"), ",");
+			List<String> optionsOther = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".type.other"), ",");
+			options.addAll(optionsOther);
 		}
 		else
 		{
-			options = getCodeOptionsByObjectType(type);
+			options = getCodeOptionsByObjectType(type, source);
 		}
 		
 		return options;
