@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -290,15 +291,12 @@ public class FacetedSearchAPIController {
     	if (query != null)
     	{
 			String[] objectsToExcludeArray = getObjectsToExclude();
+
+			String subQuery = getObjectsToExcludeSubQuery(objectsToExcludeArray);
 			
-			if (objectsToExcludeArray != null)
+			if (!"".equals(subQuery))
 			{
-				String subQuery = getObjectsToExcludeSubQuery(objectsToExcludeArray);
-				
-				if (!"".equals(subQuery))
-				{
-					query += " AND " + subQuery;
-				}
+				query += " AND " + subQuery;
 			}
     	}
     	
@@ -326,28 +324,13 @@ public class FacetedSearchAPIController {
     {
     	String subQuery = "";
     	
-    	if (objectsToExcludeArray.length == 1)
-		{
-			subQuery = "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + objectsToExcludeArray[0].trim();
-		}
-		else if (objectsToExcludeArray.length > 1)
-		{
-			String OR = "";
-			for (int i = 0; i < objectsToExcludeArray.length; i++)
-			{
-				if (i == 0)
-				{
-					OR = " OR ";
-				}
-				
-				if (i == objectsToExcludeArray.length - 1)
-				{
-					OR = "";
-				}
-				
-				subQuery += "-" + SearchConstants.PROPERTY_OBJECT_TYPE  + ":" + objectsToExcludeArray[i].trim() + OR;
-			}
-		}
+    	if (objectsToExcludeArray != null)
+    	{
+    		subQuery = Arrays.stream(objectsToExcludeArray)
+    						 .map((String element) -> {return "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element;})
+							 .reduce((String left, String right) -> left + " OR " + right)
+							 .get();
+    	}
     	
     	return subQuery;
     }
