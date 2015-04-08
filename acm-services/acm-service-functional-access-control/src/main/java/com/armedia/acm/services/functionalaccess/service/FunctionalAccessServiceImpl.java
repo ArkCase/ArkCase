@@ -11,13 +11,13 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -38,7 +38,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 	private FunctionalAccessEventPublisher eventPublisher;
 	private AcmGroupDao acmGroupDao;
 	private UserDao userDao;
-	private MuleClient muleClient;
+	private ExecuteSolrQuery executeSolrQuery;
 	
 	@Override
 	public List<String> getApplicationRoles() 
@@ -204,7 +204,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
     {
 		if (LOG.isInfoEnabled()) 
 		{
-			LOG.info("Taking group from Solr with IDs = " + groupNames);
+			LOG.info("Taking groups from Solr with IDs = " + groupNames);
 		}
 		
 		String queryGroupNames = "";
@@ -225,25 +225,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		
 		String query = "object_id_s:(" + queryGroupNames + ") AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 		
-		Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-		headers.put("acmUser", auth);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+		String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
 
-        LOG.debug("Response type: " + response.getPayload().getClass());
+        LOG.debug("Response: " + response);
 
-        if ( response.getPayload() instanceof String )
-        {
-            String responsePayload = (String) response.getPayload();
-          
-            return responsePayload;
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return response;
     }
 
 	public Map<String, String> getApplicationRolesProperties() 
@@ -313,12 +299,12 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		this.userDao = userDao;
 	}
 
-	public MuleClient getMuleClient() {
-		return muleClient;
+	public ExecuteSolrQuery getExecuteSolrQuery() {
+		return executeSolrQuery;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
+	public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
+		this.executeSolrQuery = executeSolrQuery;
 	}
 	
 }
