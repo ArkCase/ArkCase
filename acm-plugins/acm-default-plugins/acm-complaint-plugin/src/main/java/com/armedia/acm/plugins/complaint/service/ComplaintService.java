@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 
 import org.json.JSONObject;
@@ -35,8 +34,6 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 
 /**
@@ -183,10 +180,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		complaint.setInitiator(initiator);
 		complaint.setPeople(peoples);
 
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(complaint);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(complaint);
 		
 		return json;
 	}
@@ -201,10 +195,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
 		complaint.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.COMPLAINT, "acm-complaint-approve"));
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(complaint);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(complaint);
 		
 		return json;
 	}
@@ -384,11 +375,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 			}
 		}
 		
-		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(searchResult);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(searchResult);
 		
 		return json;
 	}
@@ -464,10 +451,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 			LOG.warn("There is no any Person with ID=" + id);
 		}
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(searchResult);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(searchResult);
 		
 		return json;
 	}

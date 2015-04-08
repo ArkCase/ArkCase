@@ -25,6 +25,7 @@ import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -32,6 +33,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
@@ -53,6 +55,8 @@ import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -78,6 +82,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
 	private AcmPluginManager acmPluginManager;
+	private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
     @Override
 	public Object init() {
@@ -100,6 +105,15 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		return result;
 	}
+    
+    @Override
+    public JSONObject createResponse(Object object)
+    {
+    	String jsonString = getGson().toJson(object);
+		JSONObject json = new JSONObject(jsonString);
+		
+		return json;
+    }
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -800,5 +814,12 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
 		this.acmPluginManager = acmPluginManager;
 	}
-	
+
+	public Gson getGson() {
+		return gson;
+	}
+
+	public void setGson(Gson gson) {
+		this.gson = gson;
+	}	
 }
