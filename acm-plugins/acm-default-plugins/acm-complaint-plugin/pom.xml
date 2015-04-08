@@ -120,12 +120,6 @@
             <artifactId>acm-service-object-history</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-functional-access-control</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-
 
         <!-- date time -->
         <dependency>

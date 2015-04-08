@@ -21,7 +21,6 @@ import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -33,8 +32,6 @@ import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -199,10 +196,7 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		form.setApproverOptions(getApproverOptions());
 		
 		// Create JSON and back to the Frevvo form
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(form);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(form);
 
 		return json;
 	}
