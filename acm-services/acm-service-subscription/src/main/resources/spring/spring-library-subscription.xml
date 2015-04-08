@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
 
-    <task:scheduler id="searchTaskScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="searchTaskScheduler">
+    <task:scheduler id="subscriptionTaskScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="subscriptionTaskScheduler">
         <task:scheduled
                 ref="arm_subscriptionEventBatchInsertJob"
                 method="insertNewSubscriptionEvents"
-                fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
+                fixed-delay="${subscription.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
 
     <bean id="arm_subscriptionEventBatchInsertJob" class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
@@ -55,6 +60,12 @@
         </property>
     </bean>
 
+    <context:property-placeholder
+            properties-ref="subscriptionProperties"
+            ignore-unresolvable="true"
+            local-override="false"
+            order="4832336"/>
+
     <bean id="subscriptionProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
@@ -65,6 +76,7 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="subscription.batchUpdateFrequencyInMilliseconds">180000</prop>
             </props>
         </property>
     </bean>
