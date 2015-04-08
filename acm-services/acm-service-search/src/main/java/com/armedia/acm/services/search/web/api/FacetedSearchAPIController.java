@@ -296,7 +296,7 @@ public class FacetedSearchAPIController {
 			
 			if (!"".equals(subQuery))
 			{
-				query += " AND " + subQuery;
+				query += " " + SearchConstants.OPERATOR_AND + " " + subQuery;
 			}
     	}
     	
@@ -328,7 +328,7 @@ public class FacetedSearchAPIController {
     	{
     		subQuery = Arrays.stream(objectsToExcludeArray)
     						 .map((String element) -> {return "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element;})
-							 .reduce((String left, String right) -> left + " OR " + right)
+							 .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
 							 .get();
     	}
     	
