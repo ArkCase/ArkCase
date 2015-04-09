@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
@@ -20,6 +21,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Relationship;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -33,17 +35,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.Relation;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by armdev on 5/1/14.
@@ -57,6 +56,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EcmFileDao ecmFileDao;
 
     private AcmContainerDao containerFolderDao;
+
+    private AcmFolderDao folderDao;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -470,20 +471,171 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         sortParam = sortParam + " " + sortDirection;
         return sortParam;
     }
-    
+
+
     @Override
-    public String buildSafeFolderName(String folderName)
-	{    	
-		if (folderName != null)
-		{
-			String regex = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX;
-			String replacement = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT;
-			
-			folderName = folderName.replaceAll(regex, replacement);
-		}
-		
-		return folderName;
-	}
+    public EcmFile copyFile(Long fileId,Long targetObjectId,String targetObjectType, String pathForTheNewCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID,file.getVersionSeriesId());
+        props.put(EcmFileConstants.DST_FOLDER_PATH,pathForTheNewCopy);
+
+        EcmFile result;
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+
+            String dstFolderId = message.getInboundProperty(EcmFileConstants.DESTINATION_FOLDER_PROPERTY);
+
+            String newFileId = cmisObject.getId();
+
+            AcmFolder folder = getFolderDao().findByCmisFolderId(dstFolderId);
+
+            EcmFile fileCopy = new EcmFile();
+
+            AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+            fileCopy.setVersionSeriesId(newFileId);
+            fileCopy.setFileType(file.getFileType());
+            fileCopy.setActiveVersionTag(file.getActiveVersionTag());
+            fileCopy.setFileName(cmisObject.getName());
+            fileCopy.setFolder(folder);
+            fileCopy.setContainer(container);
+            fileCopy.setStatus(file.getStatus());
+            fileCopy.setCategory(file.getCategory());
+            fileCopy.setFileMimeType(file.getFileMimeType());
+
+            result = getEcmFileDao().save(fileCopy);
+            return result;
+        } catch ( MuleException e  ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        } catch (AcmCreateObjectFailedException e) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        } catch ( PersistenceException e ){
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        }
+    }
+
+    @Override
+    public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType , String pathForTheNewFileLocation) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+
+
+        EcmFile file = getEcmFileDao().find(fileId);
+
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.DST_FOLDER_ID, pathForTheNewFileLocation);
+        props.put(EcmFileConstants.SRC_FOLDER_ID, file.getFolder().getCmisFolderId());
+
+        AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+
+        EcmFile movedFile;
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            String cmisObjectId = cmisObject.getId();
+
+            String dstFolderId = message.getInboundProperty(EcmFileConstants.DESTINATION_FOLDER_PROPERTY);
+
+            file.setVersionSeriesId(cmisObjectId);
+            file.setContainer(container);
+
+            AcmFolder newFolder = getFolderDao().findByCmisFolderId(dstFolderId);
+
+            file.setFolder(newFolder);
+
+            movedFile = getEcmFileDao().save(file);
+            return movedFile;
+        } catch (MuleException e) {
+            if(log.isErrorEnabled()){
+                log.error("Could not move file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not move file",e);
+        }
+    }
+
+    @Override
+    public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(objectId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+
+            getEcmFileDao().deleteFile(objectId);
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not delete file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not delete file",e);
+        } catch ( PersistenceException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not delete file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not delete file",e);
+
+        }
+    }
+
+    @Override
+    public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.NEW_FILE_NAME,newFileName);
+
+
+        EcmFile renamedFile;
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
+            file.setFileName(newFileName);
+            renamedFile = getEcmFileDao().save(file);
+            return renamedFile;
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not rename file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not rename file",e);
+
+        }
+    }
+
+    @Override
+    public EcmFile findById(Long fileId) {
+        return getEcmFileDao().find(fileId);
+    }
 
     public EcmFileTransaction getEcmFileTransaction()
     {
@@ -587,5 +739,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
+    }
+
+    public AcmFolderDao getFolderDao() {
+        return folderDao;
+    }
+
+    public void setFolderDao(AcmFolderDao folderDao) {
+        this.folderDao = folderDao;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher() {
+        return applicationEventPublisher;
     }
 }

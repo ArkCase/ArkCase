@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="renameFile" doc:name="Rename File">
+        <description>
+            The incoming payload is EcmFile that should be renamed. The return payload is the renamed CMIS document.
+            If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://renameFile.in"
+                exchange-pattern="request-response"
+                doc:name="Rename File">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+        <timer-interceptor/>
+
+
+        <cmis:update-object-properties objectId="#[message.inboundProperties.ecmFileId]">
+            <cmis:properties>
+                <cmis:property key="cmis:name" value-ref="#[message.inboundProperties.newFileName]"/>
+            </cmis:properties>
+        </cmis:update-object-properties>
+
+
+		<catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception renaming: #[exception.message]"/>
+            <set-property propertyName="renameException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

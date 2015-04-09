@@ -20,7 +20,7 @@ public abstract class AcmAbstractDao<T>
     public T save(T toSave)
     {
         T saved = em.merge(toSave);
-        em.persist(saved);
+//        em.persist(saved);
         return saved;
     }
 
