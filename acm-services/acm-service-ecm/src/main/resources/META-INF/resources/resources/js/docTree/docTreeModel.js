@@ -44,6 +44,10 @@ DocTree.Model = DocTree.Model || {
     ,onViewRenamedDocument: function(node, id, parentId, name) {
     }
 
+    ,NODE_TYPE_PREV: "prev"
+    ,NODE_TYPE_NEXT: "next"
+    ,NODE_TYPE_FILE: "file"
+    ,NODE_TYPE_FOLDER: "folder"
 
     ,_objType: null
     ,getObjType: function() {
@@ -157,15 +161,15 @@ DocTree.Model = DocTree.Model || {
         ,DEFAULT_SORT_BY: "name"
         ,DEFAULT_SORT_DIRECTION: "ASC"
         ,_setting: {
-//            objType: null
-//            ,objId: 0
-//            ,category: "Document"
-            maxRows: 1000
+            maxRows: 16
             ,sortBy: null
             ,sortDirection: null
-            //,folderId: 0
-            //,start: 0
-            //,totalChildren: 0
+//            ,objType: null
+//            ,objId: 0
+//            ,category: "Document"
+//            ,folderId: 0
+//            ,start: 0
+//            ,totalChildren: 0
         }
         ,getSetting: function() {
             return this._setting;
