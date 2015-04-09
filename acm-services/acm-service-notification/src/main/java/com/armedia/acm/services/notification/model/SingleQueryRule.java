@@ -11,7 +11,7 @@ import com.armedia.acm.services.notification.service.Executor;
  * @author riste.tutureski
  *
  */
-public class AssignmentRule implements NotificationRule {
+public class SingleQueryRule implements NotificationRule {
 
 	private boolean globalRule;
 	private boolean create;
@@ -20,15 +20,16 @@ public class AssignmentRule implements NotificationRule {
 	private String jpaQuery;
 	
 	@Override
-	public boolean isGlobalRule() {
+	public boolean isGlobalRule() 
+	{
 		return globalRule;
 	}
-	
+
 	public void setGlobalRule(boolean globalRule) {
 		this.globalRule = globalRule;
 	}
-	
-	@Override
+
+	@Override	
 	public boolean isCreate() {
 		return create;
 	}
@@ -36,12 +37,13 @@ public class AssignmentRule implements NotificationRule {
 	public void setCreate(boolean create) {
 		this.create = create;
 	}
-	
+
 	@Override
-	public Executor getExecutor() {
+	public Executor getExecutor() 
+	{
 		return executor;
 	}
-
+		
 	public void setExecutor(Executor executor) {
 		this.executor = executor;
 	}
@@ -56,12 +58,13 @@ public class AssignmentRule implements NotificationRule {
 	}
 
 	@Override
-	public String getJpaQuery() {
+	public String getJpaQuery() 
+	{
 		return jpaQuery;
 	}
-	
+
 	public void setJpaQuery(String jpaQuery) {
 		this.jpaQuery = jpaQuery;
 	}
-	
+
 }
