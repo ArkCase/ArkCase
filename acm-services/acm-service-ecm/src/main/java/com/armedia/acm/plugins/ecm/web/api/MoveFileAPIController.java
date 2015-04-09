@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -58,6 +59,12 @@ public class MoveFileAPIController {
             }
             getFileEventPublisher().publishFileMovedEvent(source,authentication,false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,in.getId(),"File not found.",e);
+        } catch (AcmCreateObjectFailedException e) {
+            if ( log.isErrorEnabled() ) {
+                log.error("Exception occurred while trying to move file with id: " + in.getId() + " to the location " + in.getPath());
+            }
+            getFileEventPublisher().publishFileMovedEvent(source,authentication,false);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,in.getId(),"Exception occurred while trying to move the file.",e);
         }
     }
 
