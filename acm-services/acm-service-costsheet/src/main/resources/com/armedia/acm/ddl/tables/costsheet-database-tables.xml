@@ -106,5 +106,14 @@
             <column name="cm_container_id" type="NUMBER(32,0)"/>
         </addColumn>
     </changeSet>
-     
+
+    <changeSet id="07-object-type-in-acm-costsheet-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COSTSHEET"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="COSTSHEET"
+                              tableName="acm_costsheet"/>
+    </changeSet>
+
 </databaseChangeLog>

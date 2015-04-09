@@ -114,5 +114,14 @@
         <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
     </changeSet>
 
+    <changeSet id="userorg-09-add-column-cm-object-type" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="USER_ORG"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="USER_ORG"
+                              tableName="acm_user_org"/>
+    </changeSet>
+
 </databaseChangeLog>
 
