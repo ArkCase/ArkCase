@@ -2,8 +2,11 @@ package com.armedia.acm.services.users.dao.ldap;
 
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.users.model.*;
-
+import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserRole;
+import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.RoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +18,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +31,21 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public AcmUser findByUserId(String userId)
     {
         return getEntityManager().find(AcmUser.class, userId);
+    }
+
+    public AcmUser findByUserIdAnyCase(String userId)
+    {
+        CriteriaBuilder builder = getEm().getCriteriaBuilder();
+        CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
+        Root<AcmUser> au = query.from(AcmUser.class);
+
+        query.select(au);
+
+        query.where(builder.equal(builder.lower(au.<String>get("userId")), userId.toLowerCase()));
+
+        TypedQuery<AcmUser> dbQuery = getEm().createQuery(query);
+        AcmUser user = dbQuery.getSingleResult();
+        return user;
     }
 
     public AcmUser quietFindByUserId(String userId)
