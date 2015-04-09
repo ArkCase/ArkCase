@@ -8,19 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
@@ -35,12 +23,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="acm_change_case_status")
 public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
-	/**
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	@Id
+
+
+    @Id
     @Column(name = "cm_change_case_status_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,9 +39,15 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 	
 	@Column(name = "cm_change_case_status_status")
     private String status = "ACTIVE";
-	
-	@OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_object_id")
+
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType = ChangeCaseStatusConstants.OBJECT_TYPE;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 	
 	@Column(name = "cm_change_case_status_created", nullable = false, insertable = true, updatable = false)
@@ -80,7 +75,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CHANGE_CASE_STATUS");
+            ap.setObjectType(ChangeCaseStatusConstants.OBJECT_TYPE);
         }
     }
     
@@ -180,7 +175,6 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 	@Override
 	public String getObjectType() 
 	{
-		return "ChangeCaseStatus";
+		return objectType;
 	}
-
 }

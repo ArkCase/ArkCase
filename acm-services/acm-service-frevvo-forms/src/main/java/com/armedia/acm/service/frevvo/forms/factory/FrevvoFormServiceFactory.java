@@ -50,6 +50,7 @@ public class FrevvoFormServiceFactory {
             service.setPersonDao(frevvoFormController.getPersonDao());
             service.setComplaintEventPublisher(frevvoFormController.getComplaintEventPublisher());
             service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
+            service.setSearchResults(frevvoFormController.getSearchResults());
             
             return service;
 		}
@@ -154,6 +155,7 @@ public class FrevvoFormServiceFactory {
             service.setCaseFileFactory(frevvoFormController.getCaseFileFactory());
             service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
             service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
+            service.setSearchResults(frevvoFormController.getSearchResults());
             
             return service;
 		}

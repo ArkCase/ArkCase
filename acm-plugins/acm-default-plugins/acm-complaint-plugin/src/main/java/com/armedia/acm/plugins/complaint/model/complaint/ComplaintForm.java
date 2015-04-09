@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.addressable.model.xml.GeneralPostalAddress;
@@ -44,7 +45,7 @@ public class ComplaintForm {
 	private List<Contact> people;
     private String cmisFolderId;
     private List<ParticipantItem> participants;
-    private Map<String, Strings> participantsOptions = new HashMap<>();
+    private Map<String, Map<String, Strings>> participantsOptions = new HashMap<>();
     private List<String> participantsTypeOptions;
 
 	public Long getComplaintId() {
@@ -196,11 +197,11 @@ public class ComplaintForm {
 	}
 
 	@XmlTransient
-	public Map<String, Strings> getParticipantsOptions() {
+	public Map<String, Map<String, Strings>> getParticipantsOptions() {
 		return participantsOptions;
 	}
 
-	public void setParticipantsOptions(Map<String, Strings> participantsOptions) {
+	public void setParticipantsOptions(Map<String, Map<String, Strings>> participantsOptions) {
 		this.participantsOptions = participantsOptions;
 	}
 

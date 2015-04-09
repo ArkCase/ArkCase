@@ -4,6 +4,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -52,6 +54,7 @@ public class FacetedSearchAPIController {
         String rowQueryParametars = buildSolrQuery(filters);
         String sort= "";
         String query = SearchConstants.CATCH_ALL_QUERY + q;
+        query = updateQueryWithExcludedObjects(query);
         query = URLEncoder.encode(query, "UTF-8");
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
@@ -281,6 +284,55 @@ public class FacetedSearchAPIController {
             }
         }
         return queryBuilder.toString();
+    }
+    
+    private String updateQueryWithExcludedObjects(String query)
+    {    	
+    	if (query != null)
+    	{
+			String[] objectsToExcludeArray = getObjectsToExclude();
+
+			String subQuery = getObjectsToExcludeSubQuery(objectsToExcludeArray);
+			
+			if (!"".equals(subQuery))
+			{
+				query += " " + SearchConstants.OPERATOR_AND + " " + subQuery;
+			}
+    	}
+    	
+    	return query;
+    }
+    
+    private String[] getObjectsToExclude()
+    {
+    	Map<String,Object> propertyMap = getPluginSearch().getPluginProperties();
+    	
+    	if (propertyMap.containsKey(SearchConstants.OBJECTS_TO_EXCLUDE))
+		{
+	    	String objectsToExclude = (String) propertyMap.get(SearchConstants.OBJECTS_TO_EXCLUDE);
+			
+			if (objectsToExclude != null && !"".equals(objectsToExclude))
+			{
+				return objectsToExclude.split(",");
+			}
+		}
+		
+		return null;
+    }
+    
+    private String getObjectsToExcludeSubQuery(String[] objectsToExcludeArray)
+    {
+    	String subQuery = "";
+    	
+    	if (objectsToExcludeArray != null)
+    	{
+    		subQuery = Arrays.stream(objectsToExcludeArray)
+    						 .map((String element) -> {return "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element;})
+							 .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
+							 .get();
+    	}
+    	
+    	return subQuery;
     }
 
     public AcmPlugin getPluginSearch() {

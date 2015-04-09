@@ -6,14 +6,9 @@ package com.armedia.acm.plugins.complaint.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.complaint.Strings;
 
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -37,11 +32,8 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 
 /**
@@ -58,8 +50,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private ComplaintEventPublisher complaintEventPublisher;
 
     private ComplaintFactory complaintFactory = new ComplaintFactory();
-    
-    private FunctionalAccessService functionalAccessService;
 
     public ComplaintService() {
 		
@@ -111,6 +101,11 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 				}
 				
 				result = getExistingContact(existingContactId);
+			}
+			
+			if ("init-participants".equals(action)) 
+			{
+				result = initParticipants();
 			}
 		}
 		
@@ -184,61 +179,23 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		
 		complaint.setInitiator(initiator);
 		complaint.setPeople(peoples);
-        
-        // Participants Initialization
+
+		JSONObject json = createResponse(complaint);
+		
+		return json;
+	}
+	
+	private JSONObject initParticipants()
+	{
+		ComplaintForm complaint = new ComplaintForm();
+		
+		// Participants Initialization
 		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".participantTypes"), ",");
 		complaint.setParticipantsTypeOptions(participantTypes);
-        
-		if (participantTypes != null && participantTypes.size() > 0)
-		{
-			Map<String, Strings> participantsOptions = new HashMap<>();
-			for (String participantType : participantTypes)
-			{
-				String type = "";
-				String[] participantTypeArray = participantType.split("=");
-				if (participantTypeArray != null && participantTypeArray.length == 2)
-				{
-					type = participantTypeArray[0];
-					String privilege = (String) getProperties().get(FrevvoFormName.COMPLAINT + "." + type + ".privilege");
-					
-					try
-					{
-						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
-						Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
-						
-						String group = null;
-						if (privilege.equals("acm-complaint-approve"))
-						{
-							group = "ACM_INVESTIGATOR_DEV";
-						}
-						
-						Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
-				        
-						List<AcmUser> users = new ArrayList<>(usersSet);
-				        
-				        if (users != null && users.size() > 0) {
-				        	Strings options = new Strings();
-				        	for (int i = 0; i < users.size(); i++) {
-				        		options.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-				        	}
-				        	
-				        	participantsOptions.put(type, options);
-				        }
-					}
-					catch(Exception e)
-					{
-						LOG.warn("Cannot find users with privilege = " + type + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
-					}
-				}
-			}
-			
-			complaint.setParticipantsOptions(participantsOptions);
-		}
+
+		complaint.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.COMPLAINT));
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(complaint);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(complaint);
 		
 		return json;
 	}
@@ -418,11 +375,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 			}
 		}
 		
-		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(searchResult);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(searchResult);
 		
 		return json;
 	}
@@ -498,10 +451,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 			LOG.warn("There is no any Person with ID=" + id);
 		}
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(searchResult);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(searchResult);
 		
 		return json;
 	}
@@ -562,14 +512,5 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 	public void setComplaintEventPublisher(
 			ComplaintEventPublisher complaintEventPublisher) {
 		this.complaintEventPublisher = complaintEventPublisher;
-	}
-
-	public FunctionalAccessService getFunctionalAccessService() {
-		return functionalAccessService;
-	}
-
-	public void setFunctionalAccessService(
-			FunctionalAccessService functionalAccessService) {
-		this.functionalAccessService = functionalAccessService;
-	}
+	}	
 }

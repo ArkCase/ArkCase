@@ -174,11 +174,12 @@
         <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
     </bean>
 
-    <bean id="saveCaseService" class="com.armedia.acm.plugins.casefile.service.SaveCaseService">
+    <bean id="saveCaseService" class="com.armedia.acm.plugins.casefile.service.SaveCaseServiceImpl">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
-        <property name="muleClient" ref="muleClient"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <!--<property name="muleClient" ref="muleClient"/>-->
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
     

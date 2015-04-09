@@ -109,5 +109,14 @@
             <column name="cm_container_id" type="NUMBER(32,0)"/>
         </addColumn>
     </changeSet>
-     
+
+    <changeSet id="07-object-type-in-acm-timesheet-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_timesheet">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="TIMESHEET"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="TIMESHEET"
+                              tableName="acm_timesheet"/>
+    </changeSet>
+
 </databaseChangeLog>

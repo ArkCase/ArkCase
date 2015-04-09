@@ -34,8 +34,6 @@ public class GetGroupsByPrivilegeAPIController
     private AcmPluginManager pluginManager;
     private UserDao userDao;
     private FunctionalAccessService functionalAccessService;
-    private AcmGroupDao acmGroupDao;
-    private MuleClient muleClient;
 
     @RequestMapping(
             method = RequestMethod.GET,
@@ -53,73 +51,11 @@ public class GetGroupsByPrivilegeAPIController
         }
         
         List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
-        Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
-
-        // Creating set to avoid duplicates
-        Set<String> groups = new HashSet<>();
-        if (rolesForPrivilege != null && rolesToGroups != null)
-        {
-        	for (String role : rolesForPrivilege)
-        	{
-        		List<String> groupNames = rolesToGroups.get(role);
-        		
-        		if (groupNames != null)
-        		{
-        			// We need first to get unique group names (because groups can be repeated in different roles)
-        			groups.addAll(new HashSet<>(groupNames));
-        		}
-        	}
-        }
+        Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups(); 
         
-        String retval = getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
+        String retval = getFunctionalAccessService().getGroupsByPrivilege(rolesForPrivilege, rolesToGroups, startRow, maxRows, sort, auth);
 
         return retval;
-    }
-    
-    private String getGroupsFromSolr(List<String> groupNames, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
-    {
-		if (log.isInfoEnabled()) 
-		{
-			log.info("Taking group from Solr with IDs = " + groupNames);
-		}
-		
-		String queryGroupNames = "";
-		if (groupNames != null)
-		{
-			for (int i = 0; i < groupNames.size(); i++)
-			{
-				if (i == groupNames.size() - 1)
-				{
-					queryGroupNames += groupNames.get(i);
-				}
-				else
-				{
-					queryGroupNames += groupNames.get(i) + " OR ";
-				}
-			}
-		}
-		
-		String query = "object_id_s:(" + queryGroupNames + ") AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-		
-		Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-		headers.put("acmUser", auth);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
-
-        log.debug("Response type: " + response.getPayload().getClass());
-
-        if ( response.getPayload() instanceof String )
-        {
-            String responsePayload = (String) response.getPayload();
-          
-            return responsePayload;
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
     public void setPluginManager(AcmPluginManager pluginManager)
@@ -149,21 +85,5 @@ public class GetGroupsByPrivilegeAPIController
 	public void setFunctionalAccessService(
 			FunctionalAccessService functionalAccessService) {
 		this.functionalAccessService = functionalAccessService;
-	}
-
-	public AcmGroupDao getAcmGroupDao() {
-		return acmGroupDao;
-	}
-
-	public void setAcmGroupDao(AcmGroupDao acmGroupDao) {
-		this.acmGroupDao = acmGroupDao;
-	}
-
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
 	}
 }
