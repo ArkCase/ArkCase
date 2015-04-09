@@ -356,5 +356,23 @@
         <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
     </changeSet>
 
+    <changeSet id="19-object-type-in-acm-complaint-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_complaint">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COMPLAINT"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="COMPLAINT"
+                              tableName="acm_complaint"/>
+    </changeSet>
+
+    <changeSet id="20-object-type-in-acm-close-complaint-request-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_close_complaint_request">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CLOSE_COMPLAINT_REQUEST"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="CLOSE_COMPLAINT_REQUEST"
+                              tableName="acm_close_complaint_request"/>
+    </changeSet>
+
 </databaseChangeLog>
 

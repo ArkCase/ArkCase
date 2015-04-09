@@ -214,5 +214,23 @@
     <changeSet id="case-file-15-rename-container-id" author="dmiller">
         <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
     </changeSet>
-    
+
+    <changeSet id="change-case-status-16-add-object-type-in-acm-change-case-status-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_change_case_status">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CHANGE_CASE_STATUS"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="CHANGE_CASE_STATUS"
+                              tableName="acm_change_case_status"/>
+    </changeSet>
+
+    <changeSet id="case-file-17-add-object-type-in-acm-case-file-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CASE_FILE"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="CASE_FILE"
+                              tableName="acm_case_file"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -14,24 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,7 +97,10 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private AcmContainer container = new AcmContainer();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
+    })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -128,8 +114,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType = ComplaintConstants.OBJECT_TYPE;
+
     @OneToMany (cascade = {CascadeType.ALL})
-    @JoinColumn(name = "cm_object_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -188,7 +180,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getComplaintId());
-            ap.setObjectType("COMPLAINT");
+            ap.setObjectType(getObjectType());
         }
 
         if ( getContainer() != null )
@@ -370,7 +362,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     {
         childObjects.add(childObject);
         childObject.setParentName(getComplaintNumber());
-        childObject.setParentType("COMPLAINT");
+        childObject.setParentType(ComplaintConstants.OBJECT_TYPE);
         childObject.setParentId(getComplaintId());
     }
 
@@ -388,9 +380,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return "COMPLAINT";
+        return objectType;
     }
-
 
     @Override
     @JsonIgnore
@@ -411,7 +402,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getComplaintId());
-        personAssoc.setParentType("COMPLAINT");
+        personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
 
         personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
     }
