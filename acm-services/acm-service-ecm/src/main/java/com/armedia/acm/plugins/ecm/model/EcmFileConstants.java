@@ -7,7 +7,27 @@ public interface EcmFileConstants
 {
     String MULE_ENDPOINT_CREATE_FOLDER = "vm://createFolder.in";
 
+    String MULE_ENDPOINT_COPY_FILE = "vm://copyFile.in";
+
+    String MULE_ENDPOINT_RENAME_FILE = "vm://renameFile.in";
+
+    String MULE_ENDPOINT_REPLACE_FILE = "vm://updateFile.in";
+
+    String MULE_ENDPOINT_DELETE_FILE = "vm://deleteFile.in";
+
+    String MULE_ENDPOINT_MOVE_FILE = "vm://moveFile.in";
+
+    String USER_ACTION_COPY_FILE = "COPY FILE";
+
+    String USER_ACTION_MOVE_FILE = "MOVE FILE";
+
+    String USER_ACTION_DELETE_FILE = "DELETE FILE";
+
+    String USER_ACTION_RENAME_FILE = "RENAME FILE";
+
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
+
+    String SUCCESS_DELETE_MSG = "File deleted successfully: ";
 
     String FIND_CONTAINER_QUERY =
             "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
@@ -33,5 +53,16 @@ public interface EcmFileConstants
 	String MIME_TYPE_FREVVO_URL = "www.frevvo.com";
 
     String OBJECT_FILE_TYPE = "FILE";
+
+    String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
+
+    String DESTINATION_FOLDER_PROPERTY = "dstFolderId";
+
+    String CMIS_OBJECT_ID = "cmisObjectId";
+    String SRC_FOLDER_ID = "srcFolderId";
+    String DST_FOLDER_ID = "dstFolderId";
+    String DST_FOLDER_PATH = "dstFolderPath";
+    String ECM_FILE_ID = "ecmFileId";
+    String NEW_FILE_NAME="newFileName";
 
 }

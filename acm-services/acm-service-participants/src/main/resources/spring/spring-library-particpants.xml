@@ -3,5 +3,78 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-       <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
+    <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
+
+    <bean id="acmParticipantService" class="com.armedia.acm.services.participants.service.AcmParticipantService">
+        <property name="participantDao" ref="acmParticipantDao"/>
+    </bean>
+
+    <bean id="acmParticipantEventPublisher" class="com.armedia.acm.services.participants.service.AcmParticipantEventPublisher"/>
+
+
+    <bean id="participantProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/participantPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="participantPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Participant Plugin"/>
+        <property name="pluginProperties" ref="participantProperties"/>
+        <property name="privileges">
+            <list>
+                <ref bean="participantPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="listParticipants" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/participant/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+                <bean id="changeRole" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/participant/{participantId}/{participantType}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+                <bean id="removeParticipant" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/service/participant/{userId}/{participantType}/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+                <bean id="addParticipant" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/participant/{userId}/{participantType}/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+            </list>
+
+        </property>
+    </bean>
+
+
+    <bean id="participantPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-participant"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_ANALYST</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+            </list>
+        </property>
+    </bean>
+
+
 </beans>

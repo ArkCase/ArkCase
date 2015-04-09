@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -49,6 +50,7 @@ public class EcmFileDaoIT
     {
         auditAdapter.setUserId("auditUser");
     }
+
 
     @Test
     @Transactional

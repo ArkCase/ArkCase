@@ -34,10 +34,64 @@
                     <property name="url" value="/plugin/tag"/>
                     <property name="requiredPrivilege" ref="tagPrivilege"/>
                 </bean>
+                <bean id="addNewTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/tag"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
+                <bean id="associateTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}/{tagId}"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
+                <bean id="listAllTags" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/tag"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
+                <bean id="listAssociatedTagsByObjectTypeAndId" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
+                <bean id="removeTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/service/tag/{tagId}"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
+                <bean id="removeTagAssociation" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}/{tagId}"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
+                <bean id="updateTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/tag"/>
+                    <property name="requiredPrivilege" ref="tagPrivilege"/>
+                </bean>
             </list>
 
         </property>
     </bean>
+
+    <bean id="associatedTagDao" class="com.armedia.acm.services.tag.dao.AssociatedTagDao"/>
+
+    <bean id="tagDao" class="com.armedia.acm.services.tag.dao.TagDao"/>
+
+    <bean id="associatedTagEventPublisher" class="com.armedia.acm.services.tag.service.AssociatedTagEventPublisher"/>
+
+    <bean id="tagEventPublisher" class="com.armedia.acm.services.tag.service.TagEventPublisher"/>
+
+    <bean id="tagService" class="com.armedia.acm.services.tag.service.TagService">
+        <property name="tagDao" ref="tagDao"/>
+        <property name="tagPlugin" ref="tagPlugin"/>
+    </bean>
+
+    <bean id="associatedTagService" class="com.armedia.acm.services.tag.service.AssociatedTagService">
+        <property name="tagDao" ref="tagDao"/>
+        <property name="associatedTagDao" ref="associatedTagDao"/>
+    </bean>
+
 
     <bean id="tagPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
         <property name="privilegeName" value="acm-tag"/>
