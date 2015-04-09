@@ -16,4 +16,6 @@ public interface AcmFolderConstants {
     String ACM_FOLER_ID="acmFolderId";
     String NEW_FOLDER_NAME="newFolderName";
 
+    String OBJECT_TYPE = "FOLDER";
+
 }

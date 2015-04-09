@@ -29,7 +29,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 		<catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
-            <set-property propertyName="moveException" value="#[exception]"/>
+            <set-property propertyName="deleteException" value="#[exception]"/>
         </catch-exception-strategy>
 
     </flow>

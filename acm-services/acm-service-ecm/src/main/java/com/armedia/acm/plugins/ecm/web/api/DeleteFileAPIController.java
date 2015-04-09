@@ -62,7 +62,7 @@ public class DeleteFileAPIController {
     private String prepareJsonReturnMsg(String msg, Long fileId, String fileName) {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedFileId", fileId);
-        objectToReturnJSON.put("name: ",fileName);
+        objectToReturnJSON.put("name",fileName);
         objectToReturnJSON.put("Message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.json.JSONArray;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -84,7 +85,7 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 	
 	public AcmContainer createContainer(String rootFolder, String userId, Long objectId, String objectType, String name) throws AcmCreateObjectFailedException
 	{
-		String path = rootFolder + "/" + userId + "/" + getEcmFileService().buildSafeFolderName(name);
+		String path = rootFolder + "/" + userId + "/" + FolderAndFilesUtils.buildSafeFolderName(name);
 		AcmContainer container = getAcmContainerDao().findByObjectTypeAndIdOrCreate(objectType, objectId, path, name);
 		
 		if (container != null)

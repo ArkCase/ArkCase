@@ -166,11 +166,11 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         query.setParameter("userId", userId);
 
         List<AcmParticipant> results = query.getResultList();
-        AcmParticipant existingTag = null;
+        AcmParticipant acmParticipant = null;
         if (!results.isEmpty()) {
-            existingTag = results.get(0);
+            acmParticipant = results.get(0);
         }
-        return existingTag;
+        return acmParticipant;
     }
 
     @Transactional
