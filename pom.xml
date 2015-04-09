@@ -71,6 +71,7 @@
 
         <mule.version>3.5.0-bighorn</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
+        <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version>-->
         <oracle.jdbc.version>6</oracle.jdbc.version>
         <org.json.version>20140107</org.json.version>
         <org.mvel.version>2.2.1.Final</org.mvel.version>

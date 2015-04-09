@@ -145,7 +145,7 @@
                 </bean>
                 <bean id="addNewFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/ecm"/>
+                    <property name="url" value="/api/{version}/service/ecm/folder/{parentFolderId}/{newFolderName}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="renameFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -160,17 +160,17 @@
                 </bean>
                 <bean id="deleteFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/ecm/del/{objectId}"/>
+                    <property name="url" value="/api/{version}/service/ecm/id/{fileId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="moveFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/move"/>
+                    <property name="url" value="/api/{version}/service/ecm/moveToAnotherContainer"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="copyFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/copy"/>
+                    <property name="url" value="/api/{version}/service/ecm/copyToAnotherContainer"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="replaceFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

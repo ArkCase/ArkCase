@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
 
-    <flow name="renameFolder" doc:name="Rename Folder">
+<flow name="renameFolder" doc:name="Rename Folder">
         <description>
         </description>
 
@@ -25,9 +25,17 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
-        <cmis:update-object-properties objectId="#[message.inboundProperties.acmFolderId]">
+        <enricher target="#[flowVars['folder']]">
+            <cmis:get-object-by-id objectId="#[message.inboundProperties.acmFolderId]"/>
+        </enricher>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm" message="CMIS Folder ID: #[flowVars['folder'].id]"/>
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm" message="ACM Folder ID: #[message.inboundProperties.acmFolderId]"/>
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm" message="The CMIS OBJECT: #[flowVars['folder']]"/>
+
+        <cmis:update-object-properties objectId="#[message.inboundProperties.acmFolderId]" cmisObject-ref="#[flowVars['folder']]">
             <cmis:properties>
-                <cmis:property key="cmis:name" value-ref="#[message.inboundProperties.newFolderName]"/>
+                <cmis:property key="cm:name" value-ref="#[message.inboundProperties.newFolderName]"/>
             </cmis:properties>
         </cmis:update-object-properties>
 

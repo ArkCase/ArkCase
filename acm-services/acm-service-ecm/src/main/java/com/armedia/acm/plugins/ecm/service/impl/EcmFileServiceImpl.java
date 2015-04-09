@@ -517,8 +517,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String,Object> props = new HashMap<>();
-        props.put("ecmFileId",file.getVersionSeriesId());
-        props.put("dstFolderPath",pathForTheNewCopy);
+        props.put(EcmFileConstants.ECM_FILE_ID,file.getVersionSeriesId());
+        props.put(EcmFileConstants.DST_FOLDER_PATH,pathForTheNewCopy);
 
         EcmFile result;
 
@@ -573,9 +573,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String,Object> props = new HashMap<>();
-        props.put("cmisObjectId", file.getVersionSeriesId());
-        props.put("dstFolderId", pathForTheNewFileLocation);
-        props.put("srcFolderId", file.getFolder().getCmisFolderId());
+        props.put(EcmFileConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.DST_FOLDER_ID, pathForTheNewFileLocation);
+        props.put(EcmFileConstants.SRC_FOLDER_ID, file.getFolder().getCmisFolderId());
 
         EcmFile movedFile;
 
@@ -612,7 +612,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         Map<String,Object> props = new HashMap<>();
-        props.put("ecmFileId", file.getVersionSeriesId());
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
 
         try {
             MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
@@ -635,8 +635,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
         }
         Map<String,Object> props = new HashMap<>();
-        props.put("ecmFileId", file.getVersionSeriesId());
-        props.put("newFileName",newFileName);
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.NEW_FILE_NAME,newFileName);
 
 
         EcmFile renamedFile;
