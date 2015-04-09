@@ -54,4 +54,15 @@ public interface SearchConstants
     
     String SORT_ASC = "ASC";
     String SORT_DESC = "DESC";
+    
+    /**
+     * Key that keeping information which objects to exclude from the search
+     */
+    String OBJECTS_TO_EXCLUDE = "objects.to.exclude";
+    
+    /**
+     * Query operators
+     */
+    String OPERATOR_AND = "AND";
+    String OPERATOR_OR = "OR";
 }

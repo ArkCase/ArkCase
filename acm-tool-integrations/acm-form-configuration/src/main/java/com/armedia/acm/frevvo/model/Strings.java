@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.complaint.model.complaint;
+package com.armedia.acm.frevvo.model;
 
 import java.util.ArrayList;
 

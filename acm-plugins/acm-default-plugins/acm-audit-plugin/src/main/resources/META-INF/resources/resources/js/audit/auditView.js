@@ -111,12 +111,12 @@ Audit.View = Audit.View || {
 
                         if ("text" == field.type) {
 
-                            html+= "<label class='label col-sm-12'>" + Acm.goodValue(field.desc) + "</label>"
+                            html+= "<label class='label col-sm-12'>" + Acm.goodValue(field.label) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<input type='text' class='form-control"
                             + "' id='" + Acm.goodValue(field.name)
-                            + "' value='" + Acm.goodValue(field.value) + "'>"
-                            //+ "' placeholder='" + Acm.goodValue(field.desc) + "'>"
+                            + "' value='" + Acm.goodValue(field.value)
+                            + "' placeholder='" + Acm.goodValue(field.desc) + "'>"
                             +"</div>";
 
                         }
@@ -142,7 +142,7 @@ Audit.View = Audit.View || {
                         }
                         else if("select" == field.type) {
 
-                            html += "<label class='label col-sm-12'>" + Acm.goodValue(field.desc) + "</label>"
+                            html += "<label class='label col-sm-12'>" + Acm.goodValue(field.label) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<select class='form-control"
                             + "' id='" + Acm.goodValue(field.name)

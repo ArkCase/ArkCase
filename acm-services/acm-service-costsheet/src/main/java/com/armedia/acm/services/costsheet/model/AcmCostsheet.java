@@ -8,22 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
@@ -84,9 +69,15 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 	@Column(name = "cm_costsheet_modified")
     @Temporal(TemporalType.TIMESTAMP)
 	private Date modified;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_object_id")
+
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 	
 	@OneToOne
@@ -114,7 +105,11 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 				time.setCostsheet(this);
 			}
 		}
-		
+
+        if(objectType == null){
+            objectType = getObjectType();
+        }
+
 		if (getParticipants() != null)
 		{
 			for (AcmParticipant participant : getParticipants())
@@ -272,5 +267,8 @@ public class AcmCostsheet  implements Serializable, AcmObject, AcmEntity, AcmSta
 	{
 		return CostsheetConstants.OBJECT_TYPE;
 	}
-	
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
 }

@@ -27,8 +27,6 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -179,10 +177,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 		changeCaseStatus.setInformation(information);
 		changeCaseStatus.setApproverOptions(approverOptions);
     	
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(changeCaseStatus);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(changeCaseStatus);
 
 		return json;
     }
