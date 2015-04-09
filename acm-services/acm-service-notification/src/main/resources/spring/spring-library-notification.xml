@@ -26,6 +26,7 @@
                 <prop key="notification.user.batch.run">true</prop>
                 <prop key="notification.user.batch.frequency">100000</prop>
                 <prop key="notification.user.batch.size">50</prop>
+                <prop key="notification.purge.days">30</prop>
             </props>
         </property>
     </bean>
@@ -49,12 +50,23 @@
 	<bean id="notificationPropertyFileLocation" class="java.lang.String">
 		<constructor-arg value="${user.home}/.acm/notification.properties"/>
 	</bean>
+	<bean id="notificationPurgeDays" class="java.lang.Long">
+		<constructor-arg value="${notification.purge.days}"/>
+	</bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
     
     <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
     	<property name="notificationDao" ref="notificationDao"/>
+    </bean>
+    
+    <!-- Executors -->
+    <bean id="sendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+		<property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+    <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
+    	<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="acmNotificationPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">

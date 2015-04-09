@@ -5,9 +5,12 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -15,14 +18,15 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class NotificationDao extends AcmAbstractDao<Notification>
 {
-
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
+	
     @PersistenceContext
     private EntityManager entityManager;
-
-
 
     @Override
     protected Class<Notification> getPersistenceClass()
@@ -72,14 +76,50 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         queryToDelete.setParameter("notificationId", id);
 
         Notification notificationToBeDeleted = (Notification) queryToDelete.getSingleResult();
-    entityManager.remove(notificationToBeDeleted);
-}
+	    entityManager.remove(notificationToBeDeleted);
+	}
     
-    public List<Notification> executeQuery(Date lastRunDate, int firstResult, int maxResult, String query)
+    /**
+     * This method is used only for notification rules. We have two possibilities - when we want to create notifications ('create' should be true)
+     * and get already existing notifications that rich the rules that we want to update
+     * 
+     * @param parameters
+     * @param firstResult
+     * @param maxResult
+     * @param query
+     * @param create
+     * @return
+     */
+    public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, String query, boolean create)
 	{
+    	List<Notification> retval = new ArrayList<>();
+    	
+    	if (create)
+    	{
+    		retval = createNotifications(parameters, firstResult, maxResult, query);
+    	}
+    	else
+    	{
+    		retval = getNotifications(parameters, firstResult, maxResult, query);
+    	}
+		
+		return retval;
+	}
+    
+    /**
+     * This method is called when we have mixed query and depends on that query, new notification should be created.
+     * 
+     * @param parameters
+     * @param firstResult
+     * @param maxResult
+     * @param query
+     * @return
+     */
+    private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult, String query)
+    {
     	TypedQuery<Object[]> select = getEm().createQuery(query, Object[].class);
 		
-		select.setParameter("lastRunDate", lastRunDate);
+    	select = (TypedQuery<Object[]>) populateQueryParameters(select, parameters);
 		select.setFirstResult(firstResult);
 		select.setMaxResults(maxResult);
 		
@@ -106,7 +146,67 @@ public class NotificationDao extends AcmAbstractDao<Notification>
 		}
 		
 		return retval;
-	}
+    }
+    
+    /**
+     * This method is called when we have to take already existing notifications with rules defined in the query
+     * 
+     * @param parameters
+     * @param firstResult
+     * @param maxResult
+     * @param query
+     * @return
+     */
+    private List<Notification> getNotifications(Map<String, Object> parameters, int firstResult, int maxResult, String query)
+    {
+    	Query select = getEm().createQuery(query);
+		
+    	select = populateQueryParameters(select, parameters);
+		select.setFirstResult(firstResult);
+		select.setMaxResults(maxResult);
+		
+		@SuppressWarnings("unchecked")
+		List<Notification> retval = (List<Notification>) select.getResultList();
+		
+		if (null == retval) {
+			retval = new ArrayList<>();
+        }
+		
+		return retval;
+    }
+    
+    /**
+     * This method will populate query parameters. If JPQL don't have specific property, that will be excluded from adding them in the query
+     * 
+     * @param query
+     * @param parameters
+     * @return
+     */
+    private Query populateQueryParameters(Query query, Map<String, Object> parameters)
+    {
+    	if (parameters != null)
+    	{
+    		for (Entry<String, Object> entry : parameters.entrySet())
+    		{
+    			Parameter<?> parameter = null;
+    			try
+    			{
+    				parameter = query.getParameter(entry.getKey());
+    			}
+    			catch(Exception e)
+    			{
+    				LOG.debug("Normal behaviour - the property not exist in the query, so we should not add it.");
+    			}
+    			
+    			if (parameter != null)
+    			{
+    				query.setParameter(entry.getKey(), entry.getValue());
+    			}
+    		}
+    	}
+    	
+    	return query;
+    }
 
     public EntityManager getEntityManager()
     {
