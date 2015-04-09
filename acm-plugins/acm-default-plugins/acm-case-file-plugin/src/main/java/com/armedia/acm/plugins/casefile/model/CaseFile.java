@@ -23,7 +23,6 @@ import java.util.*;
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
-    public static final String OBJECT_TYPE = "CASE_FILE";
 
     @Id
     @Column(name = "cm_case_id")
@@ -76,7 +75,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private String priority;
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
-    private String objectType;
+    private String objectType = CaseFileConstants.OBJECT_TYPE;
 
     @OneToMany (cascade = {CascadeType.ALL})
     @JoinColumns({
@@ -128,7 +127,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private Boolean restricted = Boolean.FALSE;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_parent_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
+    })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -170,10 +172,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
-        }
-
-        if(objectType == null){
-            objectType = getObjectType();
         }
 
         if ( getContainer() != null )
@@ -470,12 +468,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return OBJECT_TYPE;
+        return objectType;
     }
 
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
-    }
 
     @Override
     public String toString()

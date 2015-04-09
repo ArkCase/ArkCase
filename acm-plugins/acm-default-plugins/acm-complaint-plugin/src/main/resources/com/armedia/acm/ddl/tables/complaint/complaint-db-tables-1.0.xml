@@ -367,10 +367,10 @@
 
     <changeSet id="20-object-type-in-acm-close-complaint-request-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_close_complaint_request">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CloseComplaintRequest"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CLOSE_COMPLAINT_REQUEST"/>
         </addColumn>
         <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="CloseComplaintRequest"
+                              defaultNullValue="CLOSE_COMPLAINT_REQUEST"
                               tableName="acm_close_complaint_request"/>
     </changeSet>
 

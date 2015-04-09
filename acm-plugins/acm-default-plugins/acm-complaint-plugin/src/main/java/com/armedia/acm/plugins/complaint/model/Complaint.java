@@ -97,7 +97,10 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private AcmContainer container = new AcmContainer();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
+    })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -112,7 +115,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
-    private String objectType;
+    private String objectType = ComplaintConstants.OBJECT_TYPE;
 
     @OneToMany (cascade = {CascadeType.ALL})
     @JoinColumns({
@@ -166,9 +169,6 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
 
     private void setupChildPointers()
     {
-        if(objectType == null){
-            objectType = getObjectType();
-        }
         for ( ObjectAssociation childObject : childObjects )
         {
             childObject.setParentId(complaintId);
@@ -180,7 +180,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getComplaintId());
-            ap.setObjectType("COMPLAINT");
+            ap.setObjectType(getObjectType());
         }
 
         if ( getContainer() != null )
@@ -362,7 +362,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     {
         childObjects.add(childObject);
         childObject.setParentName(getComplaintNumber());
-        childObject.setParentType("COMPLAINT");
+        childObject.setParentType(ComplaintConstants.OBJECT_TYPE);
         childObject.setParentId(getComplaintId());
     }
 
@@ -380,11 +380,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return "COMPLAINT";
-    }
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
+        return objectType;
     }
 
     @Override
@@ -406,7 +402,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getComplaintId());
-        personAssoc.setParentType("COMPLAINT");
+        personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
 
         personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
     }

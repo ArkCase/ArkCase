@@ -23,12 +23,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="acm_change_case_status")
 public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
-	/**
+    /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	@Id
+
+
+    @Id
     @Column(name = "cm_change_case_status_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,7 +41,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
     private String status = "ACTIVE";
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
-    private String objectType;
+    private String objectType = ChangeCaseStatusConstants.OBJECT_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumns({
@@ -71,14 +72,10 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
     private void setupChildPointers()
     {
-        if(objectType == null){
-            objectType = getObjectType();
-        }
-
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CHANGE_CASE_STATUS");
+            ap.setObjectType(ChangeCaseStatusConstants.OBJECT_TYPE);
         }
     }
     
@@ -178,10 +175,6 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 	@Override
 	public String getObjectType() 
 	{
-		return "ChangeCaseStatus";
+		return objectType;
 	}
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
-    }
 }

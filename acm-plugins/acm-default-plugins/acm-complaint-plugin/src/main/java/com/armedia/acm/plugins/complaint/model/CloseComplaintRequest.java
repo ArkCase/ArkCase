@@ -33,7 +33,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     private String status = "IN APPROVAL";
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
-    private String objectType;
+    private String objectType = CloseComplaintRequestConstants.OBJECT_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumns({
@@ -64,14 +64,10 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
 
     private void setupChildPointers()
     {
-        if(objectType == null){
-            objectType = getObjectType();
-        }
-
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getId());
-            ap.setObjectType("CLOSE_COMPLAINT_REQUEST");
+            ap.setObjectType(CloseComplaintRequestConstants.OBJECT_TYPE);
         }
     }
 
@@ -182,10 +178,6 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Override
     public String getObjectType()
     {
-        return "CloseComplaintRequest";
-    }
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
+        return objectType;
     }
 }
