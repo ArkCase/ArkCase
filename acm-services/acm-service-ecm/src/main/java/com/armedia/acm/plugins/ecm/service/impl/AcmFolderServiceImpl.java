@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -38,7 +39,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
-        properties.put(AcmFolderConstants.NEW_FOLDER_NAME,newFolderName);
+        properties.put(AcmFolderConstants.NEW_FOLDER_NAME, FolderAndFilesUtils.buildSafeFolderName(newFolderName));
         try{
 
             MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER,folder,properties);
@@ -49,12 +50,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             AcmFolder newFolder = new AcmFolder();
             newFolder.setCmisFolderId(cmisFolderId);
             newFolder.setName(newFolderName);
+            newFolder.setParentFolderId(folder.getId());
 
-            AcmFolder renamedFolder = getFolderDao().save(newFolder);
+            AcmFolder result = getFolderDao().save(newFolder);
             if ( log.isDebugEnabled() ) {
                 log.debug("New folder with name: " + newFolderName +"  is added inside the folder: "+ folder.getName());
             }
-            return renamedFolder;
+            return result;
         }  catch ( MuleException e ) {
             if ( log.isErrorEnabled() ){
                 log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);

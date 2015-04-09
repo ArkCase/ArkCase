@@ -241,26 +241,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException {
-
-        if( log.isInfoEnabled() ) {
-            log.info("Creating new folder into  " + parentFolderPath + " with name " + folderName);
-        }
-        String path = parentFolderPath + "/" + folderName;
-
-        String cmisFolderId = createFolder(path);
-
-        if( log.isInfoEnabled() ){
-            log.info("Created new folder " + cmisFolderId + "with name: " + folderName);
-        }
-
-        AcmFolder newFolder = new AcmFolder();
-        newFolder.setCmisFolderId(cmisFolderId);
-        newFolder.setName(folderName);
-
-        return getFolderDao().save(newFolder);
-    }
-
     /**
      * Objects should really have a folder already.  Since we got here the object does not actually have one.
      * The application doesn't really care where the folder is, so we'll just create a folder in a sensible
@@ -491,24 +471,10 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         sortParam = sortParam + " " + sortDirection;
         return sortParam;
     }
-    
-    @Override
-    public String buildSafeFolderName(String folderName)
-	{    	
-		if (folderName != null)
-		{
-			String regex = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX;
-			String replacement = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT;
-			
-			folderName = folderName.replaceAll(regex, replacement);
-		}
-		
-		return folderName;
-	}
 
 
     @Override
-    public EcmFile copyFile(Long fileId, String pathForTheNewCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+    public EcmFile copyFile(Long fileId,Long targetObjectId,String targetObjectType, String pathForTheNewCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException {
 
         EcmFile file = getEcmFileDao().find(fileId);
 
@@ -532,10 +498,9 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             AcmFolder folder = getFolderDao().findByCmisFolderId(dstFolderId);
 
-            AcmContainer container = getOrCreateContainer(folder.getObjectType(),folder.getId());
-
             EcmFile fileCopy = new EcmFile();
 
+            AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
             fileCopy.setVersionSeriesId(newFileId);
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(file.getActiveVersionTag());
@@ -548,7 +513,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             result = getEcmFileDao().save(fileCopy);
             return result;
-        } catch ( MuleException e ) {
+        } catch ( MuleException e  ) {
             if(log.isErrorEnabled()){
                 log.error("Could not copy file "+e.getMessage(),e);
             }
@@ -558,11 +523,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 log.error("Could not copy file "+e.getMessage(),e);
             }
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        } catch ( PersistenceException e ){
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
         }
     }
 
     @Override
-    public EcmFile moveFile(Long fileId, String pathForTheNewFileLocation) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+    public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType , String pathForTheNewFileLocation) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
 
 
         EcmFile file = getEcmFileDao().find(fileId);
@@ -577,6 +547,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.DST_FOLDER_ID, pathForTheNewFileLocation);
         props.put(EcmFileConstants.SRC_FOLDER_ID, file.getFolder().getCmisFolderId());
 
+        AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+
         EcmFile movedFile;
 
         try {
@@ -587,6 +559,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String dstFolderId = message.getInboundProperty(EcmFileConstants.DESTINATION_FOLDER_PROPERTY);
 
             file.setVersionSeriesId(cmisObjectId);
+            file.setContainer(container);
 
             AcmFolder newFolder = getFolderDao().findByCmisFolderId(dstFolderId);
 
@@ -619,6 +592,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             getEcmFileDao().deleteFile(objectId);
         } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not delete file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not delete file",e);
+        } catch ( PersistenceException e ) {
             if(log.isErrorEnabled()){
                 log.error("Could not delete file "+e.getMessage(),e);
             }

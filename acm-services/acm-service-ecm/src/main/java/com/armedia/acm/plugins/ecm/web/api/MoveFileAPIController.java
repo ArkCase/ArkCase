@@ -26,10 +26,12 @@ public class MoveFileAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/moveToAnotherContainer", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/moveToAnotherContainer/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile moveFile(
             @RequestBody MoveCopyFileDto in,
+            @PathVariable("targetObjectType") String targetObjectType,
+            @PathVariable("targetObjectId") Long targetObjectId,
             Authentication authentication
     ) throws AcmUserActionFailedException {
 
@@ -38,7 +40,7 @@ public class MoveFileAPIController {
         }
         EcmFile source = getFileService().findById(in.getId());
         try {
-            EcmFile movedFile = getFileService().moveFile(in.getId(),in.getPath());
+            EcmFile movedFile = getFileService().moveFile(in.getId(), targetObjectId, targetObjectType, in.getPath());
             if(log.isInfoEnabled()) {
                 log.info("File with id: "+in.getId()+" successfully moved to the location "+in.getPath());
             }

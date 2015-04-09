@@ -3,12 +3,12 @@ package com.armedia.acm.plugins.ecm.model.event;
 
 import com.armedia.acm.event.AcmEvent;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 
 import java.util.Date;
 
 public class AcmFolderPersistenceEvent extends AcmEvent {
 
-    private static final String OBJECT_TYPE = "FOLDER";
 
     public AcmFolderPersistenceEvent(AcmFolder source, String userId) {
 
@@ -16,12 +16,12 @@ public class AcmFolderPersistenceEvent extends AcmEvent {
         setObjectId(source.getId());
         setEventDate(new Date());
         setUserId(userId);
-        setObjectType(OBJECT_TYPE);
+        setObjectType(AcmFolderConstants.OBJECT_TYPE);
     }
 
     @Override
     public String getObjectType()
     {
-        return OBJECT_TYPE;
+        return AcmFolderConstants.OBJECT_TYPE;
     }
 }
