@@ -54,7 +54,8 @@ public class NotificationDao extends AcmAbstractDao<Notification>
                 "SELECT notification " +
                         "FROM Notification notification " +
                         "WHERE notification.user = :user " +
-                        "OR notification.user = :everyone"
+                        "OR notification.user = :everyone " +
+                        "AND notification.status != 'DELETE'"
         );
         notification.setParameter("user", user);
         notification.setParameter("everyone", everyone);
