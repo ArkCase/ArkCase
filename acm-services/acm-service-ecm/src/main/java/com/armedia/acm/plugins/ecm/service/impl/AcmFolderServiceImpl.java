@@ -32,31 +32,34 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private MuleClient muleClient;
 
     @Override
-    public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException {
+    public AcmFolder addNewFolder(Long parentFolderId, String newFolderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
 
-        String path = parentFolderPath + "/" + folderName;
-        String cmisFolderId = createFolder(path);
+        AcmFolder folder = getFolderDao().find(parentFolderId);
 
-        AcmFolder newFolder = new AcmFolder();
-        newFolder.setCmisFolderId(cmisFolderId);
-        newFolder.setName(folderName);
+        Map<String,Object> properties = new HashMap<>();
+        properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
+        properties.put(AcmFolderConstants.NEW_FOLDER_NAME,newFolderName);
+        try{
 
-        return getFolderDao().save(newFolder);
-    }
-
-    private String createFolder(String folderPath) throws AcmCreateObjectFailedException
-    {
-        try
-        {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_CREATE_FOLDER, folderPath, null);
+            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER,folder,properties);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String cmisId = cmisObject.getId();
-            return cmisId;
-        }
-        catch (MuleException e)
-        {
-            log.error("Could not create folder: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(AcmFolderConstants.OBJECT_FOLDER_TYPE, e.getMessage(), e);
+
+            String cmisFolderId = cmisObject.getId();
+
+            AcmFolder newFolder = new AcmFolder();
+            newFolder.setCmisFolderId(cmisFolderId);
+            newFolder.setName(newFolderName);
+
+            AcmFolder renamedFolder = getFolderDao().save(newFolder);
+            if ( log.isDebugEnabled() ) {
+                log.debug("New folder with name: " + newFolderName +"  is added inside the folder: "+ folder.getName());
+            }
+            return renamedFolder;
+        }  catch ( MuleException e ) {
+            if ( log.isErrorEnabled() ){
+                log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was no added under "+folder.getName()+" successfully",e);
         }
     }
 
@@ -68,8 +71,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder renamedFolder;
 
         Map<String,Object> properties = new HashMap<>();
-        properties.put("acmFolderId",folder.getCmisFolderId());
-        properties.put("newFolderName",newFolderName);
+        properties.put(AcmFolderConstants.ACM_FOLER_ID,folder.getCmisFolderId());
+        properties.put(AcmFolderConstants.NEW_FOLDER_NAME,newFolderName);
 
         try{
 

@@ -58,4 +58,11 @@ public interface EcmFileConstants
 
     String DESTINATION_FOLDER_PROPERTY = "dstFolderId";
 
+    String CMIS_OBJECT_ID = "cmisObjectId";
+    String SRC_FOLDER_ID = "srcFolderId";
+    String DST_FOLDER_ID = "dstFolderId";
+    String DST_FOLDER_PATH = "dstFolderPath";
+    String ECM_FILE_ID = "ecmFileId";
+    String NEW_FILE_NAME="newFileName";
+
 }

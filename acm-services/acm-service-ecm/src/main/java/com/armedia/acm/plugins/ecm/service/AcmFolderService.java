@@ -9,7 +9,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
  */
 public interface AcmFolderService {
 
-    public AcmFolder addNewFolder(String parentFolderPath, String folderName) throws AcmCreateObjectFailedException;
+    public AcmFolder addNewFolder(Long parentFolderId, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     public AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException;
 

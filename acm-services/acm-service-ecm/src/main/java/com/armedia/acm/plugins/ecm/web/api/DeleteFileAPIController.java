@@ -28,9 +28,9 @@ public class DeleteFileAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/del/{objectId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/id/{fileId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public String deleteFile(
-            @PathVariable("objectId") Long objectId,
+            @PathVariable("fileId") Long objectId,
             Authentication authentication
     ) throws AcmUserActionFailedException {
 
