@@ -217,10 +217,10 @@
 
     <changeSet id="change-case-status-16-add-object-type-in-acm-change-case-status-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_change_case_status">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="ChangeCaseStatus"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CHANGE_CASE_STATUS"/>
         </addColumn>
         <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="CASE_FILE"
+                              defaultNullValue="CHANGE_CASE_STATUS"
                               tableName="acm_change_case_status"/>
     </changeSet>
 

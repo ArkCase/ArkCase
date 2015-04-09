@@ -70,7 +70,7 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
 	private Date modified;
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
-    private String objectType;
+    private String objectType = TimesheetConstants.OBJECT_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumns({
@@ -261,7 +261,4 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
 		return TimesheetConstants.OBJECT_TYPE;
 	}
 
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
-    }
 }
