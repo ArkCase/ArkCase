@@ -23,6 +23,9 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+            	<prop key="audit.batch.run">true</prop>
+                <prop key="audit.purge.days">30</prop>
+                <prop key="audit.batch.size">100</prop>
             </props>
         </property>
     </bean>
