@@ -7,8 +7,8 @@ public class AcmFolderRenamedEvent extends  AcmFolderPersistenceEvent {
 
     private static final String EVENT_TYPE = "com.armedia.acm.folder.renamed";
 
-    public AcmFolderRenamedEvent(AcmFolder source, String userId) {
-        super(source,userId);
+    public AcmFolderRenamedEvent(AcmFolder source, String userId, String ipAddress) {
+        super(source, userId, ipAddress);
     }
 
     @Override
