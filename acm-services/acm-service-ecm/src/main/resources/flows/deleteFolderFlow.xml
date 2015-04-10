@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
     <flow name="deleteFolder" doc:name="Delete Folder">
         <description>
-            The folder will be deleted if does not contain any children.
+            The folder will be deleted if does not contain any children elements.
         </description>
 
         <vm:inbound-endpoint
@@ -28,12 +28,11 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         </enricher>
 
         <choice>
-            <when expression="#[org.mule.util.StringUtils.isNotEmpty(flowVars.children.pageNumItems())]">
-                <set-property propertyName="isFolderNotEmpty" value="true"/>
+            <when expression="#[flowVars['children'].pageNumItems == 0]">
+                <cmis:delete objectId="#[message.inboundProperties.acmFolderId]"/>
             </when>
             <otherwise>
-                <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="MARJAN: Inside DELETE block!"/>
-                <cmis:delete objectId="#[message.inboundProperties.acmFolderId]"/>
+                <set-property propertyName="isFolderNotEmpty" value="true"/>
             </otherwise>
         </choice>
 
