@@ -4,6 +4,7 @@ package com.armedia.acm.services.notification.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.model.QueryType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class NotificationDao extends AcmAbstractDao<Notification>
 {
@@ -91,19 +93,20 @@ public class NotificationDao extends AcmAbstractDao<Notification>
      * @param create
      * @return
      */
-    public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, String query, boolean create)
+    public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, String query, QueryType queryType)
 	{
     	List<Notification> retval = new ArrayList<>();
     	
-    	if (create)
-    	{
-    		retval = createNotifications(parameters, firstResult, maxResult, query);
-    	}
-    	else
-    	{
-    		retval = getNotifications(parameters, firstResult, maxResult, query);
-    	}
-		
+    	switch (queryType) {
+			case CREATE:
+				retval = createNotifications(parameters, firstResult, maxResult, query);
+				break;
+	
+			case SELECT:
+				retval = getNotifications(parameters, firstResult, maxResult, query);
+				break;
+		}	
+    	
 		return retval;
 	}
     
@@ -187,21 +190,21 @@ public class NotificationDao extends AcmAbstractDao<Notification>
     {
     	if (parameters != null)
     	{
-    		for (Entry<String, Object> entry : parameters.entrySet())
+    		// Get parameters that are in the query
+    		Set<Parameter<?>> queryParameters = query.getParameters();
+    		
+    		if (queryParameters != null)
     		{
-    			Parameter<?> parameter = null;
-    			try
+    			for (Parameter<?> queryParameter : queryParameters)
     			{
-    				parameter = query.getParameter(entry.getKey());
-    			}
-    			catch(Exception e)
-    			{
-    				LOG.debug("Normal behaviour - the property not exist in the query, so we should not add it.");
-    			}
-    			
-    			if (parameter != null)
-    			{
-    				query.setParameter(entry.getKey(), entry.getValue());
+    				// Take query parameter name
+    				String key = queryParameter.getName();
+    				
+    				// If query parameter name exist in the provided parameters, take the value and add it
+    				if (parameters.containsKey(key))
+    				{
+    					query.setParameter(key, parameters.get(key));
+    				}
     			}
     		}
     	}

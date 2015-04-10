@@ -19,4 +19,6 @@ public interface AcmFolderConstants {
 
     String OBJECT_TYPE = "FOLDER";
 
+    String ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY = "addNewFolderException";
+
 }
