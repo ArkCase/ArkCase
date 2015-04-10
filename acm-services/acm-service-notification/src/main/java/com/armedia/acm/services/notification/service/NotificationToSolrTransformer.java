@@ -82,6 +82,7 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setLast_modified_tdt(in.getModified());
 
         solr.setNotification_type_s(in.getType());
+		solr.setData_s(in.getData());
 
         solr.setStatus_s(in.getStatus());
 
