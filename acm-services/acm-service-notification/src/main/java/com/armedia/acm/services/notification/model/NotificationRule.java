@@ -14,7 +14,7 @@ import com.armedia.acm.services.notification.service.Executor;
 public interface NotificationRule {
 
 	public boolean isGlobalRule();
-	public boolean isCreate();
+	public QueryType getQueryType();
 	public Executor getExecutor();
 	public Map<String, Object> getJpaProperties();
 	public String getJpaQuery();
