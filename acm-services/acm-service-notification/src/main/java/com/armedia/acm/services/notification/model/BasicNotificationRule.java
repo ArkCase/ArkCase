@@ -11,10 +11,10 @@ import com.armedia.acm.services.notification.service.Executor;
  * @author riste.tutureski
  *
  */
-public class AssignmentRule implements NotificationRule {
+public class BasicNotificationRule implements NotificationRule {
 
 	private boolean globalRule;
-	private boolean create;
+	private QueryType queryType;
 	private Executor executor;
 	private Map<String, Object> jpaProperties;
 	private String jpaQuery;
@@ -29,14 +29,14 @@ public class AssignmentRule implements NotificationRule {
 	}
 	
 	@Override
-	public boolean isCreate() {
-		return create;
+	public QueryType getQueryType() {
+		return queryType;
 	}
 
-	public void setCreate(boolean create) {
-		this.create = create;
+	public void setQueryType(QueryType queryType) {
+		this.queryType = queryType;
 	}
-	
+
 	@Override
 	public Executor getExecutor() {
 		return executor;

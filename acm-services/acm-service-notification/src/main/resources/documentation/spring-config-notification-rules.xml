@@ -6,9 +6,9 @@
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
 	<!-- Rules definitions -->
-    <bean id="assignRule" class="com.armedia.acm.services.notification.model.AssignmentRule">
+    <bean id="assignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
-		<property name="create" value="true"/>
+		<property name="queryType" value="CREATE"/>
 		<property name="executor" ref="sendExecutor"/>
 		<property name="jpaQuery">
 			<value>
@@ -38,9 +38,9 @@
 		</property>
     </bean>
 	
-	<bean id="unassignRule" class="com.armedia.acm.services.notification.model.AssignmentRule">
+	<bean id="unassignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
-		<property name="create" value="true"/>
+		<property name="queryType" value="CREATE"/>
 		<property name="executor" ref="sendExecutor"/>
 		<property name="jpaQuery">
 			<value>
@@ -70,9 +70,9 @@
 		</property>
     </bean>
     
-    <bean id="purgeRule" class="com.armedia.acm.services.notification.model.SingleQueryRule">
+    <bean id="purgeRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
-		<property name="create" value="false"/>
+		<property name="queryType" value="SELECT"/>
 		<property name="executor" ref="purgeExecutor"/>
 		<property name="jpaQuery">
 			<value>
