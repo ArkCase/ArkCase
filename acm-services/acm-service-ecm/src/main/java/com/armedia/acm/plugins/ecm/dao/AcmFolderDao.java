@@ -2,8 +2,11 @@ package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -29,5 +32,11 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         AcmFolder folder = query.getSingleResult();
 
         return folder;
+    }
+
+    @Transactional
+    public void deleteFolder(Long id) {
+        AcmFolder folder = getEm().find(getPersistenceClass(),id);
+        getEm().remove(folder);
     }
 }

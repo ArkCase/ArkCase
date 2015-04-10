@@ -22,11 +22,11 @@ public class FolderEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishFolderCreatedEvent( AcmFolder source, Authentication auth, boolean succeeded ) {
+    public void publishFolderCreatedEvent( AcmFolder source, Authentication auth, String ipAddress,boolean succeeded ) {
         if ( log.isDebugEnabled() ) {
             log.debug("Publishing a folder created event.");
         }
-        AcmFolderCreatedEvent folderCreatedEvent = new AcmFolderCreatedEvent(source, auth.getName());
+        AcmFolderCreatedEvent folderCreatedEvent = new AcmFolderCreatedEvent(source, auth.getName(),ipAddress);
         if ( auth.getDetails() != null && auth.getDetails() instanceof AcmAuthenticationDetails) {
             folderCreatedEvent.setIpAddress(((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress());
         }
@@ -35,22 +35,22 @@ public class FolderEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(folderCreatedEvent);
     }
 
-    public void publishFolderDeletedEvent( AcmFolder source, Authentication auth, boolean succeeded ) {
+    public void publishFolderDeletedEvent( AcmFolder source, Authentication auth, String ipAddress,boolean succeeded ) {
         if ( log.isDebugEnabled() ) {
             log.debug("Publishing a folder deleted event.");
         }
-        AcmFolderDeletedEvent folderDeletedEvent = new AcmFolderDeletedEvent(source,auth.getName());
+        AcmFolderDeletedEvent folderDeletedEvent = new AcmFolderDeletedEvent(source,auth.getName(),ipAddress);
         folderDeletedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(folderDeletedEvent);
     }
 
 
-    public void publishFolderRenamedEvent( AcmFolder source, Authentication auth, boolean succeeded ) {
+    public void publishFolderRenamedEvent( AcmFolder source, Authentication auth, String ipAddress,boolean succeeded ) {
         if ( log.isDebugEnabled() ) {
             log.debug("Publishing a folder renamed event.");
         }
-        AcmFolderRenamedEvent folderRenamedEvent = new AcmFolderRenamedEvent(source,auth.getName());
+        AcmFolderRenamedEvent folderRenamedEvent = new AcmFolderRenamedEvent(source,auth.getName(),ipAddress);
         folderRenamedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(folderRenamedEvent);
