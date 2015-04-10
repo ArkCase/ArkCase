@@ -53,7 +53,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     log.error("Folder not added successfully " + muleException.getMessage(),muleException);
                 }
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),
-                        "Folder was no created under "+folder.getName()+" successfully",muleException);
+                        "Folder was not created under "+folder.getName()+" successfully",muleException);
             }
 
             CmisObject cmisObject = message.getPayload(CmisObject.class);
@@ -130,6 +130,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if( folder == null ) {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
         }
+
 
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
