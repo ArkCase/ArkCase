@@ -17,16 +17,15 @@ public class AcmAuthentication implements Authentication
     public AcmAuthentication(Collection<AcmGrantedAuthority> authorities,
                              Object credentials,
                              Object details,
-                             Object principal,
                              boolean authenticated,
-                             String name)
+                             String userId)
     {
         this.authorities = authorities;
         this.credentials = credentials;
         this.details = details;
-        this.principal = principal;
+        this.principal = userId;
         this.authenticated = authenticated;
-        this.name = name;
+        this.name = userId;
     }
 
     @Override
