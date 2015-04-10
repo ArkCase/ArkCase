@@ -193,8 +193,7 @@ DocTree.Service = {
                     DocTree.Controller.modelCreatedFolder(response, parentId, folderName, cacheKey, callerData);
 
                 } else {
-                    if (DocTree.Model.validateCreateInfo(response)) {
-                        //?check response.parentFolderId == parentId
+                    if (DocTree.Model.validateCreateInfo(response, parentId)) {
                         var createInfo = response;
 
                         var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
