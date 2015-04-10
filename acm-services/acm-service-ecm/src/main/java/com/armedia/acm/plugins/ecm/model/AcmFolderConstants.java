@@ -21,7 +21,7 @@ public interface AcmFolderConstants {
     String ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY = "addNewFolderException";
     String IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY = "isFolderNotEmpty";
 
-    String SUCCESS_FOLDER_DELETE_MSG = "Folder deleted successfully: ";
+    String SUCCESS_FOLDER_DELETE_MSG = "Folder deleted successfully";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 }
