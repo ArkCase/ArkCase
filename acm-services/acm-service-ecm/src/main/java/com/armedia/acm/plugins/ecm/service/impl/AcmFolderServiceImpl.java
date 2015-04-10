@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
@@ -45,6 +46,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
         properties.put(AcmFolderConstants.NEW_FOLDER_NAME, FolderAndFilesUtils.buildSafeFolderName(newFolderName));
+        String cmisFolderId = null;
         try{
 
             MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER,folder,properties);
@@ -59,26 +61,30 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             }
 
             CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String cmisFolderId = cmisObject.getId();
+            cmisFolderId = cmisObject.getId();
 
             //if folder already exists mule will return existing object, we will do the same
             AcmFolder existingFolder = getFolderDao().findByCmisFolderId(cmisFolderId);
 
-            if ( existingFolder!=null ){
-                return existingFolder;
+            if ( log.isDebugEnabled() ) {
+                log.debug("Folder with name: " + newFolderName +"  exists inside the folder: "+ folder.getName());
             }
-
-
+            return existingFolder;
+        } catch ( NoResultException e ) {
             AcmFolder newFolder = new AcmFolder();
-            newFolder.setCmisFolderId(cmisFolderId);
+            if(cmisFolderId!=null) {
+                newFolder.setCmisFolderId(cmisFolderId);
+            } else {
+                if ( log.isErrorEnabled() ){
+                    log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was no added under "+folder.getName()+" successfully",null);
+            }
             newFolder.setName(newFolderName);
             newFolder.setParentFolderId(folder.getId());
 
             AcmFolder result = getFolderDao().save(newFolder);
 
-            if ( log.isDebugEnabled() ) {
-                log.debug("New folder with name: " + newFolderName +"  is added inside the folder: "+ folder.getName());
-            }
             return result;
         } catch ( PersistenceException | MuleException e ) {
             if ( log.isErrorEnabled() ){
