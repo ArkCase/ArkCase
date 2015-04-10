@@ -35,16 +35,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUser findByUserIdAnyCase(String userId)
     {
-        CriteriaBuilder builder = getEm().getCriteriaBuilder();
-        CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
-        Root<AcmUser> au = query.from(AcmUser.class);
+        String jpql =
+                "SELECT u " +
+                        "FROM AcmUser u " +
+                        "WHERE LOWER(u.userId) = :lowerUserId";
+        TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
 
-        query.select(au);
+        query.setParameter("lowerUserId", userId.toLowerCase());
 
-        query.where(builder.equal(builder.lower(au.<String>get("userId")), userId.toLowerCase()));
-
-        TypedQuery<AcmUser> dbQuery = getEm().createQuery(query);
-        AcmUser user = dbQuery.getSingleResult();
+        AcmUser user = query.getSingleResult();
         return user;
     }
 
