@@ -3,6 +3,10 @@
  */
 package com.armedia.acm.services.notification.model;
 
+import java.util.Map;
+
+import com.armedia.acm.services.notification.service.Executor;
+
 /**
  * @author riste.tutureski
  *
@@ -10,6 +14,9 @@ package com.armedia.acm.services.notification.model;
 public interface NotificationRule {
 
 	public boolean isGlobalRule();
+	public QueryType getQueryType();
+	public Executor getExecutor();
+	public Map<String, Object> getJpaProperties();
 	public String getJpaQuery();
 	
 }
