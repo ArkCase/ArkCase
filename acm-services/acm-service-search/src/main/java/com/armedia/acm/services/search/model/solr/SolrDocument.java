@@ -60,6 +60,7 @@ public class SolrDocument implements SolrBaseDocument {
 
     ///////////////for ASN /////////////////
     private String notification_type_s;
+    private String data_s;
 
     @Override
     public String getId() {
@@ -397,7 +398,16 @@ public class SolrDocument implements SolrBaseDocument {
         this.notification_type_s = notification_type_s;
     }
 
-	@Override
+    public String getData_s() {
+        return data_s;
+    }
+
+    public void setData_s(String data_s) {
+        this.data_s = data_s;
+    }
+
+
+    @Override
     public String toString()
     {
         return "SolrDocument{" +
@@ -445,6 +455,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", mime_type_s='" + mime_type_s + '\'' +
                 ", hidden_b='" + hidden_b + '\'' +
                 ", notification_type_s='" + notification_type_s + '\'' +
+                ", data_s='" + data_s + '\'' +
                 '}';
     }
 }
