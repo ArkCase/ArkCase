@@ -81,7 +81,7 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-    ,validateCreateInfo: function(data) {
+    ,validateCreateInfo: function(data, parentFolderId) {
         if (Acm.isEmpty(data)) {
             return false;
         }
@@ -90,6 +90,14 @@ DocTree.Model = DocTree.Model || {
         }
         if (0 == data.id) {
             return false;
+        }
+        if (Acm.isNotEmpty(parentFolderId)) {
+            if (Acm.isEmpty(data.parentFolderId)) {
+                return false;
+            }
+            if (data.parentFolderId != parentFolderId) {
+                return false;
+            }
         }
         return true;
     }

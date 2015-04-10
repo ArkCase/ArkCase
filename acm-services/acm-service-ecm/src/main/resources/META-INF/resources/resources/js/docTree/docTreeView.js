@@ -56,7 +56,8 @@ DocTree.View = DocTree.View || {
 
     ,_addFileNode: function(folderNode, name, type) {
         var fileNode = folderNode.addChildren({"title": "Uploading " + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.Source.getHtmlAction()});
-        fileNode.setStatus("loading");
+        //fileNode.setStatus("loading");
+        DocTree.View.markNodePending(fileNode);
         return fileNode;
     }
     ,_addingFileNodes: function(folderNode, names, type) {
@@ -305,28 +306,28 @@ DocTree.View = DocTree.View || {
     }
     ,onModelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, node) {
         if (createdFolder.hasError) {
+            App.View.ErrorBoard.show("Error occurred when creating folder", Acm.goodValue(createdFolder.errorMsg));
 
         } else {
             if (DocTree.View.validateNode(node)) {
-                $(node.span).removeClass("pending");
                 DocTree.View._fileDataToNodeData(createdFolder, node);
-                //node.lazy = true;
-                //node.action = DocTree.View.Source.getHtmlAction();
+                DocTree.View.markNodeOk(node);
                 node.renderTitle();
-                node.setStatus("ok");
             }
-
         }
-
-//        $(node.span).removeClass("pending");
-//        // Let's pretend the server returned a slightly modified
-//        // title:
-//        node.setTitle(node.title + "!");
-//        //var $divError = $("#divError");
-//        //$divError.slideUp("slow");
-//
-        App.View.ErrorBoard.show("hello folder", "world");
-        var z = 1;
+    }
+    ,markNodePending: function(node) {
+        $(node.span).addClass("pending");
+        node.setStatus("loading");
+    }
+    ,markNodeOk: function(node) {
+        $(node.span).removeClass("pending");
+        node.setStatus("ok");
+    }
+    ,markNodeError: function(node) {
+        $(node.span).addClass("pending");
+        //node.setStatus("error");
+        node.setStatus("ok");
     }
     ,onModelAddedDocument: function(node, parentId, folder) {
         //var $divError = $("#divError");
@@ -389,57 +390,8 @@ DocTree.View = DocTree.View || {
                 // (index #2 is rendered by fancytree)
 
                 //if (DocTree.View.isTopNode(node)) {
-                if (node.folder) {  //DocTree.View.isFolderNode(node)
-//                    var html =  '<div class="jtable-main-container">'
-//                        +'<div class="jtable-bottom-panel">'
-//                        +'    <div class="jtable-left-area">'
-//                        +'        <span class="jtable-page-list">'
-//                        +'            <span class="jtable-page-number-first jtable-page-number-disabled">&lt;&lt;</span>'
-//                        +'            <span class="jtable-page-number-previous jtable-page-number-disabled">&lt;</span>'
-//                        +'            <span class="jtable-page-number">1</span>'
-//                        +'            <span class="jtable-page-number">2</span>'
-//                        +'            <span class="jtable-page-number-space">...</span>'
-//                        +'            <span class="jtable-page-number">4</span>'
-//                        +'            <span class="jtable-page-number jtable-page-number-active jtable-page-number-disabled">5</span>'
-//                        +'            <span class="jtable-page-number">6</span>'
-//                        +'            <span class="jtable-page-number-space">...</span>'
-//                        +'            <span class="jtable-page-number">152</span>'
-//                        +'            <span class="jtable-page-number">153</span>'
-//                        +'            <span class="jtable-page-number-next jtable-page-number-disabled">&gt;</span>'
-//                        +'            <span class="jtable-page-number-last jtable-page-number-disabled">&gt;&gt;</span>'
-//                        +'            </span>'
-//                        +'        <span class="jtable-goto-page" style="display: inline;">'
-//                        +'            <span>Go to page: </span>'
-//                        +'               <select>'
-//                        +'                  <option value="1">1</option>'
-//                        +'                  <option value="2">2</option>'
-//                        +'                  <option value="3">3</option>'
-//                        +'                  <option value="4">4</option>'
-//                        +'                  <option value="5">5</option>'
-//                        +'                  <option value="6">6</option>'
-//                        +'                  <option value="7">7</option>'
-//                        +'                  <option value="8">8</option>'
-//                        +'                  <option value="9">9</option>'
-//                        +'                  <option value="10">10</option>'
-//                        +'               </select>'
-//                        +'            </span>'
-//                        +'        <span class="jtable-page-size-change">'
-//                        +'            <span>Row count: </span>'
-//                        +'            <select>'
-//                        +'                <option value="10">10</option>'
-//                        +'                <option value="25">25</option>'
-//                        +'                <option value="50">50</option>'
-//                        +'                <option value="100">100</option>'
-//                        +'                <option value="250">250</option>'
-//                        +'                <option value="500">500</option>'
-//                        +'            </select>'
-//                        +'        </span>'
-//                        +'    </div>'
-//                        +'    <div class="jtable-right-area">'
-//                        +'        <span class="jtable-page-info">Showing 1-1 of 1</span>'
-//                        +'    </div>'
-//                        +'</div></div>';
-//                    $tdList.eq(3).html(html);
+                if (DocTree.View.isFolderNode(node)) {
+                    ;
                 } else if (DocTree.View.isFileNode(node)) {
                     $tdList.eq(3).text(node.data.type);
                     $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
@@ -450,8 +402,6 @@ DocTree.View = DocTree.View || {
 //                $tdList.eq(8).html(DocTree.View.Source.getHtmlAction());
                 } else {  //non file, non folder
                     $tdList.eq(0).text("");
-                    //$tdList.eq(2).text("Btn" + node.title);
-
                 }
 
 
@@ -528,34 +478,23 @@ DocTree.View = DocTree.View || {
                             }
 
                         } else {
-                            var id = data.node.data.objectId;
-                            if (data.node.folder) {
-                                DocTree.Controller.viewRenamedFolder(data.node, id, parentId, name);
-                            } else {
-                                DocTree.Controller.viewRenamedDocument(data.node, id, parentId, name);
-                            }
+//                            var id = data.node.data.objectId;
+//                            if (data.node.folder) {
+//                                DocTree.Controller.viewRenamedFolder(data.node, id, parentId, name);
+//                            } else {
+//                                DocTree.Controller.viewRenamedDocument(data.node, id, parentId, name);
+//                            }
 
                         }
                     }
 
-//                    console.log("save...", this, data);
-//                    // Simulate to start a slow ajax request...
-//                    setTimeout(function(){
-//                        $(data.node.span).removeClass("pending");
-//                        // Let's pretend the server returned a slightly modified
-//                        // title:
-//                        data.node.setTitle(data.node.title + "!");
-//                    }, 2000);
-                    // We return true, so ext-edit will set the current user input
-                    // as title
-                    return true;
+
+                    return true;        // We return true, so ext-edit will set the current user input as title
                 }
                 ,close: function(event, data){
                     // Editor was removed
                     if( data.save ) {
-                        // Since we started an async request, mark the node as preliminary
-                        $(data.node.span).addClass("pending");
-                        data.node.setStatus("loading");
+                        DocTree.View.markNodePending(data.node);
                     }
                     DocTree.View.setEditing(false);
                 }
@@ -566,9 +505,6 @@ DocTree.View = DocTree.View || {
                 preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
                 preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
                 dragStart: function(node, data) {
-//                     This function MUST be defined to enable dragging for the tree.
-//                     Return false to cancel dragging of node.
-
                     if (DocTree.View.isTopNode(data.node) || DocTree.View.isSpecialNode(data.node)) {
                         return false;
                     }
@@ -579,19 +515,6 @@ DocTree.View = DocTree.View || {
                     return true;
                 },
                 dragEnter: function(node, data) {
-//                     data.otherNode may be null for non-fancytree droppables.
-//                     Return false to disallow dropping on node. In this case
-//                     dragOver and dragLeave are not called.
-//                     Return 'over', 'before, or 'after' to force a hitMode.
-//                     Return ['before', 'after'] to restrict available hitModes.
-//                     Any other return value will calc the hitMode from the cursor position.
-
-//                    // Prevent dropping a parent below another parent (only sort
-//                    // nodes under the same parent)
-//                        if(node.parent !== data.otherNode.parent){
-//                            return false;
-//                        }
-//
                     if (data.node.folder) {
                         return true;
                     } else if (DocTree.Model.NODE_TYPE_PREV == data.node.data.objectType) {
