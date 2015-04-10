@@ -5,10 +5,10 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -17,6 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.RollbackException;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,9 +48,26 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         try{
 
             MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER,folder,properties);
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
 
+            if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY)){
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+                if(log.isErrorEnabled()) {
+                    log.error("Folder not added successfully " + muleException.getMessage(),muleException);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),
+                        "Folder was no created under "+folder.getName()+" successfully",muleException);
+            }
+
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
             String cmisFolderId = cmisObject.getId();
+
+            //if folder already exists mule will return existing object, we will do the same
+            AcmFolder existingFolder = getFolderDao().findByCmisFolderId(cmisFolderId);
+
+            if ( existingFolder!=null ){
+                return existingFolder;
+            }
+
 
             AcmFolder newFolder = new AcmFolder();
             newFolder.setCmisFolderId(cmisFolderId);
@@ -53,11 +75,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             newFolder.setParentFolderId(folder.getId());
 
             AcmFolder result = getFolderDao().save(newFolder);
+
             if ( log.isDebugEnabled() ) {
                 log.debug("New folder with name: " + newFolderName +"  is added inside the folder: "+ folder.getName());
             }
             return result;
-        }  catch ( MuleException e ) {
+        } catch ( PersistenceException | MuleException e ) {
             if ( log.isErrorEnabled() ){
                 log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
             }
