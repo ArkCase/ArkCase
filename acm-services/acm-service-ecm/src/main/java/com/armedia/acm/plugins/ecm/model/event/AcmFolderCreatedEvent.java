@@ -7,8 +7,8 @@ public class AcmFolderCreatedEvent extends  AcmFolderPersistenceEvent {
 
     private static final String EVENT_TYPE = "com.armedia.acm.folder.created";
 
-    public AcmFolderCreatedEvent(AcmFolder source, String userId) {
-        super(source,userId);
+    public AcmFolderCreatedEvent(AcmFolder source, String userId, String ipAddress) {
+        super(source, userId, ipAddress);
     }
 
     @Override
