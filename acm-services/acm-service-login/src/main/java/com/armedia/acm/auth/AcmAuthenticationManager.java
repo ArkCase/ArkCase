@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
@@ -14,12 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Cycle through the configured authentication provider.  If one of them works,
@@ -79,11 +76,14 @@ public class AcmAuthenticationManager implements AuthenticationManager
     }
 
     private AcmAuthentication getAcmAuthentication(Authentication providerAuthentication) {
+
+        AcmUser user = getUserDao().findByUserIdAnyCase(providerAuthentication.getName());
+
         Collection<AcmGrantedAuthority> acmAuths =
                 getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
         
         // Collection with LDAP and ADHOC authority groups that the user belongs to
-        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthorityGroups(providerAuthentication.getName());
+        Collection<AcmGrantedAuthority> acmAuthsGroups = getAuthorityGroups(user);
         
         // Collection with application roles for LDAP and ADHOC groups/subgroups that the user belongs to
         Collection<AcmGrantedAuthority> acmAuthsRoles = getAuthoritiesMapper().mapAuthorities(acmAuthsGroups);
@@ -94,28 +94,20 @@ public class AcmAuthenticationManager implements AuthenticationManager
         
         return new AcmAuthentication(
                 acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
-                providerAuthentication.getPrincipal(), providerAuthentication.isAuthenticated(),
-                providerAuthentication.getName());
+                providerAuthentication.isAuthenticated(), user.getUserId());
     }
     
-    private Collection<AcmGrantedAuthority> getAuthorityGroups(String userId)
+    private Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
     {
     	// Result
-    	Set<AcmGrantedAuthority> authGroups = new HashSet<>();
-    	
-    	AcmUser user = getUserDao().findByUserId(userId);
+    	Set<AcmGrantedAuthority> authGroups = null;
     	
     	// All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
     	List<AcmGroup> groups = getGroupDao().findByUserMember(user);
     	
     	if (groups != null)
     	{
-    		for (AcmGroup group : groups)
-    		{
-    			// For each group create authority
-    			AcmGrantedAuthority authority = new AcmGrantedAuthority(group.getName());
-    			authGroups.add(authority);
-    		}
+            authGroups = groups.stream().map(group -> new AcmGrantedAuthority(group.getName())).collect(Collectors.toSet());
     	}
     	
     	return authGroups;
