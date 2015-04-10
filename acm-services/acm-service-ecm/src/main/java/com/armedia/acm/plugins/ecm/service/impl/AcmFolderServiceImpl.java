@@ -99,6 +99,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
+    public void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException {
+
+    }
+
+    @Override
     public AcmFolder findById(Long folderId) {
         return getFolderDao().find(folderId);
     }
