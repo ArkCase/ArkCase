@@ -1,6 +1,7 @@
 package com.armedia.acm.audit.dao;
 
 import com.armedia.acm.audit.model.AuditEvent;
+import com.armedia.acm.data.AcmAbstractDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,19 +11,49 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
+
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by armdev on 9/4/14.
  */
-public class AuditDao
+public class AuditDao extends AcmAbstractDao<AuditEvent>
 {
 
 
     @PersistenceContext
     private EntityManager em;
-
+    
+    public List<AuditEvent> findAuditsForPurge(Date threshold, int firstResult, int maxResult)
+    {
+    	Query select = getEm().createQuery("SELECT " + 
+											    "audit " +
+										   "FROM " +
+												"AuditEvent audit " +
+										   "WHERE " +
+												"audit.status != 'DELETE' " +
+										   "AND " +
+												"audit.eventDate <= :threshold");
+    	
+		select.setParameter("threshold", threshold);
+    	select.setFirstResult(firstResult);
+		select.setMaxResults(maxResult);
+		
+		@SuppressWarnings("unchecked")
+		List<AuditEvent> retval = (List<AuditEvent>) select.getResultList();
+		
+		if (retval == null)
+		{
+			retval = new ArrayList<>();
+		}
+		
+		return retval;
+    }
+    
     public List<AuditEvent> findAuditsByEventPatternAndObjectId(
             String objectType,
             Long objectId)
@@ -111,4 +142,10 @@ public class AuditDao
     public void setEm(EntityManager em) {
         this.em = em;
     }
+
+	@Override
+	protected Class<AuditEvent> getPersistenceClass() 
+	{
+		return AuditEvent.class;
+	}
 }
