@@ -83,13 +83,12 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
     {
         String userId = "userId";
 
-        expect(mockAuthentication.getName()).andReturn(userId);
         expect(mockRequest.getSession(true)).andReturn(mockSession);
         mockSession.setAttribute("acm_username", userId);
 
         replayAll();
 
-        unit.addUserIdToSession(mockRequest, mockAuthentication);
+        unit.addUserIdToSession(mockRequest, userId);
 
         verifyAll();
     }

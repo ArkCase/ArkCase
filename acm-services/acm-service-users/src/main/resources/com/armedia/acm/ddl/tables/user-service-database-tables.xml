@@ -281,4 +281,13 @@
     <changeSet id="user-tables-15-add-group_member_primary_key" author="dmiller">
         <addPrimaryKey tableName="acm_group_member" columnNames="cm_group_name, cm_user_id"/>
     </changeSet>
+
+    <changeSet id="user-tables-16-add-user-id-index" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <dbms type="oracle"/>
+        </preConditions>
+        <createIndex tableName="ACM_USER" indexName="idx_lower_user_id">
+            <column name="LOWER(cm_user_id)"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
