@@ -92,24 +92,19 @@ public class NotificationServiceImpl implements NotificationService {
 		do
 		{
 			Map<String, Object> properties = getJpaProperties(rule, lastRun);
-			notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule.getJpaQuery(), rule.isCreate());
+			notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule.getJpaQuery(), rule.getQueryType());
 			
 			if ( !notifications.isEmpty() )
             {
 				firstResult += maxResult;
 				
-				for (Notification notification : notifications)
-				{
-					// Execute needed action
-					notification = rule.getExecutor().execute(notification);
-					
-					// Save notification to database
-					Notification saved = getNotificationDao().save(notification);
-					
-					// Raise an event
-					ApplicationNotificationEvent event = new ApplicationNotificationEvent(saved, NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
-					getNotificationEventPublisher().publishNotificationEvent(event);
-				}
+				notifications.stream()
+				             .map(element -> rule.getExecutor().execute(element))
+				             .map(element -> getNotificationDao().save(element))
+				             .forEach(element -> {
+				            	 ApplicationNotificationEvent event = new ApplicationNotificationEvent(element, NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
+								 getNotificationEventPublisher().publishNotificationEvent(event);
+				             });
             }
 		}
 		while ( !notifications.isEmpty() );

@@ -6,12 +6,15 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
+import org.eclipse.persistence.exceptions.DatabaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.PersistenceException;
 
 /**
  * Created by marjan.stefanoski on 02.04.2015.
@@ -29,9 +32,9 @@ public class AddNewFolderAPIController {
     @RequestMapping(value = "/folder/{parentFolderId}/{newFolderName}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder addNewFolder(
-            @PathVariable("parentFolderId")Long parentFolderId,
-            @PathVariable("newFolderName") String newFolderName,
-            Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+            @PathVariable("parentFolderId") Long parentFolderId,
+            @PathVariable("newFolderName")  String newFolderName,
+            Authentication authentication)  throws AcmCreateObjectFailedException, AcmUserActionFailedException {
 
         if( log.isInfoEnabled() ) {
             log.info("Creating new folder into  " + parentFolderId + " with name " + newFolderName);
@@ -44,7 +47,7 @@ public class AddNewFolderAPIController {
             }
             getFolderEventPublisher().publishFolderCreatedEvent(newFolder,authentication,true);
             return newFolder;
-        } catch ( AcmCreateObjectFailedException e) {
+        } catch (  AcmCreateObjectFailedException e) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to create new folder "+ newFolderName,e);
             }
