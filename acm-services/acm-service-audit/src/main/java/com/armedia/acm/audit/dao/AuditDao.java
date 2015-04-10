@@ -63,6 +63,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                         "FROM   AuditEvent ae " +
                         "WHERE  ae.objectType = :objectType " +
                         "AND    ae.objectId = :objectId " +
+                        "AND 	ae.status != 'DELETE' " +
                         "ORDER BY ae.eventDate";
 
         Query findAudits = getEm().createQuery(queryText);
@@ -78,6 +79,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                         "FROM   AuditEvent ae " +
                         "WHERE  ae.objectType = :objectType " +
                         "AND    ae.objectId = :objectId " +
+                        "AND	ae.status != 'DELETE' " +
                         "ORDER BY ae.eventDate";
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
@@ -95,7 +97,9 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "SELECT COUNT(ae.fullEventType) " +
                         "FROM   AuditEvent ae " +
                         "WHERE  ae.objectType = :objectType " +
-                        "AND    ae.objectId = :objectId ";
+                        "AND    ae.objectId = :objectId " +
+                        "AND 	ae.status != 'DELETE'";
+        
         Query query = getEm().createQuery(queryText);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
@@ -111,6 +115,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         String queryText =
                 "SELECT ae " +
                         "FROM   AuditEvent ae " +
+                		"WHERE ae.status != 'DELETE' " +
                         "ORDER BY ae." + sortBy + " " + sort;
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
@@ -126,7 +131,8 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
     {
         String queryText =
                 "SELECT COUNT(ae.fullEventType) " +
-                        "FROM   AuditEvent ae ";
+                        "FROM   AuditEvent ae " +
+                        "WHERE ae.status != 'DELETE'";
         Query query = getEm().createQuery(queryText);
 
 
