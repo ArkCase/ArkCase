@@ -94,8 +94,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         
         return new AcmAuthentication(
                 acmAuths, providerAuthentication.getCredentials(), providerAuthentication.getDetails(),
-                user.getUserId(), providerAuthentication.isAuthenticated(),
-                user.getUserId());
+                providerAuthentication.isAuthenticated(), user.getUserId());
     }
     
     private Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)

@@ -79,7 +79,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         ));
 
         AcmAuthentication successAuthentication = new AcmAuthentication(
-                authsFromProvider, null, null, null, true, user.getUserId());
+                authsFromProvider, null, null, true, user.getUserId());
         
         
         Set<AcmGrantedAuthority> authsGroups = new HashSet<>(Arrays.asList(
