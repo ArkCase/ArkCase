@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.eclipse.persistence.exceptions.DatabaseException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by marjan.stefanoski on 02.04.2015.
@@ -34,7 +36,10 @@ public class AddNewFolderAPIController {
     public AcmFolder addNewFolder(
             @PathVariable("parentFolderId") Long parentFolderId,
             @PathVariable("newFolderName")  String newFolderName,
-            Authentication authentication)  throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+            Authentication authentication,
+            HttpSession session)  throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+
+        String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
 
         if( log.isInfoEnabled() ) {
             log.info("Creating new folder into  " + parentFolderId + " with name " + newFolderName);
@@ -45,13 +50,13 @@ public class AddNewFolderAPIController {
             if( log.isInfoEnabled() ) {
                 log.info("Created new folder " + newFolder.getId() + "with name: " + newFolderName);
             }
-            getFolderEventPublisher().publishFolderCreatedEvent(newFolder,authentication,true);
+            getFolderEventPublisher().publishFolderCreatedEvent(newFolder,authentication,ipAddress,true);
             return newFolder;
         } catch (  AcmCreateObjectFailedException e) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to create new folder "+ newFolderName,e);
             }
-            getFolderEventPublisher().publishFolderCreatedEvent(null,authentication,false);
+            getFolderEventPublisher().publishFolderCreatedEvent(null,authentication,ipAddress,false);
             throw e;
         }
     }

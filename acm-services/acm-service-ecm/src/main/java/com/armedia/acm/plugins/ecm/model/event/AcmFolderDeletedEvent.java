@@ -7,8 +7,8 @@ public class AcmFolderDeletedEvent extends  AcmFolderPersistenceEvent {
 
     private static final String EVENT_TYPE = "com.armedia.acm.folder.deleted";
 
-    public AcmFolderDeletedEvent(AcmFolder source, String userId) {
-        super(source,userId);
+    public AcmFolderDeletedEvent(AcmFolder source, String userId, String ipAddress) {
+        super(source,userId,ipAddress);
     }
 
     @Override

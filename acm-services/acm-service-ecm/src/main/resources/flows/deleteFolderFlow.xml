@@ -24,15 +24,16 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 
         <enricher target="#[flowVars['children']]">
-            <cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.ecmFolderId]"/>
+            <cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>
         </enricher>
 
         <choice>
-            <when expression="[flowVars['children'].size()==0]">
-                <cmis:delete objectId="#[message.inboundProperties.ecmFolderId]"/>
+            <when expression="#[org.mule.util.StringUtils.isNotEmpty(flowVars.children.pageNumItems())]">
+                <set-property propertyName="isFolderNotEmpty" value="true"/>
             </when>
             <otherwise>
-                <set-property propertyName="isFolderEmpty" value="true"/>
+                <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="MARJAN: Inside DELETE block!"/>
+                <cmis:delete objectId="#[message.inboundProperties.acmFolderId]"/>
             </otherwise>
         </choice>
 
