@@ -60,6 +60,7 @@ public class SolrDocument implements SolrBaseDocument {
 
     ///////////////for ASN /////////////////
     private String notification_type_s;
+    private String parent_ref_s;
 
     @Override
     public String getId() {
@@ -397,6 +398,16 @@ public class SolrDocument implements SolrBaseDocument {
         this.notification_type_s = notification_type_s;
     }
 
+    public void setParent_ref_s(String parent_ref_s)
+    {
+        this.parent_ref_s = parent_ref_s;
+    }
+
+    public String getParent_ref_s()
+    {
+        return parent_ref_s;
+    }
+
 	@Override
     public String toString()
     {
@@ -447,4 +458,6 @@ public class SolrDocument implements SolrBaseDocument {
                 ", notification_type_s='" + notification_type_s + '\'' +
                 '}';
     }
+
+
 }
