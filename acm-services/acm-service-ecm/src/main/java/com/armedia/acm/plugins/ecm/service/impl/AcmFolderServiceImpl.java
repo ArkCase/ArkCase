@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,24 +42,47 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
         properties.put(AcmFolderConstants.NEW_FOLDER_NAME, FolderAndFilesUtils.buildSafeFolderName(newFolderName));
+        String cmisFolderId = null;
         try{
 
             MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER,folder,properties);
+
+            if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY)){
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+                if(log.isErrorEnabled()) {
+                    log.error("Folder not added successfully " + muleException.getMessage(),muleException);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),
+                        "Folder was not created under "+folder.getName()+" successfully",muleException);
+            }
+
             CmisObject cmisObject = message.getPayload(CmisObject.class);
+            cmisFolderId = cmisObject.getId();
 
-            String cmisFolderId = cmisObject.getId();
+            //if folder already exists mule will return existing object, we will do the same
+            AcmFolder existingFolder = getFolderDao().findByCmisFolderId(cmisFolderId);
 
+            if ( log.isDebugEnabled() ) {
+                log.debug("Folder with name: " + newFolderName +"  exists inside the folder: "+ folder.getName());
+            }
+            return existingFolder;
+        } catch ( NoResultException e ) {
             AcmFolder newFolder = new AcmFolder();
-            newFolder.setCmisFolderId(cmisFolderId);
+            if(cmisFolderId!=null) {
+                newFolder.setCmisFolderId(cmisFolderId);
+            } else {
+                if ( log.isErrorEnabled() ){
+                    log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was no added under "+folder.getName()+" successfully",null);
+            }
             newFolder.setName(newFolderName);
             newFolder.setParentFolderId(folder.getId());
 
             AcmFolder result = getFolderDao().save(newFolder);
-            if ( log.isDebugEnabled() ) {
-                log.debug("New folder with name: " + newFolderName +"  is added inside the folder: "+ folder.getName());
-            }
+
             return result;
-        }  catch ( MuleException e ) {
+        } catch ( PersistenceException | MuleException e ) {
             if ( log.isErrorEnabled() ){
                 log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
             }
@@ -73,7 +98,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder renamedFolder;
 
         Map<String,Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.ACM_FOLER_ID,folder.getCmisFolderId());
+        properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
         properties.put(AcmFolderConstants.NEW_FOLDER_NAME,newFolderName);
 
         try{
@@ -95,7 +120,46 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             }
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_RENAME_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder "+folder.getName()+" was not renamed successfully",e);
         }
+    }
 
+    @Override
+    public void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        AcmFolder folder = getFolderDao().find(folderId);
+
+        if( folder == null ) {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
+        }
+
+
+        Map<String,Object> properties = new HashMap<>();
+        properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
+        try {
+
+            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folder, properties);
+
+                if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+                if (log.isErrorEnabled()) {
+                    log.error("Folder not deleted successfully " + muleException.getMessage(), muleException);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                        "Folder " + folder.getName() + "not deleted successfully", muleException);
+            } else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY)) {
+                if (log.isErrorEnabled()) {
+                    log.error("Folder "+folder.getName()+" is not empty and is not deleted!");
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                        "Folder " + folder.getName() + " not deleted successfully", null);
+            }
+            getFolderDao().deleteFolder(folderId);
+        }
+        catch ( PersistenceException | MuleException e ) {
+            if ( log.isErrorEnabled() ){
+                log.error("Folder  "+folder.getName()+"not deleted successfully" + e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was no added under "+folder.getName()+" successfully",e);
+        }
     }
 
     @Override
