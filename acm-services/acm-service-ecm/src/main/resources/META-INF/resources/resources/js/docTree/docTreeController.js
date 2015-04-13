@@ -14,6 +14,8 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_CREATED_FOLDER          = name + "-model-created-folder";
         this.VIEW_REMOVED_FOLDER           = name + "-view-removed-folder";
         this.MODEL_DELETED_FOLDER          = name + "-model-deleted-folder";
+        this.VIEW_REMOVED_FILE             = name + "-view-removed-file";
+        this.MODEL_DELETED_FILE            = name + "-model-deleted-file";
         //-------
 
         this.VIEW_RENAMED_FOLDER    = name + "-view-renamed-folder";
@@ -48,6 +50,12 @@ DocTree.Controller = DocTree.Controller || {
     }
     ,modelDeletedFolder: function(deletedInfo, folderId, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_DELETED_FOLDER, deletedInfo, folderId, cacheKey, callerData);
+    }
+    ,viewRemovedFile: function(fileId, cacheKey, fileNode) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_REMOVED_FILE, fileId, cacheKey, fileNode);
+    }
+    ,modelDeletedFile: function(deletedInfo, fileId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_DELETED_FILE, deletedInfo, fileId, cacheKey, callerData);
     }
 
     //----------------

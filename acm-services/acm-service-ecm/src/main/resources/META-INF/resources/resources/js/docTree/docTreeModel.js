@@ -11,6 +11,7 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FOLDER          ,this.onViewRemovedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
 
         //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
@@ -38,6 +39,9 @@ DocTree.Model = DocTree.Model || {
     }
     ,onViewRemovedFolder: function(folderId, cacheKey, folderNode) {
         DocTree.Service.deleteFolder(folderId, cacheKey, folderNode);
+    }
+    ,onViewRemovedFile: function(fileId, cacheKey, folderNode) {
+        DocTree.Service.deleteFile(fileId, cacheKey, folderNode);
     }
 
     //---------------
@@ -105,11 +109,20 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-    ,validateDeleteInfo: function(data) {
+    ,validateDeletedFolder: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
         }
         if (Acm.isEmpty(data.deletedFolderId)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateDeletedFile: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.deletedFileId)) {
             return false;
         }
         return true;

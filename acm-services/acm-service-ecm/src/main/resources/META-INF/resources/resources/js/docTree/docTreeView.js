@@ -32,6 +32,7 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST    ,this.onModelRetrievedFolderList);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_CREATED_FOLDER          ,this.onModelCreatedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_DELETED_FOLDER          ,this.onModelDeletedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_DELETED_FILE            ,this.onModelDeletedFile);
 
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
@@ -295,9 +296,12 @@ DocTree.View = DocTree.View || {
         if (deletedInfo.hasError) {
             App.View.ErrorBoard.show("Error occurred when deleting folder", Acm.goodValue(deletedInfo.errorMsg));
 
-        } else {
-//            if (DocTree.View.validateNode(node)) {
-//            }
+        }
+    }
+    ,onModelDeletedFile: function(deletedInfo, fileId, cacheKey, node) {
+        if (deletedInfo.hasError) {
+            App.View.ErrorBoard.show("Error occurred when deleting file", Acm.goodValue(deletedInfo.errorMsg));
+
         }
     }
 
@@ -921,18 +925,25 @@ DocTree.View = DocTree.View || {
                     node.editStart();
                     break;
                 case "remove":
-                    var parent = node.parent;
-                    if (parent) {
-                        var pageId = Acm.goodValue(parent.data.startRow, 0);
-                        var parentId = parent.data.objectId;
-                        var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
+                    if (DocTree.View.isFolderNode(node) || DocTree.View.isFileNode(node)) {
+                        var parent = node.parent;
+                        if (parent) {
+                            var pageId = Acm.goodValue(parent.data.startRow, 0);
+                            var parentId = parent.data.objectId;
+                            var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
 
-                        refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                        node.remove();
-                        if( refNode ) {
-                            refNode.setActive();
+                            refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                            node.remove();
+                            if( refNode ) {
+                                refNode.setActive();
+                            }
+
+                            if (DocTree.View.isFolderNode(node)) {
+                                DocTree.Controller.viewRemovedFolder(node.data.objectId, cacheKey, node);
+                            } else if (DocTree.View.isFileNode(node)) {
+                                DocTree.Controller.viewRemovedFile(node.data.objectId, cacheKey, node);
+                            }
                         }
-                        DocTree.Controller.viewRemovedFolder(node.data.objectId, cacheKey, node);
                     }
                     break;
                 case "addChild":

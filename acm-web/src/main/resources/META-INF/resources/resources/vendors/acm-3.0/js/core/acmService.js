@@ -77,7 +77,7 @@ Acm.Service = {
     }
 
     ,asyncPut : function(callback, url, param) {
-        return jQuery.ajax({type: 'PUT'
+        return this.ajax({type: 'PUT'
             ,url: url
             ,data: param
             ,success: function(response) {
@@ -87,7 +87,7 @@ Acm.Service = {
     }
 
     ,asyncDelete : function(callback, url) {
-        return jQuery.ajax({type: 'DELETE'
+        return this.ajax({type: 'DELETE'
             ,url: url
             ,success: function(response) {
                 callback(response);
