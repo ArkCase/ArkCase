@@ -29,10 +29,8 @@ DocTree.Model = DocTree.Model || {
         //DocTree.Service.retrieveTopFolder(parentType, parentId);
         //
     }
-    ,onViewAddedFolder: function(node, parentId, name) {
-        var folder = {title: name};
-        DocTree.Service.testService(node, parentId, folder);
-
+    ,onViewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
+        DocTree.Service.createFolder(parentId, folderName, cacheKey, folderNode);
     }
     ,onViewAddedDocument: function(node, parentId, name) {
         var folder = {title: name};
@@ -80,6 +78,26 @@ DocTree.Model = DocTree.Model || {
         }
         if (Acm.isNotArray(data.children)) {
             return false;
+        }
+        return true;
+    }
+    ,validateCreateInfo: function(data, parentFolderId) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.id)) {
+            return false;
+        }
+        if (0 == data.id) {
+            return false;
+        }
+        if (Acm.isNotEmpty(parentFolderId)) {
+            if (Acm.isEmpty(data.parentFolderId)) {
+                return false;
+            }
+            if (data.parentFolderId != parentFolderId) {
+                return false;
+            }
         }
         return true;
     }
