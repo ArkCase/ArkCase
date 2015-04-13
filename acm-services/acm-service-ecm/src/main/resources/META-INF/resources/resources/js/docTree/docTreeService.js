@@ -16,6 +16,7 @@ DocTree.Service = {
     ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
     ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
+    ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -195,7 +196,7 @@ DocTree.Service = {
 
                 } else {
                     if (DocTree.Model.validateCreateInfo(response)) {
-                        if (response.parentId == parentId) {
+                        if (response.parentFolderId == parentId) {
                             var createInfo = response;
 
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
@@ -224,28 +225,63 @@ DocTree.Service = {
     }
     ,deleteFolder: function(folderId, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_DELETE_FOLDER_ + folderId;
-        Acm.Service.asyncPut(
+        Acm.Service.asyncDelete(
             function(response) {
                 if (response.hasError) {
                     DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
 
                 } else {
-                    if (DocTree.Model.validateDeleteInfo(response)) {
-                        if (response.deletedFolderId == folderId) {
+                    if (DocTree.Model.validateDeletedFolder(response)) {
+                        if (DocTree.Model.validateDeleteFolder(response)) {
+                            if (response.deletedFolderId == folderId) {
+                                var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                                if (DocTree.Model.validateFolderList(folderList)) {
+                                    var deleted = -1;
+                                    for (var i = 0; i < folderList.children.length; i++) {
+                                        if (folderList.children[i].objectId == folderId) {
+                                            var deleted = i;
+                                            break;
+                                        }
+                                    }
+                                    if (0 <= deleted) {
+                                        folderList.children.splice(deleted, 1);
+                                        folderList.totalChildren--;
+                                        DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                        DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } //else
+            }
+            ,url
+        )
+    }
+    ,deleteFile: function(fileId, cacheKey, callerData) {
+        var url = App.getContextPath() + this.API_DELETE_FILE_ + fileId;
+        Acm.Service.asyncDelete(
+            function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelDeletedFile(response, fileId, cacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateDeletedFile(response)) {
+                        if (response.deletedFileId == fileId) {
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
                                 var deleted = -1;
-                                for (var i = 0; i < folderList.length; i++) {
-                                    if (folderList[i].objectId == folderId) {
+                                for (var i = 0; i < folderList.children.length; i++) {
+                                    if (folderList.children[i].objectId == fileId) {
                                         var deleted = i;
                                         break;
                                     }
                                 }
                                 if (0 <= deleted) {
-                                    folderList.splice(i,1);
+                                    folderList.children.splice(deleted, 1);
                                     folderList.totalChildren--;
                                     DocTree.Model.cacheFolderList.put(cacheKey, folderList);
-                                    DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
+                                    DocTree.Controller.modelDeletedFile(response, fileId, cacheKey, callerData);
                                 }
                             }
                         }
