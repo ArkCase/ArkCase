@@ -23,38 +23,26 @@ public class AuditServiceImpl implements AuditService {
 
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
+	private boolean batchRun;
+	private int purgeDays;
 	private AuditDao auditDao;
-	private Properties auditPluginProperties;
 	
 	/**
 	 * This method is called by scheduled task
 	 */
 	@Override
-	public void run() 
+	public void purgeBatchRun() 
 	{
 		if (!isBatchRun())
 		{
 			return;
 		}
 		
-		int firstResult = 0;
-		int maxResult = getMaxResults();
 		Date dateThreshold = createPurgeThreshold();
 		
-		List<AuditEvent> audits;
+		int deletedAudits = getAuditDao().purgeAudits(dateThreshold);
 		
-		do 
-		{
-			audits = getAuditDao().findAuditsForPurge(dateThreshold, firstResult, maxResult);
-			
-			if ( !audits.isEmpty() )
-            {	
-				audits.stream()
-				      .map((element) -> {element.setStatus(AuditConstants.STATUS_DELETE); return element;})
-					  .forEach(element -> {getAuditDao().save(element);});
-            }
-		}
-		while (!audits.isEmpty());
+		LOG.debug(deletedAudits + " audits was deleted.");
 	}
 	
 	private Date createPurgeThreshold()
@@ -66,58 +54,21 @@ public class AuditServiceImpl implements AuditService {
 		
 		return calendar.getTime();
 	}
-	
-	private int getMaxResults()
-	{
-		String batchSizeString = (String) getAuditPluginProperties().get(AuditConstants.PROPERTY_BATCH_SIZE);
-		
-		return getInt(batchSizeString);
+
+	public boolean isBatchRun() {
+		return batchRun;
 	}
-	
-	private int getPurgeDays()
-	{
-		String purgeDaysString = (String) getAuditPluginProperties().get(AuditConstants.PROPERTY_PURGE_DAYS);
-		
-		return getInt(purgeDaysString);
+
+	public void setBatchRun(boolean batchRun) {
+		this.batchRun = batchRun;
 	}
-	
-	private boolean isBatchRun()
-	{
-		String batchRunString = (String) getAuditPluginProperties().get(AuditConstants.PROPERTY_BATCH_RUN);
-		
-		return getBoolean(batchRunString);
+
+	public int getPurgeDays() {
+		return purgeDays;
 	}
-	
-	private int getInt(String value)
-	{
-		int retval = 0;
-		
-		try
-		{
-			retval = Integer.parseInt(value);
-		}
-		catch(Exception e)
-		{
-			LOG.error("Cannot parse string " + value + " to integer.", e);
-		}
-		
-		return retval;
-	}
-	
-	private boolean getBoolean(String value)
-	{
-		boolean retval = false;
-		
-		try
-		{
-			retval = Boolean.parseBoolean(value);
-		}
-		catch(Exception e)
-		{
-			LOG.error("Cannot parse string " + value + " to integer.", e);
-		}
-		
-		return retval;
+
+	public void setPurgeDays(int purgeDays) {
+		this.purgeDays = purgeDays;
 	}
 
 	public AuditDao getAuditDao() {
@@ -126,14 +77,6 @@ public class AuditServiceImpl implements AuditService {
 
 	public void setAuditDao(AuditDao auditDao) {
 		this.auditDao = auditDao;
-	}
-
-	public Properties getAuditPluginProperties() {
-		return auditPluginProperties;
-	}
-
-	public void setAuditPluginProperties(Properties auditPluginProperties) {
-		this.auditPluginProperties = auditPluginProperties;
 	}
 
 }

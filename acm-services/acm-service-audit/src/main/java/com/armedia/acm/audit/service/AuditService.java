@@ -9,6 +9,6 @@ package com.armedia.acm.audit.service;
  */
 public interface AuditService {
 
-	public void run();
+	public void purgeBatchRun();
 	
 }
