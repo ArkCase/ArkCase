@@ -1,8 +1,11 @@
-<div class="modal-header" id="divEbErrorBoard" style="background-color:lightyellow;display:none;">
-    <button type="button" class="close" data-dismiss="modal" id="btnEbErrorClose">&times;<span class="sr-only">Close</span></button>
-    <div class="modal-title"><scan id="labEbErrorMsg">Error message goes here</scan><button type="button" id="btnEbErrorDetail" style="float: right; margin-right: 50px; padding: 0px;">More Detail ...</button></div>
-    <div id="divEbErrorDetail" style="display:none;">
+<div class="modal-header" id="divMessageBoard" style="background-color:lightyellow;position: absolute;width:100%;height:auto;opacity:0.9;display: none;z-index:1;">
+    <button type="button" class="close" data-dismiss="modal" id="btnMessageClose">&times;<span class="sr-only">Close</span></button>
+    <ul style="list-style-type:none;">
+
+    </ul>
+    <div id="divMessageDetail" style="display:none;left: 100px;">
         <hr/>
-        <div class="modal-title" id="labEbErrorDetail">Detail error message goes here</div>
+        <div class="modal-title" id="labMessageDetail" style="position:relative;left:40px;color:#000000;font-weight: bold;"></div>
     </div>
+
 </div>
