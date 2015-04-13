@@ -25,7 +25,6 @@
             <props>
             	<prop key="audit.batch.run">true</prop>
                 <prop key="audit.purge.days">30</prop>
-                <prop key="audit.batch.size">100</prop>
                 <prop key="audit.batch.frequency">3600000</prop>
             </props>
         </property>

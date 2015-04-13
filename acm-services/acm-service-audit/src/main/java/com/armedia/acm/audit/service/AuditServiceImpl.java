@@ -5,15 +5,11 @@ package com.armedia.acm.audit.service;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.audit.dao.AuditDao;
-import com.armedia.acm.audit.model.AuditConstants;
-import com.armedia.acm.audit.model.AuditEvent;
 
 /**
  * @author riste.tutureski
