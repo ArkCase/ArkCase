@@ -312,21 +312,21 @@ DocTree.View = DocTree.View || {
 //        //var $divError = $("#divError");
 //        //$divError.slideUp("slow");
 //
-//        App.View.ErrorBoard.show("hello folder", "world");
+//        App.View.MessageBoard.show("hello folder", "world");
         var z = 1;
     }
     ,onModelAddedDocument: function(node, parentId, folder) {
         //var $divError = $("#divError");
         //$divError.slideDown("slow");
 
-//        App.View.ErrorBoard.showBtnDetail(true);
-//        App.View.ErrorBoard.showDivBoard(false);
-//        App.View.ErrorBoard.showBtnDetail(false);
-//        App.View.ErrorBoard.showDivBoard(true);
-//        App.View.ErrorBoard.showBtnDetail(true);
-//        App.View.ErrorBoard.showBtnDetail(false);
+//        App.View.MessageBoard.showBtnDetail(true);
+//        App.View.MessageBoard.showDivBoard(false);
+//        App.View.MessageBoard.showBtnDetail(false);
+//        App.View.MessageBoard.showDivBoard(true);
+//        App.View.MessageBoard.showBtnDetail(true);
+//        App.View.MessageBoard.showBtnDetail(false);
 
-//        App.View.ErrorBoard.show("hello doc");
+//        App.View.MessageBoard.show("hello doc");
         var z = 1;
     }
 
