@@ -28,13 +28,14 @@
     <task:scheduled-tasks scheduler="auditTaskScheduler">
         <task:scheduled
                 ref="auditService"
-                method="run"
-                fixed-delay="3600000"/>
+                method="purgeBatchRun"
+                fixed-delay="${audit.batch.frequency}"/>
     </task:scheduled-tasks>
     
     <bean id="auditService" class="com.armedia.acm.audit.service.AuditServiceImpl">
+    	<property name="batchRun" value="${audit.batch.run}"/>
+    	<property name="purgeDays" value="${audit.purge.days}"/>
     	<property name="auditDao" ref="auditDao"/>
-    	<property name="auditPluginProperties" ref="auditPluginProperties" />
     </bean>
 
 </beans>

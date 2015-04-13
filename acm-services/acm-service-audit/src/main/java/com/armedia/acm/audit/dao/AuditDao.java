@@ -12,6 +12,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -23,35 +25,37 @@ import java.util.List;
  */
 public class AuditDao extends AcmAbstractDao<AuditEvent>
 {
-
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;
     
-    public List<AuditEvent> findAuditsForPurge(Date threshold, int firstResult, int maxResult)
+    @Transactional
+    public int purgeAudits(Date threshold)
     {
-    	Query select = getEm().createQuery("SELECT " + 
-											    "audit " +
-										   "FROM " +
-												"AuditEvent audit " +
+    	int retval = 0;
+    	
+    	Query update = getEm().createQuery("UPDATE " + 
+											    "AuditEvent audit " +
+										   "SET " +
+												"audit.status = 'DELETE' " +
 										   "WHERE " +
 												"audit.status != 'DELETE' " +
 										   "AND " +
 												"audit.eventDate <= :threshold");
     	
-		select.setParameter("threshold", threshold);
-    	select.setFirstResult(firstResult);
-		select.setMaxResults(maxResult);
-		
-		@SuppressWarnings("unchecked")
-		List<AuditEvent> retval = (List<AuditEvent>) select.getResultList();
-		
-		if (retval == null)
-		{
-			retval = new ArrayList<>();
-		}
-		
-		return retval;
+    	update.setParameter("threshold", threshold);
+    	
+    	try
+    	{
+    		retval = update.executeUpdate();    		
+    	}
+    	catch(Exception e)
+    	{
+    		LOG.error("Cannot purge audits.", e);
+    	}
+    	
+    	return retval;
     }
     
     public List<AuditEvent> findAuditsByEventPatternAndObjectId(
