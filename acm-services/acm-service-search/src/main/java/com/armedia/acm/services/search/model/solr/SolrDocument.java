@@ -411,7 +411,6 @@ public class SolrDocument implements SolrBaseDocument {
         return parent_ref_s;
     }
 
-    @Override
     public String getData_s() {
         return data_s;
     }
@@ -419,7 +418,6 @@ public class SolrDocument implements SolrBaseDocument {
     public void setData_s(String data_s) {
         this.data_s = data_s;
     }
-
 
     @Override
     public String toString()
@@ -467,11 +465,10 @@ public class SolrDocument implements SolrBaseDocument {
                 ", category_s='" + category_s + '\'' +
                 ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
                 ", mime_type_s='" + mime_type_s + '\'' +
-                ", hidden_b='" + hidden_b + '\'' +
+                ", hidden_b=" + hidden_b +
                 ", notification_type_s='" + notification_type_s + '\'' +
+                ", parent_ref_s='" + parent_ref_s + '\'' +
                 ", data_s='" + data_s + '\'' +
                 '}';
     }
-
-
 }
