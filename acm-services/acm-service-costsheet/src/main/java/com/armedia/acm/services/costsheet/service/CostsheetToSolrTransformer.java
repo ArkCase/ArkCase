@@ -48,6 +48,8 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
 		solr.setParent_object_id_s(Long.toString(in.getParentId()));
 		solr.setParent_object_type_s(in.getParentType());
 		solr.setAuthor_s(in.getUser().getUserId());
+
+		solr.setParent_ref_s(in.getParentId() + "-" + in.getParentType());
 		
 		solr.setAuthor(in.getCreator());
         solr.setCreate_tdt(in.getCreated());

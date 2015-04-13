@@ -1,9 +1,11 @@
 package com.armedia.acm.services.dataaccess.service;
 
+import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 1/14/15.
@@ -23,10 +25,16 @@ public class SearchAccessControlFields
         if ( !publicDoc )
         {
             List<String> readers = getParticipantAccessChecker().getReaders(object);
+
+            // due to how Solr works we have to replace any spaces in the participant ids with an unusual character.
+            readers = readers.stream().map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE)).collect(Collectors.toList());
+
+
             doc.setAllow_acl_ss(readers);
         }
 
         List<String> denied = getParticipantAccessChecker().getDenied(object);
+        denied = denied.stream().map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE)).collect(Collectors.toList());
         doc.setDeny_acl_ss(denied);
     }
 
