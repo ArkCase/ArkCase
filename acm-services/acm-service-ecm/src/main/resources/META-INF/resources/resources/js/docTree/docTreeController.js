@@ -10,15 +10,14 @@ DocTree.Controller = DocTree.Controller || {
         this.VIEW_CHANGED_TREE             = name + "-view-changed-tree";
         this.MODEL_UPLOADED_FILE           = name + "-model-uploaded-file";
         this.MODEL_RETRIEVED_FOLDERLIST    = name + "-model-retrieved-folder-list";
-
+        this.VIEW_ADDED_FOLDER             = name + "-view-added-folder";
+        this.MODEL_CREATED_FOLDER          = name + "-model-added-folder";
         //-------
 
-        this.VIEW_ADDED_FOLDER      = name + "-view-added-folder";
-        this.VIEW_ADDED_DOCUMENT    = name + "-view-added-document";
         this.VIEW_RENAMED_FOLDER    = name + "-view-renamed-folder";
         this.VIEW_RENAMED_DOCUMENT  = name + "-view-renamed-document";
 
-        this.MODEL_ADDED_FOLDER     = name + "-model-added-folder";
+        this.VIEW_ADDED_DOCUMENT    = name + "-view-added-document";
         this.MODEL_ADDED_DOCUMENT   = name + "-model-added-document";
     }
     ,onInitialized: function() {
@@ -36,14 +35,15 @@ DocTree.Controller = DocTree.Controller || {
     ,modelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST, folderList, objType, objId, folderId, pageId, callerData);
     }
+    ,viewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_ADDED_FOLDER, parentId, folderName, cacheKey, folderNode);
+    }
+    ,modelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_CREATED_FOLDER, createdFolder, parentId, folderName, cacheKey, callerData);
+    }
     //----------------
 
-    ,viewAddedFolder: function(node, parentId, name) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_ADDED_FOLDER, node, parentId, name);
-    }
-    ,modelAddedFolder: function(node, parentId, folder) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_ADDED_FOLDER, node, parentId, folder);
-    }
+
     ,viewAddedDocument: function(node, parentId, name) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_ADDED_DOCUMENT, node, parentId, name);
     }
