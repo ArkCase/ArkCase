@@ -12,9 +12,10 @@ DocTree.Service = {
     }
 
     ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"
+    ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"
+    ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
     ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
-    ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -193,25 +194,60 @@ DocTree.Service = {
                     DocTree.Controller.modelCreatedFolder(response, parentId, folderName, cacheKey, callerData);
 
                 } else {
-                    if (DocTree.Model.validateCreateInfo(response, parentId)) {
-                        var createInfo = response;
+                    if (DocTree.Model.validateCreateInfo(response)) {
+                        if (response.parentId == parentId) {
+                            var createInfo = response;
 
-                        var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
-                        if (DocTree.Model.validateFolderList(folderList)) {
-                            var createdFolder = {};
-                            createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
-                            createdFolder.objectType = "folder";
-                            createdFolder.created    = Acm.goodValue(createInfo.created);
-                            createdFolder.creator    = Acm.goodValue(createInfo.creator);
-                            createdFolder.modified   = Acm.goodValue(createInfo.modified);
-                            createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
-                            createdFolder.name       = Acm.goodValue(createInfo.name);
-                            createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
-                            //createdFolder.cmisFolderId       = Acm.goodValue(createInfo.cmisFolderId);
-                            folderList.children.push(createdFolder);
-                            folderList.totalChildren++;
-                            DocTree.Model.cacheFolderList.put(cacheKey, folderList);
-                            DocTree.Controller.modelCreatedFolder(createdFolder, parentId, folderName, cacheKey, callerData);
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                var createdFolder = {};
+                                createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
+                                createdFolder.objectType = "folder";
+                                createdFolder.created    = Acm.goodValue(createInfo.created);
+                                createdFolder.creator    = Acm.goodValue(createInfo.creator);
+                                createdFolder.modified   = Acm.goodValue(createInfo.modified);
+                                createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
+                                createdFolder.name       = Acm.goodValue(createInfo.name);
+                                createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
+                                //createdFolder.cmisFolderId       = Acm.goodValue(createInfo.cmisFolderId);
+                                folderList.children.push(createdFolder);
+                                folderList.totalChildren++;
+                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                DocTree.Controller.modelCreatedFolder(createdFolder, parentId, folderName, cacheKey, callerData);
+                            }
+                        }
+                    }
+                } //else
+            }
+            ,url
+        )
+    }
+    ,deleteFolder: function(folderId, cacheKey, callerData) {
+        var url = App.getContextPath() + this.API_DELETE_FOLDER_ + folderId;
+        Acm.Service.asyncPut(
+            function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateDeleteInfo(response)) {
+                        if (response.deletedFolderId == folderId) {
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                var deleted = -1;
+                                for (var i = 0; i < folderList.length; i++) {
+                                    if (folderList[i].objectId == folderId) {
+                                        var deleted = i;
+                                        break;
+                                    }
+                                }
+                                if (0 <= deleted) {
+                                    folderList.splice(i,1);
+                                    folderList.totalChildren--;
+                                    DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                    DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
+                                }
+                            }
                         }
                     }
                 } //else
