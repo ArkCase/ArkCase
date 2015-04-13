@@ -8,12 +8,12 @@ DocTree.View = DocTree.View || {
         this.parentType = args.parentType;
         this.parentId = args.parentId;
 
-        this.$tree = (args.$tree)? args.$tree : $("#treeDoc");
-        this.createDocTree(args.treeArgs);
-
         this.doUploadForm = args.uploadForm;
         this.fileTypes  = args.fileTypes;
         //this.docSubMenu = this.Menu.makeDocSubMenu(this.fileTypes);
+
+        this.$tree = (args.$tree)? args.$tree : $("#treeDoc");
+        this.createDocTree(args.treeArgs);
 
         this.$formDownloadDoc = (args.$formDownloadDoc)? args.$formDownloadDoc : $("#formDownloadDoc");
         this.$formUploadDoc   = (args.$formUploadDoc)  ? args.$formUploadDoc   : $("#formUploadDoc");
@@ -30,9 +30,9 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_TREE             ,this.onViewChangedTree);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_UPLOADED_FILE           ,this.onModelUploadedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST    ,this.onModelRetrievedFolderList);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_CREATED_FOLDER          ,this.onModelCreatedFolder);
 
 
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_FOLDER            ,this.onModelAddedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
     }
     ,onInitialized: function() {
@@ -56,7 +56,8 @@ DocTree.View = DocTree.View || {
 
     ,_addFileNode: function(folderNode, name, type) {
         var fileNode = folderNode.addChildren({"title": "Uploading " + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.Source.getHtmlAction()});
-        fileNode.setStatus("loading");
+        //fileNode.setStatus("loading");
+        DocTree.View.markNodePending(fileNode);
         return fileNode;
     }
     ,_addingFileNodes: function(folderNode, names, type) {
@@ -303,17 +304,30 @@ DocTree.View = DocTree.View || {
         }
         return true;
     }
-    ,onModelAddedFolder: function(node, parentId, folder) {
+    ,onModelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, node) {
+        if (createdFolder.hasError) {
+            App.View.MessageBoard.show("Error occurred when creating folder", Acm.goodValue(createdFolder.errorMsg));
 
-//        $(node.span).removeClass("pending");
-//        // Let's pretend the server returned a slightly modified
-//        // title:
-//        node.setTitle(node.title + "!");
-//        //var $divError = $("#divError");
-//        //$divError.slideUp("slow");
-//
-//        App.View.MessageBoard.show("hello folder", "world");
-        var z = 1;
+        } else {
+            if (DocTree.View.validateNode(node)) {
+                DocTree.View._fileDataToNodeData(createdFolder, node);
+                DocTree.View.markNodeOk(node);
+                node.renderTitle();
+            }
+        }
+    }
+    ,markNodePending: function(node) {
+        $(node.span).addClass("pending");
+        node.setStatus("loading");
+    }
+    ,markNodeOk: function(node) {
+        $(node.span).removeClass("pending");
+        node.setStatus("ok");
+    }
+    ,markNodeError: function(node) {
+        $(node.span).addClass("pending");
+        //node.setStatus("error");
+        node.setStatus("ok");
     }
     ,onModelAddedDocument: function(node, parentId, folder) {
         //var $divError = $("#divError");
@@ -376,57 +390,8 @@ DocTree.View = DocTree.View || {
                 // (index #2 is rendered by fancytree)
 
                 //if (DocTree.View.isTopNode(node)) {
-                if (node.folder) {  //DocTree.View.isFolderNode(node)
-//                    var html =  '<div class="jtable-main-container">'
-//                        +'<div class="jtable-bottom-panel">'
-//                        +'    <div class="jtable-left-area">'
-//                        +'        <span class="jtable-page-list">'
-//                        +'            <span class="jtable-page-number-first jtable-page-number-disabled">&lt;&lt;</span>'
-//                        +'            <span class="jtable-page-number-previous jtable-page-number-disabled">&lt;</span>'
-//                        +'            <span class="jtable-page-number">1</span>'
-//                        +'            <span class="jtable-page-number">2</span>'
-//                        +'            <span class="jtable-page-number-space">...</span>'
-//                        +'            <span class="jtable-page-number">4</span>'
-//                        +'            <span class="jtable-page-number jtable-page-number-active jtable-page-number-disabled">5</span>'
-//                        +'            <span class="jtable-page-number">6</span>'
-//                        +'            <span class="jtable-page-number-space">...</span>'
-//                        +'            <span class="jtable-page-number">152</span>'
-//                        +'            <span class="jtable-page-number">153</span>'
-//                        +'            <span class="jtable-page-number-next jtable-page-number-disabled">&gt;</span>'
-//                        +'            <span class="jtable-page-number-last jtable-page-number-disabled">&gt;&gt;</span>'
-//                        +'            </span>'
-//                        +'        <span class="jtable-goto-page" style="display: inline;">'
-//                        +'            <span>Go to page: </span>'
-//                        +'               <select>'
-//                        +'                  <option value="1">1</option>'
-//                        +'                  <option value="2">2</option>'
-//                        +'                  <option value="3">3</option>'
-//                        +'                  <option value="4">4</option>'
-//                        +'                  <option value="5">5</option>'
-//                        +'                  <option value="6">6</option>'
-//                        +'                  <option value="7">7</option>'
-//                        +'                  <option value="8">8</option>'
-//                        +'                  <option value="9">9</option>'
-//                        +'                  <option value="10">10</option>'
-//                        +'               </select>'
-//                        +'            </span>'
-//                        +'        <span class="jtable-page-size-change">'
-//                        +'            <span>Row count: </span>'
-//                        +'            <select>'
-//                        +'                <option value="10">10</option>'
-//                        +'                <option value="25">25</option>'
-//                        +'                <option value="50">50</option>'
-//                        +'                <option value="100">100</option>'
-//                        +'                <option value="250">250</option>'
-//                        +'                <option value="500">500</option>'
-//                        +'            </select>'
-//                        +'        </span>'
-//                        +'    </div>'
-//                        +'    <div class="jtable-right-area">'
-//                        +'        <span class="jtable-page-info">Showing 1-1 of 1</span>'
-//                        +'    </div>'
-//                        +'</div></div>';
-//                    $tdList.eq(3).html(html);
+                if (DocTree.View.isFolderNode(node)) {
+                    ;
                 } else if (DocTree.View.isFileNode(node)) {
                     $tdList.eq(3).text(node.data.type);
                     $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
@@ -437,8 +402,6 @@ DocTree.View = DocTree.View || {
 //                $tdList.eq(8).html(DocTree.View.Source.getHtmlAction());
                 } else {  //non file, non folder
                     $tdList.eq(0).text("");
-                    //$tdList.eq(2).text("Btn" + node.title);
-
                 }
 
 
@@ -501,45 +464,37 @@ DocTree.View = DocTree.View || {
                     var z = 1;
                 }
                 ,save: function(event, data){
-                    var parentId = null;
                     var parent = data.node.getParent();
                     if (parent) {
-                        parentId = parent.data.objectId;
-                    }
-                    var name = data.input.val();
-                    var key = data.node.key;
-                    if (data.isNew) {
-                        if (data.node.folder) {
-                            DocTree.Controller.viewAddedFolder(data.node, parentId, name);
+                        var name = data.input.val();
+                        if (data.isNew) {
+                            if (data.node.folder) {
+                                var pageId = Acm.goodValue(parent.data.startRow, 0);
+                                var parentId = parent.data.objectId;
+                                var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
+                                DocTree.Controller.viewAddedFolder(parentId, name, cacheKey, data.node);
+//                            } else {
+//                                DocTree.Controller.viewAddedDocument(data.node, parentId, name);
+                            }
+
                         } else {
-                            DocTree.Controller.viewAddedDocument(data.node, parentId, name);
-                        }
-                    } else {
-                        var id = data.node.data.objectId;
-                        if (data.node.folder) {
-                            DocTree.Controller.viewRenamedFolder(data.node, id, parentId, name);
-                        } else {
-                            DocTree.Controller.viewRenamedDocument(data.node, id, parentId, name);
+//                            var id = data.node.data.objectId;
+//                            if (data.node.folder) {
+//                                DocTree.Controller.viewRenamedFolder(data.node, id, parentId, name);
+//                            } else {
+//                                DocTree.Controller.viewRenamedDocument(data.node, id, parentId, name);
+//                            }
+
                         }
                     }
 
-//                    console.log("save...", this, data);
-//                    // Simulate to start a slow ajax request...
-//                    setTimeout(function(){
-//                        $(data.node.span).removeClass("pending");
-//                        // Let's pretend the server returned a slightly modified
-//                        // title:
-//                        data.node.setTitle(data.node.title + "!");
-//                    }, 2000);
-                    // We return true, so ext-edit will set the current user input
-                    // as title
-                    return true;
+
+                    return true;        // We return true, so ext-edit will set the current user input as title
                 }
                 ,close: function(event, data){
                     // Editor was removed
                     if( data.save ) {
-                        // Since we started an async request, mark the node as preliminary
-                        $(data.node.span).addClass("pending");
+                        DocTree.View.markNodePending(data.node);
                     }
                     DocTree.View.setEditing(false);
                 }
@@ -550,9 +505,6 @@ DocTree.View = DocTree.View || {
                 preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
                 preventRecursiveMoves: true, // Prevent dropping nodes on own descendants
                 dragStart: function(node, data) {
-//                     This function MUST be defined to enable dragging for the tree.
-//                     Return false to cancel dragging of node.
-
                     if (DocTree.View.isTopNode(data.node) || DocTree.View.isSpecialNode(data.node)) {
                         return false;
                     }
@@ -563,19 +515,6 @@ DocTree.View = DocTree.View || {
                     return true;
                 },
                 dragEnter: function(node, data) {
-//                     data.otherNode may be null for non-fancytree droppables.
-//                     Return false to disallow dropping on node. In this case
-//                     dragOver and dragLeave are not called.
-//                     Return 'over', 'before, or 'after' to force a hitMode.
-//                     Return ['before', 'after'] to restrict available hitModes.
-//                     Any other return value will calc the hitMode from the cursor position.
-
-//                    // Prevent dropping a parent below another parent (only sort
-//                    // nodes under the same parent)
-//                        if(node.parent !== data.otherNode.parent){
-//                            return false;
-//                        }
-//
                     if (data.node.folder) {
                         return true;
                     } else if (DocTree.Model.NODE_TYPE_PREV == data.node.data.objectType) {
@@ -610,16 +549,6 @@ DocTree.View = DocTree.View || {
         var $tree = this.$tree;
         $tree.fancytree(treeArgsToUse)
             .on("command"   , DocTree.View.onCommand)
-//            .on("keydown"   , DocTree.View.onKeyDown)
-//            .on("dblclick"  , DocTree.View.onDblClick)
-//            .on("click"     , DocTree.View.onClick)
-            //.on("mouseenter, mouseleave", ".fancytree-title", function(event){
-//            .on("mouseenter, mouseleave", ".fancytree-node", function(event){
-//                // Add a hover handler to all node titles (using event delegation)
-//                var node = $.ui.fancytree.getNode(event);
-//                node.info(event.type);
-//            })
-//            .on("mouseenter, mouseleave", ".fancytree-node", function(event){
             .on("mouseenter", ".fancytree-node", function(event){
                 var node = $.ui.fancytree.getNode(event);
                 if (node) {
@@ -638,15 +567,6 @@ DocTree.View = DocTree.View || {
                     }
                 }
             })
-//            .on("hover", ".fancytree-node", function(event){
-//                var node = $.ui.fancytree.getNode(event);
-//                if (node) {
-//                    if (DocTree.View.isSpecialNode(node)) {
-//                        node.info(event.type + node.data.objectType);
-//
-//                    }
-//                }
-//            })
         ;
 
         this.tree = $tree.fancytree("getTree");
@@ -795,7 +715,7 @@ DocTree.View = DocTree.View || {
             setTimeout(function(){
                 var node = DocTree.View.Paging._triggerNode;
                 DocTree.View.Paging.doPaging(node);
-            }, 2000);
+            }, 2500);
         }
         ,pagingRelieve: function() {
             DocTree.View.Paging._triggerNode = null;
@@ -858,16 +778,6 @@ DocTree.View = DocTree.View || {
                         ,containerObjectType: containerObjectType
                         ,containerObjectId: containerObjectId
                         ,totalChildren: -1
-    //            doc.objectId = uploadInfo.fileId;
-    //            doc.objectType = DocTree.Model.NODE_TYPE_FILE;
-    //            doc.created = uploadInfo.created;
-    //            doc.creator = uploadInfo.creator;
-    //            doc.modified = uploadInfo.modified;
-    //            doc.modifier = uploadInfo.modifier;
-    //            doc.name = uploadInfo.fileName;
-    //            doc.type = uploadInfo.fileType;
-    //            doc.status = uploadInfo.status;
-    //            doc.version = "";
                         ,"action": DocTree.View.Source.getHtmlAction()
                     })
                     .getTree();
@@ -906,18 +816,15 @@ DocTree.View = DocTree.View || {
 
                 for (var i = 0; i < folderList.children.length; i++) {
                     var child = folderList.children[i];
-                    if ("folder" == Acm.goodValue(child.objectType)) {
-                        builder.addLeaf({"key":"f1"
-                            , "title": "Folder 1"
-                            , toolTip:"tip1"
-                            , "expanded": false
-                            , "folder": true
-                            , lazy: true
-                            , cache: false
-                            , "id":"f1"
-                            ,totalChildren: -1
-                            , "action": DocTree.View.Source.getHtmlAction()
-                        });
+                    if (DocTree.Model.NODE_TYPE_FOLDER == Acm.goodValue(child.objectType)) {
+                        var nodeData = DocTree.View.Source.getDefaultFolderNode();
+                        DocTree.View._fileDataToNodeData(child, nodeData);
+//                        nodeData.lazy = true;
+//                        nodeData.expanded = false;
+//                        nodeData.cache = false;
+//                        nodeData.startRow = 0;
+//                        nodeData.totalChildren = -1;
+                        builder.addLeaf(nodeData);
 
                     } if (DocTree.Model.NODE_TYPE_FILE == Acm.goodValue(child.objectType)) {
                         var nodeData = {};
@@ -927,7 +834,6 @@ DocTree.View = DocTree.View || {
                         builder.addLeaf(nodeData);
                     }
                 }
-                //builder.makeLast();
 
                 if ((0 > totalChildren) || (totalChildren - maxRows > startRow)) {//unknown size or more page
                     var title = (0 > totalChildren)? "More items..." : (totalChildren - startRow - maxRows) + " more items...";
@@ -940,32 +846,18 @@ DocTree.View = DocTree.View || {
                     });
                 }
             }
-
-    //        builder.addLeaf({"key":"f1"
-    //            , "title": "Folder 1", toolTip:"tip1"
-    //            , "expanded": false, "folder": true, lazy: true, cache: false
-    //            , "id":"f1", "action": DocTree.View.Source.getHtmlAction()
-    //        });
-    //        builder.addLeaf({"key":"f2"
-    //            , "title": "Folder 2", toolTip:"tip2"
-    //            , "expanded": false
-    //            , "folder": true
-    //            , lazy: true, cache: false
-    //            , "id":"f2", "action": DocTree.View.Source.getHtmlAction()
-    //        });
-    //        builder.addLeaf({"key":"d3"
-    //            , "title": "doc 3", toolTip:"tip3"
-    //            , "folder": false
-    //            , "id":"d3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]"
-    //            , "action": DocTree.View.Source.getHtmlAction()
-    //        });
-    //        builder.addLeaf({"key":"d4"
-    //            , "title": "doc 4", toolTip:"tip4"
-    //            , "folder": false
-    //            , "id":"d4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]"
-    //            , "action": DocTree.View.Source.getHtmlAction()
-    //        });
             return builder.getTree();
+        }
+        ,getDefaultFolderNode: function() {
+            var nodeData = {};
+            nodeData.expanded = false;
+            nodeData.folder = true;
+            nodeData.lazy = true;
+            nodeData.cache = false;
+            nodeData.totalChildren = -1;
+            nodeData.children = [];
+            nodeData.action = DocTree.View.Source.getHtmlAction();
+            return nodeData;
         }
         ,lazyLoad: function(event, data) {
             var objType = DocTree.Model.getObjType();
@@ -1072,7 +964,11 @@ DocTree.View = DocTree.View || {
             case "newFolder":
                 if (!DocTree.View.isEditing()) {
                     //node.editCreateNode("child", "New Folder");
-                    node.editCreateNode("child", {"title": "New Folder", "folder": true, "action": DocTree.View.Source.getHtmlAction()});
+                    var nodeData = DocTree.View.Source.getDefaultFolderNode();
+                    nodeData.title = "New Folder";
+                    node.editCreateNode("child", nodeData);
+
+                    //node.editCreateNode("child", {"title": "New Folder", "folder": true, "action": DocTree.View.Source.getHtmlAction()});
                 }
                 break;
             case "newDocument":

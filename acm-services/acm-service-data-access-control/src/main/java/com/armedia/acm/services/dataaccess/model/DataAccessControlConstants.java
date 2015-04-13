@@ -14,4 +14,6 @@ public interface DataAccessControlConstants
     String ACCESS_LEVEL_READ = "read";
 
     String LAST_RUN_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    String SPACE_REPLACE = "_0020_";
 }

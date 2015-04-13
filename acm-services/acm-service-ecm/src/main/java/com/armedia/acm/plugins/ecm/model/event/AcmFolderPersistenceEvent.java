@@ -10,18 +10,19 @@ import java.util.Date;
 public class AcmFolderPersistenceEvent extends AcmEvent {
 
 
-    public AcmFolderPersistenceEvent(AcmFolder source, String userId) {
+    public AcmFolderPersistenceEvent(AcmFolder source, String userId, String ipAddress) {
 
         super(source);
         setObjectId(source.getId());
         setEventDate(new Date());
         setUserId(userId);
-        setObjectType(AcmFolderConstants.OBJECT_TYPE);
+        setObjectType(AcmFolderConstants.OBJECT_FOLDER_TYPE);
+        setIpAddress(ipAddress);
     }
 
     @Override
     public String getObjectType()
     {
-        return AcmFolderConstants.OBJECT_TYPE;
+        return AcmFolderConstants.OBJECT_FOLDER_TYPE;
     }
 }
