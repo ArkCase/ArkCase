@@ -7,6 +7,8 @@ import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +20,8 @@ import java.util.List;
 public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<EcmFile> {
 
     private EcmFileDao ecmFileDao;
+
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
 
     @Override
@@ -47,10 +51,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setParent_type_s(in.getContainer().getObjectType());
         solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
 
+        solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
+
         solr.setEcmFileId(in.getVersionSeriesId());
 
         List<String> tags = prepareTagList(in.getTags());
         solr.setTags_ss(tags);
+
+        solr.setPublic_doc_b(true);
+        solr.setProtected_object_b(false);
 
         return solr;
     }
@@ -67,6 +76,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         // no access control on files (yet)
         doc.setPublic_doc_b(true);
+        doc.setProtected_object_b(false);
 
         doc.setAuthor_s(in.getCreator());
         doc.setAuthor(in.getCreator());
@@ -81,6 +91,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         doc.setParent_object_id_i(in.getContainer().getContainerObjectId());
         doc.setParent_object_id_s("" + in.getContainer().getContainerObjectId());
         doc.setParent_object_type_s(in.getContainer().getContainerObjectType());
+
+        doc.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
 
         doc.setTitle_parseable(in.getFileName());
         doc.setTitle_t(in.getFileName());
