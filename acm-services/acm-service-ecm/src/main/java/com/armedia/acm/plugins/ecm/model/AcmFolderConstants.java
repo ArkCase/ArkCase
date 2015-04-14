@@ -29,4 +29,7 @@ public interface AcmFolderConstants {
     String SUCCESS_FOLDER_DELETE_MSG = "Folder deleted successfully";
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
+
+    String CMIS_OBJECT_TYPE_ID_FOLDER = "cmis:folder";
+    String CMIS_OBJECT_TYPE_ID_FILE = "cmis:document";
 }
