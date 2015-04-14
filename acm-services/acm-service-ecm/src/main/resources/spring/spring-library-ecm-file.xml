@@ -86,9 +86,9 @@
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
-    <bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-    </bean>
+    <!--<bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">-->
+        <!--<property name="ecmFileDao" ref="ecmFileDao"/>-->
+    <!--</bean>-->
 
     <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
         <property name="folderDao" ref="acmFolderDao"/>
