@@ -20,6 +20,10 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
+
+        // uncomment to override default jtable
+        // popups and use ArkCase messageboard:
+        // App.View.MessageBoard.useAcmMessageBoard();
     }
     ,onInitialized: function() {
         if (CaseFile.View.MicroData.onInitialized)      {CaseFile.View.MicroData.onInitialized();}
