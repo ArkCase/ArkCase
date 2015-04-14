@@ -89,6 +89,19 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return file;
     }
 
+    public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId) {
+
+        String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId and e.folder.id=:folderId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("cmisFileId", cmisFileId);
+        query.setParameter("folderId", folderId);
+
+        EcmFile file = query.getSingleResult();
+
+        return file;
+    }
     @Transactional
     public void deleteFile(Long id) {
         EcmFile file = getEm().find(getPersistenceClass(),id);
