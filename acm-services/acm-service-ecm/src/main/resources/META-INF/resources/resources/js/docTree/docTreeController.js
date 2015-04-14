@@ -11,7 +11,11 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_UPLOADED_FILE           = name + "-model-uploaded-file";
         this.MODEL_RETRIEVED_FOLDERLIST    = name + "-model-retrieved-folder-list";
         this.VIEW_ADDED_FOLDER             = name + "-view-added-folder";
-        this.MODEL_CREATED_FOLDER          = name + "-model-added-folder";
+        this.MODEL_CREATED_FOLDER          = name + "-model-created-folder";
+        this.VIEW_REMOVED_FOLDER           = name + "-view-removed-folder";
+        this.MODEL_DELETED_FOLDER          = name + "-model-deleted-folder";
+        this.VIEW_REMOVED_FILE             = name + "-view-removed-file";
+        this.MODEL_DELETED_FILE            = name + "-model-deleted-file";
         //-------
 
         this.VIEW_RENAMED_FOLDER    = name + "-view-renamed-folder";
@@ -41,6 +45,19 @@ DocTree.Controller = DocTree.Controller || {
     ,modelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_CREATED_FOLDER, createdFolder, parentId, folderName, cacheKey, callerData);
     }
+    ,viewRemovedFolder: function(folderId, cacheKey, folderNode) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_REMOVED_FOLDER, folderId, cacheKey, folderNode);
+    }
+    ,modelDeletedFolder: function(deletedInfo, folderId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_DELETED_FOLDER, deletedInfo, folderId, cacheKey, callerData);
+    }
+    ,viewRemovedFile: function(fileId, cacheKey, fileNode) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_REMOVED_FILE, fileId, cacheKey, fileNode);
+    }
+    ,modelDeletedFile: function(deletedInfo, fileId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_DELETED_FILE, deletedInfo, fileId, cacheKey, callerData);
+    }
+
     //----------------
 
 
