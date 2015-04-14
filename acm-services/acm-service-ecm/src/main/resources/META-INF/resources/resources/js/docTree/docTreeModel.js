@@ -10,6 +10,10 @@ DocTree.Model = DocTree.Model || {
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FOLDER          ,this.onViewRemovedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
+
+        //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_DOCUMENT        ,this.onViewRenamedDocument);
@@ -28,10 +32,19 @@ DocTree.Model = DocTree.Model || {
         //if not in cache
         //DocTree.Service.retrieveTopFolder(parentType, parentId);
         //
+        var z = 1;
     }
     ,onViewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
         DocTree.Service.createFolder(parentId, folderName, cacheKey, folderNode);
     }
+    ,onViewRemovedFolder: function(folderId, cacheKey, folderNode) {
+        DocTree.Service.deleteFolder(folderId, cacheKey, folderNode);
+    }
+    ,onViewRemovedFile: function(fileId, cacheKey, folderNode) {
+        DocTree.Service.deleteFile(fileId, cacheKey, folderNode);
+    }
+
+    //---------------
     ,onViewAddedDocument: function(node, parentId, name) {
         var folder = {title: name};
         DocTree.Service.testService2(node, parentId, folder);
@@ -81,7 +94,7 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-    ,validateCreateInfo: function(data, parentFolderId) {
+    ,validateCreateInfo: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
         }
@@ -91,13 +104,26 @@ DocTree.Model = DocTree.Model || {
         if (0 == data.id) {
             return false;
         }
-        if (Acm.isNotEmpty(parentFolderId)) {
-            if (Acm.isEmpty(data.parentFolderId)) {
-                return false;
-            }
-            if (data.parentFolderId != parentFolderId) {
-                return false;
-            }
+        if (Acm.isEmpty(data.parentFolderId)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateDeletedFolder: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.deletedFolderId)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateDeletedFile: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.deletedFileId)) {
+            return false;
         }
         return true;
     }
