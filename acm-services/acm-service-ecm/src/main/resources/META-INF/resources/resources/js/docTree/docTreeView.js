@@ -282,7 +282,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, node) {
         if (createdFolder.hasError) {
-            App.View.ErrorBoard.show("Error occurred when creating folder", Acm.goodValue(createdFolder.errorMsg));
+            App.View.MessageBoard.show("Error occurred when creating folder", Acm.goodValue(createdFolder.errorMsg));
 
         } else {
             if (DocTree.View.validateNode(node)) {
@@ -310,14 +310,14 @@ DocTree.View = DocTree.View || {
         //var $divError = $("#divError");
         //$divError.slideDown("slow");
 
-//        App.View.ErrorBoard.showBtnDetail(true);
-//        App.View.ErrorBoard.showDivBoard(false);
-//        App.View.ErrorBoard.showBtnDetail(false);
-//        App.View.ErrorBoard.showDivBoard(true);
-//        App.View.ErrorBoard.showBtnDetail(true);
-//        App.View.ErrorBoard.showBtnDetail(false);
+//        App.View.MessageBoard.showBtnDetail(true);
+//        App.View.MessageBoard.showDivBoard(false);
+//        App.View.MessageBoard.showBtnDetail(false);
+//        App.View.MessageBoard.showDivBoard(true);
+//        App.View.MessageBoard.showBtnDetail(true);
+//        App.View.MessageBoard.showBtnDetail(false);
 
-//        App.View.ErrorBoard.show("hello doc");
+//        App.View.MessageBoard.show("hello doc");
         var z = 1;
     }
 
