@@ -131,7 +131,6 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
         return OBJECT_TYPE;
     }
 
-    @JsonIgnore
     @Override
     public Long getId() {
         return id;

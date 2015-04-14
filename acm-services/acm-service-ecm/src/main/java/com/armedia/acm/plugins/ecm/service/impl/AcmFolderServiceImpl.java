@@ -197,48 +197,58 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     private AcmCmisObjectList prepareAcmCmisObjectList(String objectType, Long objectId, Long folderId, MuleMessage message) throws TransformerException {
 
+        boolean isMoreItemsLeft = true;
         AcmCmisObjectList objectList = new AcmCmisObjectList();
         List<AcmCmisObject> acmCmisObjects = new ArrayList<>();
-
         ItemIterable<CmisObject> cmisObjects = message.getPayload(ItemIterable.class);
         objectList.setTotalChildren((int) cmisObjects.getPageNumItems());
         objectList.setContainerObjectId(objectId);
         objectList.setContainerObjectType(objectType);
         objectList.setFolderId(folderId);
+        int pageNumber = AcmFolderConstants.ZERO;
 
-        for( CmisObject cmisObject: cmisObjects ) {
-            String cmisObjectId = cmisObject.getId();
-            ObjectType type = cmisObject.getBaseType();
-            AcmFolder folder;
-            EcmFile file;
-            AcmCmisObject object = new AcmCmisObject();
-            if( type.getId().equals(AcmFolderConstants.CMIS_OBJECT_TYPE_ID_FOLDER)){
-                folder = getFolderDao().findByCmisFolderId(cmisObjectId);
-                object.setCreator(folder.getCreator());
-                object.setCreated(folder.getCreated());
-                object.setCmisObjectId(cmisObjectId);
-                object.setModified(folder.getModified());
-                object.setModifier(folder.getModifier());
-                object.setObjectId(folder.getId());
-                object.setObjectType(folder.getObjectType());
-                object.setName(folder.getName());
-            } else if (type.getId().equals(AcmFolderConstants.CMIS_OBJECT_TYPE_ID_FILE)) {
-                file = getFileDao().findByCmisFileIdAndFolderId(cmisObjectId,folderId);
-                object.setCreator(file.getCreator());
-                object.setCreated(file.getCreated());
-                object.setCmisObjectId(cmisObjectId);
-                object.setModified(file.getModified());
-                object.setModifier(file.getModifier());
-                object.setObjectId(file.getId());
-                object.setObjectType(file.getObjectType());
-                object.setName(file.getFileName());
-                object.setCategory(file.getCategory());
-                object.setVersion(file.getActiveVersionTag());
-                object.setStatus(file.getStatus());
-                object.setMimeType(file.getFileMimeType());
-                object.setType(file.getFileType());
+        while (isMoreItemsLeft) {
+            for (CmisObject cmisObject : cmisObjects) {
+                String cmisObjectId = cmisObject.getId();
+                ObjectType type = cmisObject.getBaseType();
+                AcmFolder folder;
+                EcmFile file;
+                AcmCmisObject object = new AcmCmisObject();
+                if (type.getId().equals(AcmFolderConstants.CMIS_OBJECT_TYPE_ID_FOLDER)) {
+                    folder = getFolderDao().findByCmisFolderId(cmisObjectId);
+                    object.setCreator(folder.getCreator());
+                    object.setCreated(folder.getCreated());
+                    object.setCmisObjectId(cmisObjectId);
+                    object.setModified(folder.getModified());
+                    object.setModifier(folder.getModifier());
+                    object.setObjectId(folder.getId());
+                    object.setObjectType(folder.getObjectType());
+                    object.setName(folder.getName());
+                } else if (type.getId().equals(AcmFolderConstants.CMIS_OBJECT_TYPE_ID_FILE)) {
+                    file = getFileDao().findByCmisFileIdAndFolderId(cmisObjectId, folderId);
+                    object.setCreator(file.getCreator());
+                    object.setCreated(file.getCreated());
+                    object.setCmisObjectId(cmisObjectId);
+                    object.setModified(file.getModified());
+                    object.setModifier(file.getModifier());
+                    object.setObjectId(file.getId());
+                    object.setObjectType(file.getObjectType());
+                    object.setName(file.getFileName());
+                    object.setCategory(file.getCategory());
+                    object.setVersion(file.getActiveVersionTag());
+                    object.setStatus(file.getStatus());
+                    object.setMimeType(file.getFileMimeType());
+                    object.setType(file.getFileType());
+                }
+                if (cmisObjects.getHasMoreItems()) {
+                    acmCmisObjects.add(object);
+                    cmisObjects = cmisObjects.getPage(pageNumber);
+                    pageNumber++;
+                } else {
+                    acmCmisObjects.add(object);
+                    isMoreItemsLeft = false;
+                }
             }
-            acmCmisObjects.add(object);
         }
         objectList.setChildren(acmCmisObjects);
         return objectList;

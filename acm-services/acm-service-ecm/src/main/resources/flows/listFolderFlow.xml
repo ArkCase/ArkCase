@@ -24,17 +24,10 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 
         <enricher target="#[flowVars['children']]">
-            <cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]"/>
+            <cmis:folder get="CHILDREN" folderId="#[message.inboundProperties.acmFolderId]" />
         </enricher>
 
-        <choice>
-            <when expression="#[flowVars['children'].pageNumItems == 0]">
-                <set-property propertyName="isFolderNotEmpty" value="true"/>
-            </when>
-            <otherwise>
-                <set-payload value="#[flowVars['children']]"/>
-            </otherwise>
-        </choice>
+        <set-payload value="#[flowVars['children']]"/>
 
 
 		<catch-exception-strategy>
