@@ -55,9 +55,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setEcmFileId(in.getVersionSeriesId());
 
-        List<String> tags = prepareTagList(in.getTags());
-        solr.setTags_ss(tags);
-
         solr.setPublic_doc_b(true);
         solr.setProtected_object_b(false);
 
@@ -127,14 +124,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         boolean isSupported = objectNotNull && classNames;
 
         return isSupported;
-    }
-
-    private List<String> prepareTagList(List<AcmAssociatedTag> tagList) {
-        List<String> tagTextList = new ArrayList<>();
-        for(AcmAssociatedTag tag: tagList){
-            tagTextList.add(tag.getTag().getTagText());
-        }
-        return tagTextList;
     }
     
     private boolean isHidden(EcmFile file)

@@ -40,6 +40,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String description_no_html_tags_parseable;
     private String notes_no_html_tags_parseable;
 
+
     /////////////////// for docs with an incident date ////////////
     private Date incident_date_tdt;
 
@@ -55,6 +56,10 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String assignee_last_name_lcs;
     private String assignee_full_name_lcs;
     private String incident_type_lcs;
+
+
+    ////////////// associated tags ////////////////////
+    private String tag_token_lcs;
 
     /////////////////// for docs with a status date ////////////
     private String status_lcs;
@@ -679,6 +684,14 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
     public void setTags_ss(List<String> tags_ss) {
         this.tags_ss = tags_ss;
+    }
+
+    public String getTag_token_lcs() {
+        return tag_token_lcs;
+    }
+
+    public void setTag_token_lcs(String tag_token_lcs) {
+        this.tag_token_lcs = tag_token_lcs;
     }
 
     public void setParent_ref_s(String parent_ref_s)

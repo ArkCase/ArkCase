@@ -28,6 +28,7 @@ public class TagService {
     public List<AcmTag> getAllTags(){
         List<AcmTag> tags = getTagDao().findAll();
         //If there are no tags in the DB, add predefined tags from property file
+        //if property file did not contains predefined tags return []!
         if(tags.isEmpty()){
             List<AcmTag> newTags = prepareTagsFromPropertiesFile();
             for(AcmTag tag: newTags){
@@ -47,6 +48,7 @@ public class TagService {
         newTag.setTagText(value);
         newTag.setTagName(name);
         newTag.setTagDescription(desc);
+        newTag.setTagToken(value+"-"+System.currentTimeMillis());
 
         return getTagDao().save(newTag);
     }
@@ -76,21 +78,25 @@ public class TagService {
         List<AcmTag> tags = new ArrayList<>();
         String jsonTagsString = null;
         if(getTagPlugin().getPluginProperties().containsKey(TagConstants.TAGS)) {
-             jsonTagsString = (String) getTagPlugin().getPluginProperties().get(TagConstants.TAGS);
-        }
-        JSONArray allTagsJsonArray = new JSONArray(jsonTagsString);
-        for(int i = 0; i < allTagsJsonArray.length(); i++ ){
-            JSONObject tagObject = allTagsJsonArray.getJSONObject(i);
-            tags.add(prepareTagFromJsonObject(tagObject));
+            jsonTagsString = (String) getTagPlugin().getPluginProperties().get(TagConstants.TAGS);
+            JSONArray allTagsJsonArray = new JSONArray(jsonTagsString);
+            for(int i = 0; i < allTagsJsonArray.length(); i++ ){
+                JSONObject tagObject = allTagsJsonArray.getJSONObject(i);
+                tags.add(prepareTagFromJsonObject(tagObject));
+            }
+            return tags;
+        } else {
+            return new ArrayList<>();
         }
 
-        return tags;
+
     }
     private AcmTag prepareTagFromJsonObject(JSONObject jsonObject){
         AcmTag tag = new AcmTag();
         tag.setTagName(jsonObject.getString(TagConstants.TAG_NAME));
         tag.setTagDescription(jsonObject.getString(TagConstants.TAG_DESC));
         tag.setTagText(jsonObject.getString(TagConstants.TAG_VALUE));
+        tag.setTagToken(tag.getTagText()+"-"+System.currentTimeMillis());
         return tag;
     }
 

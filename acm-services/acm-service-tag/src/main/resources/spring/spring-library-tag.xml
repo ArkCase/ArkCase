@@ -90,6 +90,12 @@
     <bean id="associatedTagService" class="com.armedia.acm.services.tag.service.AssociatedTagService">
         <property name="tagDao" ref="tagDao"/>
         <property name="associatedTagDao" ref="associatedTagDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="tagPlugin" ref="tagPlugin"/>
+    </bean>
+
+    <bean id="associatedTagToSolrTransformer" class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
+        <property name="associatedTagDao" ref="associatedTagDao"/>
     </bean>
 
 
