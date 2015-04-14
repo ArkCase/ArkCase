@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 27.03.2015.
@@ -42,7 +44,7 @@ public class ListAssociatedTagsByObjectTypeAndIdAPIController {
         List<AcmAssociatedTag> acmAssociatedTags;
         List<AcmTag> acmTags;
         try {
-            acmAssociatedTags = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(objectId,objectType);
+            acmAssociatedTags = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(objectId,objectType,auth);
             acmTags = retrieveTagList(acmAssociatedTags);
         } catch (AcmObjectNotFoundException e) {
             if (log.isDebugEnabled())
@@ -53,11 +55,7 @@ public class ListAssociatedTagsByObjectTypeAndIdAPIController {
     }
 
     private List<AcmTag> retrieveTagList(List<AcmAssociatedTag> acmAssociatedTags){
-        List<AcmTag> acmTags = new ArrayList<>();
-        for( AcmAssociatedTag acmAssociatedTag : acmAssociatedTags ){
-            acmTags.add(acmAssociatedTag.getTag());
-        }
-        return  acmTags;
+        return  acmAssociatedTags.stream().map(s -> s.getTag()).collect(Collectors.toList());
     }
 
     public AssociatedTagService getAssociatedTagService() {

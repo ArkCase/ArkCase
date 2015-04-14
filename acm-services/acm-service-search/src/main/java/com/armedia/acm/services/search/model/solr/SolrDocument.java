@@ -65,6 +65,11 @@ public class SolrDocument implements SolrBaseDocument {
 
     private String data_s;
 
+
+    ////for assigned tags/////////////////////
+    private String tag_token_lcs;
+
+
     @Override
     public String getId() {
         return id;
@@ -419,9 +424,16 @@ public class SolrDocument implements SolrBaseDocument {
         this.data_s = data_s;
     }
 
+    public String getTag_token_lcs() {
+        return tag_token_lcs;
+    }
+
+    public void setTag_token_lcs(String tag_token_lcs) {
+        this.tag_token_lcs = tag_token_lcs;
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "SolrDocument{" +
                 "id='" + id + '\'' +
                 ", status_s='" + status_s + '\'' +
@@ -469,6 +481,7 @@ public class SolrDocument implements SolrBaseDocument {
                 ", notification_type_s='" + notification_type_s + '\'' +
                 ", parent_ref_s='" + parent_ref_s + '\'' +
                 ", data_s='" + data_s + '\'' +
+                ", tag_token_lcs='" + tag_token_lcs + '\'' +
                 '}';
     }
 }

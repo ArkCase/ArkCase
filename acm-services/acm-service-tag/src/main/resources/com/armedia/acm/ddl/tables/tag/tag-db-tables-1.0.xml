@@ -93,4 +93,10 @@
 
     </changeSet>
 
+    <changeSet id="03-add-new-token-column-in-acm-tag-table" author="marst">
+        <addColumn tableName="acm_tag">
+            <column name="cm_tag_token" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
