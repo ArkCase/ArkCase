@@ -25,6 +25,9 @@ public interface AcmFolderConstants {
     String DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY = "deleteFolderException";
     String LIST_FOLDER_EXCEPTION_INBOUND_PROPERTY = "listFolderException";
     String IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY = "isFolderNotEmpty";
+    String IS_FOLDER_EMPTY_INBOUND_PROPERTY = "isFolderEmpty";
+
+    int ZERO = 0;
 
     String SUCCESS_FOLDER_DELETE_MSG = "Folder deleted successfully";
 
