@@ -116,6 +116,7 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
         this.tagName = tagName;
     }
 
+    @JsonIgnore
     public String getTagToken() {
         return tagToken;
     }

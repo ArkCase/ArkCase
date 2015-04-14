@@ -55,8 +55,7 @@ public class ListAssociatedTagsByObjectTypeAndIdAPIController {
     }
 
     private List<AcmTag> retrieveTagList(List<AcmAssociatedTag> acmAssociatedTags){
-        List<AcmTag> acmTagList = acmAssociatedTags.stream().map(s -> {return s.getTag();}).collect(Collectors.toList());
-        return  acmTagList;
+        return  acmAssociatedTags.stream().map(s -> s.getTag()).collect(Collectors.toList());
     }
 
     public AssociatedTagService getAssociatedTagService() {
