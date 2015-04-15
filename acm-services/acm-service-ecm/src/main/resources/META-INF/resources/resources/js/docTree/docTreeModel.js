@@ -91,7 +91,7 @@ DocTree.Model = DocTree.Model || {
         var found = -1;
         if (DocTree.Model.validateFolderList(folderList)) {
             for (var i = 0; i < folderList.children.length; i++) {
-                if (folderList.children[i].objectId == fileId) {
+                if (Acm.goodValue(folderList.children[i].objectId) == objectId) {
                     found = i;
                     break;
                 }
@@ -154,9 +154,12 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isEmpty(data)) {
             return false;
         }
-//        if (Acm.isEmpty(data.deletedFolderId)) {
-//            return false;
-//        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileName)) {
+            return false;
+        }
         return true;
     }
 

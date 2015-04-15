@@ -298,17 +298,19 @@ DocTree.View = DocTree.View || {
     ,onModelDeletedFolder: function(deletedInfo, folderId, cacheKey, node) {
         if (deletedInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when deleting folder", Acm.goodValue(deletedInfo.errorMsg));
+            DocTree.View.markNodeError(node);
         }
     }
     ,onModelDeletedFile: function(deletedInfo, fileId, cacheKey, node) {
         if (deletedInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when deleting file", Acm.goodValue(deletedInfo.errorMsg));
-
+            DocTree.View.markNodeError(node);
         }
     }
     ,onModelRenamedFolder: function(renamedInfo, folderName, folderId, cacheKey, node) {
         if (renamedInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when renaming folder " + folderName, Acm.goodValue(renamedInfo.errorMsg));
+            DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
         }
@@ -316,6 +318,7 @@ DocTree.View = DocTree.View || {
     ,onModelRenamedFile: function(renamedInfo, fileName, fileId, cacheKey, node) {
         if (renamedInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when renaming file " + fileName, Acm.goodValue(renamedInfo.errorMsg));
+            DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
         }
