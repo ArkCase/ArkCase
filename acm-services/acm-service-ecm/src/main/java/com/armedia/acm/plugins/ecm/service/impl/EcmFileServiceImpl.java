@@ -7,13 +7,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -328,6 +322,50 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return retval;
     }
 
+
+    @Override
+    public AcmCmisObjectList lsitAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId) throws AcmListObjectsFailedException, AcmObjectNotFoundException {
+
+        log.debug("All children objects from folder " + folderId );
+
+        AcmFolder folder = getFolderDao().find(folderId);
+        if( folder == null )
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
+        String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:"+Long.toString(folderId);
+        String filterQuery =
+                category == null ? "fq=hidden_b:false" :
+                        "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
+        // search for 50 records at a time until we find them all
+        int start = 0;
+        int max = 50;
+        String sortBy = "created";
+        String sortDirection = "ASC";
+
+        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                start, max, sortBy, sortDirection);
+
+        int totalChildren = retval.getTotalChildren();
+        int foundSoFar = retval.getChildren().size();
+
+        log.debug("Got folder children " + start + " to " + foundSoFar + " of a total of " + totalChildren);
+
+        while ( foundSoFar < totalChildren )
+        {
+            start += max;
+
+            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                    start, max, sortBy, sortDirection);
+            retval.getChildren().addAll(more.getChildren());
+
+            foundSoFar += more.getChildren().size();
+
+            log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalChildren);
+        }
+
+        retval.setMaxRows(totalChildren);
+
+        return retval;
+    }
 
     @Override
     public AcmCmisObjectList listFolderContents(Authentication auth,
