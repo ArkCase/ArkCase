@@ -184,7 +184,7 @@
                         <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Partcipant"><i class="fa fa-user"></i> New</button></div></li>
                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
-                    Participants <span class="badge bg-info">4</span> </header>
+                    Participants <span class="badge bg-info" id="labParticipants"></span> </header>
                 <ul class="list-group alt panel-body" id="tabParticipants">
 
                 </ul>
@@ -197,7 +197,7 @@
                         <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm"  data-toggle="modal" id="btnNewTag"><i class="fa fa-tag"></i> New</button></div></li>
                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
-                    Tags <span class="badge bg-info">8</span>
+                    Tags <span class="badge bg-info" id="labTags"></span>
                 </header>
                 <table class="panel-body table table-striped b-light" id="tabTags">
                     <thead>

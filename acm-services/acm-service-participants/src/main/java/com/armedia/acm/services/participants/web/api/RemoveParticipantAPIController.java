@@ -68,8 +68,8 @@ public class RemoveParticipantAPIController {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedParticipant", userId);
         objectToReturnJSON.put("fromObjectType", objectType);
-        objectToReturnJSON.put("andObjectId",objectId);
-        objectToReturnJSON.put("Message", msg);
+        objectToReturnJSON.put("objectId",objectId);
+        objectToReturnJSON.put("message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;
