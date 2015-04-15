@@ -12,11 +12,11 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FOLDER          ,this.onViewRemovedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FILE            ,this.onViewRenamedFile);
 
         //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_DOCUMENT        ,this.onViewRenamedDocument);
 
         if (DocTree.Model.Config.create)           {DocTree.Model.Config.create(args);}
         if (DocTree.Model.Key.create)              {DocTree.Model.Key.create(args);}
@@ -43,16 +43,17 @@ DocTree.Model = DocTree.Model || {
     ,onViewRemovedFile: function(fileId, cacheKey, folderNode) {
         DocTree.Service.deleteFile(fileId, cacheKey, folderNode);
     }
+    ,onViewRenamedFolder: function(name, id, cacheKey, node) {
+        DocTree.Service.renameFolder(name, id, cacheKey, node);
+    }
+    ,onViewRenamedFile: function(name, id, cacheKey, node) {
+        DocTree.Service.renameFile(name, id, cacheKey, node);
+    }
 
     //---------------
     ,onViewAddedDocument: function(node, parentId, name) {
         var folder = {title: name};
         DocTree.Service.testService2(node, parentId, folder);
-    }
-    ,onViewRenamedFolder: function(node, id, parentId, name) {
-
-    }
-    ,onViewRenamedDocument: function(node, id, parentId, name) {
     }
 
     ,NODE_TYPE_PREV: "prev"
@@ -84,6 +85,19 @@ DocTree.Model = DocTree.Model || {
         key += "." + DocTree.Model.Config.getSortDirection();
         key += "." + DocTree.Model.Config.getMaxRows();
         return key;
+    }
+
+    ,findFolderItemIdx: function(objectId, folderList) {
+        var found = -1;
+        if (DocTree.Model.validateFolderList(folderList)) {
+            for (var i = 0; i < folderList.children.length; i++) {
+                if (Acm.goodValue(folderList.children[i].objectId) == objectId) {
+                    found = i;
+                    break;
+                }
+            }
+        }
+        return found;
     }
     ,validateFolderList: function(data) {
         if (Acm.isEmpty(data)) {
@@ -127,6 +141,28 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
+    ,validateRenamedFolder: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+//        if (Acm.isEmpty(data.deletedFolderId)) {
+//            return false;
+//        }
+        return true;
+    }
+    ,validateRenamedFile: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileName)) {
+            return false;
+        }
+        return true;
+    }
+
     ,validateUploadInfo: function(data) {
         if (Acm.isArrayEmpty(data)) {
             return false;
