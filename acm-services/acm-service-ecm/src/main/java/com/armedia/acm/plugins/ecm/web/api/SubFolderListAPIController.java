@@ -7,7 +7,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class SubFolderListAPIController {
 
-    private AcmFolderService acmFolderService;
     private EcmFileService fileService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
