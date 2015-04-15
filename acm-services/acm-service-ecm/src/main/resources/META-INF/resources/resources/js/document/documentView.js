@@ -14,7 +14,7 @@ AcmDocument.View = AcmDocument.View || {
         if (AcmDocument.View.Participants.create)           {AcmDocument.View.Participants.create();}
         if (AcmDocument.View.EventHistory.create)           {AcmDocument.View.EventHistory.create();}
         if (AcmDocument.View.VersionHistory.create)         {AcmDocument.View.VersionHistory.create();}
-        if (AcmDocument.View.Tags.create)                   {AcmDocument.View.Tags.create();}
+        if (AcmDocument.View.AssociatedTags.create)                   {AcmDocument.View.AssociatedTags.create();}
     }
     ,onInitialized: function() {
         if (AcmDocument.View.MicroData.onInitialized)               {AcmDocument.View.MicroData.onInitialized();}
@@ -26,7 +26,7 @@ AcmDocument.View = AcmDocument.View || {
         if (AcmDocument.View.Participants.onInitialized)            {AcmDocument.View.Participants.onInitialized();}
         if (AcmDocument.View.EventHistory.onInitialized)            {AcmDocument.View.EventHistory.onInitialized();}
         if (AcmDocument.View.VersionHistory.onInitialized)          {AcmDocument.View.VersionHistory.onInitialized();}
-        if (AcmDocument.View.Tags.onInitialized)                    {AcmDocument.View.Tags.onInitialized();}
+        if (AcmDocument.View.AssociatedTags.onInitialized)                    {AcmDocument.View.AssociatedTags.onInitialized();}
     }
 
     ,getActiveDocumentId: function() {
@@ -43,6 +43,7 @@ AcmDocument.View = AcmDocument.View || {
 
     ,MicroData: {
         create : function() {
+            this.documentId   = Acm.Object.MicroData.get("objId");
         }
         ,onInitialized: function() {
         }
@@ -193,80 +194,95 @@ AcmDocument.View = AcmDocument.View || {
     ,Participants: {
         create: function() {
             this.$tabParticipants = $("#tabParticipants");
+            this.$tabParticipants.on("click", ".removeParticipant", function(e) {AcmDocument.View.Participants.onClickBtnRemoveParticipant(e, this);});
+            this.$tabParticipants.on("click", ".changeParticipantRole", function(e) {AcmDocument.View.Participants.onClickBtnChangeRole(e, this);});
 
-            //dummy
-            var participants = [{"fullname" : "ArkCase" , "id" : "1", "role" : "Author"},
-                                {"fullname" : "ArkCase1" , "id" : "2", "role" : "Author1"},
-                                {"fullname" : "ArkCase2" , "id" : "3", "role" : "Author2"}];
+            this.$labParticipants                       = $("#labParticipants");
 
-            this.buildParticipantsTable(participants);
 
-            this.$btnRemoveParticipant = $(".removeParticipant");
-            this.$btnRemoveParticipant.on("click", function(e) {AcmDocument.View.Participants.onClickBtnRemoveParticipant(e, this);});
-
-            this.$btnChangeRole = $(".changeParticipantRole");
-            this.$btnChangeRole.on("click", function(e) {AcmDocument.View.Participants.onClickBtnChangeRole(e, this);});
-
-            this.$participant =  $(".participantFullName");
-            /*Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);*/
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_PARTICIPANTS    ,this.onModelRetrievedParticipants);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_REMOVED_PARTICIPANT       ,this.onModelRemovedParticipant);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CHANGED_PARTICIPANT_ROLE  ,this.onModelChangedParticipantRole);
         }
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(AcmDocument.View.Participants.buildParticipantsTable());
+        ,onModelRetrievedParticipants: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
         }
-        ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(AcmDocument.View.Participants.buildParticipantsTable());
+        ,onModelRemovedParticipant: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
+        ,onModelChangedParticipantRole: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
+        ,setTextLabParticipants: function(totalParticipants){
+            Acm.Object.setText(AcmDocument.View.Participants.$labParticipants, totalParticipants);
         }
 
         ,setHtmlTabParticipants: function(val) {
             AcmDocument.View.Participants.$tabParticipants.append(val);
         }
+        ,clearHtmlTabParticipants: function(){
+            AcmDocument.View.Participants.$tabParticipants.find("li").remove();
+        }
         ,onClickBtnRemoveParticipant: function(event,ctrl) {
             event.preventDefault();
             //find participant name and id
             var participantId = $(event.target).closest('div').next().attr('id');
-            var participantName = $(event.target).closest('div').next().children('div').prop('textContent');
-            var participantRole = $(event.target).closest('div').next().children('small').prop('textContent');
-
-            alert("participantId: " + participantId + " participantName: " + participantName + " participantRole: " + participantRole );
+            var userId = $(event.target).closest('div').next().children('div').attr('data-user-id');
+            var participantType = $(event.target).closest('div').next().children('small').prop('textContent').toLowerCase();
+            AcmDocument.Controller.viewRemovedParticipant(participantId, userId, participantType, AcmDocument.View.MicroData.documentId);
         }
         ,onClickBtnChangeRole: function(event,ctrl) {
             var participantId = $(event.target).closest('div').next().attr('id');
-            var participantName = $(event.target).closest('div').next().children('div').prop('textContent');
-            var participantRole = $(event.target).closest('div').next().children('small').prop('textContent');
-
-            alert("participantRole: " + participantRole );
+            //var participantName = $(event.target).closest('div').next().children('div').prop('textContent');
+            var participantType = $(event.target).closest('div').next().children('small').prop('textContent');
+            AcmDocument.Controller.viewChangedParticipantRole(participantType, participantId, AcmDocument.View.MicroData.documentId);
         }
 
         ,buildParticipantsTable: function(participants) {
-            var html = "";
-            for (var i = 0; i < participants.length; i++) {
-
-                html += "<li class='list-group-item'>"
+            if(AcmDocument.Model.Participants.validateParticipants(participants)) {
+                AcmDocument.View.Participants.clearHtmlTabParticipants();
+                var html = "";
+                for (var i = 0; i < participants.length; i++) {
+                    if(AcmDocument.Model.Participants.validateParticipant(participants[i])){
+                        html += "<li class='list-group-item'>"
                         + "<div class='media'>"
-                            + "<span class='pull-left thumb-sm'><img src='resources/images/a1.png' class='img-circle'></span>"
-                            + "<div class='btn-group pull-right'>"
-                                + "<button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button>"
-                                + "<ul class='dropdown-menu'>"
-                                    + "<li><a href='#' class='removeParticipant'>Remove</a></li>"
-                                    + "<li><a href='#' class='changeParticipantRole'>Change Role</a></li>"
-                                + "</ul>"
-                            + "</div>"
-                            + "<div class='media-body' id='" + Acm.goodValue(participants[i].id) + "'>"
-                            + "<div><a href='#'>" + Acm.goodValue(participants[i].fullname) + "</a></div>"
-                            + "<small class='text-muted'>" + Acm.goodValue(participants[i].role) + "</small> </div>"
+                        + "<span class='pull-left thumb-sm'><img src='resources/images/a1.png' class='img-circle'></span>"
+                        + "<div class='btn-group pull-right'>"
+                        + "<button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button>"
+                        + "<ul class='dropdown-menu'>"
+                        + "<li><a href='#' class='removeParticipant'>Remove</a></li>"
+                        + "<li><a href='#' class='changeParticipantRole'>Change Role</a></li>"
+                        + "</ul>"
+                        + "</div>"
+                        + "<div class='media-body' id='" + Acm.goodValue(participants[i].id) + "'>"
+                        + "<div data-user-id='" + participants[i].participantLdapId + "'><a href='#'>" + Acm.goodValue(Acm.__FixMe__getUserFullName(participants[i].participantLdapId)) + "</a></div>"
+                        + "<small class='text-muted'>" + Acm.goodValue(participants[i].participantType.charAt(0).toUpperCase() + participants[i].participantType.slice(1)) + "</small> </div>"
                         + "</div>"
                         +"</li>";
-
-                +"<td><button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
-                +"<ul class='dropdown-menu'>"
-                +"<li><a href='#' class='makeActiveVersion'>Make Active</a></li>"
-                +"</ul></td>"
+                    }
+                }
+                AcmDocument.View.Participants.setTextLabParticipants(participants.length);
+                AcmDocument.View.Participants.setHtmlTabParticipants(html);
             }
-            this.setHtmlTabParticipants(html);
+
         }
     }
 
@@ -278,50 +294,42 @@ AcmDocument.View = AcmDocument.View || {
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_ADDED_NOTE        ,this.onModelAddedNote);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_UPDATED_NOTE      ,this.onModelUpdatedNote);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_DELETED_NOTE      ,this.onModelDeletedNote);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
-
-        ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(AcmDocument.View.Notes.$divNotes);
-        }
         ,onModelAddedNote: function(note) {
             if (note.hasError) {
-                Acm.Dialog.info(note.errorMsg);
+                App.View.MessageBoard.show(note.errorMsg);
             } else {
                 AcmEx.Object.JTable.load(AcmDocument.View.Notes.$divNotes);
             }
         }
         ,onModelUpdatedNote: function(note) {
             if (note.hasError) {
-                Acm.Dialog.info(note.errorMsg);
+                App.View.MessageBoard.show(note.errorMsg);
             } else {
                 AcmEx.Object.JTable.load(AcmDocument.View.Notes.$divNotes);
             }
         }
-        ,onModelDeletedNote: function(noteId) {
-            if (noteId.hasError) {
-                Acm.Dialog.info(noteId.errorMsg);
+        ,onModelDeletedNote: function(note) {
+            if (note.hasError) {
+                App.View.MessageBoard.show(note.errorMsg);
             } else {
                 AcmEx.Object.JTable.load(AcmDocument.View.Notes.$divNotes);
             }
         }
-        ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(AcmDocument.View.Notes.$divNotes);
-        }
-
         ,_makeJtData: function(noteList) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (noteList) {
+            if (AcmDocument.Model.Notes.validateNotes(noteList)) {
                 for (var i = 0; i < noteList.length; i++) {
-                    var Record = {};
-                    Record.id         = Acm.goodValue(noteList[i].id, 0);
-                    Record.note       = Acm.goodValue(noteList[i].note);
-                    Record.created    = Acm.getDateFromDatetime(noteList[i].created);
-                    Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
-                    jtData.Records.push(Record);
+                    if(AcmDocument.Model.Notes.validateNote(noteList[i])){
+                        var Record = {};
+                        Record.id         = Acm.goodValue(noteList[i].id, 0);
+                        Record.note       = Acm.goodValue(noteList[i].note);
+                        Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                        Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                        jtData.Records.push(Record);
+                    }
                 }
                 jtData.TotalRecordCount = noteList.length;
             }
@@ -337,39 +345,60 @@ AcmDocument.View = AcmDocument.View || {
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
-                    ,selecting: true
                     ,messages: {
                         addNewRecord: 'Add Note'
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
-                            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-                            return jtData;
+                            //var documentId = AcmDocument.View.getActiveDocumentId();
+                            var documentId = AcmDocument.View.MicroData.documentId;
+                            if (0 >= documentId) {
+                                return AcmEx.Object.JTable.getEmptyRecords();
+                            }
+                            var noteList = AcmDocument.Model.Notes.cacheNoteList.get(documentId);
+                            if (noteList) {
+                                return AcmDocument.View.Notes._makeJtData(noteList);
+
+                            } else {
+                                return AcmDocument.Service.Notes.retrieveNoteListDeferred(documentId
+                                    ,postData
+                                    ,jtParams
+                                    ,sortMap
+                                    ,function(data) {
+                                        var noteList = data;
+                                        return AcmDocument.View.Notes._makeJtData(noteList);
+                                    }
+                                    ,function(error) {
+                                    }
+                                );
+                            }  //end else
                         }
                         ,createAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
                             var rc = AcmEx.Object.JTable.getEmptyRecord();
-                            var documentId = AcmDocument.View.getActiveDocumentId();
-                            var document = AcmDocument.View.getActiveDocument();
-                            if (document) {
+                            //var documentId = AcmDocument.View.getActiveDocumentId();
+                            var documentId = AcmDocument.View.MicroData.documentId;
+                            //var document = AcmDocument.View.getActiveDocument();
+                            //if (document) {
                                 rc.Record.parentId = Acm.goodValue(documentId, 0);
-                                rc.Record.note = record.note;
+                                rc.Record.note = Acm.goodValue(record.note);
                                 rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
-                            }
+                                rc.Record.creator = Acm.__FixMe__getUserFullName(App.getUserName());    //record.creator;
+                            //}
                             return rc;
                         }
                         ,updateAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
                             var rc = AcmEx.Object.jTableGetEmptyRecord();
-                            var documentId = AcmDocument.View.getActiveDocumentId();
-                            var document = AcmDocument.View.getActiveDocument();
-                            if (document) {
-                                rc.Record.parentId = Acm.goodValue(caseFileId, 0);
-                                rc.Record.note = record.note;
+                            //var documentId = AcmDocument.View.getActiveDocumentId();
+                            var documentId = AcmDocument.View.MicroData.documentId;
+                            //var document = AcmDocument.View.getActiveDocument();
+                            //if (document) {
+                                rc.Record.parentId = Acm.goodValue(documentId, 0);
+                                rc.Record.note = Acm.goodValue(record.note);
                                 rc.Record.created = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator = App.getUserName();   //record.creator;
-                            }
+                                rc.Record.creator = Acm.__FixMe__getUserFullName(App.getUserName());   //record.creator;
+                            //}
                             return rc;
                         }
                         ,deleteAction: function(postData, jtParams) {
@@ -408,41 +437,44 @@ AcmDocument.View = AcmDocument.View || {
                     } //end field
                     ,recordAdded : function (event, data) {
                         var record = data.record;
-                        var documentId = AcmDocument.View.getActiveDocumentId();
+                        //var documentId = AcmDocument.View.getActiveDocumentId();
+                        //var documentId = AcmDocument.View.MicroData.documentId;
+                        var documentId = Acm.goodValue(record.parentId);
                         if (0 < documentId) {
                             var noteToSave = {};
-                            //noteToSave.id = record.id;
-                            noteToSave.id = 0;
-                            noteToSave.note = record.note;
+                            noteToSave.note = Acm.goodValue(record.note);
                             noteToSave.created = Acm.getCurrentDayInternal();
-                            noteToSave.creator = record.creator;
-                            noteToSave.parentId = documentId;
-                            //noteToSave.parentType = AcmDocument.Model.DOC_TYPE_DOCUMENT;
-                            //AcmDocument.Controller.viewAddedNote(noteToSave);
+                            noteToSave.creator = Acm.goodValue(record.creator);
+                            noteToSave.parentId = Acm.goodValue(record.parentId);
+                            noteToSave.parentType = AcmDocument.Model.DOC_TYPE_DOCUMENT;
+                            AcmDocument.Controller.viewAddedNote(noteToSave,documentId);
                         }
                     }
                     ,recordUpdated: function(event,data){
                         var whichRow = data.row.prevAll("tr").length;
                         var record = data.record;
-                        var documentId = AcmDocument.View.getActiveDocumentId();
+                        //var documentId = AcmDocument.View.getActiveDocumentId();
+                        //var documentId = AcmDocument.View.MicroData.documentId;
+                        var documentId = data.record.parentId;
                         if (0 < documentId) {
                             var notes = AcmDocument.Model.Notes.cacheNoteList.get(documentId);
-                            if (notes) {
-                                if(notes[whichRow]){
-                                    notes[whichRow].note = record.note;
-                                    //AcmDocument.Controller.viewUpdatedNote(notes[whichRow]);
+                            if (Acm.isNotEmpty(notes)) {
+                                if(Acm.isNotEmpty(notes[whichRow])){
+                                    notes[whichRow].note = Acm.goodValue(record.note);
+                                    AcmDocument.Controller.viewUpdatedNote(notes[whichRow],documentId);
                                 }
                             }
                         }
                     }
                     ,recordDeleted : function (event, data) {
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                        var documentId = AcmDocument.View.getActiveDocumentId();
+                        //var documentId = AcmDocument.View.getActiveDocumentId();
+                        var documentId = AcmDocument.View.MicroData.documentId;
                         if (0 < documentId) {
                             var notes = AcmDocument.Model.Notes.cacheNoteList.get(documentId);
-                            if (notes) {
-                                if(notes[whichRow]){
-                                    //AcmDocument.Controller.viewDeletedNote(notes[whichRow].id);
+                            if (Acm.isNotEmpty(notes)) {
+                                if(Acm.isNotEmpty(notes[whichRow]) && Acm.isNotEmpty(notes[whichRow].id)){
+                                    AcmDocument.Controller.viewDeletedNote(notes[whichRow].id,documentId);
                                 }
                             }
                         }
@@ -453,60 +485,75 @@ AcmDocument.View = AcmDocument.View || {
         }
     }
 
-    ,Tags: {
+    ,AssociatedTags: {
         create: function() {
-            this.$modalNewTag      = $("#modalNewTag")
-            this.$tabTags = $("#tabTags")
+            this.$modalNewAssociatedTag         = $("#modalNewTag")
 
-            //dummy
-            var tags = [{"name" : "Case" , "id" : "123", "user" : "ann-acm"},
-                        {"name" : "Complaint" , "id" : "1234", "user" : "ann-acm"},
-                        {"name" : "Other" , "id" : "1235", "user" : "ann-acm"}];
+            this.$tabAssociatedTags             = $("#tabTags");
+            this.$tabAssociatedTags.unbind("click").on("click", "a", function(e) {AcmDocument.View.AssociatedTags.onClickBtnRemoveAssociatedTag(e, this);});
 
-            this.buildTagsTable(tags);
+            this.$labTags                       = $("#labTags");
+            this.$btnNewAssociatedTag    	    = $("#btnNewTag");
+            this.$btnNewAssociatedTag.on("click", function(e) {AcmDocument.View.AssociatedTags.onClickBtnNewAssociatedTag(e, this);});
 
-            this.$btnRemoveTag = $(".removeTag");
-            this.$btnRemoveTag.on("click", function(e) {AcmDocument.View.Tags.onClickBtnRemoveTag(e, this);});
-
-            this.$btnNewTag    	    = $("#btnNewTag");
-            this.$btnNewTag.on("click", function(e) {AcmDocument.View.Tags.onClickBtnNewTag(e, this);});
-
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_ASSOCIATED_TAGS    ,this.onModelRetrievedAssociatedTags);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_REMOVED_ASSOCIATED_TAGS      ,this.onModelRemovedAssociatedTags);
         }
         ,onInitialized: function() {
         }
-        ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(AcmDocument.View.Tags.buildTagsTable());
-        }
-        ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(AcmDocument.View.Tags.buildTagsTable());
-        }
-        ,onClickBtnNewTag: function(event,ctrl) {
-            AcmDocument.View.Tags.$modalNewTag.modal("show");
-        }
-        ,onClickBtnRemoveTag: function(event,ctrl) {
-            event.preventDefault();
-            //find tag and id
-            var id = $(event.target).closest('td').siblings(':first-child').attr('id');
-            var tag = $(event.target).closest('td').siblings(':first-child').text();
-            alert("id: " + id + " " + "tag: " + tag);
-        }
-        ,setHtmlTabTags: function(val) {
-            AcmDocument.View.Tags.$tabTags.append(val);
-        }
-        ,buildTagsTable: function(tags) {
-            var html = "";
-            for (var i = 0; i < Acm.goodValue(tags.length); i++) {
-                html+= "<tr>"
-                +"<td id='" + Acm.goodValue(tags[i].id) + "'>" + Acm.goodValue(tags[i].name) + "</td>"
-                +"<td><button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
-                +"<ul class='dropdown-menu'>"
-                +"<li><a href='#' class='removeTag'>Remove</a></li>"
-                +"</ul></td>"
-                +"</tr>"
+        ,onModelRemovedAssociatedTags: function(associatedTags) {
+            if(associatedTags.hasError){
+                App.View.MessageBoard.show(associatedTags.errorMsg);
             }
-            this.setHtmlTabTags(html);
+            else{
+                AcmDocument.View.AssociatedTags.buildAssociatedTagsTable(associatedTags);
+            }
+        }
+        ,onModelRetrievedAssociatedTags: function(associatedTags) {
+            if(associatedTags.hasError){
+                App.View.MessageBoard.show(associatedTags.errorMsg);
+            }
+            else{
+                AcmDocument.View.AssociatedTags.buildAssociatedTagsTable(associatedTags);
+            }
+        }
+        ,onClickBtnNewAssociatedTag: function(event,ctrl) {
+            AcmDocument.View.AssociatedTags.$modalNewAssociatedTag.modal("show");
+        }
+        ,onClickBtnRemoveAssociatedTag: function(event,ctrl) {
+            event.preventDefault();
+            //find associatedTag and tagId
+            var tagId = $(event.target).closest('td').siblings(':first-child').attr('tagId');
+            var associatedTag = $(event.target).closest('td').siblings(':first-child').text();
+            AcmDocument.Controller.viewRemovedAssociatedTag(AcmDocument.View.MicroData.documentId, tagId);
+        }
+        ,clearHtmlTabAssociatedTags: function(val) {
+            AcmDocument.View.AssociatedTags.$tabAssociatedTags.find("td").remove();
+        }
+        ,setHtmlTabAssociatedTags: function(val) {
+            AcmDocument.View.AssociatedTags.$tabAssociatedTags.append(val);
+        }
+        ,setTextLabTags: function(totalTags){
+            Acm.Object.setText(AcmDocument.View.AssociatedTags.$labTags, totalTags);
+        }
+        ,buildAssociatedTagsTable: function(associatedTags) {
+            if(AcmDocument.Model.AssociatedTags.validateAssociatedTags(associatedTags)){
+                AcmDocument.View.AssociatedTags.clearHtmlTabAssociatedTags();
+                var html = "";
+                    for (var i = 0; i < Acm.goodValue(associatedTags.length); i++) {
+                        if(AcmDocument.Model.AssociatedTags.validateAssociatedTag(associatedTags[i])) {
+                            html+= "<tr>"
+                            +"<td tagId='" + Acm.goodValue(associatedTags[i].id) + "'>" + Acm.goodValue(associatedTags[i].tagName) + "</td>"
+                            +"<td><button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
+                            +"<ul class='dropdown-menu'>"
+                            +"<li><a href='#' class='removeTag'>Remove</a></li>"
+                            +"</ul></td>"
+                            +"</tr>"
+                    }
+                }
+                AcmDocument.View.AssociatedTags.setTextLabTags(associatedTags.length);
+                AcmDocument.View.AssociatedTags.setHtmlTabAssociatedTags(html);
+            }
         }
     }
 
