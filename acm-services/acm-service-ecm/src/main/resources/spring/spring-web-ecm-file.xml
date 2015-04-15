@@ -64,7 +64,7 @@
     </bean>
 
     <bean id="subFolderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.SubFolderListAPIController">
-        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="fileService" ref="ecmFileService"/>
     </bean>
 
 </beans>

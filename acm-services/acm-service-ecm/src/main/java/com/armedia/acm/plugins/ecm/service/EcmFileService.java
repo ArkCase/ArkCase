@@ -107,4 +107,6 @@ public interface EcmFileService
 
     EcmFile findById(Long fileId);
 
+    AcmCmisObjectList lsitAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
+
 }
