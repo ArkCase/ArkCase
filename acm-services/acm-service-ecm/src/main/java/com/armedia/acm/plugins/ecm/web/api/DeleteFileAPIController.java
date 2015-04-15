@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by marjan.stefanoski on 06.04.2015.
@@ -29,6 +30,7 @@ public class DeleteFileAPIController {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/id/{fileId}",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public String deleteFile(
             @PathVariable("fileId") Long objectId,
             Authentication authentication

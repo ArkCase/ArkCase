@@ -93,6 +93,7 @@
     <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
         <property name="folderDao" ref="acmFolderDao"/>
         <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="fileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
@@ -181,6 +182,11 @@
                 <bean id="deleteFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
                     <property name="url" value="/api/{version}/service/ecm/folder/{folderId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="listSubFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}/{folderId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
             </list>
