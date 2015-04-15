@@ -18,7 +18,7 @@ DocTree.Service = {
     ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
     ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
     ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"        //  {folderId}/{newFolderName}
-    ,API_RENAME_FILE_                 : "/api/latest/service/file/"              //  {objectId}/{newName}/{extension}
+    ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"          //  {objectId}/{newName}/{extension}
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -303,16 +303,16 @@ DocTree.Service = {
 
                 } else {
                     if (DocTree.Model.validateRenamedFolder(response)) {
-                        if (response.parentFolderId == parentId) {
-                            var renamedInfo = response;
-                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
-                            var idx = DocTree.Model.findFolderItemIdx(folderId, folderList);
-                            if (0 <= idx) {
-                                folderList[idx].name = Acm.goodValue(renamedInfo.name);
-                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
-                                DocTree.Controller.modelRenamedFolder(renamedInfo, folderName, folderId, cacheKey, callerData);
-                            }
-                        }
+//                        if (response.parentFolderId == parentId) {
+//                            var renamedInfo = response;
+//                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+//                            var idx = DocTree.Model.findFolderItemIdx(folderId, folderList);
+//                            if (0 <= idx) {
+//                                folderList[idx].name = Acm.goodValue(renamedInfo.name);
+//                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+//                                DocTree.Controller.modelRenamedFolder(renamedInfo, folderName, folderId, cacheKey, callerData);
+//                            }
+//                        }
                     }
                 } //end else
             }
@@ -336,12 +336,12 @@ DocTree.Service = {
 
                 } else {
                     if (DocTree.Model.validateRenamedFile(response)) {
-                        if (response.parentFolderId == parentId) {
+                        if (response.fileId == fileId) {
                             var renamedInfo = response;
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             var idx = DocTree.Model.findFolderItemIdx(fileId, folderList);
                             if (0 <= idx) {
-                                folderList[idx].name = Acm.goodValue(renamedInfo.name);
+                                folderList.children[idx].name = Acm.goodValue(renamedInfo.fileName);
                                 DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                 DocTree.Controller.modelRenamedFile(renamedInfo, fileName, fileId, cacheKey, callerData);
                             }
