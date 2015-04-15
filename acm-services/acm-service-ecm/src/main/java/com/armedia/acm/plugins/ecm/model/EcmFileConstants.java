@@ -17,13 +17,13 @@ public interface EcmFileConstants
 
     String MULE_ENDPOINT_MOVE_FILE = "vm://moveFile.in";
 
-    String USER_ACTION_COPY_FILE = "COPY FILE";
+    String USER_ACTION_COPY_FILE = "COPY";
 
-    String USER_ACTION_MOVE_FILE = "MOVE FILE";
+    String USER_ACTION_MOVE_FILE = "MOVE";
 
-    String USER_ACTION_DELETE_FILE = "DELETE FILE";
+    String USER_ACTION_DELETE_FILE = "DELETE";
 
-    String USER_ACTION_RENAME_FILE = "RENAME FILE";
+    String USER_ACTION_RENAME_FILE = "RENAME";
 
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
