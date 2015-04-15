@@ -11,12 +11,14 @@ DocTree.Service = {
     ,onInitialized: function() {
     }
 
-    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"
-    ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"
+    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"        //  {objectType}/{objectId}
+    ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"        //  {folderId}/{newFolderName}
     ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
     ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
     ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
+    ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"        //  {folderId}/{newFolderName}
+    ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"          //  {objectId}/{newName}/{extension}
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -218,7 +220,7 @@ DocTree.Service = {
                             }
                         }
                     }
-                } //else
+                } //end else
             }
             ,url
         )
@@ -253,7 +255,7 @@ DocTree.Service = {
                             }
                         }
                     }
-                } //else
+                } //end else
             }
             ,url
         )
@@ -270,13 +272,14 @@ DocTree.Service = {
                         if (response.deletedFileId == fileId) {
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
-                                var deleted = -1;
-                                for (var i = 0; i < folderList.children.length; i++) {
-                                    if (folderList.children[i].objectId == fileId) {
-                                        var deleted = i;
-                                        break;
-                                    }
-                                }
+//                                var deleted = -1;
+//                                for (var i = 0; i < folderList.children.length; i++) {
+//                                    if (folderList.children[i].objectId == fileId) {
+//                                        var deleted = i;
+//                                        break;
+//                                    }
+//                                }
+                                var deleted = DocTree.Model.findFolderItemIdx(fileId, folderList);
                                 if (0 <= deleted) {
                                     folderList.children.splice(deleted, 1);
                                     folderList.totalChildren--;
@@ -286,12 +289,69 @@ DocTree.Service = {
                             }
                         }
                     }
-                } //else
+                } //end else
             }
             ,url
         )
     }
+    ,renameFolder: function(folderName, folderId, cacheKey, callerData) {
+        var url = App.getContextPath() + this.API_RENAME_FOLDER_ + folderId + "/" + folderName;
+        Acm.Service.asyncPost(
+            function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelRenamedFolder(response, folderName, folderId, cacheKey, callerData);
 
+                } else {
+                    if (DocTree.Model.validateRenamedFolder(response)) {
+//                        if (response.parentFolderId == parentId) {
+//                            var renamedInfo = response;
+//                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+//                            var idx = DocTree.Model.findFolderItemIdx(folderId, folderList);
+//                            if (0 <= idx) {
+//                                folderList[idx].name = Acm.goodValue(renamedInfo.name);
+//                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+//                                DocTree.Controller.modelRenamedFolder(renamedInfo, folderName, folderId, cacheKey, callerData);
+//                            }
+//                        }
+                    }
+                } //end else
+            }
+            ,url
+        )
+    }
+    ,renameFile: function(fileName, fileId, cacheKey, callerData) {
+        var name = fileName;
+        var ext = "";
+        var ar = fileName.split(".");
+        if  (Acm.isArray(ar) && 1 < ar.length) {
+            ext = ar[ar.length-1];
+            name = fileName.substring(0, fileName.length - ext.length - 1);
+        }
+        var url = App.getContextPath() + this.API_RENAME_FILE_ + fileId + "/" + name + "/" + ext;
+
+        Acm.Service.asyncPost(
+            function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelRenamedFile(response, fileName, fileId, cacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateRenamedFile(response)) {
+                        if (response.fileId == fileId) {
+                            var renamedInfo = response;
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            var idx = DocTree.Model.findFolderItemIdx(fileId, folderList);
+                            if (0 <= idx) {
+                                folderList.children[idx].name = Acm.goodValue(renamedInfo.fileName);
+                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                DocTree.Controller.modelRenamedFile(renamedInfo, fileName, fileId, cacheKey, callerData);
+                            }
+                        }
+                    }
+                } //end else
+            }
+            ,url
+        )
+    }
     ,testService2: function(node, parentId, folder) {
         setTimeout(function(){
             var folder = {id: 123, some: "some", value: "value"};
