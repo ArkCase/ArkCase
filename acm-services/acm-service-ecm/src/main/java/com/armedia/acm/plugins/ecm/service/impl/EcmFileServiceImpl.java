@@ -338,27 +338,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                 startRow, maxRows, sortBy, sortDirection);
-
-        int totalChildren = retval.getTotalChildren();
-        int foundSoFar = retval.getChildren().size();
-
-        log.debug("Got folder children " + startRow + " to " + foundSoFar + " of a total of " + totalChildren);
-
-        while ( foundSoFar < totalChildren )
-        {
-            startRow += maxRows;
-
-            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                    startRow, maxRows, sortBy, sortDirection);
-            retval.getChildren().addAll(more.getChildren());
-
-            foundSoFar += more.getChildren().size();
-
-            log.debug("Got files " + startRow + " to " + foundSoFar + " of a total of " + totalChildren);
-        }
-
-        retval.setMaxRows(totalChildren);
-
         return retval;
     }
 

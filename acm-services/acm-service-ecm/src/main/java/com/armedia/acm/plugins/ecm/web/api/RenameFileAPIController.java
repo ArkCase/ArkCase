@@ -41,6 +41,9 @@ public class RenameFileAPIController {
             log.info("Renaming file, fileId: " + objectId + " with name " + newName);
         }
         EcmFile source = getFileService().findById(objectId);
+        if(source==null){
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found.",null);
+        }
         try {
             EcmFile renamedFile = getFileService().renameFile(objectId, newName);
             if(log.isInfoEnabled()) {
