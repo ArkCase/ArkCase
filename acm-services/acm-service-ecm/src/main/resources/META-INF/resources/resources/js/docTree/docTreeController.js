@@ -16,10 +16,13 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_DELETED_FOLDER          = name + "-model-deleted-folder";
         this.VIEW_REMOVED_FILE             = name + "-view-removed-file";
         this.MODEL_DELETED_FILE            = name + "-model-deleted-file";
+        this.VIEW_RENAMED_FOLDER           = name + "-view-renamed-folder";
+        this.MODEL_RENAMED_FOLDER          = name + "-model-renamed-folder";
+        this.VIEW_RENAMED_FILE             = name + "-view-renamed-file";
+        this.MODEL_RENAMED_FILE            = name + "-model-renamed-file";
+
         //-------
 
-        this.VIEW_RENAMED_FOLDER    = name + "-view-renamed-folder";
-        this.VIEW_RENAMED_DOCUMENT  = name + "-view-renamed-document";
 
         this.VIEW_ADDED_DOCUMENT    = name + "-view-added-document";
         this.MODEL_ADDED_DOCUMENT   = name + "-model-added-document";
@@ -57,7 +60,18 @@ DocTree.Controller = DocTree.Controller || {
     ,modelDeletedFile: function(deletedInfo, fileId, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_DELETED_FILE, deletedInfo, fileId, cacheKey, callerData);
     }
-
+    ,viewRenamedFolder: function(name, id, cacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FOLDER, name, id, cacheKey, node);
+    }
+    ,viewRenamedFile: function(name, id, cacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FILE, name, id, cacheKey, node);
+    }
+    ,modelRenamedFolder: function(renamedInfo, folderName, folderId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RENAMED_FOLDER, renamedInfo, folderName, folderId, cacheKey, callerData);
+    }
+    ,modelRenamedFile: function(renamedInfo, fileName, fileId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RENAMED_FILE, renamedInfo, fileName, fileId, cacheKey, callerData);
+    }
     //----------------
 
 
@@ -66,12 +80,6 @@ DocTree.Controller = DocTree.Controller || {
     }
     ,modelAddedDocument: function(node, parentId, document) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_ADDED_DOCUMENT, node, parentId, document);
-    }
-    ,viewRenamedFolder: function(node, id, parentId, name) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FOLDER, node, id, parentId, name);
-    }
-    ,viewRenamedDocument: function(node, id, parentId, name) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_DOCUMENT, node, id, parentId, name);
     }
 };
 
