@@ -41,7 +41,7 @@ public class SubFolderListAPIController {
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
             @RequestParam(value = "category", required = false) String category,
             Authentication authentication) throws AcmListObjectsFailedException, AcmUserActionFailedException, AcmCreateObjectFailedException {
 
@@ -56,7 +56,7 @@ public class SubFolderListAPIController {
 
         AcmCmisObjectList objectList;
         try {
-             objectList = getFileService().lsitAllSubFolderChildren(category,authentication,container,folderId);
+             objectList = getFileService().listAllSubFolderChildren(category, authentication, container, folderId, startRow, maxRows, sortBy, sortDirection);
             if( log.isInfoEnabled() ) {
                 log.info("Children of the folder with id: " + folderId + " retrieved successfully");
             }

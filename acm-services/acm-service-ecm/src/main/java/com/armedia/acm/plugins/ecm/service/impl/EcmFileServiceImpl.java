@@ -324,42 +324,37 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
 
     @Override
-    public AcmCmisObjectList lsitAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId) throws AcmListObjectsFailedException, AcmObjectNotFoundException {
+    public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException {
 
         log.debug("All children objects from folder " + folderId );
 
         AcmFolder folder = getFolderDao().find(folderId);
         if( folder == null )
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
-        String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:"+Long.toString(folderId);
+        String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:"+folderId;
         String filterQuery =
                 category == null ? "fq=hidden_b:false" :
                         "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
-        // search for 50 records at a time until we find them all
-        int start = 0;
-        int max = 50;
-        String sortBy = "created";
-        String sortDirection = "ASC";
 
         AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                start, max, sortBy, sortDirection);
+                startRow, maxRows, sortBy, sortDirection);
 
         int totalChildren = retval.getTotalChildren();
         int foundSoFar = retval.getChildren().size();
 
-        log.debug("Got folder children " + start + " to " + foundSoFar + " of a total of " + totalChildren);
+        log.debug("Got folder children " + startRow + " to " + foundSoFar + " of a total of " + totalChildren);
 
         while ( foundSoFar < totalChildren )
         {
-            start += max;
+            startRow += maxRows;
 
             AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
-                    start, max, sortBy, sortDirection);
+                    startRow, maxRows, sortBy, sortDirection);
             retval.getChildren().addAll(more.getChildren());
 
             foundSoFar += more.getChildren().size();
 
-            log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalChildren);
+            log.debug("Got files " + startRow + " to " + foundSoFar + " of a total of " + totalChildren);
         }
 
         retval.setMaxRows(totalChildren);
