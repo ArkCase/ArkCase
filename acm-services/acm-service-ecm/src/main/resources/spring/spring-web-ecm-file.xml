@@ -13,6 +13,7 @@
     </bean>
 
     <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
+        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
     </bean>
 
     <bean id="folderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.FolderListAPIController">

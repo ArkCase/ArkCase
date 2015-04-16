@@ -49,12 +49,12 @@ public class RemoveParticipantAPIController {
                 if (log.isDebugEnabled())
                     log.debug("Participant" + userId + "  successfully removed from object['" + objectType + "]:[" + objectId + "]");
                 getAcmParticipantEventPublisher().publishParticipantDeletedEvent(participant, authentication, true);
-                return prepareJsonReturnMsg(ParticipantConstants.SUCCESS_DELETE_MSG, userId, objectType, objectId);
+                return prepareJsonReturnMsg(participant, ParticipantConstants.SUCCESS_DELETE_MSG, userId, objectType, objectId);
             } else {
                 if (log.isDebugEnabled())
                     log.debug("Association not found between Participant" + userId + " and object['" + objectType + "]:[" + objectId + "] in  the DB");
                 getAcmParticipantEventPublisher().publishParticipantDeletedEvent(participant, authentication, false);
-                return prepareJsonReturnMsg(ParticipantConstants.SUCCESS_DELETE_MSG,userId, objectType, objectId);
+                return prepareJsonReturnMsg(participant, ParticipantConstants.SUCCESS_DELETE_MSG,userId, objectType, objectId);
             }
         } catch ( Exception e ) {
             if (log.isErrorEnabled())
@@ -64,8 +64,9 @@ public class RemoveParticipantAPIController {
 
     }
 
-    private String prepareJsonReturnMsg(String msg, String userId, String objectType, Long objectId) {
+    private String prepareJsonReturnMsg(AcmParticipant participant, String msg, String userId, String objectType, Long objectId) {
         JSONObject objectToReturnJSON = new JSONObject();
+        objectToReturnJSON.put("deletedParticipantId", participant.getId());
         objectToReturnJSON.put("deletedParticipant", userId);
         objectToReturnJSON.put("fromObjectType", objectType);
         objectToReturnJSON.put("objectId",objectId);

@@ -288,6 +288,7 @@ AcmDocument.Model = AcmDocument.Model || {
             this.cacheParticipants = new Acm.Model.CacheFifo();
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_REMOVED_PARTICIPANT     , this.onViewRemovedParticipant);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_CHANGED_PARTICIPANT_ROLE     , this.onViewChangedParticipantRole);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_ADDED_NEW_PARTICIPANT     , this.onViewAddedNewParticipant);
 
         }
         ,onInitialized: function() {
@@ -300,12 +301,15 @@ AcmDocument.Model = AcmDocument.Model || {
         ,onViewChangedParticipantRole: function(participantType, participantId, documentId){
             AcmDocument.Service.Participants.changeParticipantRole(participantType, participantId, documentId);
         }
+        ,onViewAddedNewParticipant: function(userId, participantType, documentId){
+            AcmDocument.Service.Participants.addNewParticipant(userId, participantType, documentId);
+        }
 
         ,validateRemovedParticipant: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.deletedParticipantId)) {
+            if (Acm.isEmpty(data.deletedParticipant)) {
                 return false;
             }
             return true;
