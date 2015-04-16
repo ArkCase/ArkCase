@@ -11,7 +11,7 @@ DocTree.Service = {
     ,onInitialized: function() {
     }
 
-    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"        //  {objectType}/{objectId}
+    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"        //  {objectType}/{objectId}//{folderId}
     ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"        //  {folderId}/{newFolderName}
     ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
@@ -22,7 +22,11 @@ DocTree.Service = {
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
-        var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId + "?start=" + pageId;
+        var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        if (0 < folderId) {
+            url += "/" + folderId;
+        }
+        url += "?start=" + pageId;
         url += "&n=" + DocTree.Model.Config.getMaxRows();
         if (Acm.isNotEmpty(setting.sortBy) && Acm.isNotEmpty(setting.sortDirection)) {
             url += "&s=" + setting.sortBy + "&dir=" + setting.sortDirection;
