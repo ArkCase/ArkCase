@@ -2,9 +2,8 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +37,7 @@ public class FileUploadAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileService ecmFileService;
+    private AcmFolderService acmFolderService;
 
     private final String uploadFileType = "attachment";
 
@@ -51,12 +51,30 @@ public class FileUploadAPIController
     public List<EcmFile> uploadFile(
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
+            @RequestParam(value = "folderId", required = false) Long folderId,
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
             MultipartHttpServletRequest request,
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
     {
-        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, request, session);
+        AcmFolder folder;
+        String folderCmisId;
+        if( folderId!=null ){
+            folder = getAcmFolderService().findById(folderId);
+            if (folder == null) {
+                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
+            }
+            folderCmisId = folder.getCmisFolderId();
+        } else {
+            AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
+            if ( container.getFolder() == null )
+            {
+                // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+                throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
+            }
+            folderCmisId = container.getFolder().getCmisFolderId();
+        }
+        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
         return uploaded;
     }
 
@@ -69,6 +87,7 @@ public class FileUploadAPIController
     public String uploadFileForBrowsersWithoutFileUploadViaXHR(
             @RequestParam("parentObjectType") String parentObjectType,
             @RequestParam("parentObjectId") Long parentObjectId,
+            @RequestParam(value = "folderId", required = false ) Long folderId,
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
             MultipartHttpServletRequest request,
             HttpServletResponse response,
@@ -78,7 +97,24 @@ public class FileUploadAPIController
         String responseMimeType = MediaType.TEXT_PLAIN_VALUE;
         response.setContentType(responseMimeType);
 
-        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, request, session);
+        AcmFolder folder;
+        String folderCmisId;
+        if( folderId!=null ){
+            folder = getAcmFolderService().findById(folderId);
+            if (folder == null) {
+                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
+            }
+            folderCmisId = folder.getCmisFolderId();
+        } else {
+            AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
+            if ( container.getFolder() == null )
+            {
+                // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+                throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
+            }
+            folderCmisId = container.getFolder().getCmisFolderId();
+        }
+        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
 
         ObjectMapper om = new ObjectMapperFactory().createObjectMapper();
         String jsonUploadedFiles = om.writeValueAsString(uploaded);
@@ -91,20 +127,13 @@ public class FileUploadAPIController
             String parentObjectType,
             Long parentObjectId,
             String fileType,
+            String folderCmisId,
             MultipartHttpServletRequest request,
             HttpSession session)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-
-        AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
-        if ( container.getFolder() == null )
-        {
-            // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
-            throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
-        }
-        String folderId = container.getFolder().getCmisFolderId();
 
         //for multiple files
         MultiValueMap<String, MultipartFile> attachments = request.getMultiFileMap();
@@ -135,7 +164,7 @@ public class FileUploadAPIController
                                 fileType,
                                 f,
                                 authentication,
-                                folderId,
+                                folderCmisId,
                                 parentObjectType,
                                 parentObjectId);
                         uploadedFiles.add(temp);
@@ -145,7 +174,6 @@ public class FileUploadAPIController
                 }
             }
         }
-
 
         return uploadedFiles;
     }
@@ -175,6 +203,14 @@ public class FileUploadAPIController
 
         return new ResponseEntity<>(filesString, HttpStatus.OK);
 
+    }
+
+    public AcmFolderService getAcmFolderService() {
+        return acmFolderService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService) {
+        this.acmFolderService = acmFolderService;
     }
 
     public EcmFileService getEcmFileService()
