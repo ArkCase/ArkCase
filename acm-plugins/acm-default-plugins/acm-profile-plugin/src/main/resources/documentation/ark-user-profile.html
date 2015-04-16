@@ -1,0 +1,118 @@
+<!DOCTYPE HTML><html><head><title>ArkCase User Profile API documentation</title><meta http-equiv=X-UA-Compatible content="IE=edge"><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=generator content="https://github.com/kevinrenskers/raml2html 0.31.1"><link rel=stylesheet href=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css><link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css><script type=text/javascript src=http://code.jquery.com/jquery-1.11.0.min.js></script><script type=text/javascript src=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js></script><script type=text/javascript src=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js></script><script type=text/javascript>
+        $(document).ready(function() {
+            $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+
+            $('[data-toggle]').click(function() {
+                var selector = $(this).data('target') + ' pre code';
+                $(selector).each(function(i, block) {
+                    hljs.highlightBlock(block);
+                });
+            });
+        });
+    </script><style>
+        .hljs {
+            background: transparent;
+        }
+        .parent {
+            color: #999;
+        }
+        .list-group-item > .badge {
+            float: none;
+            margin-right: 6px;
+        }
+        .panel-title > .methods {
+            float: right;
+        }
+        .badge {
+            border-radius: 0;
+            text-transform: uppercase;
+            width: 70px;
+            font-weight: normal;
+            color: #f3f3f6;
+            line-height: normal;
+        }
+        .badge_get {
+            background-color: #63a8e2;
+        }
+        .badge_post {
+            background-color: #6cbd7d;
+        }
+        .badge_put {
+            background-color: #22bac4;
+        }
+        .badge_delete {
+            background-color: #d26460;
+        }
+        .list-group, .panel-group {
+            margin-bottom: 0;
+        }
+        .panel-group .panel+.panel-white {
+            margin-top: 0;
+        }
+        .panel-group .panel-white {
+            border-bottom: 1px solid #F5F5F5;
+            border-radius: 0;
+        }
+        .panel-white:last-child {
+            border-bottom-color: white;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        .panel-white .panel-heading {
+            background: white;
+        }
+        .tab-pane ul {
+            padding-left: 2em;
+        }
+        .tab-pane h2 {
+            font-size: 1.2em;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-pane h3 {
+            font-size: 1.1em;
+        }
+        .tab-content {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+        #sidebar {
+            margin-top: 30px;
+        }
+        .top-resource-description {
+            border-bottom: 1px solid #ddd;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .resource-description {
+            border-bottom: 1px solid #fcfcfc;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .panel > .panel-body > .panel-group > .panel:first-child .resource-description {
+            display: none;
+        }
+        .list-group .badge {
+            float: left;
+        }
+        .method_description {
+            margin-left: 85px;
+        }
+        .method_description p:last-child {
+            margin: 0;
+        }
+    </style></head><body data-spy=scroll data-target=#sidebar><div class=container><div class=row><div class=col-md-9 role=main><div class=page-header><h1>ArkCase User Profile API documentation</h1><p></p></div><div class="panel panel-default"><div class=panel-heading><h3 id=_api_v1_plugin_profile class=panel-title>/api/v1/plugin/profile</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_plugin_profile><span class=parent></span>/api/v1/plugin/profile</a> <span class=methods></span></h4></div><div id=panel__api_v1_plugin_profile class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_plugin_profile_outlook><span class=parent>/api/v1/plugin/profile</span>/outlook</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_plugin_profile_outlook_post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_plugin_profile_outlook class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Update the user&#39;s Outlook password. The Outlook password is not a property of the UserOrg object, to prevent the password from being passed around with the UserOrg. With this approach the only time the password is passed around is when the user updates it.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_plugin_profile_outlook_post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Update the Outlook password for the authenticated user.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_plugin_profile_outlook_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/plugin/profile</span>/outlook</h4></div><div class=modal-body><div class="alert alert-info"><p>Update the Outlook password for the authenticated user.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_plugin_profile_outlook_post_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_plugin_profile_outlook_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_plugin_profile_outlook_post_request><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+      "outlookPassword":"AcMd3v$"
+    }
+    </code></pre></div><div class=tab-pane id=_api_v1_plugin_profile_outlook_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Password successfully updated.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Example</strong>:</p><pre><code>{
+      "outlookPassword":"AcMd3v$"
+    }
+    </code></pre><h2>HTTP status code <a href=http://httpstatus.es/400 target=_blank>400</a></h2><p>The user profile could not be updated.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>The actual text will state what happened.</code></pre><h2>HTTP status code <a href=http://httpstatus.es/500 target=_blank>500</a></h2><p>Usually, it means the authenticated user has not created a user profile yet.</p><h3>Body</h3><p><strong>Type: text/plain</strong></p><p><strong>Example</strong>:</p><pre><code>Server encountered exception: No user profile for user &#x27;ecmillar&#x27;
+    Exception type was: &#x27;com.armedia.acm.core.exceptions.AcmObjectNotFoundException&#x27;.
+    </code></pre></div></div></div></div></div></div></div></div></div></div></div><div class=col-md-3><div id=sidebar class="hidden-print affix" role=complementary><ul class="nav nav-pills nav-stacked"><li><a href=#_api_v1_plugin_profile>/api/v1/plugin/profile</a></li></ul></div></div></div></div></body></html>

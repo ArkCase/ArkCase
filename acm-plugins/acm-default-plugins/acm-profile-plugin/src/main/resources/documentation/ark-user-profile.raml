@@ -1,0 +1,36 @@
+#%RAML 0.8
+title: ArkCase User Profile
+
+/api/v1/plugin/profile:
+  /outlook:
+    description: Update the user's Outlook password.  The Outlook password is not a property of the UserOrg object, to prevent the password from being passed around with the UserOrg.  With this approach the only time the password is passed around is when the user updates it.
+    post:
+      description: Update the Outlook password for the authenticated user.
+      body:
+        application/json:
+          example: |
+            {
+              "outlookPassword":"AcMd3v$"
+            }
+      responses:
+        200:
+          description: Password successfully updated.
+          body:
+            application/json:
+              example: |
+                {
+                  "outlookPassword":"AcMd3v$"
+                }
+        500:
+          description: Usually, it means the authenticated user has not created a user profile yet.
+          body:
+            text/plain:
+              example: |
+                Server encountered exception: No user profile for user 'ecmillar'
+                Exception type was: 'com.armedia.acm.core.exceptions.AcmObjectNotFoundException'.
+        400:
+          description: The user profile could not be updated.
+          body:
+            text/plain:
+              example: |
+                The actual text will state what happened.
