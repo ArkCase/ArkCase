@@ -4,6 +4,7 @@ import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,16 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -119,6 +124,31 @@ public class ProcessDefinitionIT {
 
         processDefinitionManagementService.removeProcessDefinition(apd);
         processDefinitionManagementService.removeProcessDefinition(apd1);
+    }
+
+    @Test
+    @Transactional
+    public void deployProcessDefinitionAndDownloadFile() throws Exception {
+        File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
+        AcmProcessDefinition apd = processDefinitionManagementService.deployProcessDefinition(f, false, false);
+        log.info("AcmProcessDefinition deployed: " + apd);
+
+        String tmpFolder = System.getProperty("java.io.tmpdir");
+        InputStream is =  processDefinitionManagementService.getProcessDefinitionFile(apd);
+        File downloadedFile = new File(tmpFolder + "/" + apd.getFileName());
+        FileUtils.copyStreamToFile(is, downloadedFile);
+
+        try {
+            is.close();
+        } catch (IOException e) {
+            log.debug("file already closed");
+        }
+
+
+        assertTrue(FileUtils.contentEquals(f,downloadedFile));
+
+        processDefinitionManagementService.removeProcessDefinition(apd);
+
     }
 
     @After

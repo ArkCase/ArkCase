@@ -4,8 +4,6 @@ import com.armedia.acm.activiti.exceptions.AcmProcessDefinitionException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmProcessDefinitionDao;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
-import org.activiti.engine.impl.pvm.ProcessDefinitionBuilder;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -14,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,9 +26,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -54,11 +50,11 @@ public class ProcessDefinitionManagementServiceImpl implements ProcessDefinition
     }
 
     @Override
-    public OutputStream getProcessDefinitionFile(AcmProcessDefinition processDefinition) {
+    public InputStream getProcessDefinitionFile(AcmProcessDefinition processDefinition) {
         String filePath = processDefinitionsFolder + "/" + processDefinition.getFileName();
         try {
-            FileOutputStream fos = new FileOutputStream(new File(filePath));
-            return fos;
+            FileInputStream fis = new FileInputStream(new File(filePath));
+            return fis;
         } catch (FileNotFoundException e) {
             //this should not happen
             AcmProcessDefinitionException runtimeException = new AcmProcessDefinitionException("Internal application error", e);
@@ -110,10 +106,9 @@ public class ProcessDefinitionManagementServiceImpl implements ProcessDefinition
     public AcmProcessDefinition deployProcessDefinition(File processDefinitionFile, boolean makeWorkingVersion, boolean deleteFileAfterDeploy) {
         //verify that folder for keeping process definition files exists before deployment
         verifyFolderExists();
-        String name = getProcessDefinitionKey(processDefinitionFile)+".bpmn20.xml";
+        String name = getProcessDefinitionKey(processDefinitionFile) + ".bpmn20.xml";
         try {
             FileInputStream fis = new FileInputStream(processDefinitionFile);
-
 
             DeploymentBuilder deploymentBuilder = activitiRepositoryService.createDeployment();
 

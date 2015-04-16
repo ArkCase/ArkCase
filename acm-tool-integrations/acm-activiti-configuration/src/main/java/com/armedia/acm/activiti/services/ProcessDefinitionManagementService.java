@@ -3,7 +3,7 @@ package com.armedia.acm.activiti.services;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 
 import java.io.File;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ public interface ProcessDefinitionManagementService {
 
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc);
 
-    public OutputStream getProcessDefinitionFile(AcmProcessDefinition wfFile);
+    public InputStream getProcessDefinitionFile(AcmProcessDefinition wfFile);
 
     public void removeProcessDefinition(AcmProcessDefinition processDefinition);
 
