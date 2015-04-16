@@ -6,7 +6,7 @@ package com.armedia.acm.plugins.ecm.model;
 public class MoveCopyFileDto {
 
     private Long id;
-    private String path;
+    private Long folderId;
 
     public Long getId() {
         return id;
@@ -16,11 +16,11 @@ public class MoveCopyFileDto {
         this.id = id;
     }
 
-    public String getPath() {
-        return path;
+    public Long getFolderId() {
+        return folderId;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setFolderId(Long folderId) {
+        this.folderId = folderId;
     }
 }
