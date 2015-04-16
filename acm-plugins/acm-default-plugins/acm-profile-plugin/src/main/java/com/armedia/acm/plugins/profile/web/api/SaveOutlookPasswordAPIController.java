@@ -1,0 +1,95 @@
+package com.armedia.acm.plugins.profile.web.api;
+
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.profile.dao.UserOrgDao;
+import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.plugins.profile.model.UserOrgConstants;
+import com.armedia.acm.plugins.profile.service.ProfileEventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.util.Objects;
+
+@Controller
+@RequestMapping({"/api/v1/plugin/profile/outlook","/api/latest/plugin/profile/outlook"})
+public class SaveOutlookPasswordAPIController
+{
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    private ProfileEventPublisher eventPublisher;
+    private UserOrgDao userOrgDao;
+
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public OutlookDTO saveOutlookPassword(
+            @RequestBody OutlookDTO in,
+            Authentication authentication,
+            HttpSession session
+    ) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        Long userProfileId = null;
+        UserOrg userOrg = null;
+        String ipAddress = (String) session.getAttribute("acm_ip_address");
+
+        try
+        {
+            Objects.requireNonNull(in, "New password must be supplied");
+            Objects.requireNonNull(authentication, "User must be authenticated");
+
+            // need the user profile ID for events and error reporting
+            userOrg = getUserOrgDao().getUserOrgForUserId(authentication.getName());
+            userProfileId = userOrg.getUserOrgId();
+
+            getUserOrgDao().saveOutlookPassword(authentication, in);
+
+            getEventPublisher().outlookPasswordSavedEvent(userOrg, authentication, ipAddress, true);
+
+            return in;
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            // only happens when there is no user profile
+            getEventPublisher().outlookPasswordSavedEvent(null, authentication, ipAddress, false);
+            throw e;
+        }
+        catch (NullPointerException | IllegalStateException e)
+        {
+            log.error("Could not update Outlook password for user: " + e.getMessage(), e);
+
+            getEventPublisher().outlookPasswordSavedEvent(userOrg, authentication, ipAddress, false);
+            throw new AcmUserActionFailedException("update Outlook password", UserOrgConstants.OBJECT_TYPE, userProfileId, e.getMessage(), e);
+        }
+
+
+    }
+
+    public ProfileEventPublisher getEventPublisher()
+    {
+        return eventPublisher;
+    }
+
+    public void setEventPublisher(ProfileEventPublisher eventPublisher)
+    {
+        this.eventPublisher = eventPublisher;
+    }
+
+    public UserOrgDao getUserOrgDao()
+    {
+        return userOrgDao;
+    }
+
+    public void setUserOrgDao(UserOrgDao userOrgDao)
+    {
+        this.userOrgDao = userOrgDao;
+    }
+}

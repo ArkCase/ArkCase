@@ -123,5 +123,11 @@
                               tableName="acm_user_org"/>
     </changeSet>
 
+    <changeSet id="userorg-10-add-outlook-password" author="dmiller">
+        <addColumn tableName="acm_user_org">
+            <column name="cm_ms_outlook_password" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
