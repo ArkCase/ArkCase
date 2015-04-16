@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.AcmLdapEntity;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -44,6 +45,7 @@ public class LdapSyncService
     private AcmLdapSyncConfig ldapSyncConfig;
     private String directoryName;
     private boolean syncEnabled = true;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -63,6 +65,8 @@ public class LdapSyncService
             log.info("Starting sync of directory: " + getDirectoryName() + "; ldap URL: " +
                     getLdapSyncConfig().getLdapUrl());
         }
+
+        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
 
         // all the ldap work first, then all the database work; because the ldap queries could be very timeconsuming.
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
@@ -317,5 +321,15 @@ public class LdapSyncService
     public void setSyncEnabled(boolean syncEnabled)
     {
         this.syncEnabled = syncEnabled;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
