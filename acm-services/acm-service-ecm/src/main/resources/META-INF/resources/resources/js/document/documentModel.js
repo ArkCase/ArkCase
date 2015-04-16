@@ -312,6 +312,9 @@ AcmDocument.Model = AcmDocument.Model || {
             if (Acm.isEmpty(data.deletedParticipant)) {
                 return false;
             }
+            if (Acm.isEmpty(data.deletedParticipantId)) {
+                return false;
+            }
             return true;
         }
         ,validateParticipants: function(data){
