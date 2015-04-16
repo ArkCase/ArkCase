@@ -338,6 +338,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                 startRow, maxRows, sortBy, sortDirection);
+        retval.setFolderId(folderId);
         return retval;
     }
 
