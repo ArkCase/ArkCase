@@ -19,6 +19,8 @@ public interface EcmFileConstants
 
     String USER_ACTION_COPY_FILE = "COPY";
 
+    String USER_ACTION_UPLOAD_FILE = "UPLOAD";
+
     String USER_ACTION_MOVE_FILE = "MOVE";
 
     String USER_ACTION_DELETE_FILE = "DELETE";
