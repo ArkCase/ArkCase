@@ -62,17 +62,17 @@ AcmDocument.Controller = AcmDocument.Controller || {
 
     //Notes
 
-    ,VIEW_ADDED_NOTE                       : "document-view-added-note"                    //param: note
-    ,viewAddedNote: function(note) {
-        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_NOTE, note);
+    ,VIEW_ADDED_NOTE                       : "document-view-added-note"                    //param: note,documentId
+    ,viewAddedNote: function(note,documentId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_NOTE, note,documentId);
     }
-    ,VIEW_UPDATED_NOTE                     : "document-view-updated-note"                  //param: note
-    ,viewUpdatedNote: function(note) {
-        Acm.Dispatcher.fireEvent(this.VIEW_UPDATED_NOTE, note);
+    ,VIEW_UPDATED_NOTE                     : "document-view-updated-note"                  //param: note,documentId
+    ,viewUpdatedNote: function(note,documentId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_UPDATED_NOTE, note,documentId);
     }
-    ,VIEW_DELETED_NOTE                     : "document-view-deleted-note"                  //param: noteId
-    ,viewDeletedNote: function(noteId) {
-        Acm.Dispatcher.fireEvent(this.VIEW_DELETED_NOTE, noteId);
+    ,VIEW_DELETED_NOTE                     : "document-view-deleted-note"                  //param: noteId,documentId
+    ,viewDeletedNote: function(noteId,documentId) {
+        Acm.Dispatcher.fireEvent(this.VIEW_DELETED_NOTE, noteId,documentId);
     }
 
     ,MODEL_SAVED_NOTE                      : "document-model-saved-note"                   //param: note
@@ -90,6 +90,45 @@ AcmDocument.Controller = AcmDocument.Controller || {
     ,MODEL_DELETED_NOTE                    : "document-model-deleted-note"                 //param: noteId
     ,modelDeletedNote : function(noteId) {
         Acm.Dispatcher.fireEvent(this.MODEL_DELETED_NOTE, noteId);
+    }
+
+    //Tags
+
+    ,VIEW_REMOVED_ASSOCIATED_TAG            : "document-view-removed-associated-tag"         //param: documentId,associatedTagId
+    ,viewRemovedAssociatedTag : function(documentId, associatedTagId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_ASSOCIATED_TAG, documentId, associatedTagId);
+    }
+    ,MODEL_REMOVED_ASSOCIATED_TAGS          : "document-model-removed-associated-tags"      //param: associatedTags
+    ,modelRemovedAssociatedTag : function(associatedTags){
+        Acm.Dispatcher.fireEvent(this.MODEL_REMOVED_ASSOCIATED_TAGS, associatedTags);
+    }
+    ,MODEL_RETRIEVED_ASSOCIATED_TAGS        : "document-model-retrieved-associated-tags"    //param: associatedTags
+    ,modelRetrievedAssociatedTags : function(associatedTags){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ASSOCIATED_TAGS, associatedTags);
+    }
+
+
+    //Participants
+
+    ,VIEW_REMOVED_PARTICIPANT              : "document-view-removed-participant"            //param: participantId, userId, participantType,documentId
+    ,viewRemovedParticipant : function(participantId, userId, participantType,documentId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REMOVED_PARTICIPANT, participantId, userId, participantType,documentId);
+    }
+    ,MODEL_REMOVED_PARTICIPANT             : "document-model-removed-participant"           //param: participants
+    ,modelRemovedParticipant : function(participant){
+        Acm.Dispatcher.fireEvent(this.MODEL_REMOVED_PARTICIPANT, participant);
+    }
+    ,MODEL_RETRIEVED_PARTICIPANTS           : "document-model-retrieved-participants"         //param: participants
+    ,modelRetrievedParticipants : function(participants){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_PARTICIPANTS, participants);
+    }
+    ,VIEW_CHANGED_PARTICIPANT_ROLE          : "document-view-changed-participant-role"          //param: participantType,participantId
+    ,viewChangedParticipantRole : function(participantType, participantId, documentId){
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_PARTICIPANT_ROLE, participantType, participantId, documentId);
+    }
+    ,MODEL_CHANGED_PARTICIPANT_ROLE          : "document-model-changed-participant-role"          //param: participants
+    ,modelChangedParticipantRole : function(participants){
+        Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_PARTICIPANT_ROLE, participants);
     }
 };
 

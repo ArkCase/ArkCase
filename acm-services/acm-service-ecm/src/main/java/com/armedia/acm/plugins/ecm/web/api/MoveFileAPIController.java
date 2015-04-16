@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * Created by marjan.stefanoski on 06.04.2015.
  */
@@ -37,19 +39,19 @@ public class MoveFileAPIController {
     ) throws AcmUserActionFailedException {
 
         if(log.isInfoEnabled()) {
-            log.info("File with id: "+in.getId()+" will be moved to the location "+in.getPath());
+            log.info("File with id: "+in.getId()+" will be moved to the location with id: "+in.getFolderId());
         }
         EcmFile source = getFileService().findById(in.getId());
         try {
-            EcmFile movedFile = getFileService().moveFile(in.getId(), targetObjectId, targetObjectType, in.getPath());
+            EcmFile movedFile = getFileService().moveFile(in.getId(), targetObjectId, targetObjectType, in.getFolderId());
             if(log.isInfoEnabled()) {
-                log.info("File with id: "+in.getId()+" successfully moved to the location "+in.getPath());
+                log.info("File with id: "+in.getId()+" successfully moved to the location with id: "+in.getFolderId());
             }
             getFileEventPublisher().publishFileMovedEvent(movedFile,authentication,true);
             return movedFile;
         } catch (AcmUserActionFailedException e) {
             if( log.isErrorEnabled() ){
-                log.error("Exception occurred while trying to move file with id: " + in.getId() +" to the location "+ in.getPath());
+                log.error("Exception occurred while trying to move file with id: " + in.getId() +" to the location with id: "+ in.getFolderId());
             }
             getFileEventPublisher().publishFileMovedEvent(source,authentication,false);
             throw e;
@@ -61,7 +63,7 @@ public class MoveFileAPIController {
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,in.getId(),"File not found.",e);
         } catch (AcmCreateObjectFailedException e) {
             if ( log.isErrorEnabled() ) {
-                log.error("Exception occurred while trying to move file with id: " + in.getId() + " to the location " + in.getPath());
+                log.error("Exception occurred while trying to move file with id: " + in.getId() + " to the location with id:" + in.getFolderId());
             }
             getFileEventPublisher().publishFileMovedEvent(source,authentication,false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,in.getId(),"Exception occurred while trying to move the file.",e);
