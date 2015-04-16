@@ -1,0 +1,50 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-create-process-definitions-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_process_definition">
+            <column name="cm_pd_id" type="NUMBER(32,0)" >
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_process_definition"/>
+            </column>
+            <column name="cm_pd_description" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+			<column name="cm_pd_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="cm_pd_version" type="NUMBER(16,0)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="cm_pd_key" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+			 <column name="cm_pd_deployment_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="cm_pd_file_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+			<column name="cm_pd_is_active" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+			<column name="cm_pd_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_pd_creator" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_pd_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_pd_modifier" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
+

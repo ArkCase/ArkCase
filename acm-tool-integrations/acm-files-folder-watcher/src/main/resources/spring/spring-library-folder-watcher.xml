@@ -25,6 +25,7 @@
         <property name="ignoreFolders">
             <list>
                 <value>${file.separator}activemq</value>
+                <value>${file.separator}activiti${file.separator}/versions</value>
             </list>
         </property>
     </bean>
