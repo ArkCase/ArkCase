@@ -7,9 +7,9 @@
 
     <process id="TestActivitiSpringProcess" name="Testing Activiti Spring Module">
 
-        <startEvent id="start" />
+        <startEvent id="start1" />
 
-        <sequenceFlow id="approvals" sourceRef="start" targetRef="approvalTasks" />
+        <sequenceFlow id="approvals" sourceRef="start1" targetRef="approvalTasks" />
 
         <userTask id="approvalTasks" name="Approve Task"/>
 
