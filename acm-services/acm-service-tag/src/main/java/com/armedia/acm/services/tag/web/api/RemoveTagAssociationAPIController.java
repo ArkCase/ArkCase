@@ -65,9 +65,9 @@ public class RemoveTagAssociationAPIController {
 
     private String prepareJsonReturnMsg( String msg,Long objectId, Long tagId ) {
         JSONObject objectToReturnJSON = new JSONObject();
-        objectToReturnJSON.put("deletedAssociateTagId", objectId);
-        objectToReturnJSON.put("TagId", tagId);
-        objectToReturnJSON.put("Message", msg);
+        objectToReturnJSON.put("deletedAssociatedTagId", objectId);
+        objectToReturnJSON.put("tagId", tagId);
+        objectToReturnJSON.put("message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;

@@ -6,23 +6,25 @@
 AcmDocument.Model = AcmDocument.Model || {
     create : function() {
         if (AcmDocument.Service.create)              {AcmDocument.Service.create();}
+        if (AcmDocument.Model.MicroData.create)      {AcmDocument.Model.MicroData.create();}
         if (AcmDocument.Model.Lookup.create)         {AcmDocument.Model.Lookup.create();}
         if (AcmDocument.Model.Detail.create)         {AcmDocument.Model.Detail.create();}
         if (AcmDocument.Model.DocViewer.create)      {AcmDocument.Model.DocViewer.create();}
         if (AcmDocument.Model.Notes.create)          {AcmDocument.Model.Notes.create();}
         if (AcmDocument.Model.Participants.create)    {AcmDocument.Model.Participants.create();}
-        if (AcmDocument.Model.Tags.create)            {AcmDocument.Model.Tags.create();}
+        if (AcmDocument.Model.AssociatedTags.create)            {AcmDocument.Model.AssociatedTags.create();}
         if (AcmDocument.Model.VersionHistory.create)  {AcmDocument.Model.VersionHistory.create();}
         if (AcmDocument.Model.EventHistory.create)   {AcmDocument.Model.EventHistory.create();}
     }
     ,onInitialized: function() {
         if (AcmDocument.Service.onInitialized)              {AcmDocument.Service.onInitialized();}
+        if (AcmDocument.Model.MicroData.create)              {AcmDocument.Model.MicroData.create();}
         if (AcmDocument.Model.Lookup.onInitialized)         {AcmDocument.Model.Lookup.onInitialized();}
         if (AcmDocument.Model.Detail.onInitialized)         {AcmDocument.Model.Detail.onInitialized();}
         if (AcmDocument.Model.DocViewer.onInitialized)      {AcmDocument.Model.DocViewer.onInitialized();}
         if (AcmDocument.Model.Notes.onInitialized)          {AcmDocument.Model.Notes.onInitialized();}
         if (AcmDocument.Model.Participants.onInitialized)    {AcmDocument.Model.Participants.onInitialized();}
-        if (AcmDocument.Model.Tags.onInitialized)            {AcmDocument.Model.Tags.onInitialized();}
+        if (AcmDocument.Model.AssociatedTags.onInitialized)            {AcmDocument.Model.AssociatedTags.onInitialized();}
         if (AcmDocument.Model.VersionHistory.onInitialized)  {AcmDocument.Model.VersionHistory.onInitialized();}
         if (AcmDocument.Model.EventHistory.onInitialized)   {AcmDocument.Model.EventHistory.onInitialized();}
     }
@@ -75,8 +77,10 @@ AcmDocument.Model = AcmDocument.Model || {
 
 
 
-    ,DOC_TYPE_FILE              : "FILE"
-    ,DOC_TYPE_DOCUMENT          : "DOCUMENT"
+    ,DOC_TYPE_DOCUMENT          : "FILE"
+    ,DOC_TYPE_DOCUMENT_SM       : "file"
+
+
 
     ,getDocumentId : function() {
         return ObjNav.Model.getObjectId();
@@ -85,6 +89,15 @@ AcmDocument.Model = AcmDocument.Model || {
         var objId = ObjNav.Model.getObjectId();
         return ObjNav.Model.Detail.getCacheObject(AcmDocument.Model.DOC_TYPE_DOCUMENT, objId);
     }
+
+    ,MicroData: {
+        create : function() {
+            this.documentId   = Acm.Object.MicroData.get("objId");
+        }
+        ,onInitialized: function() {
+        }
+    }
+
 
     ,Detail: {
         create : function() {
@@ -165,21 +178,21 @@ AcmDocument.Model = AcmDocument.Model || {
         }
 
 
-        ,onViewAddedNote: function(note) {
-            AcmDocument.Service.Notes.addNote(note);
+        ,onViewAddedNote: function(note,documentId) {
+            AcmDocument.Service.Notes.addNote(note,documentId);
         }
-        ,onViewUpdatedNote: function(note) {
-            AcmDocument.Service.Notes.updateNote(note);
+        ,onViewUpdatedNote: function(note,documentId) {
+            AcmDocument.Service.Notes.updateNote(note,documentId);
         }
-        ,onViewDeletedNote: function(noteId) {
-            AcmDocument.Service.Notes.deleteNote(noteId);
+        ,onViewDeletedNote: function(noteId,documentId) {
+            AcmDocument.Service.Notes.deleteNote(noteId,documentId);
         }
 
         ,validateNotes: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (!Acm.isArray(data)) {
+            if (Acm.isNotArray(data)) {
                 return false;
             }
             return true;
@@ -188,10 +201,16 @@ AcmDocument.Model = AcmDocument.Model || {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.id)) {
+            if (Acm.isEmpty(data.parentId)) {
                 return false;
             }
-            if (Acm.isEmpty(data.parentId)) {
+            return true;
+        }
+        ,validateDeletedNote: function (data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedNoteId)) {
                 return false;
             }
             return true;
@@ -212,17 +231,115 @@ AcmDocument.Model = AcmDocument.Model || {
         }
     }
 
-    ,Tags: {
+    ,AssociatedTags: {
         create : function() {
+            this.cacheAssociatedTags = new Acm.Model.CacheFifo();
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_REMOVED_ASSOCIATED_TAG     , this.onViewRemovedAssociatedTag);
         }
         ,onInitialized: function() {
+            AcmDocument.Service.AssociatedTags.retrieveAssociatedTags(AcmDocument.Model.MicroData.documentId);
+        }
+
+        ,onViewRemovedAssociatedTag: function(documentId,tagId){
+            AcmDocument.Service.AssociatedTags.removeAssociatedTag(documentId,tagId);
+        }
+
+        ,validateRemovedAssociatedTag: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedAssociatedTagId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.tagId)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateAssociatedTags: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateAssociatedTag: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.tagText)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.tagDescription)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.tagName)) {
+                return false;
+            }
+            return true;
         }
     }
 
     ,Participants: {
         create : function() {
+            this.cacheParticipants = new Acm.Model.CacheFifo();
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_REMOVED_PARTICIPANT     , this.onViewRemovedParticipant);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_CHANGED_PARTICIPANT_ROLE     , this.onViewChangedParticipantRole);
+
         }
         ,onInitialized: function() {
+            AcmDocument.Service.Participants.retrieveParticipants(AcmDocument.Model.MicroData.documentId);
+        }
+
+        ,onViewRemovedParticipant: function(participantId, userId, participantType,documentId){
+            AcmDocument.Service.Participants.removeParticipant(participantId, userId, participantType,documentId);
+        }
+        ,onViewChangedParticipantRole: function(participantType, participantId, documentId){
+            AcmDocument.Service.Participants.changeParticipantRole(participantType, participantId, documentId);
+        }
+
+        ,validateRemovedParticipant: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedParticipantId)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateParticipants: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateParticipant: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.participantType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.participantLdapId)) {
+                return false;
+            }
+            return true;
         }
     }
 
