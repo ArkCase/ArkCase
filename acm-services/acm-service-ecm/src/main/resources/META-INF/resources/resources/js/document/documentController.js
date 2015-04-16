@@ -130,5 +130,13 @@ AcmDocument.Controller = AcmDocument.Controller || {
     ,modelChangedParticipantRole : function(participants){
         Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_PARTICIPANT_ROLE, participants);
     }
+    ,VIEW_ADDED_NEW_PARTICIPANT              : "document-view-added-new-participant"             //param: userId, participantType, documentId
+    ,viewAddedNewParticipant : function(userId, participantType, documentId){
+        Acm.Dispatcher.fireEvent(this.VIEW_ADDED_NEW_PARTICIPANT, userId, participantType, documentId);
+    }
+    ,MODEL_ADDED_NEW_PARTICIPANT              : "document-model-added-new-participant"            //param: userId, participantType, documentId
+    ,modelAddedNewParticipant : function(userId, participantType, documentId){
+        Acm.Dispatcher.fireEvent(this.MODEL_ADDED_NEW_PARTICIPANT, userId, participantType, documentId);
+    }
 };
 
