@@ -45,7 +45,7 @@ public class RemoveParticipantAPIController {
         AcmParticipant participant = getAcmParticipantService().getParticipantByParticipantTypeAndObjectTypeAndId(userId,participantType,objectType,objectId);
         try {
             if (participant != null) {
-                getAcmParticipantService().removeParticipant(participant);
+                getAcmParticipantService().removeParticipant(participant.getId());
                 if (log.isDebugEnabled())
                     log.debug("Participant" + userId + "  successfully removed from object['" + objectType + "]:[" + objectId + "]");
                 getAcmParticipantEventPublisher().publishParticipantDeletedEvent(participant, authentication, true);
@@ -68,8 +68,8 @@ public class RemoveParticipantAPIController {
         JSONObject objectToReturnJSON = new JSONObject();
         objectToReturnJSON.put("deletedParticipant", userId);
         objectToReturnJSON.put("fromObjectType", objectType);
-        objectToReturnJSON.put("andObjectId",objectId);
-        objectToReturnJSON.put("Message", msg);
+        objectToReturnJSON.put("objectId",objectId);
+        objectToReturnJSON.put("message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;
