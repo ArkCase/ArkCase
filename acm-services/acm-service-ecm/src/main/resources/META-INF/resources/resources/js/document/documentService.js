@@ -39,12 +39,11 @@ AcmDocument.Service = {
         ,onInitialized: function(){
 
         }
-        ,API_RETRIEVE_PARTICIPANTS          : "/api/v1/service/participant/"
-        ,API_REMOVE_PARTICIPANT             : "/api/v1/service/participant/"
-        ,API_CHANGE_PARTICIPANT_ROLE        : "/api/v1/service/participant/"
+
+        ,API_PARTICIPANTS_COMMON            : "/api/v1/service/participant/"
 
         ,retrieveParticipants : function(documentId) {
-            var url = App.getContextPath() + this.API_RETRIEVE_PARTICIPANTS + AcmDocument.Model.DOC_TYPE_DOCUMENT;
+            var url = App.getContextPath() + this.API_PARTICIPANTS_COMMON + AcmDocument.Model.DOC_TYPE_DOCUMENT;
             url += "/" + documentId;
             Acm.Service.asyncGet(
                 function(response) {
@@ -63,8 +62,33 @@ AcmDocument.Service = {
             )
         }
 
+        ,addNewParticipant : function(userId, participantType, documentId) {
+            var url = App.getContextPath() + this.API_PARTICIPANTS_COMMON + userId;
+            url += "/" + participantType;
+            url += "/" + AcmDocument.Model.DOC_TYPE_DOCUMENT;
+            url += "/" + documentId;
+
+            Acm.Service.asyncPut(
+                function (response) {
+                    if (response.hasError) {
+                        AcmDocument.Controller.modelAddedNewParticipant(response);
+                    } else {
+                        if (AcmDocument.Model.Participants.validateParticipant(response)) {
+                            var participant = response;
+                            var participants = AcmDocument.Model.Participants.cacheParticipants.get(documentId);
+                            if(AcmDocument.Model.Participants.validateParticipants(participants)){
+                                participants.push(participant);
+                                AcmDocument.Controller.modelAddedNewParticipant(participants);
+                            }
+                        }
+                    } //end else
+                }
+                , url
+            )
+        }
+
         ,removeParticipant : function(participantId, userId, participantType,documentId) {
-            var url = App.getContextPath() + this.API_REMOVE_PARTICIPANT + userId;
+            var url = App.getContextPath() + this.API_PARTICIPANTS_COMMON + userId;
             url += "/" + participantType;
             url += "/" + AcmDocument.Model.DOC_TYPE_DOCUMENT;
             url += "/" + documentId;
@@ -75,12 +99,12 @@ AcmDocument.Service = {
                         AcmDocument.Controller.modelRemovedParticipant(response);
                     } else {
                         if (AcmDocument.Model.Participants.validateRemovedParticipant(response)) {
-                            if (response.deletedParticipant == userId) {
+                            if (response.deletedParticipantId == participantId) {
                                 var participants = AcmDocument.Model.Participants.cacheParticipants.get(documentId);
                                 if(AcmDocument.Model.Participants.validateParticipants(participants)){
                                     for (var i = 0; i < participants.length; i++) {
                                         if(AcmDocument.Model.Participants.validateParticipant(participants[i])){
-                                            if (userId == participants[i].participantLdapId) {
+                                            if (participantId == participants[i].id) {
                                                 participants.splice(i, 1);
                                                 AcmDocument.Controller.modelRemovedParticipant(participants);
                                             }
@@ -96,7 +120,7 @@ AcmDocument.Service = {
         }
 
         ,changeParticipantRole : function(participantType, participantId, documentId) {
-            var url = App.getContextPath() + this.API_CHANGE_PARTICIPANT_ROLE + participantId;
+            var url = App.getContextPath() + this.API_PARTICIPANTS_COMMON + participantId;
             url += "/" + participantType;
             Acm.Service.asyncDelete(
                 function (response) {
