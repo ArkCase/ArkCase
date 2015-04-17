@@ -43,8 +43,12 @@ public class SaveOutlookPasswordAPIController
 
         try
         {
-            Objects.requireNonNull(in, "New password must be supplied");
-            Objects.requireNonNull(authentication, "User must be authenticated");
+            Objects.requireNonNull(in, UserOrgConstants.ERROR_PASSWORD_MISSING);
+            Objects.requireNonNull(in.getOutlookPassword(), UserOrgConstants.ERROR_PASSWORD_MISSING);
+            if ( in.getOutlookPassword().trim().isEmpty() )
+            {
+                throw new IllegalArgumentException(UserOrgConstants.ERROR_PASSWORD_EMPTY);
+            }
 
             // need the user profile ID for events and error reporting
             userOrg = getUserOrgDao().getUserOrgForUserId(authentication.getName());
@@ -62,12 +66,13 @@ public class SaveOutlookPasswordAPIController
             getEventPublisher().outlookPasswordSavedEvent(null, authentication, ipAddress, false);
             throw e;
         }
-        catch (NullPointerException | IllegalStateException e)
+        catch (NullPointerException | IllegalStateException | IllegalArgumentException e)
         {
             log.error("Could not update Outlook password for user: " + e.getMessage(), e);
 
             getEventPublisher().outlookPasswordSavedEvent(userOrg, authentication, ipAddress, false);
-            throw new AcmUserActionFailedException("update Outlook password", UserOrgConstants.OBJECT_TYPE, userProfileId, e.getMessage(), e);
+            throw new AcmUserActionFailedException(UserOrgConstants.ACTION_UPDATE_OUTLOOK_PASSWORD,
+                    UserOrgConstants.OBJECT_TYPE, userProfileId, e.getMessage(), e);
         }
 
 

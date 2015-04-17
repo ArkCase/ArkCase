@@ -5,15 +5,13 @@ package com.armedia.acm.plugins.profile.model;
  */
 public class UserOrgUpdateEvent extends UserOrgPersistentEvent {
 
-    private static final String EVENT_TYPE = "com.armedia.acm.profile.userorg.updated";
-
     public UserOrgUpdateEvent(UserOrg source) {
         super(source);
     }
 
     @Override
     public String getEventType() {
-        return EVENT_TYPE;
+        return UserOrgConstants.EVENT_TYPE_USER_PROFILE_MODIFIED;
     }
 }
 
