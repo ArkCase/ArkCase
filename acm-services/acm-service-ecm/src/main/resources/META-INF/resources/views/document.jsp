@@ -20,12 +20,6 @@
     <script type="text/javascript" src="<c:url value='/resources/js/document/documentController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/document/documentService.js'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebar.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarModel.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarView.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarController.js'/>"></script>
-
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>

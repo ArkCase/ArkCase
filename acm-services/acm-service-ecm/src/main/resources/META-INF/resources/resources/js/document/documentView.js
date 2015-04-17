@@ -225,8 +225,6 @@ AcmDocument.View = AcmDocument.View || {
                 ,btnOkText: "Select"
                 ,btnCancelText: "Cancel"
                 ,filters: [{key: "Object Type", values: ["USER"]}]
-                ,onClickBtnDefault : function(event, ctrl) {
-                }
                 ,$dlgObjectPicker : AcmDocument.View.Participants.$dlgObjectPicker
             });
         }
