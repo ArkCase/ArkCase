@@ -57,23 +57,7 @@ public class FileUploadAPIController
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
     {
-        AcmFolder folder;
-        String folderCmisId;
-        if( folderId!=null ){
-            folder = getAcmFolderService().findById(folderId);
-            if (folder == null) {
-                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
-            }
-            folderCmisId = folder.getCmisFolderId();
-        } else {
-            AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
-            if ( container.getFolder() == null )
-            {
-                // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
-                throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
-            }
-            folderCmisId = container.getFolder().getCmisFolderId();
-        }
+        String folderCmisId = getCmisId(parentObjectType,parentObjectId,folderId);
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
         return uploaded;
     }
@@ -96,24 +80,7 @@ public class FileUploadAPIController
     {
         String responseMimeType = MediaType.TEXT_PLAIN_VALUE;
         response.setContentType(responseMimeType);
-
-        AcmFolder folder;
-        String folderCmisId;
-        if( folderId!=null ){
-            folder = getAcmFolderService().findById(folderId);
-            if (folder == null) {
-                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
-            }
-            folderCmisId = folder.getCmisFolderId();
-        } else {
-            AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
-            if ( container.getFolder() == null )
-            {
-                // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
-                throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
-            }
-            folderCmisId = container.getFolder().getCmisFolderId();
-        }
+        String folderCmisId = getCmisId(parentObjectType,parentObjectId,folderId);
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
 
         ObjectMapper om = new ObjectMapperFactory().createObjectMapper();
@@ -205,6 +172,26 @@ public class FileUploadAPIController
 
     }
 
+    private String getCmisId(String parentObjectType, Long parentObjectId, Long folderId) throws AcmUserActionFailedException, AcmCreateObjectFailedException {
+        AcmFolder folder;
+        String folderCmisId;
+        if( folderId!=null ){
+            folder = getAcmFolderService().findById(folderId);
+            if (folder == null) {
+                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
+            }
+            folderCmisId = folder.getCmisFolderId();
+        } else {
+            AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
+            if ( container.getFolder() == null )
+            {
+                // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+                throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
+            }
+            folderCmisId = container.getFolder().getCmisFolderId();
+        }
+        return folderCmisId;
+    }
     public AcmFolderService getAcmFolderService() {
         return acmFolderService;
     }
