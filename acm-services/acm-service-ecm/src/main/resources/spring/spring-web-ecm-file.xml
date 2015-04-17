@@ -5,6 +5,7 @@
 
     <bean id="fileUploadController" class="com.armedia.acm.plugins.ecm.web.api.FileUploadAPIController">
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
