@@ -57,12 +57,13 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     @BeforeClass
     public static void initialCleanUp() {
         String userHome = System.getProperty("user.home");
-        for (File f : new File(userHome + "/.acm/activiti/versions").listFiles()) {
-            if (f.isFile() && f.getName().startsWith("Test"))
-                f.delete();
+        File versionsFolder = new File(userHome + "/.acm/activiti/versions");
+        if(versionsFolder.exists()) {
+            for (File f : versionsFolder.listFiles()) {
+                if (f.isFile() && f.getName().startsWith("Test"))
+                    f.delete();
+            }
         }
-
-
     }
 
     @Before
