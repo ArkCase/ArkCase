@@ -38,6 +38,8 @@ public class AcmProcessDefinition implements AcmEntity {
     private String fileName;
     @Column(name = "cm_pd_is_active")
     private boolean active;
+    @Column(name = "cm_pd_md5_hex")
+    private String md5Hash;
 
     @Column(name = "cm_pd_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -66,11 +68,11 @@ public class AcmProcessDefinition implements AcmEntity {
         this.description = description;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -112,6 +114,14 @@ public class AcmProcessDefinition implements AcmEntity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getMd5Hash() {
+        return md5Hash;
+    }
+
+    public void setMd5Hash(String md5Hash) {
+        this.md5Hash = md5Hash;
     }
 
     @Override

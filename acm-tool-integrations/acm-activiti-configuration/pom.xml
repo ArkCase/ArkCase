@@ -84,6 +84,12 @@
             <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Apache commons -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${apache-commons-codec}</version>
+        </dependency>
     </dependencies>
 
 

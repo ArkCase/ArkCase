@@ -20,7 +20,7 @@
         <constructor-arg index="1" value=".acm"/>
     </bean>
 
-    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher">
+    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher" depends-on="springEntityListenerConfigurer">
         <property name="baseFolder" ref="configFolder"/>
         <property name="ignoreFolders">
             <list>

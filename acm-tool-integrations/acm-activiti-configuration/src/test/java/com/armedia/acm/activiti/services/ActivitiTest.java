@@ -23,7 +23,7 @@ public class ActivitiTest {
 
         RuntimeService runtimeService = processEngine.getRuntimeService();
         RepositoryService repositoryService = processEngine.getRepositoryService();
-        InputStream is = ProcessDefinitionManagementServiceTest.class.getResourceAsStream("/activiti/bookorder.simple.bpmn20.xml");
+        InputStream is = AcmBpmnServiceTest.class.getResourceAsStream("/activiti/bookorder.simple.bpmn20.xml");
         repositoryService.createDeployment()
                 .addInputStream("/activiti/bookorder.simple.bpmn20.xml", is)
                 .deploy();

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by nebojsha on 14.04.2015.
  */
-public class AcmProcessDefinitionDao extends AcmAbstractDao<AcmProcessDefinition> {
+public class AcmBpmnDao extends AcmAbstractDao<AcmProcessDefinition> {
 
     @Override
     protected Class<AcmProcessDefinition> getPersistenceClass() {
@@ -67,6 +67,20 @@ public class AcmProcessDefinitionDao extends AcmAbstractDao<AcmProcessDefinition
         TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
         query.setParameter("key", key);
         query.setParameter("version", version);
+
+        try {
+            return query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public AcmProcessDefinition getByKeyAndDigest(String key, String digest) {
+        String queryText =
+                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.key = :key and apd.md5Hash =:digest";
+        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class);
+        query.setParameter("key", key);
+        query.setParameter("digest", digest);
 
         try {
             return query.getSingleResult();

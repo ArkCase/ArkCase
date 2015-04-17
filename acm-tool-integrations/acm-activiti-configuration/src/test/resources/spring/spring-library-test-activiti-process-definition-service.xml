@@ -4,36 +4,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
 
-    <bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
-        <property name="databaseSchemaUpdate" value="true"/>
-
-        <property name="jobExecutorActivate" value="true" />
-    </bean>
-
-    <bean id="activitiProcessEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
-        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
-    </bean>
-
-    <bean id="activitiRepositoryService" factory-bean="activitiProcessEngine" factory-method="getRepositoryService" />
-    <bean id="activitiRuntimeService" factory-bean="activitiProcessEngine" factory-method="getRuntimeService" />
-    <bean id="activitiTaskService" factory-bean="activitiProcessEngine" factory-method="getTaskService" />
-    <bean id="activitiHistoryService" factory-bean="activitiProcessEngine" factory-method="getHistoryService" />
 
 
-    <bean id="processDefinitionManagementService" class="com.armedia.acm.activiti.services.ProcessDefinitionManagementServiceImpl">
-        <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
+
+    <bean id="acmBpmnService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
         <property name="processDefinitionsFolder" value="${user.home}/.acm/activiti/versions"/>
-    </bean>
-
-
-
-    <bean id="eventRaisingActivitiProcessListener" class="com.armedia.acm.activiti.AcmProcessEventHandler">
-        <property name="runtimeService" ref="activitiRuntimeService"/>
-        <property name="historyService" ref="activitiHistoryService"/>
-    </bean>
-
-    <bean id="eventRaisingActivitiTaskListener" class="com.armedia.acm.activiti.AcmUserTaskEventHandler">
-        <property name="runtimeService" ref="activitiRuntimeService"/>
     </bean>
 
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">

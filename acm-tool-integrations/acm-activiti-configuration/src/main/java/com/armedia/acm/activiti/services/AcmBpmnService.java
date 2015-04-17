@@ -9,14 +9,14 @@ import java.util.List;
 /**
  * Created by nebojsha on 09.04.2015.
  */
-public interface ProcessDefinitionManagementService {
+public interface AcmBpmnService {
 
 
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc);
 
-    public InputStream getProcessDefinitionFile(AcmProcessDefinition wfFile);
+    public InputStream getBpmnFileStream(AcmProcessDefinition wfFile);
 
-    public void removeProcessDefinition(AcmProcessDefinition processDefinition);
+    public void remove(AcmProcessDefinition processDefinition, boolean cascade);
 
     public void makeActive(AcmProcessDefinition processDefinition);
 
@@ -24,7 +24,8 @@ public interface ProcessDefinitionManagementService {
 
     public long count();
 
-    public AcmProcessDefinition deployProcessDefinition(File processDefinitionFile, boolean makeWorkingVersion, boolean deleteFileAfterDeploy);
+    public AcmProcessDefinition deploy(File processDefinitionFile, boolean makeActive, boolean deleteFileAfterDeploy);
 
     public AcmProcessDefinition getActive(String processDefinitionKey);
+
 }
