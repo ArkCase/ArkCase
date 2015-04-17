@@ -10,6 +10,7 @@ import org.easymock.EasyMockSupport;
 import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -42,9 +45,22 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
     private Resource resourceFile;
     private Resource resourceFileNotChanged;
     private Resource resourceFileChanged;
+    private Set<String> filesToDelete = null;
+
+    @BeforeClass
+    public static void initialCleanUp() {
+        String userHome = System.getProperty("user.home");
+        for (File f : new File(userHome + "/.acm/activiti/versions").listFiles()) {
+            if (f.isFile() && f.getName().startsWith("Test"))
+                f.delete();
+        }
+
+
+    }
 
     @Before
     public void setUp() throws Exception {
+        filesToDelete = new HashSet<>();
         resourceFile = new ClassPathResource("/activiti/TestActivitiSpringProcess.bpmn20.xml");
         resourceFileNotChanged = new ClassPathResource("/activiti/TestActivitiSpringProcessNotChanged.bpmn20.xml");
         resourceFileChanged = new ClassPathResource("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml");
@@ -80,6 +96,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
         EasyMock.replay(acmBpmnDao);
 
         AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
         assertEquals("1", pd.getDeploymentId());
@@ -128,6 +145,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
         EasyMock.replay(acmBpmnDao);
 
         AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
         assertEquals("1", pd.getDeploymentId());
@@ -139,6 +157,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
 
 
         AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, false, false);
+        filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
         assertEquals(Long.valueOf(1l), pd1.getId());
         assertEquals("1", pd1.getDeploymentId());
@@ -187,6 +206,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
         EasyMock.replay(acmBpmnDao);
 
         AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
         assertEquals("1", pd.getDeploymentId());
@@ -198,6 +218,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
 
 
         AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, false, false);
+        filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
         assertEquals(Long.valueOf(2l), pd1.getId());
         assertEquals("4", pd1.getDeploymentId());
@@ -231,6 +252,19 @@ public class AcmBpmnServiceTest extends EasyMockSupport {
         EasyMock.expect(acmBpmnDao.count()).andReturn(1l);
         EasyMock.replay(acmBpmnDao);
         assertEquals(1, processDefinitionManagementService.count());
+    }
+
+    @After
+    public void cleanUp() {
+        //in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
+        String userHome = System.getProperty("user.home");
+        String processDefinitionsFolder = userHome + "/.acm/activiti/versions";
+        //delete created files
+        for (String file : filesToDelete) {
+            File toBeDeleted = new File(processDefinitionsFolder + "/" + file);
+            if (toBeDeleted.exists())
+                toBeDeleted.delete();
+        }
     }
 
 }

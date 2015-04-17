@@ -1,7 +1,7 @@
 package com.armedia.acm.activiti.services;
 
 import com.armedia.acm.activiti.exceptions.AcmBpmnException;
-import com.armedia.acm.activiti.exceptions.NotValidBpmnFileExceptuon;
+import com.armedia.acm.activiti.exceptions.NotValidBpmnFileException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
 import org.activiti.engine.RepositoryService;
@@ -203,16 +203,16 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
 
             String attributeValue = "" + expr.evaluate(doc, XPathConstants.STRING);
             if (attributeValue == null || attributeValue.length() < 1)
-                throw new NotValidBpmnFileExceptuon("attribute id not found in process tag");
+                throw new NotValidBpmnFileException("attribute id not found in process tag");
             return attributeValue;
         } catch (ParserConfigurationException e) {
-            throw new NotValidBpmnFileExceptuon("Not valid file!", e);
+            throw new NotValidBpmnFileException("Not valid file!", e);
         } catch (SAXException e) {
-            throw new NotValidBpmnFileExceptuon("Not valid file!", e);
+            throw new NotValidBpmnFileException("Not valid file!", e);
         } catch (IOException e) {
-            throw new NotValidBpmnFileExceptuon("Not valid file!", e);
+            throw new NotValidBpmnFileException("Not valid file!", e);
         } catch (XPathExpressionException e) {
-            throw new NotValidBpmnFileExceptuon("Not valid file!", e);
+            throw new NotValidBpmnFileException("Not valid file!", e);
         }
     }
 
