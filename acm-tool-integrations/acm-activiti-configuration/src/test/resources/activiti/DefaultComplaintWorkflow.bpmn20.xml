@@ -5,7 +5,7 @@
              xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
                     http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
 
-    <process id="cmComplaintWorkflow" name="Complaint review and approval process">
+    <process id="cmComplaintWorkflowUnitTest" name="Complaint review and approval process">
 
         <startEvent id="complaintSubmittedForApproval" />
 
