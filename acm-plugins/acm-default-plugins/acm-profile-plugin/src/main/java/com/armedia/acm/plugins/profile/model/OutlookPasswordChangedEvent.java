@@ -9,8 +9,6 @@ import java.util.Date;
  */
 public class OutlookPasswordChangedEvent extends AcmEvent
 {
-    private static final String EVENT_TYPE = "com.armedia.acm.profile.userorg.outlook_password_changed";
-
     public OutlookPasswordChangedEvent(UserOrg userOrg, String userId, String ipAddress, boolean succeeded)
     {
         super(userId);
@@ -19,7 +17,7 @@ public class OutlookPasswordChangedEvent extends AcmEvent
         setEventDate(new Date());
         setObjectId(userOrg == null ? null : userOrg.getUserOrgId());
         setObjectType(UserOrgConstants.OBJECT_TYPE);
-        setEventType(EVENT_TYPE);
+        setEventType(UserOrgConstants.EVENT_TYPE_OUTLOOK_PASSWORD_CHANGED);
         setSucceeded(succeeded);
     }
 }

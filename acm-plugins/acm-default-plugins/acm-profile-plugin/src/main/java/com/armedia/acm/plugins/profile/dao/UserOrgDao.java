@@ -25,8 +25,6 @@ import java.util.List;
  */
 public class UserOrgDao extends AcmAbstractDao<UserOrg> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException
     {
@@ -64,32 +62,6 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
     }
 
     @Transactional
-    public void deleteUserOrgById(Long userOrgId){
-        UserOrg userOrgToBeDeleted = getEm().find(UserOrg.class, userOrgId);
-        getEm().remove(userOrgToBeDeleted);
-    }
-
-    public UserOrg getUserByOrganization(Organization org) throws AcmObjectNotFoundException {
-        CriteriaBuilder builder = getEm().getCriteriaBuilder();
-        CriteriaQuery<UserOrg> query = builder.createQuery(UserOrg.class);
-        Root<UserOrg> d = query.from(UserOrg.class);
-        query.select(d).where(builder.equal(d.get("organization"), org));
-        TypedQuery<UserOrg> dbQuery = getEm().createQuery(query);
-        List<UserOrg> results = null;
-        results = dbQuery.getResultList();
-        if( results.isEmpty()){
-            throw new AcmObjectNotFoundException("profile",null, "Object not found",null);
-        }
-        return results.get(0);
-    }
-
-    @Transactional
-    public UserOrg updateUserInfo(UserOrg userOrgInfo){
-        userOrgInfo = getEm().merge(userOrgInfo);
-        return userOrgInfo;
-    }
-
-    @Transactional
     public void saveOutlookPassword(Authentication authentication, OutlookDTO in)
     {
         // must use a native update, since we don't want to add a password property to an entity class; since
@@ -99,7 +71,7 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
                 "SET uo.cm_ms_outlook_password = ?1 " +
                 "WHERE uo.cm_user = ?2 ";
 
-        Query q = getEntityManager().createNativeQuery(jpql);
+        Query q = getEm().createNativeQuery(jpql);
         q.setParameter(1, in.getOutlookPassword());
         q.setParameter(2, authentication.getName());
 
@@ -110,10 +82,6 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
             throw new IllegalStateException("No profile for user '" + authentication.getName() + "'");
         }
 
-    }
-
-    public EntityManager getEntityManager() {
-        return entityManager;
     }
 
     @Override
