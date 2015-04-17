@@ -9,6 +9,7 @@
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="objType">FILE</span>
         <span itemprop="objId">${objId}</span>
+        <span itemprop="participantTypes">${participantTypes}</span>
     </div>
 </jsp:attribute>
 
@@ -18,6 +19,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/document/documentView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/document/documentController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/document/documentService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseController.js'/>"></script>
 
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
@@ -37,6 +44,69 @@
         <div class="col-sm-12 m-b-xs">
             <div class="pull-right inline">
                 <div class="btn-group">
+
+
+
+                    <div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="labPoTitle" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="labPoTitle"></h4>
+                                </div>
+                                <header class="header bg-gradient b-b clearfix">
+                                    <div class="row m-t-sm">
+                                        <div class="col-md-12 m-b-sm">
+                                            <div class="input-group">
+                                                <input type="text" class="input-md form-control" id="edtPoSearch" placeholder="Enter to search for members.">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-md" type="button">Go!</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <div class="facets" id="divPoFacets">
+                                                <div name="filter_fields">
+                                                    <h6></h6>
+                                                    <div class="list-group auto" name="Object Type">
+                                                        <label class="list-group-item">
+                                                            <input type="checkbox" value="USER" checked="" disabled="">
+                                                            <span class="badge bg-info">
+                                                            </span>
+                                                            USER
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <section class="panel panel-default">
+                                                <div class="table-responsive" id="divPoResults"></div>
+
+                                            </section>
+
+                                            <div>
+                                                <label  class="label">Participant Type</label>
+                                                <select class="input-sm form-control inline v-middle" id="participantType">
+                                                    <option value="null">Select Participant Type</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <button class="btn btn-default  btn-sm" data-toggle="modal" id="btnReplaceFile">
                         <span class="text">Replace File</span>
@@ -181,7 +251,7 @@
             <section class="panel panel-default portlet-item">
                 <header class="panel-heading">
                     <ul class="nav nav-pills pull-right">
-                        <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Partcipant"><i class="fa fa-user"></i> New</button></div></li>
+                        <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" id = "newParticipant" data-toggle="tooltip" data-title="New Partcipant"><i class="fa fa-user"></i> New</button></div></li>
                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                     </ul>
                     Participants <span class="badge bg-info" id="labParticipants"></span> </header>

@@ -44,6 +44,7 @@ AcmDocument.View = AcmDocument.View || {
     ,MicroData: {
         create : function() {
             this.documentId   = Acm.Object.MicroData.get("objId");
+            this.participantTypes   = Acm.Object.MicroData.getJson("participantTypes");
         }
         ,onInitialized: function() {
         }
@@ -193,20 +194,80 @@ AcmDocument.View = AcmDocument.View || {
 
     ,Participants: {
         create: function() {
-            this.$tabParticipants = $("#tabParticipants");
+            this.$tabParticipants                       = $("#tabParticipants");
             this.$tabParticipants.on("click", ".removeParticipant", function(e) {AcmDocument.View.Participants.onClickBtnRemoveParticipant(e, this);});
             this.$tabParticipants.on("click", ".changeParticipantRole", function(e) {AcmDocument.View.Participants.onClickBtnChangeRole(e, this);});
 
             this.$labParticipants                       = $("#labParticipants");
 
+            this.$btnNewParticipant                     = $("#newParticipant");
+            this.$btnNewParticipant.on("click", function(e) {AcmDocument.View.Participants.onClickBtnNewParticipant(e, this);});
+
+            this.$dlgObjectPicker                       = $("#dlgObjectPicker");
+            this.$selParticipantType                    = $("#participantType");
+
+            this.$btnAddParticipant                     = this.$dlgObjectPicker.find('button.btn-primary');
+            this.$btnAddParticipant.unbind("click").on("click", function(e) {AcmDocument.View.Participants.onClickBtnAddParticipant(e, this);})
 
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_PARTICIPANTS    ,this.onModelRetrievedParticipants);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_REMOVED_PARTICIPANT       ,this.onModelRemovedParticipant);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CHANGED_PARTICIPANT_ROLE  ,this.onModelChangedParticipantRole);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_ADDED_NEW_PARTICIPANT      ,this.onModelAddedNewParticipant);
         }
         ,onInitialized: function() {
         }
 
+        ,pickParticipant: function() {
+            SearchBase.showSearchDialog({name: "New Participant"
+                ,title: "Add New Participant"
+                ,prompt: "Enter to search for user.."
+                ,btnGoText: "Search Now!"
+                ,btnOkText: "Select"
+                ,btnCancelText: "Cancel"
+                ,filters: [{key: "Object Type", values: ["USER"]}]
+                ,$dlgObjectPicker : AcmDocument.View.Participants.$dlgObjectPicker
+            });
+        }
+
+        ,onClickBtnNewParticipant: function() {
+            AcmDocument.View.Participants.$selParticipantType.empty();
+            var participantTypes = AcmDocument.View.MicroData.participantTypes;
+            if(Acm.isNotEmpty(participantTypes)){
+                for(var i=0;i< participantTypes.length;i++){
+                    var participantType = AcmDocument.View.MicroData.participantTypes[i];
+                    Acm.Object.appendSelect(AcmDocument.View.Participants.$selParticipantType, participantType.toLowerCase(), participantType);
+                };
+            }
+            AcmDocument.View.Participants.pickParticipant();
+            return;
+        }
+
+        ,onClickBtnAddParticipant : function(event, ctrl) {
+            SearchBase.View.Results.getSelectedRows().each(function () {
+                var record = $(this).data('record');
+                if(Acm.isNotEmpty(record) && Acm.isNotEmpty(record.id)){
+                    var userId = Acm.goodValue(record.id);
+                    var participantType = Acm.goodValue(AcmDocument.View.Participants.getSelectValueParticipantType());
+                    if(Acm.isEmpty(userId) || Acm.isEmpty(participantType)){
+                        Acm.Dialog.info("Please select both participant and participant type.")
+                    }
+                    else{
+                        AcmDocument.Controller.viewAddedNewParticipant(Acm.goodValue(record.id),Acm.goodValue(participantType),AcmDocument.View.MicroData.documentId)
+                        AcmDocument.View.Participants.$dlgObjectPicker.modal("hide");
+                    }
+                }
+            });
+        }
+
+
+        ,onModelAddedNewParticipant: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
         ,onModelRetrievedParticipants: function(participants) {
             if(participants.hasError){
                 App.View.MessageBoard.show(participants.errorMsg);
@@ -234,7 +295,9 @@ AcmDocument.View = AcmDocument.View || {
         ,setTextLabParticipants: function(totalParticipants){
             Acm.Object.setText(AcmDocument.View.Participants.$labParticipants, totalParticipants);
         }
-
+        ,getSelectValueParticipantType: function() {
+            return Acm.Object.getSelectValue(AcmDocument.View.Participants.$selParticipantType);
+        }
         ,setHtmlTabParticipants: function(val) {
             AcmDocument.View.Participants.$tabParticipants.append(val);
         }
@@ -273,7 +336,7 @@ AcmDocument.View = AcmDocument.View || {
                         + "</ul>"
                         + "</div>"
                         + "<div class='media-body' id='" + Acm.goodValue(participants[i].id) + "'>"
-                        + "<div data-user-id='" + participants[i].participantLdapId + "'><a href='#'>" + Acm.goodValue(Acm.__FixMe__getUserFullName(participants[i].participantLdapId)) + "</a></div>"
+                        + "<div data-user-id='" + Acm.goodValue(participants[i].participantLdapId) + "'><a href='#'>" + Acm.goodValue(Acm.__FixMe__getUserFullName(participants[i].participantLdapId)) + "</a></div>"
                         + "<small class='text-muted'>" + Acm.goodValue(participants[i].participantType.charAt(0).toUpperCase() + participants[i].participantType.slice(1)) + "</small> </div>"
                         + "</div>"
                         +"</li>";
