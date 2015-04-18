@@ -296,7 +296,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String sortBy = "created";
         String sortDirection = "ASC";
 
-        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+        AcmCmisObjectList retval = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                 start, max, sortBy, sortDirection);
 
         int totalFiles = retval.getTotalChildren();
@@ -308,7 +308,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             start += max;
 
-            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                     start, max, sortBy, sortDirection);
             retval.getChildren().addAll(more.getChildren());
 
@@ -336,9 +336,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 category == null ? "fq=hidden_b:false" :
                         "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
-        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+        AcmCmisObjectList retval = findObjects(auth, container, folderId,  EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                 startRow, maxRows, sortBy, sortDirection);
-        retval.setFolderId(folderId);
         return retval;
     }
 
@@ -366,12 +365,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 category == null ? "fq=hidden_b:false" :
                         "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
-        return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
+        return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
 
 
     }
 
-    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, String category, String query,
+    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query,
                                           String filterQuery, int startRow, int maxRows, String sortBy,
                                           String sortDirection)
             throws AcmListObjectsFailedException
@@ -385,7 +384,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             JSONArray docs = getSearchResults().getDocuments(results);
             int numFound = getSearchResults().getNumFound(results);
 
-            AcmCmisObjectList retval = buildAcmCmisObjectList(container, category, numFound, sortBy, sortDirection,
+            AcmCmisObjectList retval = buildAcmCmisObjectList(container, folderId, category, numFound, sortBy, sortDirection,
                     startRow, maxRows);
 
             buildChildren(docs, retval);
@@ -416,13 +415,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound,
+    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container,Long folderId, String category, int numFound,
                                                      String sortBy, String sortDirection, int startRow, int maxRows)
     {
         AcmCmisObjectList retval = new AcmCmisObjectList();
         retval.setContainerObjectId(container.getContainerObjectId());
         retval.setContainerObjectType(container.getContainerObjectType());
-        retval.setFolderId(container.getFolder().getId());
+        retval.setFolderId(folderId);
         retval.setTotalChildren(numFound);
         retval.setCategory(category == null ? "all" : category);
         retval.setSortBy(sortBy);
