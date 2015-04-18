@@ -21,11 +21,11 @@
                 <ref bean="caseFileNavigatorAction"/>
                 <ref bean="taskNavigatorAction"/>
                 <ref bean="searchNavigatorAction"/>
-                <ref bean="adminNavigatorAction"/>
                 <ref bean="reportNavigatorAction"/>
-                <ref bean="auditNavigatorAction"/>
                 <ref bean="notificationNavigatorAction"/>
                 <ref bean="subscriptionNavigatorAction"/>
+                <ref bean="auditNavigatorAction"/>
+                <ref bean="adminNavigatorAction"/>
                 <ref bean="tagNavigatorAction"/>
                 <ref bean="timeTrackingNavigatorAction"/>
                 <ref bean="costTrackingNavigatorAction"/>

@@ -1374,6 +1374,20 @@ Task.View = Task.View || {
                             ,create: false
                         }
                     } //end field
+                    ,formCreated: function (event, data) {
+                        var $noteForm = $(".jtable-create-form");
+                        //other constraints can be added
+                        //as needed as shown below
+                        var opt = {
+                            resizable: false
+                            //,autoOpen: false,
+                            //height:200,
+                            //width:200,
+                            //modal: true,
+                            //etc..
+                        };
+                        $noteForm.parent().dialog(opt);
+                    }
                     ,recordAdded : function (event, data) {
                         var record = data.record;
                         var taskId = ObjNav.View.Navigator.getActiveObjId();
