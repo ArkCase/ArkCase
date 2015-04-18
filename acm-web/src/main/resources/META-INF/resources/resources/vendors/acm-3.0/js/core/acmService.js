@@ -8,9 +8,6 @@ Acm.Service = {
     }
 
     ,ajax: function(arg) {
-        if (!arg) {
-            return;
-        }
         if (!arg.type) {
             arg.type = 'GET';
         }
@@ -20,9 +17,8 @@ Acm.Service = {
         if (!arg.dataType) {
             arg.dataType = 'json';
         }
-        if (arg.data) {
+        if (Acm.isNotEmpty(arg.data)) {
             if (Acm.isEmpty(arg.contentType)) {
-            //if (!arg.contentType) {
                 arg.contentType = "application/json; charset=utf-8";
             }
             if (!arg.beforeSend) {
@@ -33,9 +29,21 @@ Acm.Service = {
                 };
             }
         }
+
         if (!arg.error) {
             arg.error = function(xhr, status, error) {
-                arg.success({hasError:true,errorMsg:xhr.responseText});
+                //for compatible with v1.0, until refactor to v2.0
+//                if (arg.callback) {
+//                    arg.callback({hasError:true, errorMsg:xhr.responseText});
+//                } else
+                if (arg.success) {
+                    arg.success({hasError:true, errorMsg:xhr.responseText});
+                }
+
+                //v2.0, after refactor v1.0 to v2.0, remove above and uncomment below
+//                if (arg.callback) {
+//                    arg.callback({hasError:true, errorMsg:xhr.responseText});
+//                }
             };
         }
         return jQuery.ajax(arg);
@@ -59,6 +67,30 @@ Acm.Service = {
                 callback(response);
             }
         });
+    }
+    ,asyncPost2 : function(arg) {
+        return this.ajax({type: 'POST'
+            ,url: arg.url
+            ,data: arg.data
+            ,success: function(response) {
+                Acm.Service._process(response, arg);
+            }
+        });
+    }
+    ,_process: function(response, arg) {
+        if (arg.success) {
+            arg.success(response);
+
+        } else if (arg.callback) {
+            var happy = arg.callback(response);
+            if (!response.hasError && !happy) {
+                if (arg.invalid) {
+                    arg.invalid(response);
+                } else {
+                    arg.callback({hasError: true, errorMsg: "Invalid response from service " + arg.url});
+                }
+            }
+        }
     }
     
     /*
