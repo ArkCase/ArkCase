@@ -9,8 +9,6 @@ import java.util.Date;
  */
 public class UserOrgPersistentEvent extends AcmEvent {
 
-    private static final String OBJECT_TYPE = "USER_ORG";
-
     public UserOrgPersistentEvent(UserOrg source) {
         super(source);
         setEventDate(new Date());
@@ -21,7 +19,7 @@ public class UserOrgPersistentEvent extends AcmEvent {
     @Override
     public String getObjectType()
     {
-        return OBJECT_TYPE;
+        return UserOrgConstants.OBJECT_TYPE;
     }
 
 }
