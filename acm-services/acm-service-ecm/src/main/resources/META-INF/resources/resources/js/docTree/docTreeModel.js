@@ -14,6 +14,9 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FILE            ,this.onViewRenamedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPY_PASTED             ,this.onViewCopyPasted);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CUT_PASTED              ,this.onViewCutPasted);
+
 
         //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
@@ -48,6 +51,16 @@ DocTree.Model = DocTree.Model || {
     }
     ,onViewRenamedFile: function(name, id, cacheKey, node) {
         DocTree.Service.renameFile(name, id, cacheKey, node);
+    }
+    ,onViewCutPasted: function(itemId, folderId, frCacheKey, toCacheKey, node) {
+        var objType = DocTree.Model.getObjType();
+        var objId = DocTree.Model.getObjId();
+        DocTree.Service.moveItem(objType, objId, folderId, itemId, frCacheKey, toCacheKey, node);
+    }
+    ,onViewCopyPasted: function(itemId, folderId, toCacheKey, node) {
+        var objType = DocTree.Model.getObjType();
+        var objId = DocTree.Model.getObjId();
+        DocTree.Service.copyItem(objType, objId, folderId, itemId, toCacheKey, node);
     }
 
     //---------------
@@ -145,6 +158,7 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isEmpty(data)) {
             return false;
         }
+//to be determined
 //        if (Acm.isEmpty(data.deletedFolderId)) {
 //            return false;
 //        }
@@ -162,7 +176,36 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-
+    ,validateMoveItemInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder.id)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateCopyItemInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder.id)) {
+            return false;
+        }
+        return true;
+    }
     ,validateUploadInfo: function(data) {
         if (Acm.isArrayEmpty(data)) {
             return false;
