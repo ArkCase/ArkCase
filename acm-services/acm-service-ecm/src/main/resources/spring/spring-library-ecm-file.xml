@@ -189,6 +189,11 @@
                     <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}/{folderId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
+                <bean id="moveFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/ecm/folder/move/{folderToMoveId}/{dstFolderId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
