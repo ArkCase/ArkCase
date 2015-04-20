@@ -107,31 +107,21 @@ AcmDocument.View = AcmDocument.View || {
             this.$lnkSubjectType    = $("#type");
             this.$lnkStatus         = $("#status");
 
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_ERROR     ,this.onModelRetrievedObjectError);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_DOCUMENT_DETAIL           ,this.onModelRetrievedDocumentDetail);
         }
         ,onInitialized: function() {
         }
-        ,onModelRetrievedObject: function(objData) {
-            AcmDocument.View.Detail.populateDocument(objData);
-        }
-        ,onViewSelectedObject: function(objType, objId) {
-            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
-            AcmDocument.View.Detail.populateDocument(objData);
-        }
-        ,populateDocument: function(document) {
-            if (AcmDocument.Model.Detail.validateDocument(document)) {
-                this.setTextLnkDocTitle(Acm.goodValue(document.title));
+        ,onModelRetrievedDocumentDetail: function(documentDetail) {
+            if(documentDetail.hasError){
+                App.View.MessageBoard.show(documentDetail.errorMsg);
             }
-        }
-        ,populateParentDetails: function(parentObject) {
-            if (AcmDocument.Model.Detail.validateParentObject(parentObject)) {
-                this.setTextLnkCreateDate(Acm.getDateFromDatetime(parentObject.created));
-                this.setTextLnkSubjectType(Acm.goodValue(parentObject.type));
-                this.setTextLnkOwner(Acm.goodValue(parentObject.owner));
-                this.setTextLnkStatus(Acm.goodValue(parentObject.status));
-                this.setTextLnkAssignee(Acm.__FixMe__getUserFullName(parentObject.assignee));
+            else if (AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
+                AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.title_t));
+                AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.create_tdt));
+                AcmDocument.View.Detail.setTextLnkType(Acm.goodValue(documentDetail.type_s));
+                AcmDocument.View.Detail.setTextLnkOwner(Acm.__FixMe__getUserFullName(documentDetail.author));
+                AcmDocument.View.Detail.setTextLnkStatus(Acm.goodValue(documentDetail.status_s));
+                AcmDocument.View.Detail.setTextLnkAssignee(Acm.__FixMe__getUserFullName(documentDetail.author));
             }
         }
         ,setTextLnkDocTitle: function(txt) {
@@ -143,7 +133,7 @@ AcmDocument.View = AcmDocument.View || {
         ,setTextLnkAssignee: function(txt) {
             Acm.Object.setText(this.$lnkAssignee, txt);
         }
-        ,setTextLnkSubjectType: function(txt) {
+        ,setTextLnkType: function(txt) {
             Acm.Object.setText(this.$lnkSubjectType, txt);
         }
         ,setTextLnkOwner: function(txt) {
@@ -252,7 +242,8 @@ AcmDocument.View = AcmDocument.View || {
                         Acm.Dialog.info("Please select both participant and participant type.")
                     }
                     else{
-                        AcmDocument.Controller.viewAddedNewParticipant(Acm.goodValue(record.id),Acm.goodValue(participantType),AcmDocument.View.MicroData.documentId)
+                        var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
+                        AcmDocument.Controller.viewAddedNewParticipant(Acm.goodValue(record.id),Acm.goodValue(participantType),documentId)
                         AcmDocument.View.Participants.$dlgObjectPicker.modal("hide");
                     }
                 }
@@ -307,16 +298,18 @@ AcmDocument.View = AcmDocument.View || {
         ,onClickBtnRemoveParticipant: function(event,ctrl) {
             event.preventDefault();
             //find participant name and id
+            var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
             var participantId = $(event.target).closest('div').next().attr('id');
             var userId = $(event.target).closest('div').next().children('div').attr('data-user-id');
             var participantType = $(event.target).closest('div').next().children('small').prop('textContent').toLowerCase();
-            AcmDocument.Controller.viewRemovedParticipant(participantId, userId, participantType, AcmDocument.View.MicroData.documentId);
+            AcmDocument.Controller.viewRemovedParticipant(participantId, userId, participantType, documentId);
         }
         ,onClickBtnChangeRole: function(event,ctrl) {
+            var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
             var participantId = $(event.target).closest('div').next().attr('id');
             //var participantName = $(event.target).closest('div').next().children('div').prop('textContent');
             var participantType = $(event.target).closest('div').next().children('small').prop('textContent');
-            AcmDocument.Controller.viewChangedParticipantRole(participantType, participantId, AcmDocument.View.MicroData.documentId);
+            AcmDocument.Controller.viewChangedParticipantRole(participantType, participantId, documentId);
         }
 
         ,buildParticipantsTable: function(participants) {
@@ -565,7 +558,9 @@ AcmDocument.View = AcmDocument.View || {
     ,AssociatedTags: {
         create: function() {
             this.$modalNewAssociatedTag         = $("#modalNewTag")
-
+            this.$modalNewAssociatedTag.on("hidden.bs.modal", function(e) {
+                AcmDocument.View.AssociatedTags.clearNewTagModalContents();
+            });
             this.$tabAssociatedTags             = $("#tabTags");
             this.$tabAssociatedTags.unbind("click").on("click", "a", function(e) {AcmDocument.View.AssociatedTags.onClickBtnRemoveAssociatedTag(e, this);});
 
@@ -573,8 +568,18 @@ AcmDocument.View = AcmDocument.View || {
             this.$btnNewAssociatedTag    	    = $("#btnNewTag");
             this.$btnNewAssociatedTag.on("click", function(e) {AcmDocument.View.AssociatedTags.onClickBtnNewAssociatedTag(e, this);});
 
+            this.$btnAddNewAssociatedTag        = this.$modalNewAssociatedTag.find('button.btn-primary');
+            this.$btnAddNewAssociatedTag.unbind("click").on("click", function(e) {AcmDocument.View.AssociatedTags.onClickBtnAddNewAssociatedTag(e, this);})
+
+            this.$newTagForm                       = $("#newTagForm");
+            this.$edtNewTagName                    = $("#newTagName");
+            this.$edtNewTagDesc                    = $("#newTagDesc");
+            this.$edtNewTagText                    = $("#newTagText");
+
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_ASSOCIATED_TAGS    ,this.onModelRetrievedAssociatedTags);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_REMOVED_ASSOCIATED_TAGS      ,this.onModelRemovedAssociatedTags);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_ASSOCIATED_NEW_TAG           , this.onModelAssociatedNewTag);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_ALL_TAGS           , this.onModelRetrievedAllTags);
         }
         ,onInitialized: function() {
         }
@@ -594,15 +599,65 @@ AcmDocument.View = AcmDocument.View || {
                 AcmDocument.View.AssociatedTags.buildAssociatedTagsTable(associatedTags);
             }
         }
+        ,onModelRetrievedAllTags: function(allTags) {
+            if(allTags.hasError){
+                App.View.MessageBoard.show(allTags.errorMsg);
+            }
+        }
+        ,onModelAssociatedNewTag: function(associatedTags) {
+            if(associatedTags.hasError){
+                App.View.MessageBoard.show(associatedTags.errorMsg);
+            }
+            else{
+                AcmDocument.View.AssociatedTags.buildAssociatedTagsTable(associatedTags);
+            }
+        }
         ,onClickBtnNewAssociatedTag: function(event,ctrl) {
+            var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
+            //if any previous radio buttons
+            //with name tags remove them
+            $("input:radio[name=tags]").parent().remove();
+            var html = "";
+            var allTags = AcmDocument.Model.AssociatedTags.cacheAllTags.get(documentId)
+            for(var i = 0; i<allTags.length; i++){
+                if(AcmDocument.Model.AssociatedTags.validateTag(allTags[i])){
+                    html+= "<label for='tags'>" + "<input type='radio' name='tags' value='" + allTags[i].id + "'/>"
+                    html+= allTags[i].tagName + "</label>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+                }
+            }
+            AcmDocument.View.AssociatedTags.$newTagForm.append(html);
             AcmDocument.View.AssociatedTags.$modalNewAssociatedTag.modal("show");
+        }
+        ,onClickBtnAddNewAssociatedTag: function(event,ctrl){
+            var tagId = $( "input:radio[name=tags]:checked").val();
+            if(Acm.isNotEmpty(tagId)){
+                AcmDocument.Controller.viewAssociatedNewTag(tagId);
+                AcmDocument.View.AssociatedTags.$modalNewAssociatedTag.modal("hide");
+                return;
+            }
+            else{
+                AcmDocument.View.AssociatedTags.checkCeateNewTagForm();
+            }
         }
         ,onClickBtnRemoveAssociatedTag: function(event,ctrl) {
             event.preventDefault();
             //find associatedTag and tagId
+            var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
             var tagId = $(event.target).closest('td').siblings(':first-child').attr('tagId');
             var associatedTag = $(event.target).closest('td').siblings(':first-child').text();
-            AcmDocument.Controller.viewRemovedAssociatedTag(AcmDocument.View.MicroData.documentId, tagId);
+            AcmDocument.Controller.viewRemovedAssociatedTag(documentId, tagId);
+        }
+        ,checkCeateNewTagForm: function(){
+            var newTagName = AcmDocument.View.AssociatedTags.getTextNewTagName();
+            var newTagDesc = AcmDocument.View.AssociatedTags.getTextNewTagDesc();
+            var newTagText = AcmDocument.View.AssociatedTags.getTextNewTagText();
+            if(Acm.isEmpty(newTagName) || Acm.isEmpty(newTagDesc) || Acm.isEmpty(newTagText)){
+                Acm.Dialog.info("Invalid input. Please check the entries and try again.")
+            }
+            else{
+                AcmDocument.Controller.viewCreatedNewTag(newTagName, newTagDesc, newTagText);
+                AcmDocument.View.AssociatedTags.$modalNewAssociatedTag.modal("hide");
+            }
         }
         ,clearHtmlTabAssociatedTags: function(val) {
             AcmDocument.View.AssociatedTags.$tabAssociatedTags.find("td").remove();
@@ -613,12 +668,26 @@ AcmDocument.View = AcmDocument.View || {
         ,setTextLabTags: function(totalTags){
             Acm.Object.setText(AcmDocument.View.AssociatedTags.$labTags, totalTags);
         }
+        ,getTextNewTagName: function(){
+            return Acm.goodValue(AcmDocument.View.AssociatedTags.$edtNewTagName.val());
+        }
+        ,getTextNewTagDesc: function(){
+            return Acm.goodValue(AcmDocument.View.AssociatedTags.$edtNewTagDesc.val());
+        }
+        ,getTextNewTagText: function(){
+            return Acm.goodValue(AcmDocument.View.AssociatedTags.$edtNewTagText.val());
+        }
+        ,clearNewTagModalContents: function(){
+            AcmDocument.View.AssociatedTags.$edtNewTagName.val('');
+            AcmDocument.View.AssociatedTags.$edtNewTagDesc.val('');
+            AcmDocument.View.AssociatedTags.$edtNewTagText.val('');
+        }
         ,buildAssociatedTagsTable: function(associatedTags) {
-            if(AcmDocument.Model.AssociatedTags.validateAssociatedTags(associatedTags)){
+            if(AcmDocument.Model.AssociatedTags.validateTags(associatedTags)){
                 AcmDocument.View.AssociatedTags.clearHtmlTabAssociatedTags();
                 var html = "";
                     for (var i = 0; i < Acm.goodValue(associatedTags.length); i++) {
-                        if(AcmDocument.Model.AssociatedTags.validateAssociatedTag(associatedTags[i])) {
+                        if(AcmDocument.Model.AssociatedTags.validateTag(associatedTags[i])) {
                             html+= "<tr>"
                             +"<td tagId='" + Acm.goodValue(associatedTags[i].id) + "'>" + Acm.goodValue(associatedTags[i].tagName) + "</td>"
                             +"<td><button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
