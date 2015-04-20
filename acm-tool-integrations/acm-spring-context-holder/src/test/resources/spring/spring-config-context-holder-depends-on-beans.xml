@@ -15,4 +15,9 @@
         <constructor-arg value="0"/>
     </bean>
 
+    <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
+    <bean id="springEntityListenerConfigurer" class="java.lang.Integer">
+        <constructor-arg value="1"/>
+    </bean>
+
 </beans>

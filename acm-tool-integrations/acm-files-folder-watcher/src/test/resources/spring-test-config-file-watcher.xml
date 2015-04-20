@@ -18,4 +18,9 @@
         <constructor-arg value="Not really a Drools bean"/>
     </bean>
 
+    <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
+    <bean id="springEntityListenerConfigurer" class="java.lang.String">
+        <constructor-arg value="Not really a Spring listener bean"/>
+    </bean>
+
 </beans>
