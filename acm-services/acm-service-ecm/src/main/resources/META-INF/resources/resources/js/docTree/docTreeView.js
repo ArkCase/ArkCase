@@ -35,13 +35,14 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_DELETED_FILE            ,this.onModelDeletedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RENAMED_FOLDER          ,this.onModelRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RENAMED_FILE            ,this.onModelRenamedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_ITEM              ,this.onModelMovedItem);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_ITEM             ,this.onModelCopiedItem);
 
         //----------
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
     }
     ,onInitialized: function() {
     }
-
 
     ,uploadFile: function(node, fileType) {
         DocTree.View.uploadToFolderNode = node;
@@ -170,7 +171,8 @@ DocTree.View = DocTree.View || {
         fd.append("parentObjectType", DocTree.Model.getObjType());
         fd.append("parentObjectId", DocTree.Model.getObjId());
         if (!DocTree.View.isTopNode(folderNode)) {
-            fd.append("parentFolderId", folderNode.data.objectId);
+            //fd.append("parentFolderId", folderNode.data.objectId);
+            fd.append("folderId", folderNode.data.objectId);
         }
         fd.append("fileType", fileType);
         fd.append("category", "Document");
@@ -323,7 +325,22 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeOk(node);
         }
     }
-
+    ,onModelMovedItem: function(moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, node) {
+        if (moveItemInfo.hasError) {
+            App.View.MessageBoard.show("Error occurred when copying file or folder", Acm.goodValue(moveItemInfo.errorMsg));
+            DocTree.View.markNodeError(node);
+        } else {
+            DocTree.View.markNodeOk(node);
+        }
+    }
+    ,onModelCopiedItem: function(copyItemInfo, objType, objId, folderId, itemId, toCacheKey, node) {
+        if (copyItemInfo.hasError) {
+            App.View.MessageBoard.show("Error occurred when moving file or folder", Acm.goodValue(copyItemInfo.errorMsg));
+            DocTree.View.markNodeError(node);
+        } else {
+            DocTree.View.markNodeOk(node);
+        }
+    }
     //------------------
     ,onModelAddedDocument: function(node, parentId, folder) {
         //var $divError = $("#divError");
@@ -944,22 +961,7 @@ DocTree.View = DocTree.View || {
                     node.editStart();
                     break;
                 case "remove":
-                    if (DocTree.View.isFolderNode(node) || DocTree.View.isFileNode(node)) {
-                        var parent = node.parent;
-                        if (parent) {
-                            var pageId = Acm.goodValue(parent.data.startRow, 0);
-                            var parentId = parent.data.objectId;
-                            var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
-
-                            DocTree.View._doRemove(node);
-
-                            if (DocTree.View.isFolderNode(node)) {
-                                DocTree.Controller.viewRemovedFolder(node.data.objectId, cacheKey, node);
-                            } else if (DocTree.View.isFileNode(node)) {
-                                DocTree.Controller.viewRemovedFile(node.data.objectId, cacheKey, node);
-                            }
-                        }
-                    }
+                    DocTree.View._doRemove(node);
                     break;
                 case "addChild":
                     node.editCreateNode("child", "");
@@ -1115,26 +1117,65 @@ DocTree.View = DocTree.View || {
         DocTree.View.$formDownloadDoc.submit();
     }
     ,_doRemove: function(node) {
-        var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-        node.remove();
-        if( refNode ) {
-            refNode.setActive();
+        if (DocTree.View.isFolderNode(node) || DocTree.View.isFileNode(node)) {
+            var parent = node.parent;
+            if (parent) {
+                var pageId = Acm.goodValue(parent.data.startRow, 0);
+                var parentId = parent.data.objectId;
+                var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
+
+                var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                node.remove();
+                if( refNode ) {
+                    refNode.setActive();
+                }
+
+                if (DocTree.View.isFolderNode(node)) {
+                    DocTree.Controller.viewRemovedFolder(node.data.objectId, cacheKey, node);
+                } else if (DocTree.View.isFileNode(node)) {
+                    DocTree.Controller.viewRemovedFile(node.data.objectId, cacheKey, node);
+                }
+            }
         }
     }
     ,_doPaste: function(node) {
-        if( DocTree.View.CLIPBOARD.mode === "cut" ) {
-            // refNode = node.getPrevSibling();
-            if (node.folder) {
-                DocTree.View.CLIPBOARD.data.moveTo(node, "child");
-            } else {
-                DocTree.View.CLIPBOARD.data.moveTo(node, "after");
-            }
-            DocTree.View.CLIPBOARD.data.setActive();
-        } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
-            if (node.folder) {
-                node.addChildren(DocTree.View.CLIPBOARD.data).setActive();
-            } else {
-                node.addNode(DocTree.View.CLIPBOARD.data, "after").setActive();
+        var frNode = DocTree.View.CLIPBOARD.data;
+        if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
+            var frId = frNode.data.objectId;
+
+            var toNode = null;
+            var toFolderNode = DocTree.View.isFolderNode(node)? node : node.parent;
+            if (toFolderNode) {
+                var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
+                var toFolderId = toFolderNode.data.objectId;
+                var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
+
+                if( DocTree.View.CLIPBOARD.mode === "cut" ) {
+                    var frFolderNode = frNode.parent;
+                    var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
+                    var frFolderId = frFolderNode.data.objectId;
+                    var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
+
+                    if (DocTree.View.isFolderNode(node)) {
+                        frNode.moveTo(node, "child");
+                    } else {
+                        frNode.moveTo(node, "after");
+                    }
+                    toNode = frNode;
+                    toNode.setActive();
+                    DocTree.View.markNodePending(toNode);
+                    DocTree.Controller.viewCutPasted(frId, toFolderId, frCacheKey, toCacheKey, toNode);
+
+                } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
+                    if (DocTree.View.isFolderNode(node)) {
+                        toNode = node.addChildren(frNode);
+                    } else {
+                        toNode = node.addNode(frNode, "after")
+                    }
+                    toNode.setActive();
+                    DocTree.View.markNodePending(toNode);
+                    DocTree.Controller.viewCopyPasted(frId, toFolderId, toCacheKey, toNode);
+                }
             }
         }
     }
