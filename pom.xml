@@ -36,6 +36,7 @@
         <easymock.version>3.2</easymock.version>
         <eclipselink-jpa.version>2.5.2</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
+        <exchange-web-services.version>2.0-SNAPSHOT</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
         <google-collections.version>1.0</google-collections.version>
         <gson.version>1.7.1</gson.version>
@@ -529,7 +530,6 @@
                 <version>${drools.version}</version>
             </dependency>
 
-
             <!-- spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -807,6 +807,12 @@
                 <artifactId>mule-module-scripting</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
@@ -843,6 +849,13 @@
                 <version>${mule-cmis-connector.version}</version>
             </dependency>
             <!-- end of mule -->
+
+            <!-- microsoft outlook / exchange integration -->
+            <dependency>
+                <groupId>com.microsoft.ews-java-api</groupId>
+                <artifactId>ews-java-api</artifactId>
+                <version>${exchange-web-services.version}</version>
+            </dependency>
 
             <!-- camel -->
             <dependency>
