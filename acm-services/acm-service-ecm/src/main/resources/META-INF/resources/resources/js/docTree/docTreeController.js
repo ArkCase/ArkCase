@@ -20,6 +20,11 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_RENAMED_FOLDER          = name + "-model-renamed-folder";
         this.VIEW_RENAMED_FILE             = name + "-view-renamed-file";
         this.MODEL_RENAMED_FILE            = name + "-model-renamed-file";
+        this.VIEW_CUT_PASTED               = name + "-view-cut-pasted";
+        this.MODEL_MOVED_ITEM              = name + "-model-moved-item";
+        this.VIEW_COPY_PASTED              = name + "-view-copy-pasted";
+        this.MODEL_COPIED_ITEM             = name + "-model-copied-item";
+
 
         //-------
 
@@ -71,6 +76,18 @@ DocTree.Controller = DocTree.Controller || {
     }
     ,modelRenamedFile: function(renamedInfo, fileName, fileId, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RENAMED_FILE, renamedInfo, fileName, fileId, cacheKey, callerData);
+    }
+    ,viewCutPasted: function(itemId, folderId, frCacheKey, toCacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CUT_PASTED, itemId, folderId, frCacheKey, toCacheKey, node);
+    }
+    ,modelMovedItem: function(moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_ITEM, moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData);
+    }
+    ,viewCopyPasted: function(itemId, folderId, toCacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPY_PASTED, itemId, folderId, toCacheKey, node);
+    }
+    ,modelCopiedItem: function(copyItemInfo, objType, objId, folderId, itemId, toCacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_ITEM, copyItemInfo, objType, objId, folderId, itemId, toCacheKey, callerData);
     }
     //----------------
 
