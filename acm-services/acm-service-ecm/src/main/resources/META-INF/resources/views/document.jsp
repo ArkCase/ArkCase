@@ -366,7 +366,9 @@
                 <div class="row" id="tabDocViewer">
                     <div class="col-md-12">
                         <section class="panel b-a">
-                            <div id="divDocViewer" style="width:100%"></div>
+                            <div id="divDocViewer" style="width:100%">
+                                <iframe src = "/acm/resources/vendors/ViewerJS/index.html?type=pdf&title=marjan.pdf#http://localhost:8081/acm/api/latest/plugin/ecm/download/byId/1334?inline=true" width='1090' height='400' allowfullscreen webkitallowfullscreen></iframe>
+                            </div>
                         </section>
                     </div>
                 </div>
