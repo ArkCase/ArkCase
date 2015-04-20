@@ -3,16 +3,6 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-
-    <changeSet id="01-tag-foreign-key" author="marst">
-        <addForeignKeyConstraint baseTableName="acm_tag"
-                             baseColumnNames="cm_file_id"
-                             constraintName="fk_file"
-                             referencedTableName="acm_file"
-                             referencedColumnNames="cm_file_id"
-                             deferrable="true"
-                             initiallyDeferred="true"/>
-    </changeSet>
     <changeSet id="02-tag-foreign-key" author="marst">
         <addForeignKeyConstraint baseTableName="acm_associated_tag"
                                  baseColumnNames="cm_tag_id"
