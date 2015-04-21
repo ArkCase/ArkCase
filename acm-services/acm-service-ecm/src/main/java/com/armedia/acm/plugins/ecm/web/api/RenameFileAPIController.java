@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 
 /**
  * Created by marjan.stefanoski on 02.04.2015.
@@ -33,13 +35,15 @@ public class RenameFileAPIController {
             @PathVariable("objectId") Long objectId,
             @PathVariable("newName") String name,
             @PathVariable("extension") String extension,
-            Authentication authentication) throws AcmUserActionFailedException  {
+            Authentication authentication,
+            HttpSession session) throws AcmUserActionFailedException  {
 
         String newName = name +"."+extension;
 
         if( log.isInfoEnabled() ) {
             log.info("Renaming file, fileId: " + objectId + " with name " + newName);
         }
+        String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         EcmFile source = getFileService().findById(objectId);
         if(source==null){
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found.",null);
@@ -49,19 +53,19 @@ public class RenameFileAPIController {
             if(log.isInfoEnabled()) {
                 log.info("File with id: "+objectId+" successfully renamed to: " +newName);
             }
-            getFileEventPublisher().publishFileRenamedEvent(renamedFile,authentication,true);
+            getFileEventPublisher().publishFileRenamedEvent(renamedFile,authentication,ipAddress,true);
             return renamedFile;
         } catch ( AcmUserActionFailedException e ) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to rename file with id: " + objectId);
             }
-            getFileEventPublisher().publishFileRenamedEvent(source,authentication,false);
+            getFileEventPublisher().publishFileRenamedEvent(source,authentication,ipAddress,false);
             throw e;
         } catch ( AcmObjectNotFoundException e ) {
             if ( log.isErrorEnabled() ) {
                 log.debug("File with id: " + objectId + " not found in the DB");
             }
-            getFileEventPublisher().publishFileMovedEvent(source,authentication,false);
+            getFileEventPublisher().publishFileMovedEvent(source,authentication,ipAddress,false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found.",e);
         }
     }

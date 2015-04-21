@@ -7,8 +7,8 @@ public class EcmFileDeletedEvent extends  EcmFilePersistenceEvent {
 
     private static final String EVENT_TYPE = "com.armedia.acm.file.deleted";
 
-    public EcmFileDeletedEvent(EcmFile source, String userId) {
-        super(source,userId);
+    public EcmFileDeletedEvent(EcmFile source, String userId, String ipAddress) {
+        super(source,userId,ipAddress);
     }
 
     @Override
