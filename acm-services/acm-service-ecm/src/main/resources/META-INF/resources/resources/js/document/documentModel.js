@@ -29,66 +29,8 @@ AcmDocument.Model = AcmDocument.Model || {
         if (AcmDocument.Model.EventHistory.onInitialized)   {AcmDocument.Model.EventHistory.onInitialized();}
     }
 
-    ,interface: {
-        apiListObjects: function() {
-            //return "/api/latest/plugin/search/CASE_FILE";
-        }
-        ,apiRetrieveObject: function(nodeType, objId) {
-            //return "/api/latest/plugin/casefile/byId/" + objId;
-        }
-        ,apiSaveObject: function(nodeType, objId) {
-            //return "/api/latest/plugin/casefile/";
-        }
-        ,nodeId: function(objSolr) {
-            return objSolr.object_id_s;
-            //return parseInt(objSolr.object_id_s);
-        }
-        ,nodeType: function(objSolr) {
-            return AcmDocument.Model.DOC_TYPE_DOCUMENT;
-        }
-        ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable) + " (" + Acm.goodValue(objSolr.name) + ")";
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable);
-        }
-        ,objToSolr: function(objData) {
-            var solr = {};
-            solr.author = objData.creator;
-            solr.author_s = objData.creator;
-            solr.create_tdt = objData.created;
-            solr.last_modified_tdt = objData.modified;
-            solr.modifier_s = objData.modifier;
-            solr.name = objData.caseNumber;
-            solr.object_id_s = objData.id;
-            solr.object_type_s = AcmDocument.Model.DOC_TYPE_DOCUMENT;
-            solr.owner_s = objData.creator;
-            solr.status_s = objData.status;
-            solr.title_parseable = objData.title;
-            return solr;
-        }
-        ,validateObjData: function(data) {
-            return AcmDocument.Model.Detail.validateDocument(data);
-        }
-        ,nodeTypeMap: function() {
-            return AcmDocument.Model.Tree.Key.nodeTypeMap;
-        }
-    }
-
-
-
     ,DOC_TYPE_DOCUMENT          : "FILE"
     ,DOC_TYPE_DOCUMENT_SM       : "file"
-
-
-
-    ,getDocumentId : function() {
-        return ObjNav.Model.getObjectId();
-    }
-    ,getDocument: function() {
-        var objId = ObjNav.Model.getObjectId();
-        return ObjNav.Model.Detail.getCacheObject(AcmDocument.Model.DOC_TYPE_DOCUMENT, objId);
-    }
 
     ,MicroData: {
         create : function() {
@@ -101,65 +43,30 @@ AcmDocument.Model = AcmDocument.Model || {
 
     ,Detail: {
         create : function() {
-
+            this.cacheDocumentDetail = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
+            AcmDocument.Service.Detail.retrieveDocumentDetail(AcmDocument.Model.MicroData.documentId);
         }
-        ,getCacheDocument: function(documentId) {
-            if (0 >= documentId) {
-                return null;
-            }
-            return ObjNav.Model.Detail.getCacheObject(AcmDocument.Model.DOC_TYPE_DOCUMENT, documentId);
-        }
-        ,putCacheDocument: function(documentId, document) {
-            ObjNav.Model.Detail.putCacheObject(AcmDocument.Model.DOC_TYPE_DOCUMENT, documentId, document);
-        }
-        ,validateDocument: function(data) {
-            /*if (Acm.isEmpty(data)) {
+        ,validateDocumentDetail: function(data) {
+            if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
+            if (Acm.isEmpty(data.title_t)) {
                 return false;
             }
-            if (!Acm.isArray(data.childObjects)) {
+            if (Acm.isEmpty(data.create_tdt)) {
                 return false;
             }
-            if (!Acm.isArray(data.milestones)) {
+            if (Acm.isEmpty(data.type_s)) {
                 return false;
             }
-            if (!Acm.isArray(data.participants)) {
+            if (Acm.isEmpty(data.author)) {
                 return false;
             }
-            if (!Acm.isArray(data.personAssociations)) {
+            if (Acm.isEmpty(data.status_s)) {
                 return false;
             }
-            if (!Acm.isArray(data.references)) {
-                return false;
-            }*/
-            return true;
-        }
-        ,validateParentObject: function(data) {
-            /*if (Acm.isEmpty(data)) {
-             return false;
-             }
-             if (Acm.isEmpty(data.id) || Acm.isEmpty(data.caseNumber)) {
-             return false;
-             }
-             if (!Acm.isArray(data.childObjects)) {
-             return false;
-             }
-             if (!Acm.isArray(data.milestones)) {
-             return false;
-             }
-             if (!Acm.isArray(data.participants)) {
-             return false;
-             }
-             if (!Acm.isArray(data.personAssociations)) {
-             return false;
-             }
-             if (!Acm.isArray(data.references)) {
-             return false;
-             }*/
             return true;
         }
     }
@@ -234,11 +141,37 @@ AcmDocument.Model = AcmDocument.Model || {
     ,AssociatedTags: {
         create : function() {
             this.cacheAssociatedTags = new Acm.Model.CacheFifo();
-            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_REMOVED_ASSOCIATED_TAG     , this.onViewRemovedAssociatedTag);
+            this.cacheAllTags        = new Acm.Model.CacheFifo();
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_REMOVED_ASSOCIATED_TAG      , this.onViewRemovedAssociatedTag);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_CREATED_NEW_TAG             , this.onViewCreatedNewTag);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CREATED_NEW_TAG            , this.onModelCreatedNewTag);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_ASSOCIATED_NEW_TAG          , this.onViewAssociatedNewTag);
         }
         ,onInitialized: function() {
+            AcmDocument.Service.AssociatedTags.retrieveAllTags(AcmDocument.Model.MicroData.documentId);
             AcmDocument.Service.AssociatedTags.retrieveAssociatedTags(AcmDocument.Model.MicroData.documentId);
         }
+        ,onViewCreatedNewTag: function(newTagName, newTagDesc, newTagText){
+            var documentId = Acm.goodValue(AcmDocument.Model.MicroData.documentId);
+            AcmDocument.Service.AssociatedTags.createNewTag(newTagName, newTagDesc, newTagText, documentId);
+        }
+
+        //need this for now to associate newly created tag.
+        ,onModelCreatedNewTag: function(newTag){
+            if(newTag.hasError){
+                App.View.MessageBoard.show(newTag.errorMsg);
+            }
+            else if(AcmDocument.Model.AssociatedTags.validateTag(newTag)){
+                var tagId = Acm.goodValue(newTag.id);
+                var documentId = Acm.goodValue(AcmDocument.Model.MicroData.documentId);
+                AcmDocument.Service.AssociatedTags.associateNewTag(documentId, tagId);
+            }
+        }
+        ,onViewAssociatedNewTag: function(tagId){
+            var documentId = Acm.goodValue(AcmDocument.Model.MicroData.documentId);
+            AcmDocument.Service.AssociatedTags.associateNewTag(documentId,tagId);
+        }
+
 
         ,onViewRemovedAssociatedTag: function(documentId,tagId){
             AcmDocument.Service.AssociatedTags.removeAssociatedTag(documentId,tagId);
@@ -256,7 +189,7 @@ AcmDocument.Model = AcmDocument.Model || {
             }
             return true;
         }
-        ,validateAssociatedTags: function(data){
+        ,validateTags: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
@@ -266,8 +199,30 @@ AcmDocument.Model = AcmDocument.Model || {
             return true;
         }
 
-        ,validateAssociatedTag: function(data) {
+        ,validateNewTagAssociation: function(data){
             if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.parentType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.tagId)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateTag: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
                 return false;
             }
             if (Acm.isEmpty(data.tagText)) {
