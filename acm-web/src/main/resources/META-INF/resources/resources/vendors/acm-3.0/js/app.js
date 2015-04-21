@@ -211,7 +211,7 @@ Date.now = Date.now || function() { return +new Date; };
         $modal.load($remote);
       }
     );
-    
+
     // dropdown menu
     $.fn.dropdown.Constructor.prototype.change = function(e){
       e.preventDefault();
@@ -259,11 +259,11 @@ Date.now = Date.now || function() { return +new Date; };
       $target && ($targets = $target.split(','));
       $classes && $classes.length && $.each($targets, function( index, value ) {
         if ( $classes[index].indexOf( '*' ) !== -1 ) {
-          var patt = new RegExp( '\\s' + 
+          var patt = new RegExp( '\\s' +
               $classes[index].
                 replace( /\*/g, '[A-Za-z0-9-_]+' ).
                 split( ' ' ).
-                join( '\\s|\\s' ) + 
+                join( '\\s|\\s' ) +
               '\\s', 'g' );
           $($this).each( function ( i, it ) {
             var cn = ' ' + it.className + ' ';
@@ -287,17 +287,17 @@ Date.now = Date.now || function() { return +new Date; };
         $target.find('.panel-body').toggleClass($class);
         $this.toggleClass('active');
     });
-  	
+
   	// carousel
   	$('.carousel.auto').carousel();
-  	
+
   	// button loading
   	$(document).on('click.button.data-api', '[data-loading-text]', function (e) {
   	    var $this = $(e.target);
   	    $this.is('i') && ($this = $this.parent());
   	    $this.button('loading');
   	});
- 	
+
     var $window = $(window);
     // mobile
   	var mobile = function(option){
@@ -311,7 +311,7 @@ Date.now = Date.now || function() { return +new Date; };
   		}
   		if ($('[data-toggle^="shift"]').shift) {
   			$('[data-toggle^="shift"]').shift('init');
-  			
+
   		}
       return true;
   	};
@@ -326,7 +326,7 @@ Date.now = Date.now || function() { return +new Date; };
         $window.width() >= 768 && mobile('reset') && fixVbox();
       }, 500);
   	});
-    
+
     // fix vbox
     var fixVbox = function(){
       $('.ie11 .vbox').each(function(){
@@ -337,18 +337,18 @@ Date.now = Date.now || function() { return +new Date; };
 
     // collapse nav
     $(document).on('click', '[data-ride="collapse"] a', function (e) {
-      var $this = $(e.target), $active;      
+      var $this = $(e.target), $active;
       $this.is('a') || ($this = $this.closest('a'));
-      
+
       $active = $this.parent().siblings( ".active" );
       $active && $active.toggleClass('active').find('> ul:visible').slideUp(200);
-      
+
       ($this.parent().hasClass('active') && $this.next().slideUp(200)) || $this.next().slideDown(200);
       $this.parent().toggleClass('active');
-      
+
       $this.next().is('ul') && e.preventDefault();
 
-      setTimeout(function(){ $(document).trigger('updateNav'); }, 300);      
+      setTimeout(function(){ $(document).trigger('updateNav'); }, 300);
     });
 
     // dropdown still

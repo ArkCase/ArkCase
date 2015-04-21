@@ -7,8 +7,8 @@ public class EcmFileReplacedEvent extends  EcmFilePersistenceEvent {
 
     private static final String EVENT_TYPE = "com.armedia.acm.file.replaced";
 
-    public EcmFileReplacedEvent(EcmFile source, String userId) {
-        super(source,userId);
+    public EcmFileReplacedEvent(EcmFile source, String userId , String ipAddress) {
+        super(source,userId,ipAddress);
     }
 
     @Override
