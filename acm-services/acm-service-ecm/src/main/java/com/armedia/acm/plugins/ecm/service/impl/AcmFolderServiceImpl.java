@@ -174,11 +174,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 log.info("The folder: "+folderForMoving.getName()+" is a root folder, can not be moved!");
             throw  new AcmFolderException("The folder: "+folderForMoving.getName()+" is a root folder, can not be moved!");
         }
+
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
         try {
-            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folderForMoving, properties);
+            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
 
             if ( message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
@@ -186,7 +187,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     log.error("Folder can not be moved successfully " + muleException.getMessage(), muleException);
                 }
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
-                        "Folder " + folderForMoving.getName() + "can not be moved successfully", muleException);
+                        "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
             }
 
             CmisObject cmisObject = message.getPayload(CmisObject.class);

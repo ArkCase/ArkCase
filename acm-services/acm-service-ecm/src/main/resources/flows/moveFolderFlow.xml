@@ -26,10 +26,11 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
         <enricher target="#[flowVars['parentObject']]">
-            <cmis:get-parent-folders objectId="#[message.inboundProperties.acmFolderId]"/>
+            <cmis:folder get="PARENT" folderId="#[message.inboundProperties.acmFolderId]"/>
         </enricher>
 
-        <logger level="INFO" category="com.armedia.acm.plugins.ecm" message="MARJAN  parentID: #[flowVars['parentObject'].id]"/>
+
+        <logger level="INFO" category="com.armedia.acm.plugins.ecm" message="MARJAN  parentID: #[flowVars['parentObject']]"/>
 
         <cmis:move-object objectId="#[message.inboundProperties.acmFolderId]"
                           sourceFolderId="#[flowVars['parentObject'].id]"
