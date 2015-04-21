@@ -361,24 +361,24 @@ DocTree.Service = {
             ,url
         )
     }
-    ,moveItem: function(objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData) {
+    ,moveFile: function(objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData) {
         var url = App.getContextPath() + this.API_MOVE_TO_ + objType + "/" + objId;
-        var data = {"id": itemId, "folderId": folderId};
+        var data = {"id": fileId, "folderId": folderId};
         Acm.Service.asyncPost2({url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
-                    DocTree.Controller.modelMovedItem(response, objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData);
+                    DocTree.Controller.modelMovedFile(response, objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData);
 
                 } else {
-                    if (DocTree.Model.validateMoveItemInfo(response)) {
-                        if (response.fileId == itemId) {
-                            var moveItemInfo = response;
+                    if (DocTree.Model.validateMoveFileInfo(response)) {
+                        if (response.fileId == fileId) {
+                            var moveFileInfo = response;
 
                             var frFolderList = DocTree.Model.cacheFolderList.get(frCacheKey);
                             var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
                             if (DocTree.Model.validateFolderList(frFolderList) && DocTree.Model.validateFolderList(toFolderList)) {
-                                var idx = DocTree.Model.findFolderItemIdx(itemId, frFolderList);
+                                var idx = DocTree.Model.findFolderItemIdx(fileId, frFolderList);
                                 if (0 <= idx) {
                                     toFolderList.children.push(frFolderList.children[idx]);
                                     toFolderList.totalChildren++;
@@ -390,7 +390,7 @@ DocTree.Service = {
                                 }
                             }
 
-                            DocTree.Controller.modelMovedItem(moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData);
+                            DocTree.Controller.modelMovedFile(moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData);
                             return true;
                         }
                     }
@@ -398,30 +398,102 @@ DocTree.Service = {
             }
         })
     }
-    ,copyItem: function(objType, objId, folderId, itemId, toCacheKey, callerData) {
+    ,copyFile: function(objType, objId, folderId, fileId, toCacheKey, callerData) {
         var url = App.getContextPath() + this.API_COPY_TO_ + objType + "/" + objId;
-        var data = {"id": itemId, "folderId": folderId};
+        var data = {"id": fileId, "folderId": folderId};
         Acm.Service.asyncPost2({url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
-                    DocTree.Controller.modelCopiedItem(response, objType, objId, folderId, itemId, toCacheKey, callerData);
+                    DocTree.Controller.modelCopiedFile(response, objType, objId, folderId, fileId, toCacheKey, callerData);
 
                 } else {
-                    if (DocTree.Model.validateCopyItemInfo(response)) {
+                    if (DocTree.Model.validateCopyFileInfo(response)) {
                         if (response.folder.id == folderId) {
-                            var copyItemInfo = response;
+                            var copyFileInfo = response;
 
                             var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
                             if (DocTree.Model.validateFolderList(toFolderList)) {
-                                var fileData = DocTree.Service.fileCreateToFileData(copyItemInfo);
+                                var fileData = DocTree.Service.fileCreateToFileData(copyFileInfo);
                                 toFolderList.children.push(fileData);
                                 toFolderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
+
+                                DocTree.Controller.modelCopiedFile(fileData, objType, objId, folderId, fileId, toCacheKey, callerData);
+                                return true;
                             }
 
-                            DocTree.Controller.modelCopiedItem(copyItemInfo, objType, objId, folderId, itemId, toCacheKey, callerData);
+                        }
+                    }
+                } //end else
+            }
+        })
+    }
+    ,moveFolder: function(objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
+        return;
+
+        var url = App.getContextPath() + this.API_MOVE_TO_ + objType + "/" + objId;
+        var data = {"id": subFolderId, "folderId": folderId};
+        Acm.Service.asyncPost2({url: url
+            ,data: JSON.stringify(data)
+            ,callback: function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelMovedFolder(response, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateMoveFolderInfo(response)) {
+                        if (response.fileId == subFolderId) {
+                            var moveFolderInfo = response;
+
+                            var frFolderList = DocTree.Model.cacheFolderList.get(frCacheKey);
+                            var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
+                            if (DocTree.Model.validateFolderList(frFolderList) && DocTree.Model.validateFolderList(toFolderList)) {
+                                var idx = DocTree.Model.findFolderItemIdx(subFolderId, frFolderList);
+                                if (0 <= idx) {
+                                    toFolderList.children.push(frFolderList.children[idx]);
+                                    toFolderList.totalChildren++;
+                                    DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
+
+                                    frFolderList.children.splice(idx, 1);
+                                    frFolderList.totalChildren--;
+                                    DocTree.Model.cacheFolderList.put(frCacheKey, frFolderList);
+                                }
+                            }
+
+                            DocTree.Controller.modelMovedFolder(moveFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
                             return true;
+                        }
+                    }
+                } //end else
+            }
+        })
+    }
+    ,copyFolder: function(objType, objId, folderId, subFolderId, toCacheKey, callerData) {
+        return;
+
+        var url = App.getContextPath() + this.API_COPY_TO_ + objType + "/" + objId;
+        var data = {"id": subFolderId, "folderId": folderId};
+        Acm.Service.asyncPost2({url: url
+            ,data: JSON.stringify(data)
+            ,callback: function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelCopiedFolder(response, objType, objId, folderId, subFolderId, toCacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateCopyFolderInfo(response)) {
+                        if (response.folder.id == folderId) {
+                            var copyFolderInfo = response;
+
+                            var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
+                            if (DocTree.Model.validateFolderList(toFolderList)) {
+                                var fileData = DocTree.Service.fileCreateToFileData(copyFolderInfo);
+                                toFolderList.children.push(fileData);
+                                toFolderList.totalChildren++;
+                                DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
+
+                                DocTree.Controller.modelCopiedFolder(fileData, objType, objId, folderId, subFolderId, toCacheKey, callerData);
+                                return true;
+                            }
                         }
                     }
                 } //end else

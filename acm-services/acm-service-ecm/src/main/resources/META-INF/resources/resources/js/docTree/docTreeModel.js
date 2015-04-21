@@ -14,9 +14,10 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FILE            ,this.onViewRenamedFile);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPY_PASTED             ,this.onViewCopyPasted);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CUT_PASTED              ,this.onViewCutPasted);
-
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FILE              ,this.onViewMovedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FILE             ,this.onViewCopiedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FOLDER            ,this.onViewMovedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
 
         //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
@@ -52,15 +53,17 @@ DocTree.Model = DocTree.Model || {
     ,onViewRenamedFile: function(name, id, cacheKey, node) {
         DocTree.Service.renameFile(name, id, cacheKey, node);
     }
-    ,onViewCutPasted: function(itemId, folderId, frCacheKey, toCacheKey, node) {
-        var objType = DocTree.Model.getObjType();
-        var objId = DocTree.Model.getObjId();
-        DocTree.Service.moveItem(objType, objId, folderId, itemId, frCacheKey, toCacheKey, node);
+    ,onViewMovedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
+        DocTree.Service.moveFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, frCacheKey, toCacheKey, node);
     }
-    ,onViewCopyPasted: function(itemId, folderId, toCacheKey, node) {
-        var objType = DocTree.Model.getObjType();
-        var objId = DocTree.Model.getObjId();
-        DocTree.Service.copyItem(objType, objId, folderId, itemId, toCacheKey, node);
+    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
+        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
+    }
+    ,onViewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+        DocTree.Service.moveFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
+    }
+    ,onViewCopiedFolder: function(subFolderId, folderId, toCacheKey, node) {
+        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, toCacheKey, node);
     }
 
     //---------------
@@ -176,7 +179,7 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-    ,validateMoveItemInfo: function(data) {
+    ,validateMoveFileInfo: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
         }
@@ -191,7 +194,37 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
-    ,validateCopyItemInfo: function(data) {
+    ,validateCopyFileInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder.id)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateMoveFolderInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder.id)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateCopyFolderInfo: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
         }
