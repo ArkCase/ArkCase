@@ -16,7 +16,7 @@ public class AuditIT
     @Before
     public void setUp() throws Exception
     {
-        appContext = new ClassPathXmlApplicationContext("spring/spring-library-audit.xml", "spring-library-audit-test.xml");
+        appContext = new ClassPathXmlApplicationContext("spring/spring-library-audit-service.xml", "spring-library-audit-test.xml");
     }
 
     @Test

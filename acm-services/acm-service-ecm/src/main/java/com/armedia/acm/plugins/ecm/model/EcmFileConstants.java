@@ -17,13 +17,15 @@ public interface EcmFileConstants
 
     String MULE_ENDPOINT_MOVE_FILE = "vm://moveFile.in";
 
-    String USER_ACTION_COPY_FILE = "COPY FILE";
+    String USER_ACTION_COPY_FILE = "COPY";
 
-    String USER_ACTION_MOVE_FILE = "MOVE FILE";
+    String USER_ACTION_UPLOAD_FILE = "UPLOAD";
 
-    String USER_ACTION_DELETE_FILE = "DELETE FILE";
+    String USER_ACTION_MOVE_FILE = "MOVE";
 
-    String USER_ACTION_RENAME_FILE = "RENAME FILE";
+    String USER_ACTION_DELETE_FILE = "DELETE";
+
+    String USER_ACTION_RENAME_FILE = "RENAME";
 
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
@@ -56,12 +58,10 @@ public interface EcmFileConstants
 
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
 
-    String DESTINATION_FOLDER_PROPERTY = "dstFolderId";
 
     String CMIS_OBJECT_ID = "cmisObjectId";
     String SRC_FOLDER_ID = "srcFolderId";
     String DST_FOLDER_ID = "dstFolderId";
-    String DST_FOLDER_PATH = "dstFolderPath";
     String ECM_FILE_ID = "ecmFileId";
     String NEW_FILE_NAME="newFileName";
 

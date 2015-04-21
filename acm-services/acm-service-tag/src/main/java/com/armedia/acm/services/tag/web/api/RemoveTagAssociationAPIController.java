@@ -55,18 +55,19 @@ public class RemoveTagAssociationAPIController {
             if( log.isDebugEnabled() )
                 log.debug("Associated Tag with tagId:"+tagId+"  on object['" + objectType + "]:[" + objectId + "] not found in the DB");
             getAssociatedTagEventPublisher().publishAssociatedTagDeletedEvent(source, authentication, false);
-            return prepareJsonReturnMsg( SUCCESS_MSG, source.getId() );
+            return prepareJsonReturnMsg( SUCCESS_MSG, source.getId(), tagId );
         } else {
             log.debug("Associated Tag with tagId:"+tagId+"  on object['" + objectType + "]:[" + objectId + "] successfully removed");
             getAssociatedTagEventPublisher().publishAssociatedTagDeletedEvent(source,authentication, true);
-            return prepareJsonReturnMsg(SUCCESS_MSG, source.getId() );
+            return prepareJsonReturnMsg(SUCCESS_MSG, source.getId(), tagId);
         }
     }
 
-    private String prepareJsonReturnMsg( String msg,Long objectId ) {
+    private String prepareJsonReturnMsg( String msg,Long objectId, Long tagId ) {
         JSONObject objectToReturnJSON = new JSONObject();
-        objectToReturnJSON.put("deletedAssociateTagId", objectId);
-        objectToReturnJSON.put("Message", msg);
+        objectToReturnJSON.put("deletedAssociatedTagId", objectId);
+        objectToReturnJSON.put("tagId", tagId);
+        objectToReturnJSON.put("message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;

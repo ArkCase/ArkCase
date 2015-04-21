@@ -35,7 +35,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 
         <enricher target="#[flowVars['dstFolderObject']]">
-            <cmis:get-object-by-path path="#[message.inboundProperties.dstFolderPath]"/>
+            <cmis:get-object-by-id objectId="#[message.inboundProperties.dstFolderId]"/>
         </enricher>
 
 
@@ -49,14 +49,6 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
                                 versioningState="MAJOR"
                                 objectType="cmis:document"
                                 content-ref="#[flowVars['stream'].stream]" />
-
-        <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="#[flowVars['dstFolderObject'].id]"/>
-
-        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm" message="NATASHA: New Document created"/>
-
-        <set-property  propertyName="dstFolderId" value="#[flowVars['dstFolderObject'].id]"/>
-
-        <!---->
 
 
         <cmis:get-object-by-id objectId="#[payload.id]"/>

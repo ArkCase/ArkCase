@@ -37,20 +37,20 @@ public class CopyFileAPIController {
     ) throws AcmUserActionFailedException {
 
         if (log.isInfoEnabled()) {
-            log.info("File with id: " + in.getId() + " will be copy to the location " + in.getPath());
+            log.info("File with id: " + in.getId() + " will be copy into folder with id: " + in.getFolderId());
         }
 
         EcmFile source = getFileService().findById(in.getId());
         try {
-            EcmFile copyFile = getFileService().copyFile(in.getId(),targetObjectId,targetObjectType, in.getPath());
+            EcmFile copyFile = getFileService().copyFile(in.getId(),targetObjectId,targetObjectType, in.getFolderId());
             if (log.isInfoEnabled()) {
-                log.info("File with id: " + in.getId() + " successfully copied to the location " + in.getPath());
+                log.info("File with id: " + in.getId() + " successfully copied to the location with id: " + in.getFolderId());
             }
             getFileEventPublisher().publishFileCopiedEvent(copyFile,authentication,true);
             return copyFile;
         } catch (AcmUserActionFailedException e) {
             if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to copy file with id: " + in.getId() + " to the location " + in.getPath());
+                log.error("Exception occurred while trying to copy file with id: " + in.getId() + " to the location with id:" + in.getFolderId());
             }
             getFileEventPublisher().publishFileCopiedEvent(source,authentication,false);
             throw e;

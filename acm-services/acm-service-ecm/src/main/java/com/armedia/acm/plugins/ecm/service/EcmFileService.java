@@ -97,14 +97,16 @@ public interface EcmFileService
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
 
-    EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, String pathForTheNewCopy ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+    EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, String pathForTheNewFileLocation) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile findById(Long fileId);
+
+    AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
 
 }

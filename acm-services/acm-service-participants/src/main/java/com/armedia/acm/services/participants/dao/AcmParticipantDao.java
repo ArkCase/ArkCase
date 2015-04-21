@@ -174,7 +174,8 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     }
 
     @Transactional
-    public void deleteParticipant(AcmParticipant participant) throws Exception {
+    public void deleteParticipant(Long id) throws Exception {
+        AcmParticipant participant = getEm().find(getPersistenceClass(),id);
         getEm().remove(participant);
     }
 }

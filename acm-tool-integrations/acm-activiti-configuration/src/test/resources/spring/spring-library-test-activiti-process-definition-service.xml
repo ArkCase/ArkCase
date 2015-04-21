@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+
+
+
+    <bean id="acmBpmnService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
+        <property name="processDefinitionsFolder" value="${user.home}/.acm/activiti/versions"/>
+    </bean>
+
+    <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="start"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiProcessListener.handleProcessEvent(execution.eventName, execution)"/>
+    </bean>
+    <bean id="acmActivitiListener_processEnd" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="end"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiProcessListener.handleProcessEvent(execution.eventName, execution)"/>
+    </bean>
+
+    <bean id="acmActivitiListener_taskCreate" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="create"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
+    </bean>
+
+    <bean id="acmActivitiListener_taskSave" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="save"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
+    </bean>
+
+    <bean id="acmActivitiListener_taskAssignment" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="assignment"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
+    </bean>
+
+    <bean id="acmActivitiListener_taskComplete" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="complete"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
+    </bean>
+
+    <bean id="acmActivitiListener_taskDelete" class="com.armedia.acm.activiti.AcmActivitiListener">
+        <property name="event" value="delete"/>
+        <property name="implementationType" value="expression"/>
+        <property name="implementation" value="eventRaisingActivitiTaskListener.handleTaskEvent(task.eventName, task)"/>
+    </bean>
+
+    <bean id="acmActivitiProcessHandler" class="com.armedia.acm.activiti.ActivitiProcessParseHandler">
+        <property name="listenersToAdd">
+            <list>
+                <ref bean="acmActivitiListener_processStart"/>
+                <ref bean="acmActivitiListener_processEnd"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmActivitiUserTaskHandler" class="com.armedia.acm.activiti.ActivitiUserTaskParseHandler">
+        <property name="listenersToAdd">
+            <list>
+                <ref bean="acmActivitiListener_taskCreate"/>
+                <ref bean="acmActivitiListener_taskAssignment"/>
+                <ref bean="acmActivitiListener_taskComplete"/>
+                <ref bean="acmActivitiListener_taskDelete"/>
+                <ref bean="acmActivitiListener_taskSave"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

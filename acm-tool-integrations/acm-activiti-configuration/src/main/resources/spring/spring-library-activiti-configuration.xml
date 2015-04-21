@@ -98,7 +98,7 @@
     <bean id="activitiHistoryService" factory-bean="activitiProcessEngine" factory-method="getHistoryService" />
 
     <bean id="bpmnFileAddedMonitor" class="com.armedia.acm.activiti.BpmnFileAddedMonitor">
-        <property name="repositoryService" ref="activitiRepositoryService"/>
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <bean id="deployFolder" class="java.io.File">
@@ -117,4 +117,11 @@
         <property name="resolver" ref="activitiPathMatchingResolver"/>
     </bean>
 
+    <bean id="processDefinitionManagementService" class="com.armedia.acm.activiti.services.AcmBpmnServiceImpl">
+        <property name="activitiRepositoryService" ref="activitiRepositoryService"/>
+        <property name="acmBpmnDao" ref="acmProcessDefinitionDao"/>
+        <property name="processDefinitionsFolder" value="${user.home}/.acm/activiti/versions"/>
+    </bean>
+
+    <bean id="acmProcessDefinitionDao" class="com.armedia.acm.activiti.services.dao.AcmBpmnDao"/>
 </beans>

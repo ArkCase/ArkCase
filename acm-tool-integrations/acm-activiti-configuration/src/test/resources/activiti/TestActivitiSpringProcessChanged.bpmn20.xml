@@ -1,0 +1,22 @@
+<definitions targetNamespace="http://activiti.org/bpmn20"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
+                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+
+    <process id="TestActivitiSpringProcessUnitTest" name="Testing Activiti Spring Module">
+
+        <startEvent id="start1" />
+
+        <sequenceFlow id="approvals" sourceRef="start1" targetRef="approvalTasks" />
+
+        <userTask id="approvalTasks" name="Approve Task"/>
+
+        <sequenceFlow id="approvalTasksToEnd" sourceRef="approvalTasks" targetRef="done" />
+
+        <endEvent id="done" />
+
+    </process>
+
+</definitions>

@@ -45,16 +45,16 @@ public class RemoveParticipantAPIController {
         AcmParticipant participant = getAcmParticipantService().getParticipantByParticipantTypeAndObjectTypeAndId(userId,participantType,objectType,objectId);
         try {
             if (participant != null) {
-                getAcmParticipantService().removeParticipant(participant);
+                getAcmParticipantService().removeParticipant(participant.getId());
                 if (log.isDebugEnabled())
                     log.debug("Participant" + userId + "  successfully removed from object['" + objectType + "]:[" + objectId + "]");
                 getAcmParticipantEventPublisher().publishParticipantDeletedEvent(participant, authentication, true);
-                return prepareJsonReturnMsg(ParticipantConstants.SUCCESS_DELETE_MSG, userId, objectType, objectId);
+                return prepareJsonReturnMsg(participant, ParticipantConstants.SUCCESS_DELETE_MSG, userId, objectType, objectId);
             } else {
                 if (log.isDebugEnabled())
                     log.debug("Association not found between Participant" + userId + " and object['" + objectType + "]:[" + objectId + "] in  the DB");
                 getAcmParticipantEventPublisher().publishParticipantDeletedEvent(participant, authentication, false);
-                return prepareJsonReturnMsg(ParticipantConstants.SUCCESS_DELETE_MSG,userId, objectType, objectId);
+                return prepareJsonReturnMsg(participant, ParticipantConstants.SUCCESS_DELETE_MSG,userId, objectType, objectId);
             }
         } catch ( Exception e ) {
             if (log.isErrorEnabled())
@@ -64,12 +64,13 @@ public class RemoveParticipantAPIController {
 
     }
 
-    private String prepareJsonReturnMsg(String msg, String userId, String objectType, Long objectId) {
+    private String prepareJsonReturnMsg(AcmParticipant participant, String msg, String userId, String objectType, Long objectId) {
         JSONObject objectToReturnJSON = new JSONObject();
+        objectToReturnJSON.put("deletedParticipantId", participant.getId());
         objectToReturnJSON.put("deletedParticipant", userId);
         objectToReturnJSON.put("fromObjectType", objectType);
-        objectToReturnJSON.put("andObjectId",objectId);
-        objectToReturnJSON.put("Message", msg);
+        objectToReturnJSON.put("objectId",objectId);
+        objectToReturnJSON.put("message", msg);
         String objectToReturn;
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;
