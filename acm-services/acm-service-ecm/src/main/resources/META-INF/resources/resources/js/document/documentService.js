@@ -154,8 +154,29 @@ AcmDocument.Service = {
         ,onInitialized: function() {
         }
 
+        ,API_ASSOCIATED_TAGS_COMMON           : "/api/latest/service/tag"
+
         ,API_RETRIEVE_ASSOCIATED_TAGS         : "/api/latest/service/tag/"
         ,API_REMOVE_ASSOCIATED_TAGS           : "/api/latest/service/tag/"
+
+        ,retrieveAllTags : function(documentId) {
+            var url = App.getContextPath() + this.API_ASSOCIATED_TAGS_COMMON;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        AcmDocument.Controller.modelRetrievedAllTags(response);
+
+                    } else {
+                        if (AcmDocument.Model.AssociatedTags.validateTags(response)) {
+                            var allTags = response;
+                            AcmDocument.Model.AssociatedTags.cacheAllTags.put(documentId, allTags);
+                            AcmDocument.Controller.modelRetrievedAllTags(allTags);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
 
         ,retrieveAssociatedTags : function(documentId) {
             var url = App.getContextPath() + this.API_RETRIEVE_ASSOCIATED_TAGS + documentId;
@@ -166,7 +187,7 @@ AcmDocument.Service = {
                         AcmDocument.Controller.modelRetrievedAssociatedTags(response);
 
                     } else {
-                        if (AcmDocument.Model.AssociatedTags.validateAssociatedTags(response)) {
+                        if (AcmDocument.Model.AssociatedTags.validateTags(response)) {
                             var associatedTags = response;
                             AcmDocument.Model.AssociatedTags.cacheAssociatedTags.put(documentId, associatedTags);
                             AcmDocument.Controller.modelRetrievedAssociatedTags(associatedTags);
@@ -174,6 +195,60 @@ AcmDocument.Service = {
                     }
                 }
                 ,url
+            )
+        }
+
+        ,createNewTag : function(tagName,tagDesc,tagText,documentId) {
+            var url = App.getContextPath() + this.API_ASSOCIATED_TAGS_COMMON;
+            url +=  "?name=" + tagName;
+            url +=  "&desc=" + tagDesc;
+            url +=  "&text=" + tagText;
+
+            Acm.Service.asyncPut(
+                function (response) {
+                    if (response.hasError) {
+                        AcmDocument.Controller.modelCreatedNewTag(response);
+                    } else {
+                        if (AcmDocument.Model.AssociatedTags.validateTag(response)) {
+                            var newTag = response;
+                            var allTags = AcmDocument.Model.AssociatedTags.cacheAllTags.get(documentId);
+                            if (AcmDocument.Model.AssociatedTags.validateTags(allTags)) {
+                                allTags.push(newTag);
+                            }
+                            AcmDocument.Controller.modelCreatedNewTag(newTag);
+                        }
+                    } //end else
+                }
+                , url
+            )
+        }
+
+        ,associateNewTag : function(documentId, tagId) {
+            var url = App.getContextPath() + this.API_ASSOCIATED_TAGS_COMMON + "/" + documentId;
+            url += "/" + AcmDocument.Model.DOC_TYPE_DOCUMENT;
+            url += "/" + tagId;
+
+            Acm.Service.asyncPut(
+                function (response) {
+                    if (response.hasError) {
+                        AcmDocument.Controller.modelAssociatedNewTag(response);
+                    } else {
+                        if (AcmDocument.Model.AssociatedTags.validateNewTagAssociation(response)) {
+                            var tagId = response.tagId;
+                            var allTags = AcmDocument.Model.AssociatedTags.cacheAllTags.get(documentId);
+                            var associatedTags = AcmDocument.Model.AssociatedTags.cacheAssociatedTags.get(documentId);
+                            if (AcmDocument.Model.AssociatedTags.validateTags(allTags) && AcmDocument.Model.AssociatedTags.validateTags(associatedTags)) {
+                                for(var i = 0; i < allTags.length; i++){
+                                    if(tagId == allTags[i].id){
+                                        associatedTags.push(allTags[i]);
+                                        AcmDocument.Controller.modelAssociatedNewTag(associatedTags);
+                                    }
+                                }
+                            }
+                        }
+                    } //end else
+                }
+                , url
             )
         }
 
@@ -191,9 +266,9 @@ AcmDocument.Service = {
                         if (AcmDocument.Model.AssociatedTags.validateRemovedAssociatedTag(response)) {
                             if (response.tagId == tagId) {
                                 var associatedTags = AcmDocument.Model.AssociatedTags.cacheAssociatedTags.get(documentId);
-                                if(AcmDocument.Model.AssociatedTags.validateAssociatedTags(associatedTags)){
+                                if(AcmDocument.Model.AssociatedTags.validateTags(associatedTags)){
                                     for (var i = 0; i < associatedTags.length; i++) {
-                                        if(AcmDocument.Model.AssociatedTags.validateAssociatedTag(associatedTags[i])){
+                                        if(AcmDocument.Model.AssociatedTags.validateTag(associatedTags[i])){
                                             if (tagId == associatedTags[i].id) {
                                                 associatedTags.splice(i, 1);
                                                 AcmDocument.Controller.modelRemovedAssociatedTag(associatedTags);
@@ -216,6 +291,29 @@ AcmDocument.Service = {
         }
         ,onInitialized: function() {
         }
+
+        ,API_RETRIEVE_DOCUMENT_DETAILS: "/api/v1/plugin/search/quickSearch?q="
+
+        ,retrieveDocumentDetail : function(documentId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_DOCUMENT_DETAILS;
+            url += "\"" + documentId + "-" + AcmDocument.Model.DOC_TYPE_DOCUMENT + "\"";
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        AcmDocument.Controller.modelRetrievedDocumentDetail(response);
+
+                    } else {
+                        if (Acm.Validator.validateSolrData(response)) {
+                            var documentDetail = response.response.docs[0];
+                            AcmDocument.Model.Detail.cacheDocumentDetail.put(documentId, documentDetail);
+                            AcmDocument.Controller.modelRetrievedDocumentDetail(documentDetail);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+
     }
 
     ,Documents: {
