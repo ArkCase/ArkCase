@@ -7,8 +7,8 @@ public class EcmFiledCopiedEvent extends  EcmFilePersistenceEvent{
 
     private static final String EVENT_TYPE = "com.armedia.acm.file.copied";
 
-    public EcmFiledCopiedEvent(EcmFile source, String userId) {
-        super(source,userId);
+    public EcmFiledCopiedEvent(EcmFile source, String userId , String ipAddress) {
+        super(source,userId,ipAddress);
     }
 
     @Override
