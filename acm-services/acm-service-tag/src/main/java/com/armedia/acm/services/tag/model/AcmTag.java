@@ -49,9 +49,8 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tag")
-    private List<AcmAssociatedTag> associatedTags;
+    @Column(name="cm_tag_token")
+    private String tagToken;
 
     public String getTagText() {
         return tagText;
@@ -79,14 +78,6 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     @Override
     public void setCreated(Date created) {
         this.created = created;
-    }
-
-    public List<AcmAssociatedTag> getAssociatedTags() {
-        return associatedTags;
-    }
-
-    public void setAssociatedTags(List<AcmAssociatedTag> associatedTags) {
-        this.associatedTags = associatedTags;
     }
 
     @Override
@@ -126,12 +117,20 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     }
 
     @JsonIgnore
+    public String getTagToken() {
+        return tagToken;
+    }
+
+    public void setTagToken(String tagToken) {
+        this.tagToken = tagToken;
+    }
+
+    @JsonIgnore
     @Override
     public String getObjectType() {
         return OBJECT_TYPE;
     }
 
-    @JsonIgnore
     @Override
     public Long getId() {
         return id;

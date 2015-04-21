@@ -42,12 +42,11 @@ public class AcmParticipantService {
     }
 
     public void removeParticipant( Long participantId ) throws Exception {
-        AcmParticipant participant = getParticipantDao().find(participantId);
-        getParticipantDao().deleteParticipant(participant);
+        getParticipantDao().deleteParticipant(participantId);
     }
 
     public void removeParticipant( AcmParticipant participant ) throws Exception {
-        getParticipantDao().deleteParticipant(participant);
+        getParticipantDao().deleteParticipant(participant.getId());
     }
 
     public AcmParticipant findParticipant(Long id){

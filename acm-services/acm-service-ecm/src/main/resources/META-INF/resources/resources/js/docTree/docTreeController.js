@@ -16,10 +16,18 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_DELETED_FOLDER          = name + "-model-deleted-folder";
         this.VIEW_REMOVED_FILE             = name + "-view-removed-file";
         this.MODEL_DELETED_FILE            = name + "-model-deleted-file";
+        this.VIEW_RENAMED_FOLDER           = name + "-view-renamed-folder";
+        this.MODEL_RENAMED_FOLDER          = name + "-model-renamed-folder";
+        this.VIEW_RENAMED_FILE             = name + "-view-renamed-file";
+        this.MODEL_RENAMED_FILE            = name + "-model-renamed-file";
+        this.VIEW_CUT_PASTED               = name + "-view-cut-pasted";
+        this.MODEL_MOVED_ITEM              = name + "-model-moved-item";
+        this.VIEW_COPY_PASTED              = name + "-view-copy-pasted";
+        this.MODEL_COPIED_ITEM             = name + "-model-copied-item";
+
+
         //-------
 
-        this.VIEW_RENAMED_FOLDER    = name + "-view-renamed-folder";
-        this.VIEW_RENAMED_DOCUMENT  = name + "-view-renamed-document";
 
         this.VIEW_ADDED_DOCUMENT    = name + "-view-added-document";
         this.MODEL_ADDED_DOCUMENT   = name + "-model-added-document";
@@ -57,7 +65,30 @@ DocTree.Controller = DocTree.Controller || {
     ,modelDeletedFile: function(deletedInfo, fileId, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_DELETED_FILE, deletedInfo, fileId, cacheKey, callerData);
     }
-
+    ,viewRenamedFolder: function(name, id, cacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FOLDER, name, id, cacheKey, node);
+    }
+    ,viewRenamedFile: function(name, id, cacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FILE, name, id, cacheKey, node);
+    }
+    ,modelRenamedFolder: function(renamedInfo, folderName, folderId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RENAMED_FOLDER, renamedInfo, folderName, folderId, cacheKey, callerData);
+    }
+    ,modelRenamedFile: function(renamedInfo, fileName, fileId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RENAMED_FILE, renamedInfo, fileName, fileId, cacheKey, callerData);
+    }
+    ,viewCutPasted: function(itemId, folderId, frCacheKey, toCacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CUT_PASTED, itemId, folderId, frCacheKey, toCacheKey, node);
+    }
+    ,modelMovedItem: function(moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_ITEM, moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, callerData);
+    }
+    ,viewCopyPasted: function(itemId, folderId, toCacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPY_PASTED, itemId, folderId, toCacheKey, node);
+    }
+    ,modelCopiedItem: function(copyItemInfo, objType, objId, folderId, itemId, toCacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_ITEM, copyItemInfo, objType, objId, folderId, itemId, toCacheKey, callerData);
+    }
     //----------------
 
 
@@ -66,12 +97,6 @@ DocTree.Controller = DocTree.Controller || {
     }
     ,modelAddedDocument: function(node, parentId, document) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_ADDED_DOCUMENT, node, parentId, document);
-    }
-    ,viewRenamedFolder: function(node, id, parentId, name) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_FOLDER, node, id, parentId, name);
-    }
-    ,viewRenamedDocument: function(node, id, parentId, name) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_RENAMED_DOCUMENT, node, id, parentId, name);
     }
 };
 
