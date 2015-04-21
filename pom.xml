@@ -322,6 +322,12 @@
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>false</enabled></snapshots>
         </repository>
+        <repository>
+            <url>https://project.armedia.com/nexus/content/repositories/armedia.snapshot</url>
+            <id>armedia.snapshot</id>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
     </repositories>
 
     <build>
@@ -855,6 +861,7 @@
                 <groupId>com.microsoft.ews-java-api</groupId>
                 <artifactId>ews-java-api</artifactId>
                 <version>${exchange-web-services.version}</version>
+                <classifier>arkcase</classifier>
             </dependency>
 
             <!-- camel -->
