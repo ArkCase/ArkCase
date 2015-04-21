@@ -166,6 +166,17 @@ Profile.Controller = {
     ,modelDeletedSubscription: function(subscriptionId) {
         Acm.Dispatcher.fireEvent(this.MODEL_DELETED_SUBSCRIPTION, subscriptionId);
     }
+
+
+    //outlook password
+    ,VIEW_CHANGED_OUTLOOK_PASSWORD : "profile-view-changed-outlook-password"                    //param: outlookPasswordToSave
+    ,viewChangedOutlookPassword: function(outlookPasswordToSave){
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_OUTLOOK_PASSWORD, outlookPasswordToSave);
+    }
+    ,MODEL_SAVED_OUTLOOK_PASSWORD   : "profile-model-saved-outlook-password"                   //param: savedOutlookPassword
+    ,modelSavedOutlookPassword: function(savedOutlookPassword){
+        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_OUTLOOK_PASSWORD, savedOutlookPassword);
+    }
 };
 
 
