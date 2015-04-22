@@ -56,8 +56,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             event.setSucceeded(true);
 
             getApplicationEventPublisher().publishEvent(event);
+            String cmisFileId = ecmFile.getVersionSeriesId();
 
-            download(ecmFile.getVersionSeriesId(), response,inline);
+            if (cmisFileId.contains(";")) {
+                cmisFileId = cmisFileId.split(";")[0];
+            }
+            String fileWithVersionId = cmisFileId+";"+ecmFile.getActiveVersionTag();
+
+            download(fileWithVersionId, response,inline);
         }
         else
         {
