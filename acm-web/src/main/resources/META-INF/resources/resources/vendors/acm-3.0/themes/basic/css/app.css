@@ -4317,3 +4317,30 @@ h3.m-b-xs.text-black {
 .ui-menu kbd { /* Keyboard shortcuts for ui-contextmenu titles */
     float: right;
 }
+.acm-word-wrap{
+  word-wrap: break-word;
+}
+.acm-message {
+  color:#000000;
+  font-weight: bold;
+  margin:0px;
+  text-align: left
+}
+
+#acm-messageBoardContainer {
+  background-color:lightyellow;
+  position: absolute;
+  width:100%;
+  height:auto;
+  opacity:0.9;
+  display: none;
+  z-index:1;
+}
+
+#acm-labelMessageDetail {
+  position:relative;
+  left:40px;
+  color:#000000;
+  font-weight: bold;
+}
+
