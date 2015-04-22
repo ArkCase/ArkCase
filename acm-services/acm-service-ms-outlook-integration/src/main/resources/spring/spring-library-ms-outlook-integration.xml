@@ -3,10 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
-       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd">
+       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
        <cache:annotation-driven cache-manager="cacheManager"/>
        <bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager"/>
@@ -14,21 +16,40 @@
        <bean id="msOutlookIntegrationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
               <property name="location" value="file:${user.home}/.acm/msOutlookIntegration.properties"/>
               <property name="ignoreResourceNotFound" value="true"/>
-              <property name="fileEncoding" value="UTF_8"/>
               <property name="localOverride" value="false"/>
               <property name="properties">
                      <props>
                             <prop key="outlook.integration.enabled">true</prop>
+                            <prop key="outlook.exchange.server.version">Exchange2007_SP1</prop>
                      </props>
               </property>
        </bean>
 
-       <context:property-placeholder
-              ignore-resource-not-found="true"
-              local-override="false"
-              order="389012"
-              properties-ref="msOutlookIntegrationProperties"/>
+
+       <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
+              <property name="dao" ref="exchangeWebServicesOutlookDao"/>
+       </bean>
 
        <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
+              <property name="exchangeVersion" value="${outlook.exchange.server.version}"/>
+              <property name="sortFields">
+                     <map>
+                            <entry key="subject" value-ref="propertyDefinitionSubject"/>
+                            <entry key="dateTimeCreated" value-ref="propertyDefinitionDateTimeCreated"/>
+                            <entry key="dateTimeReceived" value-ref="propertyDefinitionDateTimeReceived"/>
+                            <entry key="dateTimeSent" value-ref="propertyDefinitionDateTimeSent"/>
+                            <entry key="hasAttachments" value-ref="propertyDefinitionHasAttachments"/>
+                            <entry key="displayTo" value-ref="propertyDefinitionDisplayTo"/>
+                            <entry key="size" value-ref="propertyDefinitionSize"/>
+                     </map>
+              </property>
        </bean>
+
+       <util:constant id="propertyDefinitionSubject" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
+       <util:constant id="propertyDefinitionDateTimeCreated" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeCreated"/>
+       <util:constant id="propertyDefinitionDateTimeReceived" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeReceived"/>
+       <util:constant id="propertyDefinitionDateTimeSent" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeSent"/>
+       <util:constant id="propertyDefinitionHasAttachments" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.HasAttachments"/>
+       <util:constant id="propertyDefinitionDisplayTo" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DisplayTo"/>
+       <util:constant id="propertyDefinitionSize" static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Size"/>
 </beans>

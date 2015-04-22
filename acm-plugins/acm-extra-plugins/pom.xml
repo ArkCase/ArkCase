@@ -15,6 +15,7 @@
     <modules>
         <module>acm-alfresco-rma-integration</module>
         <module>acm-personnel-security-plugin</module>
+        <module>acm-ms-outlook-plugin</module>
     </modules>
 
 
