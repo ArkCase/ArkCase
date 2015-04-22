@@ -15,9 +15,14 @@
               </property>
               <property name="urlPrivileges">
                      <list>
-                            <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                            <bean id="inboxUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                                    <property name="httpMethod" value="GET"/>
                                    <property name="url" value="/api/{version}/plugin/outlook/inbox"/>
+                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                            </bean>
+                            <bean id="calendarUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                                   <property name="httpMethod" value="GET"/>
+                                   <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
                                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
                             </bean>
                      </list>

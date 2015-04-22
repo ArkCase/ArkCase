@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.outlook.web.api;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookMailItem;
+import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -19,17 +19,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @RequestMapping({ "/api/v1/plugin/outlook", "/api/latest/plugin/outlook" })
-public class ListInboxItemsAPIController
+public class ListCalendarItemsAPIController
 {
     private OutlookService outlookService;
     private UserOrgDao userOrgDao;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/inbox", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public OutlookResults<OutlookMailItem> inbox(
-            @RequestParam(value = "s", required = false, defaultValue = "dateTimeCreated") String sort,
+    public OutlookResults<OutlookCalendarItem> inbox(
+            @RequestParam(value = "s", required = false, defaultValue = "dateTimeStart") String sort,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
@@ -46,7 +46,7 @@ public class ListInboxItemsAPIController
 
         boolean ascendingSort = "ASC".equals(sortDirection);
 
-        OutlookResults<OutlookMailItem> results = getOutlookService().findMailItems(outlookUser, startRow, maxRows, sort, ascendingSort);
+        OutlookResults<OutlookCalendarItem> results = getOutlookService().findCalendarItems(outlookUser, startRow, maxRows, sort, ascendingSort);
 
         return results;
 

@@ -29,9 +29,15 @@ public class MsOutlookJsonSchemaValidTest
     }
 
     @Test
-    public void validateEcmFileSchema() throws Exception
+    public void validateInboxSchema() throws Exception
     {
         validate("/jsonSchemas/outlook-inbox-schema.json");
+    }
+
+    @Test
+    public void validateCalendarSchema() throws Exception
+    {
+        validate("/jsonSchemas/outlook-calendar-schema.json");
     }
 
     private void validate(String path) throws IOException, ProcessingException
