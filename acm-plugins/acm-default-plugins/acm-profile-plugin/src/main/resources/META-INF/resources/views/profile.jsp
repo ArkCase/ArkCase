@@ -29,6 +29,44 @@
 <jsp:body>
     <section class="vbox">
         <header class="header m-b-xs b-light hidden-print">
+
+            <div class="pull-right inline">
+                <div class="btn-group">
+                    <button class="btn btn-default btn-sm" data-title="Change Password" data-toggle="modal" data-target="#changePassword"><i class="fa fa-key"></i> Change Password</button>
+
+
+                    <div class="modal fade in" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Change Password</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <section class="row">
+                                        <div class="col-sm-12">
+                                            <%--not used at the moment--%>
+                                            <%--<label for="currentpassword" class="label">Enter your current password.</label>
+                                            <input id="currentpassword" type="password" class="form-control" placeholder="Enter your current password.">
+                                            <hr>--%>
+                                            <label for="newpass" class="label">Enter your new password.</label>
+                                            <input id="newpass" type="password" class="form-control" placeholder="Enter your new password.">
+                                            <br>
+                                            <label for="newpassagain" class="label">Enter your new password again.</label>
+                                            <input id="newpassagain" type="password" class="form-control" placeholder="Enter your new password again.">
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Change Password</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <h3 class="m-b-xs text-black">User Profile</h3>
         </header>
         <section class="scrollable">
