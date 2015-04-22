@@ -18,6 +18,7 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FILE             ,this.onViewCopiedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FOLDER            ,this.onViewMovedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_VERSION         ,this.onViewChangedVersion);
 
         //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
@@ -64,6 +65,9 @@ DocTree.Model = DocTree.Model || {
     }
     ,onViewCopiedFolder: function(subFolderId, folderId, toCacheKey, node) {
         DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, toCacheKey, node);
+    }
+    ,onViewChangedVersion: function(fileId, version, node) {
+        DocTree.Service.setActiveVersion(fileId, version, node);
     }
 
     //---------------
