@@ -4317,17 +4317,17 @@ h3.m-b-xs.text-black {
 .ui-menu kbd { /* Keyboard shortcuts for ui-contextmenu titles */
     float: right;
 }
-.ui-word-wrap{
+.acm-word-wrap{
   word-wrap: break-word;
 }
-.ui-message {
+.acm-message {
   color:#000000;
   font-weight: bold;
   margin:0px;
   text-align: left
 }
 
-#ui-messageBoardContainer {
+#acm-messageBoardContainer {
   background-color:lightyellow;
   position: absolute;
   width:100%;
@@ -4337,7 +4337,7 @@ h3.m-b-xs.text-black {
   z-index:1;
 }
 
-#ui-labelMessageDetail {
+#acm-labelMessageDetail {
   position:relative;
   left:40px;
   color:#000000;

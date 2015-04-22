@@ -53,12 +53,12 @@ App.View = {
     ,MessageBoard: {
         create : function() {
             this.$sectionContent = $("#content");                   //this is where all the module data is displayed (tree,tables,topbar etc.)
-            this.$divBoard  = $("#ui-messageBoardContainer");
+            this.$divBoard  = $("#acm-messageBoardContainer");
             this.$divDetail = $("#divMessageDetail");
             this.$btnClose  = $("#btnMessageClose");
             this.$btnDetail = $("#btnMessageDetail");
             this.$labMsg    = $("#labMessage");
-            this.$labDetail = $("#ui-labelMessageDetail");
+            this.$labDetail = $("#acm-labelMessageDetail");
             this.$divModalMsgBoard = $(".modal-header");
 
             this.$btnClose.unbind("click").on("click", function(e) {App.View.MessageBoard.onClickBtnClose(e, this);});
@@ -118,7 +118,7 @@ App.View = {
                     detail='';
                 }
                 var html="";
-                html+= "<li><a href='#'><div class='ui-message' title='Click for Detail...'  data-msg-detail='" + detail + "'>" +  msg +
+                html+= "<li><a href='#'><div class='acm-message' title='Click for Detail...'  data-msg-detail='" + detail + "'>" +  msg +
                 //"<a href='#' style='position: absolute;right:50px;'>Detail ...</button></a>" style='color:#000000;font-weight: bold;margin:0px;text-align: left'+
                 "</div></a></li>";
                 this.$divModalMsgBoard.find("ul").prepend(html);

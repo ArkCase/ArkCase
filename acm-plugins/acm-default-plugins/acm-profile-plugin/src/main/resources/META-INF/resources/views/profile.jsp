@@ -57,7 +57,7 @@
                                             <div class="col-xs-6">
 
                                                 <h4 id="fullName"></h4>
-                                                <h4><a href="#" class='ui-word-wrap' id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
+                                                <h4><a href="#" class='acm-word-wrap' id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
                                                     <%--<small> Agent </small>--%>
 
 
@@ -155,15 +155,15 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-xs-6">
-                                                    <h4><a href="#" class='ui-word-wrap' id="location" data-type="text" data-pk="1" data-title="Enter Location"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="location" data-type="text" data-pk="1" data-title="Enter Location"></a></h4>
                                                     <small>Location </small>
 
-                                                    <h4><a href="#" class='ui-word-wrap' id="imaccount" data-type="text" data-pk="1" data-title="Enter IM Account"></a> (<a href="#" class='ui-word-wrap' id="imsystem" data-type="text" data-pk="1" data-title="Enter IM System"></a>)</h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="imaccount" data-type="text" data-pk="1" data-title="Enter IM Account"></a> (<a href="#" class='acm-word-wrap' id="imsystem" data-type="text" data-pk="1" data-title="Enter IM System"></a>)</h4>
                                                     <small> IM Account </small> </div>
                                                 <div class="col-xs-6">
-                                                    <h4><a href="#" class='ui-word-wrap' id="officephone" data-type="text" data-pk="1" data-title="Enter Office Phone Number"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="officephone" data-type="text" data-pk="1" data-title="Enter Office Phone Number"></a></h4>
                                                     <small> Office Phone </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="mobilephone" data-type="text" data-pk="1" data-title="Enter Mobile Phone Number"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="mobilephone" data-type="text" data-pk="1" data-title="Enter Mobile Phone Number"></a></h4>
                                                     <small> Mobile Phone </small> </div>
                                             </div>
                                         </li>
@@ -175,24 +175,24 @@
                                         <li class="list-group-item">
                                             <div class="row">
                                                 <div class="col-xs-6">
-                                                    <h4><a href="#" class='ui-word-wrap' id="company" data-type="text" data-pk="1" data-title="Enter Company Name"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="company" data-type="text" data-pk="1" data-title="Enter Company Name"></a></h4>
                                                     <small> Company Name </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="street" data-type="text" data-pk="1" data-title="Enter Street"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="street" data-type="text" data-pk="1" data-title="Enter Street"></a></h4>
                                                     <small> Address 1 </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="address2" data-type="text" data-pk="1" data-title="Enter Address 2"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="address2" data-type="text" data-pk="1" data-title="Enter Address 2"></a></h4>
                                                     <small> Address 2 </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="city" data-type="text" data-pk="1" data-title="Enter City"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="city" data-type="text" data-pk="1" data-title="Enter City"></a></h4>
                                                     <small> City </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="state" data-type="text" data-pk="1" data-title="Enter State"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="state" data-type="text" data-pk="1" data-title="Enter State"></a></h4>
                                                     <small> State </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="zip" data-type="text" data-pk="1" data-title="Enter ZIP"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="zip" data-type="text" data-pk="1" data-title="Enter ZIP"></a></h4>
                                                     <small> ZIP </small> </div>
                                                 <div class="col-xs-6">
-                                                    <h4><a href="#" class='ui-word-wrap' id="mainphone" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="mainphone" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
                                                     <small> Main Office Phone </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="fax" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="fax" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
                                                     <small> Fax </small>
-                                                    <h4><a href="#" class='ui-word-wrap' id="website" data-type="text" data-pk="1" data-title="Enter Website Address"></a></h4>
+                                                    <h4><a href="#" class='acm-word-wrap' id="website" data-type="text" data-pk="1" data-title="Enter Website Address"></a></h4>
                                                     <small> Website </small> </div>
                                             </div>
                                         </li>
