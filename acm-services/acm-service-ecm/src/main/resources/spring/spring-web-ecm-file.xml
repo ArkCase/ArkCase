@@ -30,6 +30,11 @@
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
     </bean>
 
+    <bean id="moveFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.MoveFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
     <bean id="renameFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.RenameFolderAPIController">
         <property name="folderService" ref="acmFolderService"/>
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
