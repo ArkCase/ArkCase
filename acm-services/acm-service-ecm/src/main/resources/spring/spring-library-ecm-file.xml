@@ -176,7 +176,7 @@
                 </bean>
                 <bean id="replaceFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/replace"/>
+                    <property name="url" value="/api/{version}/service/ecm/replace/{fileToBeReplacedId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
                 <bean id="deleteFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
@@ -187,6 +187,11 @@
                 <bean id="listSubFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}/{folderId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="moveFolder" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/ecm/folder/move/{folderToMoveId}/{dstFolderId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
             </list>

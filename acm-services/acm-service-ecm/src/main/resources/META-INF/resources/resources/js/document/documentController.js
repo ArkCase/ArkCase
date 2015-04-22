@@ -106,6 +106,26 @@ AcmDocument.Controller = AcmDocument.Controller || {
     ,modelRetrievedAssociatedTags : function(associatedTags){
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ASSOCIATED_TAGS, associatedTags);
     }
+    ,MODEL_RETRIEVED_ALL_TAGS                   : "document-model-retrieved-all-tags"    //param: allTags
+    ,modelRetrievedAllTags : function(allTags){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ALL_TAGS, allTags);
+    }
+    ,VIEW_ASSOCIATED_NEW_TAG                    : "document-view-associated-new-tag"    //param: tagId
+    ,viewAssociatedNewTag : function(tagId){
+        Acm.Dispatcher.fireEvent(this.VIEW_ASSOCIATED_NEW_TAG, tagId);
+    }
+    ,MODEL_ASSOCIATED_NEW_TAG                   : "document-model-associated-new-tag"    //param: associatedTags
+    ,modelAssociatedNewTag : function(associatedTags){
+        Acm.Dispatcher.fireEvent(this.MODEL_ASSOCIATED_NEW_TAG, associatedTags);
+    }
+    ,VIEW_CREATED_NEW_TAG                       : "document-view-created-new-tag"       //param: newTagName, newTagDesc, newTagText
+    ,viewCreatedNewTag : function(newTagName, newTagDesc, newTagText){
+        Acm.Dispatcher.fireEvent(this.VIEW_CREATED_NEW_TAG, newTagName, newTagDesc, newTagText);
+    }
+    ,MODEL_CREATED_NEW_TAG                      : "document-model-created-new-tag"      //param: newTag
+    ,modelCreatedNewTag : function(newTag){
+        Acm.Dispatcher.fireEvent(this.MODEL_CREATED_NEW_TAG, newTag);
+    }
 
 
     //Participants
@@ -137,6 +157,12 @@ AcmDocument.Controller = AcmDocument.Controller || {
     ,MODEL_ADDED_NEW_PARTICIPANT              : "document-model-added-new-participant"            //param: userId, participantType, documentId
     ,modelAddedNewParticipant : function(userId, participantType, documentId){
         Acm.Dispatcher.fireEvent(this.MODEL_ADDED_NEW_PARTICIPANT, userId, participantType, documentId);
+    }
+
+    //Document Detail
+    ,MODEL_RETRIEVED_DOCUMENT_DETAIL            : "document-model-retrieved-document-detail"      //param: documentDetail
+    ,modelRetrievedDocumentDetail: function(documentDetail){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_DOCUMENT_DETAIL, documentDetail);
     }
 };
 

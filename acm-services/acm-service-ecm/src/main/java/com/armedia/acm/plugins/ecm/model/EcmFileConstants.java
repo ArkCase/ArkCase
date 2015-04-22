@@ -27,6 +27,8 @@ public interface EcmFileConstants
 
     String USER_ACTION_RENAME_FILE = "RENAME";
 
+    String USER_ACTION_REPLACE_FILE = "REPLACE";
+
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
     String SUCCESS_DELETE_MSG = "File deleted successfully: ";
@@ -63,6 +65,10 @@ public interface EcmFileConstants
     String SRC_FOLDER_ID = "srcFolderId";
     String DST_FOLDER_ID = "dstFolderId";
     String ECM_FILE_ID = "ecmFileId";
-    String NEW_FILE_NAME="newFileName";
+    String NEW_FILE_NAME = "newFileName";
+    String FILE_NAME = "fileName";
+    String INPUT_STREAM = "inputStream";
+
+    String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 
 }
