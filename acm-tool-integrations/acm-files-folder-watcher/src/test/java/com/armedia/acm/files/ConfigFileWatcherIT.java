@@ -23,7 +23,8 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-folder-watcher.xml",
-        "/spring-test-config-file-watcher.xml"})
+        "/spring-test-config-file-watcher.xml",
+        "/spring/spring-library-property-file-manager.xml"})
 public class ConfigFileWatcherIT
 {
 

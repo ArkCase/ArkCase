@@ -32,7 +32,8 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = {
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmBpmnServiceIT {
