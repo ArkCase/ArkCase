@@ -19,6 +19,7 @@
     <http security="none" pattern="/login.jsp" />
     <http security="none" pattern="/resources/**" />
     <http security="none" pattern="/resources/js/*"/>
+    <http security="none" pattern="/resources/i18n/**"/>
     <http security="none" pattern="/resources/styles/**"/>
     <http security="none" pattern="/resources/styles/acm/**"/>
     <http security="none" pattern="/resources/styles/blueprint/**"/>
