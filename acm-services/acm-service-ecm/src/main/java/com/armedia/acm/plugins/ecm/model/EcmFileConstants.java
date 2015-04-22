@@ -29,6 +29,8 @@ public interface EcmFileConstants
 
     String USER_ACTION_REPLACE_FILE = "REPLACE";
 
+    String USER_ACTION_SET_FILE_ACTIVE_VERSION = "SET ACTIVE VERSION TO";
+
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
     String SUCCESS_DELETE_MSG = "File deleted successfully: ";
@@ -59,6 +61,7 @@ public interface EcmFileConstants
     String OBJECT_FILE_TYPE = "FILE";
 
     String EVENT_TYPE_TAG_UPDATE = "com.armedia.acm.tag.updated";
+    String EVENT_TYPE_ACTIVE_VERSION_SET = "com.armedia.acm.file.version.set";
 
 
     String CMIS_OBJECT_ID = "cmisObjectId";
