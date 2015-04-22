@@ -24,10 +24,12 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_MOVED_FILE              = name + "-model-moved-file";
         this.VIEW_COPIED_FILE              = name + "-view-copied-file";
         this.MODEL_COPIED_FILE             = name + "-model-copied-file";
-        this.VIEW_MOVED_FOLDER               = name + "-view-moved-folder";
-        this.MODEL_MOVED_FOLDER              = name + "-model-moved-folder";
-        this.VIEW_COPIED_FOLDER              = name + "-view-copied-folder";
-        this.MODEL_COPIED_FOLDER             = name + "-model-copied-folder";
+        this.VIEW_MOVED_FOLDER             = name + "-view-moved-folder";
+        this.MODEL_MOVED_FOLDER            = name + "-model-moved-folder";
+        this.VIEW_COPIED_FOLDER            = name + "-view-copied-folder";
+        this.MODEL_COPIED_FOLDER           = name + "-model-copied-folder";
+        this.VIEW_CHANGED_VERSION          = name + "-view-changed-version";
+        this.MODEL_SET_ACTIVE_VERSION      = name + "-model-set-active-version";
 
 
         //-------
@@ -105,6 +107,13 @@ DocTree.Controller = DocTree.Controller || {
     ,modelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, toCacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FOLDER, copyFolderInfo, objType, objId, folderId, subFolderId, toCacheKey, callerData);
     }
+    ,viewChangedVersion: function(fileId, version, cacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_VERSION, fileId, version, cacheKey, node);
+    }
+    ,modelSetActiveVersion: function(version, fileId, cacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_SET_ACTIVE_VERSION, version, fileId, cacheKey, callerData);
+    }
+
     //----------------
 
 

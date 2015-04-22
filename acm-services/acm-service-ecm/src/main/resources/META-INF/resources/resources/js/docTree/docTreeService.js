@@ -21,6 +21,7 @@ DocTree.Service = {
     ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
     ,API_MOVE_TO_                     : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_COPY_TO_                     : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_SET_ACTIVE_VERSION_          : "to be defined soon"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -528,6 +529,41 @@ DocTree.Service = {
         fileData.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
         return fileData;
     }
+
+    ,setActiveVersion: function(fileId, version, cacheKey, callerData) {
+        return;
+
+        var url = App.getContextPath() + this.API_SET_ACTIVE_VERSION_ + fileId + "/" + version;
+        //var data = {"id": subFolderId, "folderId": folderId};
+        Acm.Service.asyncPost2({url: url
+            //,data: JSON.stringify(data)
+            ,callback: function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelSetActiveVersion(response, fileId, cacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateCopyFolderInfo(response)) {
+                        if (response.folder.id == folderId) {
+                            var copyFolderInfo = response;
+
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                var idx = DocTree.Model.findFolderItemIdx(fileId, folderList);
+                                if (0 <= idx) {
+                                    folderList.children[idx].activeVersionTag = "xxxxxxxxxxxxxxxxx"; //response.activeVersionTag;
+                                    DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                    DocTree.Controller.modelSetActiveVersion(version, fileId, cacheKey, callerData);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                } //end else
+            }
+        })
+    }
+
+
     ,testService2: function(node, parentId, folder) {
         setTimeout(function(){
             var folder = {id: 123, some: "some", value: "value"};
