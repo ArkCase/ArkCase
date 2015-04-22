@@ -3,7 +3,17 @@ package com.armedia.acm.service.outlook.dao.impl;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import microsoft.exchange.webservices.data.core.service.item.Item;
+import microsoft.exchange.webservices.data.core.service.item.Task;
+import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
+import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
+import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
 import microsoft.exchange.webservices.data.enumeration.DateTimePrecision;
+import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+import microsoft.exchange.webservices.data.exception.ServiceLocalException;
+import microsoft.exchange.webservices.data.search.FindItemsResults;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -27,14 +37,69 @@ public class ExchangeWebServicesOutlookDaoIT
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private String validUser = "dmiller@armedia.com";
-    private String validPassword = "!MattHelm531";
+    private String validUser = "ann.acm@armedia.com";
+    private String validPassword = "Armedia123";
 
-    private AcmOutlookUser user = new AcmOutlookUser("dmiller", validUser, validPassword);
+    private AcmOutlookUser user = new AcmOutlookUser("ann-acm", validUser, validPassword);
 
     @Autowired
     @Qualifier("exchangeWebServicesOutlookDao")
     private OutlookDao dao;
+
+    @Test
+    public void mailItems() throws Exception
+    {
+        ExchangeService service = dao.connect(user);
+
+        FindItemsResults<Item> mailItems = dao.findItems(
+                service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5,
+                "subject", true);
+
+        assertNotNull(mailItems);
+
+        log.info("Total items: " + mailItems.getTotalCount() + "; more? " + mailItems.isMoreAvailable());
+
+        for ( Item item : mailItems.getItems() )
+        {
+            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
+        }
+
+        //service.loadPropertiesForItems(mailItems.getItems(), new PropertySet(ItemSchema.Body));
+
+        log.info("Body of first message: " + ( mailItems.getItems().get(0).getBody()));
+
+        mailItems = dao.findItems(
+                service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false);
+        log.info("--- descending: ");
+
+        for ( Item item : mailItems.getItems() )
+        {
+            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
+        }
+
+    }
+
+
+    @Test
+    public void taskItems() throws Exception
+    {
+        ExchangeService service = dao.connect(user);
+
+        FindItemsResults<Item> taskItems = dao.findItems(
+                service, WellKnownFolderName.Tasks, new PropertySet(ItemSchema.Body, TaskSchema.DueDate), 0, 5,
+                "subject", true);
+
+        assertNotNull(taskItems);
+
+        log.info("Total items: " + taskItems.getTotalCount() + "; more? " + taskItems.isMoreAvailable());
+
+        for ( Item item : taskItems.getItems() )
+        {
+            Task outlookTask = (Task) item;
+            log.info("Date: " + outlookTask.getDateTimeReceived() + "; subject: " + outlookTask.getSubject() +
+                    "; due: " + outlookTask.getDueDate());
+        }
+    }
 
     @Test
     public void connect()
@@ -69,9 +134,6 @@ public class ExchangeWebServicesOutlookDaoIT
             // expected
             log.info("Exception: " + e.getMessage(), e);
         }
-
-
-
     }
 
 

@@ -1,0 +1,89 @@
+/**
+ * Outlook Inbox
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Outlook Inbox Schema",
+  "type": "object",
+  "properties":
+  {
+    "totalItems": {
+      "type": "integer",
+      "description": "Number of items in the entire inbox",
+      "minimum": 0
+    },
+    "moreItemsAvailable": {
+      "type": "boolean",
+      "description": "Whether more pages can be retrieved after this page"
+    },
+    "currentStartIndex": {
+      "type": "integer",
+      "description": "Start row of the items in this page",
+      "minimum": 0
+    },
+    "currentMaxItems": {
+      "type": "integer",
+      "description": "Maximum number of items on this page"
+    },
+    "nextStartIndex": {
+      "type": "integer",
+      "description": "Value to use for the start index to retrieve the next page, if there is a next page.  -1 means there is no next page.",
+      "minimum": -1
+    },
+    "currentSortField": {
+      "type": "string",
+      "description": "The field on which the current page is sorted"
+    },
+    "currentSortAscending": {
+      "type": "boolean",
+      "description": "Whether this page is sorted ascending (true) or descending (false)"
+    },
+    "items": {
+      "description": "List of inbox items",
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "properties":
+        {
+          "id": {
+            "type": "string",
+            "description": "MS Exchange ID for this item"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "created": {
+            "type": "string",
+            "description": "Create date, in JSON date format"
+          },
+          "modified": {
+            "type": "string",
+            "description": "Modify date, in JSON date format"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "size of the message body"
+          },
+          "sent": {
+            "type": "string",
+            "description": "Send date, in JSON date format"
+          },
+          "from": {
+            "type": "string",
+            "description": "e-mail address of the message sender"
+          },
+          "read": {
+            "type": "boolean",
+            "description": "whether the user has read this message"
+          },
+          "body": {
+            "type": "string",
+            "description": "Message body, in HTML 4.01 format"
+          }
+        }
+      }
+    }
+  }
+}
