@@ -13,16 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 22.04.2015.
@@ -36,11 +30,11 @@ public class SetActiveFileVersionAPIController {
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
 
-    @RequestMapping(value = "/file/{fileId}/{versionTag}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/file/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile setFileActiveVersion(
             @PathVariable("fileId") Long fileId,
-            @PathVariable("versionTag") String versionTag,
+            @RequestParam( value = "versionTag", required = false) String versionTag,
             Authentication authentication,
             HttpSession session ) throws AcmUserActionFailedException {
         if( log.isInfoEnabled() ) {

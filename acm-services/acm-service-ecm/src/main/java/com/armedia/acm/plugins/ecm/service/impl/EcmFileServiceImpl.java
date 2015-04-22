@@ -328,12 +328,19 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         EcmFile file = getEcmFileDao().find(fileId);
         List<EcmFileVersion> fileVersionList  = file.getVersions();
-        String cmisId = fileVersionList.stream().
-                filter( s -> s.getVersionTag().equals(versionTag) ).
-                map( s -> s.getCmisObjectId() ).
-                collect(Collectors.toList()).get(AcmFolderConstants.ZERO);
+
+        String cmisId = null;
+        for(EcmFileVersion fileVersion: fileVersionList){
+            if(fileVersion.getVersionTag().equals(versionTag)){
+                cmisId = fileVersion.getCmisObjectId();
+                break;
+            }
+        }
+
         file.setActiveVersionTag(versionTag);
-        file.setVersionSeriesId(cmisId);
+        if(cmisId!=null) {
+            file.setVersionSeriesId(cmisId);
+        }
 
         return getEcmFileDao().save(file);
     }
