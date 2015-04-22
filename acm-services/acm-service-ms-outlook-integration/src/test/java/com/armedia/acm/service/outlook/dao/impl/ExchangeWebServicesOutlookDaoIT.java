@@ -31,7 +31,8 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "/spring/spring-library-ms-outlook-integration.xml"
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 public class ExchangeWebServicesOutlookDaoIT
 {

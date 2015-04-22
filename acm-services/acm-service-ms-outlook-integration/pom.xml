@@ -16,6 +16,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.microsoft.ews-java-api</groupId>
             <artifactId>ews-java-api</artifactId>
             <classifier>arkcase</classifier>
