@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 5/1/14.
@@ -322,6 +323,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return retval;
     }
 
+    @Override
+    public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws  PersistenceException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        List<EcmFileVersion> fileVersionList  = file.getVersions();
+        String cmisId = fileVersionList.stream().
+                filter( s -> s.getVersionTag().equals(versionTag) ).
+                map( s -> s.getCmisObjectId() ).
+                collect(Collectors.toList()).get(AcmFolderConstants.ZERO);
+        file.setActiveVersionTag(versionTag);
+        file.setVersionSeriesId(cmisId);
+
+        return getEcmFileDao().save(file);
+    }
 
     @Override
     public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException {
