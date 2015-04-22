@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Created by marjan.stefanoski on 06.04.2015.
  */
@@ -33,25 +35,27 @@ public class DeleteFileAPIController {
     @ResponseBody
     public String deleteFile(
             @PathVariable("fileId") Long objectId,
-            Authentication authentication
+            Authentication authentication,
+            HttpSession session
     ) throws AcmUserActionFailedException {
 
         if(log.isInfoEnabled()) {
             log.info("File with id: "+objectId+" will be deleted");
         }
+        String ipAddress = (String) session.getAttribute(EcmFileConstants.IP_ADDRESS_ATTRIBUTE);
         EcmFile source = getFileService().findById(objectId);
         try {
             getFileService().deleteFile(objectId);
             if(log.isInfoEnabled()) {
                 log.info("File with id: "+objectId+" successfully deleted");
             }
-            getFileEventPublisher().publishFileDeletedEvent(source,authentication,true);
+            getFileEventPublisher().publishFileDeletedEvent(source,authentication,ipAddress,true);
             return prepareJsonReturnMsg( EcmFileConstants.SUCCESS_DELETE_MSG,objectId, source.getFileName() );
         } catch ( AcmUserActionFailedException e ) {
             if( log.isErrorEnabled() ){
                 log.error("Exception occurred while trying to delete file with id: " + objectId);
             }
-            getFileEventPublisher().publishFileDeletedEvent(source,authentication,false);
+            getFileEventPublisher().publishFileDeletedEvent(source,authentication,ipAddress,false);
             throw e;
         } catch ( AcmObjectNotFoundException e ) {
             if( log.isErrorEnabled() ){

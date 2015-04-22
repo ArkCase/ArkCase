@@ -67,6 +67,10 @@
 <c:set var="vd_jquery"             scope="session" value="jquery-1.11.0"/>
 <c:set var="js_jquery"             scope="session" value="jquery-1.11.0.js"/>
 
+<c:set var="vd_i18next"            scope="session" value="i18next-1.8.1"/>
+<c:set var="js_i18next"            scope="session" value="i18next-1.8.1.js"/>
+
+
 <c:set var="vd_jquery_ui"          scope="session" value="jquery-ui-1.10.3"/>
 <%--<c:set var="js_jquery_ui"          scope="session" value="jquery-ui-1.10.3.custom.min.js"/>--%>
 <%--<c:set var="css_jquery_ui"         scope="session" value="jquery-ui-1.10.3.custom.min.css"/>--%>
@@ -180,6 +184,7 @@
 
 <!-- jquery must be first -->
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery}/${js_jquery}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_i18next}/${js_i18next}'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_ui}/js/${js_jquery_ui}'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_microdata}/${js_microdata}'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootstrap}/js/${js_bootstrap}'/>" ></script>
