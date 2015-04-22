@@ -34,7 +34,7 @@ public class SetActiveFileVersionAPIController {
     @ResponseBody
     public EcmFile setFileActiveVersion(
             @PathVariable("fileId") Long fileId,
-            @RequestParam( value = "versionTag", required = false) String versionTag,
+            @RequestParam( value = "versionTag", required = true) String versionTag,
             Authentication authentication,
             HttpSession session ) throws AcmUserActionFailedException {
         if( log.isInfoEnabled() ) {

@@ -327,20 +327,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws  PersistenceException {
 
         EcmFile file = getEcmFileDao().find(fileId);
-        List<EcmFileVersion> fileVersionList  = file.getVersions();
-
-        String cmisId = null;
-        for(EcmFileVersion fileVersion: fileVersionList){
-            if(fileVersion.getVersionTag().equals(versionTag)){
-                cmisId = fileVersion.getCmisObjectId();
-                break;
-            }
-        }
-
+        List<EcmFileVersion> fileVersionList = file.getVersions();
         file.setActiveVersionTag(versionTag);
-        if(cmisId!=null) {
-            file.setVersionSeriesId(cmisId);
-        }
 
         return getEcmFileDao().save(file);
     }
