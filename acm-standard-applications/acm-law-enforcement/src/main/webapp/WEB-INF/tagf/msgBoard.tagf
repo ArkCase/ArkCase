@@ -1,11 +1,11 @@
-<div class="modal-header" id="divMessageBoard" style="background-color:lightyellow;position: absolute;width:100%;height:auto;opacity:0.9;display: none;z-index:1;">
+<div class="modal-header" id="ui-messageBoardContainer">
     <button type="button" class="close" data-dismiss="modal" id="btnMessageClose">&times;<span class="sr-only">Close</span></button>
     <ul style="list-style-type:none;">
 
     </ul>
     <div id="divMessageDetail" style="display:none;left: 100px;">
         <hr/>
-        <div class="modal-title" id="labMessageDetail" style="position:relative;left:40px;color:#000000;font-weight: bold;"></div>
+        <div class="modal-title" id="ui-labelMessageDetail"></div>
     </div>
 
 </div>
