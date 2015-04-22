@@ -1,0 +1,62 @@
+#%RAML 0.8
+title: ArkCase Outlook Integration Plugin
+
+/api/v1/plugin/outlook:
+  /inbox:
+    description: Get a page of the user's e-mail items, from their Inbox.
+    get:
+      queryParameters:
+        s:
+          description: Sort field
+          required: false
+          default: dateTimeCreated
+          enum: [ "subject", "dateTimeCreated", "dateTimeReceived", "dateTimeSent", "hasAttachments", "displayTo", "size" ]
+        sortDirection:
+          description: Sort ascending or descending
+          required: false
+          default: ASC
+          enum: [ "ASC", "DESC" ]
+        start:
+          description: Index of the first item to appear in the results
+          required: false
+          default: 0
+          type: integer
+          minimum: 0
+        n:
+          description: Maximum items to include in the results
+          required: false
+          default: 50
+          type: integer
+          minimum: 1
+      responses:
+        200:
+          description: Outlook inbox successfully located and the requested page of results was returned
+          body:
+            application/json:
+              schema:
+                !include outlook-inbox-schema.json
+              example: |
+                {
+                  "totalItems" : 1221,
+                  "moreItemsAvailable" : true,
+                  "currentStartIndex" : 0,
+                  "currentMaxItems" : 50,
+                  "nextStartIndex" : 50,
+                  "currentSortField" : "dateTimeCreated",
+                  "currentSortAscending" : true,
+                  "items" : [{
+                    "id" : "AAMkAGVjMmMzN2QwLWU1ZTctNDY0My05OGFiLTJkNjE1OTc5OTlhMQBGAAAAAACOTzGM1OQ5Sae/JVKnBpIgBwDqBa92g2suSYnILcLYd6tdAASAtjPwAADqBa92g2suSYnILcLYd6tdAScuFPOVAAA=",
+                    "subject" : "Mule in Action, Second Edition - Mobile formats available now",
+                    "created" : "2014-03-10T21:07:35.000+0000",
+                    "modified" : "2014-03-10T21:07:35.000+0000",
+                    "size" : 11374,
+                    "sent" : "2014-03-10T21:15:09.000+0000",
+                    "from" : "support@manning.com",
+                    "read" : true,
+                    "body" : "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>......</html>\n"
+                    }
+                    // more items left out of this example.
+                  ]
+                }
+          
+          

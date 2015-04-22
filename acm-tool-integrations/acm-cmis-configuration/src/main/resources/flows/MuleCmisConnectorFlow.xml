@@ -12,7 +12,7 @@
 
     <spring:beans>
         <spring:import resource="classpath:/spring/spring-library-cmis-configuration.xml"/>
-        <spring:import resource="classpath:/spring/spring-library-context-holder.xml"/>
+        <spring:import resource="classpath:/spring/spring-library-property-file-manager.xml"/>
     </spring:beans>
 
     <cmis:config
