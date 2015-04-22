@@ -74,5 +74,7 @@ public interface EcmFileConstants
 
     String IP_ADDRESS_ATTRIBUTE = "acm_ip_address";
 
+    String FILE = "file";
+
     String COPY_FILE_EXCEPTION_INBOUND_PROPERTY = "copyFileException";
 }
