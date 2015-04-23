@@ -42,6 +42,9 @@
     <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfigServices.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfig.js'/>"></script>
 
+    <!-- X-Editable -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
+    <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
 
     /////////////////////////////////////////////////////////////////////
@@ -270,6 +273,28 @@
                                             </section>
                                         </div>
                                     </div>
+                                        <%--JTable - Label Configuration --%>
+                                    <div class="row" id="tabLabelConfiguration" style="display:none;">
+                                        <div class="col-md-12">
+
+                                            <h3>Label Configuration</h3>
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <input id="labelConfigurationIdFilter" class="form-control" type="text" placeholder="Filter By Id"/>
+                                                </div>
+                                                <div class="col-md-offset-2  col-md-4">
+                                                    <input id="labelConfigurationValueFilter" class="form-control" type="text" placeholder="Filter By Value"/>
+                                                </div>
+                                            </div>
+                                            <br><br>
+
+                                            <section class="panel panel-default">
+                                                <div id="divLabelConfiguration" style="width:100%">
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+
 
                                     <%--JTable - Correspondence--%>
                                     <div class="row" id="tabCorrespondenceTemplates" style="display:none;">

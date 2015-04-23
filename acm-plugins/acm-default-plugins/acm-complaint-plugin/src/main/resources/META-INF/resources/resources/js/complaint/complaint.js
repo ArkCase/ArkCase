@@ -6,6 +6,8 @@
 var Complaint = Complaint || {
     create: function() {
         i18n.init({
+            useLocalStorage: true,
+            localStorageExpirationTime: 86400000, // 1 week
             lng: 'en-au',
             lowerCaseLng: true,
             resGetPath: '/resources/i18n/complaint/__lng__.json'
