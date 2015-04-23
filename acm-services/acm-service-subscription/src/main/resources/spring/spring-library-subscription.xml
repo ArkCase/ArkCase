@@ -60,12 +60,6 @@
         </property>
     </bean>
 
-    <context:property-placeholder
-            properties-ref="subscriptionProperties"
-            ignore-unresolvable="true"
-            local-override="false"
-            order="4832336"/>
-
     <bean id="subscriptionProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring

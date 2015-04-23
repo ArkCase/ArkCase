@@ -17,7 +17,8 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 public class AuditDaoIT
 {

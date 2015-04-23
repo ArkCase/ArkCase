@@ -1,9 +1,14 @@
 package com.armedia.acm.activiti.services;
 
+import com.armedia.acm.activiti.exceptions.AcmBpmnException;
+import com.armedia.acm.activiti.exceptions.NotValidBpmnFileException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
+import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
 import org.activiti.engine.RepositoryService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.util.FileUtils;
@@ -14,8 +19,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -32,7 +48,8 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = {
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmBpmnServiceIT {
@@ -42,20 +59,99 @@ public class AcmBpmnServiceIT {
     AcmBpmnService acmBpmnService;
 
     @Autowired
+    AcmBpmnDao acmBpmnDao;
+
+    @Autowired
     RepositoryService activitiRepositoryService;
     Set<String> filesToDelete = null;
     Set<String> deploymentsIdToDelete = null;
 
+
     @Before
-    public void setUp() {
+    public void setUp() throws Exception
+    {
         filesToDelete = new HashSet<>();
         deploymentsIdToDelete = new HashSet<>();
+
+        cleanup();
+    }
+
+    public void cleanup() throws Exception
+    {
+        // cleanup any test processes that might still be in our Activiti
+        cleanup("/activiti/TestActivitiSpringProcess.bpmn20.xml");
+        cleanup("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml");
+    }
+
+    public void cleanup(String filename) throws Exception
+    {
+        File f = new File(getClass().getResource(filename).toURI());
+        String digest = getDigest(f);
+        log.info("Digest [{}] from Bpmn file", digest);
+        String bpmnId = getProcessDefinitionKey(f);
+        AcmProcessDefinition acmProcessDefinitionExisting = acmBpmnDao.getByKeyAndDigest(bpmnId, digest);
+        if ( acmProcessDefinitionExisting != null )
+        {
+            activitiRepositoryService.deleteDeployment(acmProcessDefinitionExisting.getDeploymentId(), true);
+            acmBpmnDao.remove(acmProcessDefinitionExisting);
+        }
+    }
+
+    private String getProcessDefinitionKey(File processDefinitionFile) {
+        try {
+            DocumentBuilderFactory domFactory =
+                    DocumentBuilderFactory.newInstance();
+            domFactory.setNamespaceAware(false);
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            Document doc = builder.parse(processDefinitionFile);
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            // XPath Query for showing all nodes value
+            XPathExpression expr = xpath.compile("/definitions/process/@id");
+
+            String attributeValue = "" + expr.evaluate(doc, XPathConstants.STRING);
+            if (attributeValue == null || attributeValue.length() < 1)
+                throw new NotValidBpmnFileException("attribute id not found in process tag");
+            return attributeValue;
+        } catch (ParserConfigurationException e) {
+            throw new NotValidBpmnFileException("Not valid file!", e);
+        } catch (SAXException e) {
+            throw new NotValidBpmnFileException("Not valid file!", e);
+        } catch (IOException e) {
+            throw new NotValidBpmnFileException("Not valid file!", e);
+        } catch (XPathExpressionException e) {
+            throw new NotValidBpmnFileException("Not valid file!", e);
+        }
+    }
+
+    private String getDigest(File processDefinitionFile) throws Exception
+    {
+        FileInputStream stream = null;
+        try
+        {
+            stream = new FileInputStream(processDefinitionFile);
+            String md5Hex = DigestUtils.md5Hex(stream);
+            return md5Hex;
+        }
+        catch (IOException e)
+        {
+            throw new AcmBpmnException("Error performing file digest!", e);
+        }
+        finally
+        {
+            if ( stream != null )
+            {
+                stream.close();
+            }
+        }
     }
 
     @Test
     @Transactional
     public void deployProcessDefinitionAndMakeActive() throws Exception {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
+
+        assertTrue(f.exists());
+
         AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
@@ -65,7 +161,6 @@ public class AcmBpmnServiceIT {
         assertNotNull(acmBpmnService.getActive(apd.getKey()));
 
         acmBpmnService.remove(apd, true);
-
     }
 
     @Test
@@ -83,7 +178,6 @@ public class AcmBpmnServiceIT {
         assertEquals(apd.getId(), apd1.getId());
 
         acmBpmnService.remove(apd, true);
-
     }
 
 
@@ -155,7 +249,6 @@ public class AcmBpmnServiceIT {
         assertTrue(FileUtils.contentEquals(f, downloadedFile));
 
         acmBpmnService.remove(apd, true);
-
     }
 
     @After
