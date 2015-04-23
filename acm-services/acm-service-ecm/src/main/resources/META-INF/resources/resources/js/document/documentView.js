@@ -147,7 +147,7 @@ AcmDocument.View = AcmDocument.View || {
     ,DocViewer: {
         create: function() {
             this.$divDocViewer    = $("#divDocViewer");
-            this.createJTableDocViewer(this.$divDocViewer);
+            //this.createJTableDocViewer(this.$divDocViewer);
 
             /*Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
              Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);*/
