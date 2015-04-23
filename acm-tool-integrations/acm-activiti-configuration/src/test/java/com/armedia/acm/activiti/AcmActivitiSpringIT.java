@@ -21,10 +21,11 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/spring/spring-library-activiti-configuration.xml",
-        "classpath:/spring/spring-library-data-source.xml",
-        "classpath:/spring/spring-library-test-activiti-configuration.xml",
-        "classpath:/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-test-activiti-configuration.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 public class AcmActivitiSpringIT
 {
