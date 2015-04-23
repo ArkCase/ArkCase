@@ -405,7 +405,7 @@
                                 <div id="divDocViewerHeader" stile = "width:100%">
                                     <p>Document Viewer</p>
                                 </div>
-                                <iframe src = "/acm/resources/vendors/ViewerJS/index.html?type=${type}&title=${title}#/acm/api/latest/plugin/ecm/download/byId/${fileId}?inline=true" width='100%' height='400' allowfullscreen webkitallowfullscreen></iframe>
+                                <iframe src = "${context}/resources/vendors/ViewerJS/index.html?type=${type}&title=${title}#${context}/api/latest/plugin/ecm/download/byId/${fileId}?inline=true" width='100%' height='400' allowfullscreen webkitallowfullscreen></iframe>
                             </div>
                         </section>
                     </div>

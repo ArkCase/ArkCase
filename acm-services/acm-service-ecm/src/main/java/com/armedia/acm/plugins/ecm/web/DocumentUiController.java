@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Properties;
 
@@ -38,7 +39,7 @@ public class DocumentUiController
 //    }
 
     @RequestMapping(value = "/{fileId}", method = RequestMethod.GET)
-    public ModelAndView openComplaint(Authentication auth, @PathVariable(value = "fileId") Long fileId
+    public ModelAndView openComplaint(HttpServletRequest req, Authentication auth, @PathVariable(value = "fileId") Long fileId
     ) {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("document");
@@ -53,8 +54,10 @@ public class DocumentUiController
         if (mimeFileType.contains("pdf")){
             type = "pdf";
         }
+
         mv.addObject("type", type);
         mv.addObject("title",title);
+        mv.addObject("context",req.getContextPath());
 
         String participantTypes = getEcmFileServiceProperties().getProperty("ecm.participantTypes");
         if(participantTypes != null){
