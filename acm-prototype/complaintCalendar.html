@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/font.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/app.css" type="text/css" />
+<link rel="stylesheet" href="resources/js/fullcalendar/fullcalendar.css" type="text/css"  />
+<link rel="stylesheet" href="resources/js/fullcalendar/theme.css" type="text/css" />
 <!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
@@ -19,7 +21,7 @@
 <script src="resources/js/jquery.min.js"></script>
 <script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="resources/js/fancytree/jquery.fancytree.js"></script>
-<script src="resources/js/fancytree/jquery.fancytree.table.js"></script>
+
 <link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
 </head>
 <body class="">
@@ -76,6 +78,7 @@
                   <ul class="dropdown-menu animated fadeInRight m-t-xs">
                     <span class="arrow top hidden-nav-xs"></span>
                     <li> <a href="profile.html">My Profile</a> </li>
+                    
                     <li class="divider"></li>
                     <li> <a href="index.html">Logout</a> </li>
                   </ul>
@@ -91,11 +94,11 @@
                   <li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
                   <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
+                  
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
-                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+<li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
 <li class=""> <a href="contacts.html" class="auto"> <i class="fa fa-users icon"> </i> <span class="font-bold">Contacts</span> </a> </li>
-                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
-<li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li><li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
               </nav>
@@ -156,13 +159,12 @@
               </aside>
               <aside id="email-content" class="bg-light lter">
                 <section class="vbox">
-                  <section class="scrollable">
-                    <div class="wrapper dk  clearfix">
+                  <section class="scrollable"><div class="wrapper dk  clearfix">
                       <div class="row">
-                        <div class="col-xs-6  b-r">
+                        <div class="col-xs-6 b-r">
                           <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (State)</h4>
                         </div>
-                        <div class="col-xs-6  b-r text-right">
+                        <div class="col-xs-6 text-right">
                           <h5><a href="#" id="complaintID" >2014-03-12321</a></h5>
                         </div>
                       </div>
@@ -189,57 +191,49 @@
                           <small class="text-muted">Due Date</small> </div>
                       </div>
                     </div>
+                    
                     <div>
-                      <div class="wrapper">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <section class="panel b-a">
-                              <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                  <li style="margin-right:5px"></li>
-                                  <li>
-                                    <div class="btn-group padder-v2">
-                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                                    </div>
-                                  </li>
-                                  <li> </li>
-                                </ul>
-                                <a href="#" class="font-bold">Evidence</a></div>
-                              <div class="panel-body max-200 no-padder">
-                                <table class="table table-striped th-sortable table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th>ID</th>
-                                      <th>Location</th>
-                                     
-                                       <th>Title</th>
-                                      <th>Added</th>
-                                      <th>Type</th>
-                                      <th>Collected By</th>
-                                      <th width="10%">Action</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="odd gradeA">
-                                      <td>[ID]</td>
-                                      <td>[Location]</td>
-                                      
-                                      <td><a href="evidence.html" target="_blank">[Title]</a></td>
-                                      <td>[Added]</td>
-                                      <td>[Type]</td>
-                                      <td>[Collected By]</td>
-                                      <td><select name="select2" class="input-sm form-control input-s-sm inline v-middle">
-                                        <option value="0">Choose Action</option>
-                                        <option value="1">Charge Out</option>
-                                      </select></td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </section>
+                      <aside class="wrapper">
+                      
+                        <div class="pull-right inline">
+                          
+                          
+                          <div class="dropdown">
+                          <div class="btn-group">
+ 
+
+                            <button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-calendar"></i> Download ICS</button>
+                          
+                            </div>
+                          
                           </div>
                         </div>
+                        <h4 class="m-n">Complaint Calendar</h4>
+                        <hr/>
+                        
+                      
+                    <section class="panel no-border bg-light">
+                      <header class="panel-heading bg-primary clearfix">
+                        <div class="btn-group pull-right" data-toggle="buttons">
+                          <label class="btn btn-sm btn-bg btn-default active" id="monthview">
+                            <input type="radio" name="options">Month
+                          </label>
+                          <label class="btn btn-sm btn-bg btn-default" id="weekview">
+                            <input type="radio" name="options">Week
+                          </label>
+                          <label class="btn btn-sm btn-bg btn-default" id="dayview">
+                            <input type="radio" name="options">Day
+                          </label>
+                        </div>
+                        <span class="m-t-xs inline text-white">
+                          Calendar
+                        </span>
+                      </header>
+                      <div class="calendar" id="calendar">
+
                       </div>
+                    </section>
+                  </aside>
                     </div>
                     </div>
                   </section>
@@ -254,14 +248,9 @@
     </section>
   </section>
 </section>
-
 <script type='text/javascript'>//<![CDATA[ 
 
 $(function() {
-	
-	
-	
-	
     $("#tree").fancytree({
 
 activate: function(event, data) {
@@ -353,46 +342,17 @@ var save = function() {
 <link href="resources/css/bootstrap-editable.css" rel="stylesheet">
 <script src="resources/js/bootstrap-editable.min.js"></script> 
 <script src="resources/js/typeahead.js"></script> 
-<script>
-$.fn.editable.defaults.url = '/post';
-$(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); }); 
-$(document).ready(function() { $('#version').editable({placement: 'left', value: 2,    
-        source: [
-              {value: 1, text: 'Low'},
-              {value: 2, text: 'Medium'},
-              {value: 3, text: 'High'},
-              {value: 3, text: 'Expedited'}
-           ]}); }); 
-$(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,    
-        source: [
-              {value: 1, text: 'Type 1'},
-              {value: 2, text: 'Type 2'},
-              {value: 3, text: 'Type 3'},
-              {value: 3, text: 'Type 4'}
-           ]}); }); 
-		   
-$(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,    
-        source: [
-              {value: 1, text: 'David Miller'},
-              {value: 2, text: 'Judy Hsu'},
-              {value: 3, text: 'Ronda Ringo'},
-              {value: 3, text: 'AJ McClary'}
-           ]}); }); 
-		   
-$(document).ready(function() { $('#incident').editable({
-        format: 'yyyy-mm-dd',  
-		placement: 'bottom',  
-        viewformat: 'dd/mm/yyyy',    
-        datepicker: {
-                weekStart: 1
-           }
-        }); }); 
 
-</script> 
 
 <!-- App --> 
 <script src="resources/js/app.js"></script> 
 <script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+
+<script src="resources/js/jquery.ui.touch-punch.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fullcalendar/fullcalendar.min.js"></script>
+<script src="resources/js/fullcalendar/demo.js"></script>
+
 <script src="resources/js/app.plugin.js"></script>
 </body>
 </html>
