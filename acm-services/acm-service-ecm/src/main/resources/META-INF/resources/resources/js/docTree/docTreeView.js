@@ -1315,10 +1315,6 @@ DocTree.View = DocTree.View || {
         if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
             var toFolderNode = DocTree.View.isFolderNode(toNode)? toNode : toNode.parent;
             if (toFolderNode) {
-                frNode.moveTo(toNode, mode);
-                frNode.setActive();
-                DocTree.View.markNodePending(frNode);
-
                 //var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
                 var toFolderId = toFolderNode.data.objectId;
                 //var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
@@ -1329,6 +1325,10 @@ DocTree.View = DocTree.View || {
                 var frFolderId = frFolderNode.data.objectId;
                 //var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
                 var frCacheKey = DocTree.View.getCacheKey(frFolderNode);
+
+                frNode.moveTo(toNode, mode);
+                frNode.setActive();
+                DocTree.View.markNodePending(frNode);
 
                 if (DocTree.View.isFolderNode(frNode)) {
                     DocTree.Controller.viewMovedFolder(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, frNode);
