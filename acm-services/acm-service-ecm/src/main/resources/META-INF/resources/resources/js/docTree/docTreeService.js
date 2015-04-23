@@ -19,8 +19,10 @@ DocTree.Service = {
     ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
     ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
     ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
-    ,API_MOVE_TO_                     : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
-    ,API_COPY_TO_                     : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_MOVE_FOLDER_                 : "/api/latest/service/folder/move/"                       //  {folderToMoveId}/{dstFolderId}
+    ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_SET_ACTIVE_VERSION_          : "to be defined soon"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
@@ -199,8 +201,9 @@ DocTree.Service = {
     }
     ,createFolder: function(parentId, folderName, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
-        Acm.Service.asyncPut(
-            function(response) {
+        Acm.Service.call({type: "PUT"
+            ,url: url
+            ,callback: function(response) {
                 if (response.hasError) {
                     DocTree.Controller.modelCreatedFolder(response, parentId, folderName, cacheKey, callerData);
 
@@ -212,26 +215,26 @@ DocTree.Service = {
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
                                 var createdFolder = DocTree.Service.folderCreateToFileData(createInfo);
-//                                var createdFolder = {};
-//                                createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
-//                                createdFolder.objectType = "folder";
-//                                createdFolder.created    = Acm.goodValue(createInfo.created);
-//                                createdFolder.creator    = Acm.goodValue(createInfo.creator);
-//                                createdFolder.modified   = Acm.goodValue(createInfo.modified);
-//                                createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
-//                                createdFolder.name       = Acm.goodValue(createInfo.name);
-//                                createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
+    //                                var createdFolder = {};
+    //                                createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
+    //                                createdFolder.objectType = "folder";
+    //                                createdFolder.created    = Acm.goodValue(createInfo.created);
+    //                                createdFolder.creator    = Acm.goodValue(createInfo.creator);
+    //                                createdFolder.modified   = Acm.goodValue(createInfo.modified);
+    //                                createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
+    //                                createdFolder.name       = Acm.goodValue(createInfo.name);
+    //                                createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
                                 folderList.children.push(createdFolder);
                                 folderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                 DocTree.Controller.modelCreatedFolder(createdFolder, parentId, folderName, cacheKey, callerData);
+                                return true;
                             }
                         }
                     }
                 } //end else
             }
-            ,url
-        )
+        });
     }
     ,deleteFolder: function(folderId, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_DELETE_FOLDER_ + folderId;
@@ -363,9 +366,10 @@ DocTree.Service = {
         )
     }
     ,moveFile: function(objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_MOVE_TO_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_MOVE_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
@@ -400,9 +404,10 @@ DocTree.Service = {
         })
     }
     ,copyFile: function(objType, objId, folderId, fileId, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_COPY_TO_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
@@ -430,16 +435,13 @@ DocTree.Service = {
             }
         })
     }
-    ,moveFolder: function(objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
-        return;
-
-        var url = App.getContextPath() + this.API_MOVE_TO_ + objType + "/" + objId;
-        var data = {"id": subFolderId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
-            ,data: JSON.stringify(data)
+    ,moveFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, callerData) {
+        var url = App.getContextPath() + this.API_MOVE_FOLDER_ + subFolderId + "/" + folderId;
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,callback: function(response) {
                 if (response.hasError) {
-                    DocTree.Controller.modelMovedFolder(response, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
+                    DocTree.Controller.modelMovedFolder(response, subFolderId, folderId, frCacheKey, toCacheKey, callerData);
 
                 } else {
                     if (DocTree.Model.validateMoveFolderInfo(response)) {
@@ -461,7 +463,7 @@ DocTree.Service = {
                                 }
                             }
 
-                            DocTree.Controller.modelMovedFolder(moveFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
+                            DocTree.Controller.modelMovedFolder(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, callerData);
                             return true;
                         }
                     }
@@ -472,9 +474,10 @@ DocTree.Service = {
     ,copyFolder: function(objType, objId, folderId, subFolderId, toCacheKey, callerData) {
         return;
 
-        var url = App.getContextPath() + this.API_COPY_TO_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": subFolderId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {

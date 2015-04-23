@@ -49,6 +49,15 @@ Acm.Service = {
         return jQuery.ajax(arg);
     }
 
+    ,call : function(arg) {
+        return this.ajax({type: arg.type
+            ,url: arg.url
+            ,data: arg.data
+            ,success: function(response) {
+                Acm.Service._process(response, arg);
+            }
+        });
+    }
 
     ,asyncGet : function(callback, url, param) {
         return this.ajax({url: url

@@ -343,7 +343,7 @@ DocTree.View = DocTree.View || {
             node.renderTitle();
         }
     }
-    ,onModelMovedFolder: function(moveFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
+    ,onModelMovedFolder: function(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, node) {
         if (moveFolderInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when moving folder", Acm.goodValue(moveFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
@@ -351,7 +351,7 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeOk(node);
         }
     }
-    ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, toCacheKey, node) {
+    ,onModelCopiedFolder: function(copyFolderInfo, subFolderId, folderId, toCacheKey, node) {
         if (copyFolderInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when copying folder", Acm.goodValue(copyFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
@@ -451,7 +451,9 @@ DocTree.View = DocTree.View || {
                 var $tdList = $(node.tr).find(">td");
                 // (index #0 is rendered by fancytree by adding the checkbox)
                 //$tdList.eq(1).text(node.data.objectId);
-                $tdList.eq(1).html(DocTree.View.Source.getHtmlDocLink(node.data.objectId));
+                //DocTree.View.Source.getHtmlDocLink(node).appendTo($tdList.eq(1));
+                $tdList.eq(1).html(DocTree.View.Source.getHtmlDocLink(node));
+
                 // (index #2 is rendered by fancytree)
 
                 //if (DocTree.View.isTopNode(node)) {
@@ -899,11 +901,31 @@ DocTree.View = DocTree.View || {
             }
             return src;
         }
-        ,getHtmlDocLink: function(fileId) {
+        ,getHtmlDocLink_tobe: function(node) {
+            var $div = $("<div/>")
+            .addClass("btn-group");
+            var itemId = node.data.objectId;
+            if (itemId) {
+                var url = "#";
+                if (DocTree.View.isFileNode(node)) {
+                    url = App.getContextPath() + "/plugin/document/" + itemId;
+                }
+                var $a = $("<a/>")
+                    .attr("href", url)
+                    .text(itemId)
+                    .appendTo($div);
+            }
+            return $div;
+        }
+        ,getHtmlDocLink: function(node) {
             var html = "<div></div>";
-            if (fileId) {
-                var url = App.getContextPath() + "/plugin/document/" + fileId;
-                html = "<div class='btn-group'><a href='" + url + "'>" + fileId + "</a></div>";
+            var itemId = node.data.objectId
+            if (itemId) {
+                var url = "#";
+                if (DocTree.View.isFileNode(node)) {
+                    url = App.getContextPath() + "/plugin/document/" + itemId;
+                }
+                html = "<div class='btn-group'><a href='" + url + "'>" + itemId + "</a></div>";
             }
             return html;
         }
