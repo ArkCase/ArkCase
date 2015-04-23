@@ -38,8 +38,9 @@
         <module>acm-service-object-history</module>
         <module>acm-service-tag</module>
     	<module>acm-service-timesheet</module>
-    <module>acm-service-costsheet</module>
-  </modules>
+        <module>acm-service-costsheet</module>
+        <module>acm-service-ms-outlook-integration</module>
+    </modules>
 
 
 </project>
