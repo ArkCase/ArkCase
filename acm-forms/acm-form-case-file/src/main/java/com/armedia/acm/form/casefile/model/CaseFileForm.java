@@ -10,10 +10,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
-import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
@@ -33,8 +33,10 @@ public class CaseFileForm {
 	private String caseDescription;
 	private String cmisFolderId;
 	private List<ParticipantItem> participants;
-	private Map<String, Map<String, Strings>> participantsOptions;
 	private List<String> participantsTypeOptions;
+	private Map<String, String> participantsPrivilegeTypes;
+	private OwningGroupItem owningGroup;
+	private List<String> owningGroupOptions;
 	private Person initiator;
 	private List<Person> people;
 	
@@ -111,21 +113,40 @@ public class CaseFileForm {
 	}
 
 	@XmlTransient
-	public Map<String, Map<String, Strings>> getParticipantsOptions() {
-		return participantsOptions;
-	}
-
-	public void setParticipantsOptions(Map<String, Map<String, Strings>> participantsOptions) {
-		this.participantsOptions = participantsOptions;
-	}
-
-	@XmlTransient
 	public List<String> getParticipantsTypeOptions() {
 		return participantsTypeOptions;
 	}
 
 	public void setParticipantsTypeOptions(List<String> participantsTypeOptions) {
 		this.participantsTypeOptions = participantsTypeOptions;
+	}
+
+	@XmlTransient
+	public Map<String, String> getParticipantsPrivilegeTypes() {
+		return participantsPrivilegeTypes;
+	}
+
+	public void setParticipantsPrivilegeTypes(
+			Map<String, String> participantsPrivilegeTypes) {
+		this.participantsPrivilegeTypes = participantsPrivilegeTypes;
+	}
+
+	@XmlElement(name="owningGroup")
+	public OwningGroupItem getOwningGroup() {
+		return owningGroup;
+	}
+
+	public void setOwningGroup(OwningGroupItem owningGroup) {
+		this.owningGroup = owningGroup;
+	}
+
+	@XmlTransient
+	public List<String> getOwningGroupOptions() {
+		return owningGroupOptions;
+	}
+
+	public void setOwningGroupOptions(List<String> owningGroupOptions) {
+		this.owningGroupOptions = owningGroupOptions;
 	}
 
 	@XmlElement(name="initiator", type=InitiatorPerson.class)

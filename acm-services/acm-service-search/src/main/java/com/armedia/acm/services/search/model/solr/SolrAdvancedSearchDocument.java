@@ -105,6 +105,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String supervisor_id_s;
     private List<String> child_id_ss;
     private List<String> member_id_ss;
+    private List<String> groups_id_ss;
     private boolean adhocTask_b;
     private String owner_lcs;
     private String business_process_name_lcs;
@@ -570,7 +571,15 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 		this.member_id_ss = member_id_ss;
 	}
 
-    public void setAdhocTask_b(boolean adhocTask_b)
+    public List<String> getGroups_id_ss() {
+		return groups_id_ss;
+	}
+
+	public void setGroups_id_ss(List<String> groups_id_ss) {
+		this.groups_id_ss = groups_id_ss;
+	}
+
+	public void setAdhocTask_b(boolean adhocTask_b)
     {
         this.adhocTask_b = adhocTask_b;
     }
@@ -757,6 +766,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", supervisor_id_s='" + supervisor_id_s + '\'' +
                 ", child_id_ss=" + child_id_ss +
                 ", member_id_ss=" + member_id_ss +
+                ", groups_id_ss=" + groups_id_ss +
                 ", adhocTask_b=" + adhocTask_b +
                 ", owner_lcs='" + owner_lcs + '\'' +
                 ", business_process_name_lcs='" + business_process_name_lcs + '\'' +

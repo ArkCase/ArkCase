@@ -269,7 +269,7 @@ Complaint.View = Complaint.View || {
                     + "',mode:'create',");
                     //+ "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
 
-                Acm.Dialog.openWindow(url, "", 860, 700, function() {});
+                Acm.Dialog.openWindow(url, "", 1060, 700, function() {});
             }
         }
 
@@ -1664,7 +1664,7 @@ Complaint.View = Complaint.View || {
                     var complaintTitle = Acm.goodValue(complaint.complaintTitle);
                     complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
                     url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                    Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
@@ -1787,7 +1787,7 @@ Complaint.View = Complaint.View || {
                     var complaintTitle = Acm.goodValue(complaint.complaintTitle);
                     complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
                     url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                    Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
