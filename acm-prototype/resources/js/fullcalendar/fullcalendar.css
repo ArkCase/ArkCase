@@ -9,11 +9,22 @@
 	direction: ltr;
 	text-align: left;
 	}
+
 	
 .fc table {
 	border-collapse: collapse;
 	border-spacing: 0;
 	}
+
+
+
+#calendar table.fc-header {
+display: none;	
+}
+
+#calendar table {
+	width: 100%;
+}
 	
 html .fc,
 .fc table {
@@ -26,6 +37,14 @@ html .fc,
 	vertical-align: top;
 	}
 
+#calendar table tbody tr td {
+	text-align: center;
+}
+
+#calendar table tbody tr td span.fc-button {
+	margin-top: 5px;
+}
+
 
 
 /* Header
@@ -36,16 +55,18 @@ html .fc,
 	}
 
 .fc-header-left {
-	width: 25%;
 	text-align: left;
 	}
 	
 .fc-header-center {
 	text-align: center;
 	}
+
+#calendar table tbody tr td.fc-header-center span.fc-header-title h2 {
+	display: none;
+}
 	
 .fc-header-right {
-	width: 25%;
 	text-align: right;
 	}
 	
@@ -56,8 +77,7 @@ html .fc,
 	
 .fc-header-title h2 {
 	margin-top: 0;
-	white-space: nowrap;
-	}
+	white-space: nowrap;	}
 	
 .fc .fc-header-space {
 	padding-left: 10px;
