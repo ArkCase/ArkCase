@@ -42,12 +42,7 @@
         </property>
     </bean>
 
-    <context:property-placeholder
-            properties-ref="auditPluginProperties"
-            ignore-unresolvable="true"
-            local-override="false"
-            order="736211"/>
-    
+
     <!-- Task Scheduler - once a day -->
 	<task:scheduler id="auditTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="auditTaskScheduler">

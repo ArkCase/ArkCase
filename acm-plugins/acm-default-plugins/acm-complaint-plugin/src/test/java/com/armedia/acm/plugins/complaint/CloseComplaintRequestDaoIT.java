@@ -36,7 +36,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-search.xml"
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-property-file-manager.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class CloseComplaintRequestDaoIT
