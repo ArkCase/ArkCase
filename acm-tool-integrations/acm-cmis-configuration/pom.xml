@@ -13,6 +13,12 @@
     <description>CMIS server configuration.</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-files-property-file-manager</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- mule -->
         <dependency>
             <groupId>org.mule</groupId>

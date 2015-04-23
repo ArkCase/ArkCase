@@ -1,0 +1,345 @@
+<!DOCTYPE HTML><html><head><title>ArkCase Outlook Integration Plugin API documentation</title><meta http-equiv=X-UA-Compatible content="IE=edge"><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=generator content="https://github.com/kevinrenskers/raml2html 0.31.1"><link rel=stylesheet href=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css><link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css><script type=text/javascript src=http://code.jquery.com/jquery-1.11.0.min.js></script><script type=text/javascript src=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js></script><script type=text/javascript src=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js></script><script type=text/javascript>
+        $(document).ready(function() {
+            $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+
+            $('[data-toggle]').click(function() {
+                var selector = $(this).data('target') + ' pre code';
+                $(selector).each(function(i, block) {
+                    hljs.highlightBlock(block);
+                });
+            });
+        });
+    </script><style>
+        .hljs {
+            background: transparent;
+        }
+        .parent {
+            color: #999;
+        }
+        .list-group-item > .badge {
+            float: none;
+            margin-right: 6px;
+        }
+        .panel-title > .methods {
+            float: right;
+        }
+        .badge {
+            border-radius: 0;
+            text-transform: uppercase;
+            width: 70px;
+            font-weight: normal;
+            color: #f3f3f6;
+            line-height: normal;
+        }
+        .badge_get {
+            background-color: #63a8e2;
+        }
+        .badge_post {
+            background-color: #6cbd7d;
+        }
+        .badge_put {
+            background-color: #22bac4;
+        }
+        .badge_delete {
+            background-color: #d26460;
+        }
+        .list-group, .panel-group {
+            margin-bottom: 0;
+        }
+        .panel-group .panel+.panel-white {
+            margin-top: 0;
+        }
+        .panel-group .panel-white {
+            border-bottom: 1px solid #F5F5F5;
+            border-radius: 0;
+        }
+        .panel-white:last-child {
+            border-bottom-color: white;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        .panel-white .panel-heading {
+            background: white;
+        }
+        .tab-pane ul {
+            padding-left: 2em;
+        }
+        .tab-pane h2 {
+            font-size: 1.2em;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-pane h3 {
+            font-size: 1.1em;
+        }
+        .tab-content {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+        #sidebar {
+            margin-top: 30px;
+        }
+        .top-resource-description {
+            border-bottom: 1px solid #ddd;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .resource-description {
+            border-bottom: 1px solid #fcfcfc;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .panel > .panel-body > .panel-group > .panel:first-child .resource-description {
+            display: none;
+        }
+        .list-group .badge {
+            float: left;
+        }
+        .method_description {
+            margin-left: 85px;
+        }
+        .method_description p:last-child {
+            margin: 0;
+        }
+    </style></head><body data-spy=scroll data-target=#sidebar><div class=container><div class=row><div class=col-md-9 role=main><div class=page-header><h1>ArkCase Outlook Integration Plugin API documentation</h1><p></p></div><div class="panel panel-default"><div class=panel-heading><h3 id=_api_v1_plugin_outlook class=panel-title>/api/v1/plugin/outlook</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_plugin_outlook><span class=parent></span>/api/v1/plugin/outlook</a> <span class=methods></span></h4></div><div id=panel__api_v1_plugin_outlook class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_plugin_outlook_inbox><span class=parent>/api/v1/plugin/outlook</span>/inbox</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_plugin_outlook_inbox_get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_plugin_outlook_inbox class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Get a page of the user&#39;s e-mail items, from their Inbox.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_plugin_outlook_inbox_get class=list-group-item><span class="badge badge_get">get</span><div class=method_description></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_plugin_outlook_inbox_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/plugin/outlook</span>/inbox</h4></div><div class=modal-body><div class="alert alert-info"></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_plugin_outlook_inbox_get_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_plugin_outlook_inbox_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_plugin_outlook_inbox_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>one of (subject,dateTimeCreated,dateTimeReceived,dateTimeSent,hasAttachments,displayTo,size)</em><p>Sort field</p></li><li><strong>sortDirection</strong> <em>one of (ASC,DESC)</em><p>Sort ascending or descending</p></li><li><strong>start</strong> <em>(integer)</em><p>Index of the first item to appear in the results</p></li><li><strong>n</strong> <em>(integer)</em><p>Maximum items to include in the results</p></li></ul></div><div class=tab-pane id=_api_v1_plugin_outlook_inbox_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Outlook inbox successfully located and the requested page of results was returned</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+     * Outlook Inbox
+     */
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "Outlook Inbox Schema",
+      "type": "object",
+      "properties":
+      {
+        "totalItems": {
+          "type": "integer",
+          "description": "Number of items in the entire inbox",
+          "minimum": 0
+        },
+        "moreItemsAvailable": {
+          "type": "boolean",
+          "description": "Whether more pages can be retrieved after this page"
+        },
+        "currentStartIndex": {
+          "type": "integer",
+          "description": "Start row of the items in this page",
+          "minimum": 0
+        },
+        "currentMaxItems": {
+          "type": "integer",
+          "description": "Maximum number of items on this page"
+        },
+        "nextStartIndex": {
+          "type": "integer",
+          "description": "Value to use for the start index to retrieve the next page, if there is a next page.  -1 means there is no next page.",
+          "minimum": -1
+        },
+        "currentSortField": {
+          "type": "string",
+          "description": "The field on which the current page is sorted"
+        },
+        "currentSortAscending": {
+          "type": "boolean",
+          "description": "Whether this page is sorted ascending (true) or descending (false)"
+        },
+        "items": {
+          "description": "List of inbox items",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "properties":
+            {
+              "id": {
+                "type": "string",
+                "description": "MS Exchange ID for this item"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "created": {
+                "type": "string",
+                "description": "Create date, in JSON date format"
+              },
+              "modified": {
+                "type": "string",
+                "description": "Modify date, in JSON date format"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "size of the message body"
+              },
+              "sent": {
+                "type": "string",
+                "description": "Send date, in JSON date format"
+              },
+              "from": {
+                "type": "string",
+                "description": "e-mail address of the message sender"
+              },
+              "read": {
+                "type": "boolean",
+                "description": "whether the user has read this message"
+              },
+              "body": {
+                "type": "string",
+                "description": "Message body, in HTML 4.01 format"
+              }
+            }
+          }
+        }
+      }
+    }</code></pre><p><strong>Example</strong>:</p><pre><code>{
+      "totalItems" : 1221,
+      "moreItemsAvailable" : true,
+      "currentStartIndex" : 0,
+      "currentMaxItems" : 50,
+      "nextStartIndex" : 50,
+      "currentSortField" : "dateTimeCreated",
+      "currentSortAscending" : true,
+      "items" : [{
+        "id" : "AAMkAGVjMmMzN2QwLWU1ZTctNDY0My05OGFiLTJkNjE1OTc5OTlhMQBGAAAAAACOTzGM1OQ5Sae/JVKnBpIgBwDqBa92g2suSYnILcLYd6tdAASAtjPwAADqBa92g2suSYnILcLYd6tdAScuFPOVAAA=",
+        "subject" : "Mule in Action, Second Edition - Mobile formats available now",
+        "created" : "2014-03-10T21:07:35.000+0000",
+        "modified" : "2014-03-10T21:07:35.000+0000",
+        "size" : 11374,
+        "sent" : "2014-03-10T21:15:09.000+0000",
+        "from" : "support@manning.com",
+        "read" : true,
+        "body" : "&lt;!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"&gt;\n&lt;html&gt;......&lt;/html&gt;\n"
+        }
+        // more items left out of this example.
+      ]
+    }
+    </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_plugin_outlook_calendar><span class=parent>/api/v1/plugin/outlook</span>/calendar</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_plugin_outlook_calendar_get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_plugin_outlook_calendar class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Get a page of the user&#39;s calendar items, from their Calendar folder.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_plugin_outlook_calendar_get class=list-group-item><span class="badge badge_get">get</span><div class=method_description></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_plugin_outlook_calendar_get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/plugin/outlook</span>/calendar</h4></div><div class=modal-body><div class="alert alert-info"></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_plugin_outlook_calendar_get_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_plugin_outlook_calendar_get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_plugin_outlook_calendar_get_request><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>one of (subject,dateTimeCreated,dateTimeReceived,dateTimeSent,hasAttachments,dateTimeStart)</em><p>Sort field</p></li><li><strong>sortDirection</strong> <em>one of (ASC,DESC)</em><p>Sort ascending or descending</p></li><li><strong>start</strong> <em>(integer)</em><p>Index of the first item to appear in the results</p></li><li><strong>n</strong> <em>(integer)</em><p>Maximum items to include in the results</p></li></ul></div><div class=tab-pane id=_api_v1_plugin_outlook_calendar_get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Outlook calendar folder successfully located and the requested page of results was returned</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+     * Outlook Calendar
+     */
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "Outlook Calendar Schema",
+      "type": "object",
+      "properties":
+      {
+        "totalItems": {
+          "type": "integer",
+          "description": "Number of calendar items",
+          "minimum": 0
+        },
+        "moreItemsAvailable": {
+          "type": "boolean",
+          "description": "Whether more pages can be retrieved after this page"
+        },
+        "currentStartIndex": {
+          "type": "integer",
+          "description": "Start row of the items in this page",
+          "minimum": 0
+        },
+        "currentMaxItems": {
+          "type": "integer",
+          "description": "Maximum number of items on this page"
+        },
+        "nextStartIndex": {
+          "type": "integer",
+          "description": "Value to use for the start index to retrieve the next page, if there is a next page.  -1 means there is no next page.",
+          "minimum": -1
+        },
+        "currentSortField": {
+          "type": "string",
+          "description": "The field on which the current page is sorted"
+        },
+        "currentSortAscending": {
+          "type": "boolean",
+          "description": "Whether this page is sorted ascending (true) or descending (false)"
+        },
+        "items": {
+          "description": "List of calendar items",
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "properties":
+            {
+              "id": {
+                "type": "string",
+                "description": "MS Exchange ID for this item"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "created": {
+                "type": "string",
+                "description": "Create date, in JSON date format"
+              },
+              "modified": {
+                "type": "string",
+                "description": "Modify date, in JSON date format"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "size of the message body"
+              },
+              "sent": {
+                "type": "string",
+                "description": "Send date, in JSON date format"
+              },
+              "allDayEvent": {
+                "type": "boolean"
+              },
+              "cancelled": {
+                "type": "boolean"
+              },
+              "meeting": {
+                "type": "boolean"
+              },
+              "recurring": {
+                "type": "boolean"
+              },
+              "startDate": {
+                "type": "string",
+                "description": "Start date, in JSON date format"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "End date, in JSON date format"
+              },
+              "body": {
+                "type": "string",
+                "description": "Message body, in HTML 4.01 format"
+              }
+            }
+          }
+        }
+      }
+    }</code></pre><p><strong>Example</strong>:</p><pre><code>{
+      "totalItems" : 1,
+      "moreItemsAvailable" : false,
+      "currentStartIndex" : 0,
+      "currentMaxItems" : 50,
+      "nextStartIndex" : -1,
+      "currentSortField" : "dateTimeStart",
+      "currentSortAscending" : true
+      "items" : [{
+        "id" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
+        "subject" : "test appointment",
+        "created" : "2015-04-21T21:20:16.000+0000",
+        "modified" : "2015-04-21T21:20:16.000+0000",
+        "body" : "&lt;html&gt;\n&lt;head&gt;\n&lt;meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"&gt;\n&lt;meta name=\"Generator\" content=\"Microsoft Exchange Server\"&gt;\n&lt;!-- converted from rtf --&gt;\n&lt;style&gt;&lt;!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --&gt;&lt;/style&gt;\n&lt;/head&gt;\n&lt;body&gt;\n&lt;font face=\"Times New Roman\" size=\"3\"&gt;&lt;a name=\"BM_BEGIN\"&gt;&lt;/a&gt;\n&lt;div&gt;&lt;font face=\"Tahoma, sans-serif\" size=\"2\"&gt;The body&lt;/font&gt;&lt;/div&gt;\n&lt;/font&gt;\n&lt;/body&gt;\n&lt;/html&gt;\n",
+        "size" : 1029,
+        "sent" : "2015-04-21T21:20:16.000+0000",
+        "allDayEvent" : false,
+        "cancelled" : false,
+        "meeting" : false,
+        "recurring" : false,
+        "startDate" : "2015-04-21T21:30:00.000+0000",
+        "endDate" : "2015-04-21T22:30:00.000+0000"
+        }
+      ]
+    }
+    </code></pre></div></div></div></div></div></div></div></div></div></div></div><div class=col-md-3><div id=sidebar class="hidden-print affix" role=complementary><ul class="nav nav-pills nav-stacked"><li><a href=#_api_v1_plugin_outlook>/api/v1/plugin/outlook</a></li></ul></div></div></div></div></body></html>
