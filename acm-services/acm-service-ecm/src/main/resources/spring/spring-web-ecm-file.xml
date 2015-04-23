@@ -75,4 +75,13 @@
         <property name="fileService" ref="ecmFileService"/>
     </bean>
 
+    <bean id="getEcmFileByIdAPIController" class="com.armedia.acm.plugins.ecm.web.api.GetEcmFileByIdAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="setActiveFileVersionAPIController" class="com.armedia.acm.plugins.ecm.web.api.SetActiveFileVersionAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
 </beans>

@@ -37,6 +37,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 5/1/14.
@@ -322,6 +323,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return retval;
     }
 
+    @Override
+    public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws  PersistenceException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        List<EcmFileVersion> fileVersionList = file.getVersions();
+        file.setActiveVersionTag(versionTag);
+
+        return getEcmFileDao().save(file);
+    }
 
     @Override
     public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException {
@@ -467,7 +477,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         object.setMimeType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MIME_TYPE));
         
         object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
-        
+
+        if(object.getObjectType().equals(EcmFileConstants.FILE)){
+            EcmFile file = getEcmFileDao().find(object.getObjectId());
+            object.setVersionList(file.getVersions());
+        }
+
         return object;
     }
 
@@ -503,6 +518,16 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try {
             MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
+
+            if ( message.getInboundPropertyNames().contains(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY)) {
+                MuleException muleException = message.getInboundProperty(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY);
+                if (log.isErrorEnabled()) {
+                    log.error("File can not be copied successfully " + muleException.getMessage(), muleException);
+                }
+                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
+                        "File " + file.getFileName() + " can not be copied successfully", muleException);
+            }
+
             CmisObject cmisObject = message.getPayload(CmisObject.class);
 
             String newFileId = cmisObject.getId();
@@ -518,6 +543,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopy.setStatus(file.getStatus());
             fileCopy.setCategory(file.getCategory());
             fileCopy.setFileMimeType(file.getFileMimeType());
+            fileCopy.setVersions(file.getVersions());
 
             result = getEcmFileDao().save(fileCopy);
             return result;

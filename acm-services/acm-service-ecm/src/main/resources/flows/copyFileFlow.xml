@@ -55,8 +55,8 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
 					   
 		<catch-exception-strategy>
-            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
-            <set-property propertyName="updateException" value="#[exception]"/>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception copying: #[exception.message]"/>
+            <set-property propertyName="copyFileException" value="#[exception]"/>
         </catch-exception-strategy>
 
     </flow>
