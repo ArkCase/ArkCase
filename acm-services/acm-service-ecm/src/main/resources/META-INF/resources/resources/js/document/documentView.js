@@ -187,6 +187,10 @@ AcmDocument.View = AcmDocument.View || {
             this.$tabParticipants                       = $("#tabParticipants");
             this.$tabParticipants.on("click", ".removeParticipant", function(e) {AcmDocument.View.Participants.onClickBtnRemoveParticipant(e, this);});
             this.$tabParticipants.on("click", ".changeParticipantRole", function(e) {AcmDocument.View.Participants.onClickBtnChangeRole(e, this);});
+            this.$modalParticipantChangeRole            = $("#modalParticipantChangeRole");
+            this.$btnChangeParticipantRole              = this.$modalParticipantChangeRole.find('button.btn-primary');
+            this.$btnChangeParticipantRole.on("click", function(e) {AcmDocument.View.Participants.onClickModalBtnChangeRole(e, this);})
+            this.$selParticipantRole                    = $("#participantRoles");
 
             this.$labParticipants                       = $("#labParticipants");
 
@@ -206,7 +210,45 @@ AcmDocument.View = AcmDocument.View || {
         }
         ,onInitialized: function() {
         }
-
+        ,_participantId:0
+        ,getParticipantId: function() {
+            return this._participantId;
+        }
+        ,setParticipantId: function(participantId) {
+            this._participantId = participantId;
+        }
+        ,onModelAddedNewParticipant: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
+        ,onModelRetrievedParticipants: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
+        ,onModelRemovedParticipant: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
+        ,onModelChangedParticipantRole: function(participants) {
+            if(participants.hasError){
+                App.View.MessageBoard.show(participants.errorMsg);
+            }
+            else{
+                AcmDocument.View.Participants.buildParticipantsTable(participants);
+            }
+        }
         ,pickParticipant: function() {
             SearchBase.showSearchDialog({name: "New Participant"
                 ,title: "Add New Participant"
@@ -250,51 +292,6 @@ AcmDocument.View = AcmDocument.View || {
             });
         }
 
-
-        ,onModelAddedNewParticipant: function(participants) {
-            if(participants.hasError){
-                App.View.MessageBoard.show(participants.errorMsg);
-            }
-            else{
-                AcmDocument.View.Participants.buildParticipantsTable(participants);
-            }
-        }
-        ,onModelRetrievedParticipants: function(participants) {
-            if(participants.hasError){
-                App.View.MessageBoard.show(participants.errorMsg);
-            }
-            else{
-                AcmDocument.View.Participants.buildParticipantsTable(participants);
-            }
-        }
-        ,onModelRemovedParticipant: function(participants) {
-            if(participants.hasError){
-                App.View.MessageBoard.show(participants.errorMsg);
-            }
-            else{
-                AcmDocument.View.Participants.buildParticipantsTable(participants);
-            }
-        }
-        ,onModelChangedParticipantRole: function(participants) {
-            if(participants.hasError){
-                App.View.MessageBoard.show(participants.errorMsg);
-            }
-            else{
-                AcmDocument.View.Participants.buildParticipantsTable(participants);
-            }
-        }
-        ,setTextLabParticipants: function(totalParticipants){
-            Acm.Object.setText(AcmDocument.View.Participants.$labParticipants, totalParticipants);
-        }
-        ,getSelectValueParticipantType: function() {
-            return Acm.Object.getSelectValue(AcmDocument.View.Participants.$selParticipantType);
-        }
-        ,setHtmlTabParticipants: function(val) {
-            AcmDocument.View.Participants.$tabParticipants.append(val);
-        }
-        ,clearHtmlTabParticipants: function(){
-            AcmDocument.View.Participants.$tabParticipants.find("li").remove();
-        }
         ,onClickBtnRemoveParticipant: function(event,ctrl) {
             event.preventDefault();
             //find participant name and id
@@ -305,11 +302,48 @@ AcmDocument.View = AcmDocument.View || {
             AcmDocument.Controller.viewRemovedParticipant(participantId, userId, participantType, documentId);
         }
         ,onClickBtnChangeRole: function(event,ctrl) {
-            var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
+            AcmDocument.View.Participants.buildChangeRoleDialog();
+            AcmDocument.View.Participants.$modalParticipantChangeRole.modal('show');
             var participantId = $(event.target).closest('div').next().attr('id');
+            AcmDocument.View.Participants.setParticipantId(participantId);
             //var participantName = $(event.target).closest('div').next().children('div').prop('textContent');
-            var participantType = $(event.target).closest('div').next().children('small').prop('textContent');
-            AcmDocument.Controller.viewChangedParticipantRole(participantType, participantId, documentId);
+            //var participantType = $(event.target).closest('div').next().children('small').prop('textContent');
+            //AcmDocument.Controller.viewChangedParticipantRole(participantType, participantId, documentId);
+        }
+        ,onClickModalBtnChangeRole: function(event,ctrl){
+            var selctedParticipantRole = AcmDocument.View.Participants.getSelectValueParticipantRole();
+            if(Acm.isNotEmpty(selctedParticipantRole)){
+                var documentId = Acm.goodValue(AcmDocument.View.MicroData.documentId);
+                var participantId = AcmDocument.View.Participants.getParticipantId();
+                AcmDocument.Controller.viewChangedParticipantRole(selctedParticipantRole, participantId, documentId);
+                AcmDocument.View.Participants.$modalParticipantChangeRole.modal('hide');
+            }
+        }
+
+        ,buildChangeRoleDialog: function(){
+            AcmDocument.View.Participants.$selParticipantRole.empty();
+            var participantRoles = AcmDocument.View.MicroData.participantTypes;
+            if(Acm.isNotEmpty(participantRoles)){
+                for(var i=0;i< participantRoles.length;i++){
+                    var participantRole = AcmDocument.View.MicroData.participantTypes[i];
+                    Acm.Object.appendSelect(AcmDocument.View.Participants.$selParticipantRole, participantRole.toLowerCase(), participantRole);
+                };
+            }
+        }
+        ,setTextLabParticipants: function(totalParticipants){
+            Acm.Object.setText(AcmDocument.View.Participants.$labParticipants, totalParticipants);
+        }
+        ,getSelectValueParticipantType: function() {
+            return Acm.Object.getSelectValue(AcmDocument.View.Participants.$selParticipantType);
+        }
+        ,getSelectValueParticipantRole: function() {
+            return Acm.Object.getSelectValue(AcmDocument.View.Participants.$selParticipantRole);
+        }
+        ,setHtmlTabParticipants: function(val) {
+            AcmDocument.View.Participants.$tabParticipants.append(val);
+        }
+        ,clearHtmlTabParticipants: function(){
+            AcmDocument.View.Participants.$tabParticipants.find("li").remove();
         }
 
         ,buildParticipantsTable: function(participants) {

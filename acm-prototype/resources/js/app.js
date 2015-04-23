@@ -348,4 +348,12 @@ Date.now = Date.now || function() { return +new Date; };
     $(document).on('click.bs.dropdown.data-api', '.dropdown .on, .dropup .on', function (e) { e.stopPropagation() });
 
   });
+  
+  
+  
+  
+
+  
+  
 }(jQuery);
+

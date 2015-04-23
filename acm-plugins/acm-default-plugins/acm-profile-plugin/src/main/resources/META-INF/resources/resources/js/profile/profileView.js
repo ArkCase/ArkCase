@@ -8,11 +8,13 @@ Profile.View = {
         if (Profile.View.Picture.create)          {Profile.View.Picture.create();}
         if (Profile.View.Info.create)             {Profile.View.Info.create();}
         if (Profile.View.Subscription.create)     {Profile.View.Subscription.create();}
+        if (Profile.View.OutlookPassword.create)  {Profile.View.OutlookPassword.create();}
     }
     ,onInitialized: function() {
         if (Profile.View.Picture.onInitialized)      {Profile.View.Picture.onInitialized();}
         if (Profile.View.Info.onInitialized)         {Profile.View.Info.onInitialized();}
         if (Profile.View.Subscription.onInitialized) {Profile.View.Subscription.onInitialized();}
+        if (Profile.View.OutlookPassword.onInitialized)     {Profile.View.OutlookPassword.onInitialized();}
     }
 
     ,Picture: {
@@ -594,6 +596,72 @@ Profile.View = {
         ,refreshJTableSubscription: function() {
             AcmEx.Object.jTableLoad(this.$divSubscriptions);
         }
+    }
+
+
+    ,OutlookPassword: {
+        create: function () {
+            this.$modalChangeOutlookPassword = $("#changePassword").on("hidden.bs.modal", function(e) {
+                Profile.View.OutlookPassword.clearPasswordFields();
+            });
+            this.$btnChangePassword          = this.$modalChangeOutlookPassword.find('button.btn-primary');
+            this.$btnChangePassword.on("click", function(e){Profile.View.OutlookPassword.onClickBtnChangePassword(e, this);});
+
+            this.$newPassword                = $("#newpass");
+            this.$newPasswordCheck           = $("#newpassagain");
+            //this.$currentPassword            = $("#currentpassword");
+
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_OUTLOOK_PASSWORD, this.onModelSavedOutlookPassword);
+        }
+        , onInitialized: function () {
+        }
+
+        ,onModelSavedOutlookPassword: function(savedOutlookPassword){
+            if(savedOutlookPassword.hasError){
+                App.View.MessageBoard.show("Error changing outlook password.", savedOutlookPassword.errorMsg);
+            }
+            else{
+                App.View.MessageBoard.show("Outlook password successfully changed.")
+            }
+        }
+
+        ,onClickBtnChangePassword: function(event,ctrl){
+            var newPassword = Acm.goodValue(Profile.View.OutlookPassword.getValueNewPassword());
+            var newPasswordCheck = Acm.goodValue(Profile.View.OutlookPassword.getValueNewPasswordCheck());
+            if (Acm.isEmpty(newPassword)) {
+                Acm.Dialog.info("New password cannot be empty.");
+                Profile.View.OutlookPassword.$modalChangeOutlookPassword.modal("show");
+
+            } else if (Acm.isEmpty(newPasswordCheck)) {
+                Acm.Dialog.info("Please re-enter your password.");
+                Profile.View.OutlookPassword.$modalChangeOutlookPassword.modal("show");
+
+            } else if (!Acm.compare(newPassword,newPasswordCheck)) {
+                Acm.Dialog.info("Passwords do not match. Please try again.");
+                Profile.View.OutlookPassword.$modalChangeOutlookPassword.modal("show");
+            }
+            else{
+                var outlookPasswordToSave = {};
+                outlookPasswordToSave.outlookPassword = newPassword;
+                Profile.Controller.viewChangedOutlookPassword(outlookPasswordToSave);
+                Profile.View.OutlookPassword.$modalChangeOutlookPassword.modal("hide");
+            }
+        }
+
+        ,clearPasswordFields: function(){
+            Profile.View.OutlookPassword.$newPassword.val('');
+            Profile.View.OutlookPassword.$newPasswordCheck.val('');
+            //Profile.View.OutlookPassword.$currentPassword.val('');
+        }
+        ,getValueNewPassword: function(){
+            return Acm.goodValue(Profile.View.OutlookPassword.$newPassword.val());
+        }
+        ,getValueNewPasswordCheck: function(){
+            return Acm.goodValue(Profile.View.OutlookPassword.$newPasswordCheck.val());
+        }
+        /*,getValueCurrentPassword: function(){
+            return Acm.goodValue(Profile.View.OutlookPassword.$currentPassword.val());
+        }*/
     }
 };
 
