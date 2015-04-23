@@ -194,6 +194,16 @@
                     <property name="url" value="/api/{version}/service/ecm/folder/move/{folderToMoveId}/{dstFolderId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
+                <bean id="getFileVersions" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/ecm/file/{fileId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
+                <bean id="setActiveVersionToFile" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/ecm/file/{fileId}/{versionTag}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
