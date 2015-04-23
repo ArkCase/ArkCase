@@ -9,12 +9,6 @@
 
     <task:annotation-driven />
 
-    <context:property-placeholder
-            properties-ref="lawEnforcementAppProperties"
-            ignore-unresolvable="true"
-            local-override="false"
-            order="18372"/>
-
     <bean id="lawEnforcementAppProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
