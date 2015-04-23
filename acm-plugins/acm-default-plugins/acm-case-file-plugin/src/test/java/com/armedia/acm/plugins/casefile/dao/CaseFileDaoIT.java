@@ -20,18 +20,19 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"classpath:/spring/spring-library-object-history.xml",
-        "classpath:/spring/spring-library-case-file.xml",
-        "classpath:/spring/spring-library-data-source.xml",
-        "classpath:/spring/test-case-file-context.xml",
-        "classpath:/spring/spring-library-user-service.xml",
-        "classpath:/spring/spring-library-context-holder.xml",
-        "classpath:/spring/spring-library-search.xml",
-        "classpath:/spring/spring-library-data-access-control.xml",
-        "classpath:/spring/spring-library-folder-watcher.xml",
-        "classpath:/spring/spring-library-activiti-configuration.xml",
-        "classpath:/spring/spring-library-particpants.xml",
-        "classpath:/spring/spring-library-drools-monitor.xml"
+		"/spring/spring-library-object-history.xml",
+        "/spring/spring-library-case-file.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/test-case-file-context.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-drools-monitor.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
