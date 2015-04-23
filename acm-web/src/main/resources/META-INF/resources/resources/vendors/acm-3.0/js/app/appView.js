@@ -53,12 +53,12 @@ App.View = {
     ,MessageBoard: {
         create : function() {
             this.$sectionContent = $("#content");                   //this is where all the module data is displayed (tree,tables,topbar etc.)
-            this.$divBoard  = $("#divMessageBoard");
+            this.$divBoard  = $("#acm-messageBoardContainer");
             this.$divDetail = $("#divMessageDetail");
             this.$btnClose  = $("#btnMessageClose");
             this.$btnDetail = $("#btnMessageDetail");
             this.$labMsg    = $("#labMessage");
-            this.$labDetail = $("#labMessageDetail");
+            this.$labDetail = $("#acm-labelMessageDetail");
             this.$divModalMsgBoard = $(".modal-header");
 
             this.$btnClose.unbind("click").on("click", function(e) {App.View.MessageBoard.onClickBtnClose(e, this);});
@@ -83,7 +83,7 @@ App.View = {
             detail = Acm.isEmpty(detail)?"Detail unavailable":Acm.goodValue(detail);
             App.View.MessageBoard.setTextLabDetail(detail);
             //App.View.MessageBoard.slideDivDetail(!App.View.MessageBoard.isDetailShown());
-            App.View.MessageBoard.showDivDetail();
+            App.View.MessageBoard.showDivDetail(true);
         }
         ,fitToContentSize: function(){
             $(window).resize(function () {
@@ -118,9 +118,9 @@ App.View = {
                     detail='';
                 }
                 var html="";
-                html+= "<li><a href='#'><div class='message' title='Click for Detail...' style='color:#000000;font-weight: bold;margin:0px;text-align: left' data-msg-detail='" + detail + "'>" +  msg +
-                //"<a href='#' style='position: absolute;right:50px;'>Detail ...</button></a>" +
-                "</div></a></li>";
+		html+= "<li><div class='acm-message' data-msg-detail='" + detail + "'>" +  msg +
+                        "<a href='#' style='position: absolute;right:50px;' title='Click for Detail...' data-msg-detail='" + detail + "'>" + "Detail...</button></a>" +
+                        "</div></li>";		
                 this.$divModalMsgBoard.find("ul").prepend(html);
             }
         }
@@ -131,6 +131,7 @@ App.View = {
         }
 
         ,show: function(msg, detail) {
+            App.View.MessageBoard.showDivDetail(false);
             App.View.MessageBoard.showDivBoard(false);
             if(Acm.isNotEmpty(msg)){
                 App.View.MessageBoard.addMessagesToMessageBoard(msg,detail);
@@ -164,8 +165,12 @@ App.View = {
             }
         }
 
-        ,showDivDetail: function(){
-            this.$divDetail.show();
+        ,showDivDetail: function(show){
+            if (show) {
+                this.$divDetail.show();
+            } else {
+                this.$divDetail.hide();
+            }
         }
         ,_isDetailShown: false
         ,isDetailShown: function() {

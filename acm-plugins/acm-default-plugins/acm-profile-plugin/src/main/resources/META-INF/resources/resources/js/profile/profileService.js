@@ -10,11 +10,13 @@ Profile.Service = {
         if (Profile.Service.Picture.create)         {Profile.Service.Picture.create();}
         if (Profile.Service.Info.create)            {Profile.Service.Info.create();}
         if (Profile.Service.Subscription.create)    {Profile.Service.Subscription.create();}
+        if (Profile.Service.OutlookPassword.create)    {Profile.Service.OutlookPassword.create();}
     }
     ,onInitialized: function() {
         if (Profile.Service.Picture.onInitialized)         {Profile.Service.Picture.onInitialized();}
         if (Profile.Service.Info.onInitialized)            {Profile.Service.Info.onInitialized();}
         if (Profile.Service.Subscription.onInitialized)    {Profile.Service.Subscription.onInitialized();}
+        if (Profile.Service.OutlookPassword.onInitialized)    {Profile.Service.OutlookPassword.onInitialized();}
 
     }
 
@@ -393,6 +395,33 @@ Profile.Service = {
                     }
                 }
                 ,url
+            )
+        }
+    }
+
+    ,OutlookPassword: {
+        create: function () {
+        }
+        , onInitialized: function () {
+        }
+
+        ,API_SAVE_OUTLOOK_PASSWORD: "/api/v1/plugin/profile/outlook"
+
+        ,saveOutlookPassword : function(outlookPasswordToSave) {
+            var url = App.getContextPath() + this.API_SAVE_OUTLOOK_PASSWORD;
+            Acm.Service.asyncPost(
+                function (response) {
+                    if (response.hasError) {
+                        Profile.Controller.modelSavedOutlookPassword(response);
+                    } else {
+                        if (Profile.Model.OutlookPassword.validateOutlookPassword(response)) {
+                            var savedOutlookPassword = response;
+                            Profile.Controller.modelSavedOutlookPassword(savedOutlookPassword);
+                        }
+                    } //end else
+                }
+                , url
+                ,JSON.stringify(outlookPasswordToSave)
             )
         }
     }
