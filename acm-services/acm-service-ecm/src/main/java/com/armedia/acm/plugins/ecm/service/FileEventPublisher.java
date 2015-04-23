@@ -84,4 +84,13 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(fileReplacedEvent);
     }
 
+    public void publishFileActiveVersionSetEvent( EcmFile source, Authentication auth, String ipAddress, boolean succeeded ) {
+        if ( log.isDebugEnabled() ) {
+            log.debug("Publishing a file replaced event.");
+        }
+        EcmFileActiveVersionSetEvent fileActiveVersionSetEvent = new EcmFileActiveVersionSetEvent(source,auth.getName(),ipAddress);
+        fileActiveVersionSetEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(fileActiveVersionSetEvent);
+    }
+
 }
