@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
@@ -56,8 +58,17 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             event.setSucceeded(true);
 
             getApplicationEventPublisher().publishEvent(event);
+            String cmisFileId = ecmFile.getVersionSeriesId();
 
-            download(ecmFile.getVersionSeriesId(), response,inline);
+            List<EcmFileVersion> fileVersionList = ecmFile.getVersions();
+            String cmisId = null;
+            for(EcmFileVersion fileVersion: fileVersionList){
+                if(fileVersion.getVersionTag().equals(ecmFile.getActiveVersionTag())){
+                    cmisId = fileVersion.getCmisObjectId();
+                        break;
+                    }
+                   }
+            download(cmisId, response,inline);
         }
         else
         {
