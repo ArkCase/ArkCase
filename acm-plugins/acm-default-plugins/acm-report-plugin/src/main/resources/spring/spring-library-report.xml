@@ -5,13 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-    <context:property-placeholder
-        properties-ref="reportPluginProperties"
-        ignore-unresolvable="true"
-        local-override="false"
-        order="1"/>
-
-
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="reportPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
