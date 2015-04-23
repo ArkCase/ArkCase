@@ -127,7 +127,7 @@ Timesheet.View = {
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newTimesheetFormUrl)){
                 var newTimesheetFormUrl = Timesheet.View.MicroData.formUrls.newTimesheetFormUrl;
                 newTimesheetFormUrl = newTimesheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {
+                Acm.Dialog.openWindow(newTimesheetFormUrl, "", 1060, 700, function() {
                     Timesheet.Controller.viewClosedAddTimesheetWindow();
                     Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
                 });
@@ -141,7 +141,7 @@ Timesheet.View = {
                     var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
                     editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
                     editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
-                    Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {
+                    Acm.Dialog.openWindow(editTimesheetFormUrl, "", 1060, 700, function() {
                         Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
                     });
                 }

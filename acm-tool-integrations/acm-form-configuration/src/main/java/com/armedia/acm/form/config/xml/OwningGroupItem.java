@@ -11,12 +11,11 @@ import com.armedia.acm.form.config.Item;
  * @author riste.tutureski
  *
  */
-public class ParticipantItem  extends Item{
-	
-	private String type;
-	private String name;
+public class OwningGroupItem extends Item {
 
-	@XmlElement(name="participantId")
+	private String type;
+	
+	@XmlElement(name="owningGroupId")
 	@Override
 	public Long getId() {
 		return super.getId();
@@ -27,7 +26,7 @@ public class ParticipantItem  extends Item{
 		super.setId(id);
 	}
 	
-	@XmlElement(name="participant")
+	@XmlElement(name="owningGroupValue")
 	@Override
 	public String getValue() {
 		return super.getValue();
@@ -38,7 +37,7 @@ public class ParticipantItem  extends Item{
 		super.setValue(value);
 	}
 	
-	@XmlElement(name="participantType")
+	@XmlElement(name="owningGroupType")
 	public String getType() {
 		return type;
 	}
@@ -46,14 +45,5 @@ public class ParticipantItem  extends Item{
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	@XmlElement(name="participantName")
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 }

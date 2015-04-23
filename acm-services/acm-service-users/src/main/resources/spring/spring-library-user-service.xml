@@ -15,6 +15,10 @@
     
     <bean id="groupDao" class="com.armedia.acm.services.users.dao.group.AcmGroupDao"/>
     
+    <bean id="groupService" class="com.armedia.acm.services.users.service.group.GroupServiceImpl">
+    	<property name="userDao" ref="userJpaDao" />
+    </bean>
+    
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">
     	<property name="userActionDao" ref="userActionDao" />
     </bean>

@@ -319,7 +319,7 @@ CaseFile.View = CaseFile.View || {
             	
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',xmlId:'" + xmlId + "',pdfId:'" + pdfId + "',");
-            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 860, 700
+            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
                     ,function() {
                         CaseFile.Controller.viewChangedCaseFile(caseFileId);
                     }
@@ -337,7 +337,7 @@ CaseFile.View = CaseFile.View || {
                 if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
                     if (Acm.isNotEmpty(c.caseNumber)) {
                         urlChangeCaseStatusForm = urlChangeCaseStatusForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
-                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 860, 700
+                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 1060, 700
                             ,function() {
                                 CaseFile.Controller.viewClosedCaseFile(caseFileId);
                             }
@@ -402,7 +402,7 @@ CaseFile.View = CaseFile.View || {
             	}
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
-            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 860, 700
+            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
                     ,function() {
             			// TODO: When James will find solution, we should change this
             			window.location.href = App.getContextPath() + '/plugin/casefile';
@@ -1846,7 +1846,7 @@ CaseFile.View = CaseFile.View || {
                         + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                         + "',"
                     );
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                    Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
@@ -1950,7 +1950,7 @@ CaseFile.View = CaseFile.View || {
                             + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                             + "',");
 
-                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
+                        Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30
                             ,function() {
                         		CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
                             }
