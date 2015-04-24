@@ -1891,7 +1891,7 @@ Task.View = Task.View || {
                             "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
                             //url = url.replace("_data=(", "_data=(complaintId:'" + "409" + "',complaintNumber:'" + "20140806_198" + "',mode:'edit',xmlId:'783',pdfId:'785',requestId:'780',");
 
-                            Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+                            Acm.Dialog.openWindow(url, "", 1060, 700, this.onDone);
                         }
                     }
                 }
@@ -1920,7 +1920,7 @@ Task.View = Task.View || {
                             url = url.replace("_data=(", "_data=(caseId:'" + parentId + "',caseNumber:'" + parentName +
                             "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
 
-                            Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+                            Acm.Dialog.openWindow(url, "", 1060, 700, this.onDone);
                         }
                     }
                 }

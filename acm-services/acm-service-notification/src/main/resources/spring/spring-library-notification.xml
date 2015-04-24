@@ -7,12 +7,7 @@
        					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
        					   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
-	<context:property-placeholder
-        properties-ref="notificationProperties"
-        ignore-unresolvable="true"
-        local-override="false"
-        order="987691"/>
-        
+
     <bean id="notificationProperties"
           class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring

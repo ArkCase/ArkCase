@@ -103,5 +103,5 @@
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
     </bean>
-
+    
 </beans>

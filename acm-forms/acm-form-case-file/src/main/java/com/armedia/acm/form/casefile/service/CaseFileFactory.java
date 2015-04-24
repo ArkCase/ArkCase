@@ -5,9 +5,8 @@ package com.armedia.acm.form.casefile.service;
 
 
 import com.armedia.acm.form.casefile.model.CaseFileForm;
-import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
-import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -18,7 +17,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +28,7 @@ import java.util.List;
  * @author riste.tutureski
  *
  */
-public class CaseFileFactory 
+public class CaseFileFactory extends FrevvoFormFactory
 {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -54,7 +53,7 @@ public class CaseFileFactory
 		caseFile.setTitle(form.getCaseTitle());
 		caseFile.setCaseType(form.getCaseType());
 		caseFile.setDetails(form.getCaseDescription());
-		caseFile.setParticipants(asAcmParticipants(form.getParticipants()));
+		caseFile.setParticipants(asAcmParticipants(form.getParticipants(), form.getOwningGroup(), FrevvoFormName.CASE_FILE));
 
 		if (form.getInitiator() != null)
 		{
@@ -84,29 +83,6 @@ public class CaseFileFactory
 		return caseFile;
 	}
 	
-	private List<AcmParticipant> asAcmParticipants(List<ParticipantItem> items)
-	{
-		if (items != null)
-		{
-			List<AcmParticipant> participants = new ArrayList<>();
-			for (ParticipantItem item : items)
-			{
-				AcmParticipant participant = new AcmParticipant();
-				
-				participant.setId(item.getId());
-				participant.setObjectType(FrevvoFormName.CASE_FILE.toUpperCase());
-				participant.setParticipantLdapId(item.getValue());
-				participant.setParticipantType(item.getType());
-				
-				participants.add(participant);
-			}
-			
-			return participants;
-		}
-		return null;
-	}
-	
-	@SuppressWarnings("unchecked")
 	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, FrevvoFormAbstractService formService)
 	{		
 		CaseFileForm retval = new CaseFileForm();
@@ -121,6 +97,7 @@ public class CaseFileFactory
             String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			retval.setCmisFolderId(cmisFolderId);
 			retval.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
+			retval.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 			{
@@ -149,32 +126,6 @@ public class CaseFileFactory
 		}
 		
 		return retval;
-	}
-	
-	private List<ParticipantItem> asFrevvoParticipants(List<AcmParticipant> participants)
-	{
-		if (participants != null)
-		{
-			List<ParticipantItem> items = new ArrayList<>();
-			
-			for (AcmParticipant participant : participants)
-			{
-				if (!CaseFileFormConstants.DEFAULT_USER.equals(participant.getParticipantType()))
-				{
-					ParticipantItem item = new ParticipantItem();
-					
-					item.setId(participant.getId());
-					item.setType(participant.getParticipantType());
-					item.setValue(participant.getParticipantLdapId());
-					
-					items.add(item);
-				}
-			}
-			
-			return items;
-		}
-		
-		return null;
 	}
 
 	public ObjectAssociationDao getObjectAssociationDao() {

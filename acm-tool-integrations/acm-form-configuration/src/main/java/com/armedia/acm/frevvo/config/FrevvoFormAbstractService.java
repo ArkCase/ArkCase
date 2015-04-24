@@ -546,216 +546,39 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	 * @param formName
 	 * @return
 	 */
-	public Map<String, Map<String, Strings>> getParticipants(List<String> participantTypes, String formName)
-	{
-		Map<String, String> groups = null;
-		
-		if (participantTypes != null)
+	public Strings getOwningGroups(String owningGroupType, String formName)
+	{		
+		if (owningGroupType != null)
 		{
-			Map<String, Map<String, Strings>> participantsOptions = new HashMap<>();
-			for (String participantType : participantTypes)
-			{
-				String type = "";
-				String[] participantTypeArray = participantType.split("=");
-				if (participantTypeArray != null && participantTypeArray.length == 2)
-				{
-					type = participantTypeArray[0];
-					String privilege = (String) getProperties().get(formName + "." + type.replace(" ", "_") + ".privilege");
-					
-					try
-					{
-						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
-						Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
-						
-						groups = updateGroupsIfEmpty(groups, rolesForPrivilege, rolesToGroups);						
-						participantsOptions = updateParticipantsOptions(participantsOptions, rolesForPrivilege, rolesToGroups, groups, type, privilege, formName);
-					}
-					catch(Exception e)
-					{
-						LOG.warn("Cannot find users with privilege = " + type + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
-					}
-				}
-			}
+				
+			String privilege = (String) getProperties().get(formName + "." + owningGroupType.replace(" ", "_") + ".privilege");
 			
-			return participantsOptions;
+			try
+			{
+				List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
+				Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+				
+				Map<String, String> groups = getGroups(rolesForPrivilege, rolesToGroups, 0, 1000, "name ASC", getAuthentication());		
+				
+				return getGroupsList(groups);
+			}
+			catch(Exception e)
+			{
+				LOG.error("Cannot find groups with privilege = " + owningGroupType + ".");
+			}
 		}
 		
 		return null;
 	}
 	
 	/**
-	 * Create groups only if needed (and only once in the loop)
-	 * 
-	 * @param groups
-	 * @param rolesForPrivilege
-	 * @param rolesToGroups
-	 * @return
-	 * @throws MuleException
-	 */
-	private Map<String, String> updateGroupsIfEmpty(Map<String, String> groups, List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups) throws MuleException
-	{
-		if (groups == null)
-		{
-			groups = getGroups(rolesForPrivilege, rolesToGroups, 0, 1000, "name ASC", getAuthentication());
-		}
-		
-		return groups;
-	}
-	
-	/**
-	 * Update participant options map
-	 * 
-	 * @param participantsOptions
-	 * @param rolesForPrivilege
-	 * @param rolesToGroups
-	 * @param groups
-	 * @param type
-	 * @param privilege
-	 * @param formName
-	 * @return
-	 */
-	private Map<String, Map<String, Strings>> updateParticipantsOptions(Map<String, Map<String, Strings>> participantsOptions, 
-			List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups, Map<String, String> groups,
-			String type, String privilege, String formName)
-	{
-		if (!onlyUsers(formName, type))
-		{			
-			if (groups != null)
-			{
-				Map<String, Strings> optionsMap = new HashMap<>();
-				if (onlyGroupsUsers(formName, type))
-				{
-					optionsMap = getGroupUsersMap(groups, rolesForPrivilege, rolesToGroups);
-				}
-				else if (onlyGroups(formName, type))
-				{
-					optionsMap = getGroupsMap(groups);
-				}
-				participantsOptions.put(type, optionsMap);
-			}
-		}
-		else
-		{
-			Map<String, Strings> optionsMap = getUsersMap(FrevvoFormConstants.DEFAULT_KEY, null, rolesForPrivilege, rolesToGroups);
-			participantsOptions.put(type, optionsMap);
-		}
-		
-		return participantsOptions;
-	}
-	
-	/**
-	 * Check if we should return only groups
-	 * 
-	 * @param formName
-	 * @param type
-	 * @return
-	 */
-	private boolean onlyGroups(String formName, String type)
-	{
-		String privilegeType = (String) getProperties().get(formName + "." + type.replace(" ", "_") + ".privilege.type");
-		
-		return privilegeType != null && privilegeType.equals(FrevvoFormConstants.GROUP);
-	}
-	
-	/**
-	 * Check if we should return only users
-	 * 
-	 * @param formName
-	 * @param type
-	 * @return
-	 */
-	private boolean onlyUsers(String formName, String type)
-	{
-		String privilegeType = (String) getProperties().get(formName + "." + type.replace(" ", "_") + ".privilege.type");
-		
-		return privilegeType != null && privilegeType.equals(FrevvoFormConstants.USER);
-	}
-	
-	/**
-	 * Check if we should return only groups to users map
-	 * 
-	 * @param formName
-	 * @param type
-	 * @return
-	 */
-	private boolean onlyGroupsUsers(String formName, String type)
-	{
-		String privilegeType = (String) getProperties().get(formName + "." + type.replace(" ", "_") + ".privilege.type");
-		
-		return privilegeType != null && privilegeType.equals(FrevvoFormConstants.GROUP_USER);
-	}
-	
-	/**
-	 * This method will return information which users belong in which group. In other words, this is map
-	 * between group and users. '*' is special key (which means all users)
-	 * 
-	 * @param groups
-	 * @param rolesForPrivilege
-	 * @param rolesToGroups
-	 * @return
-	 */
-	private Map<String, Strings> getGroupUsersMap(Map<String, String> groups, List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups)
-	{
-		Map<String, Strings> optionsMap = new HashMap<>();
-		
-		// Update optionsMap for each group
-		for (Entry<String, String> entry : groups.entrySet())
-		{
-			String groupId = entry.getKey();
-			
-			optionsMap = getUsersMap(groupId, optionsMap, rolesForPrivilege, rolesToGroups);
-		}
-		
-		return optionsMap;
-	}
-	
-	/**
-	 * This method will return updated map (add users to the map 'source') for given key (which can be group id or special key '*')
-	 * 
-	 * @param key
-	 * @param source
-	 * @param rolesForPrivilege
-	 * @param rolesToGroups
-	 * @return
-	 */
-	private Map<String, Strings> getUsersMap(String key, Map<String, Strings> source, List<String> rolesForPrivilege, Map<String, List<String>> rolesToGroups)
-	{
-		if (source == null)
-		{
-			source = new HashMap<String, Strings>();
-		}
-		
-		String group = null;
-		if (!FrevvoFormConstants.DEFAULT_KEY.equals(key))
-		{
-			group = key;
-		}
-		
-		Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
-        
-		List<AcmUser> users = new ArrayList<>(usersSet);
-        
-        if (users != null && users.size() > 0) {
-        	Strings options = new Strings();
-        	for (int i = 0; i < users.size(); i++) {
-        		options.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-        	}
-        	
-        	source.put(key, options);
-        }
-		
-		return source;
-	}
-	
-	/**
-	 * This method will return all groups in map that need Frevvo with special key "*", which means all groups
+	 * This method will return all groups in list that need Frevvo
 	 * 
 	 * @param groups
 	 * @return
 	 */
-	private Map<String, Strings> getGroupsMap(Map<String, String> groups)
+	private Strings getGroupsList(Map<String, String> groups)
 	{
-		Map<String, Strings> optionsMap = new HashMap<>();
 		Strings options = new Strings();
 		
 		if (groups != null)
@@ -769,9 +592,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			}
 		}
 		
-		optionsMap.put(FrevvoFormConstants.DEFAULT_KEY, options);
-		
-		return optionsMap;
+		return options;
 	}
 	
 	/**
@@ -809,6 +630,28 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		}
 		
 		return groups;
+	}
+	
+	public Map<String, String> getParticipantsPrivilegeTypes(List<String> participantTypes, String formName)
+	{
+		Map<String, String> retval = new HashMap<>();
+		
+		if (participantTypes != null)
+		{
+			for (String participantType : participantTypes)
+			{
+				String[] participantTypeArray = participantType.split("=");
+				if (participantTypeArray != null && participantTypeArray.length == 2)
+				{
+					String key = participantTypeArray[0];
+					String value = (String) getProperties().get(formName + "." + key.replace(" ", "_") + ".privilege.type");
+					
+					retval.put(key, value);
+				}
+			}
+		}
+		
+		return retval;
 	}
 
     @Override

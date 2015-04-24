@@ -7,12 +7,15 @@ import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.model.UserOrgConstants;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,6 +28,7 @@ import java.util.List;
  */
 public class UserOrgDao extends AcmAbstractDao<UserOrg> {
 
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public UserOrg getUserOrgForUserId(String userId) throws AcmObjectNotFoundException
     {
@@ -65,13 +69,13 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
     public void saveOutlookPassword(Authentication authentication, OutlookDTO in)
     {
         // must use a native update, since we don't want to add a password property to an entity class; since
-        // if we did that, the password would end up being passed aruond in POJOs and JSON objects.
+        // if we did that, the password would end up being passed around in POJOs and JSON objects.
 
-        String jpql = "UPDATE acm_user_org uo " +
+        String sql = "UPDATE acm_user_org uo " +
                 "SET uo.cm_ms_outlook_password = ?1 " +
                 "WHERE uo.cm_user = ?2 ";
 
-        Query q = getEm().createNativeQuery(jpql);
+        Query q = getEm().createNativeQuery(sql);
         q.setParameter(1, in.getOutlookPassword());
         q.setParameter(2, authentication.getName());
 
@@ -82,6 +86,38 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
             throw new IllegalStateException("No profile for user '" + authentication.getName() + "'");
         }
 
+    }
+
+    @Transactional
+    public OutlookDTO retrieveOutlookPassword(Authentication authentication)
+    {
+        // must use a native query, since we don't want to add a password property to an entity class; since
+        // if we did that, the password would end up being passed around in POJOs and JSON objects.
+
+        String sql = "SELECT cm_ms_outlook_password " +
+                "FROM acm_user_org uo " +
+                "WHERE uo.cm_user = ?1 ";
+
+        Query q = getEm().createNativeQuery(sql);
+        q.setParameter(1, authentication.getName());
+
+        try
+        {
+            Object o = q.getSingleResult();
+
+            log.debug("Query result is of type: " + o.getClass().getName());
+
+            String password = (String) o;
+
+            OutlookDTO retval = new OutlookDTO();
+            retval.setOutlookPassword(password);
+
+            return retval;
+        }
+        catch (PersistenceException pe)
+        {
+            throw new IllegalStateException("No profile for user '" + authentication.getName() + "'");
+        }
     }
 
     @Override
