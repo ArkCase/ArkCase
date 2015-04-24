@@ -108,20 +108,31 @@ AcmDocument.View = AcmDocument.View || {
             this.$lnkStatus         = $("#status");
 
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_DOCUMENT_DETAIL           ,this.onModelRetrievedDocumentDetail);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CHANGED_ACTIVE_FILE_VERSION           ,this.onModelChangedActiveFileVersion);
+
         }
         ,onInitialized: function() {
+        }
+
+        ,onModelChangedActiveFileVersion: function(documentId, documentDetail) {
+            if (documentDetail.hasError) {
+                //App.View.MessageBoard.show(documentDetail.errorMsg);
+            }
+            else if(AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
+                AcmDocument.Model.Detail.cacheDocumentDetail.put(documentId, documentDetail);
+            }
         }
         ,onModelRetrievedDocumentDetail: function(documentDetail) {
             if(documentDetail.hasError){
                 App.View.MessageBoard.show(documentDetail.errorMsg);
             }
             else if (AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
-                AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.title_t));
-                AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.create_tdt));
-                AcmDocument.View.Detail.setTextLnkType(Acm.goodValue(documentDetail.type_s));
-                AcmDocument.View.Detail.setTextLnkOwner(Acm.__FixMe__getUserFullName(documentDetail.author));
-                AcmDocument.View.Detail.setTextLnkStatus(Acm.goodValue(documentDetail.status_s));
-                AcmDocument.View.Detail.setTextLnkAssignee(Acm.__FixMe__getUserFullName(documentDetail.author));
+                AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.fileName));
+                AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.created));
+                AcmDocument.View.Detail.setTextLnkType(Acm.goodValue(documentDetail.fileType));
+                AcmDocument.View.Detail.setTextLnkOwner(Acm.__FixMe__getUserFullName(documentDetail.creator));
+                AcmDocument.View.Detail.setTextLnkStatus(Acm.goodValue(documentDetail.status));
+                AcmDocument.View.Detail.setTextLnkAssignee(Acm.__FixMe__getUserFullName(documentDetail.creator));
             }
         }
         ,setTextLnkDocTitle: function(txt) {
@@ -740,53 +751,66 @@ AcmDocument.View = AcmDocument.View || {
     ,VersionHistory: {
         create: function() {
             this.$tabVersionHistory = $("#tabVersionHistory")
-            //dummy
-            var versionHistoryList = [{"name" : "V1" , "id": "11", "date" : "03/13/2015", "user" : "ann-acm"},
-                                        {"name" : "V2" ,"id": "12", "date" : "03/17/2015", "user" : "ann-acm"},
-                                        {"name" : "V3" ,"id": "13", "date" : "03/19/2015", "user" : "ann-acm"}];
 
-            this.buildVersionHistoryTable(versionHistoryList);
+            this.$tabVersionHistory.on("click", ".makeActiveVersion", function(e) {AcmDocument.View.VersionHistory.onClickBtnMakeActiveVersion(e, this);});
 
-            this.$btnMakeActiveVersion    	    = $(".makeActiveVersion");
-            this.$btnMakeActiveVersion.on("click", function(e) {AcmDocument.View.VersionHistory.onClickBtnMakeActiveVersion(e, this);});
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_DOCUMENT_DETAIL           ,this.onModelRetrievedDocumentDetail);
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CHANGED_ACTIVE_FILE_VERSION           ,this.onModelChangedActiveVersion);
 
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(AcmDocument.View.VersionHistory.buildVersionHistoryTable());
-        }
-        ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(AcmDocument.View.VersionHistory.buildVersionHistoryTable());
-        }
+        ,onModelChangedActiveVersion:function(documentId, documentDetail){
+            if(AcmDocument.Model.VersionHistory.validateDocumentDetail(documentDetail)){
+                App.View.MessageBoard.show("Active file version changed successfully.");
+                AcmDocument.View.VersionHistory.buildVersionHistoryTable(documentDetail.versions);
+            }
+            else if (documentDetail.hasError) {
+                App.View.MessageBoard.show("Error setting active file version", documentDetail.errorMsg);
+            }
 
+        }
+        ,onModelRetrievedDocumentDetail:function(documentDetail){
+            if(AcmDocument.Model.VersionHistory.validateDocumentDetail(documentDetail)){
+                AcmDocument.View.VersionHistory.buildVersionHistoryTable(documentDetail.versions);
+            }
+        }
         ,onClickBtnMakeActiveVersion:function(event,ctrl){
             event.preventDefault();
             //find version name and id
             var id = $(event.target).closest('td').siblings(':first-child').attr('id');
-            var versionName = $(event.target).closest('td').siblings(':first-child').text();
-            alert("id: " + id + " " + "version name: " + versionName);
+            var versionTag = $(event.target).closest('td').siblings(':first-child').text();
+            var documentId = AcmDocument.View.MicroData.documentId;
+            AcmDocument.Controller.viewChangedActiveFileVersion(documentId,versionTag);
         }
-
+        ,clearHtmlTabVersionHistory: function(val) {
+                AcmDocument.View.VersionHistory.$tabVersionHistory.find("td").remove();
+        }
         ,setHtmlTabVersionHistory: function(val) {
             //$(val).appendTo(this.$tabVersionHistory);
             AcmDocument.View.VersionHistory.$tabVersionHistory.append(val);
         }
         ,buildVersionHistoryTable: function(versionHistoryList) {
-            var html = "";
-            for (var i = 0; i < versionHistoryList.length; i++) {
-                html+= "<tr>"
-                            +"<td id='" + Acm.goodValue(versionHistoryList[i].id) + "'>" + Acm.goodValue(versionHistoryList[i].name) + "</td>"
-                            +"<td>" + Acm.goodValue(versionHistoryList[i].date) + "</td>"
-                            +"<td>" + Acm.goodValue(versionHistoryList[i].user) +  "</td>"
-                            +"<td><button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
+            if(AcmDocument.Model.VersionHistory.validateVersionHistoryList(versionHistoryList)){
+                AcmDocument.View.VersionHistory.clearHtmlTabVersionHistory();
+                var html = "";
+                for (var i = 0; i < versionHistoryList.length; i++) {
+                    if(AcmDocument.Model.VersionHistory.validateVersionHistory(versionHistoryList[i])){
+                        html+= "<tr>"
+                            +"<td id='" + Acm.goodValue(versionHistoryList[i].id) + "'>" + Acm.goodValue(versionHistoryList[i].versionTag) + "</td>"
+                            +"<td>" + Acm.getDateFromDatetime(versionHistoryList[i].created) + "</td>"
+                            +"<td>" + Acm.goodValue(versionHistoryList[i].creator) +  "</td>"
+                            +"<td>"
+                            +"<div class='btn-group pull-right'>"
+
+                            +"<button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
                             +"<ul class='dropdown-menu'>"
-                                +"<li><a href='#' class='makeActiveVersion'>Make Active</a></li>"
-                            +"</ul></td>"
-                        +"</tr>"
+                            +"<li><a href='#' class='makeActiveVersion'>Make Active</a></li>"
+                            +"</ul></div></td>"
+                            +"</tr>"
+                    }
+                }
             }
             this.setHtmlTabVersionHistory(html);
         }
