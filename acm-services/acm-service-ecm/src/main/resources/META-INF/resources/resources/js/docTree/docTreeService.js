@@ -21,8 +21,8 @@ DocTree.Service = {
     ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
     ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
-    ,API_MOVE_FOLDER_                 : "/api/latest/service/folder/move/"                       //  {folderToMoveId}/{dstFolderId}
-    ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                       //  {folderToMoveId}/{dstFolderId}
+    ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_SET_ACTIVE_VERSION_          : "to be defined soon"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
@@ -428,7 +428,6 @@ DocTree.Service = {
                                 DocTree.Controller.modelCopiedFile(fileData, objType, objId, folderId, fileId, toCacheKey, callerData);
                                 return true;
                             }
-
                         }
                     }
                 } //end else
@@ -445,7 +444,7 @@ DocTree.Service = {
 
                 } else {
                     if (DocTree.Model.validateMoveFolderInfo(response)) {
-                        if (response.fileId == subFolderId) {
+                        if (response.id == subFolderId) {
                             var moveFolderInfo = response;
 
                             var frFolderList = DocTree.Model.cacheFolderList.get(frCacheKey);
