@@ -70,7 +70,7 @@ public class AcmActivitiSpringIT
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("key", "Grateful Dead");
 
-        ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcess", processVariables);
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcessUnitTest", processVariables);
         assertNotNull(pi);
 
         Task userTask = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();
