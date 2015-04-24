@@ -15,8 +15,13 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,11 +75,14 @@ public class SpringContextHolder implements ApplicationContextAware, Application
     }
 
     private void checkIfSpringConfigWasAdded(AbstractConfigurationFileEvent fileEvent, File eventFile) {
-        if (fileEvent instanceof ConfigurationFileAddedEvent && isSpringConfigFile(eventFile))
+        if (fileEvent instanceof ConfigurationFileAddedEvent && (isSpringConfigFile(eventFile) || isSpringConfigFolder(eventFile)))
         {
             try
             {
-                addContextFromFile(eventFile);
+                if(eventFile.isDirectory())
+                    addContextFromFolder(eventFile);
+                else
+                    addContextFromFile(eventFile);
             }
             catch (IOException e)
             {
@@ -85,9 +93,16 @@ public class SpringContextHolder implements ApplicationContextAware, Application
 
     private boolean isSpringConfigFile(File eventFile)
     {
-        return eventFile.getParentFile().getName().equals("spring") &&
+        return eventFile.isFile() &&
+                eventFile.getParentFile().getName().equals("spring") &&
                 eventFile.getName().startsWith("spring-config") &&
                 eventFile.getName().endsWith(".xml");
+    }
+
+    private boolean isSpringConfigFolder(File eventFile)
+    {
+        return eventFile.isDirectory() &&
+                eventFile.getName().startsWith("spring-config");
     }
 
     @Override
@@ -110,6 +125,33 @@ public class SpringContextHolder implements ApplicationContextAware, Application
 
         log.debug("Returning " + beans.size() + " beans of type " + type.getName());
         return Collections.unmodifiableMap(beans);
+    }
+
+    public void addContextFromFolder(File configFile) throws IOException, BeansException
+    {
+        log.info("Adding context from folder " + configFile.getCanonicalPath());
+
+        // the canonical path will be an absolute path.  But it will start with a / on Linux,
+        // which Spring will treat as a relative path.  Must start with file: to force an absolute path.
+        try
+        {
+            List<String> configFiles = Files
+                    .walk(configFile.toPath(), 1)
+                    .filter(p -> p.toFile().isFile()
+                            && p.toFile().getName().contains("spring-acm")
+                            && p.toFile().getName().endsWith("xml"))
+                    .map(Object::toString)
+                    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+
+            AbstractApplicationContext child = new FileSystemXmlApplicationContext(
+                    configFiles.toArray(new String[configFiles.size()]), true, toplevelContext);
+            childContextMap.put(configFile.getName(), child);
+        }
+        catch (BeansException be)
+        {
+            log.error("Could not load Spring context from folder '" + configFile.getCanonicalPath() + "' due to " +
+                    "error '" + be.getMessage() + "'", be);
+        }
     }
 
     public void addContextFromFile(File configFile) throws IOException, BeansException

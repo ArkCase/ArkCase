@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="auditPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Audit Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="auditPrivilege"/>
+                <ref bean="auditReadEventsForObjectPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="auditUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/audit"/>
+                    <property name="requiredPrivilege" ref="auditPrivilege"/>
+                </bean>
+                <bean id="auditPageUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/audit/page"/>
+                    <property name="requiredPrivilege" ref="auditPrivilege"/>
+                </bean>
+                <bean id="auditByObjectTypeAndObjectIdUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/audit/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="auditReadEventsForObjectPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

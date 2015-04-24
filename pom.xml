@@ -33,7 +33,8 @@
         <camel.version>2.13.1</camel.version>
         <castor-xml.version>1.3.3</castor-xml.version>
         <drools.version>6.1.0.Final</drools.version>
-        <easymock.version>3.2</easymock.version>
+        <easymock.version>3.3.1</easymock.version>
+        <easymock-extension.version>3.2</easymock-extension.version>
         <eclipselink-jpa.version>2.5.2</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>

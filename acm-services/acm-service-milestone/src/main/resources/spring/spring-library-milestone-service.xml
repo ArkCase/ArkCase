@@ -11,36 +11,6 @@
 
     <bean id="milestonePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Milestone Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="listMilestonesGroupedByDate"/>
-            </list>
-        </property>
-
-        <property name="urlPrivileges">
-            <list>
-                <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/milestonebyname"/>
-                    <property name="requiredPrivilege" ref="listMilestonesGroupedByDate"/>
-                </bean>
-
-            </list>
-        </property>
     </bean>
-
-    <bean id="listMilestonesGroupedByDate" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-milestone-service"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_ANALYST</value>
-            </list>
-        </property>
-    </bean>
-
 
 </beans>

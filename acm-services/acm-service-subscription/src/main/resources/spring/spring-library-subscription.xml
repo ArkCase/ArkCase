@@ -84,54 +84,6 @@
     <bean id="subscriptionPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Search Plugin"/>
         <property name="pluginProperties" ref="subscriptionProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="subscribePrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="getSubscriptionsByUser" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="getSubscriptionByUserObjectIdAndType" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="createSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="deleteSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="subscriptionUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/subscription"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-            </list>
-
-        </property>
-    </bean>
-
-    <bean id="subscribePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-subscription"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
     </bean>
 
 </beans>
