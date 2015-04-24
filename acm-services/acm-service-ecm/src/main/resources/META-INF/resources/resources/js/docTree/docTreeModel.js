@@ -61,10 +61,10 @@ DocTree.Model = DocTree.Model || {
         DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
     }
     ,onViewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
-        DocTree.Service.moveFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
+        DocTree.Service.moveFolder(subFolderId, folderId, frCacheKey, toCacheKey, node);
     }
     ,onViewCopiedFolder: function(subFolderId, folderId, toCacheKey, node) {
-        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, toCacheKey, node);
+        DocTree.Service.copyFolder(subFolderId, folderId, toCacheKey, node);
     }
     ,onViewChangedVersion: function(fileId, version, node) {
         DocTree.Service.setActiveVersion(fileId, version, node);
@@ -217,13 +217,7 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data.fileId)) {
-            return false;
-        }
-        if (Acm.isEmpty(data.folder)) {
-            return false;
-        }
-        if (Acm.isEmpty(data.folder.id)) {
+        if (Acm.isEmpty(data.id)) {
             return false;
         }
         return true;
