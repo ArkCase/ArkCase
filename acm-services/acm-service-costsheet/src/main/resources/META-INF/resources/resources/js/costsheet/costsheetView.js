@@ -130,7 +130,7 @@ Costsheet.View = {
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newCostsheetFormUrl)){
                 var newCostsheetFormUrl = Costsheet.View.MicroData.formUrls.newCostsheetFormUrl;
                 newCostsheetFormUrl = newCostsheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(newCostsheetFormUrl, "", 860, 700, function() {
+                Acm.Dialog.openWindow(newCostsheetFormUrl, "", 1060, 700, function() {
                     Costsheet.Controller.viewClosedAddCostsheetWindow();
                     if(Costsheet.Model.Detail.validateCostsheet(Costsheet.View.getActiveCostsheet())) {
                         Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
@@ -147,7 +147,7 @@ Costsheet.View = {
                     var objectType = Acm.goodValue(Costsheet.View.getActiveCostsheet().parentType);
                     editCostsheetFormUrl = editCostsheetFormUrl.replace("_data=(", "_data=(objectId:'" + objectId + "',type:'" + objectType + "',");
                     editCostsheetFormUrl = editCostsheetFormUrl.replace("embed", "popupform");
-                    Acm.Dialog.openWindow(editCostsheetFormUrl, "", 860, 700, function() {
+                    Acm.Dialog.openWindow(editCostsheetFormUrl, "", 1060, 700, function() {
                         Costsheet.Controller.viewClosedEditCostsheetWindow(Costsheet.View.getActiveCostsheet());
                     });
                 }

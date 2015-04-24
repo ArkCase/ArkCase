@@ -5,9 +5,6 @@ package com.armedia.acm.services.users.model.group;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -32,7 +29,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
 								   "/spring/spring-library-user-service.xml",
                                    "/spring/spring-library-context-holder.xml",
-		                           "/spring/spring-library-property-file-manager.xml"
+								   "/spring/spring-library-property-file-manager.xml"
                                    })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmGroupIT {
@@ -87,9 +84,6 @@ public class AcmGroupIT {
 		group.setType("Group Type");
 		group.setStatus("Group Status");
 		
-		AcmGroup savedGroup = getGroupDao().save(group);
-		getEntityManager().flush();
-		
 		
 		// Subgroup
 		AcmGroup subGroup = new AcmGroup();
@@ -98,20 +92,20 @@ public class AcmGroupIT {
 		subGroup.setDescription("SubGroup Description");
 		subGroup.setType("SubGroup Type");
 		subGroup.setStatus("SubGroup Status");
-		subGroup.setParentGroup(savedGroup);
+		subGroup.setParentGroup(group);
 		
-		AcmGroup savedSubGroup = getGroupDao().save(subGroup);
+		AcmGroup savedGroup = getGroupDao().save(subGroup);
 		getEntityManager().flush();
 		
 		
-		AcmGroup parent = getGroupDao().findByName(savedGroup.getName());
-		assertEquals(savedGroup.getName(), savedSubGroup.getParentGroup().getName());
+		AcmGroup parent = getGroupDao().findByName(savedGroup.getParentGroup().getName());
+		assertEquals(parent.getName(), savedGroup.getParentGroup().getName());
 		
-		
-		getGroupDao().deleteAcmGroupByName(savedSubGroup.getName());
-		getEntityManager().flush();
 		
 		getGroupDao().deleteAcmGroupByName(savedGroup.getName());
+		getEntityManager().flush();
+		
+		getGroupDao().deleteAcmGroupByName(savedGroup.getParentGroup().getName());
 		getEntityManager().flush();
     }
 	
@@ -151,11 +145,7 @@ public class AcmGroupIT {
 		group.setName("Group Name");
 		group.setDescription("Group Description");
 		group.setType("Group Type");
-		group.setStatus("Group Status");
-		
-		AcmGroup savedGroup = getGroupDao().save(group);
-		getEntityManager().flush();
-		
+		group.setStatus("Group Status");		
 		
 		// Subgroup
 		AcmGroup subGroup = new AcmGroup();
@@ -164,9 +154,9 @@ public class AcmGroupIT {
 		subGroup.setDescription("SubGroup Description");
 		subGroup.setType("SubGroup Type");
 		subGroup.setStatus("SubGroup Status");
-		subGroup.setParentGroup(savedGroup);
+		subGroup.setParentGroup(group);
 		
-		getGroupDao().save(subGroup);
+		AcmGroup savedGroup = getGroupDao().save(subGroup);
 		getEntityManager().flush();
 		
 		
@@ -193,9 +183,6 @@ public class AcmGroupIT {
 		group.setType("Group Type");
 		group.setStatus("Group Status");
 		
-		AcmGroup savedGroup = getGroupDao().save(group);
-		getEntityManager().flush();
-		
 		
 		// Subgroup
 		AcmGroup subGroup = new AcmGroup();
@@ -204,18 +191,21 @@ public class AcmGroupIT {
 		subGroup.setDescription("SubGroup Description");
 		subGroup.setType("SubGroup Type");
 		subGroup.setStatus("SubGroup Status");
-		subGroup.setParentGroup(savedGroup);
+		subGroup.setParentGroup(group);
 		
-		AcmGroup savedSubGroup = getGroupDao().save(subGroup);
+		getGroupDao().save(group);
 		getEntityManager().flush();		
 		
-		getGroupDao().deleteAcmGroupByName(savedSubGroup.getName());
+		getGroupDao().deleteAcmGroupByName(subGroup.getName());
 		getEntityManager().flush();
 		
-		AcmGroup parent = getGroupDao().findByName(savedGroup.getName());
-		assertEquals(0, parent.getChildGroups().size());
+		AcmGroup parent = getGroupDao().findByName(group.getName());
+		assertNotNull(parent);
 		
-		getGroupDao().deleteAcmGroupByName(savedGroup.getName());
+		AcmGroup child = getGroupDao().findByName(subGroup.getName());
+		assertNull(child);
+		
+		getGroupDao().deleteAcmGroupByName(group.getName());
 		getEntityManager().flush();
     }
 	
@@ -240,9 +230,6 @@ public class AcmGroupIT {
 		
 		group.setSupervisor(supervisor);
 		
-		AcmGroup savedGroup = getGroupDao().save(group);
-		getEntityManager().flush();
-		
 		
 		// Subgroup
 		AcmGroup subGroup = new AcmGroup();
@@ -251,24 +238,24 @@ public class AcmGroupIT {
 		subGroup.setDescription("SubGroup Description");
 		subGroup.setType("SubGroup Type");
 		subGroup.setStatus("SubGroup Status");
-		subGroup.setParentGroup(savedGroup);
-		subGroup.setSupervisor(savedGroup.getSupervisor());
+		subGroup.setParentGroup(group);
+		subGroup.setSupervisor(group.getSupervisor());
 		
-		AcmGroup savedSubGroup = getGroupDao().save(subGroup);
+		AcmGroup savedGroup = getGroupDao().save(group);
 		getEntityManager().flush();
 		
 		
 		
 		assertNotNull(savedGroup.getName());
-		assertNotNull(savedSubGroup.getName());
-		assertEquals(savedGroup.getSupervisor().getUserId(), savedSubGroup.getSupervisor().getUserId());
+		assertNotNull(savedGroup.getChildGroups().get(0).getName());
+		assertEquals(savedGroup.getSupervisor().getUserId(), savedGroup.getChildGroups().get(0).getSupervisor().getUserId());
 		
 		
 		
-		getGroupDao().deleteAcmGroupByName(savedSubGroup.getName());
+		getGroupDao().deleteAcmGroupByName(subGroup.getName());
 		getEntityManager().flush();
 		
-		getGroupDao().deleteAcmGroupByName(savedGroup.getName());
+		getGroupDao().deleteAcmGroupByName(group.getName());
 		getEntityManager().flush();
     }
 

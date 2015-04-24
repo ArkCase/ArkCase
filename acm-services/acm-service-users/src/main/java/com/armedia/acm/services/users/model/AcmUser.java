@@ -1,18 +1,24 @@
 package com.armedia.acm.services.users.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "ACM_USER")
@@ -49,6 +55,10 @@ public class AcmUser implements Serializable, AcmLdapEntity
 
     @Column(name="cm_mail")
     private String mail;
+    
+    @ManyToMany(mappedBy="members", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<AcmGroup> groups;
 
     @Transient
     private String distinguishedName;
@@ -168,7 +178,77 @@ public class AcmUser implements Serializable, AcmLdapEntity
         this.distinguishedName = distinguishedName;
     }
 
-    @Override
+    public Set<AcmGroup> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<AcmGroup> groups) 
+	{
+		// Bidirectional ManyToMany relation
+		if (groups != null)
+		{
+			for (AcmGroup group : groups)
+			{
+				if (group.getMembers() != null && !group.getMembers().contains(this))
+				{
+					group.getMembers().add(this);
+				}
+			}
+		}
+		
+		this.groups = groups;
+	}
+	
+	/**
+	 * Because of bidirectional ManyToMany relation, this method should be used for adding
+	 * groups to the user. Don't use getGroups().add(..) or getGroups().addAll(..)
+	 * 
+	 * @param group
+	 */
+	public void addGroup(AcmGroup group)
+	{
+		if (group != null)
+		{
+			if (getGroups() == null)
+			{
+				setGroups(new HashSet<>());
+			}
+			
+			getGroups().add(group);
+			
+			if (group.getMembers() != null && !group.getMembers().contains(this))
+			{
+				group.getMembers().add(this);
+			}
+		}
+	}
+	
+	/**
+	 * Because of bidirectional ManyToMany relation, this method should be used for removing
+	 * groups from the user.
+	 * 
+	 * @param group
+	 */
+	public void removeGroup(AcmGroup group)
+	{
+		if (group != null)
+		{
+			if (getGroups() != null)
+			{
+				if (getGroups().contains(group))
+				{
+					getGroups().remove(group);
+				}
+				
+				if (group.getMembers() != null && group.getMembers().contains(this))
+				{
+					group.getMembers().remove(this);
+				}
+			}			
+		}
+	}
+
+	@Override
     @JsonIgnore
     public boolean isGroup()
     {

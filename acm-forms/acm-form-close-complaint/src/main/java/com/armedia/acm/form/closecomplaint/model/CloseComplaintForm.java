@@ -23,8 +23,6 @@ public class CloseComplaintForm {
 	private ReferExternal referExternal;
 	private ExistingCase existingCase;
 	private List<Item> approvers;
-	
-	private List<String> approverOptions;
 	private String description;
 
 
@@ -60,14 +58,6 @@ public class CloseComplaintForm {
 
 	public void setApprovers(List<Item> approvers) {
 		this.approvers = approvers;
-	}
-
-	public List<String> getApproverOptions() {
-		return approverOptions;
-	}
-
-	public void setApproverOptions(List<String> approverOptions) {
-		this.approverOptions = approverOptions;
 	}
 
 	public String getDescription() {

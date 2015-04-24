@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
@@ -103,9 +104,9 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 				result = getExistingContact(existingContactId);
 			}
 			
-			if ("init-participants".equals(action)) 
+			if ("init-participants-groups".equals(action)) 
 			{
-				result = initParticipants();
+				result = initParticipantsAndGroupsInfo();
 			}
 		}
 		
@@ -185,15 +186,22 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 		return json;
 	}
 	
-	private JSONObject initParticipants()
+	private JSONObject initParticipantsAndGroupsInfo()
 	{
 		ComplaintForm complaint = new ComplaintForm();
 		
 		// Participants Initialization
 		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.COMPLAINT + ".participantTypes"), ",");
 		complaint.setParticipantsTypeOptions(participantTypes);
+		complaint.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.COMPLAINT));
 
-		complaint.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.COMPLAINT));
+		// Init Owning Group information
+		String owningGroupType = (String) getProperties().get(FrevvoFormName.COMPLAINT + ".owningGroupType");
+		OwningGroupItem owningGroupItem = new OwningGroupItem();
+		owningGroupItem.setType(owningGroupType);
+		
+		complaint.setOwningGroup(owningGroupItem);
+		complaint.setOwningGroupOptions(getOwningGroups(owningGroupType, FrevvoFormName.COMPLAINT));
 		
 		JSONObject json = createResponse(complaint);
 		
