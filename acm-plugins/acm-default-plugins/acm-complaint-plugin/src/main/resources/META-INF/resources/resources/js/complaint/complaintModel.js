@@ -19,6 +19,7 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
         if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
+        if (Complaint.Model.OutlookCalendar.create)           {Complaint.Model.OutlookCalendar.create();}
         if (Complaint.Model.Time.create)                  {Complaint.Model.Time.create();}
         if (Complaint.Model.Cost.create)                  {Complaint.Model.Cost.create();}
     }
@@ -37,6 +38,7 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
         if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
         if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
+        if (Complaint.Model.OutlookCalendar.onInitialized)           {Complaint.Model.OutlookCalendar.onInitialized();}
         if (Complaint.Model.Time.onInitialized)           {Complaint.Model.Time.onInitialized();}
         if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
@@ -129,6 +131,7 @@ Complaint.Model = Complaint.Model || {
             ,NODE_TYPE_PART_HISTORY      : "his"
             ,NODE_TYPE_PART_TIME         : "time"
             ,NODE_TYPE_PART_COST         : "cost"
+            ,NODE_TYPE_PART_CALENDAR     : "calendar"
 
 
 
@@ -157,6 +160,7 @@ Complaint.Model = Complaint.Model || {
                         ,"tabHistory"
                         ,"tabTime"
                         ,"tabCost"
+                        ,"tabOutlookCalendar"
                     ]}
                 ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
                 ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
@@ -170,7 +174,8 @@ Complaint.Model = Complaint.Model || {
                 ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
                 ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
                 ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
-            ]
+                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
+                ]
         }
     }
 
@@ -866,7 +871,7 @@ Complaint.Model = Complaint.Model || {
             this._priorities     = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_PRIORITIES);
             this._groups    =  new Acm.Model.CacheFifo();
             this._users    	 	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_USERS);
-            
+
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
         }
@@ -894,7 +899,7 @@ Complaint.Model = Complaint.Model || {
             } else {
                 Complaint.Controller.modelFoundPriorities(priorities);
             }
-            
+
             // Do not do getGroups() here. It should call after the object is loaded.
         	// This will help in the first loading to be retrieved correct groups
         	// The place for calling this now is onModelRetrievedObject(...) in this file
@@ -904,7 +909,7 @@ Complaint.Model = Complaint.Model || {
             } else {
             	Complaint.Controller.modelRetrievedGroups(groups);
             }*/
-            
+
             var users = Complaint.Model.Lookup.getUsers();
             if (Acm.isEmpty(users)) {
             	Complaint.Service.Lookup.retrieveUsers();
@@ -985,30 +990,30 @@ Complaint.Model = Complaint.Model || {
         ,getAliasTypes : function() {
             return this._aliasTypes;
         }
-        
+
         ,_participantTypes : {'assignee': 'Assignee', 'co-owner': 'Co-Owner', 'supervisor': 'Supervisor', 'owning group': 'Owning Group', 'approver': 'Approver', 'collaborator': 'Collaborator', 'follower': 'Follower', 'reader': 'Reader', 'No Access': 'No Access'}
         ,getParticipantTypes : function() {
             return this._participantTypes;
         }
-        
+
         ,onModelRetrievedObject: function(objData) {
         	Complaint.Model.Lookup.refreshAssigneesAndGroups();
         }
-        
+
         ,onViewSelectedObject: function(objType, objId) {
         	Complaint.Model.Lookup.refreshAssigneesAndGroups();
         }
-        
+
         ,refreshAssigneesAndGroups: function() {
         	var complaintId = Complaint.View.getActiveComplaintId();
-        	
+
         	var assignees = Complaint.Model.Lookup.getAssignees(complaintId);
             if (Acm.isEmpty(assignees)) {
             	Complaint.Service.Lookup.retrieveAssignees();
             } else {
             	Complaint.Controller.modelFoundAssignees(assignees);
             }
-            
+
             var groups = Complaint.Model.Lookup.getGroups(complaintId);
             if (Acm.isEmpty(groups)) {
             	Complaint.Service.Lookup.retrieveGroups();
@@ -1018,6 +1023,65 @@ Complaint.Model = Complaint.Model || {
         }
 
     }
+    ,OutlookCalendar: {
+        create : function() {
+            this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+
+        }
+        ,onInitialized: function() {
+        }
+        ,onModelRetrievedObject: function(objData) {
+            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
+        }
+        ,validateOutlookCalendarItems: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.items)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalItems)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateOutlookCalendarItem: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.size)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.sent)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.allDayEvent)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.cancelled)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.meeting)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.recurring)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.startDate)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.endDate)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
 
     ,Time: {
         create : function() {
