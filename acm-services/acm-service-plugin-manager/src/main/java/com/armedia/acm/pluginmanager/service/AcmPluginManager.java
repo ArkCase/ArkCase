@@ -2,7 +2,9 @@ package com.armedia.acm.pluginmanager.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
+import com.armedia.acm.pluginmanager.model.AcmPluginPrivileges;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -21,7 +23,7 @@ public class AcmPluginManager implements ApplicationContextAware
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
+    private SpringContextHolder springContextHolder;
     private Collection<AcmPlugin> acmPlugins = new ArrayList<>();
     private Map<String, List<String>> privilegesByRole = new HashMap<>();
     private List<AcmPluginUrlPrivilege> urlPrivileges = new ArrayList<>();
@@ -39,6 +41,7 @@ public class AcmPluginManager implements ApplicationContextAware
 
         addPluginUrlPrivileges(plugin);
     }
+
 
     private void addPluginUrlPrivileges(AcmPlugin plugin)
     {
@@ -104,6 +107,24 @@ public class AcmPluginManager implements ApplicationContextAware
             }
             registerPlugin(plugin.getValue());
         }
+
+        //read all privileges
+        Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
+
+        if ( log.isInfoEnabled() )
+        {
+            log.info(pluginsPrivileges.size() + " plugins privileges(s) found.");
+        }
+
+        for ( Map.Entry<String, AcmPluginPrivileges> privilegesForPlugin : pluginsPrivileges.entrySet() )
+        {
+            if ( log.isDebugEnabled() )
+            {
+                log.debug("Registering plugin privileges'" + privilegesForPlugin.getKey() + "' of type '" +
+                        privilegesForPlugin.getValue().getClass().getName() + "'.");
+            }
+            registerPluginPrivileges(privilegesForPlugin.getValue());
+        }
     }
 
     public List<String> getPrivilegesForRole(String role)
@@ -140,5 +161,38 @@ public class AcmPluginManager implements ApplicationContextAware
         }
 
         return retval;
+    }
+
+    public synchronized void registerPluginPrivileges(AcmPluginPrivileges pluginPrivileges)
+    {
+
+        addPluginPrivileges(pluginPrivileges);
+
+        addPluginUrlPrivileges(pluginPrivileges);
+    }
+
+    private void addPluginUrlPrivileges(AcmPluginPrivileges pluginPrivileges)
+    {
+        if ( pluginPrivileges.getUrlPrivileges() != null )
+        {
+            urlPrivileges.addAll(pluginPrivileges.getUrlPrivileges());
+        }
+    }
+    private void addPluginPrivileges(AcmPluginPrivileges pluginPrivileges)
+    {
+        if ( pluginPrivileges.getPrivileges() != null )
+        {
+            for ( AcmPluginPrivilege privilege : pluginPrivileges.getPrivileges() )
+            {
+                if ( privilege.getApplicationRolesWithPrivilege() != null )
+                {
+                    mapRolesToPrivileges(privilege);
+                }
+            }
+        }
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder) {
+        this.springContextHolder = springContextHolder;
     }
 }

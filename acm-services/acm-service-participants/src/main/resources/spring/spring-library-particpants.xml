@@ -30,51 +30,6 @@
     <bean id="participantPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Participant Plugin"/>
         <property name="pluginProperties" ref="participantProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="participantPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="listParticipants" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/participant/{objectType}/{objectId}"/>
-                    <property name="requiredPrivilege" ref="participantPrivilege"/>
-                </bean>
-                <bean id="changeRole" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/participant/{participantId}/{participantType}"/>
-                    <property name="requiredPrivilege" ref="participantPrivilege"/>
-                </bean>
-                <bean id="removeParticipant" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/participant/{userId}/{participantType}/{objectType}/{objectId}"/>
-                    <property name="requiredPrivilege" ref="participantPrivilege"/>
-                </bean>
-                <bean id="addParticipant" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/participant/{userId}/{participantType}/{objectType}/{objectId}"/>
-                    <property name="requiredPrivilege" ref="participantPrivilege"/>
-                </bean>
-            </list>
-
-        </property>
     </bean>
-
-
-    <bean id="participantPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-participant"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-
 
 </beans>
