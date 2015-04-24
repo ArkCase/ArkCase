@@ -3,13 +3,10 @@
  */
 package com.armedia.acm.forms.roi.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.services.users.model.AcmUser;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,24 +140,6 @@ public class ROIService extends FrevvoFormAbstractService {
 		reportInformation.setDate(new Date());
 		
 		roiForm.setReportInformation(reportInformation);
-
-		// Get Approvers
-		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
-
-		List<String> approverOptions = new ArrayList<String>();
-		if (acmUsers != null && acmUsers.size() > 0)
-		{
-			for (AcmUser acmUser : acmUsers)
-			{
-				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) )
-				{
-					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-				}
-			}
-		}
-
-		roiForm.setApproverOptions(approverOptions);
 		
 		JSONObject json = createResponse(roiForm);
 		

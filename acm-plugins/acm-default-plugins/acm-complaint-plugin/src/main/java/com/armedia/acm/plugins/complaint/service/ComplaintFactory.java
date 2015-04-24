@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.form.config.xml.ParticipantItem;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -30,7 +30,7 @@ import com.armedia.acm.plugins.person.model.xml.InitiatorOrganization;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPersonAlias;
 import com.armedia.acm.plugins.person.model.xml.PeopleOrganization;
 import com.armedia.acm.plugins.person.model.xml.PeoplePersonAlias;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +39,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class ComplaintFactory
+public class ComplaintFactory extends FrevvoFormFactory
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 	private static final String ANONYMOUS = "Anonymous";
-	private static final String DEFAULT_USER = "*";
 	
 	private PersonDao personDao;
     private EcmFileService fileService;
@@ -56,7 +55,7 @@ public class ComplaintFactory
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
         retval.setComplaintTitle(formComplaint.getComplaintTitle());
-        retval.setParticipants(convertToAcmParticipants(formComplaint.getParticipants()));
+        retval.setParticipants(asAcmParticipants(formComplaint.getParticipants(), formComplaint.getOwningGroup(), FrevvoFormName.COMPLAINT));
         
         Calendar  cal = Calendar.getInstance();
         cal.setTime(formComplaint.getDate());
@@ -185,24 +184,10 @@ public class ComplaintFactory
 
     	
     	// Populate participants
-    	if (complaint.getParticipants() != null && complaint.getParticipants().size() > 0)
-    	{
-    		List<ParticipantItem> participants = new ArrayList<ParticipantItem>();
-    		for (AcmParticipant participant : complaint.getParticipants())
-    		{
-    			if (!DEFAULT_USER.equals(participant.getParticipantType()))
-    			{
-	    			ParticipantItem pi = new ParticipantItem();
-	    			pi.setType(participant.getParticipantType());
-	    			pi.setValue(participant.getParticipantLdapId());
-	    			
-	    			participants.add(pi);
-    			}
-    		}
-    		
-    		complaintForm.setParticipants(participants);
-    	}
-    	
+        complaintForm.setParticipants(asFrevvoParticipants(complaint.getParticipants()));
+        // Populate owning group
+        complaintForm.setOwningGroup(asFrevvoGroupParticipant(complaint.getParticipants()));
+
     	return complaintForm;
     }
     
@@ -409,24 +394,6 @@ public class ComplaintFactory
         {
             pa.getTags().add(ANONYMOUS);
         }
-    }
-    
-    private List<AcmParticipant> convertToAcmParticipants(List<ParticipantItem> items){
-    	List<AcmParticipant> participants = new ArrayList<AcmParticipant>();
-    	
-    	if (items != null && items.size() > 0){
-    		for (ParticipantItem item : items){
-    			AcmParticipant participant = new AcmParticipant();
-    			
-    			participant.setObjectType(FrevvoFormName.COMPLAINT.toUpperCase());
-    			participant.setParticipantLdapId(item.getValue());
-				participant.setParticipantType(item.getType());
-				
-				participants.add(participant);
-    		}
-    	}
-    	
-    	return participants;
     }
     
 

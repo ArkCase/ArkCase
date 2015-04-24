@@ -20,7 +20,6 @@ public class ChangeCaseStatusForm {
 
 	private ResolveInformation information;
 	private List<Item> approvers;
-	private List<String> approverOptions;
 	private List<String> resolutions;
 
 	@XmlElement(name="information", type=CaseResolveInformation.class)
@@ -39,14 +38,6 @@ public class ChangeCaseStatusForm {
 	
 	public void setApprovers(List<Item> approvers) {
 		this.approvers = approvers;
-	}
-	
-	public List<String> getApproverOptions() {
-		return approverOptions;
-	}
-
-	public void setApproverOptions(List<String> approverOptions) {
-		this.approverOptions = approverOptions;
 	}
 
 	public void setResolutions(List<String> resolutions)

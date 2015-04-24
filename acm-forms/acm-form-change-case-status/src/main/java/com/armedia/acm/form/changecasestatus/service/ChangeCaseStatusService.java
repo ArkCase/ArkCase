@@ -156,26 +156,12 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 			information.setDate(new Date());
 		}
 		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".statuses"), ","));
-		
-		// Get Approvers
-		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
-		
-		List<String> approverOptions = new ArrayList<String>();
-		if (acmUsers != null && acmUsers.size() > 0){
-			for (AcmUser acmUser : acmUsers) {
-				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "edit".equals(mode)){
-					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-				}
-			}
-		}
 
 		String caseResolutions = (String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".resolutions");
 		List<String> resolutions = convertToList(caseResolutions, ",");
 		changeCaseStatus.setResolutions(resolutions);
 		
 		changeCaseStatus.setInformation(information);
-		changeCaseStatus.setApproverOptions(approverOptions);
     	
 		JSONObject json = createResponse(changeCaseStatus);
 
