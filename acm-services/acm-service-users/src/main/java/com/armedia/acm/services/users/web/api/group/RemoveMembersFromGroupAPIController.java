@@ -3,7 +3,6 @@
  */
 package com.armedia.acm.services.users.web.api.group;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +21,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
 
 /**
  * @author riste.tutureski
@@ -34,6 +34,7 @@ public class RemoveMembersFromGroupAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmGroupDao groupDao;
+	private GroupService groupService;
 	
 	@RequestMapping(value="/group/{groupId}/members/remove", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -48,19 +49,17 @@ public class RemoveMembersFromGroupAPIController {
 		
 		try
 		{
-			AcmGroup group = getGroupDao().findByName(groupId);
-
-			Set<AcmUser> cleanedMembers = cleanMembers(group.getMembers(), members);
-			group.setMembers(cleanedMembers);
+			Set<AcmUser> updatedMembers = getGroupService().updateMembersWithDatabaseInfo(members);
+			
+			AcmGroup group = getGroupDao().removeMembersFromGroup(groupId, updatedMembers);
 			
 			// Remove members from all child groups
 			List<AcmGroup> children = group.getChildGroups();
 			// Recursion (I couldn't find batter solution for going deep through list of lists)
-			removeMembersFromChilds(children, members);
+			removeMembersFromChilds(children, updatedMembers);
 			
-			AcmGroup saved = getGroupDao().save(group);
 			
-			return saved;
+			return group;
 		}
 		catch(Exception e)
 		{
@@ -69,44 +68,13 @@ public class RemoveMembersFromGroupAPIController {
 		}
     }
 	
-	private Set<AcmUser> cleanMembers(Set<AcmUser> members, Set<AcmUser> toRemoveArray)
-	{
-		Set<AcmUser> result = new HashSet<AcmUser>();
-		
-		if (toRemoveArray != null && members != null)
-		{
-			for (AcmUser member : members)
-			{
-				boolean found = false;
-				
-				for (AcmUser toRemove : toRemoveArray)
-				{
-					if (member.getUserId().equals(toRemove.getUserId()))
-					{
-						found = true;
-					}
-				}
-				
-				if (!found)
-				{
-					result.add(member);
-				}
-			}
-		}
-		
-		return result;
-	}
-	
 	private void removeMembersFromChilds(List<AcmGroup> childs, Set<AcmUser> membersToRemove)
 	{
 		if (childs != null)
 		{
 			for (AcmGroup child : childs)
 			{
-				Set<AcmUser> cleanedMembers = cleanMembers(child.getMembers(), membersToRemove);
-				child.setMembers(cleanedMembers);
-				
-				getGroupDao().save(child);
+				child = getGroupDao().removeMembersFromGroup(child.getName(), membersToRemove);
 				
 				if (child.getChildGroups() != null)
 				{
@@ -123,6 +91,14 @@ public class RemoveMembersFromGroupAPIController {
 
 	public void setGroupDao(AcmGroupDao groupDao) {
 		this.groupDao = groupDao;
+	}
+
+	public GroupService getGroupService() {
+		return groupService;
+	}
+
+	public void setGroupService(GroupService groupService) {
+		this.groupService = groupService;
 	}
 	
 }
