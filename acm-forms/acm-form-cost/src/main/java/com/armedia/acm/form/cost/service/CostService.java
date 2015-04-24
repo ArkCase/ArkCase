@@ -3,7 +3,6 @@
  */
 package com.armedia.acm.form.cost.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.cost.model.CostForm;
-import com.armedia.acm.form.cost.model.CostFormConstants;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
@@ -24,7 +22,6 @@ import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.frevvo.model.Options;
 import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -201,9 +198,6 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		form.setCodeOptions(codeOptions);
 		form.setCodeDetails(codeOptionsDetails);
 		
-		// Init possible approvers
-		form.setApproverOptions(getApproverOptions());
-		
 		// Create JSON and back to the Frevvo form
 		JSONObject json = createResponse(form);
 
@@ -217,28 +211,6 @@ public class CostService extends FrevvoFormChargeAbstractService {
 				SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
 		
 		return jsonResults;
-	}
-	
-	private List<String> getApproverOptions()
-	{
-		List<String> approverOptions = new ArrayList<>();
-		try
-		{
-			List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(CostFormConstants.APPROVER_PRIVILEGE);
-	        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
-	        
-	        if (users != null && users.size() > 0) {
-	        	for (int i = 0; i < users.size(); i++) {
-	        		approverOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-	        	}
-	        }
-		}
-		catch(Exception e)
-		{
-			LOG.warn("Cannot find users with privilege = " + CostFormConstants.APPROVER_PRIVILEGE + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
-		}
-		
-		return approverOptions;
 	}
 
 	@Override

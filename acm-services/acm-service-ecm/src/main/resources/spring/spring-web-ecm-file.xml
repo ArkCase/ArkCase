@@ -15,6 +15,7 @@
 
     <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="fileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="folderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.FolderListAPIController">
@@ -26,6 +27,11 @@
     </bean>
 
     <bean id="addNewFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.AddNewFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
+    <bean id="moveFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.MoveFolderAPIController">
         <property name="folderService" ref="acmFolderService"/>
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
     </bean>
@@ -67,6 +73,15 @@
 
     <bean id="subFolderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.SubFolderListAPIController">
         <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="getEcmFileByIdAPIController" class="com.armedia.acm.plugins.ecm.web.api.GetEcmFileByIdAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="setActiveFileVersionAPIController" class="com.armedia.acm.plugins.ecm.web.api.SetActiveFileVersionAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>
 
 </beans>

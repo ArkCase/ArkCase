@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import com.armedia.acm.form.config.Item;
 import com.armedia.acm.form.config.xml.ApproverItem;
+import com.armedia.acm.form.config.xml.OwningGroupItem;
+import com.armedia.acm.form.config.xml.ParticipantItem;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
@@ -91,11 +94,121 @@ public class FrevvoFormFactory {
 				item.setId(participant.getId());
 				item.setValue(participant.getParticipantLdapId());
 				
+				AcmUser user = getUser(participant.getParticipantLdapId());
+				
+				if (user != null)
+				{
+					item.setApproverName(user.getFullName());
+				}
+				
 				items.add(item);
 			}
 		}
 		
 		return items;
+	}
+	
+	public List<AcmParticipant> asAcmParticipants(List<ParticipantItem> items, OwningGroupItem groupItem, String formName)
+	{
+		List<AcmParticipant> participants = null;
+		if (items != null)
+		{
+			participants = new ArrayList<>();
+			for (ParticipantItem item : items)
+			{
+				AcmParticipant participant = new AcmParticipant();
+				
+				participant.setId(item.getId());
+				participant.setObjectType(formName.toUpperCase());
+				participant.setParticipantLdapId(item.getValue());
+				participant.setParticipantType(item.getType());
+				
+				participants.add(participant);
+			}
+		}
+		
+		// THIS PART OF CODE WILL BE REMOVED ONCE WE IMPLEMENT GROUP PICKER ON FREVVO SIDE
+		if (groupItem != null)
+		{
+			if (participants == null)
+			{
+				participants = new ArrayList<>();
+			}
+			
+			AcmParticipant participant = new AcmParticipant();
+			
+			participant.setId(groupItem.getId());
+			participant.setObjectType(formName.toUpperCase());
+			participant.setParticipantLdapId(groupItem.getValue());
+			participant.setParticipantType(groupItem.getType());
+			
+			participants.add(participant);
+		}
+		
+		return participants;
+	}
+	
+	public List<ParticipantItem> asFrevvoParticipants(List<AcmParticipant> participants)
+	{
+		if (participants != null)
+		{
+			List<ParticipantItem> items = new ArrayList<>();
+			
+			for (AcmParticipant participant : participants)
+			{
+				if (!FrevvoFormConstants.DEFAULT_USER.equals(participant.getParticipantType()) &&
+					!FrevvoFormConstants.OWNING_GROUP.equals(participant.getParticipantType()))
+				{
+					ParticipantItem item = new ParticipantItem();
+					
+					item.setId(participant.getId());
+					item.setType(participant.getParticipantType());
+					item.setValue(participant.getParticipantLdapId());
+					
+					AcmUser user = getUser(participant.getParticipantLdapId());
+					
+					if (user != null)
+					{
+						item.setName(user.getFullName());
+					}
+					
+					items.add(item);
+				}
+			}
+			
+			return items;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * THIS METHOD WILL BE REMOVED ONCE WE IMPLEMENT GROUP PICKER ON FREVVO SIDE
+	 * 
+	 * @param participant
+	 * @return
+	 */
+	public OwningGroupItem asFrevvoGroupParticipant(List<AcmParticipant> participants)
+	{
+		if (participants != null)
+		{
+			for (AcmParticipant participant : participants)
+			{
+				if (!FrevvoFormConstants.DEFAULT_USER.equals(participant.getParticipantType()) &&
+					 FrevvoFormConstants.OWNING_GROUP.equals(participant.getParticipantType()))
+				{
+					OwningGroupItem item = new OwningGroupItem();
+					
+					item.setId(participant.getId());
+					item.setType(participant.getParticipantType());
+					item.setValue(participant.getParticipantLdapId());
+					
+					return item;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public UserDao getUserDao() {

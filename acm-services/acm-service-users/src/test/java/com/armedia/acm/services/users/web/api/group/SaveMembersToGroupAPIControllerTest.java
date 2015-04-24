@@ -8,9 +8,7 @@ import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -33,8 +31,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
+import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 
 /**
  * @author riste.tutureski
@@ -53,6 +54,8 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport {
 	private SaveMembersToGroupAPIController unit;
 	private Authentication mockAuthentication;
 	private AcmGroupDao mockGroupDao;
+	private UserDao mockUserDao;
+	private GroupServiceImpl groupService;
 	
 	@Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -64,8 +67,14 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		setMockMvc(MockMvcBuilders.standaloneSetup(getUnit()).setHandlerExceptionResolvers(getExceptionResolver()).build());
 		setMockAuthentication(createMock(Authentication.class));	
 		setMockGroupDao(createMock(AcmGroupDao.class));
+		setMockUserDao(createMock(UserDao.class));
+		
+		groupService = new GroupServiceImpl();
+		groupService.setUserDao(getMockUserDao());
 		
 		getUnit().setGroupDao(getMockGroupDao());
+		getUnit().setUserDao(getMockUserDao());
+		getUnit().setGroupService(getGroupService());
     }
 	
 	@Test
@@ -94,8 +103,10 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport {
 		LOG.debug("Input JSON: " + membersAsJson);
 		
 		Capture<AcmGroup> found = new Capture<AcmGroup>();
+		Capture<String> userIdCapture = new Capture<String>();
 		
 		expect(getMockGroupDao().findByName(group.getName())).andReturn(group);
+		expect(getMockUserDao().findByUserId(capture(userIdCapture))).andReturn(user).anyTimes();
 		expect(getMockGroupDao().save(capture(found))).andReturn(group);
 		expect(getMockAuthentication().getName()).andReturn("user");
 		
@@ -158,6 +169,22 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport {
 
 	public void setMockGroupDao(AcmGroupDao mockGroupDao) {
 		this.mockGroupDao = mockGroupDao;
+	}
+
+	public UserDao getMockUserDao() {
+		return mockUserDao;
+	}
+
+	public void setMockUserDao(UserDao mockUserDao) {
+		this.mockUserDao = mockUserDao;
+	}
+
+	public GroupServiceImpl getGroupService() {
+		return groupService;
+	}
+
+	public void setGroupService(GroupServiceImpl groupService) {
+		this.groupService = groupService;
 	}
 	
 }

@@ -45,6 +45,14 @@ public class FolderEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(folderDeletedEvent);
     }
 
+    public void publishFolderMovedEvent( AcmFolder source, Authentication auth, String ipAddress,boolean succeeded ) {
+        if ( log.isDebugEnabled() )
+            log.debug("Publishing a folder moved event.");
+        AcmFolderMovedEvent folderMovedEvent = new AcmFolderMovedEvent(source,auth.getName(),ipAddress);
+        folderMovedEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(folderMovedEvent);
+    }
+
 
     public void publishFolderRenamedEvent( AcmFolder source, Authentication auth, String ipAddress,boolean succeeded ) {
         if ( log.isDebugEnabled() ) {

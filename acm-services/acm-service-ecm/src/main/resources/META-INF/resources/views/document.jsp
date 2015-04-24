@@ -223,9 +223,18 @@
                                 <div class="modal-body">
 
 
-                                    <p>Choose a tag to associate with this document: </p>
-
-                                    [Insert tree view with checkboxes]
+                                    <p>Please select from existing tags or create a new tag.</p>
+                                    <p>(* indicates required fields if creating a new tag)</p>
+                                        <div class="form-group" id="newTagForm">
+                                            <label for="newTagName" class="control-label">Name*</label>
+                                            <input type="text" class="form-control" id="newTagName">
+                                            <label for="newTagDesc" class="control-label">Description*</label>
+                                            <input type="text" class="form-control" id="newTagDesc">
+                                            <label for="newTagText" class="control-label">Text*</label>
+                                            <input type="text" class="form-control" id="newTagText">
+                                            </br>
+                                        </div>
+                                    <%--[Insert tree view with checkboxes]--%>
 
                                 </div>
                                 <div class="modal-footer">
@@ -239,7 +248,7 @@
                 </div>
             </div>
 
-            <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> Sample Document Title</a> (12321)</h4>
+            <h4 class="m-n"> <a href="#" id="docTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> </a></h4>
 
         </div>
     </div>
@@ -258,6 +267,31 @@
                 <ul class="list-group alt panel-body" id="tabParticipants">
 
                 </ul>
+
+                <div class="modal fade" id="modalParticipantChangeRole" tabindex="-1" role="dialog" aria-labelledby="changeParticipantRole" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="changeParticipantRole">Change Participant Role</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <p>Please select a role : </p>
+                                <label  class="label">Available Roles</label>
+                                <select class="input-sm form-control inline v-middle" id="participantRoles">
+                                    <option value="null">Select Participant Role</option>
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary">Change Role</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </section>
 
 
@@ -341,19 +375,19 @@
                         <div class="">
                             <div class=" clearfix">
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="owner" data-title="Owner">AJ McClary</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="owner" data-title="Owner"></a></div>
                                     <small class="text-muted">Owner</small></div>
                                 <div class="col-xs-3 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="createDate" data-title="Create Date">MM/DD/YYYY</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="createDate" data-title="Create Date"></a></div>
                                     <small class="text-muted">Created Date</small></div>
                                 <div class="col-xs-3 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="assignee" data-title="Assignee">AJ McClary</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="assignee" data-title="Assignee"></a></div>
                                     <small class="text-muted">Assigned To</small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="type" data-title="Type">Evidence</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="type" data-title="Type"></a></div>
                                     <small class="text-muted">Type</small></div>
                                 <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status" data-title="Status">Draft</a></div>
+                                    <div class="h4 font-bold"><a href="#" id="status" data-title="Status"></a></div>
                                     <small class="text-muted">Status</small></div>
                             </div>
                         </div>
@@ -366,7 +400,13 @@
                 <div class="row" id="tabDocViewer">
                     <div class="col-md-12">
                         <section class="panel b-a">
-                            <div id="divDocViewer" style="width:100%"></div>
+
+                            <div id="divDocViewer" style="width:100%">
+                                <div id="divDocViewerHeader" stile = "width:100%">
+                                    <p>Document Viewer</p>
+                                </div>
+                                <iframe src = "${context}/resources/vendors/ViewerJS/index.html?type=${type}&title=${title}#${context}/api/latest/plugin/ecm/download/byId/${fileId}?inline=true" width='100%' height='400' allowfullscreen webkitallowfullscreen></iframe>
+                            </div>
                         </section>
                     </div>
                 </div>

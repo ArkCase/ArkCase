@@ -35,8 +35,10 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_DELETED_FILE            ,this.onModelDeletedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RENAMED_FOLDER          ,this.onModelRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RENAMED_FILE            ,this.onModelRenamedFile);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_ITEM              ,this.onModelMovedItem);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_ITEM             ,this.onModelCopiedItem);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_FILE              ,this.onModelMovedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FILE             ,this.onModelCopiedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_FOLDER            ,this.onModelMovedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FOLDER           ,this.onModelCopiedFolder);
 
         //----------
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
@@ -325,17 +327,35 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeOk(node);
         }
     }
-    ,onModelMovedItem: function(moveItemInfo, objType, objId, folderId, itemId, frCacheKey, toCacheKey, node) {
-        if (moveItemInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when copying file or folder", Acm.goodValue(moveItemInfo.errorMsg));
+    ,onModelMovedFile: function(moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, node) {
+        if (moveFileInfo.hasError) {
+            App.View.MessageBoard.show("Error occurred when copying file or folder", Acm.goodValue(moveFileInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
         }
     }
-    ,onModelCopiedItem: function(copyItemInfo, objType, objId, folderId, itemId, toCacheKey, node) {
-        if (copyItemInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when moving file or folder", Acm.goodValue(copyItemInfo.errorMsg));
+    ,onModelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, node) {
+        if (copyFileInfo.hasError) {
+            App.View.MessageBoard.show("Error occurred when moving file or folder", Acm.goodValue(copyFileInfo.errorMsg));
+            DocTree.View.markNodeError(node);
+        } else if (DocTree.View.validateNode(node)) {
+            DocTree.View._fileDataToNodeData(copyFileInfo, node);
+            DocTree.View.markNodeOk(node);
+            node.renderTitle();
+        }
+    }
+    ,onModelMovedFolder: function(moveFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
+        if (moveFolderInfo.hasError) {
+            App.View.MessageBoard.show("Error occurred when copying file or folder", Acm.goodValue(moveFolderInfo.errorMsg));
+            DocTree.View.markNodeError(node);
+        } else {
+            DocTree.View.markNodeOk(node);
+        }
+    }
+    ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, toCacheKey, node) {
+        if (copyFolderInfo.hasError) {
+            App.View.MessageBoard.show("Error occurred when moving file or folder", Acm.goodValue(copyFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
@@ -545,18 +565,16 @@ DocTree.View = DocTree.View || {
                 dragDrop: function(node, data) {
                     if (node.lazy && !node.children) {
                         node.setExpanded(true).always(function(){
-                            // Wait until expand finished, then add the additional child
-                            data.otherNode.moveTo(node, data.hitMode);
+                            DocTree.View._doDrop(data.otherNode, node, data.hitMode);
                         });
                     } else {
-                        data.otherNode.moveTo(node, data.hitMode);
+                        DocTree.View._doDrop(data.otherNode, node, data.hitMode);
                     }
                 }
             }
 
         };
     }
-
     ,createDocTree: function(treeArgs) {
         var treeArgsToUse = this._getDefaultTreeArgs();
         for (var arg in treeArgs) {
@@ -1138,43 +1156,105 @@ DocTree.View = DocTree.View || {
             }
         }
     }
+//    ,_doPaste_bck: function(node) {
+//        var frNode = DocTree.View.CLIPBOARD.data;
+//        if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
+//            var frId = frNode.data.objectId;
+//
+//            var endNode = null;
+//            var toFolderNode = DocTree.View.isFolderNode(node)? node : node.parent;
+//            if (toFolderNode) {
+//                var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
+//                var toFolderId = toFolderNode.data.objectId;
+//                var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
+//
+//                if( DocTree.View.CLIPBOARD.mode === "cut" ) {
+//                    var frFolderNode = frNode.parent;
+//                    var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
+//                    var frFolderId = frFolderNode.data.objectId;
+//                    var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
+//
+//                    if (DocTree.View.isFolderNode(node)) {
+//                        frNode.moveTo(node, "child");
+//                    } else {
+//                        frNode.moveTo(node, "after");
+//                    }
+//                    endNode = frNode;
+//                    endNode.setActive();
+//                    DocTree.View.markNodePending(endNode);
+//                    DocTree.Controller.viewCutPasted(frId, toFolderId, frCacheKey, toCacheKey, endNode);
+//
+//                } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
+//                    if (DocTree.View.isFolderNode(node)) {
+//                        endNode = node.addChildren(frNode);
+//                    } else {
+//                        endNode = node.addNode(frNode, "after")
+//                    }
+//                    endNode.setActive();
+//                    DocTree.View.markNodePending(endNode);
+//                    DocTree.Controller.viewCopyPasted(frId, toFolderId, toCacheKey, endNode);
+//                }
+//            }
+//        }
+//    }
     ,_doPaste: function(node) {
-        var frNode = DocTree.View.CLIPBOARD.data;
+        var mode =  DocTree.View.isFolderNode(node)? "child" : "after";
+        if( DocTree.View.CLIPBOARD.mode === "cut" ) {
+            DocTree.View._doMove(DocTree.View.CLIPBOARD.data, node, mode);
+        } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
+            DocTree.View._doCopy(DocTree.View.CLIPBOARD.data, node, mode);
+        }
+    }
+    ,_doDrop: function(frNode, toNode, mode) {
+        DocTree.View._doMove(frNode, toNode, mode);
+    }
+    ,_doMove: function(frNode, toNode, mode) {
         if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
-            var frId = frNode.data.objectId;
-
-            var toNode = null;
-            var toFolderNode = DocTree.View.isFolderNode(node)? node : node.parent;
+            var toFolderNode = DocTree.View.isFolderNode(toNode)? toNode : toNode.parent;
             if (toFolderNode) {
+                frNode.moveTo(toNode, mode);
+                frNode.setActive();
+                DocTree.View.markNodePending(frNode);
+
                 var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
                 var toFolderId = toFolderNode.data.objectId;
                 var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
 
-                if( DocTree.View.CLIPBOARD.mode === "cut" ) {
-                    var frFolderNode = frNode.parent;
-                    var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
-                    var frFolderId = frFolderNode.data.objectId;
-                    var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
+                var frFolderNode = frNode.parent;
+                var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
+                var frFolderId = frFolderNode.data.objectId;
+                var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
 
-                    if (DocTree.View.isFolderNode(node)) {
-                        frNode.moveTo(node, "child");
-                    } else {
-                        frNode.moveTo(node, "after");
-                    }
-                    toNode = frNode;
-                    toNode.setActive();
-                    DocTree.View.markNodePending(toNode);
-                    DocTree.Controller.viewCutPasted(frId, toFolderId, frCacheKey, toCacheKey, toNode);
+                if (DocTree.View.isFolderNode(frNode)) {
+                    DocTree.Controller.viewMovedFolder(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, frNode);
+                } else if (DocTree.View.isFileNode(frNode)) {
+                    DocTree.Controller.viewMovedFile(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, frNode);
+                }
+            }
+        }
+    }
+    ,_doCopy: function(frNode, toNode, mode) {
+        if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
+            var toFolderNode = DocTree.View.isFolderNode(toNode)? toNode : toNode.parent;
+            if (toFolderNode) {
+                var newNode = null;
+                if (DocTree.View.isFolderNode(toNode)) {
+                    newNode = toNode.addChildren(frNode);
+                } else {
+                    //toNode = node.addNode(frNode, "after")
+                    newNode = toNode.addNode(frNode, mode)
+                }
+                newNode.setActive();
+                DocTree.View.markNodePending(newNode);
 
-                } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
-                    if (DocTree.View.isFolderNode(node)) {
-                        toNode = node.addChildren(frNode);
-                    } else {
-                        toNode = node.addNode(frNode, "after")
-                    }
-                    toNode.setActive();
-                    DocTree.View.markNodePending(toNode);
-                    DocTree.Controller.viewCopyPasted(frId, toFolderId, toCacheKey, toNode);
+                var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
+                var toFolderId = toFolderNode.data.objectId;
+                var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
+
+                if (DocTree.View.isFolderNode(frNode)) {
+                    DocTree.Controller.viewCopiedFolder(frNode.data.objectId, toFolderId, toCacheKey, newNode);
+                } else if (DocTree.View.isFileNode(frNode)) {
+                    DocTree.Controller.viewCopiedFile(frNode.data.objectId, toFolderId, toCacheKey, newNode);
                 }
             }
         }
