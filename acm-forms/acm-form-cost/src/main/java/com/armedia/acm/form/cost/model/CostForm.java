@@ -38,7 +38,6 @@ public class CostForm extends FrevvoForm {
 	private List<String> statusOptions;
 	private String details;
 	private List<ApproverItem> approvers;
-	private List<String> approverOptions;
 	private List<String> balanceTable;
 	
 	@XmlElement(name="id")
@@ -165,15 +164,6 @@ public class CostForm extends FrevvoForm {
 
 	public void setApprovers(List<ApproverItem> approvers) {
 		this.approvers = approvers;
-	}
-
-	@XmlTransient
-	public List<String> getApproverOptions() {
-		return approverOptions;
-	}
-
-	public void setApproverOptions(List<String> approverOptions) {
-		this.approverOptions = approverOptions;
 	}
 
 	@XmlElement(name="balanceTableItem")

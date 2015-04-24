@@ -66,6 +66,12 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
+    <%--fullcalendar--%>
+    <script src="<c:url value='/resources/vendors/${vd_fullcalendar}/${js_fullcalendar}'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/fullcalendar.css'/>" type="text/css"/>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/theme.css'/>" type="text/css"/>
+
+
 <style>
     table.fancytree-ext-table {
         width: 100%;
@@ -75,6 +81,18 @@
     table.fancytree-ext-table tbody tr td {
         border: 0px;
     }
+    /*#divCalendar {
+         margin: 40px 10px;
+         padding: 0;
+         font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+         font-size: 14px;
+    }
+
+    #divCalendar {
+        max-width: 900px;
+        margin: 0 auto;
+    }*/
+
 </style>
 </jsp:attribute>
 
@@ -469,6 +487,42 @@
                                     <section class="panel b-a">
                                         <div id="divCost" style="width:100%"></div>
                                     </section>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    <aside class="wrapper">
+                                        <%--<div class="pull-right inline">
+                                            <div class="dropdown">
+                                                <div class="btn-group">
+                                                    <button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#downloadICS" style="display:none;"><i class="fa fa-calendar"></i> Download ICS</button>
+                                                </div>
+                                            </div>
+                                        </div>--%>
+                                        <%--<h4 class="m-n" style="display:none;">Complaint Calendar</h4>--%>
+                                        <%--<hr/>--%>
+
+                                        <section class="panel no-border bg-light">
+                                            <header class="panel-heading bg-primary clearfix">
+                                                <div class="btn-group pull-right" data-toggle="buttons">
+                                                    <label class="btn btn-sm btn-bg btn-default active" id="monthview">
+                                                        <input type="radio" name="options">Month
+                                                    </label>
+                                                    <label class="btn btn-sm btn-bg btn-default" id="weekview">
+                                                        <input type="radio" name="options">Week
+                                                    </label>
+                                                    <label class="btn btn-sm btn-bg btn-default" id="dayview">
+                                                        <input type="radio" name="options">Day
+                                                    </label>
+                                                </div>
+                                                <span class="m-t-xs inline text-white">
+                                                  Calendar
+                                                </span>
+                                            </header>
+                                            <div class="calendar" id="tabOutlookCalendar">
+                                            </div>
+                                        </section>
+                                    </aside>
                                 </div>
 
                             </div>

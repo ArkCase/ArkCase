@@ -5,7 +5,6 @@ package com.armedia.acm.form.time.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -205,9 +204,6 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		// Init Statuses
 		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".statuses"), ","));
 		
-		// Init possible approvers
-		form.setApproverOptions(getApproverOptions());
-		
 		// Create JSON and back to the Frevvo form
 		JSONObject json = createResponse(form);
 
@@ -238,28 +234,6 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
 		
 		return jsonResults;
-	}
-	
-	private List<String> getApproverOptions()
-	{
-		List<String> approverOptions = new ArrayList<>();
-		try
-		{
-			List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(TimeFormConstants.APPROVER_PRIVILEGE);
-	        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
-	        
-	        if (users != null && users.size() > 0) {
-	        	for (int i = 0; i < users.size(); i++) {
-	        		approverOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-	        	}
-	        }
-		}
-		catch(Exception e)
-		{
-			LOG.warn("Cannot find users with privilege = " + TimeFormConstants.APPROVER_PRIVILEGE + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
-		}
-		
-		return approverOptions;
 	}
 
 	@Override
