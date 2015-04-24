@@ -18,6 +18,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.create)       {Complaint.View.Participants.create();}
         if (Complaint.View.Location.create)           {Complaint.View.Location.create();}
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
+        if (Complaint.View.OutlookCalendar.create)    {Complaint.View.OutlookCalendar.create();}
         if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
         if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
     }
@@ -35,6 +36,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.onInitialized)   {Complaint.View.Participants.onInitialized();}
         if (Complaint.View.Location.onInitialized)       {Complaint.View.Location.onInitialized();}
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
+        if (Complaint.View.OutlookCalendar.onInitialized) {Complaint.View.OutlookCalendar.onInitialized();}
         if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
         if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
     }
@@ -170,6 +172,9 @@ Complaint.View = Complaint.View || {
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: $.t("complaint.navigation.leaf-title.history")
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+                            ,title: $.t("complaint.navigation.leaf-title.calendar")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
                             ,title: $.t("complaint.navigation.leaf-title.time")
@@ -2852,6 +2857,170 @@ Complaint.View = Complaint.View || {
         }
     }
 
+    ,OutlookCalendar: {
+        create: function() {
+            this.$outlookCalendar          = $(".calendar");
+            this.$weekView                 = $("#weekview");
+            this.$monthView                = $("#monthview");
+            this.$dayView                  = $("#dayview");
+
+            this.createOutlookCalendarWidget(this.$outlookCalendar);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
+        }
+        ,onInitialized: function() {
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            Complaint.View.OutlookCalendar.$outlookCalendar.html("");
+            Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
+        }
+        ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
+            if(outlookCalendarItems.hasError){
+                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
+            }
+            else{
+                Complaint.View.OutlookCalendar.$outlookCalendar.html("");
+                Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
+            }
+        }
+
+        ,createCalendarSource:function(){
+            var calendarSource = [];
+            var outlookCalendarItems = Complaint.Model.OutlookCalendar.cacheOutlookCalendarItems.get(Complaint.View.getActiveComplaintId());
+            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                for(var i = 0; i<outlookCalendarItems.items.length; i++){
+                    if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
+                        var outlookCalendarItem = {};
+                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
+                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
+                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
+                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
+                        outlookCalendarItem.detail = Complaint.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
+                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
+                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
+                        calendarSource.push(outlookCalendarItem);
+                    }
+                }
+            }
+            return calendarSource;
+        }
+
+        ,makeDetail: function(calendarItem){
+            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
+                var body = Acm.goodValue(calendarItem.body) + "</br>";
+                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
+                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
+                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
+                return detail;
+            }
+        }
+
+        ,createOutlookCalendarWidget: function($s){
+            var calendarSource = this.createCalendarSource();
+            var addDragEvent = function($this){
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+                var eventObject = {
+                    title: $.trim($this.text()), // use the element's text as the event title
+                    className: $this.attr('class').replace('label','')
+                };
+
+                // store the Event Object in the DOM element so we can get to it later
+                $this.data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                $this.draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+            };
+
+            $s.fullCalendar({
+                header: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+                timeFormat: 'h(:mm)t {-h(:mm)t}',
+                displayEventEnd : true,
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function(date, allDay) { // this function is called when something is dropped
+
+                    // retrieve the dropped element's stored Event Object
+                    var originalEventObject = $(this).data('eventObject');
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+
+                    // assign it the date that was reported
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+
+                    // render the event on the calendar
+                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                    this.$outlookCalendar.fullCalendar('renderEvent', copiedEventObject, true);
+
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                    }
+
+                }
+                ,events: calendarSource
+                ,eventRender: function (event, element) {
+                    element.qtip({
+                        content: {
+                            text: Acm.goodValue(event.detail),
+                            title: {
+                                text: Acm.goodValue(event.title)
+                            }
+                        }
+                        ,position: {
+                            my: 'right center',
+                            at: 'left center',
+                            //target: 'mouse',
+                            viewport: $s,
+                            adjust: {
+                                mouse: false,
+                                scroll: false
+                            }
+                        }
+                        ,style: {
+                            classes: "qtip-rounded qtip-shadow"
+                        }
+                        ,show: { solo: true} //, ready: true, when: false
+                        ,hide: { when: 'mouseout', fixed: true}
+                    });
+                }
+            });
+            $('#myEvents').on('change', function(e, item){
+                addDragEvent($(item));
+            });
+
+            $('#myEvents li > div').each(function() {
+                addDragEvent($(this));
+            });
+
+            this.$dayView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'agendaDay')
+            });
+
+            this.$weekView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'agendaWeek')
+            });
+
+            this.$monthView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'month')
+            });
+
+        }
+    }
 
     ,Time: {
         create: function() {
