@@ -70,6 +70,9 @@
 <c:set var="vd_i18next"            scope="session" value="i18next-1.8.1"/>
 <c:set var="js_i18next"            scope="session" value="i18next-1.8.1.js"/>
 
+<c:set var="vd_jquery_qtip"       scope="session" value="jquery-qtip-2.2.1"/>
+<c:set var="css_jquery_qtip"       scope="session" value="jquery.qtip.min.css"/>
+<c:set var="js_jquery_qtip"        scope="session" value="jquery.qtip.min.js"/>
 
 <c:set var="vd_jquery_ui"          scope="session" value="jquery-ui-1.10.3"/>
 <%--<c:set var="js_jquery_ui"          scope="session" value="jquery-ui-1.10.3.custom.min.js"/>--%>
