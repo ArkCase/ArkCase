@@ -13,7 +13,7 @@ AcmDocument.Service = {
         if (AcmDocument.Service.Notes.create) {AcmDocument.Service.Notes.create();}
         if (AcmDocument.Service.AssociatedTags.create) {AcmDocument.Service.AssociatedTags.create();}
         if (AcmDocument.Service.Participants.create) {AcmDocument.Service.Participants.create();}
-
+        if (AcmDocument.Service.VersionHistory.create) {AcmDocument.Service.VersionHistory.create();}
     }
     ,onInitialized: function() {
         if (AcmDocument.Service.Lookup.onInitialized) {AcmDocument.Service.Lookup.onInitialized();}
@@ -22,7 +22,7 @@ AcmDocument.Service = {
         if (AcmDocument.Service.Notes.onInitialized) {AcmDocument.Service.Notes.onInitialized();}
         if (AcmDocument.Service.AssociatedTags.onInitialized) {AcmDocument.Service.AssociatedTags.onInitialized();}
         if (AcmDocument.Service.Participants.onInitialized) {AcmDocument.Service.Participants.onInitialized();}
-
+        if (AcmDocument.Service.VersionHistory.onInitialized) {AcmDocument.Service.VersionHistory.onInitialized();}
     }
 
     ,Lookup: {
@@ -292,19 +292,20 @@ AcmDocument.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_RETRIEVE_DOCUMENT_DETAILS: "/api/v1/plugin/search/quickSearch?q="
+        ,API_RETRIEVE_DOCUMENT_DETAILS: "/api/v1/service/ecm/file/"
 
         ,retrieveDocumentDetail : function(documentId) {
             var url = App.getContextPath() + this.API_RETRIEVE_DOCUMENT_DETAILS;
-            url += "\"" + documentId + "-" + AcmDocument.Model.DOC_TYPE_DOCUMENT + "\"";
+            url += documentId;
+
             Acm.Service.asyncGet(
                 function(response) {
                     if (response.hasError) {
                         AcmDocument.Controller.modelRetrievedDocumentDetail(response);
 
                     } else {
-                        if (Acm.Validator.validateSolrData(response)) {
-                            var documentDetail = response.response.docs[0];
+                        if (AcmDocument.Model.Detail.validateDocumentDetail(response)) {
+                            var documentDetail = response;
                             AcmDocument.Model.Detail.cacheDocumentDetail.put(documentId, documentDetail);
                             AcmDocument.Controller.modelRetrievedDocumentDetail(documentDetail);
                         }
@@ -498,6 +499,34 @@ AcmDocument.Service = {
                                 }
 
                             }
+                        }
+                    } //end else
+                }
+                , url
+            )
+        }
+    }
+
+    ,VersionHistory: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_CHANGE_ACTIVE_FILE_VERSION: "/api/v1/service/ecm/file/"
+
+        ,changeActiveFileVersion: function(documentId, versionTag){
+            var url = App.getContextPath() + this.API_CHANGE_ACTIVE_FILE_VERSION;
+            url+= documentId + "?versionTag=" + versionTag;
+
+            Acm.Service.asyncPost(
+                function (response) {
+                    if (response.hasError) {
+                        AcmDocument.Controller.modelChangedActiveFileVersion(documentId,response);
+                    } else {
+                        if (AcmDocument.Model.VersionHistory.validateDocumentDetail(response)) {
+                            var documentDetail = response;
+                            AcmDocument.Controller.modelChangedActiveFileVersion(documentId,documentDetail);
                         }
                     } //end else
                 }
