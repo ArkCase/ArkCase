@@ -8,7 +8,7 @@ var Complaint = Complaint || {
         i18n.init({
             lng: 'en-au',
             lowerCaseLng: true,
-            resGetPath: '/acm/resources/i18n/complaint/__lng__.json'
+            resGetPath: App.getContextPath() + '/resources/i18n/complaint/__lng__.json'
         }, function(){
             $('*[data-i18n]').i18n();
 
