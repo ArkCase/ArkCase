@@ -1002,9 +1002,6 @@ CaseFile.Model = CaseFile.Model || {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.items)) {
-                return false;
-            }
             if (Acm.isNotArray(data.items)) {
                 return false;
             }

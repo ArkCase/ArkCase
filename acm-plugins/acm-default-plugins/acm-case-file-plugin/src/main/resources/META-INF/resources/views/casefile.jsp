@@ -71,6 +71,9 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/fullcalendar.css'/>" type="text/css"/>
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/theme.css'/>" type="text/css"/>
 
+    <%--jquery qtip--%>
+    <script src="<c:url value='/resources/vendors/${vd_jquery_qtip}/${js_jquery_qtip}'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_qtip}/${css_jquery_qtip}'/>" type="text/css"/>
 
 <style>
     table.fancytree-ext-table {
@@ -490,7 +493,7 @@
                                 </div>
 
 
-                                <div class="col-md-12">
+                                <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
                                     <aside class="wrapper">
                                         <%--<div class="pull-right inline">
                                             <div class="dropdown">
@@ -519,7 +522,7 @@
                                                   Calendar
                                                 </span>
                                             </header>
-                                            <div class="calendar" id="tabOutlookCalendar">
+                                            <div class="calendar">
                                             </div>
                                         </section>
                                     </aside>
