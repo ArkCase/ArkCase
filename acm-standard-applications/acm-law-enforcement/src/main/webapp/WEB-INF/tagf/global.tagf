@@ -187,8 +187,8 @@
 
 <!-- jquery must be first -->
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery}/${js_jquery}'/>" ></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_i18next}/${js_i18next}'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_ui}/js/${js_jquery_ui}'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_i18next}/${js_i18next}'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_microdata}/${js_microdata}'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_bootstrap}/js/${js_bootstrap}'/>" ></script>
 
