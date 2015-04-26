@@ -205,6 +205,44 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         return movedFolder;
     }
 
+    @Override
+    public AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        AcmFolder folder = getFolderDao().find(folderToBeCopiedId);
+        AcmFolder dstFolder = getFolderDao().find(copyDstFolderId);
+        if( folder == null ) {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderToBeCopiedId,"Folder not found",null);
+        }
+        if (dstFolder == null ){
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,copyDstFolderId,"Destination folder not found",null);
+        }
+
+        AcmFolder folderCopy = null;
+        Map<String,Object> properties = new HashMap<>();
+        properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
+        properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID,dstFolder.getCmisFolderId());
+        try {
+
+            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folder, properties);
+
+            if ( message.getInboundPropertyNames().contains(AcmFolderConstants.COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY )) {
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+                if (log.isErrorEnabled()) {
+                    log.error("Folder not copied successfully " + muleException.getMessage(), muleException);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                        "Folder " + folder.getName() + "not copied successfully", muleException);
+            }
+
+
+        } catch     ( PersistenceException | MuleException e ) {
+            if ( log.isErrorEnabled() ){
+                log.error("Folder  "+folder.getName()+"not copied successfully" + e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was not copied under "+dstFolder.getName()+" successfully",e);
+        }
+        return folderCopy;
+    }
 
     @Override
     public void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
@@ -225,13 +263,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     if (log.isErrorEnabled()) {
                         log.error("Folder not deleted successfully " + muleException.getMessage(), muleException);
                     }
-                    throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                    throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
                             "Folder " + folder.getName() + "not deleted successfully", muleException);
             } else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY)) {
                 if (log.isErrorEnabled()) {
                     log.error("Folder "+folder.getName()+" is not empty and is not deleted!");
                 }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
                         "Folder " + folder.getName() + " not deleted successfully", null);
             }
             getFolderDao().deleteFolder(folderId);
