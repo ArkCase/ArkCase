@@ -4,6 +4,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivileges;
 import com.armedia.acm.spring.SpringContextHolder;
+import com.armedia.acm.spring.events.ContextAddedEvent;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -69,6 +70,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
 
         replayAll();
 
+        unit.onApplicationEvent(new ContextAddedEvent(new Object(), AcmPluginManager.PLUGINS_PRIVILEGES_FOLDER_NAME));
         unit.setApplicationContext(mockContext);
 
         verifyAll();
