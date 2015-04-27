@@ -313,11 +313,6 @@
 
 
                                     <a href="#" class="font-bold"><div>Attachments</div> </a>
-                                    <form id="formUploadDoc" style="display:none;">
-                                        <input type="file" id="file" name="files[]" multiple />
-                                    </form>
-                                    <form action="#" id="formDownloadDoc" style="display:none;">
-                                    </form>
                                 </div>
 
 
