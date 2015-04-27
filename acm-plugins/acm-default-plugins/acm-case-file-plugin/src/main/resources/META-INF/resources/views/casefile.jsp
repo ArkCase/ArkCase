@@ -162,30 +162,40 @@
                                     <div class="col-xs-12">
                                         <div class="">
                                             <div class=" clearfix">
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
-                                                    <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Create Date</small></div>
 
-                                                <div class="col-xs-1 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
-                                                    <small class="text-muted">Priority</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted">Assigned To</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted">Owning Group</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Case Type</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                                    <small class="text-muted">Due Date</small></div>
-                                                <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">State</small></div>
+                                                    <div class="row">
+                                                        <div class="col-xs-6  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a><a href="#" id="status" ></a></div>
+                                                        </div>
+                                                        <div class="col-xs-6  b-r text-right">
+                                                            <h5><a href="#" id="caseNumber"></a></h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
+                                                            <small class="text-muted">Case Type</small> </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                            <small class="text-muted">Create Date</small></div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
+                                                            <small class="text-muted">Priority</small> </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
+                                                            <small class="text-muted">Assigned To</small>
+                                                        </div>
+                                                        <div class="col-xs-4  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                            <small class="text-muted">Owning Group</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r ">
+                                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
+                                                            <small class="text-muted">Due Date</small>
+                                                        </div>
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
