@@ -82,7 +82,7 @@ public class SendDocumentsToSolr
         {
             for ( SolrDeleteDocumentByIdRequest doc : deletes )
             {
-                sendToJmsQueue(doc, "vm://solrQuickSearch.in");
+                sendToJmsQueue(doc, "jms://solrQuickSearch.in");
             }
         }
     }
@@ -105,8 +105,7 @@ public class SendDocumentsToSolr
     {
         try
         {
-            String inJson = mapper.writeValueAsString(solrDocument);
-            String json = prepareSolrStringForDelete(inJson);
+            String json = mapper.writeValueAsString(solrDocument);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Sending JSON to SOLR: " + json);
