@@ -335,6 +335,99 @@ Admin.Service = {
 
 
     }
+    ,LabelConfiguration: {
+        API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
+        ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
+        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/resource?lang={0}&ns={1}"
+
+
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+        },
+
+        retrieveLanguages: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RETRIEVE_LANGUAGES;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve resource languages:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+
+        retrieveNamespaces: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RETRIEVE_NAMESPACES;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve resource namespaces:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,retrieveResource: function(lang, namespace){
+            var $dfd = jQuery.Deferred();
+
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESOURCE.format(lang, namespace);
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve labels resource:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+        ,updateResource: function(lang, namespace, resource){
+            var $dfd =jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESOURCE.format(lang, namespace);
+            Acm.Service.asyncPut(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url
+                ,JSON.stringify(resource)
+            );
+            return $dfd.promise();
+        }
+    }
+
 
     ,Correspondence : {
 
