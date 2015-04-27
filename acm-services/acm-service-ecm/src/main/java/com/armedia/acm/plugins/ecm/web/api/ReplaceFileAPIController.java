@@ -63,6 +63,9 @@ public class ReplaceFileAPIController {
         InputStream replacementStream;
         try {
             replacementStream = getInputStreamFromAttachment(request,fileToBeReplacedId);
+            if (replacementStream == null ){
+                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,fileToBeReplacedId,"No stream found!.",null);
+            }
         } catch (IOException e) {
             if( log.isErrorEnabled() ){
                log.error("IO exception occurred while reading the inputStream of the attachment "+e.getMessage(),e);

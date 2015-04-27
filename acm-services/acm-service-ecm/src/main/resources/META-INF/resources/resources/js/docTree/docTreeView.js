@@ -10,25 +10,17 @@ DocTree.View = DocTree.View || {
 
         this.doUploadForm = args.uploadForm;
         this.fileTypes  = args.fileTypes;
-        //this.docSubMenu = this.Menu.makeDocSubMenu(this.fileTypes);
 
         this.$tree = (args.$tree)? args.$tree : $("#treeDoc");
         this.createDocTree(args.treeArgs);
 
-        this.$formDownloadDoc = (args.$formDownloadDoc)? args.$formDownloadDoc : $("#formDownloadDoc");
-        this.$formUploadDoc   = (args.$formUploadDoc)  ? args.$formUploadDoc   : $("#formUploadDoc");
-        this.$fileInput    = (args.$fileInput)   ? args.$fileInput    : $("#file");
-        this.$fileInput.on("change", function(e) {
-            DocTree.View.$formUploadDoc.submit();
-        });
-        this.$formUploadDoc.submit(function(e) {DocTree.View.onSubmitFormUploadFile(e, this);});
-
-        //this.getActiveObjId = (args.getActiveObjId)?args.getActiveObjId : ObjNav.View.Navigator.getActiveObjId;
-        //this.getPreviousObjId = (args.getPreviousObjId)?args.getPreviousObjId : ObjNav.View.Navigator.getPreviousObjId;
+        this.makeDownloadDocForm(this.$tree);
+        this.makeUploadDocForm(this.$tree);
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT           ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_TREE             ,this.onViewChangedTree);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_UPLOADED_FILE           ,this.onModelUploadedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_UPLOADED_FILES          ,this.onModelUploadedFiles);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_REPLACED_FILE           ,this.onModelReplacedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST    ,this.onModelRetrievedFolderList);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_CREATED_FOLDER          ,this.onModelCreatedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_DELETED_FOLDER          ,this.onModelDeletedFolder);
@@ -43,15 +35,78 @@ DocTree.View = DocTree.View || {
 
         //----------
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
+
+//for testing
+//        var obj = this.$tree;
+//        obj.on('dragenter', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//            $(this).css('border', '2px solid #0B85A1');
+//        });
+//        obj.on('dragover', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//        });
+//        obj.on('drop', function (e)
+//        {
+//
+//            $(this).css('border', '2px dotted #0B85A1');
+//            e.preventDefault();
+//            var files = e.originalEvent.dataTransfer.files;
+//
+//            //We need to send dropped files to Server
+//            var z = 1;
+//        });
+//
+//        $(document).on('dragenter', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//        });
+//        $(document).on('dragover', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//            //obj.css('border', '2px dotted #0B85A1');
+//        });
+//        $(document).on('drop', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//        });
     }
     ,onInitialized: function() {
     }
 
-    ,uploadFile: function(node, fileType) {
-        DocTree.View.uploadToFolderNode = node;
-        DocTree.View.uploadFileType = fileType;
-        DocTree.View.$fileInput.click();
+    ,makeUploadDocForm: function($s) {
+        this.$formUploadDoc = $("<form/>")
+            .attr("id"       , "formUploadDoc")
+            .attr("style"    , "display:none;")
+            .appendTo($s);
+        this.$fileInput = $("<input/>")
+            .attr("type"     , "file")
+            .attr("id"       , "file")
+            .attr("name"     , "files[]")
+            .attr("multiple" , "")
+            .appendTo(this.$formUploadDoc);
+
+        this.$fileInput.on("change", function(e) {
+            DocTree.View.$formUploadDoc.submit();
+        });
+        this.$formUploadDoc.submit(function(e) {
+            DocTree.View.onSubmitFormUploadFile(e, this);
+        });
     }
+    ,makeDownloadDocForm: function($s) {
+        this.$formUploadDoc = $("<form/>")
+            .attr("id"     , "formDownloadDoc")
+            .attr("action" , "#")
+            .attr("style"  , "display:none;")
+            .appendTo($s);
+    }
+
     ,uploadForm: function(node, formType) {
         DocTree.View.uploadToFolderNode = node;
         DocTree.View.uploadFileType = formType;
@@ -59,6 +114,35 @@ DocTree.View = DocTree.View || {
             DocTree.View.doUploadForm(formType, function() {
                 DocTree.View.onLoadingFrevvoForm();
             });
+        }
+    }
+    ,uploadFile: function(node, fileType) {
+        DocTree.View.uploadToFolderNode = node;
+        DocTree.View.uploadFileType = fileType;
+        DocTree.View.uploadFileNew = true;
+
+        DocTree.View.$fileInput.attr("multiple", '');
+        DocTree.View.$fileInput.click();
+    }
+    ,replaceFile: function(node) {
+//        var fileType = null;
+//        if (Acm.isArray(this.fileTypes)) {
+//            for (var i = 0; i < this.fileTypes.length; i++) {
+//                if (Acm.goodValue(this.fileTypes[i].type) == Acm.goodValue(node.data.filetype)) {
+//                    filetype = Acm.goodValue(node.data.filetype);
+//                    break;
+//                }
+//            }
+//        }
+        var fileType = Acm.goodValue(node.data.type);
+        if (Acm.isNotEmpty(fileType)) {
+            DocTree.View.replaceFileNode = node;
+            DocTree.View.uploadToFolderNode = node.parent;
+            DocTree.View.uploadFileType = fileType;
+            DocTree.View.uploadFileNew = false;
+
+            DocTree.View.$fileInput.removeAttr("multiple");
+            DocTree.View.$fileInput.click();
         }
     }
 
@@ -89,6 +173,14 @@ DocTree.View = DocTree.View || {
         }
         return deferred.promise();
     }
+    ,_returnFileNodes: function(fileNode) {
+        var deferred = $.Deferred();
+        var fileNodes = [];
+        fileNodes.push(fileNode);
+        deferred.resolve(fileNodes);
+        return deferred.promise();
+    }
+
     ,onFailedAddingFileNode: function() {
         var z = 1;
     }
@@ -168,7 +260,6 @@ DocTree.View = DocTree.View || {
         for(var i = 0; i < files.length; i++ ){
             names.push(files[i].name);
         }
-        var promiseAddNode = DocTree.View._addingFileNodes(folderNode, names, fileType);
 
         var fd = new FormData();
         fd.append("parentObjectType", DocTree.Model.getObjType());
@@ -184,7 +275,16 @@ DocTree.View = DocTree.View || {
         }
 
         var cacheKey = DocTree.View.getCacheKey(folderNode);
-        var promiseUploadFile = DocTree.Service.uploadFile(fd, cacheKey, folderNode);
+        if (DocTree.View.uploadFileNew) {
+            DocTree.View._doUploadFiles(fd, cacheKey, folderNode, names, fileType);
+        } else {
+            var replaceNode = DocTree.View.replaceFileNode;
+            DocTree.View._doReplaceFile(fd, replaceNode.data.objectId, cacheKey, replaceNode, names[0]);
+        }
+    }
+    ,_doUploadFiles: function(fd, cacheKey, folderNode, names, fileType) {
+        var promiseAddNode = DocTree.View._addingFileNodes(folderNode, names, fileType);
+        var promiseUploadFile = DocTree.Service.uploadFiles(fd, cacheKey, folderNode);
         $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFiles, fileNodes){
             if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateNodes(fileNodes)) {
                 for (var i = 0; i < uploadedFiles.length; i++) {
@@ -198,6 +298,18 @@ DocTree.View = DocTree.View || {
                         fileNode.setStatus("ok");
                     }
                 } //end for
+            }
+        });
+    }
+    ,_doReplaceFile: function(fd, fileId, cacheKey, fileNode, name) {
+        DocTree.View.markNodePending(fileNode);
+
+        var promiseReplaceFile = DocTree.Service.replaceFile(fd, fileId, cacheKey, fileNode);
+        $.when(promiseReplaceFile).done(function(replacedFile){
+            if (replacedFile && fileNode) {
+                fileNode.data.version = Acm.goodValue(replacedFile.version);
+                fileNode.renderTitle();
+                fileNode.setStatus("ok");
             }
         });
     }
@@ -267,7 +379,7 @@ DocTree.View = DocTree.View || {
         });
 
     }
-    ,onModelUploadedFile: function(uploadInfo, folderNode) {
+    ,onModelUploadedFiles: function(uploadInfo, folderNode) {
         if (uploadInfo.hasError) {
             //node.setStatus("error");
             var z = 1;
@@ -278,6 +390,13 @@ DocTree.View = DocTree.View || {
             //folderNode.data.
         }
     }
+    ,onModelReplacedFile: function(replaceInfo, fileId, fileNode) {
+        if (replaceInfo.hasError) {
+            //node.setStatus("error");
+        } else {
+        }
+    }
+
     ,onModelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, folderNode) {
         if (DocTree.Model.validateFolderList(folderList) && DocTree.View.validateNode(folderNode)) {
             folderNode.data.objectId = folderList.folderId;
@@ -450,11 +569,13 @@ DocTree.View = DocTree.View || {
                 var node = data.node;
                 var $tdList = $(node.tr).find(">td");
                 // (index #0 is rendered by fancytree by adding the checkbox)
-                //$tdList.eq(1).text(node.data.objectId);
-                //DocTree.View.Source.getHtmlDocLink(node).appendTo($tdList.eq(1));
-                $tdList.eq(1).html(DocTree.View.Source.getHtmlDocLink(node));
-
                 // (index #2 is rendered by fancytree)
+
+                //$tdList.eq(1).html(DocTree.View.Source.getHtmlDocLink(node));
+                var $td1 = $("<td/>");
+                DocTree.View.Source.getHtmlDocLink(node).appendTo($td1);
+                $tdList.eq(1).replaceWith($td1);
+
 
                 //if (DocTree.View.isTopNode(node)) {
                 if (DocTree.View.isFolderNode(node)) {
@@ -468,7 +589,8 @@ DocTree.View = DocTree.View || {
 
                     //var versions = ['0.9', '1.0', '2.0'];
                     var versions = ['1.0'];
-                    var $span = $("<span/>").appendTo($tdList.eq(6));
+                    var $td6 = $("<td/>");
+                    var $span = $("<span/>").appendTo($td6);
                     var $select = $("<select/>")
                         .addClass('docversion inline')
                         .appendTo($span)
@@ -485,6 +607,7 @@ DocTree.View = DocTree.View || {
                         }
 
                     });
+                    $tdList.eq(6).replaceWith($td6);
 
 //                    $select.on("change", function(e) {DocTree.View.onChangeVersion(e, this);});
 
@@ -901,7 +1024,7 @@ DocTree.View = DocTree.View || {
             }
             return src;
         }
-        ,getHtmlDocLink_tobe: function(node) {
+        ,getHtmlDocLink: function(node) {
             var $div = $("<div/>")
             .addClass("btn-group");
             var itemId = node.data.objectId;
@@ -917,7 +1040,7 @@ DocTree.View = DocTree.View || {
             }
             return $div;
         }
-        ,getHtmlDocLink: function(node) {
+        ,getHtmlDocLink_html: function(node) {
             var html = "<div></div>";
             var itemId = node.data.objectId
             if (itemId) {
@@ -1154,7 +1277,7 @@ DocTree.View = DocTree.View || {
                     DocTree.View._doDownload(node);
                     break;
                 case "replace":
-                    node.setStatus("error");
+                    DocTree.View.replaceFile(node);
                     break;
                 case "history":
                     node.setStatus("ok");
