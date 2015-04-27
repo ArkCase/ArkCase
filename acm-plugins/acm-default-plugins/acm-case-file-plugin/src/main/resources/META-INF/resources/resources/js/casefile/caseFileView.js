@@ -3181,20 +3181,19 @@ CaseFile.View = CaseFile.View || {
 
     ,OutlookCalendar: {
         create: function() {
-            this.$outlookCalendar          = $("#tabOutlookCalendar");
+            this.$outlookCalendar          = $(".calendar");
+            this.$weekView                 = $("#weekview");
+            this.$monthView                = $("#monthview");
+            this.$dayView                  = $("#dayview");
+
             this.createOutlookCalendarWidget(this.$outlookCalendar);
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
         }
         ,onInitialized: function() {
         }
         ,onViewSelectedObject: function(nodeType, nodeId) {
-            CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
-            CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
-        }
-        ,onModelRetrievedObject: function(objData) {
             CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
             CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
         }
@@ -3208,13 +3207,41 @@ CaseFile.View = CaseFile.View || {
             }
         }
 
+        ,createCalendarSource:function(){
+            var calendarSource = [];
+            var outlookCalendarItems = CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.get(CaseFile.View.getActiveCaseFileId());
+            if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                for(var i = 0; i<outlookCalendarItems.items.length; i++){
+                    if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
+                        var outlookCalendarItem = {};
+                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
+                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
+                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
+                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
+                        outlookCalendarItem.detail = CaseFile.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
+                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
+                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
+                        calendarSource.push(outlookCalendarItem);
+                    }
+                }
+            }
+            return calendarSource;
+        }
+
+        ,makeDetail: function(calendarItem){
+            if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
+                var body = Acm.goodValue(calendarItem.body) + "</br>";
+                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
+                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
+                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
+                return detail;
+            }
+        }
+
         ,createOutlookCalendarWidget: function($s){
-            // fullcalendar copied from demo
-            // code as a dummy placeholder
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
+            var calendarSource = this.createCalendarSource();
             var addDragEvent = function($this){
                 // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
                 // it doesn't need to have a start or end
@@ -3233,12 +3260,15 @@ CaseFile.View = CaseFile.View || {
                     revertDuration: 0  //  original position after the drag
                 });
             };
+
             $s.fullCalendar({
                 header: {
                     left: 'prev',
                     center: 'title',
                     right: 'next'
                 },
+                timeFormat: 'h(:mm)t {-h(:mm)t}',
+                displayEventEnd : true,
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
                 drop: function(date, allDay) { // this function is called when something is dropped
@@ -3264,61 +3294,32 @@ CaseFile.View = CaseFile.View || {
                     }
 
                 }
-                ,
-                events: [
-                    {
-                        title: 'All Day Event',
-                        start: new Date(y, m, 1),
-                        className:'b-l b-2x b-info'
-                    },
-                    {
-                        title: 'Long Event',
-                        start: new Date(y, m, d-5),
-                        end: new Date(y, m, d-2),
-                        className:'bg-success bg'
-                    },
-                    {
-                        id: 999,
-                        title: 'Event',
-                        start: new Date(y, m, d-5, 16, 0),
-                        allDay: false,
-                        className:'b-l b-2x b-warning'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: new Date(y, m, d+4, 16, 0),
-                        allDay: false,
-                        className:'b-l b-2x b-warning'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: new Date(y, m, d, 10, 30),
-                        allDay: false,
-                        className:'b-l b-2x b-danger'
-                    },
-                    {
-                        title: 'Lunch',
-                        start: new Date(y, m, d, 12, 0),
-                        end: new Date(y, m, d, 14, 0),
-                        allDay: false,
-                        className:'b-l b-2x b-primary'
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: new Date(y, m, d+1, 19, 0),
-                        end: new Date(y, m, d+1, 22, 30),
-                        allDay: false,
-                        className:'b-l b-2x b-warning'
-                    },
-                    {
-                        title: 'Click for Google',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        url: 'http://google.com/',
-                        className:'b-l b-2x b-primary'
-                    }
-                ]
+                ,events: calendarSource
+                ,eventRender: function (event, element) {
+                    element.qtip({
+                        content: {
+                            text: Acm.goodValue(event.detail),
+                            title: {
+                                text: Acm.goodValue(event.title)
+                            }
+                        }
+                        ,position: {
+                            my: 'right center',
+                            at: 'left center',
+                            target: 'mouse',
+                            viewport: $s,
+                            adjust: {
+                                mouse: false,
+                                scroll: false
+                            }
+                        }
+                        ,style: {
+                            classes: "qtip-rounded qtip-shadow"
+                        }
+                        ,show: { solo: true} //, ready: true, when: false
+                        ,hide: { when: 'mouseout', fixed: true}
+                    });
+                }
             });
             $('#myEvents').on('change', function(e, item){
                 addDragEvent($(item));
@@ -3328,15 +3329,15 @@ CaseFile.View = CaseFile.View || {
                 addDragEvent($(this));
             });
 
-            $(document).on('click', '#dayview', function() {
+            this.$dayView.on('click', function() {
                 $('.calendar').fullCalendar('changeView', 'agendaDay')
             });
 
-            $('#weekview').on('click', function() {
+            this.$weekView.on('click', function() {
                 $('.calendar').fullCalendar('changeView', 'agendaWeek')
             });
 
-            $('#monthview').on('click', function() {
+            this.$monthView.on('click', function() {
                 $('.calendar').fullCalendar('changeView', 'month')
             });
 

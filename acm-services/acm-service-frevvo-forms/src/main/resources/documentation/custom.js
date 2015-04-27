@@ -1,54 +1,60 @@
 // frevvo custom JavaScript
 
-// Import Rich TextArea Plugin
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/rich-textarea-plugin-v2.1/tinymce/tinymce.min.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/rich-textarea-plugin-v2.1/richtextarea.plugin.js"></script>');
-
 // Import Application CSS
-document.writeln('<link href="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app.css" rel="stylesheet" />');
+document.writeln('<link href="/frevvo/arkcase/libs/app.css" rel="stylesheet" />');
 
 // Import jQuery
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/jquery-1.11.0/jquery-1.11.0.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/jquery-1.11.0/jquery-1.11.0.js"></script>');
 document.writeln('<script type="text/javascript">var frevvo_jQuery = jQuery.noConflict(true);</script>');
 
 // Import jQuery UI
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
-document.writeln('<link href="/frevvo/js-25644/libs/user-picker-plugin-v1.0/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
+document.writeln('<link href="/frevvo/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
 
 // Import Bootstrap
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/bootstrap-3.1.1/js/bootstrap.js"></script>');
-document.writeln('<link href="/frevvo/js-25644/libs/user-picker-plugin-v1.0/bootstrap-3.1.1/css/bootstrap.css" rel="stylesheet" />');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/bootstrap-3.1.1/js/bootstrap.js"></script>');
+document.writeln('<link href="/frevvo/arkcase/libs/bootstrap-3.1.1/css/bootstrap.css" rel="stylesheet" />');
 
 // Import jTable
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/jtable-2.4.0/jquery.jtable.js"></script>');
-document.writeln('<link href="/frevvo/js-25644/libs/user-picker-plugin-v1.0/jtable-2.4.0/themes/acm/jtable.css" rel="stylesheet" />');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/jtable-2.4.0/jquery.jtable.js"></script>');
+document.writeln('<link href="/frevvo/arkcase/libs/jtable-2.4.0/themes/acm/jtable.css" rel="stylesheet" />');
+
+// Import Font Awesome
+document.writeln('<link rel="stylesheet" href="/frevvo/arkcase/libs/font-awesome/css/font-awesome.css" type="text/css">');
+
+// Import Rich TextArea Plugin
+document.writeln('<link rel="stylesheet" href="/frevvo/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
+
+// Import ArkCase libs
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/app.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appCallback.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appController.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appEvent.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appObject.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appView.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acm.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmAjax.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmDialog.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmDispatcher.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmObject.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acmValidator.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmEx.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExObject.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExService.js"></script>');
 
 // Import User Picker Plugin
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/app.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appCallback.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appEvent.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appObject.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/app/appView.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acm.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmAjax.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmDialog.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmDispatcher.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmObject.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/core/acmValidator.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/ex/acmEx.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/ex/acmExModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/ex/acmExObject.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/ex/acmExService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/search/searchBase.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/search/searchBaseController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/search/searchBaseModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/search/searchBaseService.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-25644/libs/user-picker-plugin-v1.0/search/searchBaseView.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBase.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseController.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseView.js"></script>');
 
 
 var CustomEventHandlers = {
@@ -206,3 +212,25 @@ function filterByOwningGroup(element){
 	
 	return false;
 }
+
+/* Rich Text Area properties - START */
+var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';
+
+var rtaSummernoteOptions = {
+							toolbar: [
+							  ['style', ['style']],
+							  ['font', ['bold', 'italic', 'underline', 'clear']],
+							  ['fontsize', ['fontsize']],
+							  ['color', ['color']],
+							  ['para', ['ul', 'ol', 'paragraph']],
+							  ['height', ['height']],
+							  ['table', ['table']],
+							  ['view', ['fullscreen', 'codeview']],
+							  ['help', ['help']]
+							],
+					  
+							height: 280
+						};
+						
+var rtaRefreshMilliseconds = 500;
+/* Rich Text Area properties - END */
