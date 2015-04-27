@@ -682,7 +682,7 @@ CaseFile.View = CaseFile.View || {
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
-                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
                 this.setPropertyRestricted(Acm.goodValue(c.restricted));
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
 

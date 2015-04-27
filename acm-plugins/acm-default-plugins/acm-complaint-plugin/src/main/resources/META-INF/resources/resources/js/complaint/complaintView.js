@@ -485,7 +485,7 @@ Complaint.View = Complaint.View || {
             if (Complaint.Model.Detail.validateComplaint(c)) {
                 var assignee = Complaint.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
+
                 var group = Complaint.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
 
@@ -494,7 +494,7 @@ Complaint.View = Complaint.View || {
                 this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
                 this.setTextLnkComplaintType(Acm.goodValue(c.complaintType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
-                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
             }
         }
