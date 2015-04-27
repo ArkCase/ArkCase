@@ -323,6 +323,7 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabDocs" style="display:none;">
+
                                     <%--<section class="panel b-a ">--%>
                                         <%--<div id="divDocs" style="width:100%"></div>--%>
                                         <%--<form id="formAddDocument" style="display:none;">--%>
@@ -356,11 +357,6 @@
 
 
                                             <a href="#" class="font-bold"><div>Documents</div> </a>
-                                            <form id="formUploadDoc" style="display:none;">
-                                                <input type="file" id="file" name="files[]" multiple />
-                                            </form>
-                                            <form action="#" id="formDownloadDoc" style="display:none;">
-                                            </form>
                                         </div>
 
 
@@ -412,6 +408,12 @@
                                         </div>
 
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
+                                            <%--<form id="formUploadDoc" style="display:none;">--%>
+                                                <%--<input type="file" id="file" name="files[]" multiple />--%>
+                                            <%--</form>--%>
+                                            <%--<form action="#" id="formDownloadDoc" style="display:none;">--%>
+                                            <%--</form>--%>
+
                                             <thead>
                                             <tr>
                                                 <th width2="6%"><span class='fancytree-checkbox'></span></th>
