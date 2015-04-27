@@ -50,7 +50,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private PersonDao personDao;
     private ComplaintEventPublisher complaintEventPublisher;
 
-    private ComplaintFactory complaintFactory = new ComplaintFactory();
+    private ComplaintFactory complaintFactory;
 
     public ComplaintService() {
 		
@@ -484,6 +484,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     {
         return complaintFactory;
     }
+
+	public void setComplaintFactory(ComplaintFactory complaintFactory) {
+		this.complaintFactory = complaintFactory;
+	}
 
 	/**
 	 * @return the acmPluginManager

@@ -404,7 +404,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
 
-        personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
+        if (personAssoc.getPerson().getPersonAssociations() == null)
+        {
+        	personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+        }
+        
+        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
        
     public Date getDueDate()
