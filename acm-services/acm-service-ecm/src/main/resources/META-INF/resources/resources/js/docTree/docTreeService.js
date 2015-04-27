@@ -22,9 +22,9 @@ DocTree.Service = {
     ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
     ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
-    ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                       //  {folderToMoveId}/{dstFolderId}
+    ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
     ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"        //  {targetObjectType}/{targetObjectId}
-    ,API_SET_ACTIVE_VERSION_          : "to be defined soon"
+    ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          // {fileId}?versionTag=x.y"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -584,7 +584,7 @@ DocTree.Service = {
     ,setActiveVersion: function(fileId, version, cacheKey, callerData) {
         return;
 
-        var url = App.getContextPath() + this.API_SET_ACTIVE_VERSION_ + fileId + "/" + version;
+        var url = App.getContextPath() + this.API_SET_ACTIVE_VERSION_ + fileId + "?versionTag=" + version;
         //var data = {"id": subFolderId, "folderId": folderId};
         Acm.Service.asyncPost2({url: url
             //,data: JSON.stringify(data)

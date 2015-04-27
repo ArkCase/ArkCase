@@ -37,6 +37,10 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
 
 //for testing
+        //delegate
+
+        //$treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
+
 //        var obj = this.$tree;
 //        obj.on('dragenter', function (e)
 //        {
@@ -100,7 +104,7 @@ DocTree.View = DocTree.View || {
         });
     }
     ,makeDownloadDocForm: function($s) {
-        this.$formUploadDoc = $("<form/>")
+        this.$formDownloadDoc = $("<form/>")
             .attr("id"     , "formDownloadDoc")
             .attr("action" , "#")
             .attr("style"  , "display:none;")
@@ -171,13 +175,6 @@ DocTree.View = DocTree.View || {
             }
             deferred.resolve(fileNodes);
         }
-        return deferred.promise();
-    }
-    ,_returnFileNodes: function(fileNode) {
-        var deferred = $.Deferred();
-        var fileNodes = [];
-        fileNodes.push(fileNode);
-        deferred.resolve(fileNodes);
         return deferred.promise();
     }
 
@@ -813,6 +810,51 @@ DocTree.View = DocTree.View || {
 
 
         $treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
+
+
+
+//        $treeBody.delegate("tr", "dragenter", function (e) {
+//            e.stopPropagation();
+//            e.preventDefault();
+//            $(this).css('border', '2px solid #0B85A1');
+//        });
+//        $treeBody.delegate("tr", "dragover", function (e) {
+//            e.stopPropagation();
+//            e.preventDefault();
+//        });
+//        $treeBody.delegate("tr", "drop", function (e) {
+//            //e.stopPropagation();
+//            e.preventDefault();
+//            var files = e.originalEvent.dataTransfer.files;
+//            var tree = $(this).fancytree("getTree");
+//            var node = tree.getActiveNode();
+//            var a = this;
+//            var z = 1;
+//        });
+
+
+//        var obj = this.$tree;
+//        obj.on('dragenter', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//            $(this).css('border', '2px solid #0B85A1');
+//        });
+//        obj.on('dragover', function (e)
+//        {
+//            e.stopPropagation();
+//            e.preventDefault();
+//        });
+//        obj.on('drop', function (e)
+//        {
+//
+//            $(this).css('border', '2px dotted #0B85A1');
+//            e.preventDefault();
+//            var files = e.originalEvent.dataTransfer.files;
+//
+//            //We need to send dropped files to Server
+//            var z = 1;
+//        });
 
 //        var $treeBody = $tree.find("tbody");
 //        $treeBody.contextmenu({
