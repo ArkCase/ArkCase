@@ -2849,6 +2849,16 @@ Element.addMethods();
                         return true;
                     }
                     var el = Event.element(e);
+                    /**
+                     * Original: if (el.nodeName.toLowerCase() == "textarea") {
+                     * 
+                     * Backward Compatible: yes
+                     * 
+                     * Description: Frevvo not allow ENTER "keypress" for other elements than "textarea". Summernote rich textarea is shown
+                     * in "div" element with class name "note-editable" and for that reason ENTER "keypress" not working.
+                     * In the condition below is added Summernote "div" element with class name "note-editable" and with that we are allowing
+                     * ENTER "keypress" to take effect for Summernote rich textarea as well
+                     */
                     if ((el.nodeName.toLowerCase() == "textarea") || (el.tagName.toLowerCase() == "div" && el.className.toLowerCase() == "note-editable")) {
                         return true;
                     } else {
@@ -14151,6 +14161,16 @@ _frevvo.formController = {
         FEvent.observe(a, "keypress", function(b) {
             if (b.keyCode == 13 && !_frevvo.formView.isValid(a)) {
                 var c = Event.element(b);
+                /**
+                 * Original: if (!c || c.tagName.toLowerCase() != "textarea") {
+                 * 
+                 * Backward Compatible: yes
+                 * 
+                 * Description: Frevvo not allow ENTER "keypress" for other elements than "textarea". Summernote rich textarea is shown
+                 * in "div" element with class name "note-editable" and for that reason ENTER "keypress" not working.
+                 * In the condition below is added Summernote "div" element with class name "note-editable" and with that we are allowing
+                 * ENTER "keypress" to take effect for Summernote rich textarea as well
+                 */
                 if ((!c || c.tagName.toLowerCase() != "textarea") && !(c.tagName.toLowerCase() == "div" && c.className.toLowerCase() == "note-editable")) {
                     Event.stop(b);
                 }
