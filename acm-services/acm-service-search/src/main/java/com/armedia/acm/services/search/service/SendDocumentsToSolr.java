@@ -152,11 +152,6 @@ public class SendDocumentsToSolr
         }
     }
 
-    private String prepareSolrStringForDelete(String jsonString) {
-        String json = "stream.body="+jsonString.split(",")[0]+"}}&commit=true";
-        return json;
-    }
-
     public synchronized MuleClient getMuleClient()
     {
         if ( muleClient == null )
