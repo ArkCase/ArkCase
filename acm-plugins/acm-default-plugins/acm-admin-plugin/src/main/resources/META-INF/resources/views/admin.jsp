@@ -279,10 +279,20 @@
 
                                             <h3>Label Configuration</h3>
                                             <div class="col-md-12">
-                                                <div class="col-md-4">
+                                                <div class="col-md-3">
+                                                    <select id="labelConfigurationNamespace" disabled class="form-control">
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <select id="labelConfigurationLanguage" disabled class="form-control">
+                                                    </select>
+                                                </div>
+
+
+                                                <div class="col-md-3">
                                                     <input id="labelConfigurationIdFilter" class="form-control" type="text" placeholder="Filter By Id"/>
                                                 </div>
-                                                <div class="col-md-offset-2  col-md-4">
+                                                <div class="col-md-4">
                                                     <input id="labelConfigurationValueFilter" class="form-control" type="text" placeholder="Filter By Value"/>
                                                 </div>
                                             </div>

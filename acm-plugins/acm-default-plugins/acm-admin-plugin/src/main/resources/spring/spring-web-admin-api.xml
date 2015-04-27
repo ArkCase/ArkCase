@@ -13,6 +13,18 @@
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
+    <bean id="labelConfigurationRetrieveResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveResource">
+    </bean>
+
+    <bean id="labelConfigurationUpdateResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateResource">
+    </bean>
+
+    <bean id="labelConfigurationRetrieveLanguages" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveLanguages">
+    </bean>
+
+    <bean id="labelConfigurationRetrieveNamespaces" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveNamespaces">
+    </bean>
+
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
 
 </beans>
