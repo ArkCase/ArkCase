@@ -164,5 +164,15 @@ AcmDocument.Controller = AcmDocument.Controller || {
     ,modelRetrievedDocumentDetail: function(documentDetail){
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_DOCUMENT_DETAIL, documentDetail);
     }
+
+    //version history
+    ,VIEW_CHANGED_ACTIVE_FILE_VERSION                : "document-view-changed-active-file-version"      //param: documentId,versionTag
+    ,viewChangedActiveFileVersion: function(documentId,versionTag){
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_ACTIVE_FILE_VERSION, documentId,versionTag);
+    }
+    ,MODEL_CHANGED_ACTIVE_FILE_VERSION                : "document-model-changed-active-file-version"      //param: documentId,documentDetail
+    ,modelChangedActiveFileVersion: function(documentId,documentDetail){
+        Acm.Dispatcher.fireEvent(this.MODEL_CHANGED_ACTIVE_FILE_VERSION, documentId,documentDetail);
+    }
 };
 

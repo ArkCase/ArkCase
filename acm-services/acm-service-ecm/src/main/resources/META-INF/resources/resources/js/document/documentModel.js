@@ -48,23 +48,32 @@ AcmDocument.Model = AcmDocument.Model || {
         ,onInitialized: function() {
             AcmDocument.Service.Detail.retrieveDocumentDetail(AcmDocument.Model.MicroData.documentId);
         }
-        ,validateDocumentDetail: function(data) {
+        ,validateDocumentDetail: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.title_t)) {
+            if (Acm.isEmpty(data.fileId)) {
                 return false;
             }
-            if (Acm.isEmpty(data.create_tdt)) {
+            if (Acm.isEmpty(data.status)) {
                 return false;
             }
-            if (Acm.isEmpty(data.type_s)) {
+            if (Acm.isEmpty(data.fileName)) {
                 return false;
             }
-            if (Acm.isEmpty(data.author)) {
+            if (Acm.isEmpty(data.fileType)) {
                 return false;
             }
-            if (Acm.isEmpty(data.status_s)) {
+            if (Acm.isEmpty(data.activeVersionTag)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.versions)) {
                 return false;
             }
             return true;
@@ -307,8 +316,72 @@ AcmDocument.Model = AcmDocument.Model || {
 
     ,VersionHistory: {
         create : function() {
+            Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_CHANGED_ACTIVE_FILE_VERSION     , this.onViewChangedActiveFileVersion);
         }
         ,onInitialized: function() {
+        }
+        ,onViewChangedActiveFileVersion:function(documentId,versionTag){
+            AcmDocument.Service.VersionHistory.changeActiveFileVersion(documentId,versionTag);
+        }
+        ,validateVersionHistoryList: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateVersionHistory: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.id)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.cmisObjectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.versionTag)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateDocumentDetail: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.fileId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.status)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.fileName)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.fileType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.activeVersionTag)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.creator)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.created)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.versions)) {
+                return false;
+            }
+            return true;
         }
     }
 
