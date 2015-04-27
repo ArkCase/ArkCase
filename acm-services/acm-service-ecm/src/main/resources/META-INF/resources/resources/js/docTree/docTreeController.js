@@ -8,7 +8,8 @@ DocTree.Controller = DocTree.Controller || {
         var name = Acm.goodValue(args.name, "doctree");
         this.VIEW_CHANGED_PARENT           = name + "-view-changed-parent";
         this.VIEW_CHANGED_TREE             = name + "-view-changed-tree";
-        this.MODEL_UPLOADED_FILE           = name + "-model-uploaded-file";
+        this.MODEL_UPLOADED_FILES          = name + "-model-uploaded-files";
+        this.MODEL_REPLACED_FILE           = name + "-model-replaced-file";
         this.MODEL_RETRIEVED_FOLDERLIST    = name + "-model-retrieved-folder-list";
         this.VIEW_ADDED_FOLDER             = name + "-view-added-folder";
         this.MODEL_CREATED_FOLDER          = name + "-model-created-folder";
@@ -47,8 +48,11 @@ DocTree.Controller = DocTree.Controller || {
     ,viewChangedTree: function() {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_TREE);
     }
-    ,modelUploadedFile: function(uploadInfo, folderNode) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILE, uploadInfo, folderNode);
+    ,modelUploadedFiles: function(uploadInfo, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILES, uploadInfo, callerData);
+    }
+    ,modelReplacedFile: function(replaceInfo, fileId, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_REPLACED_FILE, replaceInfo, fileId, callerData);
     }
     ,modelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST, folderList, objType, objId, folderId, pageId, callerData);
