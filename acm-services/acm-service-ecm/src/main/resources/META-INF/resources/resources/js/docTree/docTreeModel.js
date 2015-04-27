@@ -248,6 +248,15 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
+    ,validateReplaceInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        return true;
+    }
     ,validateUploadInfoItem: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
