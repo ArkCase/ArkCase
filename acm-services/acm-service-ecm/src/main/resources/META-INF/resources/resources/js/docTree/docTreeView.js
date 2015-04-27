@@ -39,6 +39,7 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FILE             ,this.onModelCopiedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_FOLDER            ,this.onModelMovedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FOLDER           ,this.onModelCopiedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_SET_ACTIVE_VERSION      ,this.onModelSetActiveVersion);
 
         //----------
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
@@ -182,10 +183,7 @@ DocTree.View = DocTree.View || {
             fd.append("files[]", files[i]);
         }
 
-//        var folderId = (DocTree.View.isTopNode(folderNode))? 0 : folderNode.data.objectId;
-//        var pageId = folderNode.data.startRow;
-//        var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-        var cacheKey = DocTree.View.getFolderCacheKey(folderNode);
+        var cacheKey = DocTree.View.getCacheKey(folderNode);
         var promiseUploadFile = DocTree.Service.uploadFile(fd, cacheKey, folderNode);
         $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFiles, fileNodes){
             if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateNodes(fileNodes)) {
@@ -329,7 +327,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelMovedFile: function(moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, node) {
         if (moveFileInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when copying file or folder", Acm.goodValue(moveFileInfo.errorMsg));
+            App.View.MessageBoard.show("Error occurred when moving file ", Acm.goodValue(moveFileInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
@@ -337,7 +335,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, node) {
         if (copyFileInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when moving file or folder", Acm.goodValue(copyFileInfo.errorMsg));
+            App.View.MessageBoard.show("Error occurred when copying file", Acm.goodValue(copyFileInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else if (DocTree.View.validateNode(node)) {
             DocTree.View._fileDataToNodeData(copyFileInfo, node);
@@ -345,20 +343,50 @@ DocTree.View = DocTree.View || {
             node.renderTitle();
         }
     }
-    ,onModelMovedFolder: function(moveFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
+    ,onModelMovedFolder: function(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, node) {
         if (moveFolderInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when copying file or folder", Acm.goodValue(moveFolderInfo.errorMsg));
+            App.View.MessageBoard.show("Error occurred when moving folder", Acm.goodValue(moveFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
         }
     }
-    ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, toCacheKey, node) {
+    ,onModelCopiedFolder: function(copyFolderInfo, subFolderId, folderId, toCacheKey, node) {
         if (copyFolderInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when moving file or folder", Acm.goodValue(copyFolderInfo.errorMsg));
+            App.View.MessageBoard.show("Error occurred when copying folder", Acm.goodValue(copyFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
+        }
+    }
+    ,onModelSetActiveVersion: function(version, fileId, cacheKey, node) {
+        if (version.hasError) {
+            App.View.MessageBoard.show("Error occurred when setting active version", Acm.goodValue(version.errorMsg));
+            DocTree.View.markNodeError(node);
+        } else if (DocTree.View.validateNode(node)) {
+            node.data.activeVertionTag = Acm.goodValue(version);
+            DocTree.View.markNodeOk(node);
+        }
+    }
+
+    ,onChangeVersion: function(event) {
+        var node = DocTree.View.tree.getActiveNode();
+        if (node) {
+            var parent = node.parent;
+            if (parent) {
+                var cacheKey = DocTree.View.getCacheKey(parent);
+
+                var verSelected = Acm.Object.getSelectValue($(this));
+                var verCurrent = Acm.goodValue(node.data.activeVersionTag);
+                if (verSelected != verCurrent) {
+                    if (verSelected < verCurrent) {
+                        var z = 1;
+                    } else {
+                        var z = 2;
+                    }
+                    DocTree.Controller.viewChangedVersion(node.data.objectId, verSelected, cacheKey, node);
+                }
+            } //end if (parent)
         }
     }
     //------------------
@@ -423,7 +451,9 @@ DocTree.View = DocTree.View || {
                 var $tdList = $(node.tr).find(">td");
                 // (index #0 is rendered by fancytree by adding the checkbox)
                 //$tdList.eq(1).text(node.data.objectId);
-                $tdList.eq(1).html(DocTree.View.Source.getHtmlDocLink(node.data.objectId));
+                //DocTree.View.Source.getHtmlDocLink(node).appendTo($tdList.eq(1));
+                $tdList.eq(1).html(DocTree.View.Source.getHtmlDocLink(node));
+
                 // (index #2 is rendered by fancytree)
 
                 //if (DocTree.View.isTopNode(node)) {
@@ -433,7 +463,57 @@ DocTree.View = DocTree.View || {
                     $tdList.eq(3).text(node.data.type);
                     $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
                     $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
-                    $tdList.eq(6).text(node.data.version);
+
+                    //-----------------------------------
+
+                    //var versions = ['0.9', '1.0', '2.0'];
+                    var versions = ['1.0'];
+                    var $span = $("<span/>").appendTo($tdList.eq(6));
+                    var $select = $("<select/>")
+                        .addClass('docversion inline')
+                        .appendTo($span)
+                        ;
+
+                    $.each(versions, function(i) {
+                        var $option = $("<option/>")
+                            .val(versions[i])
+                            .text(versions[i])
+                            .appendTo($select)
+                            ;
+                        if ("1.0" == versions[i]) {
+                            $option.attr("selected", true);
+                        }
+
+                    });
+
+//                    $select.on("change", function(e) {DocTree.View.onChangeVersion(e, this);});
+
+
+
+                    //$tdList.eq(6).text(node.data.version);
+//                    var versions = [{versionTag: "0.9"},{versionTag: "1.0"},{versionTag: "2.0"}];
+//                    var $span = $("<span/>");
+//                    var a = $tdList.eq(6);
+//                    var b = $span.html();
+//                    //$tdList.eq(6).appendTo($span);
+
+                    //var html = "<span>some</span>";
+                    //$tdList.eq(6).html(html);
+
+//                    var html = "<span>"
+//                        //+ "<select class='input-sm form-control input-s-sm inline v-middle'>"
+//                        + "<select >"
+//
+//                    html += "<option value='mr'>0.9</option>"
+//                        + "<option value='gr' selected>1.0</option>"
+//                        + "<option value='ev'>2.0</option>"
+//
+//
+//                    html += "</select>"
+//                        + "</span>";
+//
+//                    $tdList.eq(6).html(html);
+                    //----------------------------------
                     $tdList.eq(7).text(node.data.status);
                     //$tdList.eq(8).html(node.data.action);
 //                $tdList.eq(8).html(DocTree.View.Source.getHtmlAction());
@@ -503,7 +583,7 @@ DocTree.View = DocTree.View || {
                 ,save: function(event, data){
                     var parent = data.node.getParent();
                     if (parent) {
-                        var cacheKey = DocTree.View.getFolderCacheKey(parent);
+                        var cacheKey = DocTree.View.getCacheKey(parent);
                         var name = data.input.val();
                         if (data.isNew) {
                             if (DocTree.View.isFolderNode(data.node)) {
@@ -608,6 +688,8 @@ DocTree.View = DocTree.View || {
         var $treeBody = $tree.find("tbody");
         DocTree.View.Menu.useContextMenu($treeBody);
 
+
+        $treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
 
 //        var $treeBody = $tree.find("tbody");
 //        $treeBody.contextmenu({
@@ -819,11 +901,31 @@ DocTree.View = DocTree.View || {
             }
             return src;
         }
-        ,getHtmlDocLink: function(fileId) {
+        ,getHtmlDocLink_tobe: function(node) {
+            var $div = $("<div/>")
+            .addClass("btn-group");
+            var itemId = node.data.objectId;
+            if (itemId) {
+                var url = "#";
+                if (DocTree.View.isFileNode(node)) {
+                    url = App.getContextPath() + "/plugin/document/" + itemId;
+                }
+                var $a = $("<a/>")
+                    .attr("href", url)
+                    .text(itemId)
+                    .appendTo($div);
+            }
+            return $div;
+        }
+        ,getHtmlDocLink: function(node) {
             var html = "<div></div>";
-            if (fileId) {
-                var url = App.getContextPath() + "/plugin/document/" + fileId;
-                html = "<div class='btn-group'><a href='" + url + "'>" + fileId + "</a></div>";
+            var itemId = node.data.objectId
+            if (itemId) {
+                var url = "#";
+                if (DocTree.View.isFileNode(node)) {
+                    url = App.getContextPath() + "/plugin/document/" + itemId;
+                }
+                html = "<div class='btn-group'><a href='" + url + "'>" + itemId + "</a></div>";
             }
             return html;
         }
@@ -1138,9 +1240,10 @@ DocTree.View = DocTree.View || {
         if (DocTree.View.isFolderNode(node) || DocTree.View.isFileNode(node)) {
             var parent = node.parent;
             if (parent) {
-                var pageId = Acm.goodValue(parent.data.startRow, 0);
-                var parentId = parent.data.objectId;
-                var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
+//                var pageId = Acm.goodValue(parent.data.startRow, 0);
+//                var parentId = parent.data.objectId;
+//                var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
+                var cacheKey = DocTree.View.getCacheKey(parent);
 
                 var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
                 node.remove();
@@ -1212,18 +1315,20 @@ DocTree.View = DocTree.View || {
         if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
             var toFolderNode = DocTree.View.isFolderNode(toNode)? toNode : toNode.parent;
             if (toFolderNode) {
+                //var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
+                var toFolderId = toFolderNode.data.objectId;
+                //var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
+                var toCacheKey = DocTree.View.getCacheKey(toFolderNode);
+
+                var frFolderNode = frNode.parent;
+                //var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
+                var frFolderId = frFolderNode.data.objectId;
+                //var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
+                var frCacheKey = DocTree.View.getCacheKey(frFolderNode);
+
                 frNode.moveTo(toNode, mode);
                 frNode.setActive();
                 DocTree.View.markNodePending(frNode);
-
-                var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
-                var toFolderId = toFolderNode.data.objectId;
-                var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
-
-                var frFolderNode = frNode.parent;
-                var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
-                var frFolderId = frFolderNode.data.objectId;
-                var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
 
                 if (DocTree.View.isFolderNode(frNode)) {
                     DocTree.Controller.viewMovedFolder(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, frNode);
@@ -1247,9 +1352,10 @@ DocTree.View = DocTree.View || {
                 newNode.setActive();
                 DocTree.View.markNodePending(newNode);
 
-                var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
+                //var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
                 var toFolderId = toFolderNode.data.objectId;
-                var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
+                //var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
+                var toCacheKey = DocTree.View.getCacheKey(toFolderNode);
 
                 if (DocTree.View.isFolderNode(frNode)) {
                     DocTree.Controller.viewCopiedFolder(frNode.data.objectId, toFolderId, toCacheKey, newNode);
@@ -1313,7 +1419,8 @@ DocTree.View = DocTree.View || {
         return false;
     }
 
-    ,getFolderCacheKey: function(folderNode) {
+
+    ,getCacheKey: function(folderNode) {
         var pageId = Acm.goodValue(folderNode.data.startRow, 0);
         var folderId = folderNode.data.objectId;
         var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(folderNode)? 0 : folderId , pageId);
