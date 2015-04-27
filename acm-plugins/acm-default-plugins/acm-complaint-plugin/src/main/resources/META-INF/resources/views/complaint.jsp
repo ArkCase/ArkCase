@@ -146,31 +146,31 @@
                                             <div class=" clearfix">
                                                 <div class="col-xs-4 b-r">
                                                         <%--<div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="complaintTitle" data-i18n="[data-title]complaint.header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
+                                                    <div class="h4 font-bold"><a href="#" id="complaintTitle" data-i18n="[data-title]complaint:header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
                                                     <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
                                                 <div class="col-xs-2 b-r">
                                                         <%--<div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint.header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.incident-date">Incident Date</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint:header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                    <small class="text-muted" data-i18n="complaint:header.labels.incident-date">Incident Date</small></div>
                                                 <div class="col-xs-1 b-r">
                                                         <%--<div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint.header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.priority">Priority</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint:header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                                    <small class="text-muted" data-i18n="complaint:header.labels.priority">Priority</small></div>
                                                 <div class="col-xs-2 b-r">
                                                         <%--<div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint.header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.assigned-to">Assigned To</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint:header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
+                                                    <small class="text-muted" data-i18n="complaint:header.labels.assigned-to">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
                                                         <%--<div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-url="/post" data-title="Enter Owning Group"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint.header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.owning-group">Owning Group</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint:header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                    <small class="text-muted" data-i18n="complaint:header.labels.owning-group">Owning Group</small></div>
                                                 <div class="col-xs-2 b-r">
                                                         <%--<div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint.header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.incident-category">Incident Category</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint:header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
+                                                    <small class="text-muted" data-i18n="complaint:header.labels.incident-category">Incident Category</small></div>
                                                 <div class="col-xs-1">
                                                     <div class="h4 font-bold"><a href="#" id="status" ></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.state">State</small></div>
+                                                    <small class="text-muted" data-i18n="complaint:header.labels.state">State</small></div>
                                             </div>
                                         </div>
                                     </div>
@@ -178,7 +178,7 @@
 
 
                                 <div class="row" id="tabTopBlank">
-                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n="complaint.msg.no-complaint-selected"></span></p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n="complaint:msg.no-complaint-selected"></span></p>
                                 </div>
                             </div>
 
@@ -191,17 +191,17 @@
                                         <div class="col-md-12">
                                             <div class="pull-right inline">
                                                 <div class="btn-group">
-                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint.header.buttons.close-complaint" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint.header.buttons.close-complaint">Close Complaint</span></button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
                                                     <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
-                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint.header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="complaint.header.buttons.subscribe">Subscribe</span></button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="complaint:header.buttons.subscribe">Subscribe</span></button>
                                                 </div>
                                             </div>
 
                                             <div class="pull-left inline">
                                                 <div class="btn-group">
                                                     <label class="checkbox-inline">
-                                                        <input type="checkbox" id="restrict"> <span data-i18n="complaint.header.buttons.restrict">Restrict ?</span>
+                                                        <input type="checkbox" id="restrict"> <span data-i18n="complaint:header.buttons.restrict">Restrict ?</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -218,16 +218,16 @@
                                                     <ul class="nav nav-pills pull-right">
                                                         <li>
                                                             <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint.detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint.detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                                 <ul class="dropdown-menu pull-right">
-                                                                    <li><a href="#" data-i18n="complaint.detail.buttons.other">Other menu items</a></li>
+                                                                    <li><a href="#" data-i18n="complaint:detail.buttons.other">Other menu items</a></li>
                                                                 </ul>
                                                             </div>
                                                         </li>
                                                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                                     </ul>
-                                                    </span> <a href="#" class="font-bold" data-i18n="complaint.detail.buttons.details">Details</a> </div>
+                                                    </span> <a href="#" class="font-bold" data-i18n="complaint:detail.buttons.details">Details</a> </div>
                                                 <div class="panel-body">
                                                     <div class="divDetail"></div>
                                                 </div>
@@ -290,12 +290,12 @@
                                             <%--</li>--%>
                                             <li>
                                                 <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint.documents-to-retire.buttons.email">Email</span></button>
+                                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint:documents-to-retire.buttons.email">Email</span></button>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> <span data-i18n="complaint.documents-to-retire.buttons.print">Print</span></button>
+                                                    <button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> <span data-i18n="complaint:documents-to-retire.buttons.print">Print</span></button>
                                                 </div>
                                             </li>
                                             <li> </li>
@@ -308,7 +308,7 @@
 
 
 
-                                            <a href="#" class="font-bold"><div data-i18n="complaint.documents-to-retire.title">Documents</div> </a>
+                                            <a href="#" class="font-bold"><div data-i18n="complaint:documents-to-retire.title">Documents</div> </a>
                                             <form id="formUploadDoc" style="display:none;">
                                                 <input type="file" id="file" name="files[]" multiple />
                                             </form>
@@ -321,20 +321,20 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint.documents-to-retire.create-folder-dialog.buttons.close">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint.documents-to-retire.create-folder-dialog.title">Create Folder</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.close">Close</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint:documents-to-retire.create-folder-dialog.title">Create Folder</h4>
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <p data-i18n="complaint.documents-to-retire.create-folder-dialog.labels.prompt">Enter a name for the folder you would like to create:</p>
+                                                        <p data-i18n="complaint:documents-to-retire.create-folder-dialog.labels.prompt">Enter a name for the folder you would like to create:</p>
 
-                                                        <label for="folderName2" data-i18n="complaint.documents-to-retire.create-folder-dialog.labels.folder-name">Folder Name</label><br/>
-                                                        <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]complaint.documents-to-retire.create-folder-dialog.labels.folder-name" placeholder="Folder Name" />
+                                                        <label for="folderName2" data-i18n="complaint:documents-to-retire.create-folder-dialog.labels.folder-name">Folder Name</label><br/>
+                                                        <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]complaint:documents-to-retire.create-folder-dialog.labels.folder-name" placeholder="Folder Name" />
 
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint.documents-to-retire.create-folder-dialog.buttons.cancel">Cancel</button>
-                                                        <button type="button" class="btn btn-primary" data-i18n="complaint.documents-to-retire.create-folder-dialog.buttons.create-folder">Create Folder<</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.cancel">Cancel</button>
+                                                        <button type="button" class="btn btn-primary" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.create-folder">Create Folder<</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -345,20 +345,20 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint.documents-to-retire.email-dialog.buttons.close">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint.documents-to-retire.email-dialog.title">Send Email</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint:documents-to-retire.email-dialog.buttons.close">Close</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint:documents-to-retire.email-dialog.title">Send Email</h4>
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <p data-i18n="complaint.documents-to-retire.email-dialog.labels.prompt">Where would you like to email this file?</p>
+                                                        <p data-i18n="complaint:documents-to-retire.email-dialog.labels.prompt">Where would you like to email this file?</p>
 
-                                                        <label for="emailaddy" data-i18n="complaint.documents-to-retire.email-dialog.labels.email-address">Email Address</label><br/>
-                                                        <input type="text" id="emailaddy" class="input-lg" data-i18n="[placeholder]complaint.documents-to-retire.email-dialog.labels.email-address" placeholder="Email Address" />
+                                                        <label for="emailaddy" data-i18n="complaint:documents-to-retire.email-dialog.labels.email-address">Email Address</label><br/>
+                                                        <input type="text" id="emailaddy" class="input-lg" data-i18n="[placeholder]complaint:documents-to-retire.email-dialog.labels.email-address" placeholder="Email Address" />
 
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint.documents-to-retire.email-dialog.buttons.cancel">Cancel</button>
-                                                        <button type="button" class="btn btn-primary" data-i18n="complaint.documents-to-retire.email-dialog.buttons.send-email">Send Email</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint:documents-to-retire.email-dialog.buttons.cancel">Cancel</button>
+                                                        <button type="button" class="btn btn-primary" data-i18n="complaint:documents-to-retire.email-dialog.buttons.send-email">Send Email</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -368,13 +368,13 @@
                                             <thead>
                                             <tr>
                                                 <th width2="6%"><span class='fancytree-checkbox'></span></th>
-                                                <th width2="4%" data-i18n="complaint.documents-to-retire.tree.field.id">ID</th>
-                                                <th width="35%" data-i18n="complaint.documents-to-retire.tree.field.title">Title</th>
-                                                <th width="12%" data-i18n="complaint.documents-to-retire.tree.field.type">Type</th>
-                                                <th width="10%" data-i18n="complaint.documents-to-retire.tree.field.created">Created</th>
-                                                <th width="16%" data-i18n="complaint.documents-to-retire.tree.field.author">Author</th>
-                                                <th width="6%" data-i18n="complaint.documents-to-retire.tree.field.version">Version</th>
-                                                <th width="8%" data-i18n="complaint.documents-to-retire.tree.field.status">Status</th>
+                                                <th width2="4%" data-i18n="complaint:documents-to-retire.tree.field.id">ID</th>
+                                                <th width="35%" data-i18n="complaint:documents-to-retire.tree.field.title">Title</th>
+                                                <th width="12%" data-i18n="complaint:documents-to-retire.tree.field.type">Type</th>
+                                                <th width="10%" data-i18n="complaint:documents-to-retire.tree.field.created">Created</th>
+                                                <th width="16%" data-i18n="complaint:documents-to-retire.tree.field.author">Author</th>
+                                                <th width="6%" data-i18n="complaint:documents-to-retire.tree.field.version">Version</th>
+                                                <th width="8%" data-i18n="complaint:documents-to-retire.tree.field.status">Status</th>
                                                 <%--<th width2="6%" colspan="2"></th>--%>
                                             </tr>
                                             </thead>
