@@ -318,11 +318,6 @@
 
 
                                             <a href="#" class="font-bold"><div data-i18n="complaint.documents-to-retire.title">Documents</div> </a>
-                                            <form id="formUploadDoc" style="display:none;">
-                                                <input type="file" id="file" name="files[]" multiple />
-                                            </form>
-                                            <form action="#" id="formDownloadDoc" style="display:none;">
-                                            </form>
                                         </div>
 
 
