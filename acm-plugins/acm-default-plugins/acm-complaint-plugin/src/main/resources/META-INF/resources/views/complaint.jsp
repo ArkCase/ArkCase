@@ -153,37 +153,47 @@
                                     <div class="col-xs-12">
                                         <div class="">
                                             <div class=" clearfix">
-                                                <div class="col-xs-4 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="complaintTitle" data-i18n="[data-title]complaint.header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
-                                                    <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint.header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.incident-date">Incident Date</small></div>
-                                                <div class="col-xs-1 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint.header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.priority">Priority</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint.header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.assigned-to">Assigned To</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-url="/post" data-title="Enter Owning Group"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint.header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.owning-group">Owning Group</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint.header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.incident-category">Incident Category</small></div>
-                                                <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div>
-                                                    <small class="text-muted" data-i18n="complaint.header.labels.state">State</small></div>
+
+                                                <div class="wrapper dk  clearfix">
+                                                    <div class="row">
+                                                        <div class="col-xs-6  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="complaintTitle" data-i18n="[data-title]complaint.header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a><a href="#" id="status" ></a></div>
+                                                        </div>
+                                                        <div class="col-xs-6  b-r text-right">
+                                                            <h5><a href="#" id="complaintNum"></a></h5>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint.header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint.header.labels.incident-category">Incident Category</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint.header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint.header.labels.incident-date">Incident Date</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint.header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint.header.labels.priority">Priority</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint.header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint.header.labels.assigned-to">Assigned To</small>
+                                                        </div>
+                                                        <div class="col-xs-4  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint.header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint.header.labels.owning-group">Owning Group</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
+
 
 
                                 <div class="row" id="tabTopBlank">
