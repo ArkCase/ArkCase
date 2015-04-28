@@ -3270,7 +3270,11 @@ CaseFile.View = CaseFile.View || {
                 timeFormat: 'h(:mm)t {-h(:mm)t}',
                 displayEventEnd : true,
                 editable: true,
-                droppable: true, // this allows things to be dropped onto the calendar !!!
+                //disable fullcalendar droppable as it creates conflict with the doctree's.
+                //looks like fullcalendar uses the generic jquery draggable
+                //we might need to add our own external draggable event handlers
+                //tailored for fullcalendar
+                droppable: false, // this allows things to be dropped onto the calendar !!!
                 drop: function(date, allDay) { // this function is called when something is dropped
 
                     // retrieve the dropped element's stored Event Object
