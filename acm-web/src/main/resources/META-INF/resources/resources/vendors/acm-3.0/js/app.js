@@ -211,7 +211,7 @@ String.prototype.format = function() {
         namespaces: [namespace]
       },
       lowerCaseLng: true,
-      resGetPath: '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+      resGetPath: App.getContextPath() + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
     }, function() {
       $('*[data-i18n]').i18n();
 

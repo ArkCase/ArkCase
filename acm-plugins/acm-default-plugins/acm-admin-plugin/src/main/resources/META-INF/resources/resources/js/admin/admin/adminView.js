@@ -420,11 +420,10 @@ Admin.View = Admin.View || {
 
     ,LabelConfiguration: {
         create: function () {
-            //this.$divLabelConfiguration = $("#divLabelConfiguration");
-            //this.createJTableLabelConfiguration(this.$divLabelConfiguration);
 
-
-            var context = this;// Load namespaces and languages
+        }
+        , onInitialized: function () {
+            var context = Admin.View.LabelConfiguration;
             var langsDeferred = Admin.Service.LabelConfiguration.retrieveLanguages();
             var nsDeferred = Admin.Service.LabelConfiguration.retrieveNamespaces();
             $.when(
@@ -452,23 +451,10 @@ Admin.View = Admin.View || {
                 context.$divLabelConfiguration = $("#divLabelConfiguration");
                 context.createJTableLabelConfiguration(context.$divLabelConfiguration);
             });
-
-        }
-        , onInitialized: function () {
         }
 
         , onLabelConfigurationFilterChanged: function(e) {
-            var $s = e.data;
-            //var idFilter = $('#labelConfigurationIdFilter').val();
-            //var valueFilter = $('#labelConfigurationValueFilter').val();
-            //var lang = $('#labelConfigurationLanguage').val();
-            //var ns = $('#labelConfigurationNamespace').val();
-            $s.jtable('load', {
-                //id: idFilter,
-                //value: valueFilter,
-                //lang:lang,
-                //ns: ns
-            });
+            AcmEx.Object.JTable.load(Admin.View.LabelConfiguration.$divLabelConfiguration);
         }
 
         ,createJTableLabelConfiguration: function ($s) {
@@ -485,11 +471,6 @@ Admin.View = Admin.View || {
                 ,actions: {
                     listAction: function (postData, jtParams) {
 
-                        //debugger;
-                        //var editNamespace = postData ? postData.ns : '';
-                        //var editLanguage = postData ? postData.lang: '';
-                        //var idFilter = postData ? postData.id : '';
-                        //var valueFilter = postData ? postData.value : '';
                         var idFilter = $('#labelConfigurationIdFilter').val();
                         var valueFilter = $('#labelConfigurationValueFilter').val();
                         var editLanguage = $('#labelConfigurationLanguage').val();
@@ -501,7 +482,6 @@ Admin.View = Admin.View || {
                             Admin.Service.LabelConfiguration.retrieveResource(editLanguage, editNamespace)
                                 .done(function(data){
 
-                                    // Get en data from localstorage
                                     var records = [];
                                     var sortedRecords = [];
                                     if (data) {
@@ -596,8 +576,6 @@ Admin.View = Admin.View || {
                             AcmEx.Object.XEditable.useEditable(valueEl, {
                                 success: function(response, newValue) {
                                     var id = $(this).data('id');
-                                    // update data
-                                    //var data = JSON.parse(localStorage.getItem('res_en'));
 
                                     // Function uses traslate dotted string to set value of object
                                     function index(obj,is, value) {
@@ -616,12 +594,9 @@ Admin.View = Admin.View || {
                                     var editLanguage = $('#labelConfigurationLanguage').val();
                                     var editNamespace = $('#labelConfigurationNamespace').val();
                                     Admin.Service.LabelConfiguration.updateResource(editLanguage, editNamespace, tableData)
-                                        .done(function(){
-                                            //alert('Saved');
-                                        })
-                                        .fail(function(){
-                                            alert('Saving Failed');
-                                        });
+                                    .fail(function(){
+                                        Acm.Dialog.error('Can\'t save resource');
+                                    });
                                 }
                             });
 
