@@ -130,10 +130,10 @@
                                     <div class=" clearfix">
                                             <div class="row">
                                                 <div class="col-xs-6 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></div>
+                                                    <h4><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></h4>
                                                 </div>
                                                 <div class="col-xs-6 text-right">
-                                                    <h5><a href="#" id="parentObjNumber"></a></h5>
+                                                    <h4><a href="#" id="parentObjNumber"></a></h4>
                                                 </div>
                                             </div>
                                             <div class="row">
