@@ -106,7 +106,6 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocument);
-//            String json = prepareSolrStringForDelete(json1);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Sending JSON to SOLR: " + json);
@@ -141,7 +140,6 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocuments);
-
             getMuleClient().dispatch(queueName, json, null);
             if ( log.isDebugEnabled() )
             {
@@ -152,20 +150,6 @@ public class SendDocumentsToSolr
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
-    }
-
-    private String prepareSolrStringForDelete(String jsonString) {
-//        {"delete":{"id":"99434-SUBSCRIPTION","public_doc_b":false,"protected_object_b":false,"deny_acl_ss":null,"allow_acl_ss":null}}
-
-        JSONObject jsonObject = new JSONObject(jsonString);
-         String deleteValue = jsonObject.getString("delete");
-         String deleteStringModified = deleteValue.replace(","," AND ");
-         StringBuilder stringBuilder = new StringBuilder();
-         stringBuilder.append("{stream.body={\"delete\":{\"query\":");
-         stringBuilder.append(deleteStringModified);
-         stringBuilder.append("}");
-
-        return stringBuilder.toString();
     }
 
     public synchronized MuleClient getMuleClient()
@@ -188,6 +172,5 @@ public class SendDocumentsToSolr
     {
         this.contextHolder = contextHolder;
     }
-
 
 }
