@@ -102,9 +102,9 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setParent_object_type_s(in.getParentObjectType());
         doc.setParent_object_id_i(in.getParentObjectId());
 
-        if ( in.getAttachedToObjectId() != null )
+        if ( in.getParentObjectId() != null )
         {
-            doc.setParent_ref_s(Long.toString(in.getAttachedToObjectId()) + "-" + in.getAttachedToObjectType());
+            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
         }
         doc.setDue_tdt(in.getDueDate());
         doc.setAdhocTask_b(in.isAdhocTask());
