@@ -129,7 +129,7 @@ AcmDocument.View = AcmDocument.View || {
                 App.View.MessageBoard.show(documentDetail.errorMsg);
             }
             else if (AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
-                AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.fileName) + "       ");
+                AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.fileName));
                 AcmDocument.View.Detail.setTextLnkActiveVersion("(v" + Acm.goodValue(documentDetail.activeVersionTag)+ ")");
                 AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.created));
                 AcmDocument.View.Detail.setTextLnkType(Acm.goodValue(documentDetail.fileType));
