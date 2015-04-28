@@ -2283,11 +2283,11 @@ Complaint.View = Complaint.View || {
                 for (var i = 0; i < documents.length; i++) {
                     if(Complaint.Model.References.validateReferenceRecord(documents[i])){
                         var record = {};
-                        record.id = Acm.goodValue(documents.targetId, 0);
-                        record.title = Acm.goodValue(documents.targetName);
-                        record.modified = Acm.getDateFromDatetime(documents.modified);
-                        record.type = Acm.goodValue(documents.targetType);
-                        record.status = Acm.goodValue(documents.status);
+                        record.id = Acm.goodValue(documents[i].targetId, 0);
+                        record.title = Acm.goodValue(documents[i].targetName);
+                        record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        record.type = Acm.goodValue(documents[i].targetType);
+                        record.status = Acm.goodValue(documents[i].status);
                         jtData.Records.push(record);
                     }
                 }

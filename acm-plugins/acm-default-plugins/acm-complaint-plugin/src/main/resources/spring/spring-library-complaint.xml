@@ -264,10 +264,18 @@
         </property>
     </bean>
     
+    <bean id="complaintFactory" class="com.armedia.acm.plugins.complaint.service.ComplaintFactory">
+    	<property name="personDao" ref="acmPersonDao" />
+    	<property name="fileService" ref="ecmFileService" />
+    	<property name="userDao" ref="userJpaDao" />
+    	<property name="acmParticipantDao" ref="acmParticipantDao" />
+    </bean>
+    
     <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService">
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
+    	<property name="complaintFactory" ref="complaintFactory" />
     </bean>
     
      <bean id="complaintHistoryListener" class="com.armedia.acm.plugins.complaint.service.ComplaintHistoryListener">
