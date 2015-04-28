@@ -2309,6 +2309,12 @@ fieldset[disabled] .btn-dark.active {
 .chat-item+.chat-item {
   margin-top: 15px;
 }
+
+.chat-item+.chat-item.child {
+  margin-left: 50px;
+}
+
+
 .comment-list {
   position: relative;
 }
