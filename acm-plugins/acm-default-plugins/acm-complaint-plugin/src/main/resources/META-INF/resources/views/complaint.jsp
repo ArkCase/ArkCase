@@ -157,10 +157,10 @@
                                                 <div class="wrapper dk  clearfix">
                                                     <div class="row">
                                                         <div class="col-xs-6  b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="complaintTitle" data-i18n="[data-title]complaint.header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a><a href="#" id="status" ></a></div>
+                                                            <h4><a href="#" id="complaintTitle" data-i18n="[data-title]complaint.header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a><a href="#" id="status" ></a></h4>
                                                         </div>
                                                         <div class="col-xs-6  b-r text-right">
-                                                            <h5><a href="#" id="complaintNum"></a></h5>
+                                                            <h4><a href="#" id="complaintNum"></a></h4>
                                                         </div>
                                                     </div>
                                                     <div class="row">
