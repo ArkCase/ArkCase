@@ -194,28 +194,6 @@ String.prototype.format = function() {
 
   $(function(){
 
-    // Init I18n functinality
-    var lng= "en-au";
-
-    // TODO change to microdata or something else
-    // Get namespace from url
-    var namespace = $.trim(window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+ 1));
-
-    i18n.init({
-      useLocalStorage: false,
-      localStorageExpirationTime: 86400000, // 1 week
-      load: 'current', // Prevent loading of 'en' locale
-      fallbackLng: false,
-      lng: lng,
-      ns:{
-        namespaces: [namespace]
-      },
-      lowerCaseLng: true,
-      resGetPath: App.getContextPath() + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-    }, function() {
-      $('*[data-i18n]').i18n();
-
-
       // toogle fullscreen
       $(document).on('click', "[data-toggle=fullscreen]", function (e) {
         e.preventDefault();
@@ -394,6 +372,5 @@ String.prototype.format = function() {
         e.stopPropagation()
       });
 
-    });
   });
 }(jQuery);
