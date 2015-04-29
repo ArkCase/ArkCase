@@ -39,7 +39,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-property-file-manager.xml"})
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-person.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {

@@ -22,56 +22,6 @@
     <bean id="tagPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Tag Plugin"/>
         <property name="pluginProperties" ref="tagProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="tagPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="tagUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/tag"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="addNewTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/tag"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="associateTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}/{tagId}"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="listAllTags" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/tag"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="listAssociatedTagsByObjectTypeAndId" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="removeTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/tag/{tagId}"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="removeTagAssociation" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}/{tagId}"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-                <bean id="updateTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/tag"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-            </list>
-
-        </property>
     </bean>
 
     <bean id="associatedTagDao" class="com.armedia.acm.services.tag.dao.AssociatedTagDao"/>
@@ -96,20 +46,6 @@
 
     <bean id="associatedTagToSolrTransformer" class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
         <property name="associatedTagDao" ref="associatedTagDao"/>
-    </bean>
-
-
-    <bean id="tagPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-tag"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
     </bean>
 
 </beans>
