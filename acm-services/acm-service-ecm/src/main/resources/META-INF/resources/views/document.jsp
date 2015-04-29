@@ -248,7 +248,7 @@
                 </div>
             </div>
 
-            <h4 class="m-n"> <a href="#" id="docTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Case Title"> </a></h4>
+            <h4 class="m-n"> <a href="#" id="docTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Document Title">&nbsp;&nbsp;&nbsp;&nbsp; </a><small class="text-muted" id="activeVersion"></small></h4>
 
         </div>
     </div>
