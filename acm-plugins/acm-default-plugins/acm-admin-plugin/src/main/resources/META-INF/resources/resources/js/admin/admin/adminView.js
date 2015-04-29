@@ -6,6 +6,7 @@
 Admin.View = Admin.View || {
     create: function() {
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
+        if (Admin.View.LabelConfiguration.create)       {Admin.View.LabelConfiguration.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
@@ -16,6 +17,7 @@ Admin.View = Admin.View || {
     }
     ,onInitialized: function() {
         if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
+        if (Admin.View.LabelConfiguration.onInitialized)       		{Admin.View.LabelConfiguration.onInitialized();}
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
@@ -413,6 +415,197 @@ Admin.View = Admin.View || {
                 return Admin.Model.Organization.cacheTreeSource.get("source");
 
             }
+        }
+    }
+
+    ,LabelConfiguration: {
+        create: function () {
+
+        }
+        , onInitialized: function () {
+            var context = Admin.View.LabelConfiguration;
+            var langsDeferred = Admin.Service.LabelConfiguration.retrieveLanguages();
+            var nsDeferred = Admin.Service.LabelConfiguration.retrieveNamespaces();
+            $.when(
+                langsDeferred,
+                nsDeferred
+            ).done(function(languages, namespaces){
+                // Fill Languages options
+                var langOptions = [];
+                _.forEach(languages, function(langItem){
+                    langOptions.push($('<option value="{0}">{0}</option>'.format(langItem)));
+                });
+                $('#labelConfigurationLanguage').html(langOptions);
+                $('#labelConfigurationLanguage').prop('disabled', false);
+
+
+                var nsOptions = [];
+                _.forEach(namespaces, function(nsItem){
+                    nsOptions.push($('<option value="{0}">{1}</option>'.format(nsItem.id, nsItem.name)));
+                });
+                $('#labelConfigurationNamespace').html(nsOptions);
+                $('#labelConfigurationNamespace').prop('disabled', false);
+
+
+                // Create jTable data
+                context.$divLabelConfiguration = $("#divLabelConfiguration");
+                context.createJTableLabelConfiguration(context.$divLabelConfiguration);
+            });
+        }
+
+        , onLabelConfigurationFilterChanged: function(e) {
+            AcmEx.Object.JTable.load(Admin.View.LabelConfiguration.$divLabelConfiguration);
+        }
+
+        ,createJTableLabelConfiguration: function ($s) {
+            $('#labelConfigurationIdFilter, #labelConfigurationValueFilter').bind('keyup change', $s, this.onLabelConfigurationFilterChanged);
+            $('#labelConfigurationNamespace').change($s, this.onLabelConfigurationFilterChanged);
+            $('#labelConfigurationLanguage').change($s, this.onLabelConfigurationFilterChanged);
+
+            var tableData = null;
+
+            $s.jtable({
+                //title: 'Label Configuration'
+                sorting: true
+                ,defaultSorting: 'value ASC'
+                ,actions: {
+                    listAction: function (postData, jtParams) {
+
+                        var idFilter = $('#labelConfigurationIdFilter').val();
+                        var valueFilter = $('#labelConfigurationValueFilter').val();
+                        var editLanguage = $('#labelConfigurationLanguage').val();
+                        var editNamespace = $('#labelConfigurationNamespace').val();
+
+
+                        return $.Deferred(function($dfd){
+                            var rc = {};
+                            Admin.Service.LabelConfiguration.retrieveResource(editLanguage, editNamespace)
+                                .done(function(data){
+
+                                    var records = [];
+                                    var sortedRecords = [];
+                                    if (data) {
+                                        tableData = data;
+                                        var recordsObj = {};
+
+                                        // Convert values from json to dotted notation
+                                        (function recurse(obj, current) {
+                                            for(var key in obj) {
+                                                var value = obj[key];
+                                                var newKey = (current ? current + "." + key : key);  // joined key with dot
+                                                if(value && typeof value === "object") {
+                                                    recurse(value, newKey);  // it's a nested object, so do it again
+                                                } else {
+                                                    recordsObj[newKey] = value;  // it's not an object, so set the property
+                                                }
+                                            }
+                                        })(data);
+
+                                        // Convert Object to the Array and apply filters if required
+                                        for (var key in recordsObj) {
+                                            var idFilterPassed = true;
+                                            var valueFilterPassed = true;
+
+                                            if (idFilter) {
+                                                idFilterPassed = (key.toLocaleLowerCase().indexOf(idFilter.toLowerCase()) != -1);
+                                            }
+
+                                            if (valueFilter) {
+                                                valueFilterPassed = (recordsObj[key].toLocaleLowerCase().indexOf(valueFilter.toLowerCase()) != -1);
+                                            }
+
+                                            if (idFilterPassed && valueFilterPassed){
+                                                records.push({
+                                                    id: key,
+                                                    value: recordsObj[key]
+                                                });
+                                            }
+                                        }
+
+                                        // Sort records if required
+                                        if (jtParams.jtSorting) {
+                                            var params = jtParams.jtSorting.split(' ');
+                                            var fieldId = params[0];
+                                            var sortDir = params[1];
+                                            sortedRecords = _.sortBy(records, fieldId);
+                                            if (sortDir === 'DESC') {
+                                                sortedRecords.reverse();
+                                            }
+                                        } else {
+                                            sortedRecords = records;
+                                        }
+
+                                    }
+
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: sortedRecords
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(){
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: []
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }, createAction: function (postData, jtParams) {
+                        return {
+                            "Result": "OK"
+                        };
+                    }
+                }, fields: {
+                    id: {
+                        title: 'ID'
+                        , key: true
+                        , edit: false
+                        , width: '50%'
+                    }, value: {
+                        title: 'Value'
+                        , edit: false
+                        , width: '50%'
+                        , display: function(data){
+                            var valueEl = $([
+                                '<a href="#" data-id="', data.record.id, '">',
+                                data.record.value,
+                                '</a>'
+                            ].join(''));
+
+                            AcmEx.Object.XEditable.useEditable(valueEl, {
+                                success: function(response, newValue) {
+                                    var id = $(this).data('id');
+
+                                    // Function uses traslate dotted string to set value of object
+                                    function index(obj,is, value) {
+                                        if (typeof is == 'string')
+                                            return index(obj,is.split('.'), value);
+                                        else if (is.length==1 && value!==undefined)
+                                            return obj[is[0]] = value;
+                                        else if (is.length==0)
+                                            return obj;
+                                        else
+                                            return index(obj[is[0]],is.slice(1), value);
+                                    }
+
+                                    index(tableData, id, newValue);
+
+                                    var editLanguage = $('#labelConfigurationLanguage').val();
+                                    var editNamespace = $('#labelConfigurationNamespace').val();
+                                    Admin.Service.LabelConfiguration.updateResource(editLanguage, editNamespace, tableData)
+                                    .fail(function(){
+                                        Acm.Dialog.error('Can\'t save resource');
+                                    });
+                                }
+                            });
+
+                            return valueEl;
+                        }
+                    }
+                }
+            });
+            $s.jtable('load');
         }
     }
 

@@ -273,6 +273,19 @@ Task.Model = Task.Model || {
                 }
             }
         }
+        ,getGroup: function(participants) {
+            var group = null;
+            if (Acm.isArray(participants)) {
+                for (var i = 0; i < participants.length; i++) {
+                    var participant =  participants[i];
+                    if ("owning group" == participant.participantType) {
+                        group = participant.participantLdapId;
+                        break;
+                    }
+                }
+            }
+            return group;
+        }
 
         ,makeUnifiedData:function(parentObj, objType){
             var unifiedData = null;
@@ -288,6 +301,7 @@ Task.Model = Task.Model || {
                     unifiedData.status = parentObj.status;
                     unifiedData.subjectType = parentObj.complaintType;
                     unifiedData.number = parentObj.complaintNumber;
+                    unifiedData.group = Task.Model.ParentDetail.getGroup(parentObj.participants);
                 }
             }
             else if(Task.Model.DOC_TYPE_CASE_FILE == objType){
@@ -302,6 +316,7 @@ Task.Model = Task.Model || {
                     unifiedData.status = parentObj.status;
                     unifiedData.subjectType = parentObj.caseType;
                     unifiedData.number = parentObj.caseNumber;
+                    unifiedData.group = Task.Model.ParentDetail.getGroup(parentObj.participants);
                 }
             }
             return unifiedData;

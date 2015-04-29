@@ -128,24 +128,39 @@
                             <div class="col-xs-12">
                                 <div class="">
                                     <div class=" clearfix">
-                                        <div class="col-xs-4 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Task Title"></a></div>
-                                            <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
-                                        <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                            <small class="text-muted">Incident Date</small></div>
-                                        <div class="col-xs-1 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                            <small class="text-muted">Priority</small></div>
-                                        <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
-                                            <small class="text-muted">Assigned To</small></div>
-                                        <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
-                                            <small class="text-muted">Subject Type</small></div>
-                                        <div class="col-xs-1">
-                                            <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
-                                            <small class="text-muted">State</small></div>
+                                            <div class="row">
+                                                <div class="col-xs-6 b-r">
+                                                    <h4><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></h4>
+                                                </div>
+                                                <div class="col-xs-6 text-right">
+                                                    <h4><a href="#" id="parentObjNumber"></a></h4>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
+                                                    <small class="text-muted">Subject Type</small>
+                                                </div>
+                                                <div class="col-xs-4 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                    <small class="text-muted">Incident Date</small>
+                                                </div>
+                                                <div class="col-xs-4 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                                    <small class="text-muted">Priority</small>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-4 b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
+                                                    <small class="text-muted">Assigned To</small>
+                                                </div>
+                                                <div class="col-xs-4  b-r">
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjOwningGroup" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                    <small class="text-muted">Owning Group</small>
+                                                </div>
+                                            </div>
+
                                     </div>
                                 </div>
                             </div>
