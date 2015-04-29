@@ -121,6 +121,13 @@ class ActivitiTaskDao implements TaskDao
         try
         {
             getActivitiTaskService().saveTask(activitiTask);
+            
+            // If start date is not provided, set start date as creation date
+            if (in.getTaskStartDate() == null)
+            {
+            	in.setTaskStartDate(activitiTask.getCreateTime());
+            }
+            
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_TYPE, in.getAttachedToObjectType());
             getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_ID, in.getAttachedToObjectId());
             if ( in.getAttachedToObjectType() != null )
@@ -928,6 +935,12 @@ class ActivitiTaskDao implements TaskDao
         {
             extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
         }
+        
+        // If start date is not provided, set start date as creation date
+        if (acmTask.getTaskStartDate() == null)
+        {
+        	acmTask.setTaskStartDate(activitiTask.getCreateTime());
+        }
 
         String status = findTaskStatus(activitiTask);
         acmTask.setStatus(status);
@@ -991,7 +1004,8 @@ class ActivitiTaskDao implements TaskDao
             acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
             acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
             acmTask.setReworkInstructions((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
-
+            acmTask.setTaskStartDate((Date) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_START_DATE));
+            
             if ( acmTask.getReviewDocumentPdfRenditionId() != null && acmTask.getReviewDocumentPdfRenditionId() > 0 )
             {
                 EcmFile docUnderReview = getFileDao().find(acmTask.getReviewDocumentPdfRenditionId());

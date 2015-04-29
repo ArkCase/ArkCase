@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+<head>
+<meta charset="utf-8" />
+<title>Email Document Example | ACM | Armedia Case Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
+<!--[if lt IE 9]>
+    <script src="js/ie/html5shiv.js"></script>
+    <script src="js/ie/respond.min.js"></script>
+    <script src="js/ie/excanvas.js"></script>
+  <![endif]-->
+
+<script src="resources/js/jquery.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
+</head>
+<body class="">
+<section class="vbox">
+  <header class="bg-primary header header-md navbar navbar-fixed-top-xs box-shadow">
+    <div class="navbar-header aside dk text-center"> <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a> <a href="portal.html" class="navbar-brand"><img src="resources/images/armedia.png" class="m-r-sm"></a></div>
+    <ul class="nav navbar-nav hidden-xs">
+      <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-plus"></i> New </a>
+        <section class="dropdown-menu aside-xl bg-white on animated fadeInLeft">
+          <div class="row m-l-none m-r-none m-t m-b text-center">
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newComplaint.html"> <span class="m-b-xs block"> <i class="i i-notice i-2x text-primary-lt"></i> </span> <small class="text-muted">Complaint</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newCase.html"> <span class="m-b-xs block"> <i class="i i-folder i-2x text-danger-lt"></i> </span> <small class="text-muted">Case</small> </a> </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="padder-v2"> <a href="newTask.html"> <span class="m-b-xs block"> <i class="i i-checkmark i-2x text-success-lt"></i> </span> <small class="text-muted">Task</small> </a> </div>
+            </div>
+          </div>
+        </section>
+      </li>
+    </ul>
+    <form class="navbar-form navbar-right input-s-lg m-t m-l-n-xs hidden-xs" role="search">
+      <div class="form-group">
+        <div class="input-group"> <span class="input-group-btn">
+          <button type="submit" class="btn btn-sm bg-white b-white btn-icon"><i class="fa fa-search"></i></button>
+          </span>
+          <input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases...">
+        </div>
+      </div>
+    </form>
+    <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
+      <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>
+        <section class="dropdown-menu aside-xl animated flipInY">
+          <section class="panel bg-white">
+            <header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>
+            <div class="list-group list-group-alt"> </div>
+            <footer class="panel-footer text-sm"> <a href="#" class="pull-right"><i class="fa fa-cog"></i></a> <a href="#notes" data-toggle="class:show animated fadeInRight">See all acitivity</a> </footer>
+          </section>
+        </section>
+      </li>
+    </ul>
+  </header>
+  <section>
+    <section class="hbox stretch"> 
+      <!-- .aside -->
+      <aside class="bg-light lt b-r b-light aside hidden-print" id="nav">
+        <section class="vbox">
+          <section class="w-f scrollable">
+            <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
+              <div class="clearfix wrapper dk nav-user hidden-xs">
+                <div class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <span class="thumb avatar pull-left m-r"> <img src="resources/images/a0.png" class="dker"> <i class="on md b-light"></i></span> <span class="hidden-nav-xs clear"> <span class="block m-t-xs"> <strong class="font-bold text-lt">David</strong> <b class="caret"></b></span> <span class="text-muted text-xs block">Agent</span></span></a>
+                  <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                    <span class="arrow top hidden-nav-xs"></span>
+                    <li> <a href="profile.html">My Profile</a></li>
+                    <li> <a href="#">Switch User</a></li>
+                    <li class="divider"></li>
+                    <li> <a href="index.html">Logout</a></li>
+                  </ul>
+                </div>
+              </div>
+              <!-- nav -->
+              <nav class="nav-primary hidden-xs">
+                <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
+                <ul class="nav nav-main" data-ride="collapse">
+                  <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span></a></li> <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
+ <li class=""> <a href="calendar.html" class="auto"> <i class="i i-calendar icon"> </i> <span class="font-bold">Calendar</span> </a> </li>
+                  <li class=""> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span></a></li>
+                  <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span></a></li>
+                  <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span></a></li>
+                  <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span></a></li>
+                  <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
+                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+<li class=""> <a href="contacts.html" class="auto"> <i class="fa fa-users icon"> </i> <span class="font-bold">Contacts</span> </a> </li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
+<li class="active"> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
+                </ul>
+                <div class="line dk hidden-nav-xs"></div>
+              </nav>
+              <!-- / nav --> 
+            </div>
+          </section>
+          <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i></a></footer>
+        </section>
+      </aside>
+      <!-- /.aside -->
+      <section id="content">
+        <section class="vbox">
+          <section class="scrollable">
+            <section class="hbox stretch"><!-- /.aside -->
+              
+              <aside id="email-content" class="bg-light lter">
+                <section class="vbox">
+                  <section class="scrollable padder">
+                    <section class="row m-b-md">
+                      <div class="col-sm-12">
+                        <h3 class="m-b-xs text-black">Email Document Example</h3>
+                        <div class="m-t-md">
+                          <button class="btn btn-default" data-toggle="modal" data-target="#facets"> <i class="fa fa-share text"></i> <span class="text">Send Email</span> </button>
+                          <div class="modal fade" id="facets" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                  <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                </div>
+                                <header class="header bg-gradient b-b clearfix">
+                                  <div class="row m-t-sm">
+                                    <div class="col-md-12 m-b-sm">
+                                      <div class="input-group">
+                                        <input type="text" class="input-md form-control" id="searchQuery" placeholder="Enter an email address OR search for users within ArkCase.">
+                                        <span class="input-group-btn">
+                                        <button class="btn btn-md btn-default" type="button">Go!</button>
+                                        </span> </div>
+                                    </div>
+                                  </div>
+                                </header>
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-xs-3">
+                                      <div class="facets">
+                                        <h6>Create User</h6>
+                                        <div class="list-group ">
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">5</span> sally-acm </label>
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">2</span> ann-acm </label>
+                                        </div>
+                                        <h6>Person, Organization Type</h6>
+                                        <div class="list-group auto">
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">2</span> initiator </label>
+                                        </div>
+                                        <h6>Object Type</h6>
+                                        <div class="list-group auto">
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">6</span> TASK </label>
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>
+                                        </div>
+                                        <h6>Assignee Full Name</h6>
+                                        <div class="list-group auto">
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">6</span> sally supervisor </label>
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">2</span> ann administrator </label>
+                                        </div>
+                                        <h6>Priority</h6>
+                                        <div class="list-group ">
+                                          <label class="list-group-item">
+                                            <input type="checkbox" />
+                                            <span class="badge bg-info">6</span> medium </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-xs-9">
+                                      <section class="panel panel-default">
+                                        <div class="table-responsive">
+                                          <table class="table table-striped b-t b-light">
+                                            <thead>
+                                              <tr>
+                                              <th width="10"><input type="checkbox" /> </th>
+                                                <th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                <th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                <th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                <th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                               <td><input type="checkbox" /></td>
+                                                <td>[Type]</td>
+                                                <td>[ID]</td>
+                                                <td>[Title]</td>
+                                                <td>[Created]</td>
+                                                <td>[Status]</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </section>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                
+                                <div class="pull-left"><button type="button" class="btn btn-default">View Recipients (3)</button>
+                                 &nbsp;  &nbsp;
+                                <label><input type="checkbox" href="#checkedbox" data-toggle="class:show" /> Send Later</label> 
+                                
+                                <span id="checkedbox" class="hide pull-right">
+                                <input class="datepicker-input input-s-sm"  id="sendLaterDate" type="text" placeholder="Enter Date">
+                                 <input class="input-s-sm" id="sendLaterTime" type="text" placeholder="Enter Time">
+                                 </span>
+                                </div>
+                                
+                                
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                  <button type="button" class="btn btn-default">Add Selected Users (6)</button>
+                                  <button type="button" class="btn btn-primary">Send Email</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <p>&nbsp;</p>
+                          <ul>
+                            <li>When a user clicks &quot;Send Email&quot;, it prompts the user to enter an email address or search for a username (same field)</li>
+                            <li>If a user types in an email address and the email is already in the system, ArkCase will &quot;autocorrect&quot; the search result to the user's profile and allow them to add it to the &quot;Recipients List&quot; from the search results. </li>
+                            <li>If an email address does not exist, it will allow the user to add the email address to the &quot;Recipients List&quot; from the search results.</li>
+                            <li>The user can click &quot;Add Selected Users&quot; to add the selection to the &quot;Recipients List&quot; without sending an email, this way they can conitnue to search for other users before they're ready to send it.</li>
+                            <li>If the users clicks &quot;View Recipients List&quot;, it will lists the users's selection in the table. </li>
+                            <li>When the user clicks &quot;Send Email&quot;, the documents are then sent to the users in the &quot;Recipients List&quot;.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </section>
+                  </section>
+                </section>
+              </aside>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+  </section>
+</section>
+
+<!-- Bootstrap --> 
+<script src="resources/js/bootstrap.js"></script> 
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
+
+<!-- App --> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/app.plugin.js"></script>
+</body>
+</html>

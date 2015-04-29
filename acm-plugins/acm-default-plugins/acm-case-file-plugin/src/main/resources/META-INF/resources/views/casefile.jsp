@@ -162,30 +162,40 @@
                                     <div class="col-xs-12">
                                         <div class="">
                                             <div class=" clearfix">
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
-                                                    <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Create Date</small></div>
 
-                                                <div class="col-xs-1 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
-                                                    <small class="text-muted">Priority</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted">Assigned To</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted">Owning Group</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Case Type</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                                    <small class="text-muted">Due Date</small></div>
-                                                <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">State</small></div>
+                                                    <div class="row">
+                                                        <div class="col-xs-6  b-r">
+                                                            <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a><a href="#" id="status" ></a></h4>
+                                                        </div>
+                                                        <div class="col-xs-6  b-r text-right">
+                                                            <h4><a href="#" id="caseNumber"></a></h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
+                                                            <small class="text-muted">Case Type</small> </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                            <small class="text-muted">Create Date</small></div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
+                                                            <small class="text-muted">Priority</small> </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
+                                                            <small class="text-muted">Assigned To</small>
+                                                        </div>
+                                                        <div class="col-xs-4  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                            <small class="text-muted">Owning Group</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r ">
+                                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
+                                                            <small class="text-muted">Due Date</small>
+                                                        </div>
+                                                    </div>
                                             </div>
                                         </div>
                                     </div>
@@ -323,6 +333,7 @@
                                 </div>
 
                                 <div class="col-md-12" id="tabDocs" style="display:none;">
+
                                     <%--<section class="panel b-a ">--%>
                                         <%--<div id="divDocs" style="width:100%"></div>--%>
                                         <%--<form id="formAddDocument" style="display:none;">--%>
@@ -356,11 +367,6 @@
 
 
                                             <a href="#" class="font-bold"><div>Documents</div> </a>
-                                            <form id="formUploadDoc" style="display:none;">
-                                                <input type="file" id="file" name="files[]" multiple />
-                                            </form>
-                                            <form action="#" id="formDownloadDoc" style="display:none;">
-                                            </form>
                                         </div>
 
 
@@ -388,19 +394,19 @@
                                         </div>
 
 
-                                        <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="emailDocsLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                                        <h4 class="modal-title" id="emailDocsLabel">Send Email</h4>
                                                     </div>
                                                     <div class="modal-body">
 
                                                         <p>Where would you like to email this file?</p>
 
-                                                        <label for="emailaddy">Email Address</label><br/>
-                                                        <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" />
+                                                        <label for="emailaddress">Email Address</label><br/>
+                                                        <input type="text" id="emailaddress" class="input-lg" placeholder="Email Address" />
 
                                                     </div>
                                                     <div class="modal-footer">
@@ -411,7 +417,119 @@
                                             </div>
                                         </div>
 
+                                        <%--<div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Close</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                                    </div>
+                                                    <header class="header bg-gradient b-b clearfix">
+                                                        <div class="row m-t-sm">
+                                                            <div class="col-md-12 m-b-sm">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="input-md form-control" id="searchQuery" placeholder="Enter an email address OR search for users within ArkCase.">
+                                        <span class="input-group-btn">
+                                        <button class="btn btn-md btn-default" type="button">Go!</button>
+                                        </span> </div>
+                                                            </div>
+                                                        </div>
+                                                    </header>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="col-xs-3">
+                                                                <div class="facets">
+                                                                    <h6>Create User</h6>
+                                                                    <div class="list-group ">
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">5</span> sally-acm </label>
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">2</span> ann-acm </label>
+                                                                    </div>
+                                                                    <h6>Person, Organization Type</h6>
+                                                                    <div class="list-group auto">
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">2</span> initiator </label>
+                                                                    </div>
+                                                                    <h6>Object Type</h6>
+                                                                    <div class="list-group auto">
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">6</span> TASK </label>
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>
+                                                                    </div>
+                                                                    <h6>Assignee Full Name</h6>
+                                                                    <div class="list-group auto">
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">6</span> sally supervisor </label>
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">2</span> ann administrator </label>
+                                                                    </div>
+                                                                    <h6>Priority</h6>
+                                                                    <div class="list-group ">
+                                                                        <label class="list-group-item">
+                                                                            <input type="checkbox">
+                                                                            <span class="badge bg-info">6</span> medium </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-9">
+                                                                <section class="panel panel-default">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-striped b-t b-light">
+                                                                            <thead>
+                                                                            <tr>
+                                                                                <th width="10"><input type="checkbox"> </th>
+                                                                                <th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                                                <th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                                                <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                                                <th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                                                <th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                                                            </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                            <tr>
+                                                                                <td><input type="checkbox"></td>
+                                                                                <td>[Type]</td>
+                                                                                <td>[ID]</td>
+                                                                                <td>[Title]</td>
+                                                                                <td>[Created]</td>
+                                                                                <td>[Status]</td>
+                                                                            </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </section>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+
+                                                        <div class="pull-left"><button type="button" class="btn btn-default">View Recipients (3)</button></div>
+
+
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-default">Add Selected Users (6)</button>
+                                                        <button type="button" class="btn btn-primary">Send Email</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>--%>
+
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
+                                            <%--<form id="formUploadDoc" style="display:none;">--%>
+                                                <%--<input type="file" id="file" name="files[]" multiple />--%>
+                                            <%--</form>--%>
+                                            <%--<form action="#" id="formDownloadDoc" style="display:none;">--%>
+                                            <%--</form>--%>
+
                                             <thead>
                                             <tr>
                                                 <th width2="6%"><span class='fancytree-checkbox'></span></th>

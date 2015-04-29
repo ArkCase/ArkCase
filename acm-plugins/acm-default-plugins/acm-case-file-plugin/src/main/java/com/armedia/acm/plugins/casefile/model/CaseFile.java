@@ -10,10 +10,12 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -193,7 +195,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
 
-        personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
+        if (personAssoc.getPerson().getPersonAssociations() == null)
+        {
+        	personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+        }
+        
+        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
 
     public Collection<ObjectAssociation> getChildObjects()
