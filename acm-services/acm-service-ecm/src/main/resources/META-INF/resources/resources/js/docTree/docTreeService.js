@@ -88,8 +88,9 @@ DocTree.Service = {
 //            mock.name       = "Mock";
 //            mock.type       = fileType;
 //            mock.status     = folderListLatest.children[i].status;
-//            mock.version    = folderListLatest.children[i].version;
 //            mock.category   = folderListLatest.children[i].category;
+//            mock.version    = "1.1";
+//            mock.versionList  = [{versionTag:"1.0"},{versionTag:"1.1"}];
 //            folderListLatest.children.push(mock);
 //            mock = {};
 //            i = folderListLatest.children.length - 1;
@@ -102,8 +103,9 @@ DocTree.Service = {
 //            mock.name       = "Mock2";
 //            mock.type       = fileType;
 //            mock.status     = folderListLatest.children[i].status;
-//            mock.version    = folderListLatest.children[i].version;
 //            mock.category   = folderListLatest.children[i].category;
+//            mock.version    = "1.2";
+//            mock.versionList  = [{versionTag:"1.0"}, {versionTag:"1.1"}, {versionTag:"1.2"}];
 //            folderListLatest.children.push(mock);
 
             var uploadedFiles = null;
@@ -122,18 +124,7 @@ DocTree.Service = {
                     if (DocTree.Model.validateFolderList(folderList)) {
                         uploadedFiles = [];
                         for (var i = 0; i < newChildren.length; i++) {
-                            var uploadedFile = {};
-                            uploadedFile.objectId   = Acm.goodValue(newChildren[i].objectId, 0);
-                            uploadedFile.objectType = Acm.goodValue(newChildren[i].objectType, "file");
-                            uploadedFile.created    = Acm.goodValue(newChildren[i].created);
-                            uploadedFile.creator    = Acm.goodValue(newChildren[i].creator);
-                            uploadedFile.modified   = Acm.goodValue(newChildren[i].modified);
-                            uploadedFile.modifier   = Acm.goodValue(newChildren[i].modifier);
-                            uploadedFile.name       = Acm.goodValue(newChildren[i].name);
-                            uploadedFile.type       = Acm.goodValue(newChildren[i].type);
-                            uploadedFile.status     = Acm.goodValue(newChildren[i].status);
-                            uploadedFile.version    = Acm.goodValue(newChildren[i].version);
-                            uploadedFile.category   = Acm.goodValue(newChildren[i].category);
+                            var uploadedFile = DocTree.Model.fileToSolrData(newChildren[i]);
                             uploadedFiles.push(uploadedFile);
                             folderList.children.push(uploadedFile);
                             folderList.totalChildren++;
@@ -167,19 +158,7 @@ DocTree.Service = {
                             if (DocTree.Model.validateFolderList(folderList)) {
                                 uploadedFiles = [];
                                 for (var i = 0; i < uploadInfo.length; i++) {
-                                    var uploadedFile = DocTree.Service.fileCreateToFileData(uploadInfo[i]);
-//                                    var uploadedFile = {};
-//                                    uploadedFile.objectId   = Acm.goodValue(uploadInfo[i].fileId);
-//                                    uploadedFile.objectType = "file";
-//                                    uploadedFile.created    = Acm.goodValue(uploadInfo[i].created);
-//                                    uploadedFile.creator    = Acm.goodValue(uploadInfo[i].creator);
-//                                    uploadedFile.modified   = Acm.goodValue(uploadInfo[i].modified);
-//                                    uploadedFile.modifier   = Acm.goodValue(uploadInfo[i].modifier);
-//                                    uploadedFile.name       = Acm.goodValue(uploadInfo[i].fileName);
-//                                    uploadedFile.type       = Acm.goodValue(uploadInfo[i].fileType);
-//                                    uploadedFile.status     = Acm.goodValue(uploadInfo[i].status);
-//                                    uploadedFile.version    = Acm.goodValue(uploadInfo[i].activeVersionTag);
-//                                    uploadedFile.category   = Acm.goodValue(uploadInfo[i].category);
+                                    var uploadedFile = DocTree.Model.fileToSolrData(uploadInfo[i]);
                                     uploadedFiles.push(uploadedFile);
                                     folderList.children.push(uploadedFile);
                                     folderList.totalChildren++;
@@ -221,6 +200,15 @@ DocTree.Service = {
                                     var replaced = DocTree.Model.findFolderItemIdx(fileId, folderList);
                                     if (0 <= replaced) {
                                         folderList.children[replaced].version = Acm.goodValue(replaceInfo.activeVersionTag);
+
+                                        folderList.children[replaced].versionList = [];
+                                        if (Acm.isArray(replaceInfo.versions)) {
+                                            for (var i = 0; i < replaceInfo.versions.length; i++) {
+                                                var ver = {};
+                                                ver.versionTag = replaceInfo.versions[i].versionTag;
+                                                folderList.children[replaced].versionList.push(ver);
+                                            }
+                                        }
                                         DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                         DocTree.Controller.modelReplacedFile(replaceInfo, fileId, callerData);
                                         $dfd.resolve(folderList.children[replaced]);
@@ -263,16 +251,7 @@ DocTree.Service = {
 
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
-                                var createdFolder = DocTree.Service.folderCreateToFileData(createInfo);
-    //                                var createdFolder = {};
-    //                                createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
-    //                                createdFolder.objectType = "folder";
-    //                                createdFolder.created    = Acm.goodValue(createInfo.created);
-    //                                createdFolder.creator    = Acm.goodValue(createInfo.creator);
-    //                                createdFolder.modified   = Acm.goodValue(createInfo.modified);
-    //                                createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
-    //                                createdFolder.name       = Acm.goodValue(createInfo.name);
-    //                                createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
+                                var createdFolder = DocTree.Model.folderToSolrData(createInfo);
                                 folderList.children.push(createdFolder);
                                 folderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(cacheKey, folderList);
@@ -298,13 +277,6 @@ DocTree.Service = {
                             if (response.deletedFolderId == folderId) {
                                 var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                                 if (DocTree.Model.validateFolderList(folderList)) {
-//                                    var deleted = -1;
-//                                    for (var i = 0; i < folderList.children.length; i++) {
-//                                        if (folderList.children[i].objectId == folderId) {
-//                                            var deleted = i;
-//                                            break;
-//                                        }
-//                                    }
                                     var deleted = DocTree.Model.findFolderItemIdx(folderId, folderList);
                                     if (0 <= deleted) {
                                         folderList.children.splice(deleted, 1);
@@ -333,13 +305,6 @@ DocTree.Service = {
                         if (response.deletedFileId == fileId) {
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
-//                                var deleted = -1;
-//                                for (var i = 0; i < folderList.children.length; i++) {
-//                                    if (folderList.children[i].objectId == fileId) {
-//                                        var deleted = i;
-//                                        break;
-//                                    }
-//                                }
                                 var deleted = DocTree.Model.findFolderItemIdx(fileId, folderList);
                                 if (0 <= deleted) {
                                     folderList.children.splice(deleted, 1);
@@ -469,7 +434,7 @@ DocTree.Service = {
 
                             var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
                             if (DocTree.Model.validateFolderList(toFolderList)) {
-                                var fileData = DocTree.Service.fileCreateToFileData(copyFileInfo);
+                                var fileData = DocTree.Model.fileToSolrData(copyFileInfo);
                                 toFolderList.children.push(fileData);
                                 toFolderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
@@ -538,7 +503,7 @@ DocTree.Service = {
 
                             var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
                             if (DocTree.Model.validateFolderList(toFolderList)) {
-                                var fileData = DocTree.Service.fileCreateToFileData(copyFolderInfo);
+                                var fileData = DocTree.Model.fileToSolrData(copyFolderInfo);
                                 toFolderList.children.push(fileData);
                                 toFolderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
@@ -553,55 +518,24 @@ DocTree.Service = {
         })
     }
 
-    ,fileCreateToFileData: function(createInfo) {
-        var fileData = {};
-        fileData.objectId   = Acm.goodValue(createInfo.fileId);
-        fileData.objectType = "file";
-        fileData.created    = Acm.goodValue(createInfo.created);
-        fileData.creator    = Acm.goodValue(createInfo.creator);
-        fileData.modified   = Acm.goodValue(createInfo.modified);
-        fileData.modifier   = Acm.goodValue(createInfo.modifier);
-        fileData.name       = Acm.goodValue(createInfo.fileName);
-        fileData.type       = Acm.goodValue(createInfo.fileType);
-        fileData.status     = Acm.goodValue(createInfo.status);
-        fileData.version    = Acm.goodValue(createInfo.activeVersionTag);
-        fileData.category   = Acm.goodValue(createInfo.category);
-        return fileData;
-    }
-    ,folderCreateToFileData: function(createInfo) {
-        var fileData = {};
-        fileData.objectId   = Acm.goodValue(createInfo.id, 0);
-        fileData.objectType = "folder";
-        fileData.created    = Acm.goodValue(createInfo.created);
-        fileData.creator    = Acm.goodValue(createInfo.creator);
-        fileData.modified   = Acm.goodValue(createInfo.modified);
-        fileData.modifier   = Acm.goodValue(createInfo.modifier);
-        fileData.name       = Acm.goodValue(createInfo.name);
-        fileData.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
-        return fileData;
-    }
-
     ,setActiveVersion: function(fileId, version, cacheKey, callerData) {
-        return;
-
         var url = App.getContextPath() + this.API_SET_ACTIVE_VERSION_ + fileId + "?versionTag=" + version;
-        //var data = {"id": subFolderId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
-            //,data: JSON.stringify(data)
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,callback: function(response) {
                 if (response.hasError) {
                     DocTree.Controller.modelSetActiveVersion(response, fileId, cacheKey, callerData);
 
                 } else {
-                    if (DocTree.Model.validateCopyFolderInfo(response)) {
-                        if (response.folder.id == folderId) {
-                            var copyFolderInfo = response;
+                    if (DocTree.Model.validateActiveVersion(response)) {
+                        if (response.fileId == fileId) {
+                            var activeVersion = response;
 
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
                                 var idx = DocTree.Model.findFolderItemIdx(fileId, folderList);
                                 if (0 <= idx) {
-                                    folderList.children[idx].activeVersionTag = "xxxxxxxxxxxxxxxxx"; //response.activeVersionTag;
+                                    folderList.children[idx].activeVersionTag = Acm.goodValue(activeVersion.activeVersionTag);
                                     DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                     DocTree.Controller.modelSetActiveVersion(version, fileId, cacheKey, callerData);
                                     return true;
