@@ -3,6 +3,25 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.service.AcmPluginManager"/>
+    <bean id="acmPluginManager" class="com.armedia.acm.pluginmanager.service.AcmPluginManager">
+        <property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+
+    <bean id="acmPluginFolder" class="java.io.File">
+        <constructor-arg value="${user.home}/.acm/spring/spring-config-acm-plugins"/>
+    </bean>
+
+    <bean id="acmPluginResourceExpression" class="java.lang.String">
+        <constructor-arg value="classpath*:/acm-plugin/*.xml"/>
+    </bean>
+
+    <bean id="acmPluginPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
+
+    <bean id="acmPluginDeployer" class="com.armedia.acm.spring.SpringClasspathCopier">
+        <property name="resourcePattern" ref="acmPluginResourceExpression"/>
+        <property name="deployFolder" ref="acmPluginFolder"/>
+        <property name="resolver" ref="acmPluginPathMatchingResolver"/>
+    </bean>
 
 </beans>
