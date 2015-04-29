@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="personPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Person Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmPersonSavePrivilege"/>
+                <ref bean="acmPersonFindPrivilege"/>
+                <ref bean="acmPersonDeletePrivilege"/>
+                <ref bean="acmPersonAssociationDeletePrivilege"/>
+                <ref bean="acmPersonListPrivilege"/>
+                <ref bean="acmPersonTypesPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/person"/>
+                    <property name="requiredPrivilege" ref="acmPersonSavePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/person/find"/>
+                    <property name="requiredPrivilege" ref="acmPersonFindPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/person/delete/{personId}"/>
+                    <property name="requiredPrivilege" ref="acmPersonDeletePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/personAssociation/delete/{personAssocId}"/>
+                    <property name="requiredPrivilege" ref="acmPersonAssociationDeletePrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/person/list/{parentType}/{parentId}"/>
+                    <property name="requiredPrivilege" ref="acmPersonListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/person/types"/>
+                    <property name="requiredPrivilege" ref="acmPersonTypesPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="personAssociationPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="PersonAssocaition Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmPersonAssociationSavePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/personAssociation"/>
+                    <property name="requiredPrivilege" ref="acmPersonAssociationSavePrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>
