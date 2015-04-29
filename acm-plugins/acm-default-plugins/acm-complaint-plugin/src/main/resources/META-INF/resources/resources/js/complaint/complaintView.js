@@ -2283,11 +2283,11 @@ Complaint.View = Complaint.View || {
                 for (var i = 0; i < documents.length; i++) {
                     if(Complaint.Model.References.validateReferenceRecord(documents[i])){
                         var record = {};
-                        record.id = Acm.goodValue(documents.targetId, 0);
-                        record.title = Acm.goodValue(documents.targetName);
-                        record.modified = Acm.getDateFromDatetime(documents.modified);
-                        record.type = Acm.goodValue(documents.targetType);
-                        record.status = Acm.goodValue(documents.status);
+                        record.id = Acm.goodValue(documents[i].targetId, 0);
+                        record.title = Acm.goodValue(documents[i].targetName);
+                        record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        record.type = Acm.goodValue(documents[i].targetType);
+                        record.status = Acm.goodValue(documents[i].status);
                         jtData.Records.push(record);
                     }
                 }
@@ -2948,7 +2948,11 @@ Complaint.View = Complaint.View || {
                 timeFormat: 'h(:mm)t {-h(:mm)t}',
                 displayEventEnd : true,
                 editable: true,
-                droppable: true, // this allows things to be dropped onto the calendar !!!
+                //disable fullcalendar droppable as it creates conflict with the doctree's.
+                //looks like fullcalendar uses the generic jquery draggable
+                //we might need to add our own external draggable event handlers
+                //tailored for fullcalendar
+                droppable: false, // this allows things to be dropped onto the calendar !!!
                 drop: function(date, allDay) { // this function is called when something is dropped
 
                     // retrieve the dropped element's stored Event Object
