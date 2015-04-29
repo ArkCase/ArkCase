@@ -106,6 +106,7 @@ AcmDocument.View = AcmDocument.View || {
             this.$lnkAssignee       = $("#assignee");
             this.$lnkSubjectType    = $("#type");
             this.$lnkStatus         = $("#status");
+            this.$lnkActiveVersion  = $("#activeVersion");
 
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_DOCUMENT_DETAIL           ,this.onModelRetrievedDocumentDetail);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CHANGED_ACTIVE_FILE_VERSION           ,this.onModelChangedActiveFileVersion);
@@ -120,6 +121,7 @@ AcmDocument.View = AcmDocument.View || {
             }
             else if(AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
                 AcmDocument.Model.Detail.cacheDocumentDetail.put(documentId, documentDetail);
+                AcmDocument.View.Detail.setTextLnkActiveVersion("(v" + Acm.goodValue(documentDetail.activeVersionTag)+ ")");
             }
         }
         ,onModelRetrievedDocumentDetail: function(documentDetail) {
@@ -128,6 +130,7 @@ AcmDocument.View = AcmDocument.View || {
             }
             else if (AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
                 AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.fileName));
+                AcmDocument.View.Detail.setTextLnkActiveVersion("(v" + Acm.goodValue(documentDetail.activeVersionTag)+ ")");
                 AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.created));
                 AcmDocument.View.Detail.setTextLnkType(Acm.goodValue(documentDetail.fileType));
                 AcmDocument.View.Detail.setTextLnkOwner(Acm.__FixMe__getUserFullName(documentDetail.creator));
@@ -137,6 +140,9 @@ AcmDocument.View = AcmDocument.View || {
         }
         ,setTextLnkDocTitle: function(txt) {
             Acm.Object.setText(this.$lnkDocTitle, txt);
+        }
+        ,setTextLnkActiveVersion: function(txt) {
+            Acm.Object.setText(this.$lnkActiveVersion, txt);
         }
         ,setTextLnkCreateDate: function(txt) {
             Acm.Object.setText(this.$lnkCreateDate, txt);
