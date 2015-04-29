@@ -31,66 +31,6 @@
     <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="pluginProperties" ref="dashboardPluginProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="dashboardPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="dashboardUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/dashboard"/>
-                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
-                </bean>
-
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!--create dashboard get config service-->
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/dashboard/get"/>
-                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
-                </bean>
-
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!--create dashboard set config service-->
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/dashboard/set/"/>
-                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
-                </bean>
-
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/get"/>
-                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
-                </bean>
-
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/rolesByWidget/all"/>
-                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
-                </bean>
-
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/dashboard/widgets/set"/>
-                    <property name="requiredPrivilege" ref="dashboardPrivilege"/>
-                </bean>
-            </list>
-        </property>
-
-    </bean>
-
-    <bean id="dashboardPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-dashboard"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
     </bean>
 
   <bean id="dashboardEventPublisher" class="com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher"/>

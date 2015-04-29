@@ -35,49 +35,6 @@
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Profile Plugin"/>
         <property name="pluginProperties" ref="profilePluginProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="profilePrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/profile"/>
-                    <property name="requiredPrivilege" ref="profilePrivilege"/>
-                </bean>
-                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/profile/get/{userId}"/>
-                    <property name="requiredPrivilege" ref="profilePrivilege"/>
-                </bean>
-                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/profile/userOrgInfo/set"/>
-                    <property name="requiredPrivilege" ref="profilePrivilege"/>
-                </bean>
-                <bean id="saveOutlookPassword" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/profile/outlook"/>
-                    <property name="requiredPrivilege" ref="profilePrivilege"/>
-                </bean>
-            </list>
-        </property>
-
-    </bean>
-
-    <bean id="profilePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-profile"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
     </bean>
 
     <bean id="profileEventPublisher" class="com.armedia.acm.plugins.profile.service.ProfileEventPublisher"/>

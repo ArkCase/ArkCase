@@ -38,56 +38,7 @@
     <bean id="reportPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
          <property name="pluginName" value="Report Plugin"/>
         <property name="pluginProperties" ref="reportPluginProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="reportPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="reportUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/report"/>
-                    <property name="requiredPrivilege" ref="reportPrivilege"/>
-                </bean>
-                <bean id="pentahoReportsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/report/get/pentaho"/>
-                    <property name="requiredPrivilege" ref="reportPrivilege"/>
-                </bean>
-                <bean id="saveReportsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/report/save"/>
-                    <property name="requiredPrivilege" ref="reportPrivilege"/>
-                </bean>
-                <bean id="reportsToGroupsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/report/reporttogroupsmap"/>
-                    <property name="requiredPrivilege" ref="reportPrivilege"/>
-                </bean>
-                <bean id="saveReportsToGroupsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/report/reporttogroupsmap"/>
-                    <property name="requiredPrivilege" ref="reportPrivilege"/>
-                </bean>
-            </list>
-        </property>
-
     </bean>
-
-    <bean id="reportPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-report"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-    
     
     <bean id="reportService" class="com.armedia.acm.plugins.report.service.ReportServiceImpl">
     	<property name="reportUrl" ref="reportResource"/>
