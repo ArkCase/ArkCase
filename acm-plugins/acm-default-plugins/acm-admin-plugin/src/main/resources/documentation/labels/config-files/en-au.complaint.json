@@ -16,12 +16,10 @@
     },
     "buttons": {
       "close-complaint": " Close Complaint",
-      "subscribe": " Subscribe",
+      "subscribe": "Subscribe",
       "restrict": "Restrict ?"
-
     }
   },
-
   "navigation": {
     "leaf-title": {
       "details": "Details",
@@ -37,9 +35,8 @@
       "cost": "Cost"
     }
   },
-
-  "context-menu":{
-    "menu-title" :{
+  "context-menu": {
+    "menu-title": {
       "menu": "Menu:",
       "copy": "Copy",
       "paste": "Paste",
@@ -50,13 +47,11 @@
       "sub2": "Sub 2"
     }
   },
-
   "document-dialog": {
     "title": "My Dialog Title",
     "btn-ok": "Select",
     "btn-cancel": "Away"
   },
-
   "detail": {
     "title": "Details",
     "dirty-editing-detail": "Editing complaint detail",
@@ -67,7 +62,6 @@
       "details": "Details"
     }
   },
-
   "people": {
     "table": {
       "title": "People ",
@@ -78,14 +72,11 @@
         "last-name": "Last Name",
         "type": "Type"
       },
-      "msg" :{
-        "add-new-record": "Add Person"
-      }
+      "msg": {"add-new-record": "Add Person"}
     }
   },
-
   "contact-method": {
-    "table" :{
+    "table": {
       "field": {
         "type": "Type",
         "value": "Value",
@@ -94,9 +85,8 @@
       }
     }
   },
-
   "security-tags": {
-    "table" :{
+    "table": {
       "field": {
         "type": "Type",
         "value": "Value",
@@ -105,9 +95,8 @@
       }
     }
   },
-
   "organizations": {
-    "table" : {
+    "table": {
       "field": {
         "type": "Type",
         "value": "Value",
@@ -115,15 +104,12 @@
         "added-by": "Added By"
       }
     },
-    "msg": {
-      "add-new-record": "Add Organization"
-    }
+    "msg": {"add-new-record": "Add Organization"}
   },
-
   "addresses": {
     "table": {
       "field": {
-        "type" : "Type",
+        "type": "Type",
         "address": "Address",
         "city": "City",
         "state": "State",
@@ -133,13 +119,10 @@
         "added-by": "Added By"
       }
     },
-    "msg": {
-      "add-new-record": "Add Location"
-    }
+    "msg": {"add-new-record": "Add Location"}
   },
-
   "aliases": {
-    "table" : {
+    "table": {
       "field": {
         "type": "Type",
         "value": "Value",
@@ -147,25 +130,20 @@
         "added-by": "Added By"
       }
     },
-    "msg": {
-      "add-new-record": "Add Alias"
-    }
+    "msg": {"add-new-record": "Add Alias"}
   },
-
   "documents-to-retire": {
     "title": "Documents",
-
-    "form-document":{
+    "form-document": {
       "document-type": "Document Type",
-      "medical-release":"Medical Release",
+      "medical-release": "Medical Release",
       "general-release": "General Release",
       "e-delivery": "eDelivery",
       "sf86-signature": "SF86 Signature",
       "notice-of-investigation": "Notice of Investigation",
-      "witness-interview-request" :"Witness Interview Request",
+      "witness-interview-request": "Witness Interview Request",
       "other": "Other"
     },
-
     "create-folder-dialog": {
       "title": "Create Folder",
       "labels": {
@@ -178,7 +156,6 @@
         "create-folder": "Create Folder"
       }
     },
-
     "email-dialog": {
       "title": "Send Email",
       "labels": {
@@ -186,19 +163,16 @@
         "email-address": "Email Address"
       },
       "buttons": {
-        "close" :"Close",
+        "close": "Close",
         "cancel": "Cancel",
         "send-email": "Send Email"
       }
     },
-
     "buttons": {
       "email": "Email",
       "print": "Print"
     },
-
-
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "title": "Title",
@@ -206,9 +180,8 @@
         "creator": "Creator"
       }
     },
-
     "tree": {
-      "field" : {
+      "field": {
         "id": "ID",
         "title": "Title",
         "type": "Type",
@@ -218,16 +191,11 @@
         "status": "Status"
       }
     },
-
-    "msg": {
-      "add-new-record": "Add Document"
-    }
-
+    "msg": {"add-new-record": "Add Document"}
   },
-
   "notes": {
     "title": "Notes",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "note": "Note",
@@ -235,14 +203,11 @@
         "author": "Author"
       }
     },
-    "msg": {
-      "add-new-record": "Add Note"
-    }
+    "msg": {"add-new-record": "Add Note"}
   },
-
   "history": {
     "title": "History",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "event-name": "Event Name",
@@ -251,10 +216,9 @@
       }
     }
   },
-
-  "references" :{
+  "references": {
     "title": "References",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "title": "Title",
@@ -263,14 +227,11 @@
         "status": "Status"
       }
     },
-    "msg": {
-      "add-new-record": "Add Reference"
-    }
+    "msg": {"add-new-record": "Add Reference"}
   },
-
-  "tasks":{
+  "tasks": {
     "title": "Tasks",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "title": "Title",
@@ -281,28 +242,22 @@
         "status": "Status"
       }
     },
-    "msg": {
-      "add-new-record": "Add Task"
-    }
+    "msg": {"add-new-record": "Add Task"}
   },
-
   "participants": {
     "title": "Participants",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "type": "Type",
         "name": "Name"
       }
     },
-    "msg": {
-      "add-new-record": "Add Participant"
-    }
+    "msg": {"add-new-record": "Add Participant"}
   },
-
   "location": {
     "title": "Location",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "address": "Address",
@@ -312,14 +267,11 @@
         "zip": "Zip"
       }
     },
-    "msg": {
-      "add-new-record": "Add Location"
-    }
+    "msg": {"add-new-record": "Add Location"}
   },
-
   "time": {
     "title": "Time Tracking",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "form-name": "Form Name",
@@ -330,10 +282,9 @@
       }
     }
   },
-
   "cost": {
     "title": "Cost Tracking",
-    "table" : {
+    "table": {
       "field": {
         "id": "ID",
         "form-name": "Form Name",
@@ -344,10 +295,8 @@
       }
     }
   },
-
-
-  "msg":{
+  "msg": {
     "no-complaint-selected": "(No complaint is selected)",
-     "error-retrieving-complaint-data": "Error occurred for retrieving complaint data"
+    "error-retrieving-complaint-data": "Error occurred for retrieving complaint data"
   }
 }

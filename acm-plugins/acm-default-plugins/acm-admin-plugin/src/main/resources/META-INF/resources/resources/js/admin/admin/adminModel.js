@@ -339,6 +339,8 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_LEAF_REPORTS                        :          "rc"
             ,NODE_TYPE_PART_BRANCH_WORKFLOW_CONFIGURATION       :          "wfc"
             ,NODE_TYPE_PART_LEAF_WORKFLOW_CONFIGURATION         :          "wf"
+            ,NODE_TYPE_PART_BRANCH_LABEL_CONFIGURATION          :          "al"
+            ,NODE_TYPE_PART_LEAF_LABEL_CONFIGURATION            :          "lc"
             ,NODE_TYPE_PART_BRANCH_TEMPLATES                    :          "ct"
             ,NODE_TYPE_PART_LEAF_TEMPLATES                      :          "cm"
 
@@ -352,6 +354,8 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "dac"      ,icon: "",tabIds: ["tabACP"]}
                 ,{nodeType: "dc"       ,icon: "",tabIds: ["tabDashboard"]}
                 ,{nodeType: "rc"       ,icon: "",tabIds: ["tabReports"]}
+                ,{nodeType: "al"       ,icon: "",tabIds: ["tabLabelConfiguration"]}
+                ,{nodeType: "lc"       ,icon: "",tabIds: ["tabLabelConfiguration"]}
                 ,{nodeType: "ct"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "cm"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "og"       ,icon: "",tabIds: ["tOrganization"]}
@@ -402,6 +406,10 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_BRANCH_REPORTS;
                 } else if (key == this.NODE_TYPE_PART_LEAF_REPORTS) {
                     return this.NODE_TYPE_PART_LEAF_REPORTS;
+                } else if (key == this.NODE_TYPE_PART_BRANCH_LABEL_CONFIGURATION) {
+                    return this.NODE_TYPE_PART_BRANCH_LABEL_CONFIGURATION;
+                } else if (key == this.NODE_TYPE_PART_LEAF_LABEL_CONFIGURATION) {
+                    return this.NODE_TYPE_PART_LEAF_LABEL_CONFIGURATION;
                 } else if (key == this.NODE_TYPE_PART_BRANCH_TEMPLATES) {
                     return this.NODE_TYPE_PART_BRANCH_TEMPLATES;
                 } else if (key == this.NODE_TYPE_PART_LEAF_TEMPLATES) {
