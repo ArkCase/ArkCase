@@ -3199,7 +3199,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
-                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
+                App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"), outlookCalendarItems.errorMsg);
             }
             else{
                 CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
@@ -3232,9 +3232,9 @@ CaseFile.View = CaseFile.View || {
             if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
                 var body = Acm.goodValue(calendarItem.body) + "</br>";
                 var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
-                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var startDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.start") + " " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
                 var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
-                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.end") + " " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
                 var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
                 return detail;
             }
