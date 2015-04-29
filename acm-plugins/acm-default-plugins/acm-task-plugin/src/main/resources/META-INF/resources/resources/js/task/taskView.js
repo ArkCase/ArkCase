@@ -234,6 +234,7 @@ Task.View = Task.View || {
             this.$lnkParentObjAssigned       = $("#parentObjAssigned");
             this.$lnkParentObjSubjectType    = $("#parentObjSubjectType");
             this.$lnkParentObjStatus         = $("#parentObjStatus");
+            this.$lnkParentObjOwningGroup    = $("#parentObjOwningGroup");
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT            ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT              ,this.onViewSelectedObject);
@@ -261,15 +262,15 @@ Task.View = Task.View || {
                 if(Acm.isNotEmpty(task.parentObjectId) && Acm.isNotEmpty(task.parentObjectType)){
                     var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
-                        this.setTextParentObjTitle(parentObjData.title);
+                        this.setTextParentObjTitle(Acm.goodValue(parentObjData.title));
                         this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
-                        this.setTextLnkParentObjPriority(parentObjData.priority);
+                        this.setTextLnkParentObjPriority(Acm.goodValue(parentObjData.priority));
                         this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
-                        this.setTextLnkParentObjStatus(parentObjData.status);
-                        this.setTextLnkParentObjSubjectType(parentObjData.subjectType);
-                        this.setTextLnkParentObjNumber(parentObjData.number);
-                        this.setParentObjLink(parentObjData.id, parentObjData.objectType);
-
+                        this.setTextLnkParentObjStatus("  (" + Acm.goodValue(parentObjData.status) +")");
+                        this.setTextLnkParentObjSubjectType(Acm.goodValue(parentObjData.subjectType));
+                        this.setTextLnkParentObjNumber(Acm.goodValue(parentObjData.number));
+                        this.setParentObjLink(Acm.goodValue(parentObjData.id), Acm.goodValue(parentObjData.objectType));
+                        this.setTextLnkParentObjOwningGroup(Acm.goodValue(parentObjData.group));
                         this.showDivParentDetail(true);
                     }
                 }
@@ -282,6 +283,7 @@ Task.View = Task.View || {
                     this.setTextLnkParentObjSubjectType("");
                     this.setTextLnkParentObjNumber("");
                     this.setParentObjLink("");
+                    this.setTextLnkParentObjOwningGroup("");
                 }
             }
 
@@ -303,6 +305,9 @@ Task.View = Task.View || {
 
         //parent obj details setters
 
+        ,setTextLnkParentObjOwningGroup: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjOwningGroup, txt);
+        }
         ,showDivParentDetail: function(show) {
             Acm.Object.show(this.$divParentDetail, show);
         }

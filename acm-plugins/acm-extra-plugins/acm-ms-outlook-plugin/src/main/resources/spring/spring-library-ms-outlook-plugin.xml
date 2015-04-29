@@ -5,40 +5,8 @@
 
        <bean id="msOutlookPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
               <property name="pluginName" value="Microsoft Outlook Plugin"/>
-              <property name="privileges">
-                     <list>
-                            <ref bean="acmOutlookListObjectsPrivilege"/>
-                     </list>
-              </property>
               <property name="suportedObjectTypesNames">
                      <list/>
-              </property>
-              <property name="urlPrivileges">
-                     <list>
-                            <bean id="inboxUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                                   <property name="httpMethod" value="GET"/>
-                                   <property name="url" value="/api/{version}/plugin/outlook/inbox"/>
-                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
-                            </bean>
-                            <bean id="calendarUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                                   <property name="httpMethod" value="GET"/>
-                                   <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
-                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
-                            </bean>
-                     </list>
-              </property>
-       </bean>
-
-       <bean id="acmOutlookListObjectsPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-              <property name="privilegeName" value="acm-outlook-list-items"/>
-              <property name="applicationRolesWithPrivilege">
-                     <list>
-                            <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                            <value>ROLE_CALLCENTER</value>
-                            <value>ROLE_INVESTIGATOR</value>
-                            <value>ROLE_ADMINISTRATOR</value>
-                            <value>ROLE_ANALYST</value>
-                     </list>
               </property>
        </bean>
 
