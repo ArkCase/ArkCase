@@ -15,6 +15,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
         if (CaseFile.Service.History.create) {CaseFile.Service.History.create();}
+        if (CaseFile.Service.OutlookCalendar.create)   {CaseFile.Service.OutlookCalendar.create();}
         if (CaseFile.Service.Time.create)   {CaseFile.Service.Time.create();}
         if (CaseFile.Service.Cost.create)   {CaseFile.Service.Cost.create();}
     }
@@ -27,6 +28,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
         if (CaseFile.Service.History.onInitialized)        {CaseFile.Service.History.onInitialized();}
+        if (CaseFile.Service.OutlookCalendar.onInitialized)        {CaseFile.Service.OutlookCalendar.onInitialized();}
         if (CaseFile.Service.Time.onInitialized)        {CaseFile.Service.Time.onInitialized();}
         if (CaseFile.Service.Cost.onInitialized)        {CaseFile.Service.Cost.onInitialized();}
     }
@@ -1525,6 +1527,35 @@ CaseFile.Service = {
                     return jtData;
                 }
             );
+        }
+    }
+
+    ,OutlookCalendar: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        , API_RETRIEVE_CALENDAR_ITEMS: "/api/v1/plugin/outlook/calendar"
+
+
+        ,retrieveOutlookOutlookCalendarItems : function(caseFileId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_CALENDAR_ITEMS;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedOutlookCalendarItems(response);
+
+                    } else {
+                        if (CaseFile.Model.OutlookCalendar.validateOutlookCalendarItems(response)) {
+                            var outlookCalendarItems = response;
+                            CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.put(caseFileId, outlookCalendarItems);
+                            CaseFile.Controller.modelRetrievedOutlookCalendarItems(outlookCalendarItems);
+                        }
+                    }
+                }
+                ,url
+            )
         }
     }
 

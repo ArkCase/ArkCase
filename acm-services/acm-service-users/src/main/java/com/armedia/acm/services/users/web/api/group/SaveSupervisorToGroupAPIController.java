@@ -3,8 +3,6 @@
  */
 package com.armedia.acm.services.users.web.api.group;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
@@ -32,6 +31,7 @@ public class SaveSupervisorToGroupAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmGroupDao groupDao;
+	private UserDao userDao;
 	
 	@RequestMapping(value="/group/{groupId}/supervisor/save/{applyToAll}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -49,7 +49,9 @@ public class SaveSupervisorToGroupAPIController {
 		{
 			AcmGroup group = getGroupDao().findByName(groupId);
 			
-			group.setSupervisor(supervisor);
+			AcmUser updatedSupervisor = getUserDao().findByUserId(supervisor.getUserId());
+			
+			group.setSupervisor(updatedSupervisor);
 			
 			AcmGroup saved = getGroupDao().save(group);
 			
@@ -74,6 +76,14 @@ public class SaveSupervisorToGroupAPIController {
 
 	public void setGroupDao(AcmGroupDao groupDao) {
 		this.groupDao = groupDao;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 	
 }

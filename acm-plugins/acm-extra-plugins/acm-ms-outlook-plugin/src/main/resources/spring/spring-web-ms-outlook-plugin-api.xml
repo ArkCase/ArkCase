@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+       <bean id="listInboxItemsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListInboxItemsAPIController">
+              <property name="outlookService" ref="outlookService"/>
+              <property name="userOrgDao" ref="acmUserOrgDao"/>
+       </bean>
+
+       <bean id="listCalendarItemsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListCalendarItemsAPIController">
+              <property name="outlookService" ref="outlookService"/>
+              <property name="userOrgDao" ref="acmUserOrgDao"/>
+       </bean>
+
+</beans>

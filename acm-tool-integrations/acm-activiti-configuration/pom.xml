@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
-            <version>${easymock.version}</version>
+            <version>${easymock-extension.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- Apache commons -->

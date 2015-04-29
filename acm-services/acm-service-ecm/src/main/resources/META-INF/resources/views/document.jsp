@@ -267,6 +267,31 @@
                 <ul class="list-group alt panel-body" id="tabParticipants">
 
                 </ul>
+
+                <div class="modal fade" id="modalParticipantChangeRole" tabindex="-1" role="dialog" aria-labelledby="changeParticipantRole" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="changeParticipantRole">Change Participant Role</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <p>Please select a role : </p>
+                                <label  class="label">Available Roles</label>
+                                <select class="input-sm form-control inline v-middle" id="participantRoles">
+                                    <option value="null">Select Participant Role</option>
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary">Change Role</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </section>
 
 
@@ -375,8 +400,12 @@
                 <div class="row" id="tabDocViewer">
                     <div class="col-md-12">
                         <section class="panel b-a">
+
                             <div id="divDocViewer" style="width:100%">
-                                <iframe src = "/acm/resources/vendors/ViewerJS/index.html?type=pdf&title=marjan.pdf#http://localhost:8081/acm/api/latest/plugin/ecm/download/byId/1334?inline=true" width='1090' height='400' allowfullscreen webkitallowfullscreen></iframe>
+                                <div id="divDocViewerHeader" stile = "width:100%">
+                                    <p>Document Viewer</p>
+                                </div>
+                                <iframe src = "${context}/resources/vendors/ViewerJS/index.html?type=${type}&title=${title}#${context}/api/latest/plugin/ecm/download/byId/${fileId}?inline=true" width='100%' height='400' allowfullscreen webkitallowfullscreen></iframe>
                             </div>
                         </section>
                     </div>

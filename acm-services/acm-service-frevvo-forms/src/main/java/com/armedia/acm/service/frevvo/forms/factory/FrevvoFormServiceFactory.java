@@ -51,6 +51,7 @@ public class FrevvoFormServiceFactory {
             service.setComplaintEventPublisher(frevvoFormController.getComplaintEventPublisher());
             service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
             service.setSearchResults(frevvoFormController.getSearchResults());
+            service.setComplaintFactory(frevvoFormController.getComplaintFactory());
             
             return service;
 		}

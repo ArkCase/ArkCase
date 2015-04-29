@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <!-- property placeholder for all properties files -->
+    <bean id="arkCasePropertyConfigurer" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="order" value="42"/>
+        <property name="locations">
+            <list>
+                <value>file:${user.home}/.acm/acm-forms.properties</value>
+                <value>file:${user.home}/.acm/acm-reports.properties</value>
+                <value>file:${user.home}/.acm/adminPlugin.properties</value>
+                <value>file:${user.home}/.acm/applicationRoleToUserGroup.properties</value>
+                <value>file:${user.home}/.acm/auditPlugin.properties</value>
+                <value>file:${user.home}/.acm/cmis.properties</value>
+                <value>file:${user.home}/.acm/complaintPlugin.properties</value>
+                <value>file:${user.home}/.acm/correspondencePlugin.properties</value>
+                <value>file:${user.home}/.acm/dashboardPlugin.properties</value>
+                <value>file:${user.home}/.acm/dataAccessControl.properties</value>
+                <value>file:${user.home}/.acm/datasource.properties</value>
+                <value>file:${user.home}/.acm/lawEnforcementApp.properties</value>
+                <value>file:${user.home}/.acm/msOutlookIntegration.properties</value>
+                <value>file:${user.home}/.acm/notification.properties</value>
+                <value>file:${user.home}/.acm/profilePlugin.properties</value>
+                <value>file:${user.home}/.acm/solr.properties</value>
+                <value>file:${user.home}/.acm/subscriptionPlugin.properties</value>
+                <value>file:${user.home}/.acm/taskPlugin.properties</value>
+            </list>
+        </property>
+    </bean>
+</beans>

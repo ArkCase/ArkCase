@@ -18,6 +18,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.History.create)          {CaseFile.View.History.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
+        if (CaseFile.View.OutlookCalendar.create)            {CaseFile.View.OutlookCalendar.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
 
@@ -39,6 +40,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.onInitialized)     {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.History.onInitialized)         {CaseFile.View.History.onInitialized();}
         if (CaseFile.View.Correspondence.onInitialized) {CaseFile.View.Correspondence.onInitialized();}
+        if (CaseFile.View.OutlookCalendar.onInitialized)           {CaseFile.View.OutlookCalendar.onInitialized();}
         if (CaseFile.View.Time.onInitialized)           {CaseFile.View.Time.onInitialized();}
         if (CaseFile.View.Cost.onInitialized)           {CaseFile.View.Cost.onInitialized();}
     }
@@ -199,6 +201,9 @@ CaseFile.View = CaseFile.View || {
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
                             ,title: $.t("casefile:navigation.leaf-title.correspondence")
                         })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+                            ,title: "Calendar"
+                        })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
                             ,title: $.t("casefile:navigation.leaf-title.time")
                         })
@@ -319,7 +324,7 @@ CaseFile.View = CaseFile.View || {
             	
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',xmlId:'" + xmlId + "',pdfId:'" + pdfId + "',");
-            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 860, 700
+            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
                     ,function() {
                         CaseFile.Controller.viewChangedCaseFile(caseFileId);
                     }
@@ -337,7 +342,7 @@ CaseFile.View = CaseFile.View || {
                 if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
                     if (Acm.isNotEmpty(c.caseNumber)) {
                         urlChangeCaseStatusForm = urlChangeCaseStatusForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
-                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 860, 700
+                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 1060, 700
                             ,function() {
                                 CaseFile.Controller.viewClosedCaseFile(caseFileId);
                             }
@@ -402,7 +407,7 @@ CaseFile.View = CaseFile.View || {
             	}
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
-            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 860, 700
+            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
                     ,function() {
             			// TODO: When James will find solution, we should change this
             			window.location.href = App.getContextPath() + '/plugin/casefile';
@@ -677,7 +682,7 @@ CaseFile.View = CaseFile.View || {
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
-                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
                 this.setPropertyRestricted(Acm.goodValue(c.restricted));
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
 
@@ -1846,7 +1851,7 @@ CaseFile.View = CaseFile.View || {
                         + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                         + "',"
                     );
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                    Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
@@ -1950,7 +1955,7 @@ CaseFile.View = CaseFile.View || {
                             + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                             + "',");
 
-                        Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30
+                        Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30
                             ,function() {
                         		CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
                             }
@@ -3171,6 +3176,175 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
             });
+        }
+    }
+
+    ,OutlookCalendar: {
+        create: function() {
+            this.$outlookCalendar          = $(".calendar");
+            this.$weekView                 = $("#weekview");
+            this.$monthView                = $("#monthview");
+            this.$dayView                  = $("#dayview");
+
+            this.createOutlookCalendarWidget(this.$outlookCalendar);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
+        }
+        ,onInitialized: function() {
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
+            CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
+        }
+        ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
+            if(outlookCalendarItems.hasError){
+                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
+            }
+            else{
+                CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
+                CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
+            }
+        }
+
+        ,createCalendarSource:function(){
+            var calendarSource = [];
+            var outlookCalendarItems = CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.get(CaseFile.View.getActiveCaseFileId());
+            if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                for(var i = 0; i<outlookCalendarItems.items.length; i++){
+                    if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
+                        var outlookCalendarItem = {};
+                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
+                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
+                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
+                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
+                        outlookCalendarItem.detail = CaseFile.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
+                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
+                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
+                        calendarSource.push(outlookCalendarItem);
+                    }
+                }
+            }
+            return calendarSource;
+        }
+
+        ,makeDetail: function(calendarItem){
+            if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
+                var body = Acm.goodValue(calendarItem.body) + "</br>";
+                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
+                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
+                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
+                return detail;
+            }
+        }
+
+        ,createOutlookCalendarWidget: function($s){
+            var calendarSource = this.createCalendarSource();
+            var addDragEvent = function($this){
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+                var eventObject = {
+                    title: $.trim($this.text()), // use the element's text as the event title
+                    className: $this.attr('class').replace('label','')
+                };
+
+                // store the Event Object in the DOM element so we can get to it later
+                $this.data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                $this.draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+            };
+
+            $s.fullCalendar({
+                header: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+                timeFormat: 'h(:mm)t {-h(:mm)t}',
+                displayEventEnd : true,
+                editable: true,
+                //disable fullcalendar droppable as it creates conflict with the doctree's.
+                //looks like fullcalendar uses the generic jquery draggable
+                //we might need to add our own external draggable event handlers
+                //tailored for fullcalendar
+                droppable: false, // this allows things to be dropped onto the calendar !!!
+                drop: function(date, allDay) { // this function is called when something is dropped
+
+                    // retrieve the dropped element's stored Event Object
+                    var originalEventObject = $(this).data('eventObject');
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+
+                    // assign it the date that was reported
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+
+                    // render the event on the calendar
+                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                    this.$outlookCalendar.fullCalendar('renderEvent', copiedEventObject, true);
+
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                    }
+
+                }
+                ,events: calendarSource
+                ,eventRender: function (event, element) {
+                    element.qtip({
+                        content: {
+                            text: Acm.goodValue(event.detail),
+                            title: {
+                                text: Acm.goodValue(event.title)
+                            }
+                        }
+                        ,position: {
+                            my: 'right center',
+                            at: 'left center',
+                            target: 'mouse',
+                            viewport: $s,
+                            adjust: {
+                                mouse: false,
+                                scroll: false
+                            }
+                        }
+                        ,style: {
+                            classes: "qtip-rounded qtip-shadow"
+                        }
+                        ,show: { solo: true} //, ready: true, when: false
+                        ,hide: { when: 'mouseout', fixed: true}
+                    });
+                }
+            });
+            $('#myEvents').on('change', function(e, item){
+                addDragEvent($(item));
+            });
+
+            $('#myEvents li > div').each(function() {
+                addDragEvent($(this));
+            });
+
+            this.$dayView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'agendaDay')
+            });
+
+            this.$weekView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'agendaWeek')
+            });
+
+            this.$monthView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'month')
+            });
+
         }
     }
 

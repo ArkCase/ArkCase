@@ -73,6 +73,15 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
+    <%--fullcalendar--%>
+    <script src="<c:url value='/resources/vendors/${vd_fullcalendar}/${js_fullcalendar}'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/fullcalendar.css'/>" type="text/css"/>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/theme.css'/>" type="text/css"/>
+
+    <%--jquery qtip--%>
+    <script src="<c:url value='/resources/vendors/${vd_jquery_qtip}/${js_jquery_qtip}'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_qtip}/${css_jquery_qtip}'/>" type="text/css"/>
+
 /////////////////////////////////////////////////////////////////////
 <%--<style>--%>
     <%--table.fancytree-ext-table {--%>
@@ -175,6 +184,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
 
 
                                 <div class="row" id="tabTopBlank">
@@ -309,11 +320,6 @@
 
 
                                             <a href="#" class="font-bold"><div data-i18n="complaint:documents-to-retire.title">Documents</div> </a>
-                                            <form id="formUploadDoc" style="display:none;">
-                                                <input type="file" id="file" name="files[]" multiple />
-                                            </form>
-                                            <form action="#" id="formDownloadDoc" style="display:none;">
-                                            </form>
                                         </div>
 
 
@@ -666,12 +672,47 @@
                                     </div>
 
 
+                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
+                                        <aside class="wrapper">
+                                                <%--<div class="pull-right inline">
+                                                    <div class="dropdown">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#downloadICS" style="display:none;"><i class="fa fa-calendar"></i> Download ICS</button>
+                                                        </div>
+                                                    </div>
+                                                </div>--%>
+                                                <%--<h4 class="m-n" style="display:none;">Complaint Calendar</h4>--%>
+                                                <%--<hr/>--%>
+
+                                            <section class="panel no-border bg-light">
+                                                <header class="panel-heading bg-primary clearfix">
+                                                    <div class="btn-group pull-right" data-toggle="buttons">
+                                                        <label class="btn btn-sm btn-bg btn-default active" id="monthview">
+                                                            <input type="radio" name="options">Month
+                                                        </label>
+                                                        <label class="btn btn-sm btn-bg btn-default" id="weekview">
+                                                            <input type="radio" name="options">Week
+                                                        </label>
+                                                        <label class="btn btn-sm btn-bg btn-default" id="dayview">
+                                                            <input type="radio" name="options">Day
+                                                        </label>
+                                                    </div>
+                                                <span class="m-t-xs inline text-white">
+                                                  Calendar
+                                                </span>
+                                                </header>
+                                                <div class="calendar">
+                                                </div>
+                                            </section>
+                                        </aside>
+                                    </div>
 
 
 
 
 
-                                    <%--<div class="row" id="tabRefComplaints" style="display:none;">--%>
+
+                                <%--<div class="row" id="tabRefComplaints" style="display:none;">--%>
                                             <%--&lt;%&ndash;Other Complaints&ndash;%&gt;--%>
                                     <%--</div>--%>
 

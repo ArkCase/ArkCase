@@ -86,13 +86,14 @@
               <nav class="nav-primary hidden-xs">
                 <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
                 <ul class="nav nav-main" data-ride="collapse">
-                  <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li>
-                  <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
+                  <li class=""> <a href="portal.html" class="auto"> <i class="i i-statistics icon"> </i> <span class="font-bold">Dashboard</span> </a> </li> <li class=""> <a href="activity.html" class="auto"> <i class="i i-alarm icon"> </i> <span class="font-bold">Activity</span> </a> </li>
+ <li class=""> <a href="calendar.html" class="auto"> <i class="i i-calendar icon"> </i> <span class="font-bold">Calendar</span> </a> </li>
                   <li class="active"> <a href="complaints.html" class="auto"> <i class="i i-notice icon"> </i> <span class="font-bold">Complaints</span> </a> </li>
                   <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
                   <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+<li class=""> <a href="contacts.html" class="auto"> <i class="fa fa-users icon"> </i> <span class="font-bold">Contacts</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
 <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
@@ -158,30 +159,34 @@
                   <section class="scrollable">
                     <div class="wrapper dk  clearfix">
                       <div class="row">
-                        <div class="col-xs-12">
-                          <div class="">
-                            <div class=" clearfix">
-                              <div class="col-xs-4 b-r">
-                                <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> </div>
-                                <small class="text-muted"><a href="#" id="complaintID" >2014-03-12321</a></small></div>
-                              <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date">MM/DD/YYYY</a></div>
-                                <small class="text-muted">Incident Date</small></div>
-                              <div class="col-xs-1 b-r">
-                                <div class="h4 font-bold"><a href="#" id="version" data-type="select" data-pk="1" data-url="/post" data-title="Enter version">High</a></div>
-                                <small class="text-muted">version</small></div>
-                              <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">AJ McClary</a></div>
-                                <small class="text-muted">Assigned To</small></div>
-                              <div class="col-xs-2 b-r">
-                                <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
-                                <small class="text-muted">Subject Type</small></div>
-                              <div class="col-xs-1">
-                                <div class="h4 font-bold"><a href="#" id="status" >PENDING</a></div>
-                                <small class="text-muted">Status</small></div>
-                            </div>
-                          </div>
+                        <div class="col-xs-6  b-r">
+                          <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> Sample Complaint Title</a> (State)</h4>
                         </div>
+                        <div class="col-xs-6  b-r text-right">
+                          <h5><a href="#" id="complaintID" >2014-03-12321</a></h5>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-4 b-r">
+                          <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                          <small class="text-muted">Inncodent Category</small> </div>
+                        <div class="col-xs-4 b-r">
+                          <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Created Date">MM/DD/YYYY</a></div>
+                          <small class="text-muted">Created Date</small> </div>
+                        <div class="col-xs-4 b-r">
+                          <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                          <small class="text-muted">Priority</small> </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-4 b-r">
+                          <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">Ann Administrator</a></div>
+                          <small class="text-muted">Assigned To</small> </div>
+                        <div class="col-xs-4  b-r">
+                          <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-url="/post" data-title="Enter Group">ACM_INVESTIGATOR_DEV</a></div>
+                          <small class="text-muted">Owning Group</small> </div>
+                        <div class="col-xs-4 b-r ">
+                          <div class="h4 font-bold"><a href="#" id="due" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
+                          <small class="text-muted">Due Date</small> </div>
                       </div>
                     </div>
                     <div>
@@ -310,8 +315,8 @@ activate: function(event, data) {
 				href: "complaintTasks.html", 
 				nodeType: "task"
             }, {
-                title: "References",
-              	href: "complaintOther.html"
+                title: "Calendar",
+              	href: "complaintCalendar.html"
             }, {
                 title: "History",
                 folder: false,
