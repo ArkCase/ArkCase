@@ -120,9 +120,9 @@
                             </header>
                             <div class="wrapper">
                                 <div class="input-group">
-                                    <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                                    <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]casefile:navigation.search.search" placeholder="Search">
                         <span class="input-group-btn">
-                        <button class="btn btn-sm btn-default" type="button">Go!</button>
+                        <button class="btn btn-sm btn-default" type="button" data-i18n="casefile:navigation.search.btn-go">Go!</button>
                         </span> </div>
                             </div>
                             <div class="row m-b">
@@ -142,36 +142,36 @@
                                         <div class="">
                                             <div class=" clearfix">
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-title="Enter Case Title"></a> </div>
+                                                    <div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title" data-title="Enter Case Title"></a> </div>
                                                     <small class="text-muted"><a href="#" id="caseNumber" ></a></small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Create Date</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-incident-date"  data-title="Enter Incident Date"></a></div>
+                                                    <small class="text-muted" data-18n="casefile:header.labels.create-date">Create Date</small></div>
 
                                                 <div class="col-xs-1 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority">High</a></div>
-                                                    <small class="text-muted">Priority</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-priority;priority-high" data-title="Enter Priority">High</a></div>
+                                                    <small class="text-muted" data-18n="casefile:header.labels.priority">Priority</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted">Assigned To</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-assignee"  data-title="Enter Assignee"></a></div>
+                                                    <small class="text-muted" data-18n="casefile:header.labels.assigned-to">Assigned To</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted">Owning Group</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-owning-group"  data-title="Enter Owning Group"></a></div>
+                                                    <small class="text-muted" data-18n="casefile:header.labels.owning-group">Owning Group</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Case Type</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-subject-type"  data-title="Enter Subject Type"></a></div>
+                                                    <small class="text-muted" data-18n="casefile:header.labels.case-type">Case Type</small></div>
                                                 <div class="col-xs-2 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                                    <small class="text-muted">Due Date</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-due-date"  data-title="Enter Due Date"></a></div>
+                                                    <small class="text-muted" data-18n="casefile:header.labels.due-date">Due Date</small></div>
                                                 <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted">State</small></div>
+                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div> <small class="text-muted" data-18n="casefile:header.labels.state">State</small></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row" id="tabTopBlank">
-                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No case is selected)</p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n=casefile:"msg.no-case-selected">(No case is selected)</span></p>
                                 </div>
                             </div>
 
@@ -184,32 +184,42 @@
                                     <div class="pull-left inline">
                                         <div class="btn-group">
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" id="restrict"> Restrict ?
+                                                <input type="checkbox" id="restrict" > <span data-i18n="casefile:header.buttons.restrict">Restrict ?</span>
                                             </label>
                                         </div>
                                     </div>
 
                                     <div class="pull-right inline">
                                         <div class="btn-group">
-                                        	<button class="btn btn-default btn-sm" data-title="Edit Case File"><i class="fa fa-edit"></i> Edit</button>
+                                        	<button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.edit-case-file" data-title="Edit Case File"><i class="fa fa-edit"></i>
+                                                <span data-i18n="casefile:header.buttons.edit">Edit</span>
+                                            </button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                            <button class="btn btn-default btn-sm" data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i> Change Case Status</button>
+                                            <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.change-case-status"data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
+                                                <span data-i18n="casefile:header.buttons.change-case-status">Change Case Status</span>
+                                            </button>
                                             <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
-                                            <button class="btn btn-default btn-sm" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i> Reinvestigate</button>
-                                            <button class="btn btn-default btn-sm" data-title="Consolidate Case"><i class="fa fa-random"></i> Consolidate</button>
-                                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> Subscribe</button>
+                                            <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
+                                                <span data-i18n="casefile:header.buttons.reinvestigate">Reinvestigate</span>
+                                            </button>
+                                            <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
+                                                <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
+                                            </button>
+                                            <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
+                                                <span data-i18n="casefile:header.buttons.subscribe">Subscribe</span>
+                                            </button>
                                             <!-- Modal -->
                                             <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title" id="labChangeCaseStatus">Change Case Status</h4>
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:change-case-status-dialog.btn-close">Close</span></button>
+                                                            <h4 class="modal-title" id="labChangeCaseStatus" data-i18n="casefile:change-case-status-dialog.title">Change Case Status</h4>
                                                         </div>
-                                                        <div class="modal-body"> Are you sure you want to change the status for this case? </div>
+                                                        <div class="modal-body" data-i18n="casefile:change-case-status-dialog.body"> Are you sure you want to change the status for this case? </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                            <button type="button" class="btn btn-primary">Change Case Status</button>
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:change-case-status-dialog.btn-cancel">Cancel</button>
+                                                            <button type="button" class="btn btn-primary" data-i18n="casefile:change-case-status-dialog.btn-ok">Change Case Status</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,20 +228,22 @@
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                            <h4 class="modal-title" id="labConsolidateCase">Consolidate Case</h4>
+                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:consolidate-case-dialog.btn-close">Close</span></button>
+                                                            <h4 class="modal-title" id="labConsolidateCase" data-i18n="casefile:consolidate-case-dialog.title">Consolidate Case</h4>
                                                         </div>
                                                         <div class="modal-body">
                                                             <section class="row">
                                                                 <div class="col-sm-12">
-                                                                    <label for="edtConsolidateCase" class="label">Enter the case you would like to consolidate with:</label>
+                                                                    <label for="edtConsolidateCase" class="label" data-i18n="casefile:consolidate-case-dialog.enter-case-like-consolidate">
+                                                                        Enter the case you would like to consolidate with:
+                                                                    </label>
                                                                     <input id="edtConsolidateCase" type="text" class="form-control" placeholder="Case #" >
                                                                 </div>
                                                             </section>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                            <button type="button" class="btn btn-primary">Consolidate Case</button>
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:consolidate-case-dialog.btn-cancel">Cancel</button>
+                                                            <button type="button" class="btn btn-primary" data-i18n="casefile:consolidate-case-dialog.btn-ok">Consolidate Case</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -279,16 +291,16 @@
                                                     <div class="btn-group padder-v2">
                                                         <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>--%>
                                                         <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>--%>
-                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                         <ul class="dropdown-menu pull-right">
-                                                            <li><a href="#">Other menu items</a></li>
+                                                            <li><a href="#" data-i18n="casefile:detail.other-menu-items">Other menu items</a></li>
                                                         </ul>
                                                     </div>
                                                 </li>
                                                 <li>&nbsp;</li>
                                             </ul>
-                                            </span> <a href="#" class="font-bold">Details</a></div>
+                                            </span> <a href="#" class="font-bold" data-i18n="casefile:detail.details">Details</a></div>
                                         <div class="panel-body">
                                             <div class="divDetail"></div>
                                         </div>
@@ -334,7 +346,7 @@
                                         </ul>
 
 
-                                            <a href="#" class="font-bold"><div>Documents</div> </a>
+                                            <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             <form id="formUploadDoc" style="display:none;">
                                                 <input type="file" id="file" name="files[]" multiple />
                                             </form>
@@ -347,20 +359,20 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Create Folder</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:create-new-folder-dialog.btn-close">Close</span></button>
+                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="casefile:create-new-folder-dialog.title">Create Folder</h4>
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <p>Enter a name for the folder you would like to create:</p>
+                                                        <p data-i18n="casefile:create-new-folder-dialog.body">Enter a name for the folder you would like to create:</p>
 
-                                                        <label for="folderName2">Folder Name</label><br/>
-                                                        <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
+                                                        <label for="folderName2" data-i18n="casefile:create-new-folder-dialog.label.folder-name">Folder Name</label><br/>
+                                                        <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]casefile:create-new-folder-dialog.label.folder-name"placeholder="Folder Name" />
 
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-primary">Create Folder<</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:create-new-folder-dialog.btn-cancel">Cancel</button>
+                                                        <button type="button" class="btn btn-primary" data-i18n="casefile:create-new-folder-dialog.btn-ok">Create Folder</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -371,20 +383,22 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;
+                                                            <span class="sr-only" data-i18n="casefile:email-documents-dialog.btn-close">Close</span>
+                                                        </button>
+                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="casefile:email-documents-dialog.title">Send Email</h4>
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <p>Where would you like to email this file?</p>
+                                                        <p data-i18n="casefile:email-documents-dialog.body">Where would you like to email this file?</p>
 
-                                                        <label for="emailaddy">Email Address</label><br/>
-                                                        <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" />
+                                                        <label for="emailaddy" data-i18n="casefile:email-documents-dialog.label.email-address">Email Address</label><br/>
+                                                        <input type="text" id="emailaddy" class="input-lg" data-i18n="[placeholder]casefile:email-documents-dialog.label.email-address" placeholder="Email Address" />
 
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-primary">Send Email</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:email-documents-dialog.btn-cancel">Cancel</button>
+                                                        <button type="button" class="btn btn-primary" data-i18n="casefile:email-documents-dialog.btn-ok">Send Email</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -394,13 +408,13 @@
                                             <thead>
                                             <tr>
                                                 <th width2="6%"><span class='fancytree-checkbox'></span></th>
-                                                <th width2="4%">ID</th>
-                                                <th width="35%">Title</th>
-                                                <th width="12%">Type</th>
-                                                <th width="10%">Created</th>
-                                                <th width="16%">Author</th>
-                                                <th width="6%">Version</th>
-                                                <th width="8%">Status</th>
+                                                <th width2="4%" data-i18n="casefile:documents.table.field.id">ID</th>
+                                                <th width="35%" data-i18n="casefile:documents.table.field.title">Title</th>
+                                                <th width="12%" data-i18n="casefile:documents.table.field.type">Type</th>
+                                                <th width="10%" data-i18n="casefile:documents.table.field.created">Created</th>
+                                                <th width="16%" data-i18n="casefile:documents.table.field.author">Author</th>
+                                                <th width="6%" data-i18n="casefile:documents.table.field.version">Version</th>
+                                                <th width="8%" data-i18n="casefile:documents.table.field.status">Status</th>
                                                     <%--<th width2="6%" colspan="2"></th>--%>
                                             </tr>
                                             </thead>
