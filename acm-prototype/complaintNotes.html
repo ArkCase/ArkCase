@@ -194,57 +194,89 @@
                       <div class="wrapper">
                         <div class="row">
                           <div class="col-md-12">
-                            <section class="panel b-a">
-                              <div class="panel-heading b-b bg-info">
-                                <ul class="nav nav-pills pull-right">
-                                  <li style="margin-right:5px">
-                                    <div class="btn-group" style="margin-top:4px;">
-                                      <ul class="dropdown-menu dropdown-select">
-                                        <li><a href="#">
-                                          <input type="radio" name="b">
-                                        Filter 1</a></li>
-                                        <li><a href="#">
-                                          <input type="radio" name="b">
-                                          Filter 2</a></li>
-                                        <li><a href="#">
-                                          <input type="radio" name="b">
-                                          Filter 3</a></li>
-                                      </ul>
-                                    </div>
-                                  </li>
-                                  <li>
-                                    <div class="btn-group padder-v2">
-                                      <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="New Device"><i class="fa fa-file"></i> New</button>
-                                    </div>
-                                  </li>
-                                  <li>&nbsp;</li>
-                                </ul>
-                                <a href="#" class="font-bold">Notes</a></div>
-                              <div class="panel-body max-200 no-padder">
-                                <table class="table table-striped th-sortable table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th width="68%">Note</th>
-                                      <th width="12%">Created</th>
-                                      <th width="10%">Author</th>
-                                      <th width="10%">Action</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="odd gradeA">
-                                      <td>[Note]</td>
-                                      <td>[Created]</td>
-                                      <td>[Author]</td>
-                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
-                                        <option value="0">Choose Action</option>
-                                        <option value="1">Delete</option>
-                                        
-                                      </select></td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </section>
+               
+               
+               
+               
+               
+               
+                <section class="panel b-a">
+                    <div class="panel-heading b-b bg-info">Notes</div>
+                    <section class="chat-list panel-body">
+                      <article id="chat-id-1" class="chat-item left">
+                        <a href="#" class="pull-left thumb-sm avatar"><img src="resources/images/a0.png"></a>
+                        <section class="chat-body">
+                          <div class="panel b-light text-sm m-b-none">
+                            <div class="panel-body">
+                              <span class="arrow left"></span>
+                              <p class="m-b-none">Message 1</p>
+                            </div>
+                            <div class="pull-right "><a href="#reply1" data-toggle="class:show" class="text-muted">Reply</a></div>
+                          </div>
+                          <small class="text-muted"><i class="fa fa-ok text-success"></i> 2 minutes ago by [Name] </small>
+                          <input type="text" id="reply1" class="form-control hide" placeholder="Enter a reply">
+                        </section>
+                      </article>
+                      <article id="chat-id-1" class="chat-item left">
+                        <a href="#" class="pull-left thumb-sm avatar"><img src="resources/images/a2.png" class="img-circle"></a>
+                        <section class="chat-body">                      
+                          <div class="panel bg-light text-sm m-b-none">
+                            <div class="panel-body">
+                              <span class="arrow right"></span>
+                              <p class="m-b-none">Message 2</p>
+                            </div>
+                             <div class="pull-right"><a href="#reply2" data-toggle="class:show" class="text-muted">Reply</a></div>
+                             
+                             
+                      
+                             
+                          </div>
+                          <small class="text-muted">1 minutes ago by [Name]</small>
+                          
+                          <input type="text" id="reply2" class="form-control hide" placeholder="Enter a reply">
+                        </section>
+                      </article>    
+                      
+                      
+                       <article id="chat-id-1" class="chat-item child left">
+                        <a href="#" class="pull-left thumb-sm avatar"><img src="resources/images/a2.png" class="img-circle"></a>
+                        <section class="chat-body">                      
+                          <div class="panel bg-light text-sm m-b-none">
+                            <div class="panel-body">
+                              <span class="arrow right"></span>
+                              <p class="m-b-none">Message 2</p>
+                            </div>
+                             
+                             
+                      
+                             
+                          </div>
+                          <small class="text-muted">1 minutes ago by [Name]</small>
+                          
+                         
+                        </section>
+                      </article>                              
+                    </section>
+                    <footer class="panel-footer">
+                      <!-- chat form -->
+                      <article class="chat-item" id="chat-form">
+                        <a class="pull-left thumb-sm avatar"><img src="resources/images/a0.png" class="img-circle"></a>
+                        <section class="chat-body">
+                          <form action="" class="m-b-none">
+                            <div class="input-group">
+                              <input type="text" class="form-control" placeholder="Enter a comment">
+                              <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">SEND</button>
+                              </span>
+                            </div>
+                          </form>
+                        </section>
+                      </article>
+                    </footer>
+                  </section>
+                            
+                            
+                            
                           </div>
                         </div>
                       </div>
