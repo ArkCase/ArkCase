@@ -38,10 +38,13 @@
     
     <bean id="saveSupervisorToGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveSupervisorToGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
+    	<property name="userDao" ref="userJpaDao"/>
     </bean>
     
     <bean id="saveMembersToGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveMembersToGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
+    	<property name="userDao" ref="userJpaDao"/>
+    	<property name="groupService" ref="groupService" />
     </bean>
     
     <bean id="removeSupervisorFromGroupAPIController" class="com.armedia.acm.services.users.web.api.group.RemoveSupervisorFromGroupAPIController">
@@ -50,6 +53,7 @@
     
     <bean id="removeMembersFromGroupAPIController" class="com.armedia.acm.services.users.web.api.group.RemoveMembersFromGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
+    	<property name="groupService" ref="groupService" />
     </bean>
 
 </beans>

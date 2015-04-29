@@ -58,8 +58,6 @@ public class ROIServiceTest extends EasyMockSupport
 		ROIForm form = gson.fromJson(expected, ROIForm.class);
 		form.getReportInformation().setDate(new Date());
 
-		expect(mockUserDao.findByFullNameKeyword("")).andReturn(new ArrayList<AcmUser>());
-
 		replayAll();
 
 		Object initFormData = roiServiceTest.get("init-form-data");

@@ -15,12 +15,16 @@ DocTree.Service = {
     ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
     ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
     ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
+    ,API_REPLACE_FILE_                : "/api/latest/service/ecm/replace/"                       //  {fileToBeReplacedId}
     ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
     ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
     ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
     ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
-    ,API_MOVE_TO_                     : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
-    ,API_COPY_TO_                     : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+    ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
+    ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"        //  {targetObjectType}/{targetObjectId}
+    ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          // {fileId}?versionTag=x.y"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -142,18 +146,17 @@ DocTree.Service = {
     }
 
 
-    ,uploadFile: function(formData, cacheKey, callerData) {
+    ,uploadFiles: function(formData, cacheKey, callerData) {
         return $.Deferred(function($dfd){
             var url = App.getContextPath() + DocTree.Service.API_UPLOAD_FILE;
-            Acm.Service.ajax({
-                url: url
+            Acm.Service.ajax({type: 'POST'
+                ,url: url
                 ,data: formData
                 ,processData: false
                 ,contentType: false
-                ,type: 'POST'
                 ,success: function(response){
                     if (response.hasError) {
-                        DocTree.Controller.modelUploadedFile(response, callerData);
+                        DocTree.Controller.modelUploadedFiles(response, callerData);
                         $dfd.reject();
                     } else {
                         var uploadedFiles = null;
@@ -183,12 +186,12 @@ DocTree.Service = {
                                 }
                                 DocTree.Model.cacheFolderList.put(cacheKey, folderList);
 
-                                DocTree.Controller.modelUploadedFile(uploadInfo, callerData);
+                                DocTree.Controller.modelUploadedFiles(uploadInfo, callerData);
                                 $dfd.resolve(uploadedFiles);
                             }
                         }
 
-                        if (!uploadedFile) {
+                        if (!uploadedFiles) {
                             $dfd.reject();
                         }
                     }
@@ -196,10 +199,60 @@ DocTree.Service = {
             });
         });
     }
+    ,replaceFile: function(formData, fileId, cacheKey, callerData) {
+        return $.Deferred(function($dfd){
+            var url = App.getContextPath() + DocTree.Service.API_REPLACE_FILE_ + fileId;
+            Acm.Service.ajax({type: 'POST'
+                ,url: url
+                ,data: formData
+                ,processData: false
+                ,contentType: false
+                ,success: function(response){
+                    if (response.hasError) {
+                        DocTree.Controller.modelReplacedFile(response, fileId, callerData);
+                        $dfd.reject();
+                    } else {
+                        if (DocTree.Model.validateReplaceInfo(response)) {
+                            var replaceInfo = response;
+
+                            if (replaceInfo.fileId == fileId) {
+                                var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                                if (DocTree.Model.validateFolderList(folderList)) {
+                                    var replaced = DocTree.Model.findFolderItemIdx(fileId, folderList);
+                                    if (0 <= replaced) {
+                                        folderList.children[replaced].version = Acm.goodValue(replaceInfo.activeVersionTag);
+                                        DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                        DocTree.Controller.modelReplacedFile(replaceInfo, fileId, callerData);
+                                        $dfd.resolve(folderList.children[replaced]);
+                                    }
+
+//                                    uploadedFile.objectId   = Acm.goodValue(uploadInfo[i].fileId);
+//                                    uploadedFile.objectType = "file";
+//                                    uploadedFile.created    = Acm.goodValue(uploadInfo[i].created);
+//                                    uploadedFile.creator    = Acm.goodValue(uploadInfo[i].creator);
+//                                    uploadedFile.modified   = Acm.goodValue(uploadInfo[i].modified);
+//                                    uploadedFile.modifier   = Acm.goodValue(uploadInfo[i].modifier);
+//                                    uploadedFile.name       = Acm.goodValue(uploadInfo[i].fileName);
+//                                    uploadedFile.type       = Acm.goodValue(uploadInfo[i].fileType);
+//                                    uploadedFile.status     = Acm.goodValue(uploadInfo[i].status);
+//                                    uploadedFile.version    = Acm.goodValue(uploadInfo[i].activeVersionTag);
+//                                    uploadedFile.category   = Acm.goodValue(uploadInfo[i].category);
+
+                                }
+                            }
+                        }
+
+                    }
+                }
+            });
+        });
+    }
+
     ,createFolder: function(parentId, folderName, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
-        Acm.Service.asyncPut(
-            function(response) {
+        Acm.Service.call({type: "PUT"
+            ,url: url
+            ,callback: function(response) {
                 if (response.hasError) {
                     DocTree.Controller.modelCreatedFolder(response, parentId, folderName, cacheKey, callerData);
 
@@ -211,26 +264,26 @@ DocTree.Service = {
                             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
                             if (DocTree.Model.validateFolderList(folderList)) {
                                 var createdFolder = DocTree.Service.folderCreateToFileData(createInfo);
-//                                var createdFolder = {};
-//                                createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
-//                                createdFolder.objectType = "folder";
-//                                createdFolder.created    = Acm.goodValue(createInfo.created);
-//                                createdFolder.creator    = Acm.goodValue(createInfo.creator);
-//                                createdFolder.modified   = Acm.goodValue(createInfo.modified);
-//                                createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
-//                                createdFolder.name       = Acm.goodValue(createInfo.name);
-//                                createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
+    //                                var createdFolder = {};
+    //                                createdFolder.objectId   = Acm.goodValue(createInfo.id, 0);
+    //                                createdFolder.objectType = "folder";
+    //                                createdFolder.created    = Acm.goodValue(createInfo.created);
+    //                                createdFolder.creator    = Acm.goodValue(createInfo.creator);
+    //                                createdFolder.modified   = Acm.goodValue(createInfo.modified);
+    //                                createdFolder.modifier   = Acm.goodValue(createInfo.modifier);
+    //                                createdFolder.name       = Acm.goodValue(createInfo.name);
+    //                                createdFolder.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
                                 folderList.children.push(createdFolder);
                                 folderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                 DocTree.Controller.modelCreatedFolder(createdFolder, parentId, folderName, cacheKey, callerData);
+                                return true;
                             }
                         }
                     }
                 } //end else
             }
-            ,url
-        )
+        });
     }
     ,deleteFolder: function(folderId, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_DELETE_FOLDER_ + folderId;
@@ -362,9 +415,10 @@ DocTree.Service = {
         )
     }
     ,moveFile: function(objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_MOVE_TO_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_MOVE_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
@@ -399,9 +453,10 @@ DocTree.Service = {
         })
     }
     ,copyFile: function(objType, objId, folderId, fileId, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_COPY_TO_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
@@ -422,27 +477,23 @@ DocTree.Service = {
                                 DocTree.Controller.modelCopiedFile(fileData, objType, objId, folderId, fileId, toCacheKey, callerData);
                                 return true;
                             }
-
                         }
                     }
                 } //end else
             }
         })
     }
-    ,moveFolder: function(objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
-        return;
-
-        var url = App.getContextPath() + this.API_MOVE_TO_ + objType + "/" + objId;
-        var data = {"id": subFolderId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
-            ,data: JSON.stringify(data)
+    ,moveFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, callerData) {
+        var url = App.getContextPath() + this.API_MOVE_FOLDER_ + subFolderId + "/" + folderId;
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,callback: function(response) {
                 if (response.hasError) {
-                    DocTree.Controller.modelMovedFolder(response, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
+                    DocTree.Controller.modelMovedFolder(response, subFolderId, folderId, frCacheKey, toCacheKey, callerData);
 
                 } else {
                     if (DocTree.Model.validateMoveFolderInfo(response)) {
-                        if (response.fileId == subFolderId) {
+                        if (response.id == subFolderId) {
                             var moveFolderInfo = response;
 
                             var frFolderList = DocTree.Model.cacheFolderList.get(frCacheKey);
@@ -460,7 +511,7 @@ DocTree.Service = {
                                 }
                             }
 
-                            DocTree.Controller.modelMovedFolder(moveFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
+                            DocTree.Controller.modelMovedFolder(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, callerData);
                             return true;
                         }
                     }
@@ -471,9 +522,10 @@ DocTree.Service = {
     ,copyFolder: function(objType, objId, folderId, subFolderId, toCacheKey, callerData) {
         return;
 
-        var url = App.getContextPath() + this.API_COPY_TO_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": subFolderId, "folderId": folderId};
-        Acm.Service.asyncPost2({url: url
+        Acm.Service.call({type: "POST"
+            ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
                 if (response.hasError) {
@@ -528,6 +580,41 @@ DocTree.Service = {
         fileData.folderId   = Acm.goodValue(createInfo.parentFolderId, 0);
         return fileData;
     }
+
+    ,setActiveVersion: function(fileId, version, cacheKey, callerData) {
+        return;
+
+        var url = App.getContextPath() + this.API_SET_ACTIVE_VERSION_ + fileId + "?versionTag=" + version;
+        //var data = {"id": subFolderId, "folderId": folderId};
+        Acm.Service.asyncPost2({url: url
+            //,data: JSON.stringify(data)
+            ,callback: function(response) {
+                if (response.hasError) {
+                    DocTree.Controller.modelSetActiveVersion(response, fileId, cacheKey, callerData);
+
+                } else {
+                    if (DocTree.Model.validateCopyFolderInfo(response)) {
+                        if (response.folder.id == folderId) {
+                            var copyFolderInfo = response;
+
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                var idx = DocTree.Model.findFolderItemIdx(fileId, folderList);
+                                if (0 <= idx) {
+                                    folderList.children[idx].activeVersionTag = "xxxxxxxxxxxxxxxxx"; //response.activeVersionTag;
+                                    DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                    DocTree.Controller.modelSetActiveVersion(version, fileId, cacheKey, callerData);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                } //end else
+            }
+        })
+    }
+
+
     ,testService2: function(node, parentId, folder) {
         setTimeout(function(){
             var folder = {id: 123, some: "some", value: "value"};

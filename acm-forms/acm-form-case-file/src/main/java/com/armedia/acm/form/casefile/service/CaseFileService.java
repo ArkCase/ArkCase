@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
+import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
@@ -78,9 +79,9 @@ public class CaseFileService extends FrevvoFormAbstractService {
 				result = initFormData();
 			}
 			
-			if ("init-participants".equals(action)) 
+			if ("init-participants-groups".equals(action)) 
 			{
-				result = initParticipants();
+				result = initParticipantsAndGroupsInfo();
 			}
 		}
 		
@@ -260,16 +261,22 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return people;
 	}
 	
-	private JSONObject initParticipants()
+	private JSONObject initParticipantsAndGroupsInfo()
 	{
 		CaseFileForm form = new CaseFileForm();
 		
 		// Init Participant types
 		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".participantTypes"), ",");
 		form.setParticipantsTypeOptions(participantTypes);
+		form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.CASE_FILE));
 		
-		// Init Participants
-		form.setParticipantsOptions(getParticipants(participantTypes, FrevvoFormName.CASE_FILE));
+		// Init Owning Group information
+		String owningGroupType = (String) getProperties().get(FrevvoFormName.CASE_FILE + ".owningGroupType");
+		OwningGroupItem owningGroupItem = new OwningGroupItem();
+		owningGroupItem.setType(owningGroupType);
+		
+		form.setOwningGroup(owningGroupItem);
+		form.setOwningGroupOptions(getOwningGroups(owningGroupType, FrevvoFormName.CASE_FILE));
 		
 		JSONObject json = createResponse(form);
 		

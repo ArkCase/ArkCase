@@ -234,6 +234,7 @@ Task.View = Task.View || {
             this.$lnkParentObjAssigned       = $("#parentObjAssigned");
             this.$lnkParentObjSubjectType    = $("#parentObjSubjectType");
             this.$lnkParentObjStatus         = $("#parentObjStatus");
+            this.$lnkParentObjOwningGroup    = $("#parentObjOwningGroup");
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT            ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT              ,this.onViewSelectedObject);
@@ -261,15 +262,15 @@ Task.View = Task.View || {
                 if(Acm.isNotEmpty(task.parentObjectId) && Acm.isNotEmpty(task.parentObjectType)){
                     var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
-                        this.setTextParentObjTitle(parentObjData.title);
+                        this.setTextParentObjTitle(Acm.goodValue(parentObjData.title));
                         this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
-                        this.setTextLnkParentObjPriority(parentObjData.priority);
+                        this.setTextLnkParentObjPriority(Acm.goodValue(parentObjData.priority));
                         this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
-                        this.setTextLnkParentObjStatus(parentObjData.status);
-                        this.setTextLnkParentObjSubjectType(parentObjData.subjectType);
-                        this.setTextLnkParentObjNumber(parentObjData.number);
-                        this.setParentObjLink(parentObjData.id, parentObjData.objectType);
-
+                        this.setTextLnkParentObjStatus("  (" + Acm.goodValue(parentObjData.status) +")");
+                        this.setTextLnkParentObjSubjectType(Acm.goodValue(parentObjData.subjectType));
+                        this.setTextLnkParentObjNumber(Acm.goodValue(parentObjData.number));
+                        this.setParentObjLink(Acm.goodValue(parentObjData.id), Acm.goodValue(parentObjData.objectType));
+                        this.setTextLnkParentObjOwningGroup(Acm.goodValue(parentObjData.group));
                         this.showDivParentDetail(true);
                     }
                 }
@@ -282,6 +283,7 @@ Task.View = Task.View || {
                     this.setTextLnkParentObjSubjectType("");
                     this.setTextLnkParentObjNumber("");
                     this.setParentObjLink("");
+                    this.setTextLnkParentObjOwningGroup("");
                 }
             }
 
@@ -303,6 +305,9 @@ Task.View = Task.View || {
 
         //parent obj details setters
 
+        ,setTextLnkParentObjOwningGroup: function(txt) {
+            Acm.Object.setText(this.$lnkParentObjOwningGroup, txt);
+        }
         ,showDivParentDetail: function(show) {
             Acm.Object.show(this.$divParentDetail, show);
         }
@@ -1891,7 +1896,7 @@ Task.View = Task.View || {
                             "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
                             //url = url.replace("_data=(", "_data=(complaintId:'" + "409" + "',complaintNumber:'" + "20140806_198" + "',mode:'edit',xmlId:'783',pdfId:'785',requestId:'780',");
 
-                            Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+                            Acm.Dialog.openWindow(url, "", 1060, 700, this.onDone);
                         }
                     }
                 }
@@ -1920,7 +1925,7 @@ Task.View = Task.View || {
                             url = url.replace("_data=(", "_data=(caseId:'" + parentId + "',caseNumber:'" + parentName +
                             "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
 
-                            Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+                            Acm.Dialog.openWindow(url, "", 1060, 700, this.onDone);
                         }
                     }
                 }

@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by armdev on 3/12/15.
@@ -14,6 +15,7 @@ public class AcmCmisObject implements Serializable
     private String objectType;
     private String name;
     private String version;
+    private List<EcmFileVersion> versionList;
     private Date created;
     private String creator;
     private Date modified;
@@ -149,4 +151,12 @@ public class AcmCmisObject implements Serializable
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+    public List<EcmFileVersion> getVersionList() {
+        return versionList;
+    }
+
+    public void setVersionList(List<EcmFileVersion> versionList) {
+        this.versionList = versionList;
+    }
 }

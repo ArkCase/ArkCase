@@ -15,7 +15,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source-test.xml",
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 public class SpringEntityListenerConfigurerIT
 {

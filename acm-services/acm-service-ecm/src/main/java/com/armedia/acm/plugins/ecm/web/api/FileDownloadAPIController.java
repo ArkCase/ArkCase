@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -56,8 +57,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             event.setSucceeded(true);
 
             getApplicationEventPublisher().publishEvent(event);
-
-            download(ecmFile.getVersionSeriesId(), response,inline);
+            String cmisFileId = FolderAndFilesUtils.getActiveVersionCmisId(ecmFile);
+            download(cmisFileId, response,inline);
         }
         else
         {

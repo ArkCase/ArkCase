@@ -33,9 +33,11 @@
         <camel.version>2.13.1</camel.version>
         <castor-xml.version>1.3.3</castor-xml.version>
         <drools.version>6.1.0.Final</drools.version>
-        <easymock.version>3.2</easymock.version>
+        <easymock.version>3.3.1</easymock.version>
+        <easymock-extension.version>3.2</easymock-extension.version>
         <eclipselink-jpa.version>2.5.2</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
+        <exchange-web-services.version>2.0-SNAPSHOT</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
         <google-collections.version>1.0</google-collections.version>
         <gson.version>1.7.1</gson.version>
@@ -321,6 +323,12 @@
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>false</enabled></snapshots>
         </repository>
+        <repository>
+            <url>https://***REMOVED***/content/repositories/armedia.snapshot</url>
+            <id>armedia.snapshot</id>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
     </repositories>
 
     <build>
@@ -528,7 +536,6 @@
                 <artifactId>drools-decisiontables</artifactId>
                 <version>${drools.version}</version>
             </dependency>
-
 
             <!-- spring -->
             <dependency>
@@ -807,6 +814,12 @@
                 <artifactId>mule-module-scripting</artifactId>
                 <version>${mule.version}</version>
                 <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aop</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.mule.modules</groupId>
@@ -843,6 +856,14 @@
                 <version>${mule-cmis-connector.version}</version>
             </dependency>
             <!-- end of mule -->
+
+            <!-- microsoft outlook / exchange integration -->
+            <dependency>
+                <groupId>com.microsoft.ews-java-api</groupId>
+                <artifactId>ews-java-api</artifactId>
+                <version>${exchange-web-services.version}</version>
+                <classifier>arkcase</classifier>
+            </dependency>
 
             <!-- camel -->
             <dependency>

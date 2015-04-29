@@ -15,7 +15,9 @@ Admin.Service = {
         }
         ,API_GROUP                  : "/api/latest/users/group/"
         ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get?n=50&s=create_date_tdt desc"
-        ,API_RETRIEVE_USERS         : "/api/v1/plugin/search/advanced/USER"
+        // In this URL "n" was not provided. For that reason it always back the default value (which is 10).
+        // If the application have more than 10 users, the rest of the users will not be shown in the organization hierarchy.
+        ,API_RETRIEVE_USERS         : "/api/v1/plugin/search/advanced/USER?n=10000"
         ,API_FACET_SEARCH_          : "/api/v1/plugin/search/facetedSearch?q="
 
 
