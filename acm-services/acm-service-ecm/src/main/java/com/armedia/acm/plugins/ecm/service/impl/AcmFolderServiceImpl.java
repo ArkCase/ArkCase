@@ -9,9 +9,8 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.ItemIterable;
-import org.apache.chemistry.opencmis.client.api.ObjectType;
+import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -206,7 +205,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+    public AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
 
         AcmFolder folder = getFolderDao().find(folderToBeCopiedId);
         AcmFolder dstFolder = getFolderDao().find(copyDstFolderId);
@@ -216,32 +215,48 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if (dstFolder == null ){
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,copyDstFolderId,"Destination folder not found",null);
         }
+        addNewFolder(copyDstFolderId,folder.getName());
 
-        AcmFolder folderCopy = null;
-        Map<String,Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
-        properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID,dstFolder.getCmisFolderId());
-        try {
+//        AcmFolder folderCopy = null;
+//        Map<String,Object> properties = new HashMap<>();
+//        properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
+//        properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID,dstFolder.getCmisFolderId());
+//        try {
+//            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folder, properties);
+//            if ( message.getInboundPropertyNames().contains(AcmFolderConstants.COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY )) {
+//                MuleException muleException = message.getInboundProperty(AcmFolderConstants.COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+//                if ( log.isErrorEnabled() ) {
+//                    log.error("Folder not copied successfully " + muleException.getMessage(), muleException);
+//                }
+//                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+//                        "Folder " + folder.getName() + "not copied successfully", muleException);
+//            }
+//        } catch ( PersistenceException | MuleException e ) {
+//            if ( log.isErrorEnabled() ){
+//                log.error( "Folder  "+ folder.getName() + "not copied successfully" + e.getMessage(),e);
+//            }
+//            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was not copied under "+dstFolder.getName()+" successfully",e);
+//        }
+//        return folderCopy;
+        return null;
+    }
 
-            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folder, properties);
+    private void copyChildren(Folder parentFolder, Folder toCopyFolder) {
 
-            if ( message.getInboundPropertyNames().contains(AcmFolderConstants.COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY )) {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.COPY_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled()) {
-                    log.error("Folder not copied successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                        "Folder " + folder.getName() + "not copied successfully", muleException);
+        ItemIterable<CmisObject> immediateChildren = toCopyFolder.getChildren();
+        for (CmisObject child : immediateChildren) {
+            if ( child instanceof Document ) {
+                copyDocument(parentFolder, ( Document ) child);
+            } else if ( child instanceof Folder ) {
+//                copyFolder(parentFolder, ( Folder ) child);
             }
-
-
-        } catch     ( PersistenceException | MuleException e ) {
-            if ( log.isErrorEnabled() ){
-                log.error("Folder  "+folder.getName()+"not copied successfully" + e.getMessage(),e);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was not copied under "+dstFolder.getName()+" successfully",e);
         }
-        return folderCopy;
+    }
+
+    public void copyDocument(Folder parentFolder, Document toCopyDocument) {
+        Map<String, Object> documentProperties = new HashMap<String, Object>(2);
+        documentProperties.put(PropertyIds.NAME, toCopyDocument.getName());
+        documentProperties.put(PropertyIds.OBJECT_TYPE_ID, toCopyDocument.getBaseTypeId().value());
     }
 
     @Override

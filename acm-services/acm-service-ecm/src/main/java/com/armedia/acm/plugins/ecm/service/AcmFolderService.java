@@ -24,7 +24,7 @@ public interface AcmFolderService {
 
     AcmCmisObjectList getFolderChildren(String objectType,Long objectId, Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+    AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
 
 
