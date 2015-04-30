@@ -40,6 +40,18 @@ public class MsOutlookJsonSchemaValidTest
         validate("/jsonSchemas/outlook-calendar-schema.json");
     }
 
+    @Test
+    public void validateContactsSchema() throws Exception
+    {
+        validate("/jsonSchemas/outlook-contacts-schema.json");
+    }
+
+    @Test
+    public void validateTasksSchema() throws Exception
+    {
+        validate("/jsonSchemas/outlook-tasks-schema.json");
+    }
+
     private void validate(String path) throws IOException, ProcessingException
     {
         Resource schemaResource = new ClassPathResource(path);
