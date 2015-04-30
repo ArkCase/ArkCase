@@ -1,304 +1,324 @@
 {
-  "header": {
-    "labels": {
-      "enter-complaint-title": "Enter Complaint Title",
-      "incident-date": "Incident Date",
-      "enter-incident-date": "Enter Incident Date",
-      "priority": "Priority",
-      "enter-priority": "Enter Priority",
-      "assigned-to": "Assigned To",
-      "enter-assignee": "Enter Assignee",
-      "owning-group": "Owning Group",
-      "enter-owning-group": "Enter Owning Group",
-      "enter-due-date": "Enter Due Date",
-      "due-date": "Due Date",
-      "incident-category": "Incident Category",
-      "enter-incident-category": "Enter Incident Category",
-      "state": "State"
+    "header": {
+        "labels": {
+            "enter-complaint-title": "Enter Complaint Title",
+            "incident-date": "Incident Date",
+            "enter-incident-date": "Enter Incident Date",
+            "priority": "Priority",
+            "enter-priority": "Enter Priority",
+            "assigned-to": "Assigned To",
+            "enter-assignee": "Enter Assignee",
+            "owning-group": "Owning Group",
+            "enter-owning-group": "Enter Owning Group",
+            "enter-due-date": "Enter Due Date",
+            "due-date": "Due Date",
+            "incident-category": "Incident Category",
+            "enter-incident-category": "Enter Incident Category",
+            "state": "State"
+        },
+        "buttons": {
+            "close-complaint": "Close Complaint",
+            "subscribe": "Subscribe",
+            "restrict": "Restrict ?"
+        }
     },
-    "buttons": {
-      "close-complaint": " Close Complaint",
-      "subscribe": "Subscribe",
-      "restrict": "Restrict ?"
+    "navigation": {
+        "leaf-title": {
+            "details": "Details",
+            "location": "Location",
+            "people": "People",
+            "documents": "Documents",
+            "tasks": "Tasks",
+            "notes": "Notes",
+            "participants": "Participants",
+            "references": "References",
+            "history": "History",
+            "time": "Time",
+            "cost": "Cost"
+        }
+    },
+    "context-menu": {
+        "menu-title": {
+            "menu": "Menu:",
+            "copy": "Copy",
+            "paste": "Paste",
+            "edit": "Edit",
+            "delete": "Delete",
+            "more": "More",
+            "sub1": "Sub 1",
+            "sub2": "Sub 2"
+        }
+    },
+    "document-dialog": {
+        "title": "My Dialog Title",
+        "btn-ok": "Select",
+        "btn-cancel": "Away"
+    },
+    "detail": {
+        "title": "Details",
+        "dirty-editing-detail": "Editing complaint detail",
+        "buttons": {
+            "edit": "Edit",
+            "save": "Save",
+            "other": "Other menu items",
+            "details": "Details"
+        }
+    },
+    "people": {
+        "table": {
+            "title": "People ",
+            "field": {
+                "id": "ID",
+                "title": "Title",
+                "first-name": "First Name",
+                "last-name": "Last Name",
+                "type": "Type"
+            },
+            "msg": {
+                "add-new-record": "Add Person"
+            }
+        }
+    },
+    "contact-method": {
+        "table": {
+            "field": {
+                "type": "Type",
+                "value": "Value",
+                "date-added": "Date Added",
+                "added-by": "Added By"
+            }
+        }
+    },
+    "security-tags": {
+        "table": {
+            "field": {
+                "type": "Type",
+                "value": "Value",
+                "date-added": "Date Added",
+                "added-by": "Added By"
+            }
+        }
+    },
+    "organizations": {
+        "table": {
+            "field": {
+                "type": "Type",
+                "value": "Value",
+                "date-added": "Date Added",
+                "added-by": "Added By"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Organization"
+        }
+    },
+    "addresses": {
+        "table": {
+            "field": {
+                "type": "Type",
+                "address": "Address",
+                "city": "City",
+                "state": "State",
+                "zip": "Zip",
+                "country": "Country",
+                "date-added": "Date Added",
+                "added-by": "Added By"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Location"
+        }
+    },
+    "aliases": {
+        "table": {
+            "field": {
+                "type": "Type",
+                "value": "Value",
+                "date-added": "Date Added",
+                "added-by": "Added By"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Alias"
+        }
+    },
+    "documents-to-retire": {
+        "title": "Documents",
+        "form-document": {
+            "document-type": "Document Type",
+            "medical-release": "Medical Release",
+            "general-release": "General Release",
+            "e-delivery": "eDelivery",
+            "sf86-signature": "SF86 Signature",
+            "notice-of-investigation": "Notice of Investigation",
+            "witness-interview-request": "Witness Interview Request",
+            "other": "Other"
+        },
+        "create-folder-dialog": {
+            "title": "Create Folder",
+            "labels": {
+                "prompt": "Enter a name for the folder you would like to create:",
+                "folder-name": "Folder Name"
+            },
+            "buttons": {
+                "close": "Close",
+                "cancel": "Cancel",
+                "create-folder": "Create Folder"
+            }
+        },
+        "email-dialog": {
+            "title": "Send Email",
+            "labels": {
+                "prompt": "Where would you like to email this file?",
+                "email-address": "Email Address"
+            },
+            "buttons": {
+                "close": "Close",
+                "cancel": "Cancel",
+                "send-email": "Send Email"
+            }
+        },
+        "buttons": {
+            "email": "Email",
+            "print": "Print"
+        },
+        "table": {
+            "field": {
+                "id": "ID",
+                "title": "Title",
+                "created": "Created",
+                "creator": "Creator"
+            }
+        },
+        "tree": {
+            "field": {
+                "id": "ID",
+                "title": "Title",
+                "type": "Type",
+                "created": "Created",
+                "author": "Author",
+                "version": "Version",
+                "status": "Status"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Document"
+        }
+    },
+    "notes": {
+        "title": "Notes",
+        "table": {
+            "field": {
+                "id": "ID",
+                "note": "Note",
+                "created": "Created",
+                "author": "Author"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Note"
+        }
+    },
+    "history": {
+        "title": "History",
+        "table": {
+            "field": {
+                "id": "ID",
+                "event-name": "Event Name",
+                "date": "Date",
+                "user": "User"
+            }
+        }
+    },
+    "references": {
+        "title": "References",
+        "table": {
+            "field": {
+                "id": "ID",
+                "title": "Title",
+                "modified": "Modified",
+                "reference-type": "Reference Type",
+                "status": "Status"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Reference"
+        }
+    },
+    "tasks": {
+        "title": "Tasks",
+        "table": {
+            "field": {
+                "id": "ID",
+                "title": "Title",
+                "created": "Created",
+                "priority": "Priority",
+                "due": "Due",
+                "assignee": "Assignee",
+                "status": "Status"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Task"
+        }
+    },
+    "participants": {
+        "title": "Participants",
+        "table": {
+            "field": {
+                "id": "ID",
+                "type": "Type",
+                "name": "Name"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Participant"
+        }
+    },
+    "location": {
+        "title": "Location",
+        "table": {
+            "field": {
+                "id": "ID",
+                "address": "Address",
+                "type": "Type",
+                "city": "City",
+                "state": "State",
+                "zip": "Zip"
+            }
+        },
+        "msg": {
+            "add-new-record": "Add Location"
+        }
+    },
+    "time": {
+        "title": "Time Tracking",
+        "table": {
+            "field": {
+                "id": "ID",
+                "form-name": "Form Name",
+                "username": "Username",
+                "total-hours": "Total Hours",
+                "modified-date": "Modified Date",
+                "status": "Status"
+            }
+        }
+    },
+    "cost": {
+        "title": "Cost Tracking",
+        "table": {
+            "field": {
+                "id": "ID",
+                "form-name": "Form Name",
+                "username": "Username",
+                "total-cost": "Total Cost",
+                "modified-date": "Modified Date",
+                "status": "Status"
+            }
+        }
+    },
+    "msg": {
+        "no-complaint-selected": "(No complaint is selected)",
+        "error-retrieving-complaint-data": "Error occurred for retrieving complaint data"
     }
-  },
-  "navigation": {
-    "leaf-title": {
-      "details": "Details",
-      "location": "Location",
-      "people": "People",
-      "documents": "Documents",
-      "tasks": "Tasks",
-      "notes": "Notes",
-      "participants": "Participants",
-      "references": "References",
-      "history": "History",
-      "time": "Time",
-      "cost": "Cost"
-    }
-  },
-  "context-menu": {
-    "menu-title": {
-      "menu": "Menu:",
-      "copy": "Copy",
-      "paste": "Paste",
-      "edit": "Edit",
-      "delete": "Delete",
-      "more": "More",
-      "sub1": "Sub 1",
-      "sub2": "Sub 2"
-    }
-  },
-  "document-dialog": {
-    "title": "My Dialog Title",
-    "btn-ok": "Select",
-    "btn-cancel": "Away"
-  },
-  "detail": {
-    "title": "Details",
-    "dirty-editing-detail": "Editing complaint detail",
-    "buttons": {
-      "edit": "Edit",
-      "save": "Save",
-      "other": "Other menu items",
-      "details": "Details"
-    }
-  },
-  "people": {
-    "table": {
-      "title": "People ",
-      "field": {
-        "id": "ID",
-        "title": "Title",
-        "first-name": "First Name",
-        "last-name": "Last Name",
-        "type": "Type"
-      },
-      "msg": {"add-new-record": "Add Person"}
-    }
-  },
-  "contact-method": {
-    "table": {
-      "field": {
-        "type": "Type",
-        "value": "Value",
-        "date-added": "Date Added",
-        "added-by": "Added By"
-      }
-    }
-  },
-  "security-tags": {
-    "table": {
-      "field": {
-        "type": "Type",
-        "value": "Value",
-        "date-added": "Date Added",
-        "added-by": "Added By"
-      }
-    }
-  },
-  "organizations": {
-    "table": {
-      "field": {
-        "type": "Type",
-        "value": "Value",
-        "date-added": "Date Added",
-        "added-by": "Added By"
-      }
-    },
-    "msg": {"add-new-record": "Add Organization"}
-  },
-  "addresses": {
-    "table": {
-      "field": {
-        "type": "Type",
-        "address": "Address",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip",
-        "country": "Country",
-        "date-added": "Date Added",
-        "added-by": "Added By"
-      }
-    },
-    "msg": {"add-new-record": "Add Location"}
-  },
-  "aliases": {
-    "table": {
-      "field": {
-        "type": "Type",
-        "value": "Value",
-        "date-added": "Date Added",
-        "added-by": "Added By"
-      }
-    },
-    "msg": {"add-new-record": "Add Alias"}
-  },
-  "documents-to-retire": {
-    "title": "Documents",
-    "form-document": {
-      "document-type": "Document Type",
-      "medical-release": "Medical Release",
-      "general-release": "General Release",
-      "e-delivery": "eDelivery",
-      "sf86-signature": "SF86 Signature",
-      "notice-of-investigation": "Notice of Investigation",
-      "witness-interview-request": "Witness Interview Request",
-      "other": "Other"
-    },
-    "create-folder-dialog": {
-      "title": "Create Folder",
-      "labels": {
-        "prompt": "Enter a name for the folder you would like to create:",
-        "folder-name": "Folder Name"
-      },
-      "buttons": {
-        "close": "Close",
-        "cancel": "Cancel",
-        "create-folder": "Create Folder"
-      }
-    },
-    "email-dialog": {
-      "title": "Send Email",
-      "labels": {
-        "prompt": "Where would you like to email this file?",
-        "email-address": "Email Address"
-      },
-      "buttons": {
-        "close": "Close",
-        "cancel": "Cancel",
-        "send-email": "Send Email"
-      }
-    },
-    "buttons": {
-      "email": "Email",
-      "print": "Print"
-    },
-    "table": {
-      "field": {
-        "id": "ID",
-        "title": "Title",
-        "created": "Created",
-        "creator": "Creator"
-      }
-    },
-    "tree": {
-      "field": {
-        "id": "ID",
-        "title": "Title",
-        "type": "Type",
-        "created": "Created",
-        "author": "Author",
-        "version": "Version",
-        "status": "Status"
-      }
-    },
-    "msg": {"add-new-record": "Add Document"}
-  },
-  "notes": {
-    "title": "Notes",
-    "table": {
-      "field": {
-        "id": "ID",
-        "note": "Note",
-        "created": "Created",
-        "author": "Author"
-      }
-    },
-    "msg": {"add-new-record": "Add Note"}
-  },
-  "history": {
-    "title": "History",
-    "table": {
-      "field": {
-        "id": "ID",
-        "event-name": "Event Name",
-        "date": "Date",
-        "user": "User"
-      }
-    }
-  },
-  "references": {
-    "title": "References",
-    "table": {
-      "field": {
-        "id": "ID",
-        "title": "Title",
-        "modified": "Modified",
-        "reference-type": "Reference Type",
-        "status": "Status"
-      }
-    },
-    "msg": {"add-new-record": "Add Reference"}
-  },
-  "tasks": {
-    "title": "Tasks",
-    "table": {
-      "field": {
-        "id": "ID",
-        "title": "Title",
-        "created": "Created",
-        "priority": "Priority",
-        "due": "Due",
-        "assignee": "Assignee",
-        "status": "Status"
-      }
-    },
-    "msg": {"add-new-record": "Add Task"}
-  },
-  "participants": {
-    "title": "Participants",
-    "table": {
-      "field": {
-        "id": "ID",
-        "type": "Type",
-        "name": "Name"
-      }
-    },
-    "msg": {"add-new-record": "Add Participant"}
-  },
-  "location": {
-    "title": "Location",
-    "table": {
-      "field": {
-        "id": "ID",
-        "address": "Address",
-        "type": "Type",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip"
-      }
-    },
-    "msg": {"add-new-record": "Add Location"}
-  },
-  "time": {
-    "title": "Time Tracking",
-    "table": {
-      "field": {
-        "id": "ID",
-        "form-name": "Form Name",
-        "username": "Username",
-        "total-hours": "Total Hours",
-        "modified-date": "Modified Date",
-        "status": "Status"
-      }
-    }
-  },
-  "cost": {
-    "title": "Cost Tracking",
-    "table": {
-      "field": {
-        "id": "ID",
-        "form-name": "Form Name",
-        "username": "Username",
-        "total-cost": "Total Cost",
-        "modified-date": "Modified Date",
-        "status": "Status"
-      }
-    }
-  },
-  "msg": {
-    "no-complaint-selected": "(No complaint is selected)",
-    "error-retrieving-complaint-data": "Error occurred for retrieving complaint data"
-  }
 }
