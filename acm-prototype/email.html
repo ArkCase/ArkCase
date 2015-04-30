@@ -216,9 +216,9 @@
                                 
                                 <div class="pull-left"><button type="button" class="btn btn-default">View Recipients (3)</button>
                                  &nbsp;  &nbsp;
-                                <label><input type="checkbox" href="#checkedbox" data-toggle="class:show" /> Send Later</label> 
+                                <label><input type="checkbox" id="checkedbox" /> Send Later</label> 
                                 
-                                <span id="checkedbox" class="hide pull-right">
+                                <span id="datetime" class="pull-right">
                                 <input class="datepicker-input input-s-sm"  id="sendLaterDate" type="text" placeholder="Enter Date">
                                  <input class="input-s-sm" id="sendLaterTime" type="text" placeholder="Enter Time">
                                  </span>
@@ -254,6 +254,22 @@
     </section>
   </section>
 </section>
+
+
+<script>
+					  
+$('#checkedbox').click(function(){
+        var val = $(this).val();
+        $('#datetime').slideToggle();
+});
+	
+					  
+</script>
+<style>
+
+#datetime { display:none}
+
+</style>
 
 <!-- Bootstrap --> 
 <script src="resources/js/bootstrap.js"></script> 
