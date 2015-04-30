@@ -701,6 +701,9 @@ CaseFile.View = CaseFile.View || {
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
                 
+                var group = CaseFile.Model.Detail.getGroup(c);
+                this.setTextLnkGroup(Acm.goodValue(group));
+                
                 CaseFile.View.Detail.populateRestriction(c);
             }
         }
