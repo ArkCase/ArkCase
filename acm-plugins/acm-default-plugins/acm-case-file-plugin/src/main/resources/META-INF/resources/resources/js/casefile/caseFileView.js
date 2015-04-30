@@ -558,6 +558,12 @@ CaseFile.View = CaseFile.View || {
                 }
             	,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
             });
+            
+            // This is happen after loading the object, for that reason we should check here as well.
+            // We need both, assignees and groups for checking.
+            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelRetrievedGroups: function(groups) {
             var choices = [];
@@ -575,6 +581,12 @@ CaseFile.View = CaseFile.View || {
                 }
             	,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
             });
+            
+            // This is happen after loading the object, for that reason we should check here as well.
+            // We need both, assignees and groups for checking.
+            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelFoundSubjectTypes: function(subjectTypes) {
             var choices = [];
@@ -688,11 +700,11 @@ CaseFile.View = CaseFile.View || {
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                if(!Acm.compare(assignee ,App.getUserName())){
-                    CaseFile.View.Detail.$chkRestrict.prop('disabled', true);
-                }
+                
                 var group = CaseFile.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
+                
+                CaseFile.View.Detail.populateRestriction(c);
             }
         }
 
@@ -749,6 +761,18 @@ CaseFile.View = CaseFile.View || {
 //        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
 //        	}
 //        }
+        
+        ,populateRestriction: function(c) {
+        	if (CaseFile.Model.Detail.validateCaseFile(c)) {
+	        	var assignee = CaseFile.Model.Detail.getAssignee(c);
+	        	var group = CaseFile.Model.Detail.getGroup(c);
+	        	var assignees = CaseFile.Model.Lookup.getAssignees(c.id);
+	        	var groups = CaseFile.Model.Lookup.getGroups(c.id);
+	            
+	            var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
+	            CaseFile.View.Detail.$chkRestrict.prop('disabled', restrict);
+        	}
+        }
     }
     
     ,People: {
