@@ -380,6 +380,11 @@ Complaint.View = Complaint.View || {
                 }
             	,currentValue: Complaint.Model.Detail.getAssignee(Complaint.View.getActiveComplaint())
             });
+            
+            // This is happen after loading the object and after changing the owning group, for that reason 
+            // we should check here as well.  We need both, assignees and groups for checking - assignees and groups should be loaded. 
+            // If in this stage assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            Complaint.View.Detail.populateRestriction(Complaint.View.getActiveComplaint());
         }
         ,onModelRetrievedGroups: function(groups) {
             var choices = [];
@@ -397,6 +402,11 @@ Complaint.View = Complaint.View || {
                 }
             	,currentValue: Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint())
             });
+            
+            // This is happen after loading the object and after changing the owning group, for that reason 
+            // we should check here as well.  We need both, assignees and groups for checking - assignees and groups should be loaded. 
+            // If in this stage assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            Complaint.View.Detail.populateRestriction(Complaint.View.getActiveComplaint());
         }
         ,onModelFoundComplaintTypes: function(complaintTypes) {
             var choices = [];
@@ -493,7 +503,21 @@ Complaint.View = Complaint.View || {
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
+                
+                Complaint.View.Detail.populateRestriction(c);
             }
+        }
+        
+        ,populateRestriction: function(c) {
+        	if (Complaint.Model.Detail.validateComplaint(c)) {
+	        	var assignee = Complaint.Model.Detail.getAssignee(c);
+	        	var group = Complaint.Model.Detail.getGroup(c);
+	        	var assignees = Complaint.Model.Lookup.getAssignees(c.complaintId);
+	        	var groups = Complaint.Model.Lookup.getGroups(c.complaintId);
+	            
+	            var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
+	            Complaint.View.Action.$chkRestrict.prop('disabled', restrict);
+        	}
         }
 
         ,setTextLabComplaintNumber: function(txt) {
