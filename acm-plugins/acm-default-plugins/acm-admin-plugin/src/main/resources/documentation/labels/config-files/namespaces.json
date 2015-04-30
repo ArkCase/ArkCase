@@ -6,5 +6,9 @@
     {
         "id": "casefile",
         "name": "Case Files"
+    },
+    {
+        "id": "task",
+        "name": "Tasks"
     }
 ]
