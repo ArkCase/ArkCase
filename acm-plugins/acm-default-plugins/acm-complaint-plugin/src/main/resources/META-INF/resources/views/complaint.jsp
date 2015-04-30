@@ -186,6 +186,10 @@
                                                             <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint:header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
                                                             <small class="text-muted" data-i18n="complaint:header.labels.owning-group">Owning Group</small>
                                                         </div>
+                                                        <div class="col-xs-4  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="due"  data-i18n="[data-title]complaint:header.labels.enter-due-date" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint:header.labels.due-date">Due Date</small>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
