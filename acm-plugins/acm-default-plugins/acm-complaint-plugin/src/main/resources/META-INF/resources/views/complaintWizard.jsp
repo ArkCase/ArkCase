@@ -14,7 +14,7 @@
             <section class="scrollable padder">
                 <section class="row m-b-md">
                     <div class="col-sm-12">
-                        <h3 class="m-b-xs text-black"><spring:message code="complaintNew.page.descShort" text="New Complaint" /></h3>
+                        <h3 class="m-b-xs text-black" data-i18n="complaint:wizard.title">New Complaint</h3>
                     </div>
                 </section>
 

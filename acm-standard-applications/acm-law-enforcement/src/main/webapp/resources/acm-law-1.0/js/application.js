@@ -9,11 +9,18 @@ var Application = Application || {
     run : function() {
 
         // Init I18n functinality
-        var lng= "en-au";
+        var lng= "en";
 
         // TODO change to microdata or something else
         // Get namespace from url
-        var namespace = $.trim(window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+ 1));
+        var namespace = $.trim(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
+
+        // Load resources for wizards.
+        if (namespace === 'wizard') {
+            var url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/' + namespace));
+            namespace = url.substring(url.lastIndexOf('/') + 1);
+        }
+
 
         i18n.init({
                 useLocalStorage: false,
