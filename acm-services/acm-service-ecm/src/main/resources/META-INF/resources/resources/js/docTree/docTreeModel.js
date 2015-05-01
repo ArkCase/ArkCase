@@ -66,8 +66,8 @@ DocTree.Model = DocTree.Model || {
     ,onViewCopiedFolder: function(subFolderId, folderId, toCacheKey, node) {
         DocTree.Service.copyFolder(subFolderId, folderId, toCacheKey, node);
     }
-    ,onViewChangedVersion: function(fileId, version, node) {
-        DocTree.Service.setActiveVersion(fileId, version, node);
+    ,onViewChangedVersion: function(fileId, version, cacheKey, node) {
+        DocTree.Service.setActiveVersion(fileId, version, cacheKey, node);
     }
 
     //---------------
@@ -119,6 +119,74 @@ DocTree.Model = DocTree.Model || {
         }
         return found;
     }
+
+    ,fileToSolrData: function(fileData) {
+        var solrData = {};
+        solrData.objectType = "file";
+        if (!Acm.isEmpty(fileData.fileId, 0)) {
+            solrData.objectId       = fileData.fileId;
+        } else if (!Acm.isEmpty(fileData.objectId, 0)) {
+            solrData.objectId       = fileData.objectId;
+        }
+        solrData.created    = Acm.goodValue(fileData.created);
+        solrData.creator    = Acm.goodValue(fileData.creator);
+        solrData.modified   = Acm.goodValue(fileData.modified);
+        solrData.modifier   = Acm.goodValue(fileData.modifier);
+
+        if (!Acm.isEmpty(fileData.fileName)) {
+            solrData.name       = fileData.fileName;
+        } else if (!Acm.isEmpty(fileData.name)) {
+            solrData.name       = fileData.name;
+        }
+
+        if (!Acm.isEmpty(fileData.fileType)) {
+            solrData.type       = fileData.fileType;
+        } else if (!Acm.isEmpty(fileData.type)) {
+            solrData.type       = fileData.type;
+        }
+        solrData.status     = Acm.goodValue(fileData.status);
+        solrData.category   = Acm.goodValue(fileData.category);
+        if (!Acm.isEmpty(fileData.activeVersionTag)) {
+            solrData.version    = fileData.activeVersionTag;
+        } else if (!Acm.isEmpty(fileData.version)) {
+            solrData.version    = fileData.version;
+        }
+
+        if (Acm.isArray(fileData.versions)) {
+            solrData.versionList = [];
+            for (var i = 0; i < fileData.versions.length; i++) {
+                var version = {};
+                version.versionTag = Acm.goodValue(fileData.versions[i].versionTag);
+                solrData.versionList.push(version);
+            }
+        }
+        if (Acm.isArray(fileData.versionList)) {
+            solrData.versionList = [];
+            for (var i = 0; i < fileData.versionList.length; i++) {
+                var version = {};
+                version.versionTag = Acm.goodValue(fileData.versionList[i].versionTag);
+                solrData.versionList.push(version);
+            }
+        }
+        return solrData;
+    }
+    ,folderToSolrData: function(folderData) {
+        var solrData = {};
+        solrData.objectType = "folder";
+        if (!Acm.isEmpty(folderData.id, 0)) {
+            solrData.objectId       = folderData.id;
+        } else if (!Acm.isEmpty(folderData.objectId, 0)) {
+            solrData.objectId       = folderData.objectId;
+        }
+        solrData.created    = Acm.goodValue(folderData.created);
+        solrData.creator    = Acm.goodValue(folderData.creator);
+        solrData.modified   = Acm.goodValue(folderData.modified);
+        solrData.modifier   = Acm.goodValue(folderData.modifier);
+        solrData.name       = Acm.goodValue(folderData.name);
+        solrData.folderId   = Acm.goodValue(folderData.parentFolderId, 0);
+        return solrData;
+    }
+
     ,validateFolderList: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
@@ -271,6 +339,18 @@ DocTree.Model = DocTree.Model || {
             return false;
         }
         if (Acm.isNotArray(data.tags)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateActiveVersion: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.activeVersionTag)) {
             return false;
         }
         return true;
