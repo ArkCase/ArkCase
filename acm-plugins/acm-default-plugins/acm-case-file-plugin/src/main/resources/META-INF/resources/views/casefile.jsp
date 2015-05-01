@@ -110,7 +110,7 @@
                         <section class="vbox animated fadeInLeft">
                             <section class="scrollable">
                                 <header class="dk header">
-                                    <h3 class="m-b-xs text-black pull-left"><spring:message code="caseFile.page.descShort" text="Cases" /></h3>
+                                    <h3 class="m-b-xs text-black pull-left" data-i18n="casefile:title">Case</h3>
                                     <div class="btn-group inline select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
 
@@ -237,8 +237,7 @@
                                                 <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
                                                     <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
-                                                    <span data-i18n="casefile:header.buttons.subscribe">Subscribe</span>
+                                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
                                                 </button>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
