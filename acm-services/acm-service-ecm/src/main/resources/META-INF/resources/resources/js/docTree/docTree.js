@@ -18,19 +18,49 @@ var DocTree = DocTree || {
         if (DocTree.View.onInitialized)       {DocTree.View.onInitialized();}
     }
 
-    ,showDocumentDialog: function(args) {
-        if (Acm.isEmpty(args.$divResults)) {
-            args.$tree = $("#treeDocumentPicker");
-        }
+    ,Dialog: {
+        create: function(args) {
+            if (Acm.isEmpty(args.$divResults)) {
+                args.$tree = $("#treeDocumentPicker");
+            }
 //        if (!args.jtArgs) {
 //            args.jtArgs = {multiselect:true, selecting:true, selectingCheckboxes:true};
 //        }
-        this.create(args);
+            DocTree.create(args);
 
-        Acm.deferred(DocTree.onInitialized);
+            if (Acm.isEmpty(args.$dlgDocumentPicker)) {
+                args.$dlgDocumentPicker = $("#dlgDocumentPicker");
+                this.$dlgDocumentPicker = args.$dlgDocumentPicker;
+            }
+            if (Acm.isNotEmpty(args.title)) {
+                args.$dlgDocumentPicker.find('.modal-title').text(args.title);
+            }
+            if (Acm.isNotEmpty(args.btnOkText)) {
+                args.$dlgDocumentPicker.find('button.btn-primary').text(args.btnOkText);
+            }
+            if (Acm.isNotEmpty(args.btnCancelText)) {
+                args.$dlgDocumentPicker.find('button.btn-default').text(args.btnCancelText);
+            }
+            this.onClickBtnPrimary = args.onClickBtnPrimary;
+            this.onClickBtnDefault = args.onClickBtnDefault;
 
-        DocTree.View.showDialog(args);
+            Acm.deferred(DocTree.onInitialized);
+
+            return this;
+        }
+        ,show: function() {
+            Acm.Dialog.modal(this.$dlgDocumentPicker, this.onClickBtnPrimary, this.onClickBtnDefault);
+        }
+        ,getSelector: function() {
+            return this.$dlgDocumentPicker;
+        }
+        ,getSelectedNodes: function() {
+            return DocTree.View.tree.getSelectedNodes();
+        }
+
     }
+
+
 };
 
 

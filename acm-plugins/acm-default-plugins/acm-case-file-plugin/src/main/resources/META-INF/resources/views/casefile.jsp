@@ -532,7 +532,9 @@
 
                                             <thead>
                                             <tr>
-                                                <th width2="6%"><span class='fancytree-checkbox'></span></th>
+                                                <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
+                                                <th width2="6%"><input type="checkbox"/></th>
+
                                                 <th width2="4%">ID</th>
                                                 <th width="35%">Title</th>
                                                 <th width="12%">Type</th>
