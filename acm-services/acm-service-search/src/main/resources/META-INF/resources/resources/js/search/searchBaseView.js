@@ -15,57 +15,6 @@ SearchBase.View = {
         if (SearchBase.View.Results.onInitialized)   {SearchBase.View.Results.onInitialized();}
     }
 
-    ,showDialog: function(args) {
-        if (Acm.isEmpty(args.$dlgObjectPicker)) {
-            args.$dlgObjectPicker = $("#dlgObjectPicker");
-        }
-        if (Acm.isNotEmpty(args.title)) {
-            args.$dlgObjectPicker.find('.modal-title').text(args.title);
-        }
-        if (Acm.isNotEmpty(args.prompt)) {
-            args.$edtSearch.prop('placeholder',args.prompt);
-        }
-        if (Acm.isNotEmpty(args.btnGoText)) {
-            args.$btnSearch.text(args.btnGoText);
-        }
-        if (Acm.isNotEmpty(args.btnOkText)) {
-            args.$dlgObjectPicker.find('button.btn-primary').text(args.btnOkText);
-        }
-        if (Acm.isNotEmpty(args.btnCancelText)) {
-            args.$dlgObjectPicker.find('button.btn-default').text(args.btnCancelText);
-        }
-        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
-    }
-    ,Dialog: {
-        create: function(args) {
-            if (Acm.isEmpty(args.$dlgObjectPicker)) {
-                args.$dlgObjectPicker = $("#dlgObjectPicker");
-                this.$dlgObjectPicker = args.$dlgObjectPicker
-            }
-            if (Acm.isNotEmpty(args.title)) {
-                args.$dlgObjectPicker.find('.modal-title').text(args.title);
-            }
-            if (Acm.isNotEmpty(args.prompt)) {
-                args.$edtSearch.prop('placeholder',args.prompt);
-            }
-            if (Acm.isNotEmpty(args.btnGoText)) {
-                args.$btnSearch.text(args.btnGoText);
-            }
-            if (Acm.isNotEmpty(args.btnOkText)) {
-                args.$dlgObjectPicker.find('button.btn-primary').text(args.btnOkText);
-            }
-            if (Acm.isNotEmpty(args.btnCancelText)) {
-                args.$dlgObjectPicker.find('button.btn-default').text(args.btnCancelText);
-            }
-            return this.$dlgObjectPicker;
-        }
-        ,show: function() {
-            Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
-        }
-        ,getDlgObjectPicker: function() {
-            return this.$dlgObjectPicker;
-        }
-    }
     ,Query: {
         create: function(args) {
             var $edtSearchDefault  = $("#searchQuery");
@@ -309,7 +258,6 @@ SearchBase.View = {
                     Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
                     Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
                     Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt);
-                    Record.email      = Acm.goodValue(result.docs[i].email_lcs);
                     jtData.Records.push(Record);
                 }
 

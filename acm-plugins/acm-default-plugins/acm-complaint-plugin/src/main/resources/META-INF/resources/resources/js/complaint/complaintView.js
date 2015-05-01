@@ -174,7 +174,7 @@ Complaint.View = Complaint.View || {
                             ,title: $.t("complaint:navigation.leaf-title.history")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
-                            ,title: $.t("complaint.navigation.leaf-title.calendar")
+                            ,title: $.t("complaint:navigation.leaf-title.calendar")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
                             ,title: $.t("complaint:navigation.leaf-title.time")
@@ -238,7 +238,7 @@ Complaint.View = Complaint.View || {
 
         //---- demo how to use document tree picker ----
         ,onPickDocumentDemo: function() {
-            DocTree.showDocumentDialog({name: "demoDialog"
+            DocTree.Dialog.create({name: "demoDialog"
                 ,title: $.t("complaint:document-dialog.title")
                 ,btnOkText: $.t("complaint:document-dialog.btn-ok")
                 ,btnCancelText: $.t("complaint:document-dialog.btn-cancel")
@@ -257,7 +257,7 @@ Complaint.View = Complaint.View || {
                 ,onClickBtnDefault : function(event, ctrl) {
                     alert("cancel");
                 }
-            });
+            }).show();
         }
         //---------------------------------------
 
@@ -2092,19 +2092,19 @@ Complaint.View = Complaint.View || {
                             ,defaultvalue : 0
                         }
                         ,note: {
-                            title: $.t("complaint.notes.table.field.note")
+                            title: $.t("complaint:notes.table.field.note")
                             ,type: 'textarea'
                             ,width: '50%'
                             ,edit: true
                         }
                         ,created: {
-                            title: $.t("complaint.notes.table.field.created")
+                            title: $.t("complaint:notes.table.field.created")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
                         }
                         ,creator: {
-                            title: $.t("complaint.notes.table.field.author")
+                            title: $.t("complaint:notes.table.field.author")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
@@ -2212,7 +2212,7 @@ Complaint.View = Complaint.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: $.t("complaint.history.title")
+                    title: $.t("complaint:history.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
