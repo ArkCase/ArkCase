@@ -4314,3 +4314,15 @@ h3.m-b-xs.text-black {
 
 #cloud { padding: 2px; line-height: 3em; text-align: center; } #cloud a { padding: 0px; }
 #cloud { margin: 0; } #cloud li { display: inline; }
+
+input.fancycheckbox {
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: left;
+  background-position: 0px 0px;
+
+}
