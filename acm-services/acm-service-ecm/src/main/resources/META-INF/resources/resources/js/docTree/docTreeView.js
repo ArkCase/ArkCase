@@ -12,6 +12,8 @@ DocTree.View = DocTree.View || {
         this.fileTypes  = args.fileTypes;
 
         this.$tree = (args.$tree)? args.$tree : $("#treeDoc");
+        this.$edtEmailRecipients = (args.$edtEmailRecipients)? args.$edtEmailRecipients : $("#recipientsList");
+        this.$btnAddUsersToRecipients = (args.$btnAddUsersToRecipients)? args.$btnAddUsersToRecipients : $("#addUsersToRecipients");
         this.createDocTree(args.treeArgs);
 
         this.makeDownloadDocForm(this.$tree);
@@ -148,6 +150,49 @@ DocTree.View = DocTree.View || {
             DocTree.View.$fileInput.removeAttr("multiple");
             DocTree.View.$fileInput.click();
         }
+    }
+    ,showEmailDialog: function(node){
+        SearchBase.showSearchDialog({name: "Send Email"
+            ,title: "Add New Participant"
+            ,prompt: "Enter an email address OR search for users within ArkCase."
+            ,btnGoText: "Go!"
+            ,btnOkText: "Send Email"
+            ,filters: [{key: "Object Type", values: ["USER"]}]
+            ,onClickBtnPrimary : function(event, ctrl) {
+                alert(DocTree.View.$edtEmailRecipients.val());
+            }
+        });
+        this.$edtEmailRecipients.val('');
+        this._showSelectedEmails();
+        this._deleteEmailOnBackspace();
+    }
+    ,_deleteEmailOnBackspace: function(){
+        this.$edtEmailRecipients.keyup(function (e) {
+            if (8 == e.keyCode) {
+                e.preventDefault();
+                var emails = $(this).val().split(';');
+                emails.splice(emails.length-1);
+                $(this).val(emails.join(';'));
+            }
+        })
+    }
+    ,_showSelectedEmails: function(){
+        //$('.jtable').on('click', ':checkbox', function() {
+        this.$btnAddUsersToRecipients.on('click', function(e) {
+            //prevent event from bubbling up the dom
+            e.stopImmediatePropagation();
+            var val= DocTree.View.$edtEmailRecipients.val();
+            SearchBase.View.Results.getSelectedRows().each(function () {
+                var record = $(this).data('record');
+                if(Acm.isEmpty(val) | (Acm.isNotEmpty(val) && val.substr(val.length-1)== ";")){
+                    val += record.email + ";"
+                }
+                else if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
+                    val += ";" + record.email + ";"
+                }
+                DocTree.View.$edtEmailRecipients.val(val);
+            });
+        });
     }
 
     ,_addFileNode: function(folderNode, name, type) {
@@ -1440,6 +1485,7 @@ DocTree.View = DocTree.View || {
                     break;
                 case "history":
                     node.setStatus("ok");
+                    DocTree.View.showEmailDialog(node);
                     break;
                 case "open":
                     var url = App.getContextPath() + "/plugin/document/" + node.data.objectId;

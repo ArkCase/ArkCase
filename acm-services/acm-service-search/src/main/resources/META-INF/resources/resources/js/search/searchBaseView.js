@@ -36,7 +36,36 @@ SearchBase.View = {
         }
         Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
     }
-
+    ,Dialog: {
+        create: function(args) {
+            if (Acm.isEmpty(args.$dlgObjectPicker)) {
+                args.$dlgObjectPicker = $("#dlgObjectPicker");
+                this.$dlgObjectPicker = args.$dlgObjectPicker
+            }
+            if (Acm.isNotEmpty(args.title)) {
+                args.$dlgObjectPicker.find('.modal-title').text(args.title);
+            }
+            if (Acm.isNotEmpty(args.prompt)) {
+                args.$edtSearch.prop('placeholder',args.prompt);
+            }
+            if (Acm.isNotEmpty(args.btnGoText)) {
+                args.$btnSearch.text(args.btnGoText);
+            }
+            if (Acm.isNotEmpty(args.btnOkText)) {
+                args.$dlgObjectPicker.find('button.btn-primary').text(args.btnOkText);
+            }
+            if (Acm.isNotEmpty(args.btnCancelText)) {
+                args.$dlgObjectPicker.find('button.btn-default').text(args.btnCancelText);
+            }
+            return this.$dlgObjectPicker;
+        }
+        ,show: function() {
+            Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
+        }
+        ,getDlgObjectPicker: function() {
+            return this.$dlgObjectPicker;
+        }
+    }
     ,Query: {
         create: function(args) {
             var $edtSearchDefault  = $("#searchQuery");
