@@ -373,7 +373,8 @@
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
                                             <thead>
                                             <tr>
-                                                <th width2="6%"><span class='fancytree-checkbox'></span></th>
+                                                <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
+                                                <th width2="6%"><input type="checkbox"/></th>
                                                 <th width2="4%" data-i18n="complaint:documents-to-retire.tree.field.id">ID</th>
                                                 <th width="35%" data-i18n="complaint:documents-to-retire.tree.field.title">Title</th>
                                                 <th width="12%" data-i18n="complaint:documents-to-retire.tree.field.type">Type</th>

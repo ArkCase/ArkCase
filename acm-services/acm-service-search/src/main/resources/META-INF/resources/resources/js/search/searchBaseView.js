@@ -15,27 +15,27 @@ SearchBase.View = {
         if (SearchBase.View.Results.onInitialized)   {SearchBase.View.Results.onInitialized();}
     }
 
-    ,showDialog: function(args) {
-        if (Acm.isEmpty(args.$dlgObjectPicker)) {
-            args.$dlgObjectPicker = $("#dlgObjectPicker");
-        }
-        if (Acm.isNotEmpty(args.title)) {
-            args.$dlgObjectPicker.find('.modal-title').text(args.title);
-        }
-        if (Acm.isNotEmpty(args.prompt)) {
-            args.$edtSearch.prop('placeholder',args.prompt);
-        }
-        if (Acm.isNotEmpty(args.btnGoText)) {
-            args.$btnSearch.text(args.btnGoText);
-        }
-        if (Acm.isNotEmpty(args.btnOkText)) {
-            args.$dlgObjectPicker.find('button.btn-primary').text(args.btnOkText);
-        }
-        if (Acm.isNotEmpty(args.btnCancelText)) {
-            args.$dlgObjectPicker.find('button.btn-default').text(args.btnCancelText);
-        }
-        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
-    }
+//    ,showDialog: function(args) {
+//        if (Acm.isEmpty(args.$dlgObjectPicker)) {
+//            args.$dlgObjectPicker = $("#dlgObjectPicker");
+//        }
+//        if (Acm.isNotEmpty(args.title)) {
+//            args.$dlgObjectPicker.find('.modal-title').text(args.title);
+//        }
+//        if (Acm.isNotEmpty(args.prompt)) {
+//            args.$edtSearch.prop('placeholder',args.prompt);
+//        }
+//        if (Acm.isNotEmpty(args.btnGoText)) {
+//            args.$btnSearch.text(args.btnGoText);
+//        }
+//        if (Acm.isNotEmpty(args.btnOkText)) {
+//            args.$dlgObjectPicker.find('button.btn-primary').text(args.btnOkText);
+//        }
+//        if (Acm.isNotEmpty(args.btnCancelText)) {
+//            args.$dlgObjectPicker.find('button.btn-default').text(args.btnCancelText);
+//        }
+//        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
+//    }
 
     ,Query: {
         create: function(args) {
