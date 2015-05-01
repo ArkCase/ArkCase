@@ -2,5 +2,13 @@
     {
         "id": "complaint",
         "name": "Complaints"
+    },
+    {
+        "id": "casefile",
+        "name": "Case Files"
+    },
+    {
+        "id": "task",
+        "name": "Tasks"
     }
 ]

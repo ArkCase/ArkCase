@@ -424,7 +424,7 @@ Admin.Service = {
                     $dfd.resolve(response);
                 }
                 ,url
-                ,JSON.stringify(resource)
+                ,JSON.stringify(resource, null, 4)
             );
             return $dfd.promise();
         }

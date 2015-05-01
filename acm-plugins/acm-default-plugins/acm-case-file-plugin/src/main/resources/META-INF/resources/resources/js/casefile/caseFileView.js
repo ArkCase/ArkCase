@@ -172,43 +172,43 @@ CaseFile.View = CaseFile.View || {
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: "Details"
+                            ,title: $.t("casefile:navigation.leaf-title.details")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
-                            ,title: "People"
+                            ,title: $.t("casefile:navigation.leaf-title.people")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: "Documents"
+                            ,title: $.t("casefile:navigation.leaf-title.documents")
 //                            ,folder: true
 //                            ,lazy: true
 //                            ,cache: false
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-                            ,title: "Participants"
+                            ,title: $.t("casefile:navigation.leaf-title.participants")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: "Notes"
+                            ,title: $.t("casefile:navigation.leaf-title.notes")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS
-                            ,title: "Tasks"
+                            ,title: $.t("casefile:navigation.leaf-title.tasks")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
-                            ,title: "References"
+                            ,title: $.t("casefile:navigation.leaf-title.references")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: "History"
+                            ,title: $.t("casefile:navigation.leaf-title.history")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
-                            ,title: "Correspondence"
+                            ,title: $.t("casefile:navigation.leaf-title.correspondence")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
                             ,title: "Calendar"
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
-                            ,title: "Time"
+                            ,title: $.t("casefile:navigation.leaf-title.time")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_COST
-                            ,title: "Cost"
+                            ,title: $.t("casefile:navigation.leaf-title.cost")
                         })
                         .getTree();
 
@@ -248,15 +248,15 @@ CaseFile.View = CaseFile.View || {
         ,getContextMenu: function(node) {
             var key = node.key;
             var menu = [
-                {title: "Menu:" + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
-                {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
-                {title: "Paste", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
+                {title: $.t("casefile:context-menu.menu-title.menu") + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
+                {title: $.t("casefile:context-menu.menu-title.copy"), cmd: "copy", uiIcon: "ui-icon-copy"},
+                {title: $.t("casefile:context-menu.menu-title.paste"), cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
                 {title: "----"},
-                {title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
-                {title: "Delete", cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
-                {title: "More", children: [
-                    {title: "Sub 1", cmd: "sub1"},
-                    {title: "Sub 2", cmd: "sub1"}
+                {title: $.t("casefile:context-menu.menu-title.edit"), cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
+                {title: $.t("casefile:context-menu.menu-title.delete"), cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
+                {title: $.t("casefile:context-menu.menu-title.more"), children: [
+                    {title: $.t("casefile:context-menu.menu-title.sub1"), cmd: "sub1"},
+                    {title: $.t("casefile:context-menu.menu-title.sub2"), cmd: "sub1"}
                 ]}
             ];
             return menu;
@@ -270,7 +270,7 @@ CaseFile.View = CaseFile.View || {
         ,onInitialized: function() {
         }
         ,onModelRetrievedObjectError: function(error) {
-            Acm.Dialog.error(Acm.goodValue(error.errMsg, "Error occurred for retrieving casefile data"));
+            Acm.Dialog.error(Acm.goodValue(error.errMsg, $.t("casefile:msg.error-retrieving-casefile-data")));
         }
     }
 
@@ -280,10 +280,10 @@ CaseFile.View = CaseFile.View || {
             this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
             this.$dlgConsolidateCase       = $("#consolidateCase");
             this.$edtConsolidateCase       = $("#edtConsolidateCase");
-            this.$btnEditCaseFile    	   = $("#tabTitle button[data-title='Edit Case File']");
-            this.$btnChangeCaseStatus      = $("#tabTitle button[data-title='Change Case Status']");
-            this.$btnConsolidateCase       = $("#tabTitle button[data-title='Consolidate Case']");
-            this.$btnReinvestigateCaseFile = $("#tabTitle button[data-title='Reinvestigate Case File']");
+            this.$btnEditCaseFile    	   = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.edit-case-file") + "']");
+            this.$btnChangeCaseStatus      = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.change-case-status") + "']");
+            this.$btnConsolidateCase       = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.consolidate-case") + "']");
+            this.$btnReinvestigateCaseFile = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.reinvestigate-case-file") + "']");
             this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
@@ -558,6 +558,12 @@ CaseFile.View = CaseFile.View || {
                 }
             	,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
             });
+            
+            // This is happen after loading the object, for that reason we should check here as well.
+            // We need both, assignees and groups for checking.
+            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelRetrievedGroups: function(groups) {
             var choices = [];
@@ -575,6 +581,12 @@ CaseFile.View = CaseFile.View || {
                 }
             	,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
             });
+            
+            // This is happen after loading the object, for that reason we should check here as well.
+            // We need both, assignees and groups for checking.
+            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelFoundSubjectTypes: function(subjectTypes) {
             var choices = [];
@@ -615,42 +627,42 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelSavedCaseTitle: function(caseFileId, title) {
             if (title.hasError) {
-                CaseFile.View.Detail.setTextLnkCaseTitle("(Error)");
+                CaseFile.View.Detail.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
             if (incidentDate.hasError) {
-                CaseFile.View.Detail.setTextLnkIncidentDate("(Error)");
+                CaseFile.View.Detail.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (assginee.hasError) {
-                CaseFile.View.Detail.setTextLnkAssignee("(Error)");
+                CaseFile.View.Detail.setTextLnkAssignee($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedGroup: function(caseFileId, group) {
             if (group.hasError) {
-                CaseFile.View.Detail.setTextLnkGroup("(Error)");
+                CaseFile.View.Detail.setTextLnkGroup($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedSubjectType: function(caseFileId, subjectType) {
             if (subjectType.hasError) {
-                CaseFile.View.Detail.setTextLnkSubjectType("(Error)");
+                CaseFile.View.Detail.setTextLnkSubjectType($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedPriority: function(caseFileId, priority) {
             if (priority.hasError) {
-                CaseFile.View.Detail.setTextLnkPriority("(Error)");
+                CaseFile.View.Detail.setTextLnkPriority($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedDueDate: function(caseFileId, created) {
             if (created.hasError) {
-                CaseFile.View.Detail.setTextLnkDueDate("(Error)");
+                CaseFile.View.Detail.setTextLnkDueDate($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedDetail: function(caseFileId, details) {
             if (details.hasError) {
-                CaseFile.View.Detail.setHtmlDivDetail("(Error)");
+                CaseFile.View.Detail.setHtmlDivDetail($.t("casefile:detail.error-value"));
             }
         }
 
@@ -688,11 +700,11 @@ CaseFile.View = CaseFile.View || {
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                if(!Acm.compare(assignee ,App.getUserName())){
-                    CaseFile.View.Detail.$chkRestrict.prop('disabled', true);
-                }
+                
                 var group = CaseFile.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
+                
+                CaseFile.View.Detail.populateRestriction(c);
             }
         }
 
@@ -749,6 +761,18 @@ CaseFile.View = CaseFile.View || {
 //        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
 //        	}
 //        }
+        
+        ,populateRestriction: function(c) {
+        	if (CaseFile.Model.Detail.validateCaseFile(c)) {
+	        	var assignee = CaseFile.Model.Detail.getAssignee(c);
+	        	var group = CaseFile.Model.Detail.getGroup(c);
+	        	var assignees = CaseFile.Model.Lookup.getAssignees(c.id);
+	        	var groups = CaseFile.Model.Lookup.getGroups(c.id);
+	            
+	            var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
+	            CaseFile.View.Detail.$chkRestrict.prop('disabled', restrict);
+        	}
+        }
     }
     
     ,People: {
@@ -816,12 +840,12 @@ CaseFile.View = CaseFile.View || {
                     ,CaseFile.View.People.Aliases.createLink
                 ]
                 ,{
-                    title: 'People'
+                    title: $.t("casefile:people.table.title")
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Person'
+                        addNewRecord: $.t("casefile:people.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function(postData, jtParams) {
@@ -879,27 +903,27 @@ CaseFile.View = CaseFile.View || {
                     }
                     ,fields: {
                         assocId: {
-                            title: 'ID'
+                            title: $.t("casefile:people.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }
                         ,title: {
-                            title: 'Title'
+                            title: $.t("casefile:people.table.field.title")
                             ,width: '10%'
                             ,options: CaseFile.Model.Lookup.getPersonTitles()
                         }
                         ,givenName: {
-                            title: 'First Name'
+                            title: $.t("casefile:people.table.field.first-name")
                             ,width: '15%'
                         }
                         ,familyName: {
-                            title: 'Last Name'
+                            title: $.t("casefile:people.table.field.last-name")
                             ,width: '15%'
                         }
                         ,personType: {
-                            title: 'Type'
+                            title: $.t("casefile:people.table.field.type")
                             ,options: CaseFile.Model.Lookup.getPersonTypes()
                         }
                     }
@@ -992,7 +1016,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Communication Devices'><i class='fa fa-phone'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.contact-methods.table.title") + "'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS);
                     e.preventDefault();
@@ -1006,7 +1030,7 @@ CaseFile.View = CaseFile.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Device'
+                        addNewRecord: $.t("casefile:people.table.contact-methods.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1059,16 +1083,16 @@ CaseFile.View = CaseFile.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("casefile:people.table.contact-methods.table.field.type")
                             ,width: '15%'
                             ,options: CaseFile.Model.Lookup.getContactMethodTypes()
                         }
                         ,value: {
-                            title: 'Value'
+                            title: $.t("casefile:people.table.contact-methods.table.field.value")
                             ,width: '30%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("casefile:people.table.contact-methods.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
@@ -1076,7 +1100,7 @@ CaseFile.View = CaseFile.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("casefile:people.table.communication.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1223,16 +1247,16 @@ CaseFile.View = CaseFile.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("casefile:people.table.security-tags.table.field.type")
                             ,width: '15%'
                             ,options: CaseFile.Model.Lookup.getSecurityTagTypes()
                         }
                         ,value: {
-                            title: 'Value'
+                            title: $.t("casefile:people.table.security-tags.table.field.value")
                             ,width: '30%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("casefile:people.table.security-tags.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
@@ -1240,7 +1264,7 @@ CaseFile.View = CaseFile.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("casefile:people.table.security-tags.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1312,7 +1336,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Organizations'><i class='fa fa-book'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='"+ $.t("casefile:people.table.security-tags.organizations.table.title") +"'><i class='fa fa-book'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
                     e.preventDefault();
@@ -1326,7 +1350,7 @@ CaseFile.View = CaseFile.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Organization'
+                        addNewRecord: $.t("casefile:people.table.security-tags.organizations.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1379,22 +1403,22 @@ CaseFile.View = CaseFile.View || {
                             ,list: false
                         }
                         , type: {
-                            title: 'Type'
+                            title: $.t("casefile:people.table.security-tags.organizations.table.field.type")
                             ,width: '15%'
                             ,options: CaseFile.Model.Lookup.getOrganizationTypes()
                         }
                         , value: {
-                            title: 'Value'
+                            title: $.t("casefile:people.table.security-tags.organizations.table.field.value")
                             ,width: '30%'
                         }
                         , created: {
-                            title: 'Date Added'
+                            title: $.t("casefile:people.table.security-tags.organizations.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
                         }
                         , creator: {
-                            title: 'Added By'
+                            title: $.t("casefile:people.table.security-tags.organizations.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1466,7 +1490,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Locations'><i class='fa fa-map-marker'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.addresses.table.title") + "'><i class='fa fa-map-marker'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES);
                     e.preventDefault();
@@ -1480,7 +1504,7 @@ CaseFile.View = CaseFile.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Location'
+                        addNewRecord: $.t("casefile:people.table.security-tags.addresses.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1568,38 +1592,38 @@ CaseFile.View = CaseFile.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.type")
                             ,width: '8%'
                             ,options: CaseFile.Model.Lookup.getAddressTypes()
                         }
                         ,streetAddress: {
-                            title: 'Address'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.address")
                             ,width: '20%'
                         }
                         ,city: {
-                            title: 'City'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.city")
                             ,width: '10%'
                         }
                         ,state: {
-                            title: 'State'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.state")
                             ,width: '8%'
                         }
                         ,zip: {
-                            title: 'Zip'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.zip")
                             ,width: '8%'
                         }
                         ,country: {
-                            title: 'Country'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.country")
                             ,width: '8%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.date-added")
                             ,width: '15%'
                             ,create: false
                             ,edit: false
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("casefile:people.table.security-tags.addresses.table.field.added-by")
                             ,width: '15%'
                             ,create: false
                             ,edit: false
@@ -1679,7 +1703,7 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='Aliases'><i class='fa fa-users'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.aliases.table.title") + "'><i class='fa fa-users'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES);
                     e.preventDefault();
@@ -1746,16 +1770,16 @@ CaseFile.View = CaseFile.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("casefile:people.table.security-tags.aliases.table.field.type")
                             ,width: '15%'
                             ,options: CaseFile.Model.Lookup.getAliasTypes()
                         }
                         ,value: {
-                            title: 'Value'
+                            title: $.t("casefile:people.table.security-tags.aliases.table.field.value")
                             ,width: '30%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("casefile:people.table.security-tags.aliases.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
@@ -1763,7 +1787,7 @@ CaseFile.View = CaseFile.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("casefile:people.table.security-tags.aliases.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1981,7 +2005,7 @@ CaseFile.View = CaseFile.View || {
         	
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value=''>Document Type</option>";
+                + "<option value=''>"+ $.t("casefile:documents.form-document.document-type") +"</option>";
 
             if (formDocuments != null && formDocuments.length > 0) {
             	for (var i = 0; i < formDocuments.length; i ++) {
@@ -1989,13 +2013,13 @@ CaseFile.View = CaseFile.View || {
             	}
             }
                 
-            html += "<option value='mr'>Medical Release</option>"
-                + "<option value='gr'>General Release</option>"
-                + "<option value='ev'>eDelivery</option>"
-                + "<option value='sig'>SF86 Signature</option>"
-                + "<option value='noi'>Notice of Investigation</option>"
-                + "<option value='wir'>Witness Interview Request</option>"
-                + "<option value='ot'>Other</option>"
+            html += "<option value='mr'>"+ $.t("casefile:documents.form-document.medical-release") +"</option>"
+                + "<option value='gr'>"+ $.t("casefile:documents.form-document.general-release") +"</option>"
+                + "<option value='ev'>"+ $.t("casefile:documents.form-document.e-delivery") +"</option>"
+                + "<option value='sig'>" +$.t("casefile:documents.form-document.sf86-signature") + "</option>"
+                + "<option value='noi'>" + $.t("casefile:documents.form-document.notice-of-investigation") + "</option>"
+                + "<option value='wir'>"+ $.t("casefile:documents.form-document.within-interview-request") +"</option>"
+                + "<option value='ot'>" + $.t("casefile:documents.form-document.other") + "</option>"
                 + "</select>"
                 + "</span>";
 
@@ -2032,12 +2056,12 @@ CaseFile.View = CaseFile.View || {
         }
         , createJTableDocuments: function ($s) {
             AcmEx.Object.JTable.usePaging($s, {
-                title: 'Documents'
+                title: $.t("casefire:documents.table.title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
                 , messages: {
-                    addNewRecord: 'Add Document'
+                    addNewRecord: $.t("casefire:documents.msg.add-new-record")
                 }
                 , actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
@@ -2077,7 +2101,7 @@ CaseFile.View = CaseFile.View || {
                 }
                 , fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("casefile:documents.table.field.id")
                         , key: true
                         , list: false
                         , create: false
@@ -2085,7 +2109,7 @@ CaseFile.View = CaseFile.View || {
                         , defaultvalue: 0
                     }
                     , title: {
-                        title: 'Title'
+                        title: $.t("casefile:documents.table.field.title")
                         , width: '50%'
                         , edit: false
                         , create: false
@@ -2097,13 +2121,13 @@ CaseFile.View = CaseFile.View || {
                         }
                     }
                     , created: {
-                        title: 'Created'
+                        title: $.t("casefile:documents.table.field.date-added")
                         , width: '15%'
                         , edit: false
                         , create: false
                     }
                     , creator: {
-                        title: 'Creator'
+                        title: $.t("casefile:documents.table.field.added-by")
                         , width: '15%'
                         , edit: false
                         , create: false
@@ -2147,12 +2171,12 @@ CaseFile.View = CaseFile.View || {
 
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
-                title: 'Participants'
+                title: $.t("casefile:participants.table.title")
                 ,paging: true //fix me
                 ,sorting: true //fix me
                 ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
-                    addNewRecord: 'Add Participant'
+                    addNewRecord: $.t("casefile:participants.msg.add-new-record")
                 }
                 ,actions: {
                     listAction: function(postData, jtParams) {
@@ -2205,14 +2229,14 @@ CaseFile.View = CaseFile.View || {
                 }
                 ,fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("casefile:participants.table.field.id")
                         ,key: true
                         ,list: false
                         ,create: false
                         ,edit: false
                     }
 	                ,type: {
-	                    title: 'Type'
+	                    title: $.t("casefile:participants.table.field.type")
 	                    ,width: '30%'
 	                    ,options: CaseFile.Model.Lookup.getParticipantTypes()
 	                    ,display: function (data) {
@@ -2229,7 +2253,7 @@ CaseFile.View = CaseFile.View || {
                         }
 	                }
                     ,title: {
-                        title: 'Name'
+                        title: $.t("casefile:participants.table.field.name")
                         ,width: '70%'
                         ,dependsOn: 'type'
                         ,options: function (data) {
@@ -2354,7 +2378,7 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Notes'
+                    title: $.t("casefile:notes.table.title")
                     ,paging: true
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
@@ -2362,7 +2386,7 @@ CaseFile.View = CaseFile.View || {
                     ,multiselect: false
                     ,selectingCheckboxes: false
                     ,messages: {
-                        addNewRecord: 'Add Note'
+                        addNewRecord: $.t("casefile:notes.msg.add-new-record")
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
@@ -2426,7 +2450,7 @@ CaseFile.View = CaseFile.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("casefile:notes.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
@@ -2434,19 +2458,19 @@ CaseFile.View = CaseFile.View || {
                             ,defaultvalue : 0
                         }
                         ,note: {
-                            title: 'Note'
+                            title: $.t("casefile:notes.table.field.note")
                             ,type: 'textarea'
                             ,width: '50%'
                             ,edit: true
                         }
                         ,created: {
-                            title: 'Created'
+                            title: $.t("casefile:notes.table.field.created")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
                         }
                         ,creator: {
-                            title: 'Author'
+                            title: $.t("casefile:notes.table.field.creator")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
@@ -2604,13 +2628,13 @@ CaseFile.View = CaseFile.View || {
                     if(tasks[i].taskId == taskId){
                         var task = tasks[i];
                         if(task.adhocTask == true && task.completed == false){
-                            $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' title='Complete Task'>Complete</button></div>");
+                            $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>");
                         }
                         else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
                              var availableOutcomes = task.availableOutcomes;
                              for(var j = 0; j < availableOutcomes.length; j++ ){
                                  if(availableOutcomes[j].name == 'COMPLETE'){
-                                 $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='Complete Task Outcome'>Complete</button></div>");
+                                 $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task-outcome") + "'>" + $.t("casefile:tasks.buttons.complete") + "</button></div>");
                                  }
                              }
                         }
@@ -2644,7 +2668,7 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Tasks'
+                    title: $.t("casefile:tasks.table.title")
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
@@ -2652,7 +2676,7 @@ CaseFile.View = CaseFile.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Task'
+                        addNewRecord: $.t("casefile:tasks.msg.add-new-record")
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
@@ -2687,7 +2711,7 @@ CaseFile.View = CaseFile.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("casefile:tasks.table.field.id")
                             ,key: true
                             ,list: true
                             ,create: false
@@ -2700,7 +2724,7 @@ CaseFile.View = CaseFile.View || {
                             }
                         }
                         ,title: {
-                            title: 'Title'
+                            title: $.t("casefile:tasks.table.field.title")
                             ,width: '30%'
                             ,display: function (commData) {
                                 var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
@@ -2710,28 +2734,28 @@ CaseFile.View = CaseFile.View || {
                             }
                         }
                         ,assignee: {
-                            title: 'Assignee'
+                            title: $.t("casefile:tasks.table.field.assignee")
                             ,sorting: false
                             ,width: '25'
                         }
                         ,created: {
-                            title: 'Created'
+                            title: $.t("casefile:tasks.table.field.created")
                             ,width: '15%'
                         }
                         ,priority: {
-                            title: 'Priority'
+                            title: $.t("casefile:tasks.table.field.priority")
                             ,width: '10%'
                         }
                         ,dueDate: {
-                            title: 'Due'
+                            title: $.t("casefile:tasks.table.field.due-date")
                             ,width: '15%'
                         }
                         ,status: {
-                            title: 'Status'
+                            title: $.t("casefile:tasks.table.field.status")
                             ,width: '10%'
                         }
                         ,description: {
-                            title: 'Action'
+                            title: $.t("casefile:tasks.table.field.action")
                             ,width: '10%'
                             ,edit: false
                             ,create: false
@@ -2788,12 +2812,12 @@ CaseFile.View = CaseFile.View || {
             //sortMap["modified"] = "modified";
 
             AcmEx.Object.JTable.useBasic($jt, {
-                    title: 'References'
+                    title: $.t("casefile:references.table.title")
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Reference'
+                        addNewRecord: $.t("casefile:references.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function(postData, jtParams) {
@@ -2835,7 +2859,7 @@ CaseFile.View = CaseFile.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("casefile:references.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
@@ -2843,7 +2867,7 @@ CaseFile.View = CaseFile.View || {
                             ,defaultvalue : 0
                         }
                         ,title: {
-                            title: 'Title'
+                            title: $.t("casefile:references.table.field.title")
                             ,width: '30%'
                             ,edit: true
                             ,create: false
@@ -2854,19 +2878,19 @@ CaseFile.View = CaseFile.View || {
                             }
                         }
                         ,modified: {
-                            title: 'Modified'
+                            title: $.t("casefile:references.table.field.modified")
                             ,width: '14%'
                             ,edit: false
                             ,create: false
                         }
                         ,type: {
-                            title: 'Reference Type'
+                            title: $.t("casefile:references.table.field.reference-type")
                             ,width: '14%'
                             ,edit: false
                             ,create: false
                         }
                         ,status: {
-                            title: 'Status'
+                            title: $.t("casefile:references.table.field.status")
                             ,width: '14%'
                             ,edit: false
                             ,create: false
@@ -2960,7 +2984,7 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'History'
+                    title: $.t("casefile:history.table.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
@@ -2998,19 +3022,19 @@ CaseFile.View = CaseFile.View || {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("casefile:history.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }, eventType: {
-                            title: 'Event Name'
+                            title: $.t("casefile:history.table.field.event-name")
                             ,width: '50%'
                         }, eventDate: {
-                            title: 'Date'
+                            title: $.t("casefile:history.table.field.date")
                             ,width: '25%'
                         }, userId: {
-                            title: 'User'
+                            title: $.t("casefile:history.table.field.user")
                             ,width: '25%'
                         }
                     } //end field
@@ -3083,12 +3107,12 @@ CaseFile.View = CaseFile.View || {
         ,fillReportSelection: function() {
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value='GeneralRelease.docx'>General Release</option>"
-                + "<option value='MedicalRelease.docx'>Medical Release</option>"
-                + "<option value='ClearanceGranted.docx'>Clearance Granted</option>"
-                + "<option value='ClearanceDenied.docx'>Clearance Denied</option>"
-                + "<option value='NoticeofInvestigation.docx'>Notice of Investigation</option>"
-                + "<option value='InterviewRequest.docx'>Witness Interview Request</option>"
+                + "<option value='GeneralRelease.docx'>" + $.t("casefile:correspondence.form-document.general-release") + "</option>"
+                + "<option value='MedicalRelease.docx'>" + $.t("casefile:correspondence.form-document.medical-release") + "</option>"
+                + "<option value='ClearanceGranted.docx'>" + $.t("casefile:correspondence.form-document.clearance-granted") + "</option>"
+                + "<option value='ClearanceDenied.docx'>" + $.t("casefile:correspondence.form-document.general-denied") + "</option>"
+                + "<option value='NoticeofInvestigation.docx'>" + $.t("casefile:correspondence.form-document.notice-of-investigation") + "</option>"
+                + "<option value='InterviewRequest.docx'>" + $.t("casefile:correspondence.form-document.witness-interview-request") + "</option>"
                 + "</select>"
                 + "</span>"
                 ;
@@ -3099,12 +3123,12 @@ CaseFile.View = CaseFile.View || {
 
         , createJTableCorrespondence: function ($s) {
             AcmEx.Object.JTable.usePaging($s, {
-                title: 'Correspondence'
+                title: $.t("casefile:correspondence.table.title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
                 , messages: {
-                    addNewRecord: 'Add Correspondence'
+                    addNewRecord: $.t("casefile:correspondence.msg.add-new-record")
                 }
                 , actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
@@ -3143,7 +3167,7 @@ CaseFile.View = CaseFile.View || {
                 }
                 , fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("casefile:correspondence.table.field.id")
                         , key: true
                         , list: false
                         , create: false
@@ -3151,7 +3175,7 @@ CaseFile.View = CaseFile.View || {
                         , defaultvalue: 0
                     }
                     , title: {
-                        title: 'Title'
+                        title: $.t("casefile:correspondence.table.field.title")
                         , width: '50%'
                         , edit: false
                         , create: false
@@ -3163,13 +3187,13 @@ CaseFile.View = CaseFile.View || {
                         }
                     }
                     , created: {
-                        title: 'Created'
+                        title: $.t("casefile:correspondence.table.field.created")
                         , width: '15%'
                         , edit: false
                         , create: false
                     }
                     , creator: {
-                        title: 'Creator'
+                        title: $.t("casefile:correspondence.table.field.creator")
                         , width: '15%'
                         , edit: false
                         , create: false
@@ -3199,7 +3223,7 @@ CaseFile.View = CaseFile.View || {
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
-                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
+                App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"), outlookCalendarItems.errorMsg);
             }
             else{
                 CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
@@ -3232,9 +3256,9 @@ CaseFile.View = CaseFile.View || {
             if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
                 var body = Acm.goodValue(calendarItem.body) + "</br>";
                 var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
-                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var startDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.start") + " " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
                 var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
-                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.end") + " " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
                 var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
                 return detail;
             }
@@ -3391,7 +3415,7 @@ CaseFile.View = CaseFile.View || {
                     var timesheet = timesheets[j];
                     var Record = {};
                     Record.id = Acm.goodValue(timesheet.id);
-                    Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
                     Record.type = CaseFile.Model.DOC_TYPE_TIMESHEET;
                     Record.status = Acm.goodValue(timesheet.status);
                     Record.username = Acm.goodValue(timesheet.creator);
@@ -3405,7 +3429,7 @@ CaseFile.View = CaseFile.View || {
         ,createJTableTime: function($jt) {
             AcmEx.Object.JTable.useBasic($jt
                 , {
-                    title: 'Time Tracking'
+                    title: $.t("casefile:time.table.title")
                     , sorting: true
                     , actions: {
                         listAction: function (postData, jtParams) {
@@ -3419,13 +3443,13 @@ CaseFile.View = CaseFile.View || {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("casefile:time.table.field.id")
                             , key: true
                             , list: false
                             , create: false
                             , edit: false
                         }, name: {
-                            title: 'Form Name'
+                            title: $.t("casefile:time.table.field.form-name")
                             , width: '20%'
                             ,display: function(data) {
                                 var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
@@ -3433,16 +3457,16 @@ CaseFile.View = CaseFile.View || {
                                 return $lnk;
                             }
                         }, username: {
-                            title: 'Username'
+                            title: $.t("casefile:time.table.field.username")
                             , width: '10%'
                         }, hours: {
-                            title: 'Total Hours'
+                            title: $.t("casefile:time.table.field.total-hours")
                             , width: '10%'
                         }, modified: {
-                            title: 'Modified Date'
+                            title: $.t("casefile:time.table.field.modified-date")
                             , width: '10%'
                         }, status: {
-                            title: 'Status'
+                            title: $.t("casefile:time.table.field.status")
                             , width: '10%'
                         }
                     } //end field
@@ -3498,7 +3522,7 @@ CaseFile.View = CaseFile.View || {
                     var costsheet = costsheets[j];
                     var Record = {};
                     Record.id = Acm.goodValue(costsheet.id);
-                    Record.name = "Costsheet " + Acm.goodValue(costsheet.parentNumber);
+                    Record.name = $.t("casefile:cost.table.label.costsheet") + " " + Acm.goodValue(costsheet.parentNumber);
                     Record.type = CaseFile.Model.DOC_TYPE_COSTSHEET;
                     Record.status = Acm.goodValue(costsheet.status);
                     Record.username = Acm.goodValue(costsheet.creator);
@@ -3512,7 +3536,7 @@ CaseFile.View = CaseFile.View || {
         ,createJTableCost: function($jt) {
             AcmEx.Object.JTable.useBasic($jt
                 ,{
-                    title: 'Cost Tracking'
+                    title: $.t("casefile:cost.table.title")
                     ,sorting: true
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -3527,13 +3551,13 @@ CaseFile.View = CaseFile.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("casefile:cost.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }, name: {
-                            title: 'Form Name'
+                            title: $.t("casefile:cost.table.field.form-name")
                             ,width: '20%'
                             ,display: function(data) {
                                 var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
@@ -3541,16 +3565,16 @@ CaseFile.View = CaseFile.View || {
                                 return $lnk;
                             }
                         }, username: {
-                            title: 'Username'
+                            title: $.t("casefile:cost.table.field.username")
                             ,width: '10%'
                         }, cost: {
-                            title: 'Total Cost'
+                            title: $.t("casefile:cost.table.field.total-cost")
                             ,width: '10%'
                         }, modified: {
-                            title: 'Modified Date'
+                            title: $.t("casefile:cost.table.field.modified-date")
                             ,width: '10%'
                         }, status: {
-                            title: 'Status'
+                            title: $.t("casefile:cost.table.field.status")
                             ,width: '10%'
                         }
                     } //end field

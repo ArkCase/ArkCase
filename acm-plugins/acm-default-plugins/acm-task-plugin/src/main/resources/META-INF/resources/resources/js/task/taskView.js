@@ -138,25 +138,25 @@ Task.View = Task.View || {
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: "Task Details"
+                            ,title: $.t("task:navigation.leaf-title.task-details")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REWORK
-                            ,title: "Rework Details"
+                            ,title: $.t("task:navigation.leaf-title.rework-details")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: "Documents Under Review"
+                            ,title: $.t("task:navigation.leaf-title.documents-under-review")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
-                            ,title: "Attachments"
+                            ,title: $.t("task:navigation.leaf-title.attachments")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: "Notes"
+                            ,title: $.t("task:navigation.leaf-title.notes")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
-                            ,title: "Workflow Overview"
+                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: "History"
+                            ,title: $.t("task:navigation.leaf-title.history")
                         })
                         .getTree();
 
@@ -166,22 +166,22 @@ Task.View = Task.View || {
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: "Details"
+                            ,title: $.t("task:navigation.leaf-title.details")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REJECT
-                            ,title: "Reject Comments"
+                            ,title: $.t("task:navigation.leaf-title.reject-comments")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
-                            ,title: "Attachments"
+                            ,title: $.t("task:navigation.leaf-title.attachments")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: "Notes"
+                            ,title: $.t("task:navigation.leaf-title.notes")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
-                            ,title: "Workflow Overview"
+                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: "History"
+                            ,title: $.t("task:navigation.leaf-title.history")
                         })
                         .getTree();
 
@@ -196,15 +196,15 @@ Task.View = Task.View || {
         ,getContextMenu: function(node) {
             var key = node.key;
             var menu = [
-                {title: "Menu:" + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
-                {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
-                {title: "Paste", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
+                {title: $.t("task:context-menu.menu-title.menu") + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
+                {title: $.t("task:context-menu.menu-title.copy"), cmd: "copy", uiIcon: "ui-icon-copy"},
+                {title: $.t("task:context-menu.menu-title.paste"), cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
                 {title: "----"},
-                {title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
-                {title: "Delete", cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
-                {title: "More", children: [
-                    {title: "Sub 1", cmd: "sub1"},
-                    {title: "Sub 2", cmd: "sub1"}
+                {title: $.t("task:context-menu.menu-title.edit"), cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
+                {title: $.t("task:context-menu.menu-title.delete"), cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
+                {title: $.t("task:context-menu.menu-title.more"), children: [
+                    {title: $.t("task:context-menu.menu-title.sub1"), cmd: "sub1"},
+                    {title: $.t("task:context-menu.menu-title.sub2"), cmd: "sub1"}
                 ]}
             ];
             return menu;
@@ -574,7 +574,7 @@ Task.View = Task.View || {
             if (clicked == "SEND_FOR_REWORK") {
                 var reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
                 if (reworkInstructions == null || reworkInstructions == "") {
-                    Acm.Dialog.info("Must enter rework details");
+                    Acm.Dialog.info($.t("task:task-details.label.must-enter-details"));
                 }
                 else {
                     var task = Task.View.getActiveTask();
@@ -639,42 +639,42 @@ Task.View = Task.View || {
             if (title.hasError) {
                 //Acm.Dialog.info(title.errorMsg);
 
-                Task.View.Detail.setTextLnkTaskTitle("(Error)");
+                Task.View.Detail.setTextLnkTaskTitle($.t("task:task-details.error-value"));
             }
         }
         ,onModelSavedStartDate: function(nodeType, taskId,startDate) {
             if (startDate.hasError) {
                 //Acm.Dialog.info(startDate.errorMsg);
 
-                Task.View.Detail.setTextLnkStartDate("(Error)");
+                Task.View.Detail.setTextLnkStartDate($.t("task:task-details.error-value"));
             }
         }
         ,onModelSavedAssignee: function(nodeType, taskId, assginee) {
             if (assginee.hasError) {
                 //Acm.Dialog.info(assginee.errorMsg);
 
-                Task.View.Detail.setTextLnkAssignee("(Error)");
+                Task.View.Detail.setTextLnkAssignee($.t("task:task-details.error-value"));
             }
         }
         ,onModelSavedPercentComplete: function(nodeType, taskId, percentComplete) {
             if (percentComplete.hasError) {
                 //Acm.Dialog.info(percentComplete.errorMsg);
 
-                Task.View.Detail.setTextLnkPercentComplete("(Error)");
+                Task.View.Detail.setTextLnkPercentComplete($.t("task:task-details.error-value"));
             }
         }
         ,onModelSavedPriority: function(nodeType, taskId,priority) {
             if (priority.hasError) {
                 //Acm.Dialog.info(priority.errorMsg);
 
-                Task.View.Detail.setTextLnkPriority("(Error)");
+                Task.View.Detail.setTextLnkPriority($.t("task:task-details.error-value"));
             }
         }
         ,onModelSavedDueDate: function(nodeType, taskId,dueDate) {
             if (dueDate.hasError) {
                 //Acm.Dialog.info(dueDate.errorMsg);
 
-                Task.View.Detail.setTextLnkDueDate("(Error)");
+                Task.View.Detail.setTextLnkDueDate($.t("task:task-details.error-value"));
             }
         }
 
@@ -696,12 +696,12 @@ Task.View = Task.View || {
         }
         ,onModelSavedDetail: function(nodeType, taskId, details){
             if (details.hasError) {
-                Task.View.Detail.setHtmlDivDetail("(Error)");
+                Task.View.Detail.setHtmlDivDetail($.t("task:task-details.error-value"));
             }
         }
         ,onModelSavedReworkDetails: function(nodeType, taskId, reworkDetails){
             if (reworkDetails.hasError) {
-                Task.View.Detail.setHtmlDivReworkDetails("(Error)");
+                Task.View.Detail.setHtmlDivReworkDetails($.t("task:task-details.error-value"));
             }
         }
 
@@ -761,15 +761,14 @@ Task.View = Task.View || {
         ,saveDivDetail: function() {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
-        ,DIRTY_EDITING_DETAIL: "Editing task detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare(Task.View.Detail.DIRTY_EDITING_DETAIL);
+            App.Object.Dirty.declare($.t("task:task-details.label.dirty-editing-detail"));
             Task.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Task.View.Detail.saveDivDetail();
             Task.Controller.viewChangedDetail(ObjNav.View.Navigator.getActiveObjType(), ObjNav.View.Navigator.getActiveObjId(), htmlDetail);
-            App.Object.Dirty.clear(Task.View.Detail.DIRTY_EDITING_DETAIL);
+            App.Object.Dirty.clear($.t("task:task-details.label.dirty-editing-detail"));
         }
 
         ,getHtmlDivReworkDetails: function() {
@@ -784,15 +783,14 @@ Task.View = Task.View || {
         ,saveDivReworkDetails: function() {
             return AcmEx.Object.SummerNote.save(this.$divReworkDetails);
         }
-        ,DIRTY_EDITING_REWORK_DETAIL: "Editing rework detail"
         ,onClickBtnEditReworkDetails: function(event, ctrl) {
-            App.Object.Dirty.declare(Task.View.Detail.DIRTY_EDITING_REWORK_DETAIL);
+            App.Object.Dirty.declare($.t("task:task-details.label.editing-rework-detail"));
             Task.View.Detail.editDivReworkDetails();
         }
         ,onClickBtnSaveReworkDetails: function(event, ctrl) {
             var htmlDetail = Task.View.Detail.saveDivReworkDetails();
             Task.Controller.viewChangedReworkDetails(ObjNav.View.Navigator.getActiveObjType(), ObjNav.View.Navigator.getActiveObjId(), htmlDetail);
-            App.Object.Dirty.clear(Task.View.Detail.DIRTY_EDITING_REWORK_DETAIL);
+            App.Object.Dirty.clear($.t("task:task-details.label.editing-rework-detail"));
         }
     }
 
@@ -1293,7 +1291,7 @@ Task.View = Task.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Notes'
+                    title: $.t("task:notes.table.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1301,7 +1299,7 @@ Task.View = Task.View || {
                     ,multiselect: false
                     ,selectingCheckboxes: false
                     ,messages: {
-                        addNewRecord: 'Add Note'
+                        addNewRecord: $.t("task:notes.msg.add-new-record")
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
@@ -1353,7 +1351,7 @@ Task.View = Task.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("task:notes.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
@@ -1361,19 +1359,19 @@ Task.View = Task.View || {
                             ,defaultvalue : 0
                         }
                         ,note: {
-                            title: 'Note'
+                            title: $.t("task:notes.table.field.note")
                             ,type: 'textarea'
                             ,width: '50%'
                             ,edit: true
                         }
                         ,created: {
-                            title: 'Created'
+                            title: $.t("task:notes.table.field.created")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
                         }
                         ,creator: {
-                            title: 'Author'
+                            title: $.t("task:notes.table.field.creator")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
@@ -1483,7 +1481,7 @@ Task.View = Task.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'History'
+                    title: $.t("task:history.table.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1524,19 +1522,19 @@ Task.View = Task.View || {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("task:history.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }, eventType: {
-                            title: 'Event Name'
+                            title: $.t("task:history.table.field.event-name")
                             ,width: '50%'
                         }, eventDate: {
-                            title: 'Date'
+                            title: $.t("task:history.table.field.date")
                             ,width: '25%'
                         }, userId: {
-                            title: 'User'
+                            title: $.t("task:history.table.field.user")
                             ,width: '25%'
                         }
                     } //end field
@@ -1596,7 +1594,7 @@ Task.View = Task.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Workflow Overview'
+                    title: $.t("task:workflow.table.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1618,32 +1616,32 @@ Task.View = Task.View || {
                     }
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("task:workflow.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }
                         ,participant: {
-                            title: 'Participant'
+                            title: $.t("task:workflow.table.field.participant")
                             ,width: '15%'
                             ,edit: false
                         }
                         ,role: {
-                            title: 'Role'
+                            title: $.t("task:workflow.table.field.role")
                             ,width: '15%'
                             ,edit: false
                         }
                         ,status: {
-                            title: 'Status'
+                            title: $.t("task:workflow.table.field.status")
                             ,width: '30%'
                         }
                         ,startDateTime : {
-                            title: 'Date/Time'
+                            title: $.t("task:workflow.table.field.start-date-time")
                             ,width: '20%'
                         }
                         ,endDateTime : {
-                            title: 'Date/Time'
+                            title: $.t("task:workflow.table.field.end-date-time")
                             ,width: '20%'
                             ,list: false
                         }
@@ -1742,12 +1740,12 @@ Task.View = Task.View || {
         }
         , createJTableAttachments: function ($s) {
             AcmEx.Object.JTable.usePaging($s, {
-                title: 'Attachments'
+                title: $.t("task:attachments-to-retire.table.title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
                 , messages: {
-                    addNewRecord: 'Add Document'
+                    addNewRecord: $.t("task:attachments-to-retire.msg.add-new-record")
                 }
                 , actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
@@ -1791,7 +1789,7 @@ Task.View = Task.View || {
                 }
                 , fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("task:attachments-to-retire.table.field.id")
                         , key: true
                         , list: false
                         , create: false
@@ -1799,7 +1797,7 @@ Task.View = Task.View || {
                         , defaultvalue: 0
                     }
                     , title: {
-                        title: 'Title'
+                        title: $.t("task:attachments-to-retire.table.field.title")
                         , width: '50%'
                         , edit: false
                         , create: false
@@ -1811,13 +1809,13 @@ Task.View = Task.View || {
                         }
                     }
                     , created: {
-                        title: 'Created'
+                        title: $.t("task:attachments-to-retire.table.field.created")
                         , width: '15%'
                         , edit: false
                         , create: false
                     }
                     , creator: {
-                        title: 'Creator'
+                        title: $.t("task:attachments-to-retire.table.field.creator")
                         , width: '15%'
                         , edit: false
                         , create: false
@@ -1970,7 +1968,7 @@ Task.View = Task.View || {
         }
         , createJTableDocuments: function ($s) {
             $s.jtable({
-                title: 'Documents Under Review'
+                title: $.t("task:documents-under-review.table.title")
                 , paging: true
                 , pageSize: 10 //Set page size (default: 10)
                 , sorting: true
@@ -1988,7 +1986,7 @@ Task.View = Task.View || {
                     items: [{
                         //icon: 'jtable-edit-command-button',
                         cssClass: 'editCloseComplaint',
-                        text: 'Edit Close Complaint Request',
+                        text: $.t("task:documents-under-review.table.toolbar.edit-close-request"),
                         click: function () {
                             Task.View.DocumentUnderReview.onEditCloseComplaint();
                         }
@@ -1996,7 +1994,7 @@ Task.View = Task.View || {
                         {
                             //icon: 'jtable-edit-command-button',
                             cssClass: 'changeCaseStatus',
-                            text: 'Change Case Status',
+                            text: $.t("documents-under-review.table.toolbar.change-case-status"),
                             click: function () {
                                 Task.View.DocumentUnderReview.onChangeCaseStatus();
                             }
@@ -2004,14 +2002,14 @@ Task.View = Task.View || {
                 }
                 , fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("task:documents-under-review.table.field.id")
                         , key: true
                         , list: true
                         , create: false
                         , edit: false
                     }
                     , title: {
-                        title: 'Title'
+                        title: $.t("task:documents-under-review.table.field.title")
                         , width: '50%'
                         , display: function (commData) {
                             var a = "<a href='" + App.getContextPath() + Task.Service.DocumentUnderReview.API_DOWNLOAD_DOCUMENT
@@ -2021,17 +2019,17 @@ Task.View = Task.View || {
                         }
                     }
                     , created: {
-                        title: 'Created'
+                        title: $.t("task:documents-under-review.table.field.created")
                         , width: '15%'
                         , edit: false
                     }
                     , author: {
-                        title: 'Author'
+                        title: $.t("task:documents-under-review.table.field.author")
                         , width: '15%'
                         , edit: false
                     }
                     , status: {
-                        title: 'Status'
+                        title: $.t("task:documents-under-review.table.field.status")
                         , width: '20%'
                     }
                 }
@@ -2089,7 +2087,7 @@ Task.View = Task.View || {
         }
         , createJTableRejectComments: function ($s) {
             $s.jtable({
-                title: 'Reject Comments'
+                title: $.t("task:reject-comments.table.title")
                 , paging: true
                 , sorting: true
                 , pageSize: 10 //Set page size (default: 10)
@@ -2125,7 +2123,7 @@ Task.View = Task.View || {
                 }
                 , fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("task:reject-comments.table.field.id")
                         , key: true
                         , list: false
                         , create: false
@@ -2133,19 +2131,19 @@ Task.View = Task.View || {
                         , defaultvalue: 0
                     }
                     , comment: {
-                        title: 'Comment'
+                        title: $.t("task:reject-comments.table.field.comment")
                         , type: 'textarea'
                         , width: '50%'
                         , edit: false
                     }
                     , created: {
-                        title: 'Created'
+                        title: $.t("task:reject-comments.table.field.created")
                         , width: '15%'
                         , edit: false
                         , create: false
                     }
                     , creator: {
-                        title: 'Author'
+                        title: $.t("task:reject-comments.table.field.author")
                         , width: '15%'
                         , edit: false
                         , create: false

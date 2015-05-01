@@ -22,6 +22,16 @@
                                    <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
                                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
                             </bean>
+                            <bean id="tasksUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                                   <property name="httpMethod" value="GET"/>
+                                   <property name="url" value="/api/{version}/plugin/outlook/tasks"/>
+                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                            </bean>
+                            <bean id="contactsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                                   <property name="httpMethod" value="GET"/>
+                                   <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
+                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                            </bean>
                      </list>
               </property>
        </bean>
