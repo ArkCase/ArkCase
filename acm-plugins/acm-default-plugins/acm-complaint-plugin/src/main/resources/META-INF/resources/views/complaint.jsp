@@ -213,7 +213,8 @@
                                                     <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
                                                     <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
-                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="complaint:header.buttons.subscribe">Subscribe</span></button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
+                                                    </button>
                                                 </div>
                                             </div>
 

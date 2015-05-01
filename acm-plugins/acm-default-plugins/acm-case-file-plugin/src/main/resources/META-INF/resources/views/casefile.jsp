@@ -237,8 +237,7 @@
                                                 <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
                                                     <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
-                                                    <span data-i18n="casefile:header.buttons.subscribe">Subscribe</span>
+                                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
                                                 </button>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
