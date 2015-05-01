@@ -74,7 +74,7 @@
         <section class="vbox animated fadeInLeft">
             <section class="scrollable">
                 <header class="dk header">
-                    <h3 class="m-b-xs text-black pull-left">Tasks</h3>
+                    <h3 class="m-b-xs text-black pull-left" data-i18n="task:title">Tasks</h3>
                     <div class="btn-group inline select pull-right">
                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span></button>
                         <ul class="dropdown-menu text-left text-sm" id="ulSort">
@@ -99,9 +99,9 @@
                 </header>
                 <div class="wrapper">
                     <div class="input-group">
-                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                        <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]task:header.search.search" placeholder="Search">
                             <span class="input-group-btn">
-                              <button class="btn btn-sm btn-default" type="button">Go!</button>
+                              <button class="btn btn-sm btn-default" type="button" data-i18n="task:header.search.btn-go">Go!</button>
                             </span></div>
                 </div>
                 <div class="row m-b">
@@ -130,7 +130,7 @@
                                     <div class=" clearfix">
                                             <div class="row">
                                                 <div class="col-xs-6 b-r">
-                                                    <h4><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></h4>
+                                                    <h4><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-parent-title" data-title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></h4>
                                                 </div>
                                                 <div class="col-xs-6 text-right">
                                                     <h4><a href="#" id="parentObjNumber"></a></h4>
@@ -138,29 +138,28 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted">Subject Type</small>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-i18n="[data-title]task:header.label.enter-subject-type" data-title="Enter Subject Type"></a></div>
+                                                    <small class="text-muted" data-i18n="task:header.label.subject-type">Subject Type</small>
                                                 </div>
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Incident Date</small>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-incident-date" data-title="Enter Incident Date"></a></div>
+                                                    <small class="text-muted" data-i18n="task:header.label.incident-date">Incident Date</small>
                                                 </div>
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                                    <small class="text-muted">Priority</small>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-priority" data-title="Enter Priority"></a></div>
+                                                    <small class="text-muted" data-i18n="task:header.label.priority">Priority</small>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted">Assigned To</small>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-i18n="[data-title]task:header.label.enter-assignee" data-title="Enter Assignee"></a></div>
+                                                    <small class="text-muted" data-i18n="task:header.label.assigned-to">Assigned To</small>
                                                 </div>
                                                 <div class="col-xs-4  b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjOwningGroup" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted">Owning Group</small>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjOwningGroup" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-owning-group" data-title="Enter Owning Group"></a></div>
+                                                    <small class="text-muted" data-i18n="task:header.label.owning-group">Owning Group</small>
                                                 </div>
                                             </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -176,22 +175,22 @@
 
                                 <!-- from the mockup -->
                                 <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
-                                <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>
-                                <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" title="Delete Task">Delete</button>
-                                <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" title="Complete Task">Complete</button>
+                                <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-i18n="[title]task:header.button.reject-task;task:header.button.reject" title="Reject Task">Reject</button>
+                                <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-i18n="[title]task:header.button.delete-task;task:header.button.delete" title="Delete Task">Delete</button>
+                                <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-i18n="[title]task:header.button.complete-task;task:header.button.complete" title="Complete Task">Complete</button>
 
 
                                 <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                                 <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
 
-                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> Subscribe</button>
+                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="task:header.button.subscribe">Subscribe</span></button>
                             </div>
 
                         </div>
                             <%--
                                             <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
                             --%>
-                        <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-title="Enter Task Subject"></a></h4>
+                        <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-task-subject" data-title="Enter Task Subject"></a></h4>
                         <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
 
                     <hr/>
@@ -200,23 +199,23 @@
                                 <div class="">
                                     <div class=" clearfix">
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-title="Enter % of Completion"></a></div>
-                                            <small class="text-muted">% of Completion</small></div>
+                                            <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-completion-percent" data-title="Enter % of Completion"></a></div>
+                                            <small class="text-muted" data-i18n="task:header.label.completion-percent">% of Completion</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-title="Enter Owner"></a></div>
-                                            <small class="text-muted">Assignee</small></div>
+                                            <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-owner" data-title="Enter Owner"></a></div>
+                                            <small class="text-muted" data-i18n="task:header.label.assignee">Assignee</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter priority"></a></div>
-                                            <small class="text-muted">Priority</small></div>
+                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-priority" data-title="Enter Priority"></a></div>
+                                            <small class="text-muted" data-i18n="task:header.label.priority">Priority</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-title="Enter Start Date"></a></div>
-                                            <small class="text-muted">Start Date</small></div>
+                                            <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-start-date" data-title="Enter Start Date"></a></div>
+                                            <small class="text-muted" data-i18n="task:header.label.start-date">Start Date</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-title="Enter Due Date"></a></div>
-                                            <small class="text-muted">Due Date</small></div>
+                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-due-date" data-title="Enter Due Date"></a></div>
+                                            <small class="text-muted" data-i18n="task:header.label.due-date">Due Date</small></div>
                                         <div class="col-xs-2">
-                                            <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-title="Enter Task State"></a></div>
-                                            <small class="text-muted">State</small></div>
+                                            <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-i18n="[data-title]task:header.label.enter-task-state" data-title="Enter Task State"></a></div>
+                                            <small class="text-muted" data-i18n="task:header.label.state">State</small></div>
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +224,7 @@
                 </div>
 
                 <div class="row" id="tabTopBlank">
-                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No task data)</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n="task:msg.no-task-data">(No task data)</span></p>
                 </div>
 
                 <div class="wrapper">
@@ -240,16 +239,16 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li>
                                             <div class="btn-group padder-v2">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:task-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:task-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                 <ul class="dropdown-menu pull-right">
-                                                    <li><a href="#">Other menu items</a></li>
+                                                    <li><a href="#" data-i18n="task:task-details.label.other-menu-items">Other menu items</a></li>
                                                 </ul>
                                             </div>
                                         </li>
                                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                     </ul>
-                                    </span> <a href="#" class="font-bold">Task Details</a> </div>
+                                    </span> <a href="#" class="font-bold" data-i18n="task:task-details.label.task-details">Task Details</a> </div>
                                 <div class="panel-body">
                                     <div class="divDetail"></div>
                                 </div>
@@ -264,16 +263,16 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li>
                                             <div class="btn-group padder-v2">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="task:[data-title]rework-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="task:[data-title]rework-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                 <ul class="dropdown-menu pull-right">
-                                                    <li><a href="#">Other menu items</a></li>
+                                                    <li><a href="#" data-i18n="task:rework-details.label.other-menu-items">Other menu items</a></li>
                                                 </ul>
                                             </div>
                                         </li>
                                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                     </ul>
-                                    </span> <a href="#" class="font-bold">Rework Details</a> </div>
+                                    </span> <a href="#" class="font-bold" data-i18n="task:rework-details.label.rework-details">Rework Details</a> </div>
                                 <div class="panel-body">
                                     <div class="taskReworkInstructions" data-field=""></div>
                                 </div>
@@ -327,7 +326,7 @@
                                 </ul>
 
 
-                                    <a href="#" class="font-bold"><div>Attachments</div> </a>
+                                    <a href="#" class="font-bold"><div data-i18n="task:attachments.label.attachments">Attachments</div> </a>
                                 </div>
 
 
@@ -336,19 +335,18 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">Create Folder</h4>
+                                                <h4 class="modal-title" id="myModalLabel" data-i18n="task:create-new-folder-dialog.title">Create Folder</h4>
                                             </div>
                                             <div class="modal-body">
 
-                                                <p>Enter a name for the folder you would like to create:</p>
+                                                <p data-i18n="task:create-new-folder-dialog.body">Enter a name for the folder you would like to create:</p>
 
-                                                <label for="folderName2">Folder Name</label><br/>
-                                                <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
-
+                                                <label for="folderName2" data-i18n="task:create-new-folder-dialog.label.folder-name">Folder Name</label><br/>
+                                                <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]task:create-new-folder-dialog.label.folder-name" placeholder="Folder Name" />
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-primary">Create Folder<</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:create-new-folder-dialog.button.cancel">Cancel</button>
+                                                <button type="button" class="btn btn-primary" data-i18n="task:create-new-folder-dialog.button.ok">Create Folder<</button>
                                             </div>
                                         </div>
                                     </div>
@@ -359,20 +357,20 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">Send Email</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:email-documents-dialog.button.close">Close</span></button>
+                                                <h4 class="modal-title" id="myModalLabel" data-i18n="task:email-documents-dialog.title">Send Email</h4>
                                             </div>
                                             <div class="modal-body">
 
-                                                <p>Where would you like to email this file?</p>
+                                                <p data-i18n="task:email-documents-dialog.body">Where would you like to email this file?</p>
 
-                                                <label for="emailaddy">Email Address</label><br/>
-                                                <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" />
+                                                <label for="emailaddy" data-i18n="task:email-documents-dialog.label.email-address">Email Address</label><br/>
+                                                <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" data-i18n="[placeholder]task:email-documents-dialog.label.email-address" />
 
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-primary">Send Email</button>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:email-documents-dialog.button.cancel">Cancel</button>
+                                                <button type="button" class="btn btn-primary" data-i18n="task:email-documents-dialog.button.ok">Send Email</button>
                                             </div>
                                         </div>
                                     </div>
@@ -382,13 +380,13 @@
                                     <thead>
                                     <tr>
                                         <th width2="6%"><span class='fancytree-checkbox'></span></th>
-                                        <th width2="4%">ID</th>
-                                        <th width="35%">Title</th>
-                                        <th width="12%">Type</th>
-                                        <th width="10%">Created</th>
-                                        <th width="16%">Author</th>
-                                        <th width="6%">Version</th>
-                                        <th width="8%">Status</th>
+                                        <th width2="4%" data-i18n="task:attachments.table.field.id" >ID</th>
+                                        <th width="35%" data-i18n="task:attachments.table.field.title">Title</th>
+                                        <th width="12%" data-i18n="task:attachments.table.field.type">Type</th>
+                                        <th width="10%" data-i18n="task:attachments.table.field.created">Created</th>
+                                        <th width="16%" data-i18n="task:attachments.table.field.author">Author</th>
+                                        <th width="6%" data-i18n="task:attachments.table.field.version">Version</th>
+                                        <th width="8%" data-i18n="task:attachments.table.field.status">Status</th>
                                             <%--<th width2="6%" colspan="2"></th>--%>
                                     </tr>
                                     </thead>
@@ -442,8 +440,8 @@
                         <div class="col-md-12">
                             <div class="pull-right inline">
                                 <div class="btn-group">
-                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
-                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "editCloseComplaint" data-i18n="[data-title]task:close-complaint.button.close-complaint;task:close-complaint.button.edit-close-complaint" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Edit Close Complaint</button>
+                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "changeCaseStatus" data-i18n="[data-title]task:close-complaint.button.close-complaint;task:close-complaint.button.change-case-status" data-title="Close Complaint" style="display:none;"><i class="fa fa-archive"></i> Change Case Status</button>
                                     <%--<input id="editCloseComplaintFormUrl" type="hidden" value="${editCloseComplaintFormUrl}" />--%>
                                     <%--<input id="changeCaseStatusFormUrl" type="hidden" value="${changeCaseStatusFormUrl}" />--%>
                                     <form id="formAttachments" style="display:none;">
@@ -464,13 +462,13 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                     </ul>
-                                    <a href="#" class="font-bold">Electronic Signatures</a> </div>
+                                    <a href="#" class="font-bold" data-i18n="task:signature.label.electronic-signatures">Electronic Signatures</a> </div>
                                 <div class="panel-body max-200 no-padder">
                                     <table class="table table-striped th-sortable table-hover">
                                         <thead>
                                         <tr>
-                                            <th>Signed By</th>
-                                            <th>Date</th>
+                                            <th data-i18n="task:signature.table.field.signed-by">Signed By</th>
+                                            <th data-i18n="task:signature.table.field.date">Date</th>
                                         </tr>
                                         </thead>
                                         <tbody id="signatureList" >
@@ -492,20 +490,20 @@
         <section class="vbox animated fadeInLeft">
             <section class="scrollable">
                 <header class="dk header">
-                    <p>Approvers</p>
+                    <p data-i18n="task:chat.label.approvers">Approvers</p>
                 </header>
                 <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
                 <header class="dk header">
-                    <p>Collaborators</p>
+                    <p data-i18n="task:chat.label.collaborators">Collaborators</p>
                 </header>
                 <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
                 <header class="dk header">
-                    <p>Watchers</p>
+                    <p data-i18n="task:chat.label.watchers">Watchers</p>
                 </header>
                 <div class="list-group auto list-group-alt no-radius no-borders"> <a class="list-group-item" href="#"> <i class="fa fa-fw fa-circle-o text-success text-xs"></i> <span>James Bailey</span> </a> </div>
             </section>
             <footer class="footer text-center">
-                <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> New Partipant</button>
+                <button class="btn btn-light bg-empty btn-sm"><i class="fa fa-plus"></i> <span data-i18n="task:chat.button.new-participant">New Participant</span></button>
             </footer>
         </section>
     </aside>
@@ -528,20 +526,20 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="signatureModalLabel">Electronically Sign</h4>
+                <h4 class="modal-title" id="signatureModalLabel" data-i18n="task:signature-dialog.title">Electronically Sign</h4>
             </div>
             <%-- Using a form post ajax submit --%>
             <form id="signatureConfirmForm" method="post" >
                 <div class="modal-body">
                     <div class="clearfix">
-                        <label for="confirmPassword">Password</label>
-                        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Password" >
+                        <label for="confirmPassword" data-i18n="task:signature-dialog.label.password">Password</label>
+                        <input id="confirmPassword" name="confirmPassword" type="password" data-i18n="[placeholder]task:signature-dialog.label.password" placeholder="Password" >
                     </div>
                 </div>
             </form>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="signatureConfirmBtn">Confirm</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:signature-dialog.button.close">Close</button>
+                <button type="button" class="btn btn-primary" id="signatureConfirmBtn" data-i18n="task:signature-dialog.button.ok">Confirm</button>
             </div>
         </div>
     </div>
@@ -553,18 +551,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="assignModalLabel">Assign Task</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:assign-dialog.button.close">Close</span></button>
+                <h4 class="modal-title" id="assignModalLabel" data-i18n="task:assign-dialog.title">Assign Task</h4>
             </div>
             <div class="modal-body">
-                <p>Who would you like to assign this task to?</p>
+                <p data-i18n="task:assign-dialog.label.who-assign-task-to">Who would you like to assign this task to?</p>
                 <section class="panel panel-default">
                     <div class="row wrapper">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                <input type="text" class="input-sm form-control" data-i18n="[placeholder]task:assign-dialog.button.search-people" placeholder="Search people..">
                                           <span class="input-group-btn">
-                                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                          <button class="btn btn-sm btn-default" type="button" data-i18n="task:assign-dialog.button.go">Go!</button>
                                           </span> </div>
                         </div>
                     </div>
@@ -573,10 +571,10 @@
                             <thead>
                             <tr>
                                 <th width="20"></th>
-                                <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                                <th>Last Name</th>
-                                <th>Username</th>
-                                <th>Organization</th>
+                                <th class="th-sortable" data-toggle="class" data-i18n="task:assign-dialog.table.field.first-name">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                <th data-i18n="task:assign-dialog.table.field.last-name">Last Name</th>
+                                <th data-i18n="task:assign-dialog.table.field.username">Username</th>
+                                <th data-i18n="task:assign-dialog.table.field.organization">Organization</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -584,17 +582,21 @@
                                 <td><label class="checkbox m-n">
                                     <input type="radio" name="post[]">
                                     <i></i></label></td>
-                                <td>[First Name]</td>
-                                <td>[Last Name]</td>
-                                <td>[Username]</td>
-                                <td>[Organization]</td>
+                                <td data-i18n="task:assign-dialog.table.value.first-name">[First Name]</td>
+                                <td data-i18n="task:assign-dialog.table.value.last-name">[Last Name]</td>
+                                <td data-i18n="task:assign-dialog.table.value.username">[Username]</td>
+                                <td data-i18n="task:assign-dialog.table.value.organization">[Organization]</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
-                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                            <div class="col-sm-6">
+                                <small class="text-muted inline m-t-sm m-b-sm" data-i18n="task:assign-dialog.table.field.showing-items">
+                                Showing 20-30 of 50 items
+                                </small>
+                            </div>
                             <div class="col-sm-6 text-right text-center-xs">
                                 <ul class="pagination pagination-sm m-t-none m-b-none">
                                     <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
@@ -609,8 +611,8 @@
                 </section>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Assign Task</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:assign-dialog.button.cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" data-i18n="task:assign-dialog.button.ok">Assign Task</button>
             </div>
         </div>
     </div>
@@ -619,18 +621,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="reassignModalLabel">Reassign Task</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:reassign-dialog.button.close">Close</span></button>
+                <h4 class="modal-title" id="reassignModalLabel" data-i18n="task:reassign-dialog.title">Reassign Task</h4>
             </div>
             <div class="modal-body">
-                <p>Who would you like to reassign this task to?</p>
+                <p data-i18n="task:reassign-dialog.label.who-reassign-task-to">Who would you like to reassign this task to?</p>
                 <section class="panel panel-default">
                     <div class="row wrapper">
                         <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" class="input-sm form-control" placeholder="Search people..">
+                                <input type="text" class="input-sm form-control" data-i18n="[placeholder]task:reassign-dialog.button.search-people" placeholder="Search people..">
                                           <span class="input-group-btn">
-                                          <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                          <button class="btn btn-sm btn-default" type="button" data-i18n="task:reassign-dialog.button.go">Go!</button>
                                           </span> </div>
                         </div>
                     </div>
@@ -639,10 +641,10 @@
                             <thead>
                             <tr>
                                 <th width="20"></th>
-                                <th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                                <th>Last Name</th>
-                                <th>Username</th>
-                                <th>Organization</th>
+                                <th class="th-sortable" data-toggle="class" data-i18n="task:reassign-dialog.table.field.first-name" >First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                                <th data-i18n="task:reassign-dialog.table.field.last-name">Last Name</th>
+                                <th data-i18n="task:reassign-dialog.table.field.username">Username</th>
+                                <th data-i18n="task:reassign-dialog.table.field.organization">Organization</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -650,17 +652,17 @@
                                 <td><label class="checkbox m-n">
                                     <input type="radio" name="post[]">
                                     <i></i></label></td>
-                                <td>[First Name]</td>
-                                <td>[Last Name]</td>
-                                <td>[Username]</td>
-                                <td>[Organization]</td>
+                                <td data-i18n="task:reassign-dialog.table.value.first-name">[First Name]</td>
+                                <td data-i18n="task:reassign-dialog.table.value.last-name">[Last Name]</td>
+                                <td data-i18n="task:reassign-dialog.table.value.username">[Username]</td>
+                                <td data-i18n="task:reassign-dialog.table.value.organization">[Organization]</td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                     <footer class="panel-footer">
                         <div class="row">
-                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 20-30 of 50 items</small> </div>
+                            <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm" data-i18n="task:reassign-dialog.table.field.showing-items">Showing 20-30 of 50 items</small> </div>
                             <div class="col-sm-6 text-right text-center-xs">
                                 <ul class="pagination pagination-sm m-t-none m-b-none">
                                     <li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
@@ -675,8 +677,8 @@
                 </section>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Reassign Task</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:reassign-dialog.button.cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" data-i18n="task:reassign-dialog.button.ok">Reassign Task</button>
             </div>
         </div>
     </div>
@@ -685,17 +687,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="unassignModalLabel">Unassign Task</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:unassign-dialog.button.close">Close</span></button>
+                <h4 class="modal-title" id="unassignModalLabel" data-i18n="task:unassign-dialog.title">Unassign Task</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to unassign this task?</p>
-                <label>Reason</label>
+                <p data-i18n="task:unassign-dialog.label.sure-to-unassign">Are you sure you want to unassign this task?</p>
+                <label data-i18n="task:unassign-dialog.label.reason">Reason</label>
                 <textarea class="form-control"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Unassign Task</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:unassign-dialog.button.cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" data-i18n="task:unassign-dialog.button.ok">Unassign Task</button>
             </div>
         </div>
     </div>
@@ -705,17 +707,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="approveModalLabel">Approve Task</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:approve-dialog.button.close">Close</span></button>
+                <h4 class="modal-title" id="approveModalLabel" data-i18n="task:approve-dialog.title">Approve Task</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to approve this task?</p>
-                <label>Reason</label>
+                <p data-i18n="task:approve-dialog.label.sure-to-approve">Are you sure you want to approve this task?</p>
+                <label data-i18n="task:approve-dialog.label.reason">Reason</label>
                 <textarea class="form-control"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Approve Task</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:approve-dialog.button.cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" data-i18n="task:approve-dialog.button.ok">Approve Task</button>
             </div>
         </div>
     </div>
@@ -724,22 +726,22 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
   			<div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="rejectModalLabel">Reject Task</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:reject-dialog.button.close">Close</span></button>
+                <h4 class="modal-title" id="rejectModalLabel" data-i18n="task:">Reject Task</h4>
             </div>
   			<div class="modal-body">
-  				<p>Are you sure you want to reject this task?</p>
-    			<p>This task will be returned to the owner:</p>
+  				<p data-i18n="task:reject-dialog.label.sure-to-reject">Are you sure you want to reject this task?</p>
+    			<p data-i18n="task:reject-dialog.label.task-will-return-to-owner">This task will be returned to the owner:</p>
     			<section class="panel panel-default">
 					<div class="table-responsive">
     					<table class="table table-striped b-t b-light" id="ownerTableRejectTask">
 							<thead>
 								<tr>
 									<th width="20"></th>
-									<th>First Name</th>
-									<th>Last Name</th>
-									<th>Username</th>
-									<th>Organization</th>
+									<th data-i18n="task:reject-dialog.table.field.first-name">First Name</th>
+									<th data-i18n="task:reject-dialog.table.field.last-name">Last Name</th>
+									<th data-i18n="task:reject-dialog.table.field.username">Username</th>
+									<th data-i18n="task:reject-dialog.table.field.organization">Organization</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -748,14 +750,14 @@
 						</table>
 					</div>
 				</section>
-				<p>Or select some other people from below:</p>
+				<p data-i18n="task:">Or select some other people from below:</p>
 				<section class="panel panel-default">
 					<div class="row wrapper">
 						<div class="col-sm-12">
 							<div class="input-group">
-								<input type="text" class="input-sm form-control" name="searchKeywordRejectTask" placeholder="Search people..">
+								<input type="text" class="input-sm form-control" name="searchKeywordRejectTask" data-i18n="[placeholder]task:reject-dialog.button.search-button" placeholder="Search people..">
 								<span class="input-group-btn">
-									<button class="btn btn-sm btn-default" type="button" name="searchUsersRejectTask">Go!</button>
+									<button class="btn btn-sm btn-default" type="button" name="searchUsersRejectTask" data-i18n="task:reject-dialog.button.go">Go!</button>
 								</span> 
 							</div>
                        	</div>
@@ -765,10 +767,10 @@
 			               <thead>
 			                 	<tr>
 			                   		<th width="20"></th>
-			                   		<th class="th-sortable" data-toggle="class">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-			                   		<th>Last Name</th>
-			                   		<th>Username</th>
-			                   		<th>Organization</th>
+			                   		<th class="th-sortable" data-toggle="class" data-i18n="task:reject-dialog.table.field.first-name">First Name <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+			                   		<th data-i18n="task:reject-dialog.table.field.last-name">Last Name</th>
+			                   		<th data-i18n="task:reject-dialog.table.field.username">Username</th>
+			                   		<th data-i18n="task:reject-dialog.table.field.organization">Organization</th>
 			                 	</tr>
 			               	</thead>
 	               			<tbody>
@@ -778,7 +780,7 @@
            			</div>
 					<footer class="panel-footer">
 					  <div class="row">
-					    <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm">Showing 0-0 of 0 items</small> </div>
+					    <div class="col-sm-6"> <small class="text-muted inline m-t-sm m-b-sm" data-i18n="task:reject-dialog.label.show-items">Showing 0-0 of 0 items</small> </div>
 					    <div class="col-sm-6 text-right text-center-xs">
 					      <ul class="pagination pagination-sm m-t-none m-b-none">
 					      	<!-- This area is filled dinamically depending of the result of the service -->
@@ -791,8 +793,8 @@
             	<textarea class="form-control" id="commentRejectTask"></textarea>
        		</div>
        		<div class="modal-footer">
-         		<button type="button" class="btn btn-default" data-dismiss="modal" name="cancelRejectTask">Cancel</button>
-         		<button type="button" class="btn btn-primary" name="submitRejectTask">Reject Task</button>
+         		<button type="button" class="btn btn-default" data-dismiss="modal" name="cancelRejectTask" data-i18n="task:reject-dialog.button.cancel">Cancel</button>
+         		<button type="button" class="btn btn-primary" name="submitRejectTask" data-i18n="task:reject-dialog.button.ok">Reject Task</button>
        		</div>
      	</div>
    	</div>
@@ -801,17 +803,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="deleteModalLabel">Delete Task</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:delete-dialog.button.close">Close</span></button>
+                <h4 class="modal-title" id="deleteModalLabel" data-i18n="task:">Delete Task</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this task?</p>
-                <label>Reason</label>
+                <p data-i18n="task:delete-dialog.label.sure-to-delete">Are you sure you want to delete this task?</p>
+                <label data-i18n="task:delete-dialog.label.reason">Reason</label>
                 <textarea class="form-control"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Delete Task</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="task:delete-dialog.button.cancel">Cancel</button>
+                <button type="button" class="btn btn-primary" data-i18n="task:delete-dialog.button.ok">Delete Task</button>
             </div>
         </div>
     </div>
