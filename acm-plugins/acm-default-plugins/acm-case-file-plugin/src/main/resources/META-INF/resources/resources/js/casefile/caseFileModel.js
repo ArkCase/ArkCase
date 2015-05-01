@@ -991,12 +991,20 @@ CaseFile.Model = CaseFile.Model || {
             this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
 
         }
         ,onInitialized: function() {
         }
         ,onModelRetrievedObject: function(objData) {
             CaseFile.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(CaseFile.Model.getCaseFileId());
+        }
+        ,onViewSelectedObject: function(nodeType,objId){
+            CaseFile.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(CaseFile.Model.getCaseFileId());
+        }
+        ,onViewRefreshedOutlookCalendar: function(caseFileId){
+            CaseFile.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(caseFileId);
         }
         ,validateOutlookCalendarItems: function(data) {
             if (Acm.isEmpty(data)) {
