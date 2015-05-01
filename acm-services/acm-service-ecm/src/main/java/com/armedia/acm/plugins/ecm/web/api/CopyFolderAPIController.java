@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -53,12 +54,12 @@ public class CopyFolderAPIController {
             getFolderEventPublisher().publishFolderCopiedEvent(source, authentication, ipAddress, true);
             getFolderEventPublisher().publishFolderCreatedEvent(folder,authentication,ipAddress,true);
             return folder;
-        } catch ( AcmCreateObjectFailedException | AcmObjectNotFoundException e ) {
+        } catch ( AcmFolderException| AcmCreateObjectFailedException | AcmObjectNotFoundException e ) {
             if (log.isErrorEnabled()) {
                 log.error("Exception occurred while trying to copy folder with id: " + folderId + " to the location with id:" + dstFolderId + "  "+e.getMessage(),e);
             }
             getFolderEventPublisher().publishFolderCopiedEvent(source,authentication,ipAddress,false);
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,source.getId(),"Exception occurred while trying to copy folder",e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_COPY_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,source.getId(),"Exception occurred while trying to copy folder "+e.getMessage(),e);
         }
     }
 

@@ -214,7 +214,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId, Long targetObjectId,String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+    public AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId, Long targetObjectId,String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException {
 
         AcmFolder toBeCopied = getFolderDao().find(folderToBeCopiedId);
         AcmFolder dstFolder = getFolderDao().find(copyDstFolderId);
@@ -224,6 +224,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         if ( dstFolder == null ){
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderToBeCopiedId,"Parent folder not found",null);
+        }
+
+        if ( toBeCopied.getParentFolderId() == null ) {
+            if( log.isInfoEnabled())
+                log.info("The folder: "+toBeCopied.getName()+" is a root folder, can not be moved!");
+            throw  new AcmFolderException("The folder: "+toBeCopied.getName()+" is a root folder, can not be moved!");
         }
 
         Map<String,Object> toBeCopiedFolderProperties = new HashMap<>();
