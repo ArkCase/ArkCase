@@ -238,7 +238,7 @@ Complaint.View = Complaint.View || {
 
         //---- demo how to use document tree picker ----
         ,onPickDocumentDemo: function() {
-            DocTree.showDocumentDialog({name: "demoDialog"
+            DocTree.Dialog.create({name: "demoDialog"
                 ,title: $.t("complaint:document-dialog.title")
                 ,btnOkText: $.t("complaint:document-dialog.btn-ok")
                 ,btnCancelText: $.t("complaint:document-dialog.btn-cancel")
@@ -257,7 +257,7 @@ Complaint.View = Complaint.View || {
                 ,onClickBtnDefault : function(event, ctrl) {
                     alert("cancel");
                 }
-            });
+            }).show();
         }
         //---------------------------------------
 
