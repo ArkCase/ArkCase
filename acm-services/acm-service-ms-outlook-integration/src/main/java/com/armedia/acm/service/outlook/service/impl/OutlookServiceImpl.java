@@ -143,10 +143,10 @@ public class OutlookServiceImpl implements OutlookService
             populateCoreFields(item, oti);
 
             oti.setComplete(task.getIsComplete());
-            oti.setCompleted(task.getCompleteDate());
-            oti.setDue(task.getDueDate());
+            oti.setCompleteDate(task.getCompleteDate());
+            oti.setDueDate(task.getDueDate());
             oti.setPercentComplete(task.getPercentComplete());
-            oti.setStarted(task.getStartDate());
+            oti.setStartDate(task.getStartDate());
 
             return oti;
         }
@@ -195,9 +195,12 @@ public class OutlookServiceImpl implements OutlookService
             oci.setDisplayName(contact.getDisplayName());
             oci.setCompleteName(contact.getCompleteName() == null ? null : contact.getCompleteName().getFullName());
             oci.setCompanyName(contact.getCompanyName());
-            oci.setPrimaryTelephone(contact.getPhoneNumbers().getPhoneNumber(PhoneNumberKey.PrimaryPhone));
-            oci.setEmailAddress1(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress1));
-            oci.setEmailAddress2(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress2));
+            if(contact.getPhoneNumbers().contains(PhoneNumberKey.PrimaryPhone))
+                oci.setPrimaryTelephone(contact.getPhoneNumbers().getPhoneNumber(PhoneNumberKey.PrimaryPhone));
+            if(contact.getEmailAddresses().contains(EmailAddressKey.EmailAddress1))
+                oci.setEmailAddress1(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress1));
+            if(contact.getEmailAddresses().contains(EmailAddressKey.EmailAddress2))
+                oci.setEmailAddress2(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress2));
 
             return oci;
         }
