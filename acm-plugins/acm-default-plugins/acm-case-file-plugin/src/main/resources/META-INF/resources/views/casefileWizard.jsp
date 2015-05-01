@@ -14,7 +14,7 @@
             <section class="scrollable padder">
                 <section class="row m-b-md">
                     <div class="col-sm-12">
-                        <h3 class="m-b-xs text-black"><spring:message code="caseFileNew.page.descShort" text="New Case File" /></h3>
+                        <h3 class="m-b-xs text-black" data-i18n="casefile:wizard.title">New Case File</h3>
                     </div>
                 </section>
 
