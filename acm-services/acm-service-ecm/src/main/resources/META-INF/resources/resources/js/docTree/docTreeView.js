@@ -12,8 +12,6 @@ DocTree.View = DocTree.View || {
         this.fileTypes  = args.fileTypes;
 
         this.$tree = (args.$tree)? args.$tree : $("#treeDoc");
-        this.$edtEmailRecipients = (args.$edtEmailRecipients)? args.$edtEmailRecipients : $("#recipientsList");
-        this.$btnAddUsersToRecipients = (args.$btnAddUsersToRecipients)? args.$btnAddUsersToRecipients : $("#addUsersToRecipients");
         this.createDocTree(args.treeArgs);
 
         this.makeDownloadDocForm(this.$tree);
@@ -616,6 +614,22 @@ DocTree.View = DocTree.View || {
             } //end if (parent)
         }
     }
+
+    //
+    // This prevent going to detail page when user checking version drop down too fast
+    //
+    ,onDblClickVersion: function(event, data) {
+        event.stopPropagation();
+    }
+
+    ,onClickBtnChkAllDocument: function(event, ctrl) {
+        var checked = Acm.Object.isChecked($(ctrl));
+        DocTree.View.tree.visit(function(node){
+            node.setSelected(checked);
+        });
+    }
+
+
     //------------------
     ,onModelAddedDocument: function(node, parentId, folder) {
         //var $divError = $("#divError");
@@ -632,21 +646,21 @@ DocTree.View = DocTree.View || {
         var z = 1;
     }
 
-    ,showDialog: function(args) {
-        if (Acm.isEmpty(args.$dlgDocumentPicker)) {
-            args.$dlgDocumentPicker = $("#dlgDocumentPicker");
-        }
-        if (Acm.isNotEmpty(args.title)) {
-            args.$dlgDocumentPicker.find('.modal-title').text(args.title);
-        }
-        if (Acm.isNotEmpty(args.btnOkText)) {
-            args.$dlgDocumentPicker.find('button.btn-primary').text(args.btnOkText);
-        }
-        if (Acm.isNotEmpty(args.btnCancelText)) {
-            args.$dlgDocumentPicker.find('button.btn-default').text(args.btnCancelText);
-        }
-        Acm.Dialog.modal(args.$dlgDocumentPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
-    }
+//    ,showDialog: function(args) {
+//        if (Acm.isEmpty(args.$dlgDocumentPicker)) {
+//            args.$dlgDocumentPicker = $("#dlgDocumentPicker");
+//        }
+//        if (Acm.isNotEmpty(args.title)) {
+//            args.$dlgDocumentPicker.find('.modal-title').text(args.title);
+//        }
+//        if (Acm.isNotEmpty(args.btnOkText)) {
+//            args.$dlgDocumentPicker.find('button.btn-primary').text(args.btnOkText);
+//        }
+//        if (Acm.isNotEmpty(args.btnCancelText)) {
+//            args.$dlgDocumentPicker.find('button.btn-default').text(args.btnCancelText);
+//        }
+//        Acm.Dialog.modal(args.$dlgDocumentPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
+//    }
     ,getSelectedNodes: function() {
         return this.tree.getSelectedNodes();
     }
@@ -664,6 +678,15 @@ DocTree.View = DocTree.View || {
         return {
             extensions: ["table", "gridnav", "edit", "dnd"]
             ,checkbox: true
+            ,selectMode: 2
+            ,select: function(event, data) {
+                var selNodes = data.tree.getSelectedNodes();
+                var selKeys = $.map(selNodes, function(node){
+                    return "[" + node.key + "]: '" + node.title + "'";
+                });
+                var a = selKeys.join(", ");
+                var z = 1;
+            }
             ,table: {
                 indentation: 10,      // indent 20px per node level
                 nodeColumnIdx: 2,     // render the node title into the 2nd column
@@ -693,10 +716,7 @@ DocTree.View = DocTree.View || {
                     $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
                     $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
 
-                    //-----------------------------------
 
-                    //var versions = ['0.9', '1.0', '2.0'];
-                    //var versions = ['1.0'];
                     var $td6 = $("<td/>");
                     var $span = $("<span/>").appendTo($td6);
                     var $select = $("<select/>")
@@ -718,48 +738,13 @@ DocTree.View = DocTree.View || {
                             }
                         }
                     }
-//                    $.each(versions, function(i) {
-//                        var $option = $("<option/>")
-//                            .val(versions[i])
-//                            .text(versions[i])
-//                            .appendTo($select)
-//                            ;
-//                        if ("1.0" == versions[i]) {
-//                            $option.attr("selected", true);
-//                        }
-//
-//                    });
                     $tdList.eq(6).replaceWith($td6);
 
-
-
-
-                    //$tdList.eq(6).text(node.data.version);
-//                    var versions = [{versionTag: "0.9"},{versionTag: "1.0"},{versionTag: "2.0"}];
-//                    var $span = $("<span/>");
-//                    var a = $tdList.eq(6);
-//                    var b = $span.html();
-//                    //$tdList.eq(6).appendTo($span);
-
-                    //var html = "<span>some</span>";
-                    //$tdList.eq(6).html(html);
-
-//                    var html = "<span>"
-//                        //+ "<select class='input-sm form-control input-s-sm inline v-middle'>"
-//                        + "<select >"
-//
-//                    html += "<option value='mr'>0.9</option>"
-//                        + "<option value='gr' selected>1.0</option>"
-//                        + "<option value='ev'>2.0</option>"
-//
-//
-//                    html += "</select>"
-//                        + "</span>";
-//
-//                    $tdList.eq(6).html(html);
-                    //----------------------------------
                     $tdList.eq(7).text(node.data.status);
                     //$tdList.eq(8).html(node.data.action);
+
+                    $tdList.eq(1).addClass("");
+
 //                $tdList.eq(8).html(DocTree.View.Source.getHtmlAction());
                 } else {  //non file, non folder
                     $tdList.eq(0).text("");
@@ -934,52 +919,11 @@ DocTree.View = DocTree.View || {
         DocTree.View.ExternalDnd.useExternalDnd($treeBody);
 
         $treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
+        $treeBody.delegate("select.docversion", "dblclick", DocTree.View.onDblClickVersion);
 
-//        var obj = this.$tree;
-//        obj.on('dragenter', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//            $(this).css('border', '2px solid #0B85A1');
-//        });
-//        obj.on('dragover', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
-//        obj.on('drop', function (e)
-//        {
-//
-//            $(this).css('border', '2px dotted #0B85A1');
-//            e.preventDefault();
-//            var files = e.originalEvent.dataTransfer.files;
-//
-//            //We need to send dropped files to Server
-//            var z = 1;
-//        });
-//
-//        var $treeBody = $tree.find("tbody");
-//        $treeBody.contextmenu({
-//            delegate: "button"
-//            ,autoTrigger: false
-//            ,menu: []
-//            ,beforeOpen: function(event, ui) {
-//                var node = $.ui.fancytree.getNode(ui.target);
-//                $treeBody.contextmenu("replaceMenu", DocTree.View.getContextMenu(node));
-//                $treeBody.contextmenu("enableEntry", "paste", !!DocTree.View.CLIPBOARD);
-//                node.setActive();
-//            }
-//            ,select: function(event, ui) {
-//                var that = this;
-//                //var node = $.ui.fancytree.getNode(ui.target);
-//
-//                // delay the event, so the menu can close and the click event does
-//                // not interfere with the edit control
-//                setTimeout(function(){
-//                    $(that).trigger("command", {cmd: ui.cmd});
-//                }, 100);
-//            }
-//        });
+        var $treeHead = $tree.find("thead");
+        $treeHead.find("input:checkbox").on("click", function(e) {DocTree.View.onClickBtnChkAllDocument(e, this);});
+
     }
 
     ,ExternalDnd: {
@@ -1055,6 +999,8 @@ DocTree.View = DocTree.View || {
             var z = 1;
         }
         ,onDragDrop: function(e) {
+            var node2 = $.ui.fancytree.getNode(e);
+
             //e.stopPropagation();
             e.preventDefault();
             $(this).css('border', DocTree.View.ExternalDnd._borderSave);
@@ -1083,6 +1029,12 @@ DocTree.View = DocTree.View || {
                 //,delegate: "span.fancytree-node"
                 ,delegate: "tr"
                 ,beforeOpen: function(event, ui) {
+                    var selNodes = DocTree.View.tree.getSelectedNodes();
+                    if (!Acm.isArrayEmpty(selNodes)) {
+                        $s.contextmenu("replaceMenu", DocTree.View.Menu.getBatchMenu(selNodes));
+                        return true;
+                    }
+
                     var node = $.ui.fancytree.getNode(ui.target);
                     if (DocTree.View.isSpecialNode(node)) {
                         return false;
@@ -1100,6 +1052,33 @@ DocTree.View = DocTree.View || {
                     }, 100);
                 }
             });
+        }
+
+        ,getBatchMenu: function(nodes) {
+            var menu = [];
+            if (DocTree.View.validateNodes(nodes)) {
+                var countFolder = 0;
+                var countFile = 0;
+                for (var i = 0; i < nodes.length; i++) {
+                    if (DocTree.View.isFolderNode(nodes[i])) {
+                        countFolder++;
+                    } else if (DocTree.View.isFileNode(nodes[i])) {
+                        countFile++;
+                    }
+                }
+
+                if (0 < countFile && 0 >= countFolder) {
+                    menu = [
+                        {title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
+                        ,{title: "Print", cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: "----" }
+                        ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
+                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
+                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
+                    ];
+                }
+            }
+            return menu;
         }
 
         ,getContextMenu: function(node) {
@@ -1131,6 +1110,8 @@ DocTree.View = DocTree.View || {
                     menu = [
                         {title: "Open", cmd: "open", uiIcon: "ui-icon-folder-open" }
                         ,{title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil" }
+                        ,{title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
+                        ,{title: "Print", cmd: "print", uiIcon: "ui-icon-print" }
                         ,{title: "----" }
                         ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
@@ -1141,7 +1122,6 @@ DocTree.View = DocTree.View || {
                         ,{title: "----" }
                         ,{title: "Download", cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
                         ,{title: "Replace", cmd: "replace", uiIcon: "" }
-                        ,{title: "History", cmd: "history", uiIcon: "" }
                     ];
                 }
             }
@@ -1387,10 +1367,17 @@ DocTree.View = DocTree.View || {
 
     ,Command: {
         onCommand: function(event, data){
-            var refNode, moveMode;
+            var refNode;
+            var moveMode;
             var tree = $(this).fancytree("getTree");
+            var selNodes = tree.getSelectedNodes();
             var node = tree.getActiveNode();
-            if (!DocTree.View.validateNode(node)) {
+            var batch = !Acm.isArrayEmpty(selNodes);
+            if (batch) {
+                if (!DocTree.View.validateNodes(selNodes)) {
+                    return;
+                }
+            } else if (!DocTree.View.validateNode(node)) {
                 return;
             }
 
@@ -1438,6 +1425,7 @@ DocTree.View = DocTree.View || {
                     node.editStart();
                     break;
                 case "remove":
+                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
                     DocTree.View._doRemove(node);
                     break;
                 case "addChild":
@@ -1485,9 +1473,11 @@ DocTree.View = DocTree.View || {
                     break;
 
                 case "cut":
+                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
                     DocTree.View.CLIPBOARD = {mode: data.cmd, data: node};
                     break;
                 case "copy":
+                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
                     DocTree.View.CLIPBOARD = {
                         mode: data.cmd,
                         data: node.toDict(function(n){
@@ -1513,15 +1503,15 @@ DocTree.View = DocTree.View || {
                 case "replace":
                     DocTree.View.replaceFile(node);
                     break;
-                case "history":
-                    node.setStatus("ok");
-                    DocTree.View.showEmailDialog(node);
-                    break;
                 case "open":
                     var url = App.getContextPath() + "/plugin/document/" + node.data.objectId;
                     window.open(url);
                     break;
                 case "edit":
+                    break;
+                case "email":
+                    break;
+                case "print":
                     break;
                 default:
                     Acm.log("Unhandled command: " + data.cmd);
@@ -1573,6 +1563,10 @@ DocTree.View = DocTree.View || {
                 case "ctrl+left":
                 case "ctrl+shift+left": // mac
                     cmd = "outdent";
+                case "ctrl+p":
+                case "meta+p": // mac
+                    cmd = "print";
+                    break;
             }
             if( cmd ){
                 $(this).trigger("command", {cmd: cmd});
@@ -1593,6 +1587,13 @@ DocTree.View = DocTree.View || {
     ,_doDownload: function(node) {
         DocTree.View.$formDownloadDoc.attr("action", App.getContextPath() + DocTree.Service.API_DOWNLOAD_DOCUMENT_ + node.data.objectId);
         DocTree.View.$formDownloadDoc.submit();
+    }
+    ,_doBatRemove: function(nodes) {
+        if (!Acm.isArrayEmpty(nodes)) {
+            for (var i = 0; i < nodes.length; i++) {
+                this._doRemove(nodes[i]);
+            }
+        }
     }
     ,_doRemove: function(node) {
         if (DocTree.View.isFolderNode(node) || DocTree.View.isFileNode(node)) {
@@ -1617,47 +1618,6 @@ DocTree.View = DocTree.View || {
             }
         }
     }
-//    ,_doPaste_bck: function(node) {
-//        var frNode = DocTree.View.CLIPBOARD.data;
-//        if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
-//            var frId = frNode.data.objectId;
-//
-//            var endNode = null;
-//            var toFolderNode = DocTree.View.isFolderNode(node)? node : node.parent;
-//            if (toFolderNode) {
-//                var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
-//                var toFolderId = toFolderNode.data.objectId;
-//                var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
-//
-//                if( DocTree.View.CLIPBOARD.mode === "cut" ) {
-//                    var frFolderNode = frNode.parent;
-//                    var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
-//                    var frFolderId = frFolderNode.data.objectId;
-//                    var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
-//
-//                    if (DocTree.View.isFolderNode(node)) {
-//                        frNode.moveTo(node, "child");
-//                    } else {
-//                        frNode.moveTo(node, "after");
-//                    }
-//                    endNode = frNode;
-//                    endNode.setActive();
-//                    DocTree.View.markNodePending(endNode);
-//                    DocTree.Controller.viewCutPasted(frId, toFolderId, frCacheKey, toCacheKey, endNode);
-//
-//                } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
-//                    if (DocTree.View.isFolderNode(node)) {
-//                        endNode = node.addChildren(frNode);
-//                    } else {
-//                        endNode = node.addNode(frNode, "after")
-//                    }
-//                    endNode.setActive();
-//                    DocTree.View.markNodePending(endNode);
-//                    DocTree.Controller.viewCopyPasted(frId, toFolderId, toCacheKey, endNode);
-//                }
-//            }
-//        }
-//    }
     ,_doPaste: function(node) {
         var mode =  DocTree.View.isFolderNode(node)? "child" : "after";
         if( DocTree.View.CLIPBOARD.mode === "cut" ) {
@@ -1668,6 +1628,13 @@ DocTree.View = DocTree.View || {
     }
     ,_doDrop: function(frNode, toNode, mode) {
         DocTree.View._doMove(frNode, toNode, mode);
+    }
+    ,_doBatMove: function(frNodes, toNode, mode) {
+        if (!Acm.isArrayEmpty(frNodes)) {
+            for (var i = 0; i < frNodes.length; i++) {
+                this._doMove(frNodes[i], toNode, mode);
+            }
+        }
     }
     ,_doMove: function(frNode, toNode, mode) {
         if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
@@ -1693,6 +1660,13 @@ DocTree.View = DocTree.View || {
                 } else if (DocTree.View.isFileNode(frNode)) {
                     DocTree.Controller.viewMovedFile(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, frNode);
                 }
+            }
+        }
+    }
+    ,_doBatCopy: function(frNodes, toNode, mode) {
+        if (!Acm.isArrayEmpty(frNodes)) {
+            for (var i = 0; i < frNodes.length; i++) {
+                this._doCopy(frNodes[i], toNode, mode);
             }
         }
     }
@@ -1723,6 +1697,7 @@ DocTree.View = DocTree.View || {
             }
         }
     }
+
     ,onDblClick: function(event, data) {
         var tree = $(this).fancytree("getTree"),
             node = tree.getActiveNode();
