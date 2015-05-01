@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by marjan.stefanoski on 09.04.2015.
@@ -27,15 +28,12 @@ public class FolderAndFilesUtils {
         return folderName;
     }
 
-    public static String getActiveVersionCmisId(EcmFile ecmFile) {
-        List<EcmFileVersion> fileVersionList = ecmFile.getVersions();
-        String cmisId = null;
-        for(EcmFileVersion fileVersion: fileVersionList){
-            if(fileVersion.getVersionTag().equals(ecmFile.getActiveVersionTag())){
-                cmisId = fileVersion.getCmisObjectId();
-                break;
-            }
+    public static String getActiveVersionCmisId( EcmFile ecmFile ) {
+        List<EcmFileVersion> versions = ecmFile.getVersions();
+        if ( versions == null ) {
+            return ecmFile.getVersionSeriesId();
         }
-        return cmisId;
+        return versions.stream().filter(fv -> fv.getVersionTag().equals(ecmFile.getActiveVersionTag())).
+                map(EcmFileVersion::getCmisObjectId).findFirst().orElse(ecmFile.getVersionSeriesId());
     }
 }

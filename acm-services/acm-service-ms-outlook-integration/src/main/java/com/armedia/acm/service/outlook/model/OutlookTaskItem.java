@@ -7,40 +7,40 @@ import java.util.Date;
  */
 public class OutlookTaskItem extends OutlookItem
 {
-    private Date due;
-    private Date started;
-    private Date completed;
+    private Date dueDate;
+    private Date startDate;
+    private Date completeDate;
     private boolean complete;
     private double percentComplete;
 
-    public Date getDue()
+    public Date getDueDate()
     {
-        return due;
+        return dueDate;
     }
 
-    public void setDue(Date due)
+    public void setDueDate(Date dueDate)
     {
-        this.due = due;
+        this.dueDate = dueDate;
     }
 
-    public Date getStarted()
+    public Date getStartDate()
     {
-        return started;
+        return startDate;
     }
 
-    public void setStarted(Date started)
+    public void setStartDate(Date startDate)
     {
-        this.started = started;
+        this.startDate = startDate;
     }
 
-    public Date getCompleted()
+    public Date getCompleteDate()
     {
-        return completed;
+        return completeDate;
     }
 
-    public void setCompleted(Date completed)
+    public void setCompleteDate(Date completeDate)
     {
-        this.completed = completed;
+        this.completeDate = completeDate;
     }
 
     public boolean isComplete()
@@ -67,9 +67,9 @@ public class OutlookTaskItem extends OutlookItem
     public String toString()
     {
         return "OutlookTaskItem{" +
-                "due=" + due +
-                ", started=" + started +
-                ", completed=" + completed +
+                "dueDate=" + dueDate +
+                ", startDate=" + startDate +
+                ", completeDate=" + completeDate +
                 ", complete=" + complete +
                 ", percentComplete=" + percentComplete +
                 "} " + super.toString();

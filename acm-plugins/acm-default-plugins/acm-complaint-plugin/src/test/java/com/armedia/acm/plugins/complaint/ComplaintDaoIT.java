@@ -40,7 +40,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-drools-monitor.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-person.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
