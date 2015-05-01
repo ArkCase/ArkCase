@@ -354,7 +354,8 @@
             "day": "Day",
             "calendar": "Calendar",
             "start": "Start:",
-            "end": "End:"
+            "end": "End:",
+            "refresh": "Refresh"
         },
         "msg": {
             "error-occurred": "Error occurred while retrieving calendar items."
