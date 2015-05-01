@@ -266,32 +266,29 @@ DocTree.Service = {
     }
     ,deleteFolder: function(folderId, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_DELETE_FOLDER_ + folderId;
-        Acm.Service.asyncDelete(
-            function(response) {
+        Acm.Service.call({type: "DELETE"
+            ,url : url
+            ,callback: function(response) {
                 if (response.hasError) {
                     DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
 
-                } else {
-                    if (DocTree.Model.validateDeletedFolder(response)) {
-                        if (DocTree.Model.validateDeleteFolder(response)) {
-                            if (response.deletedFolderId == folderId) {
-                                var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
-                                if (DocTree.Model.validateFolderList(folderList)) {
-                                    var deleted = DocTree.Model.findFolderItemIdx(folderId, folderList);
-                                    if (0 <= deleted) {
-                                        folderList.children.splice(deleted, 1);
-                                        folderList.totalChildren--;
-                                        DocTree.Model.cacheFolderList.put(cacheKey, folderList);
-                                        DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
-                                    }
-                                }
+                } else if (DocTree.Model.validateDeletedFolder(response)) {
+                    if (response.deletedFolderId == folderId) {
+                        var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                        if (DocTree.Model.validateFolderList(folderList)) {
+                            var deleted = DocTree.Model.findFolderItemIdx(folderId, folderList);
+                            if (0 <= deleted) {
+                                folderList.children.splice(deleted, 1);
+                                folderList.totalChildren--;
+                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                DocTree.Controller.modelDeletedFolder(response, folderId, cacheKey, callerData);
+                                return true;
                             }
                         }
                     }
-                } //end else
+                } //end else if
             }
-            ,url
-        )
+        })
     }
     ,deleteFile: function(fileId, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_DELETE_FILE_ + fileId;
