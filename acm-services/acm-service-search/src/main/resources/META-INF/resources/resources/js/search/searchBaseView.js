@@ -309,6 +309,7 @@ SearchBase.View = {
                     Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
                     Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
                     Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt);
+                    Record.email      = Acm.goodValue(result.docs[i].email_lcs);
                     jtData.Records.push(Record);
                 }
 
