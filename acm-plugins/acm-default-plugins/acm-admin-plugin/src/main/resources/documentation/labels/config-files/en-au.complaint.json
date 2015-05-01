@@ -319,5 +319,8 @@
     "msg": {
         "no-complaint-selected": "(No complaint is selected)",
         "error-retrieving-complaint-data": "Error occurred for retrieving complaint data"
+    },
+    "wizard": {
+        "title": "New Complaint"
     }
 }
