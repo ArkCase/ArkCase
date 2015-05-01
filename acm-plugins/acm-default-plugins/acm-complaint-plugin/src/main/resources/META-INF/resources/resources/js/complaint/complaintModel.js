@@ -1028,12 +1028,20 @@ Complaint.Model = Complaint.Model || {
             this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
 
         }
         ,onInitialized: function() {
         }
         ,onModelRetrievedObject: function(objData) {
             Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
+        }
+        ,onViewSelectedObject: function(nodeType,objId){
+            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
+        }
+        ,onViewRefreshedOutlookCalendar: function(complaintId){
+            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(complaintId);
         }
         ,validateOutlookCalendarItems: function(data) {
             if (Acm.isEmpty(data)) {
