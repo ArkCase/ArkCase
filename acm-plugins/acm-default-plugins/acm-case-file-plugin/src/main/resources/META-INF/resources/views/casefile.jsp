@@ -552,7 +552,8 @@
 
                                                 <thead>
                                                 <tr>
-                                                    <th width2="6%"><span class='fancytree-checkbox'></span></th>
+                                                    <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
+                                                    <th width2="6%"><input type="checkbox"/></th>
                                                     <th width2="4%" data-i18n="casefile:documents.table.field.id">ID</th>
                                                     <th width="35%" data-i18n="casefile:documents.table.field.title">Title</th>
                                                     <th width="12%" data-i18n="casefile:documents.table.field.type">Type</th>

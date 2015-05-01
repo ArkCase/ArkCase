@@ -35,7 +35,8 @@
             "references": "References",
             "history": "History",
             "time": "Time",
-            "cost": "Cost"
+            "cost": "Cost",
+            "calendar": "Calendar"
         }
     },
     "context-menu": {
