@@ -9,7 +9,7 @@ var Application = Application || {
     run : function() {
 
         // Init I18n functinality
-        var lng= "en-au";
+        var lng= "en";
 
         // TODO change to microdata or something else
         // Get namespace from url
