@@ -2884,6 +2884,9 @@ Complaint.View = Complaint.View || {
             this.$weekView                 = $("#weekview");
             this.$monthView                = $("#monthview");
             this.$dayView                  = $("#dayview");
+            this.$btnRefreshCalendar       = $("#refreshCalendar");
+
+            this.$btnRefreshCalendar.on("click", function(e) {Complaint.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
 
             this.createOutlookCalendarWidget(this.$outlookCalendar);
 
@@ -2905,7 +2908,9 @@ Complaint.View = Complaint.View || {
                 Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
             }
         }
-
+        ,onClickbtnRefreshCalendar: function(){
+            Complaint.Controller.viewRefreshedOutlookCalendar(Complaint.View.getActiveComplaintId());
+        }
         ,createCalendarSource:function(){
             var calendarSource = [];
             var outlookCalendarItems = Complaint.Model.OutlookCalendar.cacheOutlookCalendarItems.get(Complaint.View.getActiveComplaintId());
