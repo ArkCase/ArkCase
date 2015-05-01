@@ -32,11 +32,10 @@ public class LabelConfigurationUpdateResource {
             @RequestBody String resource,
             HttpServletResponse response, boolean isInline) throws IOException, AcmLabelConfigurationException {
 
-        String decodedResource = URLDecoder.decode(resource, "UTF-8");
         String fileName = String.format(resourcesFilesLocation, lang, ns);
         try {
             File file = FileUtils.getFile(fileName);
-            byte[] buffer = decodedResource.getBytes();
+            byte[] buffer = resource.getBytes();
             FileUtils.writeByteArrayToFile(file, buffer);
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
