@@ -393,29 +393,9 @@
     "no-task-data": "(No task data)"
   },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   "wizard": {
-    "labels": {
+    "title": "New Task",
+    "label": {
       "assign-to": "Assign To",
       "select-assignee": "Select Assignee",
       "associate-complaint-case": "Associate with Complaint or Case",
@@ -432,8 +412,16 @@
       "medium": "Medium",
       "high": "High",
       "expedited": "Expedited",
-      "complete": "% Complete",
+      "complete-percents": "% Complete",
       "notes": "Notes"
+    },
+    "button": {
+      "save": "Save"
+    },
+    "msg": {
+      "failed-to-retrieve-assignees": "Failed to retrieve assignees",
+      "failed-to-create-new-task": "Failed to create new task:",
+      "please-enter-subject": "Please enter a subject"
     }
   }
 
