@@ -1,0 +1,33 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xsi:schemaLocation="
+               http://www.mulesoft.org/schema/mule/core
+               http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+               http://www.mulesoft.org/schema/mule/cmis
+               http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
+               http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+
+    <flow name="getFolder">
+        <vm:inbound-endpoint
+                doc:name="Get a folder"
+                address="vm://getFolder.in"
+                exchange-pattern="request-response"/>
+
+        <enricher target="#[flowVars['folder']]">
+            <cmis:get-object-by-id objectId="#[message.inboundProperties.parentFolderId]"/>
+        </enricher>
+
+
+        <set-payload value="#[flowVars['folder']]"/>
+
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception while fetching folder: #[exception.message]"/>
+            <set-property propertyName="getFolderException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>
