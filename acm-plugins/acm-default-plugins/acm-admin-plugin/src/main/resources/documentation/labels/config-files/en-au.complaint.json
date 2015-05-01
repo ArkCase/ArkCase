@@ -319,6 +319,20 @@
             }
         }
     },
+    "outlook-calendar": {
+        "label": {
+            "month": "Month",
+            "week": "Week",
+            "day": "Day",
+            "calendar": "Calendar",
+            "start": "Start:",
+            "end": "End:",
+            "refresh": "Refresh"
+        },
+        "msg": {
+            "error-occurred": "Error occurred while retrieving calendar items."
+        }
+    },
     "msg": {
         "no-complaint-selected": "(No complaint is selected)",
         "error-retrieving-complaint-data": "Error occurred for retrieving complaint data"

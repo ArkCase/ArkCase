@@ -698,18 +698,23 @@
                                                 <header class="panel-heading bg-primary clearfix">
                                                     <div class="btn-group pull-right" data-toggle="buttons">
                                                         <label class="btn btn-sm btn-bg btn-default active" id="monthview">
-                                                            <input type="radio" name="options">Month
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.month">Month</span>
                                                         </label>
                                                         <label class="btn btn-sm btn-bg btn-default" id="weekview">
-                                                            <input type="radio" name="options">Week
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.week">Week</span>
                                                         </label>
                                                         <label class="btn btn-sm btn-bg btn-default" id="dayview">
-                                                            <input type="radio" name="options">Day
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.day">Day</span>
                                                         </label>
                                                     </div>
-                                                <span class="m-t-xs inline text-white">
-                                                  Calendar
-                                                </span>
+                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
+
+                                                    <span class="m-t-xs inline text-white" data-i18n="complaint:outlook-calendar.label.calendar">
+                                                      Calendar
+                                                    </span>
                                                 </header>
                                                 <div class="calendar">
                                                 </div>
