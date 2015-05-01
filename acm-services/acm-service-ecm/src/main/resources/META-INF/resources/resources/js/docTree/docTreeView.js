@@ -152,46 +152,76 @@ DocTree.View = DocTree.View || {
         }
     }
     ,showEmailDialog: function(node){
-        SearchBase.showSearchDialog({name: "Send Email"
-            ,title: "Add New Participant"
-            ,prompt: "Enter an email address OR search for users within ArkCase."
-            ,btnGoText: "Go!"
-            ,btnOkText: "Send Email"
-            ,filters: [{key: "Object Type", values: ["USER"]}]
-            ,onClickBtnPrimary : function(event, ctrl) {
-                alert(DocTree.View.$edtEmailRecipients.val());
+        //prepare to create dialog box
+        var args = {
+            name: "Send Email"
+            , title: "Add New Participant"
+            , prompt: "Enter an email address OR search for users within ArkCase."
+            , btnGoText: "Go!"
+            , btnOkText: "Send Email"
+            , filters: [{key: "Object Type", values: ["USER"]}]
+            , onClickBtnPrimary: function (event, ctrl) {
+                alert($edtEmailRecipients.val());
             }
+        }
+        var dlgSendEmail = SearchBase.Dialog.create(args);
+
+        //get dialog selector
+        var $s = dlgSendEmail.getSelector();
+
+        //inject buttons and input area
+        var $emailFormGroup = $("<div/>")
+            .addClass("form-group")
+            .css({"display":"inline-block", "width":"100%","text-align":"left"})
+            .prependTo($s.find('.modal-footer'));
+        var $edtEmailRecipients = $("<input/>")
+            .attr("type", "text")
+            .attr("id","recipientsList")
+            .addClass("form-control")
+            .css("width","100%")
+            .appendTo($emailFormGroup)
+            .val('');
+        var $btnAddUsersToRecipients = $("<button/>")
+            .attr("type", "button")
+            .attr("id","addUsersToRecipients")
+            .addClass("btn btn-default")
+            .html("Add Selected Users")
+            .appendTo($s.find('.modal-footer'));
+
+        //finally display the dialog box
+        dlgSendEmail.show();
+
+        //event handlers for dialog actions
+        $edtEmailRecipients.keyup(function (e) {
+            DocTree.View._deleteEmailOnBackspace(e,$edtEmailRecipients);
         });
-        this.$edtEmailRecipients.val('');
-        this._showSelectedEmails();
-        this._deleteEmailOnBackspace();
+        $s.find('.modal-footer').on('click', "#addUsersToRecipients", function(e) {
+            DocTree.View._showSelectedEmails(e,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail);
+        });
     }
-    ,_deleteEmailOnBackspace: function(){
-        this.$edtEmailRecipients.keyup(function (e) {
-            if (8 == e.keyCode) {
-                e.preventDefault();
-                var emails = $(this).val().split(';');
-                emails.splice(emails.length-1);
-                $(this).val(emails.join(';'));
-            }
-        })
+    ,_deleteEmailOnBackspace: function(event,$edtEmailRecipients){
+        if (8 == event.keyCode) {
+            event.preventDefault();
+            var emails = $edtEmailRecipients.val().split(';');
+            emails.splice(emails.length-1);
+            $edtEmailRecipients.val(emails.join(';'));
+        }
     }
-    ,_showSelectedEmails: function(){
-        //$('.jtable').on('click', ':checkbox', function() {
-        this.$btnAddUsersToRecipients.on('click', function(e) {
-            //prevent event from bubbling up the dom
-            e.stopImmediatePropagation();
-            var val= DocTree.View.$edtEmailRecipients.val();
-            SearchBase.View.Results.getSelectedRows().each(function () {
-                var record = $(this).data('record');
+    ,_showSelectedEmails: function(event,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail){
+        //prevent event from bubbling up the dom
+        event.stopImmediatePropagation();
+        var val= $edtEmailRecipients.val();
+        dlgSendEmail.getSelectedRows().each(function () {
+            var record = $(this).data('record');
+            if(Acm.isNotEmpty(record.email)){
                 if(Acm.isEmpty(val) | (Acm.isNotEmpty(val) && val.substr(val.length-1)== ";")){
-                    val += record.email + ";"
+                    val += Acm.goodValue(record.email) + ";"
                 }
                 else if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
-                    val += ";" + record.email + ";"
+                    val += ";" + Acm.goodValue(record.email) + ";"
                 }
-                DocTree.View.$edtEmailRecipients.val(val);
-            });
+                $edtEmailRecipients.val(val);
+            }
         });
     }
 
