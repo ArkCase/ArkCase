@@ -3209,6 +3209,9 @@ CaseFile.View = CaseFile.View || {
             this.$weekView                 = $("#weekview");
             this.$monthView                = $("#monthview");
             this.$dayView                  = $("#dayview");
+            this.$btnRefreshCalendar       = $("#refreshCalendar");
+
+            this.$btnRefreshCalendar.on("click", function(e) {CaseFile.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
 
             this.createOutlookCalendarWidget(this.$outlookCalendar);
 
@@ -3230,7 +3233,9 @@ CaseFile.View = CaseFile.View || {
                 CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
             }
         }
-
+        ,onClickbtnRefreshCalendar: function(){
+                CaseFile.Controller.viewRefreshedOutlookCalendar(CaseFile.View.getActiveCaseFileId());
+        }
         ,createCalendarSource:function(){
             var calendarSource = [];
             var outlookCalendarItems = CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.get(CaseFile.View.getActiveCaseFileId());
