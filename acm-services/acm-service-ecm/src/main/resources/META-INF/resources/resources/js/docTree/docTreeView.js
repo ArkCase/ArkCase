@@ -474,6 +474,8 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
+            DocTree.View.selectNodes(DocTree.View.CLIPBOARD.data, true);
+
         }
     }
     ,onModelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, node) {
@@ -552,8 +554,15 @@ DocTree.View = DocTree.View || {
     ,onClickBtnChkAllDocument: function(event, ctrl) {
         var checked = Acm.Object.isChecked($(ctrl));
         DocTree.View.tree.visit(function(node){
-            node.setSelected(checked);
+            node.setSelected(check);
         });
+    }
+    ,checkNodes: function(nodes, check) {
+        if (!Acm.isArrayEmpty(nodes)) {
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].setSelected(check);
+            }
+        }
     }
 
 
@@ -997,13 +1006,20 @@ DocTree.View = DocTree.View || {
                 if (0 < countFile && 0 >= countFolder) {
                     menu = [
                         {title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print", cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: "Print <kbd>Ctrl+P</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
                         ,{title: "----" }
                         ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
                         ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
                     ];
                 }
+//                if (0 < countFile || 0 < countFolder) {
+//                    menu = [
+//                        {title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
+//                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
+//                    ];
+//                }
             }
             return menu;
         }
@@ -1038,7 +1054,7 @@ DocTree.View = DocTree.View || {
                         {title: "Open", cmd: "open", uiIcon: "ui-icon-folder-open" }
                         ,{title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil" }
                         ,{title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print", cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: "Print <kbd>Ctrl+X</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
                         ,{title: "----" }
                         ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
@@ -1352,8 +1368,8 @@ DocTree.View = DocTree.View || {
                     node.editStart();
                     break;
                 case "remove":
-                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
-                    DocTree.View._doRemove(node);
+                    var nodes = (batch)? selNodes : [node];
+                    DocTree.View._doBatRemove(nodes);
                     break;
                 case "addChild":
                     node.editCreateNode("child", "");
@@ -1400,17 +1416,25 @@ DocTree.View = DocTree.View || {
                     break;
 
                 case "cut":
-                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
-                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: node};
+                    var nodes = (batch)? selNodes : [node];
+                    DocTree.View.checkNodes(nodes, false);
+                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: nodes};
                     break;
                 case "copy":
-                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
-                    DocTree.View.CLIPBOARD = {
-                        mode: data.cmd,
-                        data: node.toDict(function(n){
+                    var nodes = (batch)? selNodes : [node];
+                    DocTree.View.checkNodes(nodes, false);
+                    for (var i = 0; i < nodes.length; i++) {
+                        nodes[i] = nodes[i].toDict(function(n){
                             delete n.key;
-                        })
-                    };
+                        });
+                    }
+                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: nodes};
+//                    DocTree.View.CLIPBOARD = {
+//                        mode: data.cmd,
+//                        data: node.toDict(function(n){
+//                            delete n.key;
+//                        })
+//                    };
                     break;
                 case "clear":
                     DocTree.View.CLIPBOARD = null;
@@ -1548,9 +1572,9 @@ DocTree.View = DocTree.View || {
     ,_doPaste: function(node) {
         var mode =  DocTree.View.isFolderNode(node)? "child" : "after";
         if( DocTree.View.CLIPBOARD.mode === "cut" ) {
-            DocTree.View._doMove(DocTree.View.CLIPBOARD.data, node, mode);
+            DocTree.View._doBatMove(DocTree.View.CLIPBOARD.data, node, mode);
         } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
-            DocTree.View._doCopy(DocTree.View.CLIPBOARD.data, node, mode);
+            DocTree.View._doBatCopy(DocTree.View.CLIPBOARD.data, node, mode);
         }
     }
     ,_doDrop: function(frNode, toNode, mode) {

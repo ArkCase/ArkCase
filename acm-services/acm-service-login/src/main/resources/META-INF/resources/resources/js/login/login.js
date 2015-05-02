@@ -5,8 +5,12 @@
  */
 var Login = Login || {
     create: function() {
-        Acm.log("Login.create()");
+        if (Login.View.create) {Login.View.create();}
+
         Application.initSessionData();
+    }
+    ,onInitialize: function() {
+        if (Login.View.onInitialize) {Login.View.onInitialize();}
     }
 
 

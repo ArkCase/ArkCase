@@ -1,15 +1,20 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<!DOCTYPE html>
-<html lang="en" class="app">
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <%@include file="/WEB-INF/tagf/global.tagf" %>
+<t:detail>
+<jsp:attribute name="endOfHead">
     <title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>
-</head>
-<body>
+</jsp:attribute>
+
+<jsp:attribute name="endOfBody">
+    <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/login/loginView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
+</jsp:attribute>
+
+<jsp:body>
     <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
         <div class="container aside-xl ">
             <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/resources/vendors/${acm_theme}/images/logo.png'/>" /></a>
@@ -25,7 +30,8 @@
                     </div>
                 </c:if>
 
-                <form action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
+                <%--<form action="<%= request.getContextPath()%>/j_spring_security_check" method="post">--%>
+                <form action="#" method="post">
                     <div class="list-group">
                         <div class="list-group-item">
                             <c:if test="${not empty param.login_error}">
@@ -54,13 +60,5 @@
             </p>
         </div>
     </footer>
-
-    <script src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/login/login.js'/>"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function() {
-            Application.run();
-        });
-    </script>
-</body>
-</html>
+</jsp:body>
+</t:detail>
