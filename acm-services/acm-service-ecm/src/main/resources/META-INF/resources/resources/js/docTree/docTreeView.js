@@ -911,51 +911,32 @@ DocTree.View = DocTree.View || {
                 DocTree.View.ExternalDnd._borderSave = $(this).css('border');
             }
             $(this).css('border', '2px solid #0B85A1');
-            var a = this;
-
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
-            var z = 1;
         }
         ,onDragOver: function(e) {
             e.stopPropagation();
             e.preventDefault();
             $(this).css('border', '2px solid #0B85A1');
-            var a = this;
-
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
-            var z = 1;
-
         }
         ,onDragLeave: function(e) {
             e.stopPropagation();
             e.preventDefault();
-            $(this).css('border', DocTree.View.ExternalDnd._borderSave);
-            var a = this;
 
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
-            var z = 1;
+            if (null != DocTree.View.ExternalDnd._borderSave) {
+                $(this).css('border', DocTree.View.ExternalDnd._borderSave);
+            }
         }
         ,onDragDrop: function(e) {
-            var node2 = $.ui.fancytree.getNode(e);
-
             //e.stopPropagation();
             e.preventDefault();
-            $(this).css('border', DocTree.View.ExternalDnd._borderSave);
+            if (null != DocTree.View.ExternalDnd._borderSave) {
+                $(this).css('border', DocTree.View.ExternalDnd._borderSave);
+            }
+
+            var node = $.ui.fancytree.getNode(e);
             var files = e.originalEvent.dataTransfer.files;
+
             var tree = DocTree.View.tree;
-            var node = tree.getActiveNode();
+            var node2 = tree.getActiveNode();
             var a = this;
 
             var $tdList = $(this).find(">td");

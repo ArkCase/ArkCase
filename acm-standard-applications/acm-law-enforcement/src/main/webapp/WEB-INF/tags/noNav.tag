@@ -10,7 +10,8 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <%@include file="/WEB-INF/tagf/global.tagf" %>
+    <%--<%@include file="/WEB-INF/tagf/global.tagf" %>--%>
+    <%@include file="/resources/include/global.inc" %>
 
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
@@ -24,7 +25,8 @@
     <section>
         <section class="hbox stretch">
             <section id="content">
-                <%@include file="/WEB-INF/tagf/msgBoard.tagf"%>
+                <%--<%@include file="/WEB-INF/tagf/msgBoard.tagf"%>--%>
+                <%@include file="/resources/include/msgBoard.inc" %>
                 <jsp:doBody/>
             </section>
         </section>
@@ -55,7 +57,8 @@
     });
 </script>
 
-<%@include file="/WEB-INF/tagf/dialog.tagf" %>
+<%--<%@include file="/WEB-INF/tagf/dialog.inc" %>--%>
+<%--<%@include file="/resources/include/dialog.inc" %>--%>
 
 </body>
 </html>

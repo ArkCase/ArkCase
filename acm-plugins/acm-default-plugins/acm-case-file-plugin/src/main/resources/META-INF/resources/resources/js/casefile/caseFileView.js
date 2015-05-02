@@ -354,7 +354,7 @@ CaseFile.View = CaseFile.View || {
 
         //---- demo how to use object picker ----
         ,onPickObjectDemo: function() {
-            SearchBase.showSearchDialog({name: "demoDialog"
+            SearchBase.Dialog.create({name: "demoDialog"
                 ,title: "My Dialog Title"
                 ,prompt: "Enter to search Case or Task"
                 ,btnGoText: "Search Now!"
@@ -372,7 +372,7 @@ CaseFile.View = CaseFile.View || {
                 ,onClickBtnDefault : function(event, ctrl) {
                     alert("cancel");
                 }
-            });
+            }).show();
         }
         //---------------------------------------
 

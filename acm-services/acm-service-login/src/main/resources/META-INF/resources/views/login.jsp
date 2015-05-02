@@ -3,7 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<t:detail>
+<t:noNav>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>
 </jsp:attribute>
@@ -61,4 +61,4 @@
         </div>
     </footer>
 </jsp:body>
-</t:detail>
+</t:noNav>
