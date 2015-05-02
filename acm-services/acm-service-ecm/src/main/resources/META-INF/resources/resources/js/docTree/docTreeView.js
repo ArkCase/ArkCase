@@ -1067,7 +1067,7 @@ DocTree.View = DocTree.View || {
                         {title: "Open", cmd: "open", uiIcon: "ui-icon-folder-open" }
                         ,{title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil" }
                         ,{title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print <kbd>Ctrl+X</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: "Print <kbd>Ctrl+P</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
                         ,{title: "----" }
                         ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
