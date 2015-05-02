@@ -94,6 +94,7 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
+        <property name="fileService" ref="ecmFileService"/>
     </bean>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
