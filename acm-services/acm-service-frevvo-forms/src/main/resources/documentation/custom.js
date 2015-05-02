@@ -99,7 +99,7 @@ var CustomEventHandlers = {
 			filters.push({key: "Group", values: [owningGroup]});
 		}
 		
-		SearchBase.showSearchDialog({name: "pickUser"
+		SearchBase.Dialog.create({name: "pickUser"
 			,title: "Add User"
 			,prompt: "Enter to search for users."
 			,btnGoText: "Go!"
@@ -143,7 +143,7 @@ var CustomEventHandlers = {
 					}
 				});
 			}
-		});
+		}).show();
    }
 }
 

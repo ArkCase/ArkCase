@@ -98,6 +98,8 @@
     }*/
 
 </style>
+
+    <%@include file="/resources/include/dlgSearch.inc" %>
 </jsp:attribute>
 
     <jsp:body>

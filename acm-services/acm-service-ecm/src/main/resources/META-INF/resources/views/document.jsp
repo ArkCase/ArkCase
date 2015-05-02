@@ -3,7 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<t:detail>
+<t:noNav>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="document.page.title" text="Document | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
+    <%@include file="/resources/include/dlgSearch.inc" %>
+    <%@include file="/resources/include/dlgDocTree.inc" %>
 </jsp:attribute>
 
 <jsp:body>
@@ -427,4 +429,4 @@
 </aside>
 </section>
 </jsp:body>
-</t:detail>
+</t:noNav>

@@ -1,0 +1,140 @@
+<div class="modal fade" id="dlgDocTreeDnd" tabindex="-1" role="dialog" aria-labelledby="labPoTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="labDocTreeDndTitle">Drag and Drop</h4>
+            </div>
+            <header class="header bg-gradient b-b clearfix">
+                <div class="row m-t-sm">
+                    <div class="col-md-12 m-b-sm">
+                        <div class="input-group">
+                            <input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>
+                            <span class="input-group-btn">
+                            <button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>
+                            </span> </div>
+                    </div>
+                </div>
+            </header>
+            <%--<div class="modal-body">--%>
+                <%--<div class="row">--%>
+                    <%--<div class="col-xs-3">--%>
+                        <%--<div class="facets" id="divPoFacets">--%>
+                            <%--&lt;%&ndash;<h6>Create User</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group ">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">5</span> sally-acm </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">2</span> ann-acm </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Person, Organization Type</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">2</span> initiator </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Object Type</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">6</span> TASK </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Assignee Full Name</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group auto">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">6</span> sally supervisor </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">2</span> ann administrator </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<h6>Priority</h6>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<div class="list-group ">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<label class="list-group-item">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<input type="checkbox">&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;<span class="badge bg-info">6</span> medium </label>&ndash;%&gt;--%>
+                            <%--&lt;%&ndash;</div>&ndash;%&gt;--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dlgDocumentPicker" tabindex="-1" role="dialog" aria-labelledby="labDoTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="labDoTitle">Choose Document</h4>
+            </div>
+            <header class="header bg-gradient b-b clearfix">
+                <div class="row m-t-sm">
+                    <div class="col-md-12 m-b-sm">
+                        <%--<div class="input-group">--%>
+                            <%--<input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>--%>
+                            <%--<span class="input-group-btn">--%>
+                            <%--&lt;%&ndash;<button class="btn btn-md btn-default" type="button"><spring:message code="search.submit.text" text="Go!" /></button>&ndash;%&gt;--%>
+                            <%--<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>--%>
+                            <%--</span> </div>--%>
+                    </div>
+                </div>
+            </header>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <section class="panel b-a">
+                            <div class="panel-heading b-b bg-info">
+                                <a href="#" class="font-bold">Documents </a>
+                            </div>
+
+                            <table id="treeDocumentPicker" class="table table-striped th-sortable table-hover">
+                                <thead>
+                                <tr>
+                                    <th><span class='fancytree-checkbox'></span></th>
+                                    <th>ID</th>
+                                    <th width="40%">Title</th>
+                                    <th>Type</th>
+                                    <th>Created</th>
+                                    <th>Author</th>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                    <%--<th colspan="2"></th>--%>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>5</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <%--<td></td>--%>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
