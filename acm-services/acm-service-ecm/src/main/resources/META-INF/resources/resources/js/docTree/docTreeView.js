@@ -474,7 +474,7 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
-            DocTree.View.selectNodes(DocTree.View.CLIPBOARD.data, true);
+            DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
 
         }
     }
@@ -486,6 +486,19 @@ DocTree.View = DocTree.View || {
             DocTree.View._fileDataToNodeData(copyFileInfo, node);
             DocTree.View.markNodeOk(node);
             node.renderTitle();
+
+            //DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
+            if (Acm.isArray(DocTree.View.CLIPBOARD.data)) {
+                var clipBoardNodes = DocTree.View.CLIPBOARD.data;
+                for (var i = 0; i < clipBoardNodes.length; i++) {
+                    if (Acm.isNotEmpty(clipBoardNodes[i].data)) {
+                        if (Acm.goodValue(clipBoardNodes[i].data.name) == Acm.goodValue(node.data.name)) {
+                            node.setSelected(true);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     ,onModelMovedFolder: function(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, node) {
