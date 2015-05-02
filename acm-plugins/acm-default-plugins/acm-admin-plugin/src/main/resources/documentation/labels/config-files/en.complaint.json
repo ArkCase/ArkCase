@@ -35,7 +35,8 @@
             "references": "References",
             "history": "History",
             "time": "Time",
-            "cost": "Cost"
+            "cost": "Cost",
+            "calendar": "Calendar"
         }
     },
     "context-menu": {
@@ -316,6 +317,20 @@
                 "modified-date": "Modified Date",
                 "status": "Status"
             }
+        }
+    },
+    "outlook-calendar": {
+        "label": {
+            "month": "Month",
+            "week": "Week",
+            "day": "Day",
+            "calendar": "Calendar",
+            "start": "Start:",
+            "end": "End:",
+            "refresh": "Refresh"
+        },
+        "msg": {
+            "error-occurred": "Error occurred while retrieving calendar items."
         }
     },
     "msg": {
