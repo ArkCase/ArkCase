@@ -343,12 +343,12 @@
 
                                                         <div class="btn-group ">
                                                             <label>
-                                                                <input type="radio" id="radReplace" value="replace">
+                                                                <input type="radio" id="radReplace" name="op" value="replace">
                                                                 <span>Replace file </span>&nbsp;&nbsp;&nbsp;<span>(If more then one files are dropped, only first one is used) </span>
                                                             </label>
                                                             <br/>
                                                             <label>
-                                                                <input type="radio" id="radCopy" value="copy">
+                                                                <input type="radio" id="radCopy" name="op" value="copy">
                                                                 <span >Copy file(s) under parent folder</span>
                                                             </label>
                                                         </div>
@@ -358,10 +358,6 @@
                                                             <label for="selDocTreeFileTypes" >File Type: </label>
                                                             <select id="selDocTreeFileTypes">
                                                                 <option value="" selected>Please provide a file type</option>
-                                                                <%--<option value="1">Sort Date1 Ascending</option>--%>
-                                                                <%--<option value="2">Sort2 Date Descending</option>--%>
-                                                                <%--<option value="3">Sort Complaint3 ID Ascending</option>--%>
-                                                                <%--<option value="4">Sort Complaint 4ID Ascending</option>--%>
                                                             </select>
                                                         </div>
 
