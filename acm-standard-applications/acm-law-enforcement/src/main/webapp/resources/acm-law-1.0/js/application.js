@@ -6,110 +6,80 @@
  * @author jwu
  */
 var Application = Application || {
-    run : function() {
+    run : function(context) {
+        var acmModules = [];
 
-        // Init I18n functinality
-        var lng= "en";
-
-        // TODO change to microdata or something else
-        // Get namespace from url
-        var namespace = $.trim(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
-
-        // Load resources for wizards.
-        if (namespace === 'wizard') {
-            var url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/' + namespace));
-            namespace = url.substring(url.lastIndexOf('/') + 1);
+        if ("undefined" != typeof Acm) {
+            acmModules.push(Acm);
+        }
+        if ("undefined" != typeof AcmEx) {
+            acmModules.push(AcmEx);
+        }
+        if ("undefined" != typeof App) {
+            acmModules.push(App);
+        }
+        if ("undefined" != typeof Topbar) {
+            acmModules.push(Topbar);
+        }
+        if ("undefined" != typeof Sidebar) {
+            acmModules.push(Sidebar);
+        }
+        if ("undefined" != typeof Login) {
+            acmModules.push(Login);
+        }
+        if ("undefined" != typeof Dashboard) {
+            acmModules.push(Dashboard);
+        }
+        if ("undefined" != typeof Complaint) {
+            acmModules.push(Complaint);
+        }
+        if ("undefined" != typeof CaseFile) {
+            acmModules.push(CaseFile);
+        }
+        if ("undefined" != typeof Task) {
+            acmModules.push(Task);
+        }
+        if ("undefined" != typeof TaskOld) {
+            acmModules.push(TaskOld);
+        }
+        if ("undefined" != typeof TaskWizard) {
+            acmModules.push(TaskWizard);
+        }
+        if ("undefined" != typeof Search) {
+            acmModules.push(Search);
+        }
+        if ("undefined" != typeof Admin) {
+            acmModules.push(Admin);
+        }
+        if ("undefined" != typeof Audit) {
+            acmModules.push(Audit);
+        }
+        if ("undefined" != typeof Report) {
+            acmModules.push(Report);
+        }
+        if ("undefined" != typeof Profile) {
+            acmModules.push(Profile);
+        }
+        if ("undefined" != typeof Subscription) {
+            acmModules.push(Subscription);
+        }
+        if ("undefined" != typeof AcmNotification) {
+            acmModules.push(AcmNotification);
+        }
+        if ("undefined" != typeof Costsheet) {
+            acmModules.push(Costsheet);
+        }
+        if ("undefined" != typeof Timesheet) {
+            acmModules.push(Timesheet);
+        }
+        if ("undefined" != typeof Tag) {
+            acmModules.push(Tag);
+        }
+        if ("undefined" != typeof AcmDocument) {
+            acmModules.push(AcmDocument);
         }
 
-
-        i18n.init({
-                useLocalStorage: false,
-                localStorageExpirationTime: 86400000, // 1 week
-                load: 'current', // Prevent loading of 'en' locale
-                fallbackLng: false,
-                lng: lng,
-                ns:{
-                    namespaces: [namespace]
-                },
-                lowerCaseLng: true,
-                resGetPath: App.getContextPath() + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-            }, function() {
-            $('*[data-i18n]').i18n();
-
-
-            var acmModules = [];
-
-            if ("undefined" != typeof Acm) {
-                acmModules.push(Acm);
-            }
-            if ("undefined" != typeof AcmEx) {
-                acmModules.push(AcmEx);
-            }
-            if ("undefined" != typeof App) {
-                acmModules.push(App);
-            }
-            if ("undefined" != typeof Topbar) {
-                acmModules.push(Topbar);
-            }
-            if ("undefined" != typeof Sidebar) {
-                acmModules.push(Sidebar);
-            }
-            if ("undefined" != typeof Login) {
-                acmModules.push(Login);
-            }
-            if ("undefined" != typeof Dashboard) {
-                acmModules.push(Dashboard);
-            }
-            if ("undefined" != typeof Complaint) {
-                acmModules.push(Complaint);
-            }
-            if ("undefined" != typeof CaseFile) {
-                acmModules.push(CaseFile);
-            }
-            if ("undefined" != typeof Task) {
-                acmModules.push(Task);
-            }
-            if ("undefined" != typeof TaskOld) {
-                acmModules.push(TaskOld);
-            }
-            if ("undefined" != typeof TaskWizard) {
-                acmModules.push(TaskWizard);
-            }
-            if ("undefined" != typeof Search) {
-                acmModules.push(Search);
-            }
-            if ("undefined" != typeof Admin) {
-                acmModules.push(Admin);
-            }
-            if ("undefined" != typeof Audit) {
-                acmModules.push(Audit);
-            }
-            if ("undefined" != typeof Report) {
-                acmModules.push(Report);
-            }
-            if ("undefined" != typeof Profile) {
-                acmModules.push(Profile);
-            }
-            if ("undefined" != typeof Subscription) {
-                acmModules.push(Subscription);
-            }
-            if ("undefined" != typeof AcmNotification) {
-                acmModules.push(AcmNotification);
-            }
-            if ("undefined" != typeof Costsheet) {
-                acmModules.push(Costsheet);
-            }
-            if ("undefined" != typeof Timesheet) {
-                acmModules.push(Timesheet);
-            }
-            if ("undefined" != typeof Tag) {
-                acmModules.push(Tag);
-            }
-            if ("undefined" != typeof AcmDocument) {
-                acmModules.push(AcmDocument);
-            }
-
-
+        this.initI18n(context.path, function() {
             for (var i = 0; i < acmModules.length; i++) {
                 var module = acmModules[i];
                 if ("undefined" != typeof module) {
@@ -127,6 +97,7 @@ var Application = Application || {
                 }
             }
         });
+
     }
 
     ,SESSION_DATA_PROFILE               : "AcmProfile"
@@ -149,7 +120,7 @@ var Application = Application || {
     ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
 
     ,initSessionData: function() {
-        sessionStorage.setItem("AcmProfile", null);
+        sessionStorage.setItem(this.SESSION_DATA_PROFILE, null);
 
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_TYPES, null);
@@ -173,5 +144,36 @@ var Application = Application || {
         sessionStorage.setItem("AcmTaskAssignees", null);
         sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
+    }
+
+    ,initI18n: function(contextPath, onDone) {
+        var lng= "en";
+
+        // TODO change to microdata or something else
+        // Get namespace from url
+        var namespace = $.trim(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
+
+        // Load resources for wizards.
+        if (namespace === 'wizard') {
+            var url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/' + namespace));
+            namespace = url.substring(url.lastIndexOf('/') + 1);
+        }
+
+
+        i18n.init({
+            useLocalStorage: false,
+            localStorageExpirationTime: 86400000, // 1 week
+            load: 'current', // Prevent loading of 'en' locale
+            fallbackLng: false,
+            lng: lng,
+            ns:{
+                namespaces: [namespace]
+            },
+            lowerCaseLng: true,
+            resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+        }, function() {
+            $('*[data-i18n]').i18n();
+            onDone();
+        });
     }
 }

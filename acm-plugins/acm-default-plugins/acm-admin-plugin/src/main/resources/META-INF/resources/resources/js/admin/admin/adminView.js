@@ -231,7 +231,7 @@ Admin.View = Admin.View || {
                 Admin.Model.Organization.setParentNodeFlag(true);
                 Admin.Model.Organization.Tree.setSupervisorFlag(false);
 
-                SearchBase.showSearchDialog({name: "pickMember"
+                SearchBase.Dialog.create({name: "pickMember"
                     ,title: "Add Members"
                     ,prompt: "Enter to search for members."
                     ,btnGoText: "Go!"
@@ -254,13 +254,13 @@ Admin.View = Admin.View || {
                             Admin.Controller.viewAddedMembers(people,parentGroupId);
                         }
                     }
-                });
+                }).show();
             }
             ,onClickAddSupervisors: function(node){
                 Admin.Model.Organization.setParentNodeFlag(true);
                 Admin.Model.Organization.Tree.setSupervisorFlag(true);
 
-                SearchBase.showSearchDialog({name: "pickSupervisor"
+                SearchBase.Dialog.create({name: "pickSupervisor"
                     ,title: "Add Supervisor"
                     ,prompt: "Enter to search for supervisor."
                     ,btnGoText: "Go!"
@@ -286,7 +286,7 @@ Admin.View = Admin.View || {
                             Admin.Controller.viewAddedSupervisor(people[0],parentGroupId);
                         }
                     }
-                });
+                }).show();
             }
             ,onClickButtonsCancelEventBubble: function (e) {
                 var evt = e ? e:window.event;

@@ -10,7 +10,8 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <%@include file="/WEB-INF/tagf/global.tagf" %>
+    <%--<%@include file="/WEB-INF/tagf/global.tagf" %>--%>
+    <%@include file="/resources/include/global.jspf" %>
 
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
@@ -24,7 +25,8 @@
     <section>
         <section class="hbox stretch">
             <section id="content">
-                <%@include file="/WEB-INF/tagf/msgBoard.tagf"%>
+                <%--<%@include file="/WEB-INF/tagf/msgBoard.tagf"%>--%>
+                <%@include file="/resources/include/msgBoard.jspf" %>
                 <jsp:doBody/>
             </section>
         </section>
@@ -51,11 +53,14 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        Application.run();
+        var context = {};
+        context.path = Acm.Object.MicroData.get("contextPath");
+        Application.run(context);
     });
 </script>
 
-<%@include file="/WEB-INF/tagf/dialog.tagf" %>
+<%--<%@include file="/WEB-INF/tagf/dialog.tagf" %>--%>
+<%--<%@include file="/resources/include/dialog.jspf" %>--%>
 
 </body>
 </html>
