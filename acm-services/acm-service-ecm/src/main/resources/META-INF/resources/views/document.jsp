@@ -379,13 +379,13 @@
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="owner" data-title="Owner"></a></div>
                                     <small class="text-muted">Owner</small></div>
-                                <div class="col-xs-3 b-r">
+                                <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="createDate" data-title="Create Date"></a></div>
                                     <small class="text-muted">Created Date</small></div>
                                 <div class="col-xs-3 b-r">
                                     <div class="h4 font-bold"><a href="#" id="assignee" data-title="Assignee"></a></div>
                                     <small class="text-muted">Assigned To</small></div>
-                                <div class="col-xs-2 b-r">
+                                <div class="col-xs-3 b-r">
                                     <div class="h4 font-bold"><a href="#" id="type" data-title="Type"></a></div>
                                     <small class="text-muted">Type</small></div>
                                 <div class="col-xs-2">
