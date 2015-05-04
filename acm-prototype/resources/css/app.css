@@ -261,6 +261,10 @@ a.list-group-item:focus {
 .panel.panel-default {
   border-color: #eaeef1;
 }
+
+#wizardform div.panel.panel-default {
+	border: none;
+}
 .panel.panel-default > .panel-heading,
 .panel.panel-default > .panel-footer {
   border-color: #eaeef1;
@@ -3985,6 +3989,10 @@ div.panel-body.no-padder table {
 }
 .m-b-sm {
   margin-bottom: 10px;
+}
+
+#wizardform div.panel.panel-default div.panel-body.no-padder div.tab-content ul.pager.wizard.m-b-sm {
+	padding: 10px;
 }
 .m-b {
   margin-bottom: 15px;
