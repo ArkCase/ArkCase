@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+<head>
+<meta charset="utf-8" />
+<title>Split Cases | ACM | Armedia Case Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/font.css" type="text/css" />
+<link rel="stylesheet" href="resources/css/app.css" type="text/css" />
+<!--[if lt IE 9]>
+    <script src="js/ie/html5shiv.js"></script>
+    <script src="js/ie/respond.min.js"></script>
+    <script src="js/ie/excanvas.js"></script>
+  <![endif]-->
+<script src="resources/js/jquery.min.js"></script>
+<script src="resources/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.js"></script>
+<script src="resources/js/fancytree/jquery.fancytree.table.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/js/fancytree/skin-win8/ui.fancytree.css">
+
+</head>
+<body class="">
+<section class="vbox">
+  <section>
+    <section class="hbox stretch"> 
+      <!-- .aside --><!-- /.aside -->
+      
+      <section id="content">
+        <header class="header bg-white b-b clearfix">
+          <div class="row m-t-sm">
+            <div class="col-sm-12 m-b-xs">
+              <div class="pull-right inline">
+                <div class="btn-group">
+                
+                             
+                            
+                            
+                            
+                              <button class="btn btn-info btn-sm"><i class="fa fa-save"></i> Save Changes</button>
+                            
+                            
+                  <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Close Document" onClick="window.close();"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+              <h4 class="m-n"> Split Complaint</h4>
+            </div>
+          </div>
+        </header>
+        <section class="hbox stretch">
+          <aside>
+            <section class="vbox">
+              <section class="scrollable">
+                <div class="wrapper dk  clearfix">
+                  <div class="row">
+                    <div class="col-xs-6  b-r">
+                      <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> New Complaint Title</a></h4>
+                    </div>
+                    <div class="col-xs-6  b-r text-right">
+                      <h5><a href="#" id="complaintID" >[New Complaint ID]</a></h5>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-4 b-r">
+                      <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type">CRIMINAL</a></div>
+                      <small class="text-muted">Inncodent Category</small></div>
+                    <div class="col-xs-4 b-r">
+                      <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Created Date">MM/DD/YYYY</a></div>
+                      <small class="text-muted">Created Date</small></div>
+                    <div class="col-xs-4 b-r">
+                      <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority">High</a></div>
+                      <small class="text-muted">Priority</small></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-4 b-r">
+                      <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee">Ann Administrator</a></div>
+                      <small class="text-muted">Assigned To</small></div>
+                    <div class="col-xs-4  b-r">
+                      <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-url="/post" data-title="Enter Group">ACM_INVESTIGATOR_DEV</a></div>
+                      <small class="text-muted">Owning Group</small></div>
+                    <div class="col-xs-4 b-r ">
+                      <div class="h4 font-bold"><a href="#" id="due" data-type="date" data-pk="1" data-url="/post" data-title="Enter Due Date">MM/DD/YYYY</a></div>
+                      <small class="text-muted">Due Date</small></div>
+                  </div>
+                </div>
+                <div class="wrapper ">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <section class="panel b-a ">
+                        <div class="panel-heading b-b bg-info">
+                          <ul class="nav nav-pills pull-right">
+                            <li></li>
+                            <li> </li>
+                          </ul>
+                          </span> <a href="#" class="font-bold">Split Complaint</a></div>
+                       <form id="wizardform" method="get" action="">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <ul class="nav nav-tabs font-bold">
+                          <li class="active"><a href="#initiator" data-toggle="tab">Intiator</a></li>
+                          <li class=""><a href="#details" data-toggle="tab">Details</a></li>
+                          <li class=""><a href="#people" data-toggle="tab">People</a></li>
+                           <li class=""><a href="#documents" data-toggle="tab">Documents</a></li>
+                           <li class=""><a href="#evidence" data-toggle="tab">Evidence</a></li>
+                           <li class=""><a href="#participants" data-toggle="tab">Participants</a></li>
+                           <li class=""><a href="#notes" data-toggle="tab">Notes</a></li>
+                           <li class=""><a href="#tasks" data-toggle="tab">Tasks</a></li>
+                        </ul>
+                      </div>
+                      <div class="panel-body no-padder">
+                       
+                        <div class="tab-content">
+                          <div class="tab-pane active panel-body no-padder" id="initiator">                            
+                     
+                                <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                    <th width="10"><input type="checkbox" /></th>
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Title</th>
+                                      <th>Role</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                    <td><input type="checkbox" /></td>
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
+                                      <td>[Title]</td>
+                                      <td>[Role]</td>
+                                    
+                                    </tr>
+                                  </tbody>
+                                </table>
+                          </div>
+                          <div class="tab-pane panel-body" id="details">
+                          
+                          
+                          <div class="complaintDetails">
+                                          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+                                          <p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
+                                        </div>
+                          
+                          
+                          </div>
+                          <div class="tab-pane panel-body no-padder" id="people"><table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                    <th width="10"><input type="checkbox" /></th>
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Title</th>
+                                      <th>Role</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                    <td><input type="checkbox" /></td>
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
+                                      <td>[Title]</td>
+                                      <td>[Role]</td>
+                                    
+                                    </tr>
+                                  </tbody>
+                                </table></div>
+                          <div class="tab-pane panel-body no-padder" id="documents">
+                          
+                          
+                            <table id="treetable" class="table table-striped th-sortable table-hover">
+                                <thead>
+                                  <tr>
+                                    <th><input type="checkbox" class="fancycheckbox" /></th>
+                                    <th>ID</th>
+                                    <th width="40%">Title</th>
+                                    <th>Type</th>
+                                    <th>Created</th>
+                                    <th>Author</th>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                    <th colspan="2"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                          
+                          </div>
+                           <div class="tab-pane panel-body no-padder" id="evidence">
+                           
+                           
+                             <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                     <th width="10"><input type="checkbox" /></th>
+                                      <th>ID</th>
+                                      <th>Location</th>
+                                     
+                                       <th>Title</th>
+                                      <th>Added</th>
+                                      <th>Type</th>
+                                      <th>Collected By</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                    <td><input type="checkbox" /></td>
+                                      <td>[ID]</td>
+                                      <td>[Location]</td>
+                                      
+                                      <td><a href="evidence.html" target="_blank">[Title]</a></td>
+                                      <td>[Added]</td>
+                                      <td>[Type]</td>
+                                      <td>[Collected By]</td>
+                                      
+                                    </tr>
+                                  </tbody>
+                                </table>
+                           
+                           
+                           </div>
+                           
+                           
+                            <div class="tab-pane panel-body no-padder" id="participants"><table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                    <th width="10"><input type="checkbox" /></th>
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Title</th>
+                                      <th>Role</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                    <td><input type="checkbox" /></td>
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
+                                      <td>[Title]</td>
+                                      <td>[Role]</td>
+                                    
+                                    </tr>
+                                  </tbody>
+                                </table></div>
+                                
+                                 <div class="tab-pane panel-body no-padder" id="notes">
+                                 
+                                 <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                     <th width="10"><input type="checkbox" /></th>
+                                      <th width="70%">Note</th>
+                                      <th >Created</th>
+                                      <th >Author</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                    <td><input type="checkbox" /></td>
+                                      <td>[Note]</td>
+                                      <td>[Created]</td>
+                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
+                                        <option value="0">Choose Action</option>
+                                        <option value="1">Delete</option>
+                                        
+                                      </select></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                 
+                                 </div>
+                           <div class="tab-pane panel-body no-padder" id="tasks">
+                           
+                           
+                           <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                    <th width="10"><input type="checkbox" /></th>
+                                      <th>ID</th>
+                                      <th>Title</th>
+                                      <th>Created</th>
+                                      <th>Priority</th>
+                                      <th>Due</th>
+                                      <th>Status</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                    <td><input type="checkbox" /></td>
+                                      <td>[ID]</td>
+                                      <td>[Title]</td>
+                                      <td>[Created]</td>
+                                      <td>[Priority]</td>
+                                      <td>[Due]</td>
+                                      <td>[Status]</td>
+                                      
+                                    </tr>
+                                  </tbody>
+                                </table>
+                           
+                           </div>
+                          
+                          <ul class="pager wizard m-b-sm">
+                            <li class="previous first" style="display:none;"><a href="#">First</a></li>
+                            <li class="previous"><a href="#">Previous</a></li>
+                            <li class="next last disabled" style="display:none;"><a href="#">Last</a></li>
+                            <li class="next disabled"><a href="#">Next</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </section>
+              
+            </section>
+          </aside>
+        </section>
+      </section>
+    </section>
+  </section>
+</section>
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/datepicker/bootstrap-datepicker.js"></script> 
+
+
+<script src="resources/js/wizard/jquery.bootstrap.wizard.js"></script>
+
+<script>
++function ($) {
+
+  $(function(){
+
+    $('#wizardform').bootstrapWizard({
+      'tabClass': 'nav nav-tabs',
+      'onNext': function(tab, navigation, index) {
+        return true;
+      },
+      onTabClick: function(tab, navigation, index) {
+        return true;
+      },
+      onTabShow: function(tab, navigation, index) {
+        var $total = navigation.find('li').length;
+        var $current = index+1;
+        var $percent = ($current/$total) * 100;
+        $('#wizardform').find('.progress-bar').css({width:$percent+'%'});
+      }
+    });
+
+    
+  });
+}(window.jQuery);
+</script>
+
+<!-- Bootstrap --> 
+<script src="resources/js/bootstrap.js"></script> 
+
+<link rel="stylesheet" href="resources/js/summernote/summernote.css" type="text/css"/>
+<script src="resources/js/summernote/summernote.js"></script> 
+<script>
+  
+  $('.complaintDetails').summernote({focus: true});
+  
+  
+</script> 
+
+<link href="resources/css/bootstrap-editable.css" rel="stylesheet">
+<script src="resources/js/bootstrap-editable.min.js"></script> 
+<script src="resources/js/typeahead.js"></script> 
+<script>
+$.fn.editable.defaults.url = '/post';
+$(document).ready(function() { $('#caseTitle').editable({placement: 'right'}); }); 
+$(document).ready(function() { $('#priority').editable({placement: 'left', value: 2,    
+        source: [
+              {value: 1, text: 'Low'},
+              {value: 2, text: 'Medium'},
+              {value: 3, text: 'High'},
+              {value: 3, text: 'Expedited'}
+           ]}); }); 
+$(document).ready(function() { $('#type').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'Type 1'},
+              {value: 2, text: 'Type 2'},
+              {value: 3, text: 'Type 3'},
+              {value: 3, text: 'Type 4'}
+           ]}); }); 
+		   
+		   $(document).ready(function() { $('#group').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'Type 1'},
+              {value: 2, text: 'Type 2'},
+              {value: 3, text: 'Type 3'},
+              {value: 3, text: 'Type 4'}
+           ]}); }); 
+		   
+$(document).ready(function() { $('#assigned').editable({placement: 'bottom', value: 2,    
+        source: [
+              {value: 1, text: 'David Miller'},
+              {value: 2, text: 'Judy Hsu'},
+              {value: 3, text: 'Ronda Ringo'},
+              {value: 3, text: 'AJ McClary'}
+           ]}); }); 
+		   
+		   
+$(document).ready(function() { $('#incident').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+		
+		
+		$(document).ready(function() { $('#due').editable({
+        format: 'yyyy-mm-dd',  
+		placement: 'bottom',  
+        viewformat: 'dd/mm/yyyy',    
+        datepicker: {
+                weekStart: 1
+           }
+        }); }); 
+
+
+</script> 
+
+
+<script type='text/javascript'>//<![CDATA[ 
+
+$(function() {
+	
+	    $("#treetable").fancytree({
+
+
+			extensions: ["table"],
+			checkbox: true,
+			table: {
+        indentation: 10,      // indent 20px per node level
+        nodeColumnIdx: 1,     // render the node title into the 2nd column
+        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+      },
+	  renderColumns: function(event, data) {
+        var node = data.node,
+        $tdList = $(node.tr).find(">td");
+        // (index #0 is rendered by fancytree by adding the checkbox)
+        $tdList.eq(1).text("[ID]");
+		
+		
+		
+		
+		$tdList.eq(3).text(node.data.type);
+		$tdList.eq(4).text(node.data.created);
+		$tdList.eq(5).text(node.data.author);
+		$tdList.eq(6).text(node.data.version);
+		$tdList.eq(7).text(node.data.status);
+		$tdList.eq(8).html(node.data.action);
+		
+		
+		
+        // (index #2 is rendered by fancytree)
+        //$tdList.eq(3).text(node.key);
+        //$tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
+      },
+	
+        source: [
+	{"title": "Folder 1", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Subfolder</a></li><li><a href='#'>Add Document</a></li><li><a href='#'>Delete Subfolder</a></li></ul></div>",  "children": [
+		
+			{"title": "Document 1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 2", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
+
+		
+	]}
+]
+    });
+	});
+	</script>
+
+
+<!-- App --> 
+<script src="resources/js/app.js"></script> 
+<script src="resources/js/slimscroll/jquery.slimscroll.min.js"></script> 
+<script src="resources/js/app.plugin.js"></script>
+</body>
+</html>
