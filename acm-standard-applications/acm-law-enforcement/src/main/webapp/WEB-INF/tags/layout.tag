@@ -27,7 +27,8 @@
 
     <section>
         <section class="hbox stretch">
-            <%@include file="/WEB-INF/tagf/sidebar.tagf"%>
+            <%--<%@include file="/WEB-INF/tagf/sidebar.tagf"%>--%>
+            <%@include file="/resources/include/sidebar.jspf" %>
             <section id="content">
                 <%--<%@include file="/WEB-INF/tagf/msgBoard.tagf"%>--%>
                 <%@include file="/resources/include/msgBoard.jspf" %>
