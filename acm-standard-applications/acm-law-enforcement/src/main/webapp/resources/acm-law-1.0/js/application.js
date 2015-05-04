@@ -6,11 +6,17 @@
  * @author jwu
  */
 var Application = Application || {
-    run : function() {
+    run : function(context) {
         var acmModules = [];
 
+        if ("undefined" != typeof Acm) {
+            acmModules.push(Acm);
+        }
         if ("undefined" != typeof AcmEx) {
             acmModules.push(AcmEx);
+        }
+        if ("undefined" != typeof App) {
+            acmModules.push(App);
         }
         if ("undefined" != typeof Topbar) {
             acmModules.push(Topbar);
@@ -73,12 +79,7 @@ var Application = Application || {
             acmModules.push(AcmDocument);
         }
 
-        Acm.create();
-        App.create();
-        acmModules.unshift(Acm);
-        acmModules.unshift(App);
-
-        this.initI18n(function() {
+        this.initI18n(context.path, function() {
             for (var i = 0; i < acmModules.length; i++) {
                 var module = acmModules[i];
                 if ("undefined" != typeof module) {
@@ -87,7 +88,6 @@ var Application = Application || {
                     }
                 }
             }
-
             for (var i = 0; i < acmModules.length; i++) {
                 var module = acmModules[i];
                 if ("undefined" != typeof module) {
@@ -146,7 +146,7 @@ var Application = Application || {
 
     }
 
-    ,initI18n: function(onDone) {
+    ,initI18n: function(contextPath, onDone) {
         var lng= "en";
 
         // TODO change to microdata or something else
@@ -170,7 +170,7 @@ var Application = Application || {
                 namespaces: [namespace]
             },
             lowerCaseLng: true,
-            resGetPath: App.getContextPath() + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+            resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
         }, function() {
             $('*[data-i18n]').i18n();
             onDone();

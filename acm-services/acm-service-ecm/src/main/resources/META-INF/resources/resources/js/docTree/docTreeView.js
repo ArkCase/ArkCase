@@ -36,52 +36,11 @@ DocTree.View = DocTree.View || {
         //----------
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
 
-//for testing
-        //delegate
 
-        //$treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
-
-//        var obj = this.$tree;
-//        obj.on('dragenter', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//            $(this).css('border', '2px solid #0B85A1');
-//        });
-//        obj.on('dragover', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
-//        obj.on('drop', function (e)
-//        {
-//
-//            $(this).css('border', '2px dotted #0B85A1');
-//            e.preventDefault();
-//            var files = e.originalEvent.dataTransfer.files;
-//
-//            //We need to send dropped files to Server
-//            var z = 1;
-//        });
-//
-//        $(document).on('dragenter', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
-//        $(document).on('dragover', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//            //obj.css('border', '2px dotted #0B85A1');
-//        });
-//        $(document).on('drop', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
+        if (this.DialogDnd.create) {this.DialogDnd.create(args);}
     }
     ,onInitialized: function() {
+        if (DocTree.View.DialogDnd.onInitialized) {DocTree.View.DialogDnd.onInitialized();}
     }
 
     ,makeUploadDocForm: function($s) {
@@ -944,6 +903,12 @@ DocTree.View = DocTree.View || {
             var $a = $tdList.eq(1).find("a");
             var a2 = $a.attr("href");
             var a3 = $a.text();
+
+            var $dlg = $("#emailDocs");
+            Acm.Dialog.modal($dlg ,function() {
+                alert("OKed");
+            });
+
             var z = 1;
         }
     }
@@ -1798,5 +1763,76 @@ DocTree.View = DocTree.View || {
         return true;
     }
 
+
+    ,DialogDnd: {
+        create : function(args) {
+            this.$dlgDocTreeDnd = $("#dlgDocTreeDnd");
+            this.$radOperation = this.$dlgDocTreeDnd.find("input:radio");
+            this.$radOperation.on("click", function(e) {DocTree.View.DialogDnd.onClickRadOperation(e, this);});
+            this.$radReplace = this.$radOperation.eq(0);
+            this.$radCopy    = this.$radOperation.eq(1);
+
+            this.$selFileTypes = this.$dlgDocTreeDnd.find("select");
+            this.fillSelFileTypes(args.fileTypes);
+            this.$selFileTypes.on("change", function(e) {DocTree.View.DialogDnd.onChangeFileTypes(e, this);});
+            this.$divFileType = this.$selFileTypes.closest("div");
+            this.$btnOk = this.$dlgDocTreeDnd.find("button.btn-primary");
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onClickRadOperation: function(event, ctrl) {
+            DocTree.View.DialogDnd.update();
+        }
+        ,onChangeFileTypes: function(event, ctrl) {
+            DocTree.View.DialogDnd.update();
+        }
+        ,fillSelFileTypes: function(fileTypes) {
+            for (var i = 0; i < fileTypes.length; i++) {
+                var fileType = fileTypes[i];
+                if (Acm.isEmpty(fileType.form)) {
+                    var $option = $("<option/>")
+                        .val(Acm.goodValue(fileType.type))
+                        .text(Acm.goodValue(fileType.label))
+                        .appendTo(this.$selFileTypes)
+                        ;
+                }
+            }
+        }
+        ,update: function() {
+            var replaceChecked = this.isCheckedRadReplace();
+            var copyChecked = this.isCheckedRadCopy();
+            var fileType = this.getValueSelFileType();
+
+        }
+        ,show: function(onClickBtnPrimary) {
+            this.showDivFileType(false);
+            this.setEnableBtnOk(false);
+
+            Acm.Dialog.modal(this.$dlgDocTreeDnd, onClickBtnPrimary);
+        }
+
+        ,getValueSelFileType: function() {
+            return Acm.Object.getSelectValue(this.$selFileTypes);
+        }
+        ,setEnableBtnOk: function(enable) {
+            Acm.Object.setEnable(this.$btnOk.enable);
+        }
+        ,isCheckedRadReplace: function() {
+            return Acm.Object.isChecked(this.$radOperation.eq(0));
+        }
+        ,setCheckedRadReplace: function(check) {
+            Acm.Object.setChecked(this.$radOperation.eq(0), check);
+        }
+        ,isCheckedRadCopy: function() {
+            return Acm.Object.isChecked(this.$radOperation.eq(1));
+        }
+        ,setCheckedRadCopy: function(check) {
+            Acm.Object.setChecked(this.$radOperation.eq(1), check);
+        }
+        ,showDivFileType: function(show) {
+            Acm.Object.show(this.$divFileType, show);
+        }
+    }
 };
 
