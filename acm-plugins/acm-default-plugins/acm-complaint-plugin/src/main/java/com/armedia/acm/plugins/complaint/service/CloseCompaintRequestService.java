@@ -187,23 +187,18 @@ public class CloseCompaintRequestService
             return;
         }
 
-        // Remove the person ID, so when we save the case, new person association records will be created.
-        // Since we are not saving the complaint, nothing bad will happen to the complaint person associations.
         for ( PersonAssociation pa : personAssociations )
         {
-        	if (existingCaseFile.getId() != null)
-        	{
-	            PersonAssociation paCopy = new PersonAssociation();
-	            paCopy.setPersonType(pa.getPersonType());
-	            paCopy.setPerson(pa.getPerson());
-	            paCopy.setPersonDescription(pa.getPersonDescription());
-	            paCopy.setNotes(pa.getNotes());
-	            paCopy.setTags(pa.getTags());
-	            paCopy.setParentId(existingCaseFile.getId());
-	            paCopy.setParentType(existingCaseFile.getObjectType());
-	
-	            existingCaseFile.getPersonAssociations().add(paCopy);
-        	}
+            PersonAssociation paCopy = new PersonAssociation();
+            paCopy.setPersonType(pa.getPersonType());
+            paCopy.setPerson(pa.getPerson());
+            paCopy.setPersonDescription(pa.getPersonDescription());
+            paCopy.setNotes(pa.getNotes());
+            paCopy.setTags(pa.getTags());
+            paCopy.setParentId(existingCaseFile.getId());
+            paCopy.setParentType(existingCaseFile.getObjectType());
+
+            existingCaseFile.getPersonAssociations().add(paCopy);
         }
     }
 
