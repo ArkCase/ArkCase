@@ -8,6 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="task.page.title" text="Tasks | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">task</span>
         <span itemprop="objType">TASK</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -182,8 +183,8 @@
 
                                 <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                                 <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
-
-                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="task:header.button.subscribe">Subscribe</span></button>
+                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]task:header.button.subscribe"><i class="fa fa-bullhorn"></i>
+                                </button>
                             </div>
 
                         </div>
@@ -263,8 +264,8 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li>
                                             <div class="btn-group padder-v2">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="task:[data-title]rework-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="task:[data-title]rework-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                 <ul class="dropdown-menu pull-right">
                                                     <li><a href="#" data-i18n="task:rework-details.label.other-menu-items">Other menu items</a></li>
                                                 </ul>
