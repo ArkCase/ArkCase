@@ -148,18 +148,14 @@ var Application = Application || {
 
     ,initI18n: function(contextPath, onDone) {
         var lng= "en";
+        var namespaces = ['common'];
 
-        // TODO change to microdata or something else
-        // Get namespace from url
-        var namespace = $.trim(window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1));
-
-        // Load resources for wizards.
-        if (namespace === 'wizard') {
-            var url = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/' + namespace));
-            namespace = url.substring(url.lastIndexOf('/') + 1);
+        // Get namespace from detailData
+        var namespace = Acm.Object.MicroData.get("resourceNamespace");
+        if (namespace) {
+            namespaces.push(namespace);
         }
-
-
+            
         i18n.init({
             useLocalStorage: false,
             localStorageExpirationTime: 86400000, // 1 week
@@ -167,13 +163,16 @@ var Application = Application || {
             fallbackLng: false,
             lng: lng,
             ns:{
-                namespaces: [namespace]
+                namespaces: namespaces
             },
             lowerCaseLng: true,
-            resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+            resGetPath: App.getContextPath() + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'        
         }, function() {
             $('*[data-i18n]').i18n();
             onDone();
         });
+
+        // Send "i18n ready" global event
+        $(document).trigger('i18n-ready');
     }
 }
