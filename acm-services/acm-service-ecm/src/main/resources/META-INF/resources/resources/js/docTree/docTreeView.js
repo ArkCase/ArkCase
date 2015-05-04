@@ -904,10 +904,13 @@ DocTree.View = DocTree.View || {
             var a2 = $a.attr("href");
             var a3 = $a.text();
 
-            var $dlg = $("#emailDocs");
-            Acm.Dialog.modal($dlg ,function() {
+            DocTree.View.DialogDnd.show(function() {
                 alert("OKed");
             });
+//            var $dlg = $("#emailDocs");
+//            Acm.Dialog.modal($dlg ,function() {
+//                alert("OKed");
+//            });
 
             var z = 1;
         }
@@ -1802,10 +1805,27 @@ DocTree.View = DocTree.View || {
         ,update: function() {
             var replaceChecked = this.isCheckedRadReplace();
             var copyChecked = this.isCheckedRadCopy();
-            var fileType = this.getValueSelFileType();
+            if (replaceChecked) {
+                this.showDivFileType(false);
+                this.setEnableBtnOk(true);
 
+            } else if (copyChecked) {
+                this.showDivFileType(true);
+                var fileType = this.getValueSelFileType();
+                if (Acm.isNotEmpty(fileType)) {
+                    this.setEnableBtnOk(true);
+                } else {
+                    this.setEnableBtnOk(false);
+                }
+
+            } else {
+                this.showDivFileType(false);
+                this.setEnableBtnOk(false);
+            }
         }
         ,show: function(onClickBtnPrimary) {
+            this.setCheckedRadReplace(false);
+            this.setCheckedRadCopy(false);
             this.showDivFileType(false);
             this.setEnableBtnOk(false);
 
@@ -1816,7 +1836,7 @@ DocTree.View = DocTree.View || {
             return Acm.Object.getSelectValue(this.$selFileTypes);
         }
         ,setEnableBtnOk: function(enable) {
-            Acm.Object.setEnable(this.$btnOk.enable);
+            Acm.Object.setEnable(this.$btnOk, enable);
         }
         ,isCheckedRadReplace: function() {
             return Acm.Object.isChecked(this.$radOperation.eq(0));
