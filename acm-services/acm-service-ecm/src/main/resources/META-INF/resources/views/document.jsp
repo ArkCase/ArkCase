@@ -3,7 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<t:detail>
+<t:noNav>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="document.page.title" text="Document | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
+    <%@include file="/resources/include/dlgSearch.jspf" %>
+    <%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
 <jsp:body>
@@ -377,13 +379,13 @@
                                 <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="owner" data-title="Owner"></a></div>
                                     <small class="text-muted">Owner</small></div>
-                                <div class="col-xs-3 b-r">
+                                <div class="col-xs-2 b-r">
                                     <div class="h4 font-bold"><a href="#" id="createDate" data-title="Create Date"></a></div>
                                     <small class="text-muted">Created Date</small></div>
                                 <div class="col-xs-3 b-r">
                                     <div class="h4 font-bold"><a href="#" id="assignee" data-title="Assignee"></a></div>
                                     <small class="text-muted">Assigned To</small></div>
-                                <div class="col-xs-2 b-r">
+                                <div class="col-xs-3 b-r">
                                     <div class="h4 font-bold"><a href="#" id="type" data-title="Type"></a></div>
                                     <small class="text-muted">Type</small></div>
                                 <div class="col-xs-2">
@@ -427,4 +429,4 @@
 </aside>
 </section>
 </jsp:body>
-</t:detail>
+</t:noNav>

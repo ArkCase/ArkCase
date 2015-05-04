@@ -36,52 +36,11 @@ DocTree.View = DocTree.View || {
         //----------
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
 
-//for testing
-        //delegate
 
-        //$treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
-
-//        var obj = this.$tree;
-//        obj.on('dragenter', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//            $(this).css('border', '2px solid #0B85A1');
-//        });
-//        obj.on('dragover', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
-//        obj.on('drop', function (e)
-//        {
-//
-//            $(this).css('border', '2px dotted #0B85A1');
-//            e.preventDefault();
-//            var files = e.originalEvent.dataTransfer.files;
-//
-//            //We need to send dropped files to Server
-//            var z = 1;
-//        });
-//
-//        $(document).on('dragenter', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
-//        $(document).on('dragover', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//            //obj.css('border', '2px dotted #0B85A1');
-//        });
-//        $(document).on('drop', function (e)
-//        {
-//            e.stopPropagation();
-//            e.preventDefault();
-//        });
+        if (this.DialogDnd.create) {this.DialogDnd.create(args);}
     }
     ,onInitialized: function() {
+        if (DocTree.View.DialogDnd.onInitialized) {DocTree.View.DialogDnd.onInitialized();}
     }
 
     ,makeUploadDocForm: function($s) {
@@ -474,6 +433,8 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
+            DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
+
         }
     }
     ,onModelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, node) {
@@ -484,6 +445,19 @@ DocTree.View = DocTree.View || {
             DocTree.View._fileDataToNodeData(copyFileInfo, node);
             DocTree.View.markNodeOk(node);
             node.renderTitle();
+
+            //DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
+            if (Acm.isArray(DocTree.View.CLIPBOARD.data)) {
+                var clipBoardNodes = DocTree.View.CLIPBOARD.data;
+                for (var i = 0; i < clipBoardNodes.length; i++) {
+                    if (Acm.isNotEmpty(clipBoardNodes[i].data)) {
+                        if (Acm.goodValue(clipBoardNodes[i].data.name) == Acm.goodValue(node.data.name)) {
+                            node.setSelected(true);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
     ,onModelMovedFolder: function(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, node) {
@@ -552,8 +526,15 @@ DocTree.View = DocTree.View || {
     ,onClickBtnChkAllDocument: function(event, ctrl) {
         var checked = Acm.Object.isChecked($(ctrl));
         DocTree.View.tree.visit(function(node){
-            node.setSelected(checked);
+            node.setSelected(check);
         });
+    }
+    ,checkNodes: function(nodes, check) {
+        if (!Acm.isArrayEmpty(nodes)) {
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].setSelected(check);
+            }
+        }
     }
 
 
@@ -889,51 +870,32 @@ DocTree.View = DocTree.View || {
                 DocTree.View.ExternalDnd._borderSave = $(this).css('border');
             }
             $(this).css('border', '2px solid #0B85A1');
-            var a = this;
-
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
-            var z = 1;
         }
         ,onDragOver: function(e) {
             e.stopPropagation();
             e.preventDefault();
             $(this).css('border', '2px solid #0B85A1');
-            var a = this;
-
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
-            var z = 1;
-
         }
         ,onDragLeave: function(e) {
             e.stopPropagation();
             e.preventDefault();
-            $(this).css('border', DocTree.View.ExternalDnd._borderSave);
-            var a = this;
 
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
-            var z = 1;
+            if (null != DocTree.View.ExternalDnd._borderSave) {
+                $(this).css('border', DocTree.View.ExternalDnd._borderSave);
+            }
         }
         ,onDragDrop: function(e) {
-            var node2 = $.ui.fancytree.getNode(e);
-
             //e.stopPropagation();
             e.preventDefault();
-            $(this).css('border', DocTree.View.ExternalDnd._borderSave);
+            if (null != DocTree.View.ExternalDnd._borderSave) {
+                $(this).css('border', DocTree.View.ExternalDnd._borderSave);
+            }
+
+            var node = $.ui.fancytree.getNode(e);
             var files = e.originalEvent.dataTransfer.files;
+
             var tree = DocTree.View.tree;
-            var node = tree.getActiveNode();
+            var node2 = tree.getActiveNode();
             var a = this;
 
             var $tdList = $(this).find(">td");
@@ -941,6 +903,12 @@ DocTree.View = DocTree.View || {
             var $a = $tdList.eq(1).find("a");
             var a2 = $a.attr("href");
             var a3 = $a.text();
+
+            var $dlg = $("#emailDocs");
+            Acm.Dialog.modal($dlg ,function() {
+                alert("OKed");
+            });
+
             var z = 1;
         }
     }
@@ -997,13 +965,20 @@ DocTree.View = DocTree.View || {
                 if (0 < countFile && 0 >= countFolder) {
                     menu = [
                         {title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print", cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: "Print <kbd>Ctrl+P</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
                         ,{title: "----" }
                         ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
                         ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
                     ];
                 }
+//                if (0 < countFile || 0 < countFolder) {
+//                    menu = [
+//                        {title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
+//                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
+//                    ];
+//                }
             }
             return menu;
         }
@@ -1038,7 +1013,7 @@ DocTree.View = DocTree.View || {
                         {title: "Open", cmd: "open", uiIcon: "ui-icon-folder-open" }
                         ,{title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil" }
                         ,{title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print", cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: "Print <kbd>Ctrl+P</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
                         ,{title: "----" }
                         ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
@@ -1352,8 +1327,8 @@ DocTree.View = DocTree.View || {
                     node.editStart();
                     break;
                 case "remove":
-                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
-                    DocTree.View._doRemove(node);
+                    var nodes = (batch)? selNodes : [node];
+                    DocTree.View._doBatRemove(nodes);
                     break;
                 case "addChild":
                     node.editCreateNode("child", "");
@@ -1400,17 +1375,25 @@ DocTree.View = DocTree.View || {
                     break;
 
                 case "cut":
-                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
-                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: node};
+                    var nodes = (batch)? selNodes : [node];
+                    DocTree.View.checkNodes(nodes, false);
+                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: nodes};
                     break;
                 case "copy":
-                    if (batch) { node = selNodes[0];}//temp patch before bulk functions available
-                    DocTree.View.CLIPBOARD = {
-                        mode: data.cmd,
-                        data: node.toDict(function(n){
+                    var nodes = (batch)? selNodes : [node];
+                    DocTree.View.checkNodes(nodes, false);
+                    for (var i = 0; i < nodes.length; i++) {
+                        nodes[i] = nodes[i].toDict(function(n){
                             delete n.key;
-                        })
-                    };
+                        });
+                    }
+                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: nodes};
+//                    DocTree.View.CLIPBOARD = {
+//                        mode: data.cmd,
+//                        data: node.toDict(function(n){
+//                            delete n.key;
+//                        })
+//                    };
                     break;
                 case "clear":
                     DocTree.View.CLIPBOARD = null;
@@ -1548,9 +1531,9 @@ DocTree.View = DocTree.View || {
     ,_doPaste: function(node) {
         var mode =  DocTree.View.isFolderNode(node)? "child" : "after";
         if( DocTree.View.CLIPBOARD.mode === "cut" ) {
-            DocTree.View._doMove(DocTree.View.CLIPBOARD.data, node, mode);
+            DocTree.View._doBatMove(DocTree.View.CLIPBOARD.data, node, mode);
         } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
-            DocTree.View._doCopy(DocTree.View.CLIPBOARD.data, node, mode);
+            DocTree.View._doBatCopy(DocTree.View.CLIPBOARD.data, node, mode);
         }
     }
     ,_doDrop: function(frNode, toNode, mode) {
@@ -1780,5 +1763,76 @@ DocTree.View = DocTree.View || {
         return true;
     }
 
+
+    ,DialogDnd: {
+        create : function(args) {
+            this.$dlgDocTreeDnd = $("#dlgDocTreeDnd");
+            this.$radOperation = this.$dlgDocTreeDnd.find("input:radio");
+            this.$radOperation.on("click", function(e) {DocTree.View.DialogDnd.onClickRadOperation(e, this);});
+            this.$radReplace = this.$radOperation.eq(0);
+            this.$radCopy    = this.$radOperation.eq(1);
+
+            this.$selFileTypes = this.$dlgDocTreeDnd.find("select");
+            this.fillSelFileTypes(args.fileTypes);
+            this.$selFileTypes.on("change", function(e) {DocTree.View.DialogDnd.onChangeFileTypes(e, this);});
+            this.$divFileType = this.$selFileTypes.closest("div");
+            this.$btnOk = this.$dlgDocTreeDnd.find("button.btn-primary");
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onClickRadOperation: function(event, ctrl) {
+            DocTree.View.DialogDnd.update();
+        }
+        ,onChangeFileTypes: function(event, ctrl) {
+            DocTree.View.DialogDnd.update();
+        }
+        ,fillSelFileTypes: function(fileTypes) {
+            for (var i = 0; i < fileTypes.length; i++) {
+                var fileType = fileTypes[i];
+                if (Acm.isEmpty(fileType.form)) {
+                    var $option = $("<option/>")
+                        .val(Acm.goodValue(fileType.type))
+                        .text(Acm.goodValue(fileType.label))
+                        .appendTo(this.$selFileTypes)
+                        ;
+                }
+            }
+        }
+        ,update: function() {
+            var replaceChecked = this.isCheckedRadReplace();
+            var copyChecked = this.isCheckedRadCopy();
+            var fileType = this.getValueSelFileType();
+
+        }
+        ,show: function(onClickBtnPrimary) {
+            this.showDivFileType(false);
+            this.setEnableBtnOk(false);
+
+            Acm.Dialog.modal(this.$dlgDocTreeDnd, onClickBtnPrimary);
+        }
+
+        ,getValueSelFileType: function() {
+            return Acm.Object.getSelectValue(this.$selFileTypes);
+        }
+        ,setEnableBtnOk: function(enable) {
+            Acm.Object.setEnable(this.$btnOk.enable);
+        }
+        ,isCheckedRadReplace: function() {
+            return Acm.Object.isChecked(this.$radOperation.eq(0));
+        }
+        ,setCheckedRadReplace: function(check) {
+            Acm.Object.setChecked(this.$radOperation.eq(0), check);
+        }
+        ,isCheckedRadCopy: function() {
+            return Acm.Object.isChecked(this.$radOperation.eq(1));
+        }
+        ,setCheckedRadCopy: function(check) {
+            Acm.Object.setChecked(this.$radOperation.eq(1), check);
+        }
+        ,showDivFileType: function(show) {
+            Acm.Object.show(this.$divFileType, show);
+        }
+    }
 };
 
