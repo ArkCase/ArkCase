@@ -8,6 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">complaint</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -303,11 +304,11 @@
                                     <section class="panel b-a">
                                         <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
                                             <li style="margin-right:5px"></li>
-                                            <%--<li>--%>
-                                                <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
-                                                <%--</div>--%>
-                                            <%--</li>--%>
+                                            <li>
+                                                <div class="btn-group padder-v2">
+                                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#dlgDocTreeDnd"><i class="fa fa-folder"></i> New Folder</button>
+                                                </div>
+                                            </li>
                                             <li>
                                                 <div class="btn-group padder-v2">
                                                     <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint:documents-to-retire.buttons.email">Email</span></button>
@@ -332,24 +333,39 @@
                                         </div>
 
 
-                                        <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="dlgDocTreeDnd" tabindex="-1" role="dialog" aria-labelledby="h4DocTreeDnd" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.close">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint:documents-to-retire.create-folder-dialog.title">Create Folder</h4>
+                                                        <h4 class="modal-title" id="h4DocTreeDnd">Drag and Drop</h4>
                                                     </div>
                                                     <div class="modal-body">
 
-                                                        <p data-i18n="complaint:documents-to-retire.create-folder-dialog.labels.prompt">Enter a name for the folder you would like to create:</p>
+                                                        <div class="btn-group ">
+                                                            <label>
+                                                                <input type="radio" id="radReplace" name="op" value="replace">
+                                                                <span>Replace file </span>&nbsp;&nbsp;&nbsp;<span>(If more then one files are dropped, only first one is used) </span>
+                                                            </label>
+                                                            <br/>
+                                                            <label>
+                                                                <input type="radio" id="radCopy" name="op" value="copy">
+                                                                <span >Copy file(s) under parent folder</span>
+                                                            </label>
+                                                        </div>
+                                                        <br/>
 
-                                                        <label for="folderName2" data-i18n="complaint:documents-to-retire.create-folder-dialog.labels.folder-name">Folder Name</label><br/>
-                                                        <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]complaint:documents-to-retire.create-folder-dialog.labels.folder-name" placeholder="Folder Name" />
+                                                        <div>
+                                                            <label for="selDocTreeFileTypes" >File Type: </label>
+                                                            <select id="selDocTreeFileTypes">
+                                                                <option value="" selected>Please provide a file type</option>
+                                                            </select>
+                                                        </div>
 
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.cancel">Cancel</button>
-                                                        <button type="button" class="btn btn-primary" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.create-folder">Create Folder<</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
+                                                        <button type="button" class="btn btn-primary" >OK</button>
                                                     </div>
                                                 </div>
                                             </div>
