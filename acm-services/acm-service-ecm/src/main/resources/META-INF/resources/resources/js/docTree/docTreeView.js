@@ -149,78 +149,141 @@ DocTree.View = DocTree.View || {
             DocTree.View.$fileInput.click();
         }
     }
-    ,showEmailDialog: function(node){
-        //prepare to create dialog box
-        var args = {
-            name: "Send Email"
-            , title: "Add New Participant"
-            , prompt: "Enter an email address OR search for users within ArkCase."
-            , btnGoText: "Go!"
-            , btnOkText: "Send Email"
-            , filters: [{key: "Object Type", values: ["USER"]}]
-            , onClickBtnPrimary: function (event, ctrl) {
-                alert($edtEmailRecipients.val());
+    ,Email:{
+        showEmailDialog: function(node){
+            //prepare to create dialog box
+            var args = {
+                name: "Send Email"
+                , title: "Add New Participant"
+                , prompt: "Enter an email address OR search for users within ArkCase."
+                , btnGoText: "Go!"
+                , btnOkText: "Send Email"
+                , filters: [{key: "Object Type", values: ["USER"]}]
+                , onClickBtnPrimary: function (event, ctrl) {
+                    alert($edtEmailRecipients.val());
+                }
+            }
+            var dlgSendEmail = SearchBase.Dialog.create(args);
+
+            //get dialog selector
+            var $s = dlgSendEmail.getSelector();
+
+            //inject buttons and input area
+
+            //create form and add input area for
+            //email addresses
+            var $emailFormGroup = $("<div/>")
+                .addClass("form-group")
+                .css({"display":"inline-block", "width":"100%","text-align":"left"})
+                .prependTo($s.find('.modal-footer'));
+
+            var $edtEmailRecipients = $("<input/>")
+                .attr("type", "text")
+                .attr("id","recipientsList")
+                .addClass("form-control")
+                .css("width","100%")
+                .appendTo($emailFormGroup)
+                .val('');
+
+            //create button to add users to recipients
+            var $btnAddUsersToRecipients = $("<button/>")
+                .attr("type", "button")
+                .attr("id","addUsersToRecipients")
+                .addClass("btn btn-default")
+                .html("Add Selected Users");
+
+            $s.find('button.btn-primary').before($btnAddUsersToRecipients);
+
+            //create a send later checkbox and
+            //send later date picker and time fields
+            var $labelForSendLater = $("<label>")
+                .attr('for', "sendLater")
+                .addClass("pull-left")
+                .text('Send Later');
+
+            var $chkSendLater = $("<input/>")
+                .attr("type", "checkbox")
+                .attr("id", "sendLater")
+                .addClass("pull-left");
+
+            $chkSendLater.appendTo($labelForSendLater);
+            $labelForSendLater.appendTo($s.find('.modal-footer'));
+
+            var $edtSendLaterDateTime = $("<span/>")
+                .attr("id", "datetime")
+                .addClass("pull-left")
+                .css("display", "none")
+                .html("&nbsp;&nbsp;&nbsp");
+
+            var $edtSendLaterDate = $("<input/>")
+                .attr("type", "text")
+                .attr("id", "sendLaterDate")
+                .attr("placeholder", "Click to enter date")
+                .addClass("input-s-sm");
+
+            var $edtSendLaterTime = $("<p/><input/>")
+                .attr("type", "text")
+                .attr("id", "sendLaterTime")
+                .attr("placeholder", "Click to enter time")
+                .addClass("input-s-sm");
+
+            $edtSendLaterDate.appendTo($edtSendLaterDateTime);
+            $edtSendLaterTime.appendTo($edtSendLaterDateTime);
+            $edtSendLaterDateTime.appendTo($s.find('.modal-footer'));
+            $edtSendLaterDate.datepicker();
+
+            //finally display the dialog box
+            dlgSendEmail.show();
+
+            //event handlers for dialog actions
+            $edtEmailRecipients.keyup(function (e) {
+                DocTree.View.Email._deleteEmailOnBackspace(e,$edtEmailRecipients);
+            });
+
+            $s.find('.modal-footer').on('click', "#addUsersToRecipients", function(e) {
+                DocTree.View.Email._showSelectedEmails(e,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail);
+            });
+
+            $s.find('.modal-footer').on('click', "#sendLater", function(e) {
+                $edtSendLaterDateTime.slideToggle();
+            });
+
+            $s.on("hidden.bs.modal", function(e) {
+                $emailFormGroup.remove();
+                $edtEmailRecipients.remove();
+                $btnAddUsersToRecipients.remove();
+                $labelForSendLater.remove();
+                $chkSendLater.remove();
+                $edtSendLaterDateTime.remove();
+                $edtSendLaterDate.remove();
+                $edtSendLaterTime.remove();
+            });
+        }
+        ,_deleteEmailOnBackspace: function(event,$edtEmailRecipients){
+            if (8 == event.keyCode) {
+                event.preventDefault();
+                var emails = $edtEmailRecipients.val().split(';');
+                emails.splice(emails.length-1);
+                $edtEmailRecipients.val(emails.join(';'));
             }
         }
-        var dlgSendEmail = SearchBase.Dialog.create(args);
-
-        //get dialog selector
-        var $s = dlgSendEmail.getSelector();
-
-        //inject buttons and input area
-        var $emailFormGroup = $("<div/>")
-            .addClass("form-group")
-            .css({"display":"inline-block", "width":"100%","text-align":"left"})
-            .prependTo($s.find('.modal-footer'));
-        var $edtEmailRecipients = $("<input/>")
-            .attr("type", "text")
-            .attr("id","recipientsList")
-            .addClass("form-control")
-            .css("width","100%")
-            .appendTo($emailFormGroup)
-            .val('');
-        var $btnAddUsersToRecipients = $("<button/>")
-            .attr("type", "button")
-            .attr("id","addUsersToRecipients")
-            .addClass("btn btn-default")
-            .html("Add Selected Users")
-            .appendTo($s.find('.modal-footer'));
-
-        //finally display the dialog box
-        dlgSendEmail.show();
-
-        //event handlers for dialog actions
-        $edtEmailRecipients.keyup(function (e) {
-            DocTree.View._deleteEmailOnBackspace(e,$edtEmailRecipients);
-        });
-        $s.find('.modal-footer').on('click', "#addUsersToRecipients", function(e) {
-            DocTree.View._showSelectedEmails(e,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail);
-        });
-    }
-    ,_deleteEmailOnBackspace: function(event,$edtEmailRecipients){
-        if (8 == event.keyCode) {
-            event.preventDefault();
-            var emails = $edtEmailRecipients.val().split(';');
-            emails.splice(emails.length-1);
-            $edtEmailRecipients.val(emails.join(';'));
+        ,_showSelectedEmails: function(event,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail){
+            //prevent event from bubbling up the dom
+            event.stopImmediatePropagation();
+            var val= $edtEmailRecipients.val();
+            dlgSendEmail.getSelectedRows().each(function () {
+                var record = $(this).data('record');
+                if(Acm.isNotEmpty(record.email)){
+                    if(Acm.isEmpty(val) | (Acm.isNotEmpty(val) && val.substr(val.length-1)== ";")){
+                        val += Acm.goodValue(record.email) + ";"
+                    }
+                    else if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
+                        val += ";" + Acm.goodValue(record.email) + ";"
+                    }
+                    $edtEmailRecipients.val(val);
+                }
+            });
         }
-    }
-    ,_showSelectedEmails: function(event,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail){
-        //prevent event from bubbling up the dom
-        event.stopImmediatePropagation();
-        var val= $edtEmailRecipients.val();
-        dlgSendEmail.getSelectedRows().each(function () {
-            var record = $(this).data('record');
-            if(Acm.isNotEmpty(record.email)){
-                if(Acm.isEmpty(val) | (Acm.isNotEmpty(val) && val.substr(val.length-1)== ";")){
-                    val += Acm.goodValue(record.email) + ";"
-                }
-                else if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
-                    val += ";" + Acm.goodValue(record.email) + ";"
-                }
-                $edtEmailRecipients.val(val);
-            }
-        });
     }
 
     ,_addFileNode: function(folderNode, name, type) {
@@ -1510,6 +1573,7 @@ DocTree.View = DocTree.View || {
                 case "edit":
                     break;
                 case "email":
+                    DocTree.View.Email.showEmailDialog(node);
                     break;
                 case "print":
                     break;
