@@ -36,8 +36,8 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
-    <%@include file="/resources/include/dlgSearch.inc" %>
-    <%@include file="/resources/include/dlgDocTree.inc" %>
+    <%@include file="/resources/include/dlgSearch.jspf" %>
+    <%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
 <jsp:body>

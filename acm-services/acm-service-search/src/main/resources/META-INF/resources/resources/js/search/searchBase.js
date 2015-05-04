@@ -19,7 +19,12 @@ var SearchBase = SearchBase || {
         if (SearchBase.View.onInitialized)       {SearchBase.View.onInitialized();}
     }
 
+    //
+    //this function is retiring. Please use SearchBase.Dialog.create(args).show(); instead
+    //
     ,showSearchDialog: function(args) {
+
+
 //        if (Acm.isEmpty(args.$edtSearch)) {
 //            args.$edtSearch = $("#edtPoSearch");
 //        }
