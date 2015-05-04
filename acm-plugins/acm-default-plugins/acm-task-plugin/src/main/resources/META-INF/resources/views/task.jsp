@@ -183,8 +183,8 @@
 
                                 <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                                 <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
-
-                                <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="task:header.button.subscribe">Subscribe</span></button>
+                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]task:header.button.subscribe"><i class="fa fa-bullhorn"></i>
+                                </button>
                             </div>
 
                         </div>
