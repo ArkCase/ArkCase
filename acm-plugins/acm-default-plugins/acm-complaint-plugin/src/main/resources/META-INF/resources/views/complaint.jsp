@@ -8,6 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">complaint</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
