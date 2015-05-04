@@ -264,8 +264,8 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li>
                                             <div class="btn-group padder-v2">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="task:[data-title]rework-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="task:[data-title]rework-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                 <ul class="dropdown-menu pull-right">
                                                     <li><a href="#" data-i18n="task:rework-details.label.other-menu-items">Other menu items</a></li>
                                                 </ul>
