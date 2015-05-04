@@ -166,7 +166,7 @@ var Application = Application || {
                 namespaces: namespaces
             },
             lowerCaseLng: true,
-            resGetPath: App.getContextPath() + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'        
+            resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
         }, function() {
             $('*[data-i18n]').i18n();
             onDone();
