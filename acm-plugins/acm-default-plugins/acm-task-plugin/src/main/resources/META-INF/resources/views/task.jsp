@@ -8,6 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="task.page.title" text="Tasks | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">task</span>
         <span itemprop="objType">TASK</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
