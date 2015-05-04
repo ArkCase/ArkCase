@@ -98,6 +98,8 @@
     }*/
 
 </style>
+
+    <%@include file="/resources/include/dlgSearch.jspf" %>
 </jsp:attribute>
 
     <jsp:body>
@@ -223,18 +225,18 @@
 
                                         <div class="pull-right inline">
                                             <div class="btn-group">
-                                                <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.edit-case-file" data-title="Edit Case File"><i class="fa fa-edit"></i>
+                                                <button class="btn btn-default btn-sm" id="btnEditCaseFile" data-i18n="[data-title]casefile:header.buttons.edit-case-file" data-title="Edit Case File"><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.edit">Edit</span>
                                                 </button>
                                                     <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                                <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.change-case-status"data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
+                                                <button class="btn btn-default btn-sm" id="btnChangeCaseStatus" data-i18n="[data-title]casefile:header.buttons.change-case-status"data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.change-case-status">Change Case Status</span>
                                                 </button>
                                                     <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
-                                                <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
+                                                <button class="btn btn-default btn-sm" id="btnReinvestigate" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
                                                     <span data-i18n="casefile:header.buttons.reinvestigate">Reinvestigate</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
+                                                <button class="btn btn-default btn-sm" id="btnConsolidateCase" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
                                                     <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
                                                 </button>
                                                 <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>

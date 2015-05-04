@@ -50,6 +50,13 @@ App.View = {
         }
     }
 
+    ,I18n: {
+        create : function() {
+
+        }
+
+    }
+
     ,MessageBoard: {
         create : function() {
             this.$sectionContent = $("#content");                   //this is where all the module data is displayed (tree,tables,topbar etc.)
