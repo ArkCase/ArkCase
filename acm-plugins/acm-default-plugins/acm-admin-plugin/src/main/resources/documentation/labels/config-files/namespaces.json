@@ -1,11 +1,19 @@
 [
     {
+        "id": "common",
+        "name": "Common"
+    },
+    {
         "id": "complaint",
         "name": "Complaints"
     },
     {
         "id": "casefile",
         "name": "Case Files"
+    },
+    {
+        "id": "dashboard",
+        "name": "Dashboard"
     },
     {
         "id": "task",
