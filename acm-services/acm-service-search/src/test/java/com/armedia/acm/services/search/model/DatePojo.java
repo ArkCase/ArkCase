@@ -10,7 +10,7 @@ import java.util.Date;
 public class DatePojo
 {
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date date;
 
     public Date getDate()
