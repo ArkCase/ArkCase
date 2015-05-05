@@ -1994,7 +1994,7 @@ Task.View = Task.View || {
                         {
                             //icon: 'jtable-edit-command-button',
                             cssClass: 'changeCaseStatus',
-                            text: $.t("documents-under-review.table.toolbar.change-case-status"),
+                            text: $.t("task:documents-under-review.table.toolbar.change-case-status"),
                             click: function () {
                                 Task.View.DocumentUnderReview.onChangeCaseStatus();
                             }
