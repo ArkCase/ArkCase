@@ -240,12 +240,12 @@ DocTree.View = DocTree.View || {
         var folderNode = DocTree.View.uploadToFolderNode;
         var fileType = DocTree.View.uploadFileType;
         var names = [];
-        for(var i = 0; i < files.length; i++ ){
-            names.push(files[i].name);
-            if (0 == i && !DocTree.View.uploadFileNew) {    //for replace operation, only take one file
-                break;
-            }
-        }
+//        for(var i = 0; i < files.length; i++ ){
+//            names.push(files[i].name);
+//            if (0 == i && !DocTree.View.uploadFileNew) {    //for replace operation, only take one file
+//                break;
+//            }
+//        }
 
         var fd = new FormData();
         fd.append("parentObjectType", DocTree.Model.getObjType());
@@ -257,6 +257,7 @@ DocTree.View = DocTree.View || {
         fd.append("fileType", fileType);
         fd.append("category", "Document");
         for(var i = 0; i < files.length; i++ ){
+            names.push(files[i].name);
             fd.append("files[]", files[i]);
             if (0 == i && !DocTree.View.uploadFileNew) {    //for replace operation, only take one file
                 break;
@@ -1837,7 +1838,7 @@ DocTree.View = DocTree.View || {
                 this.setEnableBtnOk(Acm.isNotEmpty(this.getValueSelFileType()));
 
             } else {
-                alert("should never get here");
+                Acm.log("should never get here");
                 this.showDivFileType(false);
                 this.setEnableBtnOk(false);
             }
