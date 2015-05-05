@@ -306,7 +306,7 @@ AcmEx.Object = {
             arg.placement = Acm.goodValue(arg.placement, "bottom");
             arg.emptytext = Acm.goodValue(arg.emptytext, "Unknown");
             arg.format = Acm.goodValue(arg.format, "mm/dd/yyyy");
-            arg.viewformat = Acm.goodValue(arg.viewformat, "mm/dd/yyyy");
+            arg.viewformat = Acm.goodValue(arg.viewformat, $.t("common:date.short").toLowerCase());
             arg.datepicker = Acm.goodValue(arg.datepicker, {
                 weekStart: 1
             });
@@ -321,6 +321,8 @@ AcmEx.Object = {
         }
         ,setDate: function($s, txt) {
             if (txt) {
+                // Apply internal format  'MM/DD/YYYY' to date
+                txt = moment(txt, $.t("common:date.short")).format('MM/DD/YYYY')
                 $s.editable("setValue", txt, true);  //true = use internal format
             } else {
                 Acm.Object.setText($s, "Unknown");

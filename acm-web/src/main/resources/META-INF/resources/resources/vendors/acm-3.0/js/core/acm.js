@@ -229,10 +229,7 @@ var Acm = Acm || {
     ,getDateFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            var year  = dt.substr(0, 4);
-            var month = dt.substr(5, 2);
-            var day   = dt.substr(8, 2);
-            d = month + "/" + day + "/" + year;
+            d = moment(dt).format($.t("common:date.short"))
         }
         return d;
     }
@@ -240,13 +237,7 @@ var Acm = Acm || {
     ,getDateTimeFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            var year  = dt.substr(0, 4);
-            var month = dt.substr(5, 2);
-            var day   = dt.substr(8, 2);
-            var hour   = dt.substr(11, 2);
-            var minute   = dt.substr(14, 2);
-            var second   = dt.substr(17, 2);
-            d = month + "/" + day + "/" + year + " " + hour + ":" + minute + ":" + second;
+            d = moment(dt).format($.t("common:date.full"));
         }
         return d;
     }
