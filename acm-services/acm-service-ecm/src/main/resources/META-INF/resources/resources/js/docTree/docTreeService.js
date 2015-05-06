@@ -213,23 +213,9 @@ DocTree.Service = {
                                         DocTree.Controller.modelReplacedFile(replaceInfo, fileId, callerData);
                                         $dfd.resolve(folderList.children[replaced]);
                                     }
-
-//                                    uploadedFile.objectId   = Acm.goodValue(uploadInfo[i].fileId);
-//                                    uploadedFile.objectType = "file";
-//                                    uploadedFile.created    = Acm.goodValue(uploadInfo[i].created);
-//                                    uploadedFile.creator    = Acm.goodValue(uploadInfo[i].creator);
-//                                    uploadedFile.modified   = Acm.goodValue(uploadInfo[i].modified);
-//                                    uploadedFile.modifier   = Acm.goodValue(uploadInfo[i].modifier);
-//                                    uploadedFile.name       = Acm.goodValue(uploadInfo[i].fileName);
-//                                    uploadedFile.type       = Acm.goodValue(uploadInfo[i].fileType);
-//                                    uploadedFile.status     = Acm.goodValue(uploadInfo[i].status);
-//                                    uploadedFile.version    = Acm.goodValue(uploadInfo[i].activeVersionTag);
-//                                    uploadedFile.category   = Acm.goodValue(uploadInfo[i].category);
-
                                 }
                             }
-                        }
-
+                        } //end if (DocTree.Model.validateReplaceInfo(response))
                     }
                 }
             });
