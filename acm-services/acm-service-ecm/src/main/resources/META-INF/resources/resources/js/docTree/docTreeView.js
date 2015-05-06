@@ -442,7 +442,9 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
-            DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
+            if (DocTree.View.CLIPBOARD && DocTree.View.CLIPBOARD.data && DocTree.View.CLIPBOARD.batch) {
+                DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
+            }
 
         }
     }
@@ -455,14 +457,16 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeOk(node);
             node.renderTitle();
 
-            //DocTree.View.checkNodes(DocTree.View.CLIPBOARD.data, true);
-            if (Acm.isArray(DocTree.View.CLIPBOARD.data)) {
-                var clipBoardNodes = DocTree.View.CLIPBOARD.data;
-                for (var i = 0; i < clipBoardNodes.length; i++) {
-                    if (Acm.isNotEmpty(clipBoardNodes[i].data)) {
-                        if (Acm.goodValue(clipBoardNodes[i].data.name) == Acm.goodValue(node.data.name)) {
-                            node.setSelected(true);
-                            break;
+            if (DocTree.View.CLIPBOARD && DocTree.View.CLIPBOARD.src && DocTree.View.CLIPBOARD.batch) {
+                //DocTree.View.checkNodes(DocTree.View.CLIPBOARD.src, true);
+                if (Acm.isArray(DocTree.View.CLIPBOARD.src)) {
+                    var clipBoardNodes = DocTree.View.CLIPBOARD.src;
+                    for (var i = 0; i < clipBoardNodes.length; i++) {
+                        if (Acm.isNotEmpty(clipBoardNodes[i].data)) {
+                            if (Acm.goodValue(clipBoardNodes[i].data.name) == Acm.goodValue(node.data.name)) {
+                                clipBoardNodes[i].setSelected(true);
+                                break;
+                            }
                         }
                     }
                 }
@@ -477,12 +481,18 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeOk(node);
         }
     }
-    ,onModelCopiedFolder: function(copyFolderInfo, subFolderId, folderId, toCacheKey, node) {
+    ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
         if (copyFolderInfo.hasError) {
             App.View.MessageBoard.show("Error occurred when copying folder", Acm.goodValue(copyFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
-        } else {
+        } else if (DocTree.View.validateNode(node)) {
+            DocTree.View._folderDataToNodeData(copyFolderInfo, node);
             DocTree.View.markNodeOk(node);
+
+            node.setExpanded(false);
+            node.resetLazy();
+
+            node.renderTitle();
         }
     }
     ,onModelSetActiveVersion: function(version, fileId, cacheKey, node) {
@@ -1161,8 +1171,7 @@ DocTree.View = DocTree.View || {
             return src;
         }
         ,getHtmlDocLink: function(node) {
-            var $div = $("<div/>")
-            .addClass("btn-group");
+            var $div = $("<div/>").addClass("btn-group");
             var itemId = node.data.objectId;
             if (itemId) {
                 var url = "#";
@@ -1397,18 +1406,24 @@ DocTree.View = DocTree.View || {
 
                 case "cut":
                     var nodes = (batch)? selNodes : [node];
-                    DocTree.View.checkNodes(nodes, false);
-                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: nodes};
+                    if (batch) {
+                        DocTree.View.checkNodes(nodes, false);
+                    }
+                    DocTree.View.CLIPBOARD = {mode: data.cmd, batch: batch, data: nodes};
                     break;
                 case "copy":
                     var nodes = (batch)? selNodes : [node];
-                    DocTree.View.checkNodes(nodes, false);
+                    if (batch) {
+                        DocTree.View.checkNodes(nodes, false);
+                    }
+                    var clones = [];
                     for (var i = 0; i < nodes.length; i++) {
-                        nodes[i] = nodes[i].toDict(function(n){
+                        var clone = nodes[i].toDict(function(n){
                             delete n.key;
                         });
+                        clones.push(clone);
                     }
-                    DocTree.View.CLIPBOARD = {mode: data.cmd, data: nodes};
+                    DocTree.View.CLIPBOARD = {mode: data.cmd, batch: batch, data: clones, src: nodes};
 //                    DocTree.View.CLIPBOARD = {
 //                        mode: data.cmd,
 //                        data: node.toDict(function(n){
@@ -1554,7 +1569,7 @@ DocTree.View = DocTree.View || {
         if( DocTree.View.CLIPBOARD.mode === "cut" ) {
             DocTree.View._doBatMove(DocTree.View.CLIPBOARD.data, node, mode);
         } else if( DocTree.View.CLIPBOARD.mode === "copy" ) {
-            DocTree.View._doBatCopy(DocTree.View.CLIPBOARD.data, node, mode);
+            DocTree.View._doBatCopy(DocTree.View.CLIPBOARD.src, DocTree.View.CLIPBOARD.data, node, mode);
         }
     }
     ,_doDrop: function(frNode, toNode, mode) {
@@ -1571,15 +1586,11 @@ DocTree.View = DocTree.View || {
         if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
             var toFolderNode = DocTree.View.isFolderNode(toNode)? toNode : toNode.parent;
             if (toFolderNode) {
-                //var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
                 var toFolderId = toFolderNode.data.objectId;
-                //var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
                 var toCacheKey = DocTree.View.getCacheKey(toFolderNode);
 
                 var frFolderNode = frNode.parent;
-                //var frFolderPage = Acm.goodValue(frFolderNode.data.startRow, 0);
                 var frFolderId = frFolderNode.data.objectId;
-                //var frCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(frFolderNode)? 0 : frFolderId , frFolderPage);
                 var frCacheKey = DocTree.View.getCacheKey(frFolderNode);
 
                 frNode.moveTo(toNode, mode);
@@ -1594,14 +1605,14 @@ DocTree.View = DocTree.View || {
             }
         }
     }
-    ,_doBatCopy: function(frNodes, toNode, mode) {
-        if (!Acm.isArrayEmpty(frNodes)) {
+    ,_doBatCopy: function(srcNodes, frNodes, toNode, mode) {
+        if (!Acm.isArrayEmpty(srcNodes) && !Acm.isArrayEmpty(frNodes)) {
             for (var i = 0; i < frNodes.length; i++) {
-                this._doCopy(frNodes[i], toNode, mode);
+                this._doCopy(srcNodes[i], frNodes[i], toNode, mode);
             }
         }
     }
-    ,_doCopy: function(frNode, toNode, mode) {
+    ,_doCopy: function(srcNode, frNode, toNode, mode) {
         if (DocTree.View.isFolderNode(frNode) || DocTree.View.isFileNode(frNode)) {
             var toFolderNode = DocTree.View.isFolderNode(toNode)? toNode : toNode.parent;
             if (toFolderNode) {
@@ -1615,13 +1626,12 @@ DocTree.View = DocTree.View || {
                 newNode.setActive();
                 DocTree.View.markNodePending(newNode);
 
-                //var toFolderPage = Acm.goodValue(toFolderNode.data.startRow, 0);
                 var toFolderId = toFolderNode.data.objectId;
-                //var toCacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(toFolderNode)? 0 : toFolderId , toFolderPage);
                 var toCacheKey = DocTree.View.getCacheKey(toFolderNode);
+                var frCacheKey = DocTree.View.getCacheKey(srcNode.parent);
 
                 if (DocTree.View.isFolderNode(frNode)) {
-                    DocTree.Controller.viewCopiedFolder(frNode.data.objectId, toFolderId, toCacheKey, newNode);
+                    DocTree.Controller.viewCopiedFolder(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, newNode);
                 } else if (DocTree.View.isFileNode(frNode)) {
                     DocTree.Controller.viewCopiedFile(frNode.data.objectId, toFolderId, toCacheKey, newNode);
                 }
