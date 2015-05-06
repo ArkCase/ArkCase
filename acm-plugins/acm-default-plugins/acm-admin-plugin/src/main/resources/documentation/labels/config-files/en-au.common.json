@@ -1,6 +1,43 @@
 {
+    "top-bar": {
+        "button": {
+            "task": "Task",
+            "complaint": "Complaint",
+            "case-file": "Case File",
+            "timesheet": "Timesheet",
+            "costsheet": "Costsheet"
+        },
+        "label": {
+            "search": "Search complaints, cases...",
+            "see-all-notifications": "See all notifications"
+        }
+    },
+
+    "navigation": {
+        "label" :{
+            "navigation": "Navigation",
+            "help": "Help",
+            "my-profile": "My Profile",
+            "logout": "Logout",
+
+            "tasks": "Tasks",
+            "complaints": "Complaints",
+            "search": "Search",
+            "case-files": "Case Files",
+            "dashboard":"Dashboad",
+            "administration": "Administration",
+            "audit": "Audit",
+            "reports": "Reports",
+            "subscriptions": "Subscriptions",
+            "notifications": "Notifications",
+            "time-tracing": "Time Tracking",
+            "cost-tracking" :"Cost Tracking",
+            "tags": "Tags"
+        }
+    },
+
     "date": {
-        "short": "DD/MM/YYYY",
-        "full": "DD/MM/YYYY h:mm:ss a"
+        "short": "MM/DD/YYYY",
+        "full": "MM/DD/YYYY h:mm:ss a"
     }
 }

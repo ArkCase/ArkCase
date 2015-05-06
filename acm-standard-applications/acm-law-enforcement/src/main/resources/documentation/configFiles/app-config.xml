@@ -56,6 +56,7 @@
     <!-- top bar buttons -->
     <bean id="createTaskAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Task"/>
+        <property name="actionResourceName" value="common:top-bar.button.task" />
         <property name="iconName" value="i i-checkmark"/>
         <property name="url" value="/plugin/task/wizard"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
@@ -63,6 +64,7 @@
 
     <bean id="createComplaintAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Complaint"/>
+        <property name="actionResourceName" value="common:top-bar.button.complaint" />
         <property name="iconName" value="i i-notice"/>
         <property name="url" value="/plugin/complaint/wizard"/>
         <property name="requiredPrivilege" value="acm-complaint-create"/>
@@ -70,6 +72,7 @@
 
     <bean id="createCaseFileAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Case File"/>
+        <property name="actionResourceName" value="common:top-bar.button.case-file" />
         <property name="iconName" value="i i-file2"/>
         <property name="url" value="/plugin/casefile/wizard"/>
         <property name="requiredPrivilege" value="case-file-create"/>
@@ -77,6 +80,7 @@
 
     <bean id="createTimesheetAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Timesheet"/>
+        <property name="actionResourceName" value="common:top-bar.button.timesheet" />
         <property name="iconName" value="i i-alarm"/>
         <property name="url" value="/plugin/timesheet/wizard"/>
         <property name="requiredPrivilege" value="acm-timesheet-create"/>
@@ -84,6 +88,7 @@
 
     <bean id="createCostsheetAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Costsheet"/>
+        <property name="actionResourceName" value="common:top-bar.button.costsheet" />
         <property name="iconName" value="fa fa-money"/>
         <property name="url" value="/plugin/costsheet/wizard"/>
         <property name="requiredPrivilege" value="acm-costsheet-create"/>
@@ -95,6 +100,7 @@
     <!-- navigator tabs -->
     <bean id="taskNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Tasks"/>
+        <property name="actionResourceName" value="common:navigation.label.tasks" />
         <property name="iconName" value="i i-checkmark"/>
         <property name="url" value="/plugin/task"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
@@ -102,6 +108,7 @@
 
     <bean id="complaintNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Complaints"/>
+        <property name="actionResourceName" value="common:navigation.label.complaints" />
         <property name="iconName" value="i i-notice"/>
         <property name="url" value="/plugin/complaint"/>
         <property name="requiredPrivilege" value="acm-complaint-list"/>
@@ -109,6 +116,7 @@
 
     <bean id="searchNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Search"/>
+        <property name="actionResourceName" value="common:navigation.label.search" />
         <property name="iconName" value="i i-search2"/>
         <property name="url" value="/plugin/search"/>
         <property name="requiredPrivilege" value="acm-search"/>
@@ -116,6 +124,7 @@
 
     <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Case Files"/>
+        <property name="actionResourceName" value="common:navigation.label.case-files" />
         <property name="iconName" value="i i-folder"/>
         <property name="url" value="/plugin/casefile"/>
         <property name="requiredPrivilege" value="case-file-list"/>
@@ -123,6 +132,7 @@
 
     <bean id="dashboardNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Dashboard"/>
+        <property name="actionResourceName" value="common:navigation.label.dashboard" />
         <property name="iconName" value="i i-statistics"/>
         <property name="url" value="/plugin/dashboard"/>
         <property name="requiredPrivilege" value="acm-dashboard"/>
@@ -130,6 +140,7 @@
 
     <bean id="adminNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Administration"/>
+        <property name="actionResourceName" value="common:navigation.label.administration" />
         <property name="iconName" value="fa fa-wrench"/>
         <property name="url" value="/plugin/admin"/>
         <property name="requiredPrivilege" value="acm-admin"/>
@@ -137,6 +148,7 @@
 
     <bean id="auditNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Audit"/>
+        <property name="actionResourceName" value="common:navigation.label.audit" />
         <property name="iconName" value="fa fa-bolt"/>
         <property name="url" value="/plugin/audit"/>
         <property name="requiredPrivilege" value="acm-audit"/>
@@ -144,6 +156,7 @@
 
     <bean id="reportNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Reports"/>
+        <property name="actionResourceName" value="common:navigation.label.reports" />
         <property name="iconName" value="i i-stats"/>
         <property name="url" value="/plugin/report"/>
         <property name="requiredPrivilege" value="acm-report"/>
@@ -151,6 +164,7 @@
 
     <bean id="subscriptionNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Subscriptions"/>
+        <property name="actionResourceName" value="common:navigation.label.subscriptions" />
         <property name="iconName" value="fa fa-bullhorn"/>
         <property name="url" value="/plugin/subscription"/>
         <property name="requiredPrivilege" value="acm-subscription"/>
@@ -158,6 +172,7 @@
 
     <bean id="notificationNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Notifications"/>
+        <property name="actionResourceName" value="common:navigation.label.notifications" />
         <property name="iconName" value="fa fa-bell-o"/>
         <property name="url" value="/plugin/notification"/>
         <property name="requiredPrivilege" value="acm-notification"/>
@@ -165,6 +180,7 @@
 
     <bean id="timeTrackingNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Time Tracking"/>
+        <property name="actionResourceName" value="common:navigation.label.time-tracking" />
         <property name="iconName" value="i i-alarm"/>
         <property name="url" value="/plugin/timesheet"/>
         <property name="requiredPrivilege" value="acm-timesheet"/>
@@ -172,6 +188,7 @@
 
     <bean id="costTrackingNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Cost Tracking"/>
+        <property name="actionResourceName" value="common:navigation.label.cost-tracking" />
         <property name="iconName" value="fa fa-money"/>
         <property name="url" value="/plugin/costsheet"/>
         <property name="requiredPrivilege" value="acm-costsheet"/>
@@ -179,6 +196,7 @@
 
     <bean id="tagNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Tags"/>
+        <property name="actionResourceName" value="common:navigation.label.tags" />
         <property name="iconName" value="fa fa-tags"/>
         <property name="url" value="/plugin/tag"/>
         <property name="requiredPrivilege" value="acm-tag"/>

@@ -18,27 +18,27 @@
                         </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
                             <span class="arrow top hidden-nav-xs"></span>
-                            <li> <a href="<c:url value='/plugin/profile'/>">My Profile</a> </li>
+                            <li> <a href="<c:url value='/plugin/profile'/>" data-i18n="common:navigation.label.my-profile">My Profile</a> </li>
                             <%--<li> <a href="#">Switch User</a> </li>--%>
-                            <li> <a href="<c:url value='http://internal.armedia.com/confluence/display/ARK/Using+ArkCase'/>" target="_blank">Help</a> </li>
+                            <li> <a href="<c:url value='http://internal.armedia.com/confluence/display/ARK/Using+ArkCase'/>" target="_blank" data-i18n="common:navigation.label.help">Help</a> </li>
 
                             <li class="divider"></li>
-                            <li> <a href="<c:url value='/logout'/>">Logout</a> </li>
+                            <li> <a href="<c:url value='/logout'/>" data-i18n="common:navigation.label.logout">Logout</a> </li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- nav -->
                 <nav class="nav-primary hidden-xs">
-                    <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
+                    <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm" data-i18n="common:navigation.label.navigation">Navigation</div>
                     <ul class="nav nav-main" data-ride="collapse" id="ulPlugin">
                         <c:forEach var="navTab" items="${acm_application.navigatorTabs}">
                             <c:set var="requiredPrivilege" value="${navTab.requiredPrivilege}" scope="page"/>
                             <c:if test="${acm_privileges[requiredPrivilege]}">
                                 <li class="">
-                                    <a href="<c:url value='${navTab.url}' />" title="${navTab.actionName}" class="auto">
+                                    <a href="<c:url value='${navTab.url}' />" data-i18n="[title]${topbarAction.actionResourceName}" title="${navTab.actionName}" class="auto">
                                         <i class="<c:url value='${navTab.iconName}' /> icon"> </i>
-                                        <span class="font-bold">${navTab.actionName}</span>
+                                        <span class="font-bold" data-i18n="${navTab.actionResourceName}">${navTab.actionName}</span>
                                     </a>
                                 </li>
                             </c:if>
