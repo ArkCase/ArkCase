@@ -37,18 +37,21 @@ public class MsOutlookJsonSchemaValidTest
     @Test
     public void validateCalendarSchema() throws Exception
     {
+        validate("/jsonSchemas/outlook-appointment-schema.json");
         validate("/jsonSchemas/outlook-calendar-schema.json");
     }
 
     @Test
     public void validateContactsSchema() throws Exception
     {
+        validate("/jsonSchemas/outlook-contact-schema.json");
         validate("/jsonSchemas/outlook-contacts-schema.json");
     }
 
     @Test
     public void validateTasksSchema() throws Exception
     {
+        validate("/jsonSchemas/outlook-task-schema.json");
         validate("/jsonSchemas/outlook-tasks-schema.json");
     }
 

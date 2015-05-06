@@ -1,6 +1,7 @@
 package com.armedia.acm.service.outlook.model;
 
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by armdev on 4/20/15.
@@ -11,8 +12,11 @@ public class OutlookCalendarItem extends OutlookItem
     private Boolean cancelled;
     private Boolean meeting;
     private Boolean recurring;
+    private int recurringInterval;
     private Date startDate;
+    private TimeZone timeZone;
     private Date endDate;
+    private Date recurringEndDate;
 
     public void setAllDayEvent(Boolean allDayEvent)
     {
@@ -74,6 +78,30 @@ public class OutlookCalendarItem extends OutlookItem
         return endDate;
     }
 
+    public Date getRecurringEndDate() {
+        return recurringEndDate;
+    }
+
+    public void setRecurringEndDate(Date recurringEndDate) {
+        this.recurringEndDate = recurringEndDate;
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public int getRecurringInterval() {
+        return recurringInterval;
+    }
+
+    public void setRecurringInterval(int recurringInterval) {
+        this.recurringInterval = recurringInterval;
+    }
+
     @Override
     public String toString()
     {
@@ -84,6 +112,7 @@ public class OutlookCalendarItem extends OutlookItem
                 ", recurring=" + recurring +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", recurringEndDate=" + recurringEndDate +
                 "} " + super.toString();
     }
 }
