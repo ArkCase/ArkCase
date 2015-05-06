@@ -559,7 +559,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopy.setStatus(file.getStatus());
             fileCopy.setCategory(file.getCategory());
             fileCopy.setFileMimeType(file.getFileMimeType());
-            fileCopy.setVersions(file.getVersions());
+            fileCopy.setVersions(versionList);
 
             result = getEcmFileDao().save(fileCopy);
             return result;
