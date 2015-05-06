@@ -305,6 +305,16 @@
                                                 <div id="divLabelConfiguration" style="width:100%">
                                                 </div>
                                             </section>
+
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <label>Default language</label>
+                                                    <select id="labelConfigurationDefaultLanguage" disabled class="form-control">
+                                                    </select>
+                                                </div>
+                                                <button id="labelConfigurationApplyDefaultLanguage" disabled class="btn btn-default">Apply</button>
+                                            </form>
+
                                         </div>
                                     </div>
 
