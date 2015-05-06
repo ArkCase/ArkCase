@@ -25,7 +25,7 @@
                 <bean id="calendarUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
-                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
                 <bean id="tasksUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
@@ -35,7 +35,7 @@
                 <bean id="tasksUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/tasks"/>
-                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
                 <bean id="contactsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
@@ -45,7 +45,7 @@
                 <bean id="contactsUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
-                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
             </list>
         </property>
