@@ -475,7 +475,6 @@ Admin.View = Admin.View || {
 
         ,onClickApplyDefaultLanguageBtn: function(e) {
             e.preventDefault();
-            // Get value
             var newDefaultLang = $('#labelConfigurationDefaultLanguage').val();
             this.settings.defaultLang = newDefaultLang;
             Admin.Service.LabelConfiguration.updateSettings(this.settings);
