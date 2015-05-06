@@ -25,6 +25,7 @@ DocTree.Service = {
     ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
     ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"        //  {targetObjectType}/{targetObjectId}
     ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          // {fileId}?versionTag=x.y"
+    ,API_SEND_EMAIL_                  : "/api/latest/service/notification/email"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -553,5 +554,19 @@ DocTree.Service = {
         }, 1000);
     }
 
+    ,sendEmail: function(emailData) {
+        var url = App.getContextPath() + this.API_SEND_EMAIL_;
+        Acm.Service.call({type: "POST"
+            ,url: url
+            ,data: JSON.stringify(emailData)
+            ,callback: function(response) {
+                if (response.hasError) {
+
+                } else {
+                    var z = 1;
+                } //end else
+            }
+        })
+    }
 };
 

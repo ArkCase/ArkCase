@@ -109,7 +109,7 @@ DocTree.View = DocTree.View || {
         }
     }
     ,Email:{
-        showEmailDialog: function(node){
+        showEmailDialog: function(nodes){
             //prepare to create dialog box
             var args = {
                 name: "Send Email"
@@ -119,7 +119,9 @@ DocTree.View = DocTree.View || {
                 , btnOkText: "Send Email"
                 , filters: [{key: "Object Type", values: ["USER"]}]
                 , onClickBtnPrimary: function (event, ctrl) {
-                    alert($edtEmailRecipients.val());
+                    var emailAddresses = ($edtEmailRecipients.val());
+                    var emailData = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
+                    DocTree.Controller.viewSentEmail(emailData);
                 }
             }
             var dlgSendEmail = SearchBase.Dialog.create(args);
@@ -242,6 +244,22 @@ DocTree.View = DocTree.View || {
                     $edtEmailRecipients.val(val);
                 }
             });
+        }
+        ,_makeEmailData: function(emailAddresses, nodes){
+            var emailData = {};
+            emailData.objectType = DocTree.Model.DOC_TYPE_DOCUMENT_SM;
+            emailData.emailAddresses = emailAddresses;
+            emailData.users = users;
+            emailData.title = "ArkCase Documents"
+            emailData.note = DocTree.View.Email._makeEmailNote(nodes);
+            return emailData;
+        }
+        ,_makeEmailNote: function(nodes){
+            var note = "Please follow the links below to view the document(s): " + "<br/>";
+            for(var i = 0; i < nodes.length; i++){
+                note+= App.getContextPath() + "/api/plugin/document/" + Acm.goodValue(nodes[i].data.objectId) + "<br/>";
+            }
+            return note;
         }
     }
 
@@ -1559,7 +1577,12 @@ DocTree.View = DocTree.View || {
                 case "edit":
                     break;
                 case "email":
-                    DocTree.View.Email.showEmailDialog(node);
+                    if(batch){
+                        DocTree.View.Email.showEmailDialog(selNodes);
+                    }
+                    else{
+                        DocTree.View.Email.showEmailDialog(node);
+                    }
                     break;
                 case "print":
                     break;

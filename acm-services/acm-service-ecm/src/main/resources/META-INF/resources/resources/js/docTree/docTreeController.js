@@ -31,6 +31,7 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_COPIED_FOLDER           = name + "-model-copied-folder";
         this.VIEW_CHANGED_VERSION          = name + "-view-changed-version";
         this.MODEL_SET_ACTIVE_VERSION      = name + "-model-set-active-version";
+        this.VIEW_SENT_EMAIL               = name + "-view-sent-email";
 
 
         //-------
@@ -116,6 +117,9 @@ DocTree.Controller = DocTree.Controller || {
     }
     ,modelSetActiveVersion: function(version, fileId, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_SET_ACTIVE_VERSION, version, fileId, cacheKey, callerData);
+    }
+    ,viewSentEmail: function(emailData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_SENT_EMAIL, emailData);
     }
 
     //----------------
