@@ -23,7 +23,7 @@ DocTree.Service = {
     ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
     ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
-    ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"        //  {targetObjectType}/{targetObjectId}
+    ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"                   //  {folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}
     ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          // {fileId}?versionTag=x.y"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
@@ -484,7 +484,7 @@ DocTree.Service = {
     ,copyFolder: function(objType, objId, folderId, subFolderId, toCacheKey, callerData) {
         return;
 
-        var url = App.getContextPath() + this.API_COPY_FILE_ + objType + "/" + objId;
+        var url = App.getContextPath() + this.API_COPY_FOLDER_ + objType + "/" + objId;
         var data = {"id": subFolderId, "folderId": folderId};
         Acm.Service.call({type: "POST"
             ,url: url
