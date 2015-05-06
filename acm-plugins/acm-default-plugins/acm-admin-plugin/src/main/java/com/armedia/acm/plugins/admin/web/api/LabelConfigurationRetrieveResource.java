@@ -42,7 +42,7 @@ public class LabelConfigurationRetrieveResource {
             if (log.isErrorEnabled()){
                 log.error(String.format("Can't read resource file %s", fileName));
             }
-            throw new AcmLabelConfigurationException("Can't read recources info", e);
+            throw new AcmLabelConfigurationException("Can't read resources info", e);
         }
     }
 
