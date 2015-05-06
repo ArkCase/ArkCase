@@ -535,6 +535,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String newFileId = cmisObject.getId();
             EcmFile fileCopy = new EcmFile();
 
+
+            List<EcmFileVersion> versionList = new ArrayList<>();
+            List<EcmFileVersion> versions = file.getVersions();
+            if( versions!=null ) {
+                for (EcmFileVersion fVer : versions) {
+                    EcmFileVersion ver = new EcmFileVersion();
+                    ver.setCmisObjectId(fVer.getCmisObjectId());
+                    ver.setVersionTag(fVer.getVersionTag());
+                    ver.setFile(fVer.getFile());
+                    versionList.add(ver);
+                }
+            }
+
+
             AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
             fileCopy.setVersionSeriesId(newFileId);
             fileCopy.setFileType(file.getFileType());
@@ -545,7 +559,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopy.setStatus(file.getStatus());
             fileCopy.setCategory(file.getCategory());
             fileCopy.setFileMimeType(file.getFileMimeType());
-            fileCopy.setVersions(file.getVersions());
+            fileCopy.setVersions(versionList);
 
             result = getEcmFileDao().save(fileCopy);
             return result;
