@@ -30,21 +30,21 @@
       "minimum": 0,
       "description": "size of the message body"
     },
-    "sent": {
+    "sentDate": {
       "type": "string",
-      "description": "Send date, in JSON date format"
+      "description": "Sent date, in JSON date format"
     },
-    "due": {
+    "dueDate": {
       "type": "string",
-      "description": "Send date, in JSON date format"
+      "description": "Due date, in JSON date format"
     },
-    "started": {
+    "startDate": {
       "type": "string",
-      "description": "Send date, in JSON date format"
+      "description": "Start date, in JSON date format"
     },
-    "completed": {
+    "completeDate": {
       "type": "string",
-      "description": "Send date, in JSON date format"
+      "description": "Complete date, in JSON date format"
     },
     "complete": {
       "type": "boolean"
