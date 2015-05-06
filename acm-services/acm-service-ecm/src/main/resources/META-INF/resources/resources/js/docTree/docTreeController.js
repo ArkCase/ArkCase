@@ -93,8 +93,8 @@ DocTree.Controller = DocTree.Controller || {
     ,modelMovedFile: function(moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_FILE, moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData);
     }
-    ,viewCopiedFile: function(fileId, folderId, toCacheKey, node) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FILE, fileId, folderId, toCacheKey, node);
+    ,viewCopiedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FILE, fileId, folderId, frCacheKey, toCacheKey, node);
     }
     ,modelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FILE, copyFileInfo, objType, objId, folderId, fileId, toCacheKey, callerData);
@@ -102,14 +102,14 @@ DocTree.Controller = DocTree.Controller || {
     ,viewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_MOVED_FOLDER, subFolderId, folderId, frCacheKey, toCacheKey, node);
     }
-    ,modelMovedFolder: function(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_FOLDER, moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, callerData);
+    ,modelMovedFolder: function(moveFolderInfo, subFolderId, folderId, toCacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_FOLDER, moveFolderInfo, subFolderId, folderId, toCacheKey, callerData);
     }
-    ,viewCopiedFolder: function(subFolderId, folderId, toCacheKey, node) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FOLDER, subFolderId, folderId, toCacheKey, node);
+    ,viewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FOLDER, subFolderId, folderId, frCacheKey, toCacheKey, node);
     }
-    ,modelCopiedFolder: function(copyFolderInfo, subFolderId, folderId, toCacheKey, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FOLDER, copyFolderInfo, subFolderId, folderId, toCacheKey, callerData);
+    ,modelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FOLDER, copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
     }
     ,viewChangedVersion: function(fileId, version, cacheKey, node) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_VERSION, fileId, version, cacheKey, node);

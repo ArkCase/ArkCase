@@ -63,8 +63,8 @@ DocTree.Model = DocTree.Model || {
     ,onViewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
         DocTree.Service.moveFolder(subFolderId, folderId, frCacheKey, toCacheKey, node);
     }
-    ,onViewCopiedFolder: function(subFolderId, folderId, toCacheKey, node) {
-        DocTree.Service.copyFolder(subFolderId, folderId, toCacheKey, node);
+    ,onViewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
     }
     ,onViewChangedVersion: function(fileId, version, cacheKey, node) {
         DocTree.Service.setActiveVersion(fileId, version, cacheKey, node);
@@ -183,7 +183,11 @@ DocTree.Model = DocTree.Model || {
         solrData.modified   = Acm.goodValue(folderData.modified);
         solrData.modifier   = Acm.goodValue(folderData.modifier);
         solrData.name       = Acm.goodValue(folderData.name);
-        solrData.folderId   = Acm.goodValue(folderData.parentFolderId, 0);
+        if (!Acm.isEmpty(folderData.parentFolderId, 0)) {
+            solrData.folderId   = Acm.goodValue(folderData.parentFolderId, 0);
+        } else if (!Acm.isEmpty(folderData.folderId, 0)) {
+            solrData.folderId   = Acm.goodValue(folderData.folderId, 0);
+        }
         return solrData;
     }
 
@@ -294,13 +298,10 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data.fileId)) {
+        if (Acm.isEmpty(data.id)) {
             return false;
         }
-        if (Acm.isEmpty(data.folder)) {
-            return false;
-        }
-        if (Acm.isEmpty(data.folder.id)) {
+        if (Acm.isEmpty(data.parentFolderId)) {
             return false;
         }
         return true;
