@@ -1,0 +1,62 @@
+/**
+ * Outlook Task Schema
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Outlook Task Schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "MS Exchange ID for this item"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "created": {
+      "type": "string",
+      "description": "Create date, in JSON date format"
+    },
+    "modified": {
+      "type": "string",
+      "description": "Modify date, in JSON date format"
+    },
+    "body": {
+      "type": "string",
+      "description": "Message body, in HTML 4.01 format"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "size of the message body"
+    },
+    "sent": {
+      "type": "string",
+      "description": "Send date, in JSON date format"
+    },
+    "due": {
+      "type": "string",
+      "description": "Send date, in JSON date format"
+    },
+    "started": {
+      "type": "string",
+      "description": "Send date, in JSON date format"
+    },
+    "completed": {
+      "type": "string",
+      "description": "Send date, in JSON date format"
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "percentComplete": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "endDate": {
+      "type": "string",
+      "description": "End date, in JSON date format"
+    }
+  }
+}

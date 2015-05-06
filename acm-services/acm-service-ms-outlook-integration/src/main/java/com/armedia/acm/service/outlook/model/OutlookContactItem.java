@@ -11,9 +11,9 @@ public class OutlookContactItem extends OutlookItem
     private String surname;
     private String displayName;
     private String companyName;
-    private EmailAddress emailAddress1;
+    private String emailAddress1;
     private String primaryTelephone;
-    private EmailAddress emailAddress2;
+    private String emailAddress2;
     private String completeName;
 
     public void setSurname(String surname)
@@ -47,12 +47,12 @@ public class OutlookContactItem extends OutlookItem
         return companyName;
     }
 
-    public void setEmailAddress1(EmailAddress emailAddress1)
+    public void setEmailAddress1(String emailAddress1)
     {
         this.emailAddress1 = emailAddress1;
     }
 
-    public EmailAddress getEmailAddress1()
+    public String getEmailAddress1()
     {
         return emailAddress1;
     }
@@ -67,12 +67,12 @@ public class OutlookContactItem extends OutlookItem
         return primaryTelephone;
     }
 
-    public void setEmailAddress2(EmailAddress emailAddress2)
+    public void setEmailAddress2(String emailAddress2)
     {
         this.emailAddress2 = emailAddress2;
     }
 
-    public EmailAddress getEmailAddress2()
+    public String getEmailAddress2()
     {
         return emailAddress2;
     }

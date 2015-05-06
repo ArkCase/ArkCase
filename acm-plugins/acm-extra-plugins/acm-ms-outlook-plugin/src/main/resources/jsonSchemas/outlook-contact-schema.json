@@ -1,0 +1,59 @@
+/**
+ * Outlook Contact Schema
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Outlook Contact Schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "MS Exchange ID for this item"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "created": {
+      "type": "string",
+      "description": "Create date, in JSON date format"
+    },
+    "modified": {
+      "type": "string",
+      "description": "Modify date, in JSON date format"
+    },
+    "body": {
+      "type": "string",
+      "description": "Message body, in HTML 4.01 format"
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "size of the message body"
+    },
+    "sent": {
+      "type": "string",
+      "description": "Send date, in JSON date format"
+    },
+    "surname": {
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "companyName": {
+      "type": "string"
+    },
+    "emailAddress1": {
+      "type": "string"
+    },
+    "primaryTelephone": {
+      "type": "string"
+    },
+    "emailAddress2": {
+      "type": "string"
+    },
+    "completeName": {
+      "type": "string"
+    }
+  }
+}
