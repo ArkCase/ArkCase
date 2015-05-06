@@ -1418,7 +1418,7 @@ DocTree.View = DocTree.View || {
                     }
                     var clones = [];
                     for (var i = 0; i < nodes.length; i++) {
-                        var clone = nodes[i].toDict(function(n){
+                        var clone = nodes[i].toDict(false, function(n){
                             delete n.key;
                         });
                         clones.push(clone);
@@ -1755,17 +1755,23 @@ DocTree.View = DocTree.View || {
 
 
     ,markNodePending: function(node) {
-        $(node.span).addClass("pending");
-        node.setStatus("loading");
+        if (this.validateNode(node)) {
+            $(node.span).addClass("pending");
+            node.setStatus("loading");
+        }
     }
     ,markNodeOk: function(node) {
-        $(node.span).removeClass("pending");
-        node.setStatus("ok");
+        if (this.validateNode(node)) {
+            $(node.span).removeClass("pending");
+            node.setStatus("ok");
+        }
     }
     ,markNodeError: function(node) {
-        $(node.span).addClass("pending");
-        //node.setStatus("error");
-        node.setStatus("ok");
+        if (this.validateNode(node)) {
+            $(node.span).addClass("pending");
+            //node.setStatus("error");
+            node.setStatus("ok");
+        }
     }
     ,validateNodes: function(data) {
         if (Acm.isNotArray(data)) {
