@@ -15,13 +15,11 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -169,6 +166,22 @@ public class CloseCompaintRequestService
 					ecmFile.setActiveVersionTag(file.getVersion());
 					ecmFile.setVersionSeriesId(file.getCmisObjectId());
 					ecmFile.setFileMimeType(file.getMimeType());
+
+                    if ( file.getVersionList() != null )
+                    {
+                        List<EcmFileVersion> newVersions = new ArrayList<>();
+
+                        for ( EcmFileVersion v : file.getVersionList() )
+                        {
+                            EcmFileVersion vnew = new EcmFileVersion();
+                            vnew.setCmisObjectId(v.getCmisObjectId());
+                            vnew.setVersionTag(v.getVersionTag());
+                            vnew.setFile(v.getFile());
+                            newVersions.add(vnew);
+                        }
+
+                        ecmFile.setVersions(newVersions);
+                    }
 					
 					getEcmFileDao().save(ecmFile);
 				}
