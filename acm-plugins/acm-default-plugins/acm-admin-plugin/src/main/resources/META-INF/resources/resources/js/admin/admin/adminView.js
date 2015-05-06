@@ -420,21 +420,37 @@ Admin.View = Admin.View || {
 
     ,LabelConfiguration: {
         create: function () {
-
+            this.$btnApplyDefaultLanguage = $("#labelConfigurationApplyDefaultLanguage");
+            this.$btnApplyDefaultLanguage.click($.proxy(this.onClickApplyDefaultLanguageBtn, this));
         }
         , onInitialized: function () {
             var context = Admin.View.LabelConfiguration;
+            var settingsDeferred = Admin.Service.LabelConfiguration.retrieveSettings();
             var langsDeferred = Admin.Service.LabelConfiguration.retrieveLanguages();
             var nsDeferred = Admin.Service.LabelConfiguration.retrieveNamespaces();
             $.when(
+                settingsDeferred,
                 langsDeferred,
                 nsDeferred
-            ).done(function(languages, namespaces){
+            ).done(function(settings, languages, namespaces){
                 // Fill Languages options
+                context.settings = settings;
                 var langOptions = [];
+                var defLangOptions = [];
+
+
                 _.forEach(languages, function(langItem){
-                    langOptions.push($('<option value="{0}">{0}</option>'.format(langItem)));
+                    // Select default language in options
+                    var selected = (settings.defaultLang === langItem) ? 'selected' : '';
+                    langOptions.push($('<option value="{0}" {1}>{0}</option>'.format(langItem, selected )));
+                    defLangOptions.push($('<option value="{0}" {1}>{0}</option>'.format(langItem, selected)));
                 });
+
+                $('#labelConfigurationDefaultLanguage').html(defLangOptions);
+                $('#labelConfigurationDefaultLanguage').prop('disabled', false);
+
+                $('#labelConfigurationApplyDefaultLanguage').prop('disabled', false);
+
                 $('#labelConfigurationLanguage').html(langOptions);
                 $('#labelConfigurationLanguage').prop('disabled', false);
 
@@ -453,8 +469,15 @@ Admin.View = Admin.View || {
             });
         }
 
-        , onLabelConfigurationFilterChanged: function(e) {
+        ,onLabelConfigurationFilterChanged: function(e) {
             AcmEx.Object.JTable.load(Admin.View.LabelConfiguration.$divLabelConfiguration);
+        }
+
+        ,onClickApplyDefaultLanguageBtn: function(e) {
+            e.preventDefault();
+            var newDefaultLang = $('#labelConfigurationDefaultLanguage').val();
+            this.settings.defaultLang = newDefaultLang;
+            Admin.Service.LabelConfiguration.updateSettings(this.settings);
         }
 
         ,createJTableLabelConfiguration: function ($s) {
