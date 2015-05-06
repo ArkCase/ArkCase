@@ -36,7 +36,7 @@
                             <c:set var="requiredPrivilege" value="${navTab.requiredPrivilege}" scope="page"/>
                             <c:if test="${acm_privileges[requiredPrivilege]}">
                                 <li class="">
-                                    <a href="<c:url value='${navTab.url}' />" data-i18n="[title]${topbarAction.actionResourceName}" title="${navTab.actionName}" class="auto">
+                                    <a href="<c:url value='${navTab.url}' />" data-i18n="[title]${navTab.actionResourceName}" title="${navTab.actionName}" class="auto">
                                         <i class="<c:url value='${navTab.iconName}' /> icon"> </i>
                                         <span class="font-bold" data-i18n="${navTab.actionResourceName}">${navTab.actionName}</span>
                                     </a>
