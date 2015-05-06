@@ -3,6 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+    <!-- global privilege for URLs that should be public to anyone -->
+    <bean id="acmGlobalAllowPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-global-allow"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
+                <value>ROLE_CALLCENTER</value>
+                <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_INVESTIGATOR</value>
+                <value>ROLE_ANALYST</value>
+            </list>
+        </property>
+    </bean>
 
     <!--Audit Plugin-->
     <bean id="auditPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">

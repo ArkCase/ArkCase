@@ -16,9 +16,9 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Notes.create)           {CaseFile.View.Notes.create();}
         if (CaseFile.View.Tasks.create)           {CaseFile.View.Tasks.create();}
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
-        if (CaseFile.View.History.create)          {CaseFile.View.History.create();}
+        if (CaseFile.View.History.create)         {CaseFile.View.History.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
-        if (CaseFile.View.OutlookCalendar.create)            {CaseFile.View.OutlookCalendar.create();}
+        if (CaseFile.View.OutlookCalendar.create) {CaseFile.View.OutlookCalendar.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
 
@@ -27,22 +27,22 @@ CaseFile.View = CaseFile.View || {
         // App.View.MessageBoard.useAcmMessageBoard();
     }
     ,onInitialized: function() {
-        if (CaseFile.View.MicroData.onInitialized)      {CaseFile.View.MicroData.onInitialized();}
-        if (CaseFile.View.Navigator.onInitialized)      {CaseFile.View.Navigator.onInitialized();}
-        if (CaseFile.View.Content.onInitialized)        {CaseFile.View.Content.onInitialized();}
-        if (CaseFile.View.Action.onInitialized)         {CaseFile.View.Action.onInitialized();}
-        if (CaseFile.View.Detail.onInitialized)         {CaseFile.View.Detail.onInitialized();}
-        if (CaseFile.View.People.onInitialized)         {CaseFile.View.People.onInitialized();}
-        if (CaseFile.View.Documents.onInitialized)      {CaseFile.View.Documents.onInitialized();}
-        if (CaseFile.View.Participants.onInitialized)   {CaseFile.View.Participants.onInitialized();}
-        if (CaseFile.View.Notes.onInitialized)          {CaseFile.View.Notes.onInitialized();}
-        if (CaseFile.View.Tasks.onInitialized)          {CaseFile.View.Tasks.onInitialized();}
-        if (CaseFile.View.References.onInitialized)     {CaseFile.View.References.onInitialized();}
+        if (CaseFile.View.MicroData.onInitialized)       {CaseFile.View.MicroData.onInitialized();}
+        if (CaseFile.View.Navigator.onInitialized)       {CaseFile.View.Navigator.onInitialized();}
+        if (CaseFile.View.Content.onInitialized)         {CaseFile.View.Content.onInitialized();}
+        if (CaseFile.View.Action.onInitialized)          {CaseFile.View.Action.onInitialized();}
+        if (CaseFile.View.Detail.onInitialized)          {CaseFile.View.Detail.onInitialized();}
+        if (CaseFile.View.People.onInitialized)          {CaseFile.View.People.onInitialized();}
+        if (CaseFile.View.Documents.onInitialized)       {CaseFile.View.Documents.onInitialized();}
+        if (CaseFile.View.Participants.onInitialized)    {CaseFile.View.Participants.onInitialized();}
+        if (CaseFile.View.Notes.onInitialized)           {CaseFile.View.Notes.onInitialized();}
+        if (CaseFile.View.Tasks.onInitialized)           {CaseFile.View.Tasks.onInitialized();}
+        if (CaseFile.View.References.onInitialized)      {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.History.onInitialized)         {CaseFile.View.History.onInitialized();}
-        if (CaseFile.View.Correspondence.onInitialized) {CaseFile.View.Correspondence.onInitialized();}
-        if (CaseFile.View.OutlookCalendar.onInitialized)           {CaseFile.View.OutlookCalendar.onInitialized();}
-        if (CaseFile.View.Time.onInitialized)           {CaseFile.View.Time.onInitialized();}
-        if (CaseFile.View.Cost.onInitialized)           {CaseFile.View.Cost.onInitialized();}
+        if (CaseFile.View.Correspondence.onInitialized)  {CaseFile.View.Correspondence.onInitialized();}
+        if (CaseFile.View.OutlookCalendar.onInitialized) {CaseFile.View.OutlookCalendar.onInitialized();}
+        if (CaseFile.View.Time.onInitialized)            {CaseFile.View.Time.onInitialized();}
+        if (CaseFile.View.Cost.onInitialized)            {CaseFile.View.Cost.onInitialized();}
     }
 
     ,getActiveCaseFileId: function() {
@@ -280,10 +280,10 @@ CaseFile.View = CaseFile.View || {
             this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
             this.$dlgConsolidateCase       = $("#consolidateCase");
             this.$edtConsolidateCase       = $("#edtConsolidateCase");
-            this.$btnEditCaseFile    	   = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.edit-case-file") + "']");
-            this.$btnChangeCaseStatus      = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.change-case-status") + "']");
-            this.$btnConsolidateCase       = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.consolidate-case") + "']");
-            this.$btnReinvestigateCaseFile = $("#tabTitle button[data-title='" + $.t("casefile:header.buttons.reinvestigate-case-file") + "']");
+            this.$btnEditCaseFile    	   = $("#btnEditCaseFile");
+            this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus");
+            this.$btnConsolidateCase       = $("#btnConsolidateCase");
+            this.$btnReinvestigateCaseFile = $("#btnReinvestigate");
             this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
@@ -354,7 +354,7 @@ CaseFile.View = CaseFile.View || {
 
         //---- demo how to use object picker ----
         ,onPickObjectDemo: function() {
-            SearchBase.showSearchDialog({name: "demoDialog"
+            SearchBase.Dialog.create({name: "demoDialog"
                 ,title: "My Dialog Title"
                 ,prompt: "Enter to search Case or Task"
                 ,btnGoText: "Search Now!"
@@ -372,7 +372,7 @@ CaseFile.View = CaseFile.View || {
                 ,onClickBtnDefault : function(event, ctrl) {
                     alert("cancel");
                 }
-            });
+            }).show();
         }
         //---------------------------------------
 
@@ -3110,7 +3110,7 @@ CaseFile.View = CaseFile.View || {
                 + "<option value='GeneralRelease.docx'>" + $.t("casefile:correspondence.form-document.general-release") + "</option>"
                 + "<option value='MedicalRelease.docx'>" + $.t("casefile:correspondence.form-document.medical-release") + "</option>"
                 + "<option value='ClearanceGranted.docx'>" + $.t("casefile:correspondence.form-document.clearance-granted") + "</option>"
-                + "<option value='ClearanceDenied.docx'>" + $.t("casefile:correspondence.form-document.general-denied") + "</option>"
+                + "<option value='ClearanceDenied.docx'>" + $.t("casefile:correspondence.form-document.clearance-denied") + "</option>"
                 + "<option value='NoticeofInvestigation.docx'>" + $.t("casefile:correspondence.form-document.notice-of-investigation") + "</option>"
                 + "<option value='InterviewRequest.docx'>" + $.t("casefile:correspondence.form-document.witness-interview-request") + "</option>"
                 + "</select>"
@@ -3209,6 +3209,9 @@ CaseFile.View = CaseFile.View || {
             this.$weekView                 = $("#weekview");
             this.$monthView                = $("#monthview");
             this.$dayView                  = $("#dayview");
+            this.$btnRefreshCalendar       = $("#refreshCalendar");
+
+            this.$btnRefreshCalendar.on("click", function(e) {CaseFile.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
 
             this.createOutlookCalendarWidget(this.$outlookCalendar);
 
@@ -3230,7 +3233,9 @@ CaseFile.View = CaseFile.View || {
                 CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
             }
         }
-
+        ,onClickbtnRefreshCalendar: function(){
+                CaseFile.Controller.viewRefreshedOutlookCalendar(CaseFile.View.getActiveCaseFileId());
+        }
         ,createCalendarSource:function(){
             var calendarSource = [];
             var outlookCalendarItems = CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.get(CaseFile.View.getActiveCaseFileId());

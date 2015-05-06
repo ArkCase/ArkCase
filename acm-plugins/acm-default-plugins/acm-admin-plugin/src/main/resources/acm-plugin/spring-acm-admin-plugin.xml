@@ -3,16 +3,17 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="adminPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+    <bean id="adminPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges" depends-on="adminPrivilege,acmGlobalAllowPrivilege">
         <property name="pluginName" value="Admin Plugin"/>
         <property name="privileges">
             <list>
                 <ref bean="adminPrivilege"/>
+                <ref bean="acmGlobalAllowPrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
             <list>
-                <bean id="adminUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege" depends-on="adminPrivilege">
+                <bean id="adminUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/admin"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
@@ -45,7 +46,7 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelconfiguration/resource"/>
-                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
@@ -55,12 +56,12 @@
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelconfiguration/languages"/>
-                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/admin/labelconfiguration/namespaces"/>
-                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
             </list>
         </property>

@@ -80,6 +80,9 @@
 
     </style>
     //////////////////////////////////////////////////////////////////////
+
+
+    <%@include file="/resources/include/dlgSearch.jspf" %>
 </jsp:attribute>
 
 <jsp:body>

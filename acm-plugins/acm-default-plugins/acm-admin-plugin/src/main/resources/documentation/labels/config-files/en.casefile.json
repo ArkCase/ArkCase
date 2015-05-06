@@ -1,4 +1,5 @@
 {
+    "title": "Case",
     "header": {
         "buttons": {
             "edit": "Edit",
@@ -353,7 +354,8 @@
             "day": "Day",
             "calendar": "Calendar",
             "start": "Start:",
-            "end": "End:"
+            "end": "End:",
+            "refresh": "Refresh"
         },
         "msg": {
             "error-occurred": "Error occurred while retrieving calendar items."
@@ -362,5 +364,10 @@
     "msg": {
         "no-case-selected": "(No case is selected)",
         "error-retrieving-casefile-data": "Error occurred for retrieving casefile data"
+    },
+
+    "wizard": {
+        "title" : "New Case File"
     }
+
 }
