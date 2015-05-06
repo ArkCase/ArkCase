@@ -1,0 +1,54 @@
+<aside class="bg-light lt b-r b-light aside hidden-print" id="nav">
+    <section class="vbox">
+        <section class="w-f scrollable">
+            <div class=slim-scroll data-height=auto data-disable-fade-out=true data-distance=0 data-size=10px data-railOpacity=0.2>
+                <div class="clearfix wrapper dk nav-user hidden-xs">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="thumb avatar pull-left m-r">
+                                <%--<img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ann.jpg" class="dker">--%>
+                                <img id="sidebarPic" src="" default="<c:url value='/resources/vendors/${acm_theme}/images/nopic.png'/>" class="dker">
+                                <i class="on md b-light"></i>
+                            </span>
+                            <span class="hidden-nav-xs clear">
+                                <span class="block m-t-xs"> <strong class="font-bold text-lt">${acm_user.fullName}</strong> <b class="caret"></b> </span>
+                                <span class="text-muted text-xs block" id="sidebarTitle"></span>
+                                <%--<span class="text-muted text-xs block">Agent</span>--%>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <span class="arrow top hidden-nav-xs"></span>
+                            <li> <a href="<c:url value='/plugin/profile'/>">My Profile</a> </li>
+                            <%--<li> <a href="#">Switch User</a> </li>--%>
+                            <li> <a href="<c:url value='http://internal.armedia.com/confluence/display/ARK/Using+ArkCase'/>" target="_blank">Help</a> </li>
+
+                            <li class="divider"></li>
+                            <li> <a href="<c:url value='/logout'/>">Logout</a> </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- nav -->
+                <nav class="nav-primary hidden-xs">
+                    <div class="text-muted text-sm hidden-nav-xs padder m-t-sm m-b-sm">Navigation</div>
+                    <ul class="nav nav-main" data-ride="collapse" id="ulPlugin">
+                        <c:forEach var="navTab" items="${acm_application.navigatorTabs}">
+                            <c:set var="requiredPrivilege" value="${navTab.requiredPrivilege}" scope="page"/>
+                            <c:if test="${acm_privileges[requiredPrivilege]}">
+                                <li class="">
+                                    <a href="<c:url value='${navTab.url}' />" title="${navTab.actionName}" class="auto">
+                                        <i class="<c:url value='${navTab.iconName}' /> icon"> </i>
+                                        <span class="font-bold">${navTab.actionName}</span>
+                                    </a>
+                                </li>
+                            </c:if>
+                        </c:forEach>
+                    </ul>
+                </nav>
+			    <!-- / nav -->
+            </div>
+        </section>
+        <footer class="footer hidden-xs no-padder text-center-nav-xs"> <a href="#nav" data-toggle="class:nav-xs" class="btn btn-icon icon-muted btn-inactive m-l-xs m-r-xs"> <i class="i i-circleleft text"></i> <i class="i i-circleright text-active"></i> </a> </footer>
+    </section>
+</aside>
+

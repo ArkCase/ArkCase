@@ -8,6 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">complaint</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -82,18 +83,7 @@
     <script src="<c:url value='/resources/vendors/${vd_jquery_qtip}/${js_jquery_qtip}'/>"></script>
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_qtip}/${css_jquery_qtip}'/>" type="text/css"/>
 
-/////////////////////////////////////////////////////////////////////
-<%--<style>--%>
-    <%--table.fancytree-ext-table {--%>
-        <%--width: 100%;--%>
-        <%--outline: 0;--%>
-    <%--}--%>
-
-    <%--table.fancytree-ext-table tbody tr td {--%>
-        <%--border: 0px;--%>
-    <%--}--%>
-<%--</style>--%>
-//////////////////////////////////////////////////////////////////////
+    <%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
 <jsp:body>
@@ -107,26 +97,15 @@
                     <section class="vbox animated fadeInLeft">
                         <section class="scrollable">
                             <header class="dk header">
-                                <h3 class="m-b-xs text-black pull-left"><spring:message code="complaint.page.descShort" text="Complaints" /></h3>
+                                <h3 class="m-b-xs text-black pull-left" data-i18n="complaint:title">Complaints</h3>
                                 <div class="btn-group inline select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm" id="ulSort">
-                                        <%--<li><a href="#">Sort Date Ascending</a></li>--%>
-                                        <%--<li><a href="#">Sort Date Descending</a></li>--%>
-                                        <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
-                                        <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
                                     </ul>
                                 </div>
                                 <div class="btn-group select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm" id="ulFilter">
-                                        <%--<li><a href="#">All Open Complaints</a></li>--%>
-                                        <%--<li><a href="#">All Complaints I've Created</a></li>--%>
-                                        <%--<li><a href="#">All Closed No Further Action</a></li>--%>
-                                        <%--<li><a href="#">All Closed Refer External</a></li>--%>
-                                        <%--<li><a href="#">All Closed Added to Existing Case</a></li>--%>
-                                        <%--<li><a href="#">All Closed Open Investigation </a></li>--%>
-                                            <%--<li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>--%>
                                     </ul>
                                 </div>
                             </header>
@@ -213,7 +192,8 @@
                                                     <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
                                                     <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
-                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i> <span data-i18n="complaint:header.buttons.subscribe">Subscribe</span></button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
+                                                    </button>
                                                 </div>
                                             </div>
 
@@ -296,62 +276,30 @@
                                         <%--</div>--%>
                                     <%--</div>--%>
 
-<!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
-                                    <%--<div class="row">--%>
                                     <div class="col-md-12">
                                     <section class="panel b-a">
-                                        <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
-                                            <li style="margin-right:5px"></li>
-                                            <%--<li>--%>
-                                                <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
-                                                <%--</div>--%>
-                                            <%--</li>--%>
-                                            <li>
-                                                <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint:documents-to-retire.buttons.email">Email</span></button>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> <span data-i18n="complaint:documents-to-retire.buttons.print">Print</span></button>
-                                                </div>
-                                            </li>
-                                            <li> </li>
-                                        </ul>
-
-
-
-
-
-
-
+                                        <div class="panel-heading b-b bg-info">
+                                            <%--<ul class="nav nav-pills pull-right">--%>
+                                                <%--<li style="margin-right:5px"></li>--%>
+                                                <%--<li>--%>
+                                                    <%--<div class="btn-group padder-v2">--%>
+                                                        <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#dlgDocTreeDnd"><i class="fa fa-folder"></i> New Folder</button>--%>
+                                                    <%--</div>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<div class="btn-group padder-v2">--%>
+                                                        <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint:documents-to-retire.buttons.email">Email</span></button>--%>
+                                                    <%--</div>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<div class="btn-group padder-v2">--%>
+                                                        <%--<button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> <span data-i18n="complaint:documents-to-retire.buttons.print">Print</span></button>--%>
+                                                    <%--</div>--%>
+                                                <%--</li>--%>
+                                                <%--<li> </li>--%>
+                                            <%--</ul>--%>
 
                                             <a href="#" class="font-bold"><div data-i18n="complaint:documents-to-retire.title">Documents</div> </a>
-                                        </div>
-
-
-                                        <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.close">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint:documents-to-retire.create-folder-dialog.title">Create Folder</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-
-                                                        <p data-i18n="complaint:documents-to-retire.create-folder-dialog.labels.prompt">Enter a name for the folder you would like to create:</p>
-
-                                                        <label for="folderName2" data-i18n="complaint:documents-to-retire.create-folder-dialog.labels.folder-name">Folder Name</label><br/>
-                                                        <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]complaint:documents-to-retire.create-folder-dialog.labels.folder-name" placeholder="Folder Name" />
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.cancel">Cancel</button>
-                                                        <button type="button" class="btn btn-primary" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.create-folder">Create Folder<</button>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
 
 
@@ -381,7 +329,8 @@
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
                                             <thead>
                                             <tr>
-                                                <th width2="6%"><span class='fancytree-checkbox'></span></th>
+                                                <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
+                                                <th width2="6%"><input type="checkbox"/></th>
                                                 <th width2="4%" data-i18n="complaint:documents-to-retire.tree.field.id">ID</th>
                                                 <th width="35%" data-i18n="complaint:documents-to-retire.tree.field.title">Title</th>
                                                 <th width="12%" data-i18n="complaint:documents-to-retire.tree.field.type">Type</th>
@@ -389,7 +338,6 @@
                                                 <th width="16%" data-i18n="complaint:documents-to-retire.tree.field.author">Author</th>
                                                 <th width="6%" data-i18n="complaint:documents-to-retire.tree.field.version">Version</th>
                                                 <th width="8%" data-i18n="complaint:documents-to-retire.tree.field.status">Status</th>
-                                                <%--<th width2="6%" colspan="2"></th>--%>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -402,222 +350,14 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <%--<td></td>--%>
                                             </tr>
                                             </tbody>
                                         </table>
 
                                     </section>
 
-
-
-                                    <%--<h3>Additional Action Examples</h3>--%>
-                                    <%--<p>I added these modal window examples below to save time (it takes longer for me to code it into the FancyTree).</p>--%>
-
-<!-- 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333 -->
-<!--
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#createsubfolder">
-
-                                        <span class="text">Create Subfolder</span>
-                                    </button> <div class="modal fade" id="createsubfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Create Subfolder</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Enter a name for the subfolder you would like to create:</p>
-
-                                                    <label for="folderName">Folder Name</label><br/>
-                                                    <input type="text" id="folderName" class="input-lg" placeholder="Folder Name" />
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Create Subfolder</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#deletesubfolder">
-
-                                        <span class="text">Delete Subfolder</span>
-                                    </button> <div class="modal fade" id="deletesubfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Delete Subfolder</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-
-                                                    <p>Are you sure you want to delete [folder name] from [partent folder]?</p>
-
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Delete Subfolder</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#replaceFile">
-
-                                        <span class="text">Replace File</span>
-                                    </button> <div class="modal fade" id="replaceFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Replace File</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-
-                                                    <p>Choose a file from your computer to replace [document name]:</p>
-
-                                                    <label for="fileName">File</label><br/>
-                                                    <input type="file" id="fileName" class="input-lg" />
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Replace File</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#delete">
-
-                                        <span class="text">Delete</span>
-                                    </button> <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Delete</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Are you sure you want to delete [file name] from [partent folder]?</p>
-
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Delete</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#copy">
-
-                                        <span class="text">Copy</span>
-                                    </button> <div class="modal fade" id="copy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Copy</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Where would you like to copy this file? Choose the directory from the box below:</p>
-                                                    <p>[place tree view here]</p>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Copy</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#move">
-
-                                        <span class="text">Move</span>
-                                    </button> <div class="modal fade" id="move" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Move</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Where would you like to move this file? Choose the directory from the box below:</p>
-                                                    <p>[place tree view here]</p>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Move</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <button class="btn btn-default" onClick="window.open('documents.html', '_blank');">Edit</button>
-                                    <button class="btn btn-default" onClick="window.open('documents.html', '_blank');">View</button>
-
-
-
-
-                                    <div class="btn-group">
-                                        <button type="buton" class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-cog"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Add Subfolder</a></li>
-                                            <li><a href="#">Add Document</a></li>
-                                            <li><a href="#">Delete Subfolder</a></li>
-                                        </ul>
-                                    </div>
-
-
-                                    <div class="btn-group">
-                                        <button type="buton" class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-cog"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Download</a></li>
-                                            <li><a href="#">Replace</a></li>
-                                            <li><a href="#">History</a></li>
-                                            <li><a href="#">Delete</a></li>
-                                            <li><a href="#">Copy</a></li>
-                                            <li><a href="#">Move</a></li>
-                                            <li><a href="#">Edit</a></li>
-                                            <li><a href="#">View</a></li>
-                                        </ul>
-                                    </div>
-
--->
-
                                     </div>
                                     </div>
-<!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->
 
 
 
@@ -696,18 +436,23 @@
                                                 <header class="panel-heading bg-primary clearfix">
                                                     <div class="btn-group pull-right" data-toggle="buttons">
                                                         <label class="btn btn-sm btn-bg btn-default active" id="monthview">
-                                                            <input type="radio" name="options">Month
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.month">Month</span>
                                                         </label>
                                                         <label class="btn btn-sm btn-bg btn-default" id="weekview">
-                                                            <input type="radio" name="options">Week
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.week">Week</span>
                                                         </label>
                                                         <label class="btn btn-sm btn-bg btn-default" id="dayview">
-                                                            <input type="radio" name="options">Day
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.day">Day</span>
                                                         </label>
                                                     </div>
-                                                <span class="m-t-xs inline text-white">
-                                                  Calendar
-                                                </span>
+                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
+
+                                                    <span class="m-t-xs inline text-white" data-i18n="complaint:outlook-calendar.label.calendar">
+                                                      Calendar
+                                                    </span>
                                                 </header>
                                                 <div class="calendar">
                                                 </div>

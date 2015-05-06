@@ -64,4 +64,12 @@ public class FolderEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(folderRenamedEvent);
     }
 
+    public void publishFolderCopiedEvent( AcmFolder source, Authentication auth, String ipAddress,boolean succeeded ) {
+        if ( log.isDebugEnabled() )
+            log.debug("Publishing a folder copied event.");
+        AcmFolderCopiedEvent folderCopiedEvent = new AcmFolderCopiedEvent(source,auth.getName(),ipAddress);
+        folderCopiedEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(folderCopiedEvent);
+    }
+
 }

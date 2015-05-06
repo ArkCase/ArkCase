@@ -1,0 +1,428 @@
+{
+  "title": "Tasks",
+  "navigation": {
+    "search": {
+      "search": "Search",
+      "btn-go": "Go!"
+    },
+    "leaf-title": {
+      "task-details": "Task Details",
+      "rework-details": "Rework Details",
+      "documents-under-review":"Documents Under Review",
+      "attachments": "Attachments",
+      "notes" : "Notes",
+      "workflow-overview": "Workflow Overview",
+      "history" :"History",
+      "details": "Details",
+      "reject-comments": "Reject Comments"
+    }
+  },
+
+  "context-menu": {
+    "menu-title": {
+      "menu": "Menu:",
+      "copy": "Copy",
+      "paste": "Paste",
+      "edit": "Edit",
+      "delete": "Delete",
+      "more": "More",
+      "sub1": "Sub 1",
+      "sub2": "Sub 2"
+    }
+  },
+
+
+  "header": {
+    "label": {
+      "enter-parent-title": "Enter Parent Title",
+      "enter-subject-type": "Enter Subject Type",
+      "subject-type": "Subject Type",
+      "enter-incident-date" :"Enter Incident Date",
+      "incident-date":"Incident Date",
+      "enter-priority": "Enter Priority",
+      "priority" : "Priority",
+      "enter-assignee": "Enter Assignee",
+      "assigned-to": "Assigned To",
+      "enter-owning-group": "Enter Owning Group",
+      "owning-group":"Owning Group",
+      "enter-task-subject": "Enter Task Subject",
+      "enter-completion-percent": "Enter % of Completion",
+      "completion-percent": "% of Completion",
+      "enter-owner": "Enter Owner",
+      "assignee": "Assignee",
+      "enter-priority": "Enter Priority",
+      "priority": "Priority",
+      "enter-start-date": "Enter Start Date",
+      "start-date": "Start Date",
+      "enter-due-date": "Enter Due Date",
+      "due-date": "Due Date",
+      "enter-task-state": "Enter Task State",
+      "state" :"State"
+    },
+
+    "button": {
+      "reject": "Reject",
+      "reject-task":"Reject Task",
+      "delete": "Delete",
+      "delete-task": "Delete Task",
+      "complete": "Complete",
+      "complete-task": "Complete Task",
+      "subscribe": "Subscribe"
+    }
+  },
+
+  "task-details": {
+    "error-value": "(Error)",
+    "button": {
+      "edit": "Edit",
+      "save": "Save"
+    },
+    "label" :{
+      "other-menu-items" :"Other Menu Items",
+      "task-details": "Task Details",
+      "must-enter-details": "Must enter rework details",
+      "dirty-editing-detail": "Editing task detail",
+      "editing-rework-detail": "Editing rework detail"
+    }
+  },
+
+  "notes": {
+    "table": {
+      "title": "Note",
+      "field" :{
+        "id": "ID",
+        "note": "Note",
+        "created": "Created",
+        "creator": "Author"
+      }
+    },
+    "msg": {
+      "add-new-record": "Add Note"
+    }
+  },
+
+  "history": {
+    "table" :{
+      "title": "History",
+      "field": {
+        "id": "ID",
+        "event-name": "Event Name",
+        "date": "Date",
+        "user": "User"
+      }
+    }
+  },
+
+  "workflow": {
+    "table": {
+      "title": "Workflow Overview",
+      "field": {
+        "id": "ID",
+        "participant": "Participant",
+        "role": "Role",
+        "status": "Status",
+        "start-date-time": "Date/Time",
+        "end-date-time": "Date/Time"
+      }
+    }
+  },
+  "attachments-to-retire": {
+    "table": {
+      "title":"Attachments",
+      "field" :{
+        "id": "ID",
+        "title": "Title",
+        "created": "Created",
+        "creator": "Creator"
+      }
+    },
+    "msg": {
+      "add-new-record": "Add Document"
+    }
+  },
+
+  "documents-under-review": {
+    "table": {
+      "title" :"Documents Under Review",
+      "toolbar": {
+        "edit-close-request": "Edit Close Complaint Request",
+        "change-case-status": "Change Case Status"
+      },
+      "field":{
+        "id": "ID",
+        "title": "Title",
+        "created": "Created",
+        "author": "Author",
+        "status": "Status"
+      }
+    }
+  },
+
+  "reject-comments": {
+    "table": {
+      "title" : "Reject Comments",
+      "field" :{
+        "id": "ID",
+        "comment": "Comment",
+        "created": "Created",
+        "author": "Author"
+      }
+    }
+  },
+
+  "rework-details" :{
+    "button": {
+      "edit": "Edit",
+      "save": "Save"
+    },
+    "label" :{
+      "other-menu-items" :"Other Menu Items",
+      "rework-details": "Rework Details"
+    }
+  },
+
+  "attachments": {
+    "label": {
+      "attachments": "Attachments"
+    },
+    "table": {
+      "field": {
+        "id": "ID",
+        "title": "Title",
+        "type": "Type",
+        "created": "Created",
+        "author": "Author",
+        "version": "Version",
+        "status": "Status"
+      }
+    }
+  },
+
+  "close-complaint": {
+    "button": {
+      "close-complaint": "Close Complaint",
+      "edit-close-complaint":"Edit Close Complaint",
+      "change-case-status":"Change Case Status"
+    }
+  },
+
+  "signature": {
+    "label" :{
+      "electronic-signatures": "Electronic Signatures"
+    },
+    "table":{
+      "field": {
+        "signed-by": "Signed By",
+        "date": "Date"
+      }
+    }
+  },
+
+  "chat": {
+    "label": {
+      "approvers": "Approvers",
+      "collaborators": "Collaborators",
+      "watchers": "Watchers"
+    },
+    "button":{
+      "new-participant": "Participant"
+    }
+  },
+
+  "create-new-folder-dialog": {
+    "title": "Create Folder",
+    "body": "Enter a name for the folder you would like to create:",
+    "label": {
+      "folder-name": "Folder Name"
+    },
+    "button": {
+      "ok": "Create Folder",
+      "cancel": "Cancel",
+      "close": "Close"
+    }
+  },
+
+  "email-documents-dialog": {
+    "title": "Send Email",
+    "body": "Where would you like to email this file?",
+    "label": {
+      "email-address": "Email Address"
+    },
+    "button": {
+      "ok": "Send Email",
+      "cancel": "Cancel",
+      "close": "Close"
+    }
+  },
+
+  "signature-dialog": {
+    "title": "Electronically Sign",
+    "label": {
+      "password" : "Password"
+    },
+    "button": {
+      "close": "Close",
+      "ok": "Confirm"
+    }
+  },
+
+  "assign-dialog": {
+    "title": "Assign Task",
+    "label": {
+      "who-assign-task-to": "Who would you like to assign this task to?"
+    },
+    "button": {
+      "search-people": "Search people..",
+      "close": "Close",
+      "cancel": "Cancel",
+      "ok": "Assign Task",
+      "go": "Go!"
+    },
+    "table": {
+      "field": {
+        "first-name": "First Name",
+        "last-name": "Last Name",
+        "username": "Username",
+        "organization": "Organization",
+        "showing-items": "Showing 20-30 of 50 items"
+      },
+      "value": {
+        "first-name": "[First Name]",
+        "last-name": "[Last Name]",
+        "username": "[Username]",
+        "organization": "[Organization]"
+      }
+    }
+  },
+
+  "reassign-dialog": {
+    "title": "Reassign Task",
+    "label": {
+      "who-reassign-task-to": "Who would you like to reassign this task to?"
+    },
+    "button": {
+      "search-people": "Search people..",
+      "close": "Close",
+      "cancel": "Cancel",
+      "ok": "Reassign Task",
+      "go": "Go!"
+    },
+    "table": {
+      "field": {
+        "first-name": "First Name",
+        "last-name": "Last Name",
+        "username": "Username",
+        "organization": "Organization",
+        "showing-items": "Showing 20-30 of 50 items"
+      },
+      "value": {
+        "first-name": "[First Name]",
+        "last-name": "[Last Name]",
+        "username": "[Username]",
+        "organization": "[Organization]"
+      }
+    }
+  },
+
+  "unassign-dialog": {
+    "title": "Unassign Task",
+    "label": {
+      "sure-to-unassign": "Are you sure you want to unassign this task?",
+      "reason": "Reason"
+    },
+    "button": {
+      "close": "Close",
+      "cancel": "Cancel",
+      "ok": "Unassign Task"
+    }
+  },
+
+  "approve-dialog": {
+    "title": "Approve Task",
+    "label": {
+      "sure-to-approve": "Are you sure you want to approve this task?",
+      "reason": "Reason"
+    },
+    "button": {
+      "close": "Close",
+      "cancel": "Cancel",
+      "ok": "Approve Task"
+    }
+  },
+
+  "reject-dialog": {
+    "title": "Rejet Task",
+    "label": {
+      "sure-to-reject": "Are you sure you want to reject this task?",
+      "task-will-return-to-owner": "This task will be returned to the owner:",
+      "select-people": "Or select some other people from below:",
+      "show-items": "Showing 0-0 of 0 items"
+    },
+    "table": {
+      "field" :{
+        "first-name": "First Name",
+        "last-name": "Last Name",
+        "username": "Username",
+        "organization": "Organization"
+      }
+    },
+
+    "button": {
+      "search-button": "Search people..",
+      "go":"Go!",
+      "close": "Close",
+      "cancel": "Cancel",
+      "ok": "Reject Task"
+    }
+  },
+
+  "delete-dialog": {
+    "title": "Delete Task",
+    "label": {
+      "sure-to-delete": "Are you sure you want to delete this task?",
+      "reason": "Reason"
+    },
+    "button": {
+      "close": "Close",
+      "cancel": "Cancel",
+      "ok": "Delete Task"
+    }
+  },
+
+  "msg": {
+    "no-task-data": "(No task data)"
+  },
+
+  "wizard": {
+    "title": "New Task",
+    "label": {
+      "assign-to": "Assign To",
+      "select-assignee": "Select Assignee",
+      "associate-complaint-case": "Associate with Complaint or Case",
+      "complaint-or-case": "Complaint or Case #",
+      "subject": "Subject",
+      "start-date": "Start Date",
+      "status": "Status",
+      "select-status": "Select Status",
+      "active": "Active",
+      "due-date": "Due Date",
+      "priority": "Priority",
+      "select-priority": "Select Priority",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "expedited": "Expedited",
+      "complete-percents": "% Complete",
+      "notes": "Notes"
+    },
+    "button": {
+      "save": "Save"
+    },
+    "msg": {
+      "failed-to-retrieve-assignees": "Failed to retrieve assignees",
+      "failed-to-create-new-task": "Failed to create new task:",
+      "please-enter-subject": "Please enter a subject"
+    }
+  }
+
+}
