@@ -338,7 +338,8 @@ Admin.Service = {
 
     }
     ,LabelConfiguration: {
-        API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
+        API_SETTINGS: "/api/latest/plugin/admin/labelconfiguration/settings"
+        ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
         ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
         ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/resource?lang={0}&ns={1}"
 
@@ -347,6 +348,45 @@ Admin.Service = {
 
         }
         ,onInitialized: function() {
+        },
+
+        retrieveSettings: function(){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_SETTINGS;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve resource settings:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+        updateSettings: function(settings){
+            var $dfd =jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_SETTINGS;
+            Acm.Service.asyncPut(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url
+                ,JSON.stringify(settings, null, 4)
+            );
+            return $dfd.promise();
         },
 
         retrieveLanguages: function() {

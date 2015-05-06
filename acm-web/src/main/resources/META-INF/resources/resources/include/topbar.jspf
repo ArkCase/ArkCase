@@ -19,7 +19,7 @@
                                         <span class="m-b-xs block">
                                             <i class="${topbarAction.iconName} i-2x text-primary-lt"></i>
                                         </span>
-                                        <small class="text-muted">${topbarAction.actionName}</small>
+                                        <small class="text-muted" data-i18n="${topbarAction.actionResourceName}">${topbarAction.actionName}</small>
                                     </a>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                 <%--<input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases..." id="edtSearch" data-provide="typeahead" autocomplete="off" data-source='["arizona","alaska"]'>--%>
                 <%--<input type="text" name="acmQuickSearch" id="acmQuickSearch" class="form-control input-sm no-border typeahead" placeholder="Search complaints, cases..." />--%>
 
-                <input type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" placeholder="Search complaints, cases...">
+                <input type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" data-i18n="[placeholder]common:top-bar.label.search" placeholder="Search complaints, cases...">
                 <input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />
             </div>
         </div>
@@ -51,7 +51,7 @@
                         <%--<header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>--%>
                         <div class="list-group list-group-alt"> </div>
                         <footer class="panel-footer text-sm"> <a href="#" class="pull-right"></a>
-                            <a href="<c:url value='/plugin/notification'/>">See all notifications</a>
+                            <a href="<c:url value='/plugin/notification'/>" data-i18n="common:top-bar.label.see-all-notifications">See all notifications</a>
                         </footer>
                     </section>
                 </section>

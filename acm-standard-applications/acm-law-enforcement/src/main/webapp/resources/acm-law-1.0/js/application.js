@@ -147,32 +147,37 @@ var Application = Application || {
     }
 
     ,initI18n: function(contextPath, onDone) {
-        var lng= "en";
-        var namespaces = ['common'];
+        // Get  settings with default language
+        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
+            .done(function(data){
+                var namespaces = ['common'];
+                var lng= data.defaultLang;
 
-        // Get namespace from detailData
-        var namespace = Acm.Object.MicroData.get("resourceNamespace");
-        if (namespace) {
-            namespaces.push(namespace);
-        }
-            
-        i18n.init({
-            useLocalStorage: false,
-            localStorageExpirationTime: 86400000, // 1 week
-            load: 'current', // Prevent loading of 'en' locale
-            fallbackLng: false,
-            lng: lng,
-            ns:{
-                namespaces: namespaces
-            },
-            lowerCaseLng: true,
-            resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-        }, function() {
-            $('*[data-i18n]').i18n();
-            onDone();
-        });
+                // Get namespace from detailData
+                var namespace = Acm.Object.MicroData.get("resourceNamespace");
+                if (namespace) {
+                    namespaces.push(namespace);
+                }
 
-        // Send "i18n ready" global event
-        $(document).trigger('i18n-ready');
+                i18n.init({
+                    useLocalStorage: false,
+                    localStorageExpirationTime: 86400000, // 1 week
+                    load: 'current', // Prevent loading of 'en' locale
+                    fallbackLng: false,
+                    lng: lng,
+                    ns:{
+                        namespaces: namespaces
+                    },
+                    lowerCaseLng: true,
+                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+                }, function() {
+                    $('*[data-i18n]').i18n();
+                    onDone();
+                });
+
+                // Send "i18n ready" global event
+                $(document).trigger('i18n-ready');
+
+            });
     }
 }
