@@ -100,7 +100,8 @@
 
 </style>
 
-    <%@include file="/resources/include/dlgSearch.jspf" %>
+<%@include file="/resources/include/dlgSearch.jspf" %>
+<%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
     <jsp:body>
@@ -118,28 +119,12 @@
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
 
                                         <ul class="dropdown-menu text-left text-sm" id="ulSort">
-                                                <%--<li><a href="#">Sort Date Ascending</a></li>--%>
-                                                <%--<li><a href="#">Sort Date Descending</a></li>--%>
-                                                <%--<li><a href="#">Sort Case ID Ascending</a></li>--%>
-                                                <%--<li><a href="#">Sort Case ID Ascending</a></li>--%>
                                         </ul>
                                     </div>
 
                                     <div class="btn-group select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                         <ul class="dropdown-menu text-left text-sm" id="ulFilter">
-                                                <%--<li><a href="#">All Open Cases</a></li>--%>
-                                                <%--<li><a href="#">All Closed</a></li>--%>
-                                                <%--<li><a href="#">All Inactive</a></li>--%>
-
-                                                <%--<li><a href="#">Cases I've Opened</a></li>--%>
-                                                <%--<li><a href="#">Unapproved Cases</a></li>--%>
-                                                <%--<li><a href="#">Approved Cases</a></li>--%>
-                                                <%--<li><a href="#">Cases From Group</a></li>--%>
-                                                <%--<li><a href="#">Closed or Expired Cases</a></li>--%>
-                                                <%--<li><a href="#">New Cases</a></li>--%>
-                                                <%--<li><a href="#">All Destroyed</a></li>--%>
-                                                <%--<li><a href="#">All Archived</a></li>--%>
                                         </ul>
                                     </div>
                                 </header>
@@ -323,8 +308,6 @@
                                                 <ul class="nav nav-pills pull-right">
                                                     <li>
                                                         <div class="btn-group padder-v2">
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>--%>
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>--%>
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                             <ul class="dropdown-menu pull-right">
@@ -359,61 +342,12 @@
 
 
                                         <section class="panel b-a">
-                                            <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
-                                                <li style="margin-right:5px"></li>
-                                                    <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                    <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> Email</button>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                    <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> Print</button>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                <li> </li>
-                                            </ul>
-
-
+                                            <div class="panel-heading b-b bg-info">
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             </div>
 
 
-                                            <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:create-new-folder-dialog.btn-close">Close</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel" data-i18n="casefile:create-new-folder-dialog.title">Create Folder</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-
-                                                            <p data-i18n="casefile:create-new-folder-dialog.body">Enter a name for the folder you would like to create:</p>
-
-                                                            <label for="folderName2" data-i18n="casefile:create-new-folder-dialog.label.folder-name">Folder Name</label><br/>
-                                                            <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]casefile:create-new-folder-dialog.label.folder-name"placeholder="Folder Name" />
-
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:create-new-folder-dialog.btn-cancel">Cancel</button>
-                                                            <button type="button" class="btn btn-primary" data-i18n="casefile:create-new-folder-dialog.btn-ok">Create Folder</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             <table id="treeDoc" class="table table-striped th-sortable table-hover">
-                                                    <%--<form id="formUploadDoc" style="display:none;">--%>
-                                                    <%--<input type="file" id="file" name="files[]" multiple />--%>
-                                                    <%--</form>--%>
-                                                    <%--<form action="#" id="formDownloadDoc" style="display:none;">--%>
-                                                    <%--</form>--%>
-
                                                 <thead>
                                                 <tr>
                                                     <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
@@ -425,7 +359,6 @@
                                                     <th width="16%" data-i18n="casefile:documents.table.field.author">Author</th>
                                                     <th width="6%" data-i18n="casefile:documents.table.field.version">Version</th>
                                                     <th width="8%" data-i18n="casefile:documents.table.field.status">Status</th>
-                                                        <%--<th width2="6%" colspan="2"></th>--%>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -438,7 +371,6 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                        <%--<td></td>--%>
                                                 </tr>
                                                 </tbody>
                                             </table>
