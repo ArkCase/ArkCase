@@ -3,37 +3,52 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-       <bean id="msOutlookPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
-              <property name="pluginName" value="Microsoft Outlook Plugin"/>
-              <property name="privileges">
-                     <list>
-                            <ref bean="acmOutlookListObjectsPrivilege"/>
-                     </list>
-              </property>
-              <property name="urlPrivileges">
-                     <list>
-                            <bean id="inboxUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                                   <property name="httpMethod" value="GET"/>
-                                   <property name="url" value="/api/{version}/plugin/outlook/inbox"/>
-                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
-                            </bean>
-                            <bean id="calendarUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                                   <property name="httpMethod" value="GET"/>
-                                   <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
-                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
-                            </bean>
-                            <bean id="tasksUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                                   <property name="httpMethod" value="GET"/>
-                                   <property name="url" value="/api/{version}/plugin/outlook/tasks"/>
-                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
-                            </bean>
-                            <bean id="contactsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                                   <property name="httpMethod" value="GET"/>
-                                   <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
-                                   <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
-                            </bean>
-                     </list>
-              </property>
-       </bean>
+    <bean id="msOutlookPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Microsoft Outlook Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmOutlookListObjectsPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="inboxUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/inbox"/>
+                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                </bean>
+                <bean id="calendarUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
+                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                </bean>
+                <bean id="calendarUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/calendar"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean id="tasksUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/tasks"/>
+                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                </bean>
+                <bean id="tasksUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/tasks"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean id="contactsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
+                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                </bean>
+                <bean id="contactsUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
 
 </beans>
