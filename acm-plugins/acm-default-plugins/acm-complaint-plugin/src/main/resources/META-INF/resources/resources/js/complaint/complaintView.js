@@ -1673,7 +1673,7 @@ Complaint.View = Complaint.View || {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
 
-        ,uploadForm: function(type, onCloseForm) {
+        ,uploadForm: function(type, folderId, onCloseForm) {
             var complaintId = Complaint.View.getActiveComplaintId();
             var complaint = Complaint.View.getActiveComplaint();
             if (Complaint.Model.Detail.validateComplaint(complaint) )
@@ -1689,7 +1689,13 @@ Complaint.View = Complaint.View || {
                     // the Frevvo form will decode it.
                     var complaintTitle = Acm.goodValue(complaint.complaintTitle);
                     complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
+                    url = url.replace("_data=(", "_data=(type:'complaint'"
+                        + ", complaintId:'" + complaint.complaintId
+                        + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber)
+                        + "',complaintTitle:'" + complaintTitle
+                        + "',complaintPriority:'" + Acm.goodValue(complaint.priority)
+                        + "',folderId:'" + folderId
+                        + "',");
                     Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
