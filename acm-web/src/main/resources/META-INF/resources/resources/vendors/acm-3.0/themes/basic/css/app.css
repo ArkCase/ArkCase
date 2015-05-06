@@ -4308,15 +4308,17 @@ h3.m-b-xs.text-black {
 #cloud { margin: 0; } #cloud li { display: inline; }
 
 
+/* for ui-contextmenu */
 .ui-menu {
     /*width: 180px;*/
     /*font-size: 63%;*/
     width: 240px;
     font-size: 100%;
 }
-.ui-menu kbd { /* Keyboard shortcuts for ui-contextmenu titles */
+.ui-menu kbd {
     float: right;
 }
+
 .acm-word-wrap{
   word-wrap: break-word;
 }
@@ -4342,5 +4344,10 @@ h3.m-b-xs.text-black {
   left:40px;
   color:#000000;
   font-weight: bold;
+}
+
+/* external file drag and drop to doc tree hilite */
+tr.dragover {
+    border: 2px solid #0B85A1;
 }
 
