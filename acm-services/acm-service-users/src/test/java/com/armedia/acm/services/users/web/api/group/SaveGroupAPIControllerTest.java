@@ -43,7 +43,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 public class SaveGroupAPIControllerTest extends EasyMockSupport {
 
 	private Logger LOG = LoggerFactory.getLogger(getClass());
-	
+
 	private MockMvc mockMvc;
 	private SaveGroupAPIController unit;
 	private Authentication mockAuthentication;

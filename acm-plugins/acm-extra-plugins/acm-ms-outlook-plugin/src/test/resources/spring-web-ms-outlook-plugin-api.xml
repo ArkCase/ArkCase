@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="createContactItemAPIController"
+          class="com.armedia.acm.plugins.outlook.web.api.CreateContactItemAPIController">
+    </bean>
+
+    <bean id="createTaskItemAPIController" class="com.armedia.acm.plugins.outlook.web.api.CreateTaskItemAPIController">
+    </bean>
+
+    <bean id="createCalendarAppointmentAPIController"
+          class="com.armedia.acm.plugins.outlook.web.api.CreateCalendarAppointmentAPIController">
+    </bean>
+
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+
+    <!-- dummy bean for the activiti engine. -->
+    <bean id="activitiProcessEngineConfiguration" class="java.lang.String">
+        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
+    </bean>
+
+    <!-- dummy bean for the drools deployer -->
+    <bean id="drlDeployer" class="java.lang.String">
+        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
+    </bean>
+</beans>

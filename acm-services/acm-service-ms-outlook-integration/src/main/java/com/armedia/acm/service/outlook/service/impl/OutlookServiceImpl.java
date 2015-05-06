@@ -2,7 +2,10 @@ package com.armedia.acm.service.outlook.service.impl;
 
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookException;
 import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.exception.AcmOutlookListItemsFailedException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
@@ -14,6 +17,7 @@ import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
@@ -23,6 +27,7 @@ import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema
 import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
 import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
 import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
+import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.EmailAddressKey;
 import microsoft.exchange.webservices.data.enumeration.PhoneNumberKey;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
@@ -198,9 +203,9 @@ public class OutlookServiceImpl implements OutlookService
             if(contact.getPhoneNumbers().contains(PhoneNumberKey.PrimaryPhone))
                 oci.setPrimaryTelephone(contact.getPhoneNumbers().getPhoneNumber(PhoneNumberKey.PrimaryPhone));
             if(contact.getEmailAddresses().contains(EmailAddressKey.EmailAddress1))
-                oci.setEmailAddress1(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress1));
+                oci.setEmailAddress1(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress1).getAddress());
             if(contact.getEmailAddresses().contains(EmailAddressKey.EmailAddress2))
-                oci.setEmailAddress2(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress2));
+                oci.setEmailAddress2(contact.getEmailAddresses().getEmailAddress(EmailAddressKey.EmailAddress2).getAddress());
 
             return oci;
         }
@@ -278,6 +283,54 @@ public class OutlookServiceImpl implements OutlookService
         results.setItems(contacts);
 
         return results;
+    }
+
+    @Override
+    public OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, WellKnownFolderName folderName, OutlookCalendarItem calendarItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException {
+        ExchangeService service = connect(user);
+        Folder folder;
+        try {
+            folder = Folder.bind(service, folderName);
+        } catch (Exception e) {
+            throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
+        }
+        return getDao().createCalendarAppointment(service, folder, calendarItem);
+    }
+
+    @Override
+    public OutlookTaskItem createOutlookTaskItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookTaskItem taskItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException {
+        ExchangeService service = connect(user);
+        Folder folder;
+        try {
+            folder = Folder.bind(service, folderName);
+        } catch (Exception e) {
+            throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
+        }
+        return getDao().createTaskItem(service, folder, taskItem);
+    }
+
+    @Override
+    public OutlookContactItem createOutlookContactItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookContactItem contactItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException {
+        ExchangeService service = connect(user);
+        Folder folder;
+        try {
+            folder = Folder.bind(service, folderName);
+        } catch (Exception e) {
+            throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
+        }
+        return getDao().createContactItem(service, folder, contactItem);
+    }
+
+    @Override
+    public void deleteItem(AcmOutlookUser user, String itemId, DeleteMode deleteMode) throws AcmOutlookException, AcmOutlookItemNotFoundException {
+        ExchangeService service = connect(user);
+        getDao().deleteItem(service, itemId, deleteMode);
+    }
+
+    @Override
+    public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode) {
+        ExchangeService service = connect(user);
+        getDao().deleteAppointmentItem(service, appointmentId, recurring, deleteMode);
     }
 
     protected ExchangeService connect(AcmOutlookUser user) throws AcmOutlookConnectionFailedException
