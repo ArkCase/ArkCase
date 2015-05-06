@@ -233,14 +233,19 @@ DocTree.View = DocTree.View || {
     }
     ,onSubmitFormUploadFile: function(event, ctrl) {
         event.preventDefault();
-
+        var files = DocTree.View.$fileInput[0].files;
+        DocTree.View.doSubmitFormUploadFile(files);
+    }
+    ,doSubmitFormUploadFile: function(files) {
         var folderNode = DocTree.View.uploadToFolderNode;
         var fileType = DocTree.View.uploadFileType;
-        var files = DocTree.View.$fileInput[0].files;
         var names = [];
-        for(var i = 0; i < files.length; i++ ){
-            names.push(files[i].name);
-        }
+//        for(var i = 0; i < files.length; i++ ){
+//            names.push(files[i].name);
+//            if (0 == i && !DocTree.View.uploadFileNew) {    //for replace operation, only take one file
+//                break;
+//            }
+//        }
 
         var fd = new FormData();
         fd.append("parentObjectType", DocTree.Model.getObjType());
@@ -252,7 +257,11 @@ DocTree.View = DocTree.View || {
         fd.append("fileType", fileType);
         fd.append("category", "Document");
         for(var i = 0; i < files.length; i++ ){
+            names.push(files[i].name);
             fd.append("files[]", files[i]);
+            if (0 == i && !DocTree.View.uploadFileNew) {    //for replace operation, only take one file
+                break;
+            }
         }
 
         var cacheKey = DocTree.View.getCacheKey(folderNode);
@@ -335,7 +344,7 @@ DocTree.View = DocTree.View || {
     // The gear button click events toggle the menu popup. For some unknown reason, the events are fired
     // multiple times rapidly, which mess up the menu toggle logic. _contextMenuIsOpening flag is used
     // to ignore click events during a 100ms time window.
-    ,_contextMenuIsOpening: false
+//    ,_contextMenuIsOpening: false
     ,onViewChangedTree: function() {
         var $btnTreeBody = DocTree.View.$tree.find("tbody");
         var $btnTreeActions = DocTree.View.$tree.find("button");
@@ -862,57 +871,66 @@ DocTree.View = DocTree.View || {
             });
         }
 
-        ,_borderSave: null
         ,onDragEnter: function(e) {
             e.stopPropagation();
             e.preventDefault();
-            if (null == DocTree.View.ExternalDnd._borderSave) {
-                DocTree.View.ExternalDnd._borderSave = $(this).css('border');
-            }
-            $(this).css('border', '2px solid #0B85A1');
+            $(this).addClass("dragover");
         }
         ,onDragOver: function(e) {
             e.stopPropagation();
             e.preventDefault();
-            $(this).css('border', '2px solid #0B85A1');
+            $(this).addClass("dragover");
         }
         ,onDragLeave: function(e) {
             e.stopPropagation();
             e.preventDefault();
-
-            if (null != DocTree.View.ExternalDnd._borderSave) {
-                $(this).css('border', DocTree.View.ExternalDnd._borderSave);
-            }
+            $(this).removeClass("dragover");
         }
         ,onDragDrop: function(e) {
             //e.stopPropagation();
             e.preventDefault();
-            if (null != DocTree.View.ExternalDnd._borderSave) {
-                $(this).css('border', DocTree.View.ExternalDnd._borderSave);
-            }
+            $(this).removeClass("dragover");
 
             var node = $.ui.fancytree.getNode(e);
             var files = e.originalEvent.dataTransfer.files;
+            if (files instanceof FileList) {
+                if (DocTree.View.isFolderNode(node)) {
+                    DocTree.View.DialogDnd.showIfDropToFolderNode(function() {
+                        //var replace = DocTree.View.DialogDnd.isCheckedRadReplace();
+                        //var toParent = DocTree.View.DialogDnd.isCheckedRadUploadToParent();
+                        var toFolder = DocTree.View.DialogDnd.isCheckedRadUploadToFolder();
+                        var fileType = DocTree.View.DialogDnd.getValueSelFileType();
+                        if (toFolder && Acm.isNotEmpty(fileType)) {
+                            DocTree.View.uploadToFolderNode = node;
+                            DocTree.View.uploadFileType = fileType;
+                            DocTree.View.uploadFileNew = true;
+                            DocTree.View.doSubmitFormUploadFile(files);
+                        }
+                    });
 
-            var tree = DocTree.View.tree;
-            var node2 = tree.getActiveNode();
-            var a = this;
+                } else if (DocTree.View.isFileNode(node)) {
+                    DocTree.View.DialogDnd.showIfDropToFileNode(function() {
+                        var replace = DocTree.View.DialogDnd.isCheckedRadReplace();
+                        var toParent = DocTree.View.DialogDnd.isCheckedRadUploadToParent();
+                        //var toFolder = DocTree.View.DialogDnd.isCheckedRadUploadToFolder();
+                        var fileType = DocTree.View.DialogDnd.getValueSelFileType();
+                        if (replace) {
+                            DocTree.View.replaceFileNode = node;
+                            DocTree.View.uploadToFolderNode = node.parent;
+                            DocTree.View.uploadFileType = Acm.goodValue(node.data.type);
+                            DocTree.View.uploadFileNew = false;
+                            DocTree.View.doSubmitFormUploadFile(files);
 
-            var $tdList = $(this).find(">td");
-            var $td = $tdList.eq(1);
-            var $a = $tdList.eq(1).find("a");
-            var a2 = $a.attr("href");
-            var a3 = $a.text();
+                        } else if (toParent && Acm.isNotEmpty(fileType)) {
+                            DocTree.View.uploadToFolderNode = node.parent;
+                            DocTree.View.uploadFileType = fileType;
+                            DocTree.View.uploadFileNew = true;
+                            DocTree.View.doSubmitFormUploadFile(files);
+                        }
+                    });
+                }
+            }
 
-            DocTree.View.DialogDnd.show(function() {
-                alert("OKed");
-            });
-//            var $dlg = $("#emailDocs");
-//            Acm.Dialog.modal($dlg ,function() {
-//                alert("OKed");
-//            });
-
-            var z = 1;
         }
     }
 
@@ -1772,8 +1790,9 @@ DocTree.View = DocTree.View || {
             this.$dlgDocTreeDnd = $("#dlgDocTreeDnd");
             this.$radOperation = this.$dlgDocTreeDnd.find("input:radio");
             this.$radOperation.on("click", function(e) {DocTree.View.DialogDnd.onClickRadOperation(e, this);});
-            this.$radReplace = this.$radOperation.eq(0);
-            this.$radCopy    = this.$radOperation.eq(1);
+//            this.$radReplace       = this.$radOperation.eq(0);
+//            this.$radUploadParent  = this.$radOperation.eq(1);
+//            this.$radUpload        = this.$radOperation.eq(2);
 
             this.$selFileTypes = this.$dlgDocTreeDnd.find("select");
             this.fillSelFileTypes(args.fileTypes);
@@ -1803,55 +1822,100 @@ DocTree.View = DocTree.View || {
             }
         }
         ,update: function() {
-            var replaceChecked = this.isCheckedRadReplace();
-            var copyChecked = this.isCheckedRadCopy();
-            if (replaceChecked) {
+            var replace = this.isCheckedRadReplace();
+            var toParent = this.isCheckedRadUploadToParent();
+            var toFolder = this.isCheckedRadUploadToFolder();
+            if (replace) {
                 this.showDivFileType(false);
                 this.setEnableBtnOk(true);
 
-            } else if (copyChecked) {
+            } else if (toParent) {
                 this.showDivFileType(true);
-                var fileType = this.getValueSelFileType();
-                if (Acm.isNotEmpty(fileType)) {
-                    this.setEnableBtnOk(true);
-                } else {
-                    this.setEnableBtnOk(false);
-                }
+                this.setEnableBtnOk(Acm.isNotEmpty(this.getValueSelFileType()));
+
+            } else if (toFolder) {
+                this.showDivFileType(true);
+                this.setEnableBtnOk(Acm.isNotEmpty(this.getValueSelFileType()));
 
             } else {
+                Acm.log("should never get here");
                 this.showDivFileType(false);
                 this.setEnableBtnOk(false);
             }
         }
-        ,show: function(onClickBtnPrimary) {
+        ,showIfDropToFolderNode: function(onClickBtnPrimary) {
             this.setCheckedRadReplace(false);
-            this.setCheckedRadCopy(false);
+            this.setCheckedRadUploadToParent(false);
+            this.setCheckedRadUploadToFolder(true);
+
+            this.showRadReplace(false);
+            this.showRadUploadToParent(false);
+            this.showRadUploadToFolder(false);
+
+            this.showDivFileType(true);
+            this.setValueSelFileType("");
+            this.setEnableBtnOk(false);
+
+            Acm.Dialog.modal(this.$dlgDocTreeDnd, onClickBtnPrimary);
+        }
+        ,showIfDropToFileNode: function(onClickBtnPrimary) {
+            this.setCheckedRadReplace(false);
+            this.setCheckedRadUploadToParent(false);
+            this.setCheckedRadUploadToFolder(false);
+
+            this.showRadReplace(true);
+            this.showRadUploadToParent(true);
+            this.showRadUploadToFolder(false);
+
             this.showDivFileType(false);
+            this.setValueSelFileType("");
             this.setEnableBtnOk(false);
 
             Acm.Dialog.modal(this.$dlgDocTreeDnd, onClickBtnPrimary);
         }
 
-        ,getValueSelFileType: function() {
-            return Acm.Object.getSelectValue(this.$selFileTypes);
-        }
-        ,setEnableBtnOk: function(enable) {
-            Acm.Object.setEnable(this.$btnOk, enable);
-        }
         ,isCheckedRadReplace: function() {
             return Acm.Object.isChecked(this.$radOperation.eq(0));
         }
         ,setCheckedRadReplace: function(check) {
             Acm.Object.setChecked(this.$radOperation.eq(0), check);
         }
-        ,isCheckedRadCopy: function() {
+        ,showRadReplace: function(show) {
+            Acm.Object.show(this.$radOperation.eq(0).closest("label"), show);
+        }
+
+        ,isCheckedRadUploadToParent: function() {
             return Acm.Object.isChecked(this.$radOperation.eq(1));
         }
-        ,setCheckedRadCopy: function(check) {
+        ,setCheckedRadUploadToParent: function(check) {
             Acm.Object.setChecked(this.$radOperation.eq(1), check);
+        }
+        ,showRadUploadToParent: function(show) {
+            Acm.Object.show(this.$radOperation.eq(1).closest("label"), show);
+        }
+
+        ,isCheckedRadUploadToFolder: function() {
+            return Acm.Object.isChecked(this.$radOperation.eq(2));
+        }
+        ,setCheckedRadUploadToFolder: function(check) {
+            Acm.Object.setChecked(this.$radOperation.eq(2), check);
+        }
+        ,showRadUploadToFolder: function(show) {
+            Acm.Object.show(this.$radOperation.eq(2).closest("label"), show);
+        }
+
+        ,getValueSelFileType: function() {
+            return Acm.Object.getSelectValue(this.$selFileTypes);
+        }
+        ,setValueSelFileType: function(value) {
+            return Acm.Object.setSelectValue(this.$selFileTypes, value);
         }
         ,showDivFileType: function(show) {
             Acm.Object.show(this.$divFileType, show);
+        }
+
+        ,setEnableBtnOk: function(enable) {
+            Acm.Object.setEnable(this.$btnOk, enable);
         }
     }
 };

@@ -100,7 +100,8 @@
 
 </style>
 
-    <%@include file="/resources/include/dlgSearch.jspf" %>
+<%@include file="/resources/include/dlgSearch.jspf" %>
+<%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
     <jsp:body>
@@ -118,28 +119,12 @@
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
 
                                         <ul class="dropdown-menu text-left text-sm" id="ulSort">
-                                                <%--<li><a href="#">Sort Date Ascending</a></li>--%>
-                                                <%--<li><a href="#">Sort Date Descending</a></li>--%>
-                                                <%--<li><a href="#">Sort Case ID Ascending</a></li>--%>
-                                                <%--<li><a href="#">Sort Case ID Ascending</a></li>--%>
                                         </ul>
                                     </div>
 
                                     <div class="btn-group select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                         <ul class="dropdown-menu text-left text-sm" id="ulFilter">
-                                                <%--<li><a href="#">All Open Cases</a></li>--%>
-                                                <%--<li><a href="#">All Closed</a></li>--%>
-                                                <%--<li><a href="#">All Inactive</a></li>--%>
-
-                                                <%--<li><a href="#">Cases I've Opened</a></li>--%>
-                                                <%--<li><a href="#">Unapproved Cases</a></li>--%>
-                                                <%--<li><a href="#">Approved Cases</a></li>--%>
-                                                <%--<li><a href="#">Cases From Group</a></li>--%>
-                                                <%--<li><a href="#">Closed or Expired Cases</a></li>--%>
-                                                <%--<li><a href="#">New Cases</a></li>--%>
-                                                <%--<li><a href="#">All Destroyed</a></li>--%>
-                                                <%--<li><a href="#">All Archived</a></li>--%>
                                         </ul>
                                     </div>
                                 </header>
@@ -323,8 +308,6 @@
                                                 <ul class="nav nav-pills pull-right">
                                                     <li>
                                                         <div class="btn-group padder-v2">
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit" onclick="edit()"><i class="fa fa-pencil"></i></button>--%>
-                                                                <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save" onclick="save()"><i class="fa fa-save"></i></button>--%>
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
                                                             <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                             <ul class="dropdown-menu pull-right">
@@ -359,200 +342,12 @@
 
 
                                         <section class="panel b-a">
-                                            <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
-                                                <li style="margin-right:5px"></li>
-                                                    <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                    <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> Email</button>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                    <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> Print</button>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                <li> </li>
-                                            </ul>
-
-
+                                            <div class="panel-heading b-b bg-info">
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             </div>
 
 
-                                            <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:create-new-folder-dialog.btn-close">Close</span></button>
-                                                            <h4 class="modal-title" id="myModalLabel" data-i18n="casefile:create-new-folder-dialog.title">Create Folder</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-
-                                                            <p data-i18n="casefile:create-new-folder-dialog.body">Enter a name for the folder you would like to create:</p>
-
-                                                            <label for="folderName2" data-i18n="casefile:create-new-folder-dialog.label.folder-name">Folder Name</label><br/>
-                                                            <input type="text" id="folderName2" class="input-lg" data-i18n="[placeholder]casefile:create-new-folder-dialog.label.folder-name"placeholder="Folder Name" />
-
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:create-new-folder-dialog.btn-cancel">Cancel</button>
-                                                            <button type="button" class="btn btn-primary" data-i18n="casefile:create-new-folder-dialog.btn-ok">Create Folder</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="emailDocsLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal">&times;
-                                                                <span class="sr-only" data-i18n="casefile:email-documents-dialog.btn-close">Close</span>
-                                                            </button>
-                                                            <h4 class="modal-title" id="emailDocsLabel" data-i18n="casefile:email-documents-dialog.title">Send Email</h4>
-                                                        </div>
-                                                        <div class="modal-body">
-
-                                                            <p data-i18n="casefile:email-documents-dialog.body">Where would you like to email this file?</p>
-
-                                                            <label for="emailaddy" data-i18n="casefile:email-documents-dialog.label.email-address">Email Address</label><br/>
-                                                            <input type="text" id="emailaddy" class="input-lg" data-i18n="[placeholder]casefile:email-documents-dialog.label.email-address" placeholder="Email Address" />
-
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:email-documents-dialog.btn-cancel">Cancel</button>
-                                                            <button type="button" class="btn btn-primary" data-i18n="casefile:email-documents-dialog.btn-ok">Send Email</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                                <%--<div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                                    <div class="modal-dialog modal-lg">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Close</span></button>
-                                                                <h4 class="modal-title" id="myModalLabel">Send Email</h4>
-                                                            </div>
-                                                            <header class="header bg-gradient b-b clearfix">
-                                                                <div class="row m-t-sm">
-                                                                    <div class="col-md-12 m-b-sm">
-                                                                        <div class="input-group">
-                                                                            <input type="text" class="input-md form-control" id="searchQuery" placeholder="Enter an email address OR search for users within ArkCase.">
-                                                <span class="input-group-btn">
-                                                <button class="btn btn-md btn-default" type="button">Go!</button>
-                                                </span> </div>
-                                                                    </div>
-                                                                </div>
-                                                            </header>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-xs-3">
-                                                                        <div class="facets">
-                                                                            <h6>Create User</h6>
-                                                                            <div class="list-group ">
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">5</span> sally-acm </label>
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">2</span> ann-acm </label>
-                                                                            </div>
-                                                                            <h6>Person, Organization Type</h6>
-                                                                            <div class="list-group auto">
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">2</span> initiator </label>
-                                                                            </div>
-                                                                            <h6>Object Type</h6>
-                                                                            <div class="list-group auto">
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">6</span> TASK </label>
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>
-                                                                            </div>
-                                                                            <h6>Assignee Full Name</h6>
-                                                                            <div class="list-group auto">
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">6</span> sally supervisor </label>
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">2</span> ann administrator </label>
-                                                                            </div>
-                                                                            <h6>Priority</h6>
-                                                                            <div class="list-group ">
-                                                                                <label class="list-group-item">
-                                                                                    <input type="checkbox">
-                                                                                    <span class="badge bg-info">6</span> medium </label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-xs-9">
-                                                                        <section class="panel panel-default">
-                                                                            <div class="table-responsive">
-                                                                                <table class="table table-striped b-t b-light">
-                                                                                    <thead>
-                                                                                    <tr>
-                                                                                        <th width="10"><input type="checkbox"> </th>
-                                                                                        <th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                                                                                        <th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                                                                                        <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                                                                                        <th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                                                                                        <th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-
-
-
-                                                                                    </tr>
-                                                                                    </thead>
-                                                                                    <tbody>
-                                                                                    <tr>
-                                                                                        <td><input type="checkbox"></td>
-                                                                                        <td>[Type]</td>
-                                                                                        <td>[ID]</td>
-                                                                                        <td>[Title]</td>
-                                                                                        <td>[Created]</td>
-                                                                                        <td>[Status]</td>
-
-
-
-                                                                                    </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </div>
-                                                                        </section>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-
-                                                                <div class="pull-left"><button type="button" class="btn btn-default">View Recipients (3)</button></div>
-
-
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                <button type="button" class="btn btn-default">Add Selected Users (6)</button>
-                                                                <button type="button" class="btn btn-primary">Send Email</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>--%>
-
-
                                             <table id="treeDoc" class="table table-striped th-sortable table-hover">
-                                                    <%--<form id="formUploadDoc" style="display:none;">--%>
-                                                    <%--<input type="file" id="file" name="files[]" multiple />--%>
-                                                    <%--</form>--%>
-                                                    <%--<form action="#" id="formDownloadDoc" style="display:none;">--%>
-                                                    <%--</form>--%>
-
                                                 <thead>
                                                 <tr>
                                                     <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
@@ -564,7 +359,6 @@
                                                     <th width="16%" data-i18n="casefile:documents.table.field.author">Author</th>
                                                     <th width="6%" data-i18n="casefile:documents.table.field.version">Version</th>
                                                     <th width="8%" data-i18n="casefile:documents.table.field.status">Status</th>
-                                                        <%--<th width2="6%" colspan="2"></th>--%>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -577,7 +371,6 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
-                                                        <%--<td></td>--%>
                                                 </tr>
                                                 </tbody>
                                             </table>
