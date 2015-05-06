@@ -9,40 +9,39 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by sergey.kolomiets on 4/24/15.
+ * Created by sergey.kolomiets on 4/6/15.
  */
 @Controller
 @RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LabelConfigurationRetrieveLanguages {
+public class LabelConfigurationRetrieveSettings {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private String languagesFileLocation;
+    private String settingsFileLocation;
 
-    @RequestMapping(value = "/labelconfiguration/languages", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = "/labelconfiguration/settings", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveLanguages(
+    public void retrieveSettings(
             HttpServletResponse response) throws IOException, AcmLabelConfigurationException {
 
         try {
-            File file = FileUtils.getFile(languagesFileLocation);
+            File file = FileUtils.getFile(settingsFileLocation);
             FileUtils.copyFile(file, response.getOutputStream());
             response.getOutputStream().flush();
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
-                log.error(String.format("Can't read file %s", languagesFileLocation));
+                log.error(String.format("Can't read settings file %s", settingsFileLocation));
             }
-            throw new AcmLabelConfigurationException("Can't get languages info", e);
+            throw new AcmLabelConfigurationException("Can't get settings info", e);
         }
     }
 
-    public void setLanguagesFileLocation(String languagesFileLocation) {
-        this.languagesFileLocation = languagesFileLocation;
+    public void setSettingsFileLocation(String settingsFileLocation) {
+        this.settingsFileLocation = settingsFileLocation;
     }
 }
