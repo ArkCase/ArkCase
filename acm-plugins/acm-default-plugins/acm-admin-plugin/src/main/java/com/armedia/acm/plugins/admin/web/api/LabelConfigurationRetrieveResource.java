@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -37,14 +36,13 @@ public class LabelConfigurationRetrieveResource {
         String fileName = String.format(resourcesFilesLocation, lang, ns);
         try {
             File file = FileUtils.getFile(fileName);
-            byte[] buffer = FileUtils.readFileToByteArray(file);
-            response.getOutputStream().write(buffer, 0, buffer.length);
+            FileUtils.copyFile(file, response.getOutputStream());
             response.getOutputStream().flush();
         } catch (Exception e) {
             if (log.isErrorEnabled()){
                 log.error(String.format("Can't read resource file %s", fileName));
             }
-            throw new AcmLabelConfigurationException("Can't update recources info", e);
+            throw new AcmLabelConfigurationException("Can't read recources info", e);
         }
     }
 

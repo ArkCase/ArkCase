@@ -29,6 +29,14 @@
         <property name="namespacesFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/namespaces.json"/>
     </bean>
 
+    <bean id="labelConfigurationRetrieveSettings" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveSettings">
+        <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json"/>
+    </bean>
+
+    <bean id="labelConfigurationUpdateSettings" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateSettings">
+        <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json"/>
+    </bean>
+
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
 
 </beans>

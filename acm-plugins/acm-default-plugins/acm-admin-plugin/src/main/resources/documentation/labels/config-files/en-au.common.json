@@ -1,6 +1,6 @@
 {
-  "date": {
-    "short": "MM/DD/YYYY",
-    "full": "MM/DD/YYYY h:mm:ss a"
-  }
+    "date": {
+        "short": "DD/MM/YYYY",
+        "full": "DD/MM/YYYY h:mm:ss a"
+    }
 }
