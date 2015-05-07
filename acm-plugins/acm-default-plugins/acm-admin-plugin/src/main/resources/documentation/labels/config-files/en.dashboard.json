@@ -6,7 +6,7 @@
     "weather": {
       "label": {
         "location": "Location",
-        "enter-location": "Enter Locaiton",
+        "enter-location": "Enter Location",
         "insert-location-in-configuration":"Please insert a location in the widget configuration"
       }
     }

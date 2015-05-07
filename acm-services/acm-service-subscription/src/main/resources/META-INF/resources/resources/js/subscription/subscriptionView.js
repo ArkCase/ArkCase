@@ -49,7 +49,7 @@ Subscription.View = {
                     ,sorting: false
                 }
                 ,parentName: {
-                    title: $.t("subscription:table.field.parent-id")
+                    title: $.t("subscription:table.field.parent-name")
                     ,width: '15%'
                     ,sorting: false
                     ,display: function(data) {
