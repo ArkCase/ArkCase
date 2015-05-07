@@ -279,7 +279,7 @@ SearchBase.View = {
         }
         ,_getDefaultJtArgs: function() {
             return {
-                title: 'Search Results'
+                title: $.t("search:table.title")
                 ,multiselect: false
                 ,selecting: false
                 ,selectingCheckboxes: false
@@ -329,7 +329,7 @@ SearchBase.View = {
                 }  //end actions
                 ,fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("search:table.field.id")
                         ,key: true
                         ,list: false
                         ,create: false
@@ -337,7 +337,7 @@ SearchBase.View = {
                         ,sorting: false
                     }
                     ,name: {
-                        title: 'Name'
+                        title: $.t("search:table.field.name")
                         ,width: '15%'
                         ,sorting: false
                         ,display: function(data) {
@@ -345,16 +345,16 @@ SearchBase.View = {
                         }
                     }
                     ,type: {
-                        title: 'Type'
+                        title: $.t("search:table.field.type")
                         //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
                         ,sorting: false
                     }
                     ,title: {
-                        title: 'Title'
+                        title: $.t("search:table.field.title")
                         ,width: '30%'
                     }
                     ,parentId: {
-                        title: 'Parent ID'
+                        title: $.t("search:table.field.parent-id")
                         ,key: false
                         ,list: false
                         ,create: false
@@ -362,7 +362,7 @@ SearchBase.View = {
                         ,sorting: false
                     }
                     ,parentName: {
-                        title: 'Parent'
+                        title: $.t("search:table.field.parent-name")
                         ,width: '15%'
                         ,sorting: false
                         ,display: function(data) {
@@ -370,17 +370,17 @@ SearchBase.View = {
                         }
                     }
                     ,parentType: {
-                        title: 'Parent Type'
+                        title: $.t("search:table.field.parent-type")
                         ,sorting: false
                         ,list: false
                     }
                     ,owner: {
-                        title: 'Assignee'
+                        title: $.t("search:table.field.owner")
                         ,width: '15%'
                         ,sorting: false
                     }
                     ,modified: {
-                        title: 'Modified'
+                        title: $.t("search:table.field.modified")
                         ,type: 'textarea'
                         ,width: '20%'
                         ,sorting: false

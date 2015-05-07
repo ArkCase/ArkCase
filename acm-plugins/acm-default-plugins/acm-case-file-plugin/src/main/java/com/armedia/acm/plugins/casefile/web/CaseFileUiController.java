@@ -28,6 +28,7 @@ public class CaseFileUiController
     private AcmPlugin plugin;
 	private FormUrl formUrl;
 	private Map<String, Object> formProperties;
+    private Map<String, Object> notificationProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
@@ -66,7 +67,8 @@ public class CaseFileUiController
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
-        mv.addObject("arkcaseUrl",props.get("arkcase.url"));
+        mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
+        mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
 
         mv.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
@@ -147,4 +149,12 @@ public class CaseFileUiController
 	public void setFormProperties(Map<String, Object> formProperties) {
 		this.formProperties = formProperties;
 	}
+
+    public Map<String, Object> getNotificationProperties() {
+        return notificationProperties;
+    }
+
+    public void setNotificationProperties(Map<String, Object> notificationProperties) {
+        this.notificationProperties = notificationProperties;
+    }
 }

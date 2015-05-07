@@ -15,6 +15,7 @@
         <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
         <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
+        <span itemprop="arkcasePort">${arkcasePort}</span>
 
         <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
         <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>

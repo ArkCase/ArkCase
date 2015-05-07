@@ -8,6 +8,7 @@ DocTree.View = DocTree.View || {
         this.parentType = args.parentType;
         this.parentId = args.parentId;
         this.arkcaseUrl = args.arkcaseUrl;
+        this.arkcasePort = args.arkcasePort;
 
         this.doUploadForm = args.uploadForm;
         this.fileTypes  = args.fileTypes;
@@ -121,7 +122,7 @@ DocTree.View = DocTree.View || {
             //prepare to create dialog box
             var args = {
                 name: "Send Email"
-                , title: "Add New Participant"
+                , title: "Add New Recipients"
                 , prompt: "Enter an email address OR search for users within ArkCase."
                 , btnGoText: "Go!"
                 , btnOkText: "Send Email"
@@ -133,8 +134,8 @@ DocTree.View = DocTree.View || {
                         dlgSendEmail.show();
                     }
                     else{
-                        var emailData = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
-                        DocTree.Controller.viewSentEmail(emailData);
+                        var emailNotifications = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
+                        DocTree.Controller.viewSentEmail(emailNotifications);
                     }
                 }
             }
@@ -149,8 +150,8 @@ DocTree.View = DocTree.View || {
                 //create form and add input area for
                 //email addresses
                 var $emailFormGroup = $("<div/>")
-                    .addClass("form-group")
-                    .css({"display": "inline-block", "width": "100%", "text-align": "left"})
+                    .addClass("form-group acm-emailFormGroup")
+                    //.css({"display": "inline-block", "width": "100%", "text-align": "left"})
                     .text("Enter e-mail addresses separated by \";\" or select from the search above")
                     .prependTo($dlgSelector.find('.modal-footer'));
 
@@ -244,25 +245,38 @@ DocTree.View = DocTree.View || {
             });
         }
         ,_makeEmailData: function(emailAddresses, nodes){
+            var emailNotifications = [];
             var emailData = {};
             emailData.emailAddresses = emailAddresses;
             emailData.title = "ArkCase Documents"
             emailData.note = DocTree.View.Email._makeEmailNote(nodes);
-            return emailData;
+            emailNotifications.push(emailData);
+            return emailNotifications;
         }
         ,_makeEmailNote: function(nodes){
-            var note = "Please follow the links below to view the document(s): " + "\n\n";
+            var firstLine = "Please follow the links below to view the document(s): " + "\n\n";
+            var note="";
             if(Acm.isArray(nodes)){
                 for(var i = 0; i < nodes.length; i++){
-                    note+= Acm.goodValue(nodes[i].data.name) + "\n" + Acm.goodValue(DocTree.View.arkcaseUrl)
-                        + App.getContextPath() + "/api/plugin/document/" + Acm.goodValue(nodes[i].data.objectId) + "\n\n";
+                    var title = Acm.goodValue(nodes[i].data.name) + "\n";
+                    var url = Acm.goodValue(DocTree.View.arkcaseUrl);
+                    if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
+                        url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
+                    }
+                    url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes[i].data.objectId);
+                    note += title + url + "\n\n";
                 }
             }
             else{
-                note+= Acm.goodValue(nodes.data.name) + "\n" +  Acm.goodValue(DocTree.View.arkcaseUrl)
-                    + App.getContextPath() + "/api/plugin/document/" + Acm.goodValue(nodes.data.objectId) + "\n";
+                var title = Acm.goodValue(nodes.data.name) + "\n";
+                var url = Acm.goodValue(DocTree.View.arkcaseUrl);
+                if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
+                    url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
+                }
+                url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes.data.objectId);
+                note += title + url + "\n\n";
             }
-            return note;
+            return firstLine + note;
         }
     }
 

@@ -361,6 +361,15 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
+    ,validateSentEmail: function(data){
+        if (Acm.isEmpty(data.state)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.userEmail)) {
+            return false;
+        }
+        return true;
+    }
 
     ,Key: {
         create: function(args) {

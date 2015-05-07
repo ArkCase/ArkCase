@@ -26,6 +26,7 @@ var Complaint = Complaint || {
                 ,fileTypes     : Complaint.View.MicroData.fileTypes
                 ,uploadForm    : Complaint.View.Documents.uploadForm
                 ,arkcaseUrl    : Complaint.View.MicroData.arkcaseUrl
+                ,arkcasePort    : Complaint.View.MicroData.arkcasePort
 
 //                ,parentType        : Complaint.Model.DOC_TYPE_COMPLAINT
 //                ,parentId          : null

@@ -33,6 +33,7 @@ public class ComplaintUiController
 	private FormUrl formUrl;
 	private UserActionDao userActionDao;
 	private Map<String, Object> formProperties;
+    private Map<String, Object> notificationProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth, HttpServletRequest request) {
@@ -94,7 +95,9 @@ public class ComplaintUiController
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
-        mv.addObject("arkcaseUrl",props.get("arkcase.url"));
+        mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
+        mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
+
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         mv.addObject("token", token);
         log.debug("Security token: " + token);
@@ -160,5 +163,13 @@ public class ComplaintUiController
 
     public void setPlugin(AcmPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public Map<String, Object> getNotificationProperties() {
+        return notificationProperties;
+    }
+
+    public void setNotificationProperties(Map<String, Object> notificationProperties) {
+        this.notificationProperties = notificationProperties;
     }
 }

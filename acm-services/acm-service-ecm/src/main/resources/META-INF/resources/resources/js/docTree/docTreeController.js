@@ -118,8 +118,8 @@ DocTree.Controller = DocTree.Controller || {
     ,modelSetActiveVersion: function(version, fileId, cacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_SET_ACTIVE_VERSION, version, fileId, cacheKey, callerData);
     }
-    ,viewSentEmail: function(emailData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_SENT_EMAIL, emailData);
+    ,viewSentEmail: function(emailNotifications) {
+        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_SENT_EMAIL, emailNotifications);
     }
 
     //----------------
