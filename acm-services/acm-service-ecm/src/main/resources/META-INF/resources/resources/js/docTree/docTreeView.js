@@ -74,7 +74,7 @@ DocTree.View = DocTree.View || {
         DocTree.View.uploadToFolderNode = node;
         DocTree.View.uploadFileType = formType;
         if (DocTree.View.doUploadForm) {
-            DocTree.View.doUploadForm(formType, function() {
+            DocTree.View.doUploadForm(formType, node.data.objectId, function() {
                 DocTree.View.onLoadingFrevvoForm();
             });
         }
