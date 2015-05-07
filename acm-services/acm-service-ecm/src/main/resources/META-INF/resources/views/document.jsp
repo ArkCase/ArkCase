@@ -110,9 +110,9 @@
                     </div>
 
 
-                    <button class="btn btn-default  btn-sm" data-toggle="modal" id="btnReplaceFile">
+                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnReplaceFile">
                         <span class="text">Replace File</span>
-                    </button>
+                    </button>--%>
 
                     <div class="modal fade" id="modalReplaceFile" tabindex="-1" role="dialog" aria-labelledby="replaceFile" aria-hidden="true">
                         <div class="modal-dialog">
@@ -138,9 +138,9 @@
 
 
 
-                    <button class="btn btn-default  btn-sm" data-toggle="modal" id="btnDeleteFile">
+                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnDeleteFile">
                         <span class="text">Delete</span>
-                    </button>
+                    </button>--%>
 
                     <div class="modal fade" id="modalDeleteFile" tabindex="-1" role="dialog" aria-labelledby="deleteFile" aria-hidden="true">
                         <div class="modal-dialog">
@@ -163,9 +163,9 @@
 
 
 
-                    <button class="btn btn-default  btn-sm" data-toggle="modal" id="btnCopyFile">
+                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnCopyFile">
                         <span class="text">Copy</span>
-                    </button>
+                    </button>--%>
 
                     <div class="modal fade" id="modalCopyFile" tabindex="-1" role="dialog" aria-labelledby="copyFile" aria-hidden="true">
                         <div class="modal-dialog">
@@ -189,9 +189,9 @@
                     </div>
 
 
-                    <button class="btn btn-default  btn-sm" data-toggle="modal" id="btnMoveFile">
+                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnMoveFile">
                         <span class="text">Move</span>
-                    </button>
+                    </button>--%>
 
                     <div class="modal fade" id="modalMoveFile" tabindex="-1" role="dialog" aria-labelledby="moveFile" aria-hidden="true">
                         <div class="modal-dialog">
@@ -256,119 +256,131 @@
     </div>
 </header>
 <section class="hbox stretch">
-<aside class="aside-xxl bg-light dker b-r" id="subNav">
-    <section class="scrollable">
-        <div class="wrapper">
-            <section class="panel panel-default portlet-item">
-                <header class="panel-heading">
-                    <ul class="nav nav-pills pull-right">
-                        <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" id = "newParticipant" data-toggle="tooltip" data-title="New Partcipant"><i class="fa fa-user"></i> New</button></div></li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    Participants <span class="badge bg-info" id="labParticipants"></span> </header>
-                <ul class="list-group alt panel-body" id="tabParticipants">
+    <aside class="aside-xxl bg-light dker b-r" id="subNav">
+        <section class="vbox">
+            <section class="scrollable">
+                <div class="wrapper">
+                    <section class="panel panel-default portlet-item">
+                        <header class="panel-heading">
+                            <ul class="nav nav-pills pull-right">
+                                <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" id = "newParticipant" data-toggle="tooltip" data-title="New Partcipant"><i class="fa fa-user"></i> New</button></div></li>
+                                <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                            </ul>
+                            Participants <span class="badge bg-info" id="labParticipants"></span> </header>
+                        <ul class="list-group alt panel-body" id="tabParticipants">
 
-                </ul>
+                        </ul>
 
-                <div class="modal fade" id="modalParticipantChangeRole" tabindex="-1" role="dialog" aria-labelledby="changeParticipantRole" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                <h4 class="modal-title" id="changeParticipantRole">Change Participant Role</h4>
+                        <div class="modal fade" id="modalParticipantChangeRole" tabindex="-1" role="dialog" aria-labelledby="changeParticipantRole" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="changeParticipantRole">Change Participant Role</h4>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <p>Please select a role : </p>
+                                        <label  class="label">Available Roles</label>
+                                        <select class="input-sm form-control inline v-middle" id="participantRoles">
+                                            <option value="null">Select Participant Role</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-primary">Change Role</button>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="modal-body">
-                                <p>Please select a role : </p>
-                                <label  class="label">Available Roles</label>
-                                <select class="input-sm form-control inline v-middle" id="participantRoles">
-                                    <option value="null">Select Participant Role</option>
-                                </select>
-                            </div>
+                    </section>
 
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary">Change Role</button>
-                            </div>
+
+                    <section class="panel panel-default portlet-item">
+                        <header class="panel-heading">
+                            <ul class="nav nav-pills pull-right">
+                                <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm"  data-toggle="modal" id="btnNewTag"><i class="fa fa-tag"></i> New</button></div></li>
+                                <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                            </ul>
+                            Tags <span class="badge bg-info" id="labTags"></span>
+                        </header>
+                        <table class="panel-body table table-striped b-light" id="tabTags">
+                            <thead>
+                            <tr>
+
+                                <th class="th-sortable" data-toggle="class">Tag <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                <th width="10">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </section>
+
+
+                    <section class="panel panel-default portlet-item">
+                        <header class="panel-heading">
+                            <ul class="nav nav-pills pull-right">
+                                <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                            </ul>
+                            Version History
+                        </header>
+
+
+                        <table class="panel-body table table-striped b-light" id="tabVersionHistory">
+                            <thead>
+                            <tr>
+
+                                <th class="th-sortable" data-toggle="class">Version <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                <th>Date/Time</th>
+                                <th>User</th>
+                                <th width="10">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="panel panel-default portlet-item">
+                        <header class="panel-heading">
+                            <ul class="nav nav-pills pull-right">
+                                <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                            </ul>
+                            Event History </header>
+                        <table class="panel-body table table-striped b-light" id ="tabEventHistory">
+                            <thead>
+                            <tr>
+
+                                <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                <th>Date/Time</th>
+                                <th>User</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <div class="row" id="tabNotes">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divNotes" style="width:100%"></div>
+                            </section>
                         </div>
                     </div>
                 </div>
-
+                <br/>
+                <br/>
             </section>
-
-
-            <section class="panel panel-default portlet-item">
-                <header class="panel-heading">
-                    <ul class="nav nav-pills pull-right">
-                        <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm"  data-toggle="modal" id="btnNewTag"><i class="fa fa-tag"></i> New</button></div></li>
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    Tags <span class="badge bg-info" id="labTags"></span>
-                </header>
-                <table class="panel-body table table-striped b-light" id="tabTags">
-                    <thead>
-                    <tr>
-
-                        <th class="th-sortable" data-toggle="class">Tag <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                        <th width="10">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </section>
-
-
-            <section class="panel panel-default portlet-item">
-                <header class="panel-heading">
-                    <ul class="nav nav-pills pull-right">
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    Version History
-                </header>
-
-
-                <table class="panel-body table table-striped b-light" id="tabVersionHistory">
-                    <thead>
-                    <tr>
-
-                        <th class="th-sortable" data-toggle="class">Version <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                        <th>Date/Time</th>
-                        <th>User</th>
-                        <th width="10">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </section>
-
-            <section class="panel panel-default portlet-item">
-                <header class="panel-heading">
-                    <ul class="nav nav-pills pull-right">
-                        <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                    </ul>
-                    Event History </header>
-                <table class="panel-body table table-striped b-light" id ="tabEventHistory">
-                    <thead>
-                    <tr>
-
-                        <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                        <th>Date/Time</th>
-                        <th>User</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-            </section>
-        </div>
-    </section>
-</aside>
-<aside>
+        </section>
+    </aside>
+    <aside>
     <section class="vbox">
         <section class="scrollable">
             <div class="wrapper bg-empty  clearfix">
@@ -413,13 +425,7 @@
                     </div>
                 </div>
 
-                <div class="row" id="tabNotes">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
-                            <div id="divNotes" style="width:100%"></div>
-                        </section>
-                    </div>
-                </div>
+
 
 
             </div>
