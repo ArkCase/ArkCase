@@ -153,10 +153,13 @@ var Application = Application || {
                 var namespaces = ['common'];
                 var lng= data.defaultLang;
 
-                // Get namespace from detailData
-                var namespace = Acm.Object.MicroData.get("resourceNamespace");
-                if (namespace) {
-                    namespaces.push(namespace);
+                // Get namespaces divided by "," symbol from detailData
+                var names = Acm.Object.MicroData.get("resourceNamespace");
+                if (names) {
+                    names = names.split(',');
+                    for (var i = 0; i < names.length; i++) {
+                        namespaces.push($.trim(names[i]));
+                    }
                 }
 
                 i18n.init({

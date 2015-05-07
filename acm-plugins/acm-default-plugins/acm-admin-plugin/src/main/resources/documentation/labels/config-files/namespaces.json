@@ -18,5 +18,25 @@
     {
         "id": "task",
         "name": "Tasks"
+    },
+    {
+        "id": "search",
+        "name": "Search"
+    },
+    {
+        "id": "report",
+        "name": "Reports"
+    },
+    {
+        "id": "notification",
+        "name": "Notifications"
+    },
+    {
+        "id": "subscription",
+        "name": "Subscriptions"
+    },
+    {
+        "id": "tag",
+        "name": "Tags"
     }
 ]

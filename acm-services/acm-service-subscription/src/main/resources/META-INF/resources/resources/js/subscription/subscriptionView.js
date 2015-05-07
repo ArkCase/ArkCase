@@ -15,7 +15,7 @@ Subscription.View = {
         return {
             fields: {
                 id: {
-                    title: 'ID'
+                    title: $.t("subscription:table.field.id")
                     ,key: true
                     ,list: false
                     ,create: false
@@ -23,7 +23,7 @@ Subscription.View = {
                     ,sorting: false
                 }
                 ,name: {
-                    title: 'Name'
+                    title: $.t("subscription:table.field.name")
                     ,width: '15%'
                     ,sorting: false
                     ,display: function(data) {
@@ -32,16 +32,16 @@ Subscription.View = {
                     ,list: false
                 }
                 ,type: {
-                    title: 'Type'
+                    title: $.t("subscription:table.field.type")
                     ,sorting: false
                     ,list: false
                 }
                 ,title: {
-                    title: 'Event'
+                    title: $.t("subscription:table.field.event")
                     ,width: '30%'
                 }
                 ,parentId: {
-                    title: 'Parent ID'
+                    title: $.t("subscription:table.field.parent-id")
                     ,key: false
                     ,list: false
                     ,create: false
@@ -49,7 +49,7 @@ Subscription.View = {
                     ,sorting: false
                 }
                 ,parentName: {
-                    title: 'Parent'
+                    title: $.t("subscription:table.field.parent-name")
                     ,width: '15%'
                     ,sorting: false
                     ,display: function(data) {
@@ -57,17 +57,17 @@ Subscription.View = {
                     }
                 }
                 ,parentType: {
-                    title: 'Parent Type'
+                    title: $.t("subscription:table.field.parent-type")
                     ,sorting: false
                 }
                 ,owner: {
-                    title: 'Owner'
+                    title: $.t("subscription:table.field.owner")
                     ,width: '15%'
                     ,sorting: false
                     ,list: false
                 }
                 ,modified: {
-                    title: 'Modified'
+                    title: $.t("subscription:table.field.modified")
                     ,type: 'textarea'
                     ,width: '20%'
                     ,sorting: false
