@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.profile.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
+import com.armedia.acm.plugins.profile.exception.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.model.UserOrgConstants;
@@ -66,7 +67,7 @@ public class SaveOutlookPasswordAPIController
             getEventPublisher().outlookPasswordSavedEvent(null, authentication, ipAddress, false);
             throw e;
         }
-        catch (NullPointerException | IllegalStateException | IllegalArgumentException e)
+        catch (AcmEncryptionException | NullPointerException | IllegalStateException | IllegalArgumentException e)
         {
             log.error("Could not update Outlook password for user: " + e.getMessage(), e);
 

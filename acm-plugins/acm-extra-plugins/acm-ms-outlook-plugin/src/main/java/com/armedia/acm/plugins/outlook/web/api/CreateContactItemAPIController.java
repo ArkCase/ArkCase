@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
+import com.armedia.acm.plugins.profile.exception.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
@@ -32,7 +33,7 @@ public class CreateContactItemAPIController {
     public OutlookContactItem createContactItem(
             @RequestBody OutlookContactItem in,
             Authentication authentication,
-            HttpSession session) {
+            HttpSession session) throws AcmEncryptionException {
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");

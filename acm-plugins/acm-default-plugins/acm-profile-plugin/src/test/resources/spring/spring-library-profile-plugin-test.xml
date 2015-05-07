@@ -7,4 +7,6 @@
             id="complaintExceptionResolver"
             class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
+    <bean id="acmUserOrgDao" class="com.armedia.acm.plugins.profile.dao.UserOrgDao"/>
+
 </beans>
