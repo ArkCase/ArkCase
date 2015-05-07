@@ -546,17 +546,25 @@ DocTree.Service = {
         }, 1000);
     }
 
-    ,sendEmail: function(emailData) {
+    ,sendEmail: function(emailNotifications) {
         var url = App.getContextPath() + this.API_SEND_EMAIL_;
         Acm.Service.call({type: "POST"
             ,url: url
-            ,data: JSON.stringify(emailData)
+            ,data: JSON.stringify(emailNotifications)
             ,callback: function(response) {
-                if (response.hasError) {
-                    var z = 1;
-                } else {
-                    var z = 1;
-                } //end else
+                if(Acm.isArray(response)){
+                    var failed;
+                    for(var i = 0; i < response.length; i++){
+                        if (DocTree.Model.validateSentEmail(response[i])) {
+                            if("NOT_SENT" == response[i].state){
+                                failed += response[i].userEmail + ";";
+                            }
+                        }
+                    }
+                    if(Acm.isNotEmpty(failed)){
+                        Acm.MessageBoard.show("Email delivery failed to :  ") + failed + "\n" + "Please check provided email addresses and try again";
+                    }
+                }
             }
         })
     }

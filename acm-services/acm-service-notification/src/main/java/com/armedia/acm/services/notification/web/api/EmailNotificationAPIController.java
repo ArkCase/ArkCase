@@ -28,28 +28,31 @@ public class EmailNotificationAPIController {
     @RequestMapping(value = "/email", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Notification> sendEmail(
-            @RequestBody EmailNotificationDto in
+            @RequestBody List<EmailNotificationDto> in
     ) throws AcmUserActionFailedException {
         if (log.isInfoEnabled()) {
             log.info("Sending email to recipients");
         }
         List<Notification> notificationList = new ArrayList<Notification>();
-        Notification notification = new Notification();
         try {
             if (in == null) {
                 throw new AcmNotificationException("Could not create notification for email, missing email addresses and file information");
             }
-            notification.setTitle(in.getTitle());
-            notification.setNote(in.getNote());
-            for (String emailAddress: in.getEmailAddresses()) {
-                notification.setUserEmail(emailAddress);
-                notification.setStatus(NotificationConstants.STATUS_NEW);
-                notificationList.add(getEmailNotificationSender().send(notification));
+            for(EmailNotificationDto emailNotification : in){
+                Notification notification = new Notification();
+                notification.setTitle(emailNotification.getTitle());
+                notification.setNote(emailNotification.getNote());
+                for (String emailAddress: emailNotification.getEmailAddresses()) {
+                    notification.setUserEmail(emailAddress);
+                    notification.setStatus(NotificationConstants.STATUS_NEW);
+                    notificationList.add(getEmailNotificationSender().send(notification));
+                }
             }
+
             return notificationList;
         }
         catch (Exception e) {
-            throw new AcmUserActionFailedException("Unable to send emails ", in.getObjectType(), in.getObjectId(), e.getMessage(), e);
+            throw new AcmUserActionFailedException("Unable to send emails ", null, null, e.getMessage(), e);
         }
     }
 

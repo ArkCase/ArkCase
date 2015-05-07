@@ -71,8 +71,8 @@ var SearchBase = SearchBase || {
 
             if (Acm.isEmpty(args.$dlgObjectPicker)) {
                 args.$dlgObjectPicker = $("#dlgObjectPicker");
-                this.$dlgObjectPicker = args.$dlgObjectPicker;
             }
+            this.$dlgObjectPicker = args.$dlgObjectPicker;
             if (Acm.isNotEmpty(args.title)) {
                 args.$dlgObjectPicker.find('.modal-title').text(args.title);
             }
