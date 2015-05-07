@@ -66,6 +66,7 @@ public class CaseFileUiController
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
+        mv.addObject("arkcaseUrl",props.get("arkcase.url"));
 
         mv.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));

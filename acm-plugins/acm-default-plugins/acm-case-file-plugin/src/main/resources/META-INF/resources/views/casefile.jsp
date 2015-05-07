@@ -13,6 +13,7 @@
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
 
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>

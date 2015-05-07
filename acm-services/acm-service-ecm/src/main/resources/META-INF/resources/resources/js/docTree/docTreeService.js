@@ -561,7 +561,7 @@ DocTree.Service = {
             ,data: JSON.stringify(emailData)
             ,callback: function(response) {
                 if (response.hasError) {
-
+                    var z = 1;
                 } else {
                     var z = 1;
                 } //end else

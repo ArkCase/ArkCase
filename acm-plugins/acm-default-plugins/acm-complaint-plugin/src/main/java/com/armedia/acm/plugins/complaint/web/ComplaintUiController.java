@@ -94,7 +94,7 @@ public class ComplaintUiController
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
-
+        mv.addObject("arkcaseUrl",props.get("arkcase.url"));
         String token = this.authenticationTokenService.getTokenForAuthentication(auth);
         mv.addObject("token", token);
         log.debug("Security token: " + token);
