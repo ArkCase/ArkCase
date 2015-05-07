@@ -4,11 +4,11 @@ package com.armedia.acm.services.notification.web.api;
  * Created by manoj.dhungana on 5/4/2015.
  */
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.model.EmailNotificationDto;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.EmailNotificationSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class EmailNotificationAPIController {
         if (log.isInfoEnabled()) {
             log.info("Sending email to recipients");
         }
-        List<Notification> notificationList = new ArrayList<>();
+        List<Notification> notificationList = new ArrayList<Notification>();
         Notification notification = new Notification();
         try {
             if (in == null) {
@@ -41,9 +41,9 @@ public class EmailNotificationAPIController {
             }
             notification.setTitle(in.getTitle());
             notification.setNote(in.getNote());
-            for (int j = 0; j < in.getEmailAddresses().size(); j++) {
-                notification.setUser(in.getEmailAddresses().get(j));
-                notification.setUserEmail(in.getEmailAddresses().get(j));
+            for (String emailAddress: in.getEmailAddresses()) {
+                notification.setUserEmail(emailAddress);
+                notification.setStatus(NotificationConstants.STATUS_NEW);
                 notificationList.add(getEmailNotificationSender().send(notification));
             }
             return notificationList;

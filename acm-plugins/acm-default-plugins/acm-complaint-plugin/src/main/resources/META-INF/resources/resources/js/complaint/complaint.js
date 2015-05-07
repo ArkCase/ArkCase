@@ -25,6 +25,8 @@ var Complaint = Complaint || {
             DocTree.create({name: "complaint"
                 ,fileTypes     : Complaint.View.MicroData.fileTypes
                 ,uploadForm    : Complaint.View.Documents.uploadForm
+                ,arkcaseUrl    : Complaint.View.MicroData.arkcaseUrl
+
 //                ,parentType        : Complaint.Model.DOC_TYPE_COMPLAINT
 //                ,parentId          : null
 //                ,$tree            : Complaint.View.Documents.$tree

@@ -7,6 +7,7 @@ DocTree.View = DocTree.View || {
     create : function(args) {
         this.parentType = args.parentType;
         this.parentId = args.parentId;
+        this.arkcaseUrl = args.arkcaseUrl;
 
         this.doUploadForm = args.uploadForm;
         this.fileTypes  = args.fileTypes;
@@ -109,7 +110,14 @@ DocTree.View = DocTree.View || {
         }
     }
     ,Email:{
-        showEmailDialog: function(nodes){
+        _isDlgComponentsCreated: false
+        ,isDlgComponentsCreated: function() {
+            return this._isDlgComponentsCreated;
+        }
+        ,setDlgComponentsCreated: function(isDlgComponentsCreated) {
+            this._isDlgComponentsCreated = isDlgComponentsCreated;
+        }
+        ,showEmailDialog: function(nodes){
             //prepare to create dialog box
             var args = {
                 name: "Send Email"
@@ -119,114 +127,104 @@ DocTree.View = DocTree.View || {
                 , btnOkText: "Send Email"
                 , filters: [{key: "Object Type", values: ["USER"]}]
                 , onClickBtnPrimary: function (event, ctrl) {
-                    var emailAddresses = ($edtEmailRecipients.val());
-                    var emailData = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
-                    DocTree.Controller.viewSentEmail(emailData);
+                    var emailAddresses = ($dlgSelector.find("#recipientsList").val().split(";"));
+                    if(Acm.isArrayEmpty(emailAddresses) && emailAddresses[0] != ""){
+                        Acm.Dialog.info("Select users to send email");
+                        dlgSendEmail.show();
+                    }
+                    else{
+                        var emailData = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
+                        DocTree.Controller.viewSentEmail(emailData);
+                    }
                 }
             }
+
             var dlgSendEmail = SearchBase.Dialog.create(args);
 
             //get dialog selector
-            var $s = dlgSendEmail.getSelector();
+            var $dlgSelector = dlgSendEmail.getSelector();
 
             //inject buttons and input area
+            if(!this.isDlgComponentsCreated()) {
+                //create form and add input area for
+                //email addresses
+                var $emailFormGroup = $("<div/>")
+                    .addClass("form-group")
+                    .css({"display": "inline-block", "width": "100%", "text-align": "left"})
+                    .text("Enter e-mail addresses separated by \";\" or select from the search above")
+                    .prependTo($dlgSelector.find('.modal-footer'));
 
-            //create form and add input area for
-            //email addresses
-            var $emailFormGroup = $("<div/>")
-                .addClass("form-group")
-                .css({"display":"inline-block", "width":"100%","text-align":"left"})
-                .prependTo($s.find('.modal-footer'));
+                var $edtEmailRecipients = $("<input/>")
+                    .attr("type", "text")
+                    .attr("id", "recipientsList")
+                    .addClass("form-control")
+                    .css("width", "100%")
+                    .appendTo($emailFormGroup)
+                    .val('');
 
-            var $edtEmailRecipients = $("<input/>")
-                .attr("type", "text")
-                .attr("id","recipientsList")
-                .addClass("form-control")
-                .css("width","100%")
-                .appendTo($emailFormGroup)
-                .val('');
+                //create button to add users to recipients
+                var $btnAddUsersToRecipients = $("<button/>")
+                    .attr("type", "button")
+                    .attr("id", "addUsersToRecipients")
+                    .addClass("btn btn-default")
+                    .html("Add Selected Users");
 
-            //create button to add users to recipients
-            var $btnAddUsersToRecipients = $("<button/>")
-                .attr("type", "button")
-                .attr("id","addUsersToRecipients")
-                .addClass("btn btn-default")
-                .html("Add Selected Users");
+                $dlgSelector.find('button.btn-primary').before($btnAddUsersToRecipients);
 
-            $s.find('button.btn-primary').before($btnAddUsersToRecipients);
+                //create a send later checkbox and
+                //send later date picker and time fields
+                var $labelForSendLater = $("<label>")
+                    .attr('for', "sendLater")
+                    .addClass("pull-left")
+                    .text('Send Later');
 
-            //create a send later checkbox and
-            //send later date picker and time fields
-            var $labelForSendLater = $("<label>")
-                .attr('for', "sendLater")
-                .addClass("pull-left")
-                .text('Send Later');
+                var $chkSendLater = $("<input/>")
+                    .attr("type", "checkbox")
+                    .attr("id", "sendLater")
+                    .addClass("pull-left");
 
-            var $chkSendLater = $("<input/>")
-                .attr("type", "checkbox")
-                .attr("id", "sendLater")
-                .addClass("pull-left");
+                $chkSendLater.appendTo($labelForSendLater);
+                $labelForSendLater.appendTo($dlgSelector.find('.modal-footer'));
 
-            $chkSendLater.appendTo($labelForSendLater);
-            $labelForSendLater.appendTo($s.find('.modal-footer'));
+                var $edtSendLaterDateTime = $("<span/>")
+                    .attr("id", "datetime")
+                    .addClass("pull-left")
+                    .css("display", "none")
+                    .html("&nbsp;&nbsp;&nbsp");
 
-            var $edtSendLaterDateTime = $("<span/>")
-                .attr("id", "datetime")
-                .addClass("pull-left")
-                .css("display", "none")
-                .html("&nbsp;&nbsp;&nbsp");
+                var $edtSendLaterDate = $("<input/>")
+                    .attr("type", "text")
+                    .attr("id", "sendLaterDate")
+                    .attr("placeholder", "Click to enter date")
+                    .addClass("input-s-sm");
 
-            var $edtSendLaterDate = $("<input/>")
-                .attr("type", "text")
-                .attr("id", "sendLaterDate")
-                .attr("placeholder", "Click to enter date")
-                .addClass("input-s-sm");
+                var $edtSendLaterTime = $("<p/><input/>")
+                    .attr("type", "text")
+                    .attr("id", "sendLaterTime")
+                    .attr("placeholder", "Click to enter time")
+                    .addClass("input-s-sm");
 
-            var $edtSendLaterTime = $("<p/><input/>")
-                .attr("type", "text")
-                .attr("id", "sendLaterTime")
-                .attr("placeholder", "Click to enter time")
-                .addClass("input-s-sm");
-
-            $edtSendLaterDate.appendTo($edtSendLaterDateTime);
-            $edtSendLaterTime.appendTo($edtSendLaterDateTime);
-            $edtSendLaterDateTime.appendTo($s.find('.modal-footer'));
-            $edtSendLaterDate.datepicker();
-
+                $edtSendLaterDate.appendTo($edtSendLaterDateTime);
+                $edtSendLaterTime.appendTo($edtSendLaterDateTime);
+                $edtSendLaterDateTime.appendTo($dlgSelector.find('.modal-footer'));
+                $edtSendLaterDate.datepicker();
+                this.setDlgComponentsCreated(true);
+            }
             //finally display the dialog box
             dlgSendEmail.show();
 
             //event handlers for dialog actions
-            $edtEmailRecipients.keyup(function (e) {
-                DocTree.View.Email._deleteEmailOnBackspace(e,$edtEmailRecipients);
-            });
-
-            $s.find('.modal-footer').on('click', "#addUsersToRecipients", function(e) {
+            $dlgSelector.find('.modal-footer').on('click', "#addUsersToRecipients", function(e) {
                 DocTree.View.Email._showSelectedEmails(e,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail);
             });
 
-            $s.find('.modal-footer').on('click', "#sendLater", function(e) {
-                $edtSendLaterDateTime.slideToggle();
+            $dlgSelector.find('.modal-footer').on('click', "#sendLater", function(e) {
+                $dlgSelector.find("#datetime").slideToggle();
             });
 
-            $s.on("hidden.bs.modal", function(e) {
-                $emailFormGroup.remove();
-                $edtEmailRecipients.remove();
-                $btnAddUsersToRecipients.remove();
-                $labelForSendLater.remove();
-                $chkSendLater.remove();
-                $edtSendLaterDateTime.remove();
-                $edtSendLaterDate.remove();
-                $edtSendLaterTime.remove();
+            $dlgSelector.on("hidden.bs.modal", function(e) {
+                $dlgSelector.find("#recipientsList").val('');
             });
-        }
-        ,_deleteEmailOnBackspace: function(event,$edtEmailRecipients){
-            if (8 == event.keyCode) {
-                event.preventDefault();
-                var emails = $edtEmailRecipients.val().split(';');
-                emails.splice(emails.length-1);
-                $edtEmailRecipients.val(emails.join(';'));
-            }
         }
         ,_showSelectedEmails: function(event,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail){
             //prevent event from bubbling up the dom
@@ -235,11 +233,11 @@ DocTree.View = DocTree.View || {
             dlgSendEmail.getSelectedRows().each(function () {
                 var record = $(this).data('record');
                 if(Acm.isNotEmpty(record.email)){
-                    if(Acm.isEmpty(val) | (Acm.isNotEmpty(val) && val.substr(val.length-1)== ";")){
-                        val += Acm.goodValue(record.email) + ";"
+                    if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
+                        val += ";" + Acm.goodValue(record.email);
                     }
-                    else if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
-                        val += ";" + Acm.goodValue(record.email) + ";"
+                    else{
+                        val += Acm.goodValue(record.email);
                     }
                     $edtEmailRecipients.val(val);
                 }
@@ -247,17 +245,22 @@ DocTree.View = DocTree.View || {
         }
         ,_makeEmailData: function(emailAddresses, nodes){
             var emailData = {};
-            emailData.objectType = DocTree.Model.DOC_TYPE_DOCUMENT_SM;
             emailData.emailAddresses = emailAddresses;
-            emailData.users = users;
             emailData.title = "ArkCase Documents"
             emailData.note = DocTree.View.Email._makeEmailNote(nodes);
             return emailData;
         }
         ,_makeEmailNote: function(nodes){
-            var note = "Please follow the links below to view the document(s): " + "<br/>";
-            for(var i = 0; i < nodes.length; i++){
-                note+= App.getContextPath() + "/api/plugin/document/" + Acm.goodValue(nodes[i].data.objectId) + "<br/>";
+            var note = "Please follow the links below to view the document(s): " + "\n\n";
+            if(Acm.isArray(nodes)){
+                for(var i = 0; i < nodes.length; i++){
+                    note+= Acm.goodValue(nodes[i].data.name) + "\n" + Acm.goodValue(DocTree.View.arkcaseUrl)
+                        + App.getContextPath() + "/api/plugin/document/" + Acm.goodValue(nodes[i].data.objectId) + "\n\n";
+                }
+            }
+            else{
+                note+= Acm.goodValue(nodes.data.name) + "\n" +  Acm.goodValue(DocTree.View.arkcaseUrl)
+                    + App.getContextPath() + "/api/plugin/document/" + Acm.goodValue(nodes.data.objectId) + "\n";
             }
             return note;
         }
@@ -491,8 +494,8 @@ DocTree.View = DocTree.View || {
         return fileNode;
     }
 
-    ,onViewChangedParent: function(objType, objId) {
-        DocTree.View.switchObject(objType, objId);
+    ,onViewChangedParent: function(objType, objId, arkcaseUrl) {
+        DocTree.View.switchObject(objType, objId, arkcaseUrl);
     }
 
     // The gear button click events toggle the menu popup. For some unknown reason, the events are fired
