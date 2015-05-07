@@ -329,7 +329,9 @@ DocTree.View = DocTree.View || {
         var fileNode = null;
         for (var i = 0; i < fileNodes.length; i++) {
             var nameOrig = this._getNameOrig(name);
-            if (fileNodes[i].data.name == nameOrig && fileNodes[i].data.type == type) {
+            var nameNode = fileNodes[i].data.name;
+            nameNode = nameNode.replace(/ /g, "_");
+            if (nameNode == nameOrig && fileNodes[i].data.type == type) {
                 fileNode = fileNodes[i];
                 break;
             }
