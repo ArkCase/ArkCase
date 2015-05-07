@@ -22,5 +22,9 @@
     {
         "id": "search",
         "name": "Search"
+    },
+    {
+        "id": "report",
+        "name": "Reports"
     }
 ]
