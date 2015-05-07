@@ -3,23 +3,41 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-       <bean id="listInboxItemsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListInboxItemsAPIController">
-              <property name="outlookService" ref="outlookService"/>
-              <property name="userOrgDao" ref="acmUserOrgDao"/>
-       </bean>
+    <bean id="listInboxItemsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListInboxItemsAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
 
-       <bean id="listCalendarItemsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListCalendarItemsAPIController">
-              <property name="outlookService" ref="outlookService"/>
-              <property name="userOrgDao" ref="acmUserOrgDao"/>
-       </bean>
+    <bean id="listCalendarItemsAPIController"
+          class="com.armedia.acm.plugins.outlook.web.api.ListCalendarItemsAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
 
-        <bean id="listOutlookTasksAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListTasksAPIController">
-            <property name="outlookService" ref="outlookService"/>
-            <property name="userOrgDao" ref="acmUserOrgDao"/>
-        </bean>
+    <bean id="listOutlookTasksAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListTasksAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
 
-        <bean id="listContactsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListContactsAPIController">
-            <property name="outlookService" ref="outlookService"/>
-            <property name="userOrgDao" ref="acmUserOrgDao"/>
-        </bean>
+    <bean id="listContactsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListContactsAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
+
+    <bean id="createContactItemAPIController"
+          class="com.armedia.acm.plugins.outlook.web.api.CreateContactItemAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
+
+    <bean id="createTaskItemAPIController" class="com.armedia.acm.plugins.outlook.web.api.CreateTaskItemAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
+
+    <bean id="createCalendarAppointmentAPIController"
+          class="com.armedia.acm.plugins.outlook.web.api.CreateCalendarAppointmentAPIController">
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+    </bean>
 </beans>
