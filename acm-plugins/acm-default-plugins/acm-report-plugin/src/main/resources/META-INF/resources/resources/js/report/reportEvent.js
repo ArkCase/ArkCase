@@ -53,7 +53,7 @@ Report.Event = {
             if (pageUrl.indexOf("?") <= -1) {
                 pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status; 
             } else {
-                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status;; 
+                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status;
             }
             
             // Incident Category, Priority, Owner not added since DB clarification is needed.

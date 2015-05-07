@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -27,13 +26,12 @@ public class LabelConfigurationRetrieveNamespaces {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public void retrieveResource(
+    public void retrieveNamespaces(
             HttpServletResponse response) throws IOException, AcmLabelConfigurationException {
 
         try {
             File file = FileUtils.getFile(namespacesFileLocation);
-            byte[] buffer = FileUtils.readFileToByteArray(file);
-            response.getOutputStream().write(buffer, 0, buffer.length);
+            FileUtils.copyFile(file, response.getOutputStream());
             response.getOutputStream().flush();
         } catch (Exception e) {
             if (log.isErrorEnabled()) {

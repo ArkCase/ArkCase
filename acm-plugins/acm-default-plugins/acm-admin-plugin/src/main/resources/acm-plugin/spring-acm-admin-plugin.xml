@@ -63,6 +63,16 @@
                     <property name="url" value="/api/{version}/plugin/admin/labelconfiguration/namespaces"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/admin/labelconfiguration/settings"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/plugin/admin/labelconfiguration/settings"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
