@@ -494,8 +494,8 @@ DocTree.View = DocTree.View || {
         return fileNode;
     }
 
-    ,onViewChangedParent: function(objType, objId, arkcaseUrl) {
-        DocTree.View.switchObject(objType, objId, arkcaseUrl);
+    ,onViewChangedParent: function(objType, objId) {
+        DocTree.View.switchObject(objType, objId);
     }
 
     // The gear button click events toggle the menu popup. For some unknown reason, the events are fired
