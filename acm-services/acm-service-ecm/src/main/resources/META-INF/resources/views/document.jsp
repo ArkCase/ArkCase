@@ -7,6 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="document.page.title" text="Document | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">search</span>
         <span itemprop="objType">FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="participantTypes">${participantTypes}</span>
