@@ -1,0 +1,14 @@
+{
+  "label": {
+    "powered-by-arkcase": "Powered by ArkCase"
+  },
+  "plugins": {
+    "weather": {
+      "label": {
+        "location": "Location",
+        "enter-location": "Enter Locaiton",
+        "insert-location-in-configuration":"Please insert a location in the widget configuration"
+      }
+    }
+  }
+}

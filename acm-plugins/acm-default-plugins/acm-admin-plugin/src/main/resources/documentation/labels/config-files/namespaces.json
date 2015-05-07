@@ -26,5 +26,17 @@
     {
         "id": "report",
         "name": "Reports"
+    },
+    {
+        "id": "notification",
+        "name": "Notifications"
+    },
+    {
+        "id": "subscription",
+        "name": "Subscriptions"
+    },
+    {
+        "id": "tag",
+        "name": "Tags"
     }
 ]
