@@ -9,6 +9,7 @@ public class AcmAction implements Serializable
 {
     private static final long serialVersionUID = 7818426146639850396L;
     private String actionName;
+    private String actionResourceName;
     private String requiredPrivilege;
 
 
@@ -20,6 +21,14 @@ public class AcmAction implements Serializable
     public void setActionName(String actionName)
     {
         this.actionName = actionName;
+    }
+
+    public String getActionResourceName() {
+        return actionResourceName;
+    }
+
+    public void setActionResourceName(String actionResourceName) {
+        this.actionResourceName = actionResourceName;
     }
 
     public String getRequiredPrivilege()
