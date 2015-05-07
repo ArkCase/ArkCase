@@ -528,6 +528,9 @@ AcmDocument.View = AcmDocument.View || {
                             ,type: 'textarea'
                             ,width: '50%'
                             ,edit: true
+                            ,display: function (data) {
+                                return "<p id='acm-docDetailLongNote' title='" + data.record.note + "'>" + data.record.note + "</p>";
+                            }
                         }
                         ,created: {
                             title: 'Created'
