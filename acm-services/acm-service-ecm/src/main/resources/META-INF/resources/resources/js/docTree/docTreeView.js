@@ -74,7 +74,7 @@ DocTree.View = DocTree.View || {
         DocTree.View.uploadToFolderNode = node;
         DocTree.View.uploadFileType = formType;
         if (DocTree.View.doUploadForm) {
-            DocTree.View.doUploadForm(formType, function() {
+            DocTree.View.doUploadForm(formType, node.data.objectId, function() {
                 DocTree.View.onLoadingFrevvoForm();
             });
         }
@@ -329,7 +329,9 @@ DocTree.View = DocTree.View || {
         var fileNode = null;
         for (var i = 0; i < fileNodes.length; i++) {
             var nameOrig = this._getNameOrig(name);
-            if (fileNodes[i].data.name == nameOrig && fileNodes[i].data.type == type) {
+            var nameNode = fileNodes[i].data.name;
+            nameNode = nameNode.replace(/ /g, "_");
+            if (nameNode == nameOrig && fileNodes[i].data.type == type) {
                 fileNode = fileNodes[i];
                 break;
             }

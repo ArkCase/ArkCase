@@ -1852,7 +1852,7 @@ CaseFile.View = CaseFile.View || {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
 
-        ,uploadForm: function(type, onCloseForm) {
+        ,uploadForm: function(type, folderId, onCloseForm) {
             //var token = CaseFile.View.MicroData.token;
             var caseFileId = CaseFile.View.getActiveCaseFileId();
             var caseFile = CaseFile.View.getActiveCaseFile();
@@ -1873,6 +1873,7 @@ CaseFile.View = CaseFile.View || {
                         + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
                         + "',caseTitle:'" + caseTitle
                         + "',casePriority:'" + Acm.goodValue(caseFile.priority)
+                        + "',folderId:'" + folderId
                         + "',"
                     );
                     Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
