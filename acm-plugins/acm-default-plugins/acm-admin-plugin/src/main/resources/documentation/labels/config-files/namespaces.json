@@ -18,5 +18,9 @@
     {
         "id": "task",
         "name": "Tasks"
+    },
+    {
+        "id": "search",
+        "name": "Search"
     }
 ]
