@@ -66,6 +66,11 @@
             <artifactId>acm-form-cost</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-ebrief</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
   	
 		 <!-- spring -->
         <dependency>
