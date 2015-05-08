@@ -36,7 +36,23 @@
         "name": "Subscriptions"
     },
     {
+        "id": "audit",
+        "name": "Audit"
+    },
+    {
+        "id": "admin",
+        "name": "Administration"
+    },
+    {
         "id": "tag",
         "name": "Tags"
+    },
+    {
+        "id": "timesheet",
+        "name":"Time Tracking"
+    },
+    {
+        "id": "costsheet",
+        "name": "Cost Tracking"
     }
 ]

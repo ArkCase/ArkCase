@@ -101,7 +101,7 @@ Audit.View = Audit.View || {
             for (var i = 0; i < auditCriteria.length; i++) {
 
                 html += "<div class='col-sm-12 text-center' >"
-                        + "<h3>" + Acm.goodValue(auditCriteria[i].name)
+                        + "<h3>" + Acm.goodValue($.t(auditCriteria[i].name))
                         + "</h3>"
                         + "</div>";
 
@@ -111,18 +111,18 @@ Audit.View = Audit.View || {
 
                         if ("text" == field.type) {
 
-                            html+= "<label class='label col-sm-12'>" + Acm.goodValue(field.label) + "</label>"
+                            html+= "<label class='label col-sm-12'>" + Acm.goodValue($.t(field.label)) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<input type='text' class='form-control"
-                            + "' id='" + Acm.goodValue(field.name)
+                            + "' id='" + Acm.goodValue($.t(field.name))
                             + "' value='" + Acm.goodValue(field.value)
-                            + "' placeholder='" + Acm.goodValue(field.desc) + "'>"
+                            + "' placeholder='" + Acm.goodValue($.t(field.desc)) + "'>"
                             +"</div>";
 
                         }
                         else if ("dateRange" == field.type) {
 
-                            html+= "<label class='label col-sm-12'>" + "From" + "</label>"
+                            html+= "<label class='label col-sm-12'>" + $.t("audit:label.date-from") + "</label>"
                             + "<div class='col-sm-12'>"
                             +"<input class='datepicker-input form-control' type='text' data-date-format='mm-dd-yyyy' placeholder='mm/dd/yyyy"
                             + "' id='" + Acm.goodValue(field.nameStartDate)
@@ -131,7 +131,7 @@ Audit.View = Audit.View || {
                             + "' >"
                             +"</div>";
 
-                            html+= "<label class='label col-sm-12'>" + "To" + "</label>"
+                            html+= "<label class='label col-sm-12'>" + $.t("audit:label.date-to") + "</label>"
                             + "<div class='col-sm-12'>"
                             +"<input class='datepicker-input form-control' type='text' data-date-format='mm-dd-yyyy' placeholder='mm/dd/yyyy"
                             + "' id='" + Acm.goodValue(field.nameEndDate)
@@ -142,12 +142,12 @@ Audit.View = Audit.View || {
                         }
                         else if("select" == field.type) {
 
-                            html += "<label class='label col-sm-12'>" + Acm.goodValue(field.label) + "</label>"
+                            html += "<label class='label col-sm-12'>" + Acm.goodValue($.t(field.label)) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<select class='form-control"
                             + "' id='" + Acm.goodValue(field.name)
                             + "' value='" + Acm.goodValue(field.value)
-                            + "' placeholder='" + Acm.goodValue(field.desc)
+                            + "' placeholder='" + Acm.goodValue($.t(field.desc))
                             + "' >";
                             if (field.options) {
 
@@ -158,8 +158,8 @@ Audit.View = Audit.View || {
                                         html += " value='" + Acm.goodValue(option.value) + "'";
                                     }
                                     html += ">";
-                                    if (option.text) {
-                                        html += Acm.goodValue(option.text);
+                                    if ($.t(option.text)) {
+                                        html += Acm.goodValue($.t(option.text));
                                     }
                                     html += "</option>";
                                 }
