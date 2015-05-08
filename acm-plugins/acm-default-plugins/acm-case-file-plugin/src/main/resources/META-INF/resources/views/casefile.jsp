@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
