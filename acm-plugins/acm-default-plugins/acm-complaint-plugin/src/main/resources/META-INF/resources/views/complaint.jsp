@@ -402,8 +402,7 @@
                                     </div>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
-                                        <aside class="wrapper">
+                                    <div id="tabOutlookCalendar" style="display:none;">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
@@ -415,7 +414,7 @@
                                                 <%--<hr/>--%>
 
                                             <section class="panel no-border bg-light">
-                                                <header class="panel-heading bg-primary clearfix">
+                                                <header class="panel-heading bg-info clearfix">
                                                     <div class="btn-group pull-right" data-toggle="buttons">
                                                         <label class="btn btn-sm btn-bg btn-default active" id="monthview">
                                                             <input type="radio" name="options">
@@ -439,7 +438,6 @@
                                                 <div class="calendar">
                                                 </div>
                                             </section>
-                                        </aside>
                                     </div>
 
 
