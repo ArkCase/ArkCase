@@ -898,7 +898,7 @@ CaseFile.Model = CaseFile.Model || {
 
 
         //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator']
+        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
         ,getPersonTypes : function() {
             return this._personTypes;
         }

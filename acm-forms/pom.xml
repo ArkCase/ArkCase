@@ -20,6 +20,7 @@
     	<module>acm-form-electronic-communication</module>
     	<module>acm-form-time</module>
     <module>acm-form-cost</module>
+    <module>acm-form-ebrief</module>
   </modules>
 
 </project>
