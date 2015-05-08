@@ -15,13 +15,11 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +69,9 @@ public class CloseCompaintRequestService
         {
             CaseFile fullInvestigation = openFullInvestigation(updatedComplaint, user);
             log.debug("Opened a full investigation: " + fullInvestigation.getCaseNumber());
+            
+            // Add CaseFile as Reference to the Complaint
+            addReferenceToComplaint(updatedComplaint, fullInvestigation);
         }
 
         boolean shouldComplaintBeAddedToExistingCase = shallWeAddComplaintToExistingCase(updatedRequest);
@@ -83,6 +83,9 @@ public class CloseCompaintRequestService
             if ( updatedCaseFile != null )
             {
                 log.debug("Added complaint to existing case file: " + updatedCaseFile.getCaseNumber());
+                
+                // Add CaseFile as Reference to the Complaint
+                addReferenceToComplaint(updatedComplaint, updatedCaseFile);
             }
         }
 
@@ -118,7 +121,7 @@ public class CloseCompaintRequestService
         // not update the case file's details.  User can read the complaint details via the link to the
         // complaint from the references table.
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint);
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT");
         existingCaseFile.addChildObject(originalComplaint);
 
         
@@ -128,7 +131,7 @@ public class CloseCompaintRequestService
         Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
         existingCaseFile = getSaveCaseService().saveCase(existingCaseFile, auth, null);
 
-        addChildObjectsToCaseFile(updatedComplaint, existingCaseFile, auth);
+        addChildObjectsToCaseFile(updatedComplaint, existingCaseFile, auth);        
         
         return existingCaseFile;
 
@@ -163,6 +166,22 @@ public class CloseCompaintRequestService
 					ecmFile.setActiveVersionTag(file.getVersion());
 					ecmFile.setVersionSeriesId(file.getCmisObjectId());
 					ecmFile.setFileMimeType(file.getMimeType());
+
+                    if ( file.getVersionList() != null )
+                    {
+                        List<EcmFileVersion> newVersions = new ArrayList<>();
+
+                        for ( EcmFileVersion v : file.getVersionList() )
+                        {
+                            EcmFileVersion vnew = new EcmFileVersion();
+                            vnew.setCmisObjectId(v.getCmisObjectId());
+                            vnew.setVersionTag(v.getVersionTag());
+                            vnew.setFile(v.getFile());
+                            newVersions.add(vnew);
+                        }
+
+                        ecmFile.setVersions(newVersions);
+                    }
 					
 					getEcmFileDao().save(ecmFile);
 				}
@@ -181,8 +200,6 @@ public class CloseCompaintRequestService
             return;
         }
 
-        // Remove the person ID, so when we save the case, new person association records will be created.
-        // Since we are not saving the complaint, nothing bad will happen to the complaint person associations.
         for ( PersonAssociation pa : personAssociations )
         {
             PersonAssociation paCopy = new PersonAssociation();
@@ -221,7 +238,7 @@ public class CloseCompaintRequestService
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
 
-        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint);
+        ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(), updatedComplaint.getComplaintNumber(), "COMPLAINT");
         caseFile.addChildObject(originalComplaint);
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), caseFile);
@@ -251,14 +268,16 @@ public class CloseCompaintRequestService
         return details;
     }
 
-    private ObjectAssociation makeObjectAssociation(Complaint updatedComplaint)
+    private ObjectAssociation makeObjectAssociation(Long id, String number, String type)
     {
-        ObjectAssociation originalComplaint = new ObjectAssociation();
-        originalComplaint.setTargetId(updatedComplaint.getComplaintId());
-        originalComplaint.setTargetName(updatedComplaint.getComplaintNumber());
-        originalComplaint.setTargetType("COMPLAINT");
-        originalComplaint.setAssociationType("REFERENCE");
-        return originalComplaint;
+        ObjectAssociation oa = new ObjectAssociation();
+        
+        oa.setTargetId(id);
+        oa.setTargetName(number);
+        oa.setTargetType(type);
+        oa.setAssociationType("REFERENCE");
+        
+        return oa;
     }
 
     private boolean shallWeOpenAFullInvestigation(CloseComplaintRequest updatedRequest)
@@ -290,7 +309,16 @@ public class CloseCompaintRequestService
 
         return c;
     }
-
+    
+    private void addReferenceToComplaint(Complaint complaint, CaseFile caseFile)
+    {
+    	if (complaint != null && caseFile != null)
+    	{
+	        ObjectAssociation caseFileObjectAssociation = makeObjectAssociation(caseFile.getId(), caseFile.getCaseNumber(), caseFile.getObjectType());
+	        complaint.addChildObject(caseFileObjectAssociation);
+	        getComplaintDao().save(complaint);
+    	}
+    }
 
     public ComplaintDao getComplaintDao()
     {

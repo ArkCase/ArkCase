@@ -387,5 +387,15 @@ Complaint.Controller = Complaint.Controller || {
     ,viewDeletedLocation: function(complaint) {
         Acm.Dispatcher.fireEvent(this.VIEW_DELETED_LOCATION, complaint);
     }
+
+    //outlook calendar items
+    ,MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS         : "complaint-model-retrieved-outlook-calendar-items"
+    ,modelRetrievedOutlookCalendarItems: function(outlookCalendarItems){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS, outlookCalendarItems);
+    }
+    ,VIEW_REFRESHED_OUTLOOK_CALENDAR                : "complaint-view-refreshed-outlook-calendar"
+    ,viewRefreshedOutlookCalendar: function(complaintId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REFRESHED_OUTLOOK_CALENDAR, complaintId);
+    }
 };
 

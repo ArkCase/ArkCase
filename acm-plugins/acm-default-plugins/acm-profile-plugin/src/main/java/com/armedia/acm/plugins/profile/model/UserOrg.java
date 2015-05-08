@@ -63,6 +63,9 @@ public class UserOrg implements Serializable{
     @Column(name="cm_mobile_phone")
     private String mobilePhoneNumber;
 
+    @Column(name="cm_object_type")
+    private String objectType  = UserOrgConstants.OBJECT_TYPE;
+
     /**
      * This field is only used when the profile is created. Usually it will be null.  Use the container folder
      * to get the CMIS object ID of the complaint folder.
@@ -108,7 +111,7 @@ public class UserOrg implements Serializable{
         if ( getContainer() != null )
         {
             getContainer().setContainerObjectId(getUserOrgId());
-            getContainer().setContainerObjectType("USER_ORG");
+            getContainer().setContainerObjectType(UserOrgConstants.OBJECT_TYPE);
             getContainer().setContainerObjectTitle(getUser().getUserId());
         }
     }
@@ -273,5 +276,9 @@ public class UserOrg implements Serializable{
     public void setContainer(AcmContainer container)
     {
         this.container = container;
+    }
+
+    public String getObjectType() {
+        return objectType;
     }
 }

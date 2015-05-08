@@ -5,13 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-    <context:property-placeholder
-        properties-ref="complaintPluginProperties"
-        ignore-unresolvable="true"
-        local-override="false"
-        order="1"/>
-
-
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="complaintPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
@@ -133,121 +126,9 @@
     <bean id="complaintPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Complaint Plugin"/>
         <property name="pluginProperties" ref="complaintPluginProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="acmComplaintCreatePrivilege"/>
-                <ref bean="acmComplaintSavePrivilege"/>
-                <ref bean="acmComplaintListPrivilege"/>
-                <ref bean="acmComplaintApprovePrivilege"/>
-            </list>
-        </property>
         <property name="suportedObjectTypesNames">
             <list>
                 <value>COMPLAINT</value>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- create complaint service -->
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/complaint"/>
-                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- create complaint wizard -->
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/complaint/wizard"/>
-                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/forUser/{user}"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- complaint navigator tab home page -->
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/complaint"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/complaint/{complaintId}"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- list of complaints -->
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/list/{timePeriod}"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/types"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/priorities"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- attach a file to the complaint -->
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/workflow"/>
-                    <property name="requiredPrivilege" ref="acmComplaintCreatePrivilege"/>
-                </bean>
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <!-- attach a file to the complaint -->
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/complaint/byId/{complaintId}"/>
-                    <property name="requiredPrivilege" ref="acmComplaintListPrivilege"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="acmComplaintListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-list"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-    <bean id="acmComplaintSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-save"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="acmComplaintCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-create"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="acmComplaintApprovePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-complaint-approve"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
@@ -257,24 +138,19 @@
     <bean id="saveComplaintBusinessRule" class="com.armedia.acm.plugins.complaint.service.SaveComplaintBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-complaint-number-rules.xlsx"/>
     </bean>
-
-
-    <bean id="acmSearchPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-search"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
+    
+    <bean id="complaintFactory" class="com.armedia.acm.plugins.complaint.service.ComplaintFactory">
+    	<property name="personDao" ref="acmPersonDao" />
+    	<property name="fileService" ref="ecmFileService" />
+    	<property name="userDao" ref="userJpaDao" />
+    	<property name="acmParticipantDao" ref="acmParticipantDao" />
     </bean>
     
     <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService">
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
+    	<property name="complaintFactory" ref="complaintFactory" />
     </bean>
     
      <bean id="complaintHistoryListener" class="com.armedia.acm.plugins.complaint.service.ComplaintHistoryListener">

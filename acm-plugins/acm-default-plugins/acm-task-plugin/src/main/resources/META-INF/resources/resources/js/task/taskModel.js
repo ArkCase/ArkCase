@@ -259,19 +259,32 @@ Task.Model = Task.Model || {
 
         ,_retrieveParentObject: function(task) {
             if (Task.Model.Detail.validateTask(task)) {
-                if(Acm.isNotEmpty(task.attachedToObjectId) && Acm.isNotEmpty(task.attachedToObjectType)){
-                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.attachedToObjectId);
+                if(Acm.isNotEmpty(task.parentObjectId) && Acm.isNotEmpty(task.parentObjectType)){
+                    var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (!Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
-                        if(Task.Model.DOC_TYPE_COMPLAINT == task.attachedToObjectType){
-                            Task.Service.ParentDetail.retrieveComplaint(task.attachedToObjectId);
-                        } else if(Task.Model.DOC_TYPE_CASE_FILE == task.attachedToObjectType){
-                            Task.Service.ParentDetail.retrieveCaseFile(task.attachedToObjectId);
+                        if(Task.Model.DOC_TYPE_COMPLAINT == task.parentObjectType){
+                            Task.Service.ParentDetail.retrieveComplaint(task.parentObjectId);
+                        } else if(Task.Model.DOC_TYPE_CASE_FILE == task.parentObjectType){
+                            Task.Service.ParentDetail.retrieveCaseFile(task.parentObjectId);
                         }
 
                         //Task.Service.ParentDetail.retrieveParentObject(task.attachedToObjectType, task.attachedToObjectId);
                     }
                 }
             }
+        }
+        ,getGroup: function(participants) {
+            var group = null;
+            if (Acm.isArray(participants)) {
+                for (var i = 0; i < participants.length; i++) {
+                    var participant =  participants[i];
+                    if ("owning group" == participant.participantType) {
+                        group = participant.participantLdapId;
+                        break;
+                    }
+                }
+            }
+            return group;
         }
 
         ,makeUnifiedData:function(parentObj, objType){
@@ -288,6 +301,7 @@ Task.Model = Task.Model || {
                     unifiedData.status = parentObj.status;
                     unifiedData.subjectType = parentObj.complaintType;
                     unifiedData.number = parentObj.complaintNumber;
+                    unifiedData.group = Task.Model.ParentDetail.getGroup(parentObj.participants);
                 }
             }
             else if(Task.Model.DOC_TYPE_CASE_FILE == objType){
@@ -302,6 +316,7 @@ Task.Model = Task.Model || {
                     unifiedData.status = parentObj.status;
                     unifiedData.subjectType = parentObj.caseType;
                     unifiedData.number = parentObj.caseNumber;
+                    unifiedData.group = Task.Model.ParentDetail.getGroup(parentObj.participants);
                 }
             }
             return unifiedData;

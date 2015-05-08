@@ -5,16 +5,11 @@ package com.armedia.acm.form.casefile.service;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
-import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -29,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
+import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
@@ -47,8 +43,6 @@ import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -63,7 +57,6 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	private CaseFileDao caseFileDao;
 	private PersonIdentificationDao personIdentificationDao;
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
-	private AcmPluginManager acmPluginManager;
 
 	private RuntimeService activitiRuntimeService;
 
@@ -85,6 +78,11 @@ public class CaseFileService extends FrevvoFormAbstractService {
 			{
 				result = initFormData();
 			}
+			
+			if ("init-participants-groups".equals(action)) 
+			{
+				result = initParticipantsAndGroupsInfo();
+			}
 		}
 		
 		return result;
@@ -102,7 +100,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		
 		if (form == null)
 		{
-			LOG.warn("Cannot unmarshall Close Case Form.");
+			LOG.warn("Cannot unmarshall Case Form.");
 			return false;
 		}
 		
@@ -211,23 +209,13 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		// Init Case File types
 		caseFileForm.setCaseTypes(convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".types"), ","));
 		
-		// Init Participant types
-		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".participantTypes"), ",");
-		caseFileForm.setParticipantsTypeOptions(participantTypes);
-		
-		// Init Participants
-		caseFileForm.setParticipantsOptions(initParticipants(participantTypes));
-		
 		// Init Initiator information		
 		caseFileForm.setInitiator(initInitiator());
 		
 		// Init People information
 		caseFileForm.setPeople(initPeople());
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(caseFileForm);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(caseFileForm);
 
 		return json;
 	}
@@ -273,54 +261,26 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return people;
 	}
 	
-	private Map<String, List<String>> initParticipants(List<String> participantTypes)
+	private JSONObject initParticipantsAndGroupsInfo()
 	{
-		if (participantTypes != null && participantTypes.size() > 0)
-		{
-			Map<String, List<String>> participantsOptions = new HashMap<>();
-			for (String participantType : participantTypes)
-			{
-				String type = "";
-				String[] participantTypeArray = participantType.split("=");
-				if (participantTypeArray != null && participantTypeArray.length == 2)
-				{
-					type = participantTypeArray[0];
-					String privilege = (String) getProperties().get(FrevvoFormName.CASE_FILE + "." + type + ".privilege");
-					
-					try
-					{
-						List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
-						Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
-						
-						String group = null;
-						if (privilege.equals("acm-case-approve"))
-						{
-							group = "ACM_INVESTIGATOR_DEV";
-						}
-						
-						Set<AcmUser> usersSet = getFunctionalAccessService().getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group, null);
-				        
-						List<AcmUser> users = new ArrayList<>(usersSet);
-				        if (users != null && users.size() > 0) {
-				        	List<String> options = new ArrayList<>();
-				        	for (int i = 0; i < users.size(); i++) {
-				        		options.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-				        	}
-				        	
-				        	participantsOptions.put(type, options);
-				        }
-					}
-					catch(Exception e)
-					{
-						LOG.warn("Cannot find users with privilege = " + type + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
-					}
-				}
-			}
-			
-			return participantsOptions;
-		}
+		CaseFileForm form = new CaseFileForm();
 		
-		return null;
+		// Init Participant types
+		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.CASE_FILE + ".participantTypes"), ",");
+		form.setParticipantsTypeOptions(participantTypes);
+		form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.CASE_FILE));
+		
+		// Init Owning Group information
+		String owningGroupType = (String) getProperties().get(FrevvoFormName.CASE_FILE + ".owningGroupType");
+		OwningGroupItem owningGroupItem = new OwningGroupItem();
+		owningGroupItem.setType(owningGroupType);
+		
+		form.setOwningGroup(owningGroupItem);
+		form.setOwningGroupOptions(getOwningGroups(owningGroupType, FrevvoFormName.CASE_FILE));
+		
+		JSONObject json = createResponse(form);
+		
+		return json;
 	}
 	
 	private List<ContactMethod> initContactMethods()
@@ -509,14 +469,6 @@ public class CaseFileService extends FrevvoFormAbstractService {
 	public void setCaseFile(CaseFile caseFile)
 	{
 		this.caseFile = caseFile;
-	}
-
-	public AcmPluginManager getAcmPluginManager() {
-		return acmPluginManager;
-	}
-
-	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
-		this.acmPluginManager = acmPluginManager;
 	}
 
 	public FunctionalAccessService getFunctionalAccessService() {

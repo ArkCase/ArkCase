@@ -378,5 +378,14 @@ CaseFile.Controller = CaseFile.Controller || {
     }
 
 
+    //outlook calendar items
+    ,MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS         : "case-file-model-retrieved-outlook-calendar-items"
+    ,modelRetrievedOutlookCalendarItems: function(outlookCalendarItems){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS, outlookCalendarItems);
+    }
+    ,VIEW_REFRESHED_OUTLOOK_CALENDAR                : "case-file-view-refreshed-outlook-calendar"
+    ,viewRefreshedOutlookCalendar: function(caseFileId){
+        Acm.Dispatcher.fireEvent(this.VIEW_REFRESHED_OUTLOOK_CALENDAR, caseFileId);
+    }
 };
 

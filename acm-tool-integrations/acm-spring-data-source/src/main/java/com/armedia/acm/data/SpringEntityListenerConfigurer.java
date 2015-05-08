@@ -64,7 +64,7 @@ public class SpringEntityListenerConfigurer implements ApplicationContextAware
         {
             DescriptorEventAdapter dea = new AcmBeforeUpdateAdapter(beforeUpdateListener);
             retval.add(dea);
-        }
+            }
 
         for ( AcmBeforeInsertListener beforeInsertListener : findBeforeInsertListeners()  )
         {

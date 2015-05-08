@@ -57,6 +57,8 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setParent_name_t(in.getEventObjectName());
         solr.setParent_number_lcs(in.getEventObjectNumber());
 
+        solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
+
         solr.setOwner_lcs(in.getSubscriptionOwner());
 
         return solr;
@@ -94,6 +96,8 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         }
         solr.setTitle_parseable(title);
         solr.setParent_object_id_s(Long.toString(in.getEventObjectId()));
+
+        solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
 
         solr.setParent_object_type_s(in.getEventObjectType());
 

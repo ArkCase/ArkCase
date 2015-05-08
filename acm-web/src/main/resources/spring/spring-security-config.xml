@@ -19,6 +19,7 @@
     <http security="none" pattern="/login.jsp" />
     <http security="none" pattern="/resources/**" />
     <http security="none" pattern="/resources/js/*"/>
+    <http security="none" pattern="/resources/i18n/**"/>
     <http security="none" pattern="/resources/styles/**"/>
     <http security="none" pattern="/resources/styles/acm/**"/>
     <http security="none" pattern="/resources/styles/blueprint/**"/>
@@ -33,6 +34,7 @@
         <intercept-url pattern="/api/**" access="isAuthenticated()"/>
         <http-basic/>
         <custom-filter ref="acmBasicAndTokenAuthenticationFilter" before="BASIC_AUTH_FILTER"/>
+        <custom-filter ref="corsFilter" after="PRE_AUTH_FILTER"/>
         <logout
                 logout-url="/logout"
                 success-handler-ref="acmLogoutSuccessHandler"

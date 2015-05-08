@@ -8,11 +8,14 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">complaint,subscription,search</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
+        <span itemprop="arkcasePort">${arkcasePort}</span>
 
         <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
         <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
@@ -73,18 +76,17 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
-/////////////////////////////////////////////////////////////////////
-<%--<style>--%>
-    <%--table.fancytree-ext-table {--%>
-        <%--width: 100%;--%>
-        <%--outline: 0;--%>
-    <%--}--%>
+    <%--fullcalendar--%>
+    <script src="<c:url value='/resources/vendors/${vd_fullcalendar}/${js_fullcalendar}'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/fullcalendar.css'/>" type="text/css"/>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_fullcalendar}/theme.css'/>" type="text/css"/>
 
-    <%--table.fancytree-ext-table tbody tr td {--%>
-        <%--border: 0px;--%>
-    <%--}--%>
-<%--</style>--%>
-//////////////////////////////////////////////////////////////////////
+    <%--jquery qtip--%>
+    <script src="<c:url value='/resources/vendors/${vd_jquery_qtip}/${js_jquery_qtip}'/>"></script>
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_qtip}/${css_jquery_qtip}'/>" type="text/css"/>
+
+    <%@include file="/resources/include/dlgSearch.jspf" %>
+    <%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
 <jsp:body>
@@ -98,26 +100,15 @@
                     <section class="vbox animated fadeInLeft">
                         <section class="scrollable">
                             <header class="dk header">
-                                <h3 class="m-b-xs text-black pull-left"><spring:message code="complaint.page.descShort" text="Complaints" /></h3>
+                                <h3 class="m-b-xs text-black pull-left" data-i18n="complaint:title">Complaints</h3>
                                 <div class="btn-group inline select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm" id="ulSort">
-                                        <%--<li><a href="#">Sort Date Ascending</a></li>--%>
-                                        <%--<li><a href="#">Sort Date Descending</a></li>--%>
-                                        <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
-                                        <%--<li><a href="#">Sort Complaint ID Ascending</a></li>--%>
                                     </ul>
                                 </div>
                                 <div class="btn-group select pull-right">
                                     <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-filter"></i></span> <span class="caret"></span> </button>
                                     <ul class="dropdown-menu text-left text-sm" id="ulFilter">
-                                        <%--<li><a href="#">All Open Complaints</a></li>--%>
-                                        <%--<li><a href="#">All Complaints I've Created</a></li>--%>
-                                        <%--<li><a href="#">All Closed No Further Action</a></li>--%>
-                                        <%--<li><a href="#">All Closed Refer External</a></li>--%>
-                                        <%--<li><a href="#">All Closed Added to Existing Case</a></li>--%>
-                                        <%--<li><a href="#">All Closed Open Investigation </a></li>--%>
-                                            <%--<li><a href="<c:url value='/'/>plugin/complaint/wizard">New Complaint</a></li>--%>
                                     </ul>
                                 </div>
                             </header>
@@ -144,41 +135,51 @@
                                     <div class="col-xs-12">
                                         <div class="">
                                             <div class=" clearfix">
-                                                <div class="col-xs-4 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"></a> </div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="complaintTitle" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a> </div>
-                                                    <small class="text-muted"><a href="#" id="complaintNum" ></a></small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-url="/post" data-title="Enter Incident Date"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted">Incident Date</small></div>
-                                                <div class="col-xs-1 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-url="/post" data-title="Enter Priority"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
-                                                    <small class="text-muted">Priority</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-url="/post" data-title="Enter Assignee"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted">Assigned To</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-url="/post" data-title="Enter Owning Group"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted">Owning Group</small></div>
-                                                <div class="col-xs-2 b-r">
-                                                        <%--<div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-url="/post" data-title="Enter Subject Type"></a></div>--%>
-                                                    <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
-                                                    <small class="text-muted">Incident Category</small></div>
-                                                <div class="col-xs-1">
-                                                    <div class="h4 font-bold"><a href="#" id="status" ></a></div>
-                                                    <small class="text-muted">State</small></div>
+
+                                                <div class="wrapper dk  clearfix">
+                                                    <div class="row">
+                                                        <div class="col-xs-6  b-r">
+                                                            <h4><a href="#" id="complaintTitle" data-i18n="[data-title]complaint:header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a><a href="#" id="status" ></a></h4>
+                                                        </div>
+                                                        <div class="col-xs-6  b-r text-right">
+                                                            <h4><a href="#" id="complaintNum"></a></h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint:header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint:header.labels.incident-category">Incident Category</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint:header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint:header.labels.incident-date">Incident Date</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint:header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint:header.labels.priority">Priority</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint:header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint:header.labels.assigned-to">Assigned To</small>
+                                                        </div>
+                                                        <div class="col-xs-4  b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint:header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                            <small class="text-muted" data-i18n="complaint:header.labels.owning-group">Owning Group</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
 
+
+
                                 <div class="row" id="tabTopBlank">
-                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No complaint is selected)</p>
+                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n="complaint:msg.no-complaint-selected"></span></p>
                                 </div>
                             </div>
 
@@ -191,17 +192,18 @@
                                         <div class="col-md-12">
                                             <div class="pull-right inline">
                                                 <div class="btn-group">
-                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> Close Complaint</button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
                                                     <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
-                                                    <button class="btn btn-default btn-sm" id="btnSubscribe"><i class="fa fa-bullhorn"></i> Subscribe</button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
+                                                    </button>
                                                 </div>
                                             </div>
 
                                             <div class="pull-left inline">
                                                 <div class="btn-group">
                                                     <label class="checkbox-inline">
-                                                        <input type="checkbox" id="restrict"> Restrict ?
+                                                        <input type="checkbox" id="restrict"> <span data-i18n="complaint:header.buttons.restrict">Restrict ?</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -218,16 +220,16 @@
                                                     <ul class="nav nav-pills pull-right">
                                                         <li>
                                                             <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                                 <ul class="dropdown-menu pull-right">
-                                                                    <li><a href="#">Other menu items</a></li>
+                                                                    <li><a href="#" data-i18n="complaint:detail.buttons.other">Other menu items</a></li>
                                                                 </ul>
                                                             </div>
                                                         </li>
                                                         <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                                     </ul>
-                                                    </span> <a href="#" class="font-bold">Details</a> </div>
+                                                    </span> <a href="#" class="font-bold" data-i18n="complaint:detail.buttons.details">Details</a> </div>
                                                 <div class="panel-body">
                                                     <div class="divDetail"></div>
                                                 </div>
@@ -277,105 +279,47 @@
                                         <%--</div>--%>
                                     <%--</div>--%>
 
-<!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111 -->
-                                    <%--<div class="row">--%>
                                     <div class="col-md-12">
                                     <section class="panel b-a">
-                                        <div class="panel-heading b-b bg-info">  <ul class="nav nav-pills pull-right">
-                                            <li style="margin-right:5px"></li>
-                                            <%--<li>--%>
-                                                <%--<div class="btn-group padder-v2">--%>
-                                                    <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#createnewfolder"><i class="fa fa-folder"></i> New Folder</button>--%>
-                                                <%--</div>--%>
-                                            <%--</li>--%>
-                                            <li>
-                                                <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> Email</button>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="btn-group padder-v2">
-                                                    <button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> Print</button>
-                                                </div>
-                                            </li>
-                                            <li> </li>
-                                        </ul>
+                                        <div class="panel-heading b-b bg-info">
+                                            <%--<ul class="nav nav-pills pull-right">--%>
+                                                <%--<li style="margin-right:5px"></li>--%>
+                                                <%--<li>--%>
+                                                    <%--<div class="btn-group padder-v2">--%>
+                                                        <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#dlgDocTreeDnd"><i class="fa fa-folder"></i> New Folder</button>--%>
+                                                    <%--</div>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<div class="btn-group padder-v2">--%>
+                                                        <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint:documents-to-retire.buttons.email">Email</span></button>--%>
+                                                    <%--</div>--%>
+                                                <%--</li>--%>
+                                                <%--<li>--%>
+                                                    <%--<div class="btn-group padder-v2">--%>
+                                                        <%--<button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> <span data-i18n="complaint:documents-to-retire.buttons.print">Print</span></button>--%>
+                                                    <%--</div>--%>
+                                                <%--</li>--%>
+                                                <%--<li> </li>--%>
+                                            <%--</ul>--%>
 
-
-
-
-
-
-
-
-                                            <a href="#" class="font-bold"><div>Documents</div> </a>
-                                            <form id="formUploadDoc" style="display:none;">
-                                                <input type="file" id="file" name="file">
-                                            </form>
-                                            <form action="#" id="formDownloadDoc" style="display:none;">
-                                            </form>
+                                            <a href="#" class="font-bold"><div data-i18n="complaint:documents-to-retire.title">Documents</div> </a>
                                         </div>
 
 
-                                        <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Create Folder</h4>
-                                                    </div>
-                                                    <div class="modal-body">
 
-                                                        <p>Enter a name for the folder you would like to create:</p>
-
-                                                        <label for="folderName2">Folder Name</label><br/>
-                                                        <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-primary">Create Folder<</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel">Send Email</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-
-                                                        <p>Where would you like to email this file?</p>
-
-                                                        <label for="emailaddy">Email Address</label><br/>
-                                                        <input type="text" id="emailaddy" class="input-lg" placeholder="Email Address" />
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-primary">Send Email</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
                                             <thead>
                                             <tr>
-                                                <th width2="6%"><span class='fancytree-checkbox'></span></th>
-                                                <th width2="4%">ID</th>
-                                                <th width="35%">Title</th>
-                                                <th width="12%">Type</th>
-                                                <th width="10%">Created</th>
-                                                <th width="16%">Author</th>
-                                                <th width="6%">Version</th>
-                                                <th width="8%">Status</th>
-                                                <%--<th width2="6%" colspan="2"></th>--%>
+                                                <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
+                                                <th width2="6%"><input type="checkbox"/></th>
+                                                <th width2="4%" data-i18n="complaint:documents-to-retire.tree.field.id">ID</th>
+                                                <th width="35%" data-i18n="complaint:documents-to-retire.tree.field.title">Title</th>
+                                                <th width="12%" data-i18n="complaint:documents-to-retire.tree.field.type">Type</th>
+                                                <th width="10%" data-i18n="complaint:documents-to-retire.tree.field.created">Created</th>
+                                                <th width="16%" data-i18n="complaint:documents-to-retire.tree.field.author">Author</th>
+                                                <th width="6%" data-i18n="complaint:documents-to-retire.tree.field.version">Version</th>
+                                                <th width="8%" data-i18n="complaint:documents-to-retire.tree.field.status">Status</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -388,222 +332,14 @@
                                                 <td></td>
                                                 <td></td>
                                                 <td></td>
-                                                <%--<td></td>--%>
                                             </tr>
                                             </tbody>
                                         </table>
 
                                     </section>
 
-
-
-                                    <%--<h3>Additional Action Examples</h3>--%>
-                                    <%--<p>I added these modal window examples below to save time (it takes longer for me to code it into the FancyTree).</p>--%>
-
-<!-- 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333 -->
-<!--
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#createsubfolder">
-
-                                        <span class="text">Create Subfolder</span>
-                                    </button> <div class="modal fade" id="createsubfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Create Subfolder</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Enter a name for the subfolder you would like to create:</p>
-
-                                                    <label for="folderName">Folder Name</label><br/>
-                                                    <input type="text" id="folderName" class="input-lg" placeholder="Folder Name" />
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Create Subfolder</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#deletesubfolder">
-
-                                        <span class="text">Delete Subfolder</span>
-                                    </button> <div class="modal fade" id="deletesubfolder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Delete Subfolder</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-
-                                                    <p>Are you sure you want to delete [folder name] from [partent folder]?</p>
-
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Delete Subfolder</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#replaceFile">
-
-                                        <span class="text">Replace File</span>
-                                    </button> <div class="modal fade" id="replaceFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Replace File</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-
-                                                    <p>Choose a file from your computer to replace [document name]:</p>
-
-                                                    <label for="fileName">File</label><br/>
-                                                    <input type="file" id="fileName" class="input-lg" />
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Replace File</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#delete">
-
-                                        <span class="text">Delete</span>
-                                    </button> <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Delete</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Are you sure you want to delete [file name] from [partent folder]?</p>
-
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Delete</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#copy">
-
-                                        <span class="text">Copy</span>
-                                    </button> <div class="modal fade" id="copy" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Copy</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Where would you like to copy this file? Choose the directory from the box below:</p>
-                                                    <p>[place tree view here]</p>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Copy</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#move">
-
-                                        <span class="text">Move</span>
-                                    </button> <div class="modal fade" id="move" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Move</h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Where would you like to move this file? Choose the directory from the box below:</p>
-                                                    <p>[place tree view here]</p>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                    <button type="button" class="btn btn-primary">Move</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <button class="btn btn-default" onClick="window.open('documents.html', '_blank');">Edit</button>
-                                    <button class="btn btn-default" onClick="window.open('documents.html', '_blank');">View</button>
-
-
-
-
-                                    <div class="btn-group">
-                                        <button type="buton" class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-cog"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Add Subfolder</a></li>
-                                            <li><a href="#">Add Document</a></li>
-                                            <li><a href="#">Delete Subfolder</a></li>
-                                        </ul>
-                                    </div>
-
-
-                                    <div class="btn-group">
-                                        <button type="buton" class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-cog"></i>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#">Download</a></li>
-                                            <li><a href="#">Replace</a></li>
-                                            <li><a href="#">History</a></li>
-                                            <li><a href="#">Delete</a></li>
-                                            <li><a href="#">Copy</a></li>
-                                            <li><a href="#">Move</a></li>
-                                            <li><a href="#">Edit</a></li>
-                                            <li><a href="#">View</a></li>
-                                        </ul>
-                                    </div>
-
--->
-
                                     </div>
                                     </div>
-<!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 -->
 
 
 
@@ -666,12 +402,50 @@
                                     </div>
 
 
+                                    <div id="tabOutlookCalendar" style="display:none;">
+                                                <%--<div class="pull-right inline">
+                                                    <div class="dropdown">
+                                                        <div class="btn-group">
+                                                            <button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#downloadICS" style="display:none;"><i class="fa fa-calendar"></i> Download ICS</button>
+                                                        </div>
+                                                    </div>
+                                                </div>--%>
+                                                <%--<h4 class="m-n" style="display:none;">Complaint Calendar</h4>--%>
+                                                <%--<hr/>--%>
+
+                                            <section class="panel no-border bg-light">
+                                                <header class="panel-heading bg-info clearfix">
+                                                    <div class="btn-group pull-right" data-toggle="buttons">
+                                                        <label class="btn btn-sm btn-bg btn-default active" id="monthview">
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.month">Month</span>
+                                                        </label>
+                                                        <label class="btn btn-sm btn-bg btn-default" id="weekview">
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.week">Week</span>
+                                                        </label>
+                                                        <label class="btn btn-sm btn-bg btn-default" id="dayview">
+                                                            <input type="radio" name="options">
+                                                            <span data-i18n="complaint:outlook-calendar.label.day">Day</span>
+                                                        </label>
+                                                    </div>
+                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
+
+                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="complaint:outlook-calendar.label.calendar">
+                                                      Calendar
+                                                    </span>
+                                                </header>
+                                                <div class="calendar">
+                                                </div>
+                                            </section>
+                                    </div>
 
 
 
 
 
-                                    <%--<div class="row" id="tabRefComplaints" style="display:none;">--%>
+
+                                <%--<div class="row" id="tabRefComplaints" style="display:none;">--%>
                                             <%--&lt;%&ndash;Other Complaints&ndash;%&gt;--%>
                                     <%--</div>--%>
 

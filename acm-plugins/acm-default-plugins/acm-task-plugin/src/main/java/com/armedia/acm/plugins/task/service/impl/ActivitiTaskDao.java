@@ -20,6 +20,7 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.bpmn.model.BpmnModel;
@@ -120,22 +121,33 @@ class ActivitiTaskDao implements TaskDao
         try
         {
             getActivitiTaskService().saveTask(activitiTask);
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_TYPE", in.getAttachedToObjectType());
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_ID", in.getAttachedToObjectId());
+            
+            // If start date is not provided, set start date as creation date
+            if (in.getTaskStartDate() == null)
+            {
+            	in.setTaskStartDate(activitiTask.getCreateTime());
+            }
+            
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_TYPE, in.getAttachedToObjectType());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_ID, in.getAttachedToObjectId());
             if ( in.getAttachedToObjectType() != null )
             {
                 getActivitiTaskService().setVariableLocal(activitiTask.getId(), in.getAttachedToObjectType(), in.getAttachedToObjectId());
             }
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "OBJECT_NAME", in.getAttachedToObjectName());
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "START_DATE", in.getTaskStartDate());
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "PERCENT_COMPLETE", in.getPercentComplete());
-            getActivitiTaskService().setVariableLocal(activitiTask.getId(), "DETAILS", in.getDetails());
 
-            getActivitiTaskService().setVariable(activitiTask.getId(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OBJECT_NAME, in.getAttachedToObjectName());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_START_DATE, in.getTaskStartDate());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PERCENT_COMPLETE, in.getPercentComplete());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_DETAILS, in.getDetails());
+
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, in.getParentObjectId());
+            getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, in.getParentObjectType());
+
+            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS, in.getReworkInstructions());
 
             if ( in.getTaskOutcome() != null )
             {
-                getActivitiTaskService().setVariableLocal(activitiTask.getId(), "outcome", in.getTaskOutcome().getName());
+                getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OUTCOME, in.getTaskOutcome().getName());
             }
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
@@ -158,7 +170,7 @@ class ActivitiTaskDao implements TaskDao
 
             // the rules (or the user) may have removed some participants.  We want to delete all participants other
             // than the ones we just now validated.
-            getParticipantDao().removeAllOtherParticipantsForObject("TASK", in.getTaskId(), in.getParticipants());
+            getParticipantDao().removeAllOtherParticipantsForObject(TaskConstants.OBJECT_TYPE, in.getTaskId(), in.getParticipants());
             in.setParticipants(getParticipantDao().saveParticipants(in.getParticipants()));
 
             return in;
@@ -178,7 +190,7 @@ class ActivitiTaskDao implements TaskDao
         {
             for ( AcmParticipant ap : in.getParticipants() )
             {
-                if ( "assignee".equals(ap.getParticipantType()) )
+                if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()) )
                 {
                     if ( in.getAssignee() == null )
                     {
@@ -203,9 +215,9 @@ class ActivitiTaskDao implements TaskDao
         {
             AcmParticipant assignee = new AcmParticipant();
             assignee.setParticipantLdapId(in.getAssignee());
-            assignee.setParticipantType("assignee");
+            assignee.setParticipantType(ParticipantTypes.ASSIGNEE);
             assignee.setObjectId(in.getTaskId());
-            assignee.setObjectType("TASK");
+            assignee.setObjectType(TaskConstants.OBJECT_TYPE);
 
             if ( in.getParticipants() == null )
             {
@@ -256,7 +268,7 @@ class ActivitiTaskDao implements TaskDao
             if ( outcomePropertyName != null && outcomeId != null )
             {
                 getActivitiTaskService().setVariable(strTaskId, outcomePropertyName, outcomeId);
-                getActivitiTaskService().setVariableLocal(strTaskId, "outcome", outcomeId);
+                getActivitiTaskService().setVariableLocal(strTaskId, TaskConstants.VARIABLE_NAME_OUTCOME, outcomeId);
             }
 
             getActivitiTaskService().complete(strTaskId);
@@ -574,7 +586,7 @@ class ActivitiTaskDao implements TaskDao
 
                     if (null != localVariables && localVariables.containsKey("outcome"))
                     {
-                        String outcome = (String) localVariables.get("outcome");
+                        String outcome = (String) localVariables.get(TaskConstants.VARIABLE_NAME_OUTCOME);
                         status = WordUtils.capitalizeFully(outcome.replaceAll("_", " "));
                     }
 	    			
@@ -671,14 +683,22 @@ class ActivitiTaskDao implements TaskDao
 
         if ( hti.getProcessVariables() != null )
         {
-            retval.setAttachedToObjectId((Long) hti.getProcessVariables().get("OBJECT_ID"));
-            retval.setAttachedToObjectType((String) hti.getProcessVariables().get("OBJECT_TYPE"));
-            retval.setAttachedToObjectName((String) hti.getProcessVariables().get("OBJECT_NAME"));
-            retval.setWorkflowRequestId((Long) hti.getProcessVariables().get("REQUEST_ID"));
-            retval.setWorkflowRequestType((String) hti.getProcessVariables().get("REQUEST_TYPE"));
-            retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get("pdfRenditionId"));
-            retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get("formXmlId"));
-            retval.setReworkInstructions((String) hti.getProcessVariables().get("REWORK_INSTRUCTIONS"));
+            retval.setAttachedToObjectId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
+            retval.setAttachedToObjectType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
+            retval.setAttachedToObjectName((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
+            retval.setWorkflowRequestId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
+            retval.setWorkflowRequestType((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
+            retval.setReviewDocumentPdfRenditionId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            retval.setReviewDocumentFormXmlId((Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
+            retval.setReworkInstructions((String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
+
+            Long parentObjectId = (Long) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
+            parentObjectId = parentObjectId == null ? retval.getAttachedToObjectId() : parentObjectId;
+            retval.setParentObjectId(parentObjectId);
+
+            String parentObjectType = (String) hti.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
+            parentObjectType = parentObjectType == null ? retval.getAttachedToObjectType() : parentObjectType;
+            retval.setParentObjectType(parentObjectType);
 
         }
 
@@ -830,32 +850,42 @@ class ActivitiTaskDao implements TaskDao
     {
         if ( acmTask.getAttachedToObjectId() == null )
         {
-            Long objectId = (Long) taskLocal.get("OBJECT_ID");
+            Long objectId = (Long) taskLocal.get(TaskConstants.VARIABLE_NAME_OBJECT_ID);
             acmTask.setAttachedToObjectId(objectId);
         }
         if ( acmTask.getAttachedToObjectType() == null )
         {
-            String objectType = (String) taskLocal.get("OBJECT_TYPE");
+            String objectType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE);
             acmTask.setAttachedToObjectType(objectType);
         }
         if ( acmTask.getAttachedToObjectName() == null )
         {
-            String objectName = (String) taskLocal.get("OBJECT_NAME");
+            String objectName = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_OBJECT_NAME);
             acmTask.setAttachedToObjectName(objectName);
         }
-        Date startDate = (Date) taskLocal.get("START_DATE");
+        if ( acmTask.getParentObjectId() == null )
+        {
+            Long parentObjectId = (Long) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
+            acmTask.setParentObjectId(parentObjectId);
+        }
+        if ( acmTask.getParentObjectType() == null )
+        {
+            String parentObjectType = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
+            acmTask.setParentObjectType(parentObjectType);
+        }
+        Date startDate = (Date) taskLocal.get(TaskConstants.VARIABLE_NAME_START_DATE);
         acmTask.setTaskStartDate(startDate);
 
-        Integer percentComplete = (Integer) taskLocal.get("PERCENT_COMPLETE");
+        Integer percentComplete = (Integer) taskLocal.get(TaskConstants.VARIABLE_NAME_PERCENT_COMPLETE);
         acmTask.setPercentComplete(percentComplete);
 
-        String details = (String) taskLocal.get("DETAILS");
+        String details = (String) taskLocal.get(TaskConstants.VARIABLE_NAME_DETAILS);
         acmTask.setDetails(details);
     }
 
     private String acmPriorityFromActivitiPriority(int priority)
     {
-        String defaultPriority = "Medium";
+        String defaultPriority = TaskConstants.DEFAULT_PRIORITY_WORD;
 
         for ( Map.Entry<String, Integer> acmToActiviti : getPriorityLevelToNumberMap().entrySet() )
         {
@@ -905,6 +935,12 @@ class ActivitiTaskDao implements TaskDao
         {
             extractTaskLocalVariables(acmTask, activitiTask.getTaskLocalVariables());
         }
+        
+        // If start date is not provided, set start date as creation date
+        if (acmTask.getTaskStartDate() == null)
+        {
+        	acmTask.setTaskStartDate(activitiTask.getCreateTime());
+        }
 
         String status = findTaskStatus(activitiTask);
         acmTask.setStatus(status);
@@ -951,15 +987,25 @@ class ActivitiTaskDao implements TaskDao
     {
         if ( activitiTask.getProcessVariables() != null )
         {
-            acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get("OBJECT_ID"));
-            acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get("OBJECT_TYPE"));
-            acmTask.setAttachedToObjectName((String) activitiTask.getProcessVariables().get("OBJECT_NAME"));
-            acmTask.setWorkflowRequestId((Long) activitiTask.getProcessVariables().get("REQUEST_ID"));
-            acmTask.setWorkflowRequestType((String) activitiTask.getProcessVariables().get("REQUEST_TYPE"));
-            acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get("pdfRenditionId"));
-            acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get("formXmlId"));
-            acmTask.setReworkInstructions((String) activitiTask.getProcessVariables().get("REWORK_INSTRUCTIONS"));
+            acmTask.setAttachedToObjectId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
+            acmTask.setAttachedToObjectType((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
+            acmTask.setAttachedToObjectName((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_NAME));
 
+            Long parentObjectId = (Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID);
+            parentObjectId = parentObjectId == null ? acmTask.getAttachedToObjectId() : parentObjectId;
+            acmTask.setParentObjectId(parentObjectId);
+
+            String parentObjectType = (String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE);
+            parentObjectType = parentObjectType == null ? acmTask.getAttachedToObjectType() : parentObjectType;
+            acmTask.setParentObjectType(parentObjectType);
+
+            acmTask.setWorkflowRequestId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_ID));
+            acmTask.setWorkflowRequestType((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REQUEST_TYPE));
+            acmTask.setReviewDocumentPdfRenditionId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PDF_RENDITION_ID));
+            acmTask.setReviewDocumentFormXmlId((Long) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_XML_RENDITION_ID));
+            acmTask.setReworkInstructions((String) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_REWORK_INSTRUCTIONS));
+            acmTask.setTaskStartDate((Date) activitiTask.getProcessVariables().get(TaskConstants.VARIABLE_NAME_START_DATE));
+            
             if ( acmTask.getReviewDocumentPdfRenditionId() != null && acmTask.getReviewDocumentPdfRenditionId() > 0 )
             {
                 EcmFile docUnderReview = getFileDao().find(acmTask.getReviewDocumentPdfRenditionId());

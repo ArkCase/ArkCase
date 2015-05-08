@@ -3,7 +3,9 @@
  */
 package com.armedia.acm.services.users.dao.group;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -101,6 +103,47 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>{
 		 if (group != null)
 		 {
 			 group.setStatus(AcmGroupStatus.DELETE);
+			 group.setParentGroup(null);
+			 group.setChildGroups(null);
+			 
+			 if (group.getMembers() != null)
+			 {
+				 // Clone the members that should be removed because of
+				 // concurrent modification exception
+				 Set<AcmUser> clonedMembers = getClonedMembers(group.getMembers());
+				 for (AcmUser member : clonedMembers)
+				 {
+					 group.removeMember(member);
+				 }
+			 }
+			 
+			 group = save(group);
+		 }
+		 
+		 return group;
+	}
+	
+	@Transactional
+	public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
+	{
+		 Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name = :name");
+		 query.setParameter("name", name); 
+     
+		 AcmGroup group = (AcmGroup) query.getSingleResult();
+		 
+		 if (group != null)
+		 {			 
+			 if (group.getMembers() != null)
+			 {
+				 for (AcmUser member : membersToRemove)
+				 {
+					 if (group.getMembers().contains(member))
+					 {
+						 group.removeMember(member);
+					 }
+				 }
+			 }
+			 
 			 group = save(group);
 		 }
 		 
@@ -135,6 +178,14 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>{
 		List<AcmGroup> groups =  query.getResultList();
 		
 		return groups;
+	}
+	
+	private Set<AcmUser> getClonedMembers(Set<AcmUser> members)
+	{
+		@SuppressWarnings("unchecked")
+		Set<AcmUser> clonedMembers = (HashSet) new HashSet<>(members).clone();
+		
+		return clonedMembers;
 	}
 	
 	@Override

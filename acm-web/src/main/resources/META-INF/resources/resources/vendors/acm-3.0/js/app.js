@@ -176,183 +176,201 @@ Modernizr.addTest('ios',function(){return!!navigator.userAgent.match(/iPhone|iPa
 
 Date.now = Date.now || function() { return +new Date; };
 
+/**
+ * Add Format string functionality
+ * Example: String.format("Hello {0}, {1}", "world", "John") returns "Hello World John"
+ */
+String.prototype.format = function() {
+  var formatted = this;
+  for (var i = 0; i < arguments.length; i++) {
+    var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+    formatted = formatted.replace(regexp, arguments[i]);
+  }
+  return formatted;
+};
+
+
 +function ($) {
 
   $(function(){
 
-    // toogle fullscreen
-    $(document).on('click', "[data-toggle=fullscreen]", function(e){
-      e.preventDefault();
-      if (screenfull.enabled) {
-        screenfull.request();
-      }
-    });
-
-  	// placeholder
-  	$('input[placeholder], textarea[placeholder]').placeholder();
-
-    // popover
-    $("[data-toggle=popover]").popover();
-    $(document).on('click', '.popover-title .close', function(e){
-    	var $target = $(e.target), $popover = $target.closest('.popover').prev();
-    	$popover && $popover.popover('hide');
-    });
-
-    // ajax modal
-    $(document).on('click', '[data-toggle="ajaxModal"]',
-      function(e) {
-        $('#ajaxModal').remove();
+      // toogle fullscreen
+      $(document).on('click', "[data-toggle=fullscreen]", function (e) {
         e.preventDefault();
-        var $this = $(this)
-          , $remote = $this.data('remote') || $this.attr('href')
-          , $modal = $('<div class="modal fade" id="ajaxModal"><div class="modal-body"></div></div>');
-        $('body').append($modal);
-        $modal.modal();
-        $modal.load($remote);
-      }
-    );
-    
-    // dropdown menu
-    $.fn.dropdown.Constructor.prototype.change = function(e){
-      e.preventDefault();
-      var $item = $(e.target), $select, $checked = false, $menu, $label;
-      !$item.is('a') && ($item = $item.closest('a'));
-      $menu = $item.closest('.dropdown-menu');
-      $label = $menu.parent().find('.dropdown-label');
-      $labelHolder = $label.text();
-      $select = $item.find('input');
-      $checked = $select.is(':checked');
-      if($select.is(':disabled')) return;
-      if($select.attr('type') == 'radio' && $checked) return;
-      if($select.attr('type') == 'radio') $menu.find('li').removeClass('active');
-      $item.parent().removeClass('active');
-      !$checked && $item.parent().addClass('active');
-      $select.prop("checked", !$select.prop("checked"));
+        if (screenfull.enabled) {
+          screenfull.request();
+        }
+      });
 
-      $items = $menu.find('li > a > input:checked');
-      if ($items.length) {
+      // placeholder
+      $('input[placeholder], textarea[placeholder]').placeholder();
+
+      // popover
+      $("[data-toggle=popover]").popover();
+      $(document).on('click', '.popover-title .close', function (e) {
+        var $target = $(e.target), $popover = $target.closest('.popover').prev();
+        $popover && $popover.popover('hide');
+      });
+
+      // ajax modal
+      $(document).on('click', '[data-toggle="ajaxModal"]',
+          function (e) {
+            $('#ajaxModal').remove();
+            e.preventDefault();
+            var $this = $(this)
+                , $remote = $this.data('remote') || $this.attr('href')
+                , $modal = $('<div class="modal fade" id="ajaxModal"><div class="modal-body"></div></div>');
+            $('body').append($modal);
+            $modal.modal();
+            $modal.load($remote);
+          }
+      );
+
+      // dropdown menu
+      $.fn.dropdown.Constructor.prototype.change = function (e) {
+        e.preventDefault();
+        var $item = $(e.target), $select, $checked = false, $menu, $label;
+        !$item.is('a') && ($item = $item.closest('a'));
+        $menu = $item.closest('.dropdown-menu');
+        $label = $menu.parent().find('.dropdown-label');
+        $labelHolder = $label.text();
+        $select = $item.find('input');
+        $checked = $select.is(':checked');
+        if ($select.is(':disabled')) return;
+        if ($select.attr('type') == 'radio' && $checked) return;
+        if ($select.attr('type') == 'radio') $menu.find('li').removeClass('active');
+        $item.parent().removeClass('active');
+        !$checked && $item.parent().addClass('active');
+        $select.prop("checked", !$select.prop("checked"));
+
+        $items = $menu.find('li > a > input:checked');
+        if ($items.length) {
           $text = [];
           $items.each(function () {
-              var $str = $(this).parent().text();
-              $str && $text.push($.trim($str));
+            var $str = $(this).parent().text();
+            $str && $text.push($.trim($str));
           });
 
           $text = $text.length < 4 ? $text.join(', ') : $text.length + ' selected';
           $label.html($text);
-      }else{
-        $label.html($label.data('placeholder'));
-      }
-    }
-    $(document).on('click.dropdown-menu', '.dropdown-select > li > a', $.fn.dropdown.Constructor.prototype.change);
-
-  	// tooltip
-    $("[data-toggle=tooltip]").tooltip();
-
-    // class
-  	$(document).on('click', '[data-toggle^="class"]', function(e){
-  		e && e.preventDefault();
-  		var $this = $(e.target), $class , $target, $tmp, $classes, $targets;
-  		!$this.data('toggle') && ($this = $this.closest('[data-toggle^="class"]'));
-    	$class = $this.data()['toggle'];
-    	$target = $this.data('target') || $this.attr('href');
-      $class && ($tmp = $class.split(':')[1]) && ($classes = $tmp.split(','));
-      $target && ($targets = $target.split(','));
-      $classes && $classes.length && $.each($targets, function( index, value ) {
-        if ( $classes[index].indexOf( '*' ) !== -1 ) {
-          var patt = new RegExp( '\\s' + 
-              $classes[index].
-                replace( /\*/g, '[A-Za-z0-9-_]+' ).
-                split( ' ' ).
-                join( '\\s|\\s' ) + 
-              '\\s', 'g' );
-          $($this).each( function ( i, it ) {
-            var cn = ' ' + it.className + ' ';
-            while ( patt.test( cn ) ) {
-              cn = cn.replace( patt, ' ' );
-            }
-            it.className = $.trim( cn );
-          });
+        } else {
+          $label.html($label.data('placeholder'));
         }
-        ($targets[index] !='#') && $($targets[index]).toggleClass($classes[index]) || $this.toggleClass($classes[index]);
-      });
-    	$this.toggleClass('active');
-  	});
+      }
+      $(document).on('click.dropdown-menu', '.dropdown-select > li > a', $.fn.dropdown.Constructor.prototype.change);
 
-    // panel toggle
-    $(document).on('click', '.panel-toggle', function(e){
-      e && e.preventDefault();
-      var $this = $(e.target), $class = 'collapse' , $target;
-      if (!$this.is('a')) $this = $this.closest('a');
-      $target = $this.closest('.panel');
+      // tooltip
+      $("[data-toggle=tooltip]").tooltip();
+
+      // class
+      $(document).on('click', '[data-toggle^="class"]', function (e) {
+        e && e.preventDefault();
+        var $this = $(e.target), $class, $target, $tmp, $classes, $targets;
+        !$this.data('toggle') && ($this = $this.closest('[data-toggle^="class"]'));
+        $class = $this.data()['toggle'];
+        $target = $this.data('target') || $this.attr('href');
+        $class && ($tmp = $class.split(':')[1]) && ($classes = $tmp.split(','));
+        $target && ($targets = $target.split(','));
+        $classes && $classes.length && $.each($targets, function (index, value) {
+          if ($classes[index].indexOf('*') !== -1) {
+            var patt = new RegExp('\\s' +
+            $classes[index].
+                replace(/\*/g, '[A-Za-z0-9-_]+').
+                split(' ').
+                join('\\s|\\s') +
+            '\\s', 'g');
+            $($this).each(function (i, it) {
+              var cn = ' ' + it.className + ' ';
+              while (patt.test(cn)) {
+                cn = cn.replace(patt, ' ');
+              }
+              it.className = $.trim(cn);
+            });
+          }
+          ($targets[index] != '#') && $($targets[index]).toggleClass($classes[index]) || $this.toggleClass($classes[index]);
+        });
+        $this.toggleClass('active');
+      });
+
+      // panel toggle
+      $(document).on('click', '.panel-toggle', function (e) {
+        e && e.preventDefault();
+        var $this = $(e.target), $class = 'collapse', $target;
+        if (!$this.is('a')) $this = $this.closest('a');
+        $target = $this.closest('.panel');
         $target.find('.panel-body').toggleClass($class);
         $this.toggleClass('active');
-    });
-  	
-  	// carousel
-  	$('.carousel.auto').carousel();
-  	
-  	// button loading
-  	$(document).on('click.button.data-api', '[data-loading-text]', function (e) {
-  	    var $this = $(e.target);
-  	    $this.is('i') && ($this = $this.parent());
-  	    $this.button('loading');
-  	});
- 	
-    var $window = $(window);
-    // mobile
-  	var mobile = function(option){
-  		if(option == 'reset'){
-            //jwu modified to avoid the "Uncaught TypeError: undefined is not a function"
-            //$('[data-toggle^="shift"]').shift('reset');
-            if ($('[data-toggle^="shift"]').shift) {
-                $('[data-toggle^="shift"]').shift('reset');
-            }
-  			return true;
-  		}
-  		if ($('[data-toggle^="shift"]').shift) {
-  			$('[data-toggle^="shift"]').shift('init');
-  			
-  		}
-      return true;
-  	};
-  	// unmobile
-  	$window.width() < 768 && mobile();
-    // resize
-    var $resize;
-  	$window.resize(function() {
-      clearTimeout($resize);
-      $resize = setTimeout(function(){
-        $window.width() < 767 && mobile();
-        $window.width() >= 768 && mobile('reset') && fixVbox();
-      }, 500);
-  	});
-    
-    // fix vbox
-    var fixVbox = function(){
-      $('.ie11 .vbox').each(function(){
-        $(this).height($(this).parent().height());
       });
-    }
-    fixVbox();
 
-    // collapse nav
-    $(document).on('click', '[data-ride="collapse"] a', function (e) {
-      var $this = $(e.target), $active;      
-      $this.is('a') || ($this = $this.closest('a'));
-      
-      $active = $this.parent().siblings( ".active" );
-      $active && $active.toggleClass('active').find('> ul:visible').slideUp(200);
-      
-      ($this.parent().hasClass('active') && $this.next().slideUp(200)) || $this.next().slideDown(200);
-      $this.parent().toggleClass('active');
-      
-      $this.next().is('ul') && e.preventDefault();
+      // carousel
+      $('.carousel.auto').carousel();
 
-      setTimeout(function(){ $(document).trigger('updateNav'); }, 300);      
-    });
+      // button loading
+      $(document).on('click.button.data-api', '[data-loading-text]', function (e) {
+        var $this = $(e.target);
+        $this.is('i') && ($this = $this.parent());
+        $this.button('loading');
+      });
 
-    // dropdown still
-    $(document).on('click.bs.dropdown.data-api', '.dropdown .on, .dropup .on', function (e) { e.stopPropagation() });
+      var $window = $(window);
+      // mobile
+      var mobile = function (option) {
+        if (option == 'reset') {
+          //jwu modified to avoid the "Uncaught TypeError: undefined is not a function"
+          //$('[data-toggle^="shift"]').shift('reset');
+          if ($('[data-toggle^="shift"]').shift) {
+            $('[data-toggle^="shift"]').shift('reset');
+          }
+          return true;
+        }
+        if ($('[data-toggle^="shift"]').shift) {
+          $('[data-toggle^="shift"]').shift('init');
+
+        }
+        return true;
+      };
+      // unmobile
+      $window.width() < 768 && mobile();
+      // resize
+      var $resize;
+      $window.resize(function () {
+        clearTimeout($resize);
+        $resize = setTimeout(function () {
+          $window.width() < 767 && mobile();
+          $window.width() >= 768 && mobile('reset') && fixVbox();
+        }, 500);
+      });
+
+      // fix vbox
+      var fixVbox = function () {
+        $('.ie11 .vbox').each(function () {
+          $(this).height($(this).parent().height());
+        });
+      }
+      fixVbox();
+
+      // collapse nav
+      $(document).on('click', '[data-ride="collapse"] a', function (e) {
+        var $this = $(e.target), $active;
+        $this.is('a') || ($this = $this.closest('a'));
+
+        $active = $this.parent().siblings(".active");
+        $active && $active.toggleClass('active').find('> ul:visible').slideUp(200);
+
+        ($this.parent().hasClass('active') && $this.next().slideUp(200)) || $this.next().slideDown(200);
+        $this.parent().toggleClass('active');
+
+        $this.next().is('ul') && e.preventDefault();
+
+        setTimeout(function () {
+          $(document).trigger('updateNav');
+        }, 300);
+      });
+
+      // dropdown still
+      $(document).on('click.bs.dropdown.data-api', '.dropdown .on, .dropup .on', function (e) {
+        e.stopPropagation()
+      });
 
   });
 }(jQuery);

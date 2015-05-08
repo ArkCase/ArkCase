@@ -4,10 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;
@@ -15,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.PersistenceException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -84,6 +82,8 @@ public interface EcmFileService
      */
     String createFolder(String folderPath) throws AcmCreateObjectFailedException;
 
+
+
     @Transactional
     AcmContainer getOrCreateContainer(String objectType, Long objectId) throws
             AcmCreateObjectFailedException, AcmUserActionFailedException;
@@ -97,11 +97,18 @@ public interface EcmFileService
                                          String category, String sortBy,
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
-    /**
-     * Replace all not allowed characters in folder name with underscore
-     * 
-     * @param name
-     * @return
-     */
-    String buildSafeFolderName(String name);
+
+    EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
+    void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    EcmFile findById(Long fileId);
+
+    AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
+
+    EcmFile setFilesActiveVersion(Long fileId,String versionTag) throws PersistenceException;
 }

@@ -229,10 +229,7 @@ var Acm = Acm || {
     ,getDateFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            var year  = dt.substr(0, 4);
-            var month = dt.substr(5, 2);
-            var day   = dt.substr(8, 2);
-            d = month + "/" + day + "/" + year;
+            d = moment(dt).format($.t("common:date.short"))
         }
         return d;
     }
@@ -240,13 +237,7 @@ var Acm = Acm || {
     ,getDateTimeFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            var year  = dt.substr(0, 4);
-            var month = dt.substr(5, 2);
-            var day   = dt.substr(8, 2);
-            var hour   = dt.substr(11, 2);
-            var minute   = dt.substr(14, 2);
-            var second   = dt.substr(17, 2);
-            d = month + "/" + day + "/" + year + " " + hour + ":" + minute + ":" + second;
+            d = moment(dt).format($.t("common:date.full"));
         }
         return d;
     }
@@ -497,6 +488,44 @@ var Acm = Acm || {
     	}
     	
     	return retval;
+    }
+    
+    ,checkRestriction: function(assignee, group, assignees, groups) {
+    	var restrict = true;
+    	
+    	// We need only one true condition.
+        // First check if the assignee is the logged user
+        if(!Acm.isEmpty(assignee) && Acm.compare(assignee, App.getUserName())){
+        	restrict = false;
+        } else {
+            // If the user is not assignee, check in the assignees (users that belong to the group)
+        	// Skip this check if the group is empty
+            if (Acm.isArray(assignees) && !Acm.isEmpty(group)) {
+            	for (var i = 0; i < assignees.length; i++) {
+            		if(Acm.compare(assignees[i].userId, App.getUserName())){
+            			restrict = false;
+            			break;
+            		}
+            	}
+            }
+            
+            // If the user in not assignee or is not in the users that belong to a group, check if it's supervisor of the group
+            // Skip this check if the group is empty
+            if (restrict) {
+	            if (Acm.isArray(groups) && !Acm.isEmpty(group)) {
+	            	for (var i = 0; i < groups.length; i++) {
+	            		if(Acm.compare(groups[i].object_id_s, group)){
+	            			if (!Acm.isEmpty(groups[i].supervisor_id_s) && Acm.compare(groups[i].supervisor_id_s, App.getUserName())) {
+	            				restrict = false;
+	                			break;
+	            			}
+	            		}
+	            	}
+	            }
+            }
+        }
+        
+        return restrict;
     }
 
 };

@@ -11,7 +11,6 @@ public class ROIForm {
 	private ReportInformation reportInformation;
 	private ReportDetails reportDetails;
 	private List<Item> approvers;
-	private List<String> approverOptions;
 
 	/**
 	 * @return the reportInformation
@@ -49,15 +48,5 @@ public class ROIForm {
 	public void setApprovers(List<Item> approvers)
 	{
 		this.approvers = approvers;
-	}
-
-	public void setApproverOptions(List<String> approverOptions)
-	{
-		this.approverOptions = approverOptions;
-	}
-
-	public List<String> getApproverOptions()
-	{
-		return approverOptions;
 	}
 }

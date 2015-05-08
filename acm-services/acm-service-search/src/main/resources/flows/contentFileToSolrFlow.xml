@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
 
 
     <http:endpoint name="http.submitContentFiles"
-                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.object_id_s=#[flowVars['objectId']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parentId']]&amp;literal.parent_type_s=#[flowVars['parentType']]&amp;literal.parent_number_lcs=#[flowVars['parentName']]"
+                   address="http://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.contentFileHandler}?overwrite=true&amp;literal.parent_ref_s=#[flowVars['parentRef']]&amp;literal.status_lcs=#[flowVars['status']]&amp;literal.protected_object_b=#[flowVars['protectedObject']]&amp;literal.public_doc_b=#[flowVars['publicDoc']]&amp;literal.id=#[flowVars['docId']]&amp;literal.object_type_s=#[flowVars['objectType']]&amp;literal.object_id_s=#[flowVars['objectId']]&amp;literal.modified_date_tdt=#[flowVars['modified']]&amp;literal.modifier_lcs=#[flowVars['modifier']]&amp;literal.create_date_tdt=#[flowVars['created']]&amp;literal.creator_lcs=#[flowVars['creator']]&amp;literal.name=#[flowVars['name']]&amp;literal.parent_id_s=#[flowVars['parentId']]&amp;literal.parent_type_s=#[flowVars['parentType']]&amp;literal.parent_number_lcs=#[flowVars['parentName']]"
                    encoding="UTF-8"
                    method="POST"
                    exchange-pattern="request-response"
@@ -50,7 +50,10 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <set-variable variableName="parentId" value="#[message.payload.parent_id_s]"/>
         <set-variable variableName="parentType" value="#[message.payload.parent_type_s]"/>
         <set-variable variableName="parentName" value="#[message.payload.parent_number_lcs]"/>
-
+        <set-variable variableName="publicDoc" value="#[message.payload.public_doc_b]"/>
+        <set-variable variableName="protectedObject" value="#[message.payload.protected_object_b]"/>
+        <set-variable variableName="status" value="#[message.payload.status_lcs]"/>
+        <set-variable variableName="parentRef" value="#[message.payload.parent_ref_s]"/>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG" message="Doc ID: #[flowVars['docId']]" />
 

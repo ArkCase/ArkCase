@@ -13,7 +13,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoForm;
+import com.armedia.acm.frevvo.model.Options;
 
 /**
  * @author riste.tutureski
@@ -26,7 +28,8 @@ public class CostForm extends FrevvoForm {
 	private String user;
 	private List<String> userOptions;
 	private Long objectId;
-	private Map<String, List<String>> codeOptions;
+	private Map<String, Options> codeOptions;
+	private Map<String, Map<String, Details>> codeDetails;
 	private String objectType;
 	private List<String> objectTypeOptions;
 	private String objectNumber;
@@ -35,7 +38,6 @@ public class CostForm extends FrevvoForm {
 	private List<String> statusOptions;
 	private String details;
 	private List<ApproverItem> approvers;
-	private List<String> approverOptions;
 	private List<String> balanceTable;
 	
 	@XmlElement(name="id")
@@ -73,14 +75,23 @@ public class CostForm extends FrevvoForm {
 	public void setObjectId(Long objectId) {
 		this.objectId = objectId;
 	}
-	
+
 	@XmlTransient
-	public Map<String, List<String>> getCodeOptions() {
+	public Map<String, Options> getCodeOptions() {
 		return codeOptions;
 	}
 
-	public void setCodeOptions(Map<String, List<String>> codeOptions) {
+	public void setCodeOptions(Map<String, Options> codeOptions) {
 		this.codeOptions = codeOptions;
+	}
+
+	@XmlTransient
+	public Map<String, Map<String, Details>> getCodeDetails() {
+		return codeDetails;
+	}
+
+	public void setCodeDetails(Map<String, Map<String, Details>> codeDetails) {
+		this.codeDetails = codeDetails;
 	}
 
 	@XmlElement(name="type")
@@ -153,15 +164,6 @@ public class CostForm extends FrevvoForm {
 
 	public void setApprovers(List<ApproverItem> approvers) {
 		this.approvers = approvers;
-	}
-
-	@XmlTransient
-	public List<String> getApproverOptions() {
-		return approverOptions;
-	}
-
-	public void setApproverOptions(List<String> approverOptions) {
-		this.approverOptions = approverOptions;
 	}
 
 	@XmlElement(name="balanceTableItem")

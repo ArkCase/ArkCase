@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+    <bean id="acmSaveNotePluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Save Note Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmSaveNotePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmSaveNoteUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/note"/>
+                    <property name="requiredPrivilege" ref="acmSaveNotePrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmDeleteNoteByIdPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmDeleteNoteByIdPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmDeleteNoteByIdUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/note/{noteId}"/>
+                    <property name="requiredPrivilege" ref="acmDeleteNoteByIdPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="acmListNotesPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Delete Note Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmListNotesPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmListNotesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/note/{parentType}/{parentId}"/>
+                    <property name="requiredPrivilege" ref="acmListNotesPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

@@ -3,7 +3,6 @@
  */
 package com.armedia.acm.form.cost.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.cost.model.CostForm;
-import com.armedia.acm.form.cost.model.CostFormConstants;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.frevvo.model.Options;
+import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -33,8 +33,6 @@ import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -191,18 +189,17 @@ public class CostService extends FrevvoFormChargeAbstractService {
 		item.setTitleOptions(convertToList((String) getProperties().get(FrevvoFormName.COSTSHEET + ".titles"), ","));
 		form.setItems(Arrays.asList(item));
 		
-		// Set charge codes for each type
-		Map<String, List<String>> codeOptions = getCodeOptions(types);
-		form.setCodeOptions(codeOptions);
+		// Set charge codes for each type and details for them
+		OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.COSTSHEET, types);
+				
+		Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
+		Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
 		
-		// Init possible approvers
-		form.setApproverOptions(getApproverOptions());
+		form.setCodeOptions(codeOptions);
+		form.setCodeDetails(codeOptionsDetails);
 		
 		// Create JSON and back to the Frevvo form
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(form);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(form);
 
 		return json;
 	}
@@ -210,31 +207,10 @@ public class CostService extends FrevvoFormChargeAbstractService {
 	@Override
 	public String getSolrResponse(String objectType)
 	{
-		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_ASC, null);
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50,
+				SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
 		
 		return jsonResults;
-	}
-	
-	private List<String> getApproverOptions()
-	{
-		List<String> approverOptions = new ArrayList<>();
-		try
-		{
-			List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(CostFormConstants.APPROVER_PRIVILEGE);
-	        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
-	        
-	        if (users != null && users.size() > 0) {
-	        	for (int i = 0; i < users.size(); i++) {
-	        		approverOptions.add(users.get(i).getUserId() + "=" + users.get(i).getFullName());
-	        	}
-	        }
-		}
-		catch(Exception e)
-		{
-			LOG.warn("Cannot find users with privilege = " + CostFormConstants.APPROVER_PRIVILEGE + ". Continue and not break the execution - normal behavior when configuration has some wrong data.");
-		}
-		
-		return approverOptions;
 	}
 
 	@Override

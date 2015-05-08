@@ -6,6 +6,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">search</span>
+    </div>
     <%--<div id="detailData" itemscope="true" style="display: none">
         <span itemprop="helpUrl">${helpUrl}</span>
     </div>--%>
@@ -42,6 +45,9 @@
     <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfigServices.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/admin/dashboard/angular/dashboardConfig.js'/>"></script>
 
+    <!-- X-Editable -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
+    <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
 
     /////////////////////////////////////////////////////////////////////
@@ -77,6 +83,9 @@
 
     </style>
     //////////////////////////////////////////////////////////////////////
+
+
+    <%@include file="/resources/include/dlgSearch.jspf" %>
 </jsp:attribute>
 
 <jsp:body>
@@ -270,6 +279,48 @@
                                             </section>
                                         </div>
                                     </div>
+                                        <%--JTable - Label Configuration --%>
+                                    <div class="row" id="tabLabelConfiguration" style="display:none;">
+                                        <div class="col-md-12">
+
+                                            <h3>Label Configuration</h3>
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <select id="labelConfigurationNamespace" disabled class="form-control">
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <select id="labelConfigurationLanguage" disabled class="form-control">
+                                                    </select>
+                                                </div>
+
+
+                                                <div class="col-md-3">
+                                                    <input id="labelConfigurationIdFilter" class="form-control" type="text" placeholder="Filter By Id"/>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input id="labelConfigurationValueFilter" class="form-control" type="text" placeholder="Filter By Value"/>
+                                                </div>
+                                            </div>
+                                            <br><br>
+
+                                            <section class="panel panel-default">
+                                                <div id="divLabelConfiguration" style="width:100%">
+                                                </div>
+                                            </section>
+
+                                            <form class="form-inline">
+                                                <div class="form-group">
+                                                    <label>Default language</label>
+                                                    <select id="labelConfigurationDefaultLanguage" disabled class="form-control">
+                                                    </select>
+                                                </div>
+                                                <button id="labelConfigurationApplyDefaultLanguage" disabled class="btn btn-default">Apply</button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+
 
                                     <%--JTable - Correspondence--%>
                                     <div class="row" id="tabCorrespondenceTemplates" style="display:none;">

@@ -15,28 +15,6 @@ SearchBase.View = {
         if (SearchBase.View.Results.onInitialized)   {SearchBase.View.Results.onInitialized();}
     }
 
-    ,showDialog: function(args) {
-        if (Acm.isEmpty(args.$dlgObjectPicker)) {
-            args.$dlgObjectPicker = $("#dlgObjectPicker");
-        }
-        if (Acm.isNotEmpty(args.title)) {
-            args.$dlgObjectPicker.find('.modal-title').text(args.title);
-        }
-        if (Acm.isNotEmpty(args.prompt)) {
-            args.$edtSearch.prop('placeholder',args.prompt);
-        }
-        if (Acm.isNotEmpty(args.btnGoText)) {
-            args.$btnSearch.text(args.btnGoText);
-        }
-        if (Acm.isNotEmpty(args.btnOkText)) {
-            args.$dlgObjectPicker.find('button.btn-primary').text(args.btnOkText);
-        }
-        if (Acm.isNotEmpty(args.btnCancelText)) {
-            args.$dlgObjectPicker.find('button.btn-default').text(args.btnCancelText);
-        }
-        Acm.Dialog.modal(args.$dlgObjectPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
-    }
-
     ,Query: {
         create: function(args) {
             var $edtSearchDefault  = $("#searchQuery");
@@ -280,6 +258,7 @@ SearchBase.View = {
                     Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
                     Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
                     Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt);
+                    Record.email      = Acm.goodValue(result.docs[i].email_lcs);
                     jtData.Records.push(Record);
                 }
 
@@ -300,7 +279,7 @@ SearchBase.View = {
         }
         ,_getDefaultJtArgs: function() {
             return {
-                title: 'Search Results'
+                title: $.t("search:table.title")
                 ,multiselect: false
                 ,selecting: false
                 ,selectingCheckboxes: false
@@ -350,7 +329,7 @@ SearchBase.View = {
                 }  //end actions
                 ,fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("search:table.field.id")
                         ,key: true
                         ,list: false
                         ,create: false
@@ -358,7 +337,7 @@ SearchBase.View = {
                         ,sorting: false
                     }
                     ,name: {
-                        title: 'Name'
+                        title: $.t("search:table.field.name")
                         ,width: '15%'
                         ,sorting: false
                         ,display: function(data) {
@@ -366,16 +345,16 @@ SearchBase.View = {
                         }
                     }
                     ,type: {
-                        title: 'Type'
+                        title: $.t("search:table.field.type")
                         //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
                         ,sorting: false
                     }
                     ,title: {
-                        title: 'Title'
+                        title: $.t("search:table.field.title")
                         ,width: '30%'
                     }
                     ,parentId: {
-                        title: 'Parent ID'
+                        title: $.t("search:table.field.parent-id")
                         ,key: false
                         ,list: false
                         ,create: false
@@ -383,7 +362,7 @@ SearchBase.View = {
                         ,sorting: false
                     }
                     ,parentName: {
-                        title: 'Parent'
+                        title: $.t("search:table.field.parent-name")
                         ,width: '15%'
                         ,sorting: false
                         ,display: function(data) {
@@ -391,17 +370,17 @@ SearchBase.View = {
                         }
                     }
                     ,parentType: {
-                        title: 'Parent Type'
+                        title: $.t("search:table.field.parent-type")
                         ,sorting: false
                         ,list: false
                     }
                     ,owner: {
-                        title: 'Assignee'
+                        title: $.t("search:table.field.owner")
                         ,width: '15%'
                         ,sorting: false
                     }
                     ,modified: {
-                        title: 'Modified'
+                        title: $.t("search:table.field.modified")
                         ,type: 'textarea'
                         ,width: '20%'
                         ,sorting: false

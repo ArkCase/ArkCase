@@ -76,9 +76,10 @@ public interface NotificationConstants {
     public static final String EMAIL_RESPONSE_TIMEOUT_KEY = "notification.user.email.responseTimeout";
     
     /**
-     * Notification message status new
+     * Notification message statuses
      */
     public static final String STATUS_NEW = "New";
+    public static final String STATUS_DELETE = "DELETE";
     
     /**
      * Notification message action empty (default one)

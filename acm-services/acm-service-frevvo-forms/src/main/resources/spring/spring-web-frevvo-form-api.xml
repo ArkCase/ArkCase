@@ -50,6 +50,8 @@
         <property name="timesheetEventPublisher" ref="timesheetEventPublisher"/>
         <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
         <property name="functionalAccessService" ref="functionalAccessService"/>
+        <property name="complaintFactory" ref="complaintFactory"/>
+        <property name="ebriefFactory" ref="ebriefFactory"/>
 	</bean>
 
 </beans>

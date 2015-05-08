@@ -21,7 +21,9 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {
         "/spring/spring-library-notification.xml",
         "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-notification-plugin-test.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NotificationIT

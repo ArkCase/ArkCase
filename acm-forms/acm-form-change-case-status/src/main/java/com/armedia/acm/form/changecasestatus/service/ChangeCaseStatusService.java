@@ -27,8 +27,6 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -158,31 +156,14 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 			information.setDate(new Date());
 		}
 		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".statuses"), ","));
-		
-		// Get Approvers
-		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
-		
-		List<String> approverOptions = new ArrayList<String>();
-		if (acmUsers != null && acmUsers.size() > 0){
-			for (AcmUser acmUser : acmUsers) {
-				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "edit".equals(mode)){
-					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-				}
-			}
-		}
 
 		String caseResolutions = (String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".resolutions");
 		List<String> resolutions = convertToList(caseResolutions, ",");
 		changeCaseStatus.setResolutions(resolutions);
 		
 		changeCaseStatus.setInformation(information);
-		changeCaseStatus.setApproverOptions(approverOptions);
     	
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(changeCaseStatus);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(changeCaseStatus);
 
 		return json;
     }

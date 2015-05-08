@@ -50,10 +50,11 @@
 
             <%--</section>--%>
             <footer class="footer bg-white b-t b-light">
-                <p>Powered by ArkCase</p>
+                <p data-i18n="dashboard:label.powered-by-arkcase">Powered by ArkCase</p>
             </footer>
         </section>
     </section>
+
 </jsp:body>
 </t:layout>
 

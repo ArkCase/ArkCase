@@ -1,0 +1,22 @@
+{
+    "label": {
+        "input-search": "Type in your search query to find complaints, cases, tasks, and documents."
+    },
+    "button": {
+        "go": "Go!"
+    },
+    "table": {
+        "title": "Search Results",
+        "field": {
+            "id": "ID",
+            "name": "Name",
+            "type": "Type",
+            "title": "Title",
+            "parent-id": "Parent ID",
+            "parent-name": "Parent",
+            "parent-type": "Parent Type",
+            "owner": "Assignee",
+            "modified": "Modified"
+        }
+    }
+}

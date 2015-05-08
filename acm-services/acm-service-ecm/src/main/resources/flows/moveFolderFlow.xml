@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="moveFolder" doc:name="Move a folder from one location to other">
+        <description>
+            The incoming payload is AcmFolder that should be moved to other location. The return payload is the moved CMIS folder.
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://moveFolder.in"
+                exchange-pattern="request-response"
+                doc:name="Move Folder">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+        <enricher target="#[flowVars['parentObject']]">
+            <cmis:folder get="PARENT" folderId="#[message.inboundProperties.acmFolderId]"/>
+        </enricher>
+
+
+        <cmis:move-object objectId="#[message.inboundProperties.acmFolderId]"
+                          sourceFolderId="#[flowVars['parentObject'].id]"
+                          targetFolderId="#[message.inboundProperties.dstFolderId]"/>
+
+
+		<catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="moveFolderException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

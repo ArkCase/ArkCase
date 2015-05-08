@@ -100,7 +100,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
-        expect(mockMuleClient.send("vm://downloadFileFlow.in", cmisId, null)).andReturn(mockMuleMessage);
+        expect(mockMuleClient.send("vm://downloadFileFlow.in", "cmisId", null)).andReturn(mockMuleMessage);
         expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).atLeastOnce();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);

@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.services.tag.model.AcmTag;
+import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -65,7 +64,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private String fileMimeType;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "cm_folder_id")
     private AcmFolder folder;
 
@@ -86,8 +85,8 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private List<EcmFileVersion> versions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="cm_file_id")
-    private List<AcmTag> tags = new ArrayList<>();
+    @JoinColumn(name="cm_parent_object_id")
+    private List<AcmAssociatedTag> tags = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -274,11 +273,11 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         this.container = container;
     }
 
-    public List<AcmTag> getTags() {
+    public List<AcmAssociatedTag> getTags() {
         return tags;
     }
 
-    public void setTags(List<AcmTag> tags) {
+    public void setTags(List<AcmAssociatedTag> tags) {
         this.tags = tags;
     }
 
