@@ -459,7 +459,7 @@
                                                     </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
 
-                                                <span class="m-t-xs inline text-white" data-i18n="casefile:outlook-calendar.label.calendar">
+                                                <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
                                                   Calendar
                                                 </span>
                                                 </header>
