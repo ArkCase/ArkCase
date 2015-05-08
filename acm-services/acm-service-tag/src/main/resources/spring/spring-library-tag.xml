@@ -22,34 +22,30 @@
     <bean id="tagPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Tag Plugin"/>
         <property name="pluginProperties" ref="tagProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="tagPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="tagUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/tag"/>
-                    <property name="requiredPrivilege" ref="tagPrivilege"/>
-                </bean>
-            </list>
-
-        </property>
     </bean>
 
-    <bean id="tagPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-tag"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
+    <bean id="associatedTagDao" class="com.armedia.acm.services.tag.dao.AssociatedTagDao"/>
+
+    <bean id="tagDao" class="com.armedia.acm.services.tag.dao.TagDao"/>
+
+    <bean id="associatedTagEventPublisher" class="com.armedia.acm.services.tag.service.AssociatedTagEventPublisher"/>
+
+    <bean id="tagEventPublisher" class="com.armedia.acm.services.tag.service.TagEventPublisher"/>
+
+    <bean id="tagService" class="com.armedia.acm.services.tag.service.TagService">
+        <property name="tagDao" ref="tagDao"/>
+        <property name="tagPlugin" ref="tagPlugin"/>
+    </bean>
+
+    <bean id="associatedTagService" class="com.armedia.acm.services.tag.service.AssociatedTagService">
+        <property name="tagDao" ref="tagDao"/>
+        <property name="associatedTagDao" ref="associatedTagDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="tagPlugin" ref="tagPlugin"/>
+    </bean>
+
+    <bean id="associatedTagToSolrTransformer" class="com.armedia.acm.services.tag.service.AssociatedTagToSolrTransformer">
+        <property name="associatedTagDao" ref="associatedTagDao"/>
     </bean>
 
 </beans>

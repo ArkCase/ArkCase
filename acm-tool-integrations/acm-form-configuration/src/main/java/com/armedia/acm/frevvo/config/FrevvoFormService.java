@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,5 +56,7 @@ public interface FrevvoFormService {
 
 	void setUserIpAddress(String userIpAddress);
 	String getUserIpAddress();
+	
+	public JSONObject createResponse(Object object);
 	
 }

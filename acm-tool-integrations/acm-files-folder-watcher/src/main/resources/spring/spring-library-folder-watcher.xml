@@ -6,9 +6,6 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-    <!-- Spring requires a property placeholder to resolve placeholders such as ${user.home} -->
-    <context:property-placeholder />
-
     <bean id="userHomeFolder" class="java.io.File">
         <constructor-arg value="${user.home}"/>
     </bean>
@@ -20,11 +17,12 @@
         <constructor-arg index="1" value=".acm"/>
     </bean>
 
-    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher">
+    <bean id="configFileListener" class="com.armedia.acm.files.ConfigFileWatcher" depends-on="springEntityListenerConfigurer">
         <property name="baseFolder" ref="configFolder"/>
         <property name="ignoreFolders">
             <list>
                 <value>${file.separator}activemq</value>
+                <value>${file.separator}activiti${file.separator}/versions</value>
             </list>
         </property>
     </bean>

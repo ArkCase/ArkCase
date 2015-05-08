@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="acmSignatureConfirmPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Signature Confirm Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmSignatureConfirmPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmSignatureConfirmUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/signature/confirm/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="acmSignatureConfirmPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="acmSignatureFindPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Signature Find Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmSignatureFindPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmFindSignatureUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/signature/find/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="acmSignatureFindPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

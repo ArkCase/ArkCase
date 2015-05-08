@@ -96,15 +96,15 @@ Timesheet.View = {
         ,getContextMenu: function(node) {
             var key = node.key;
             var menu = [
-                {title: "Menu:" + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
-                {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
-                {title: "Paste", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
+                {title: $.t("timesheet:context-menu.menu-title.menu") + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
+                {title: $.t("timesheet:context-menu.menu-title.copy"), cmd: "copy", uiIcon: "ui-icon-copy"},
+                {title: $.t("timesheet:context-menu.menu-title.paste"), cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
                 {title: "----"},
-                {title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
-                {title: "Delete", cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
-                {title: "More", children: [
-                    {title: "Sub 1", cmd: "sub1"},
-                    {title: "Sub 2", cmd: "sub1"}
+                {title: $.t("timesheet:context-menu.menu-title.edit"), cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
+                {title: $.t("timesheet:context-menu.menu-title.delete"), cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
+                {title: $.t("timesheet:context-menu.menu-title.more"), children: [
+                    {title: $.t("timesheet:context-menu.menu-title.sub1"), cmd: "sub1"},
+                    {title: $.t("timesheet:context-menu.menu-title.sub2"), cmd: "sub1"}
                 ]}
             ];
             return menu;
@@ -127,7 +127,7 @@ Timesheet.View = {
             if(Acm.isNotEmpty(formUrls) && Acm.isNotEmpty(formUrls.newTimesheetFormUrl)){
                 var newTimesheetFormUrl = Timesheet.View.MicroData.formUrls.newTimesheetFormUrl;
                 newTimesheetFormUrl = newTimesheetFormUrl.replace("embed", "popupform");
-                Acm.Dialog.openWindow(newTimesheetFormUrl, "", 860, 700, function() {
+                Acm.Dialog.openWindow(newTimesheetFormUrl, "", 1060, 700, function() {
                     Timesheet.Controller.viewClosedAddTimesheetWindow();
                     Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
                 });
@@ -141,7 +141,7 @@ Timesheet.View = {
                     var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
                     editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
                     editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
-                    Acm.Dialog.openWindow(editTimesheetFormUrl, "", 860, 700, function() {
+                    Acm.Dialog.openWindow(editTimesheetFormUrl, "", 1060, 700, function() {
                         Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
                     });
                 }
@@ -195,7 +195,7 @@ Timesheet.View = {
                 Timesheet.View.Detail.setTextTimesheetName(timesheetName);
             }
             if(Acm.isNotEmpty(timesheet.modified)){
-                Timesheet.View.Detail.setTextTimesheetModifiedDate("Last Modified " + Acm.getDateFromDatetime(timesheet.modified));
+                Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime(timesheet.modified));
             }
         }
         ,resetDetail: function(timesheet) {
@@ -204,16 +204,15 @@ Timesheet.View = {
             Timesheet.View.Detail.setTextTimesheetName("");
         }
 
-        ,DIRTY_EDITING_DETAIL: "Editing Timesheet detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare(Timesheet.View.Detail.DIRTY_EDITING_DETAIL);
+            App.Object.Dirty.declare($.t("timesheet:detail.label.editing-timesheet-detail"));
             Timesheet.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Timesheet.View.Detail.saveDivDetail();
             if(Acm.isNotEmpty(htmlDetail)){
                 Timesheet.Controller.viewSavedDetail(Timesheet.View.getActiveTimesheet(), htmlDetail);
-                App.Object.Dirty.clear(Timesheet.View.Detail.DIRTY_EDITING_DETAIL);
+                App.Object.Dirty.clear($.t("timesheet:detail.label.editing-timesheet-detail"));
             }
         }
         ,getHtmlDivDetail: function() {
@@ -270,7 +269,7 @@ Timesheet.View = {
             var sortMap = {};
             AcmEx.Object.JTable.useBasic($jt
                 , {
-                    title: 'Person'
+                    title: $.t('timesheet:person.table.title')
                     , sorting: true
                     , actions: {
                         listAction: function (postData, jtParams) {
@@ -291,7 +290,7 @@ Timesheet.View = {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("timesheet:person.table.field.id")
                             , key: true
                             , list: false
                             , create: false
@@ -300,17 +299,17 @@ Timesheet.View = {
                             , width: '5%'
                         }
                         , fullName: {
-                            title: 'Full Name'
+                            title: $.t("timesheet:person.table.field.full-name")
                             , width: '10%'
                             , sorting: true
                         }
                         , username: {
-                            title: 'Username'
+                            title: $.t("timesheet:person.table.field.username")
                             , width: '10%'
                             , sorting: true
                         }
                         , role: {
-                            title: 'Role'
+                            title: $.t("timesheet:person.table.field.role")
                             , width: '10%'
                             , sorting: true
                             ,list: false
@@ -384,7 +383,7 @@ Timesheet.View = {
 
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("timesheet:time-summary.table.field.id")
                             , key: true
                             , list: false
                             , create: false
@@ -393,7 +392,7 @@ Timesheet.View = {
                             , width: '5%'
                         }
                         , parentId: {
-                            title: 'Parent ID'
+                            title: $.t("timesheet:time-summary.table.field.parent-id")
                             , width: '10%'
                             , sorting: true
                             ,display: function(data) {
@@ -403,29 +402,29 @@ Timesheet.View = {
                             }
                         }
                         ,parentType: {
-                            title: 'Parent Type'
+                            title: $.t("timesheet:time-summary.table.field.parent-type")
                             , width: '10%'
                             , sorting: true
                             , list : true
                         }
                         ,code: {
-                            title: 'Code'
+                            title: $.t("timesheet:time-summary.table.field.code")
                             , width: '10%'
                             , sorting: true
                             , list : false
                         }
                         , hours: {
-                            title: 'Total Hours'
+                            title: $.t("timesheet:time-summary.table.field.total-hours")
                             , width: '10%'
                             , sorting: true
                         }
                         , chargedDate: {
-                            title: 'Date Charged'
+                            title: $.t("timesheet:time-summary.table.field.charged-date")
                             , width: '10%'
                             , sorting: true
                         }
                         , modifiedDate: {
-                            title: 'Modified Date'
+                            title: $.t("timesheet:time-summary.table.field.modified-date")
                             , width: '10%'
                             , sorting: true
                         }

@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,7 +29,8 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
         "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-search.xml"
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
@@ -49,6 +51,7 @@ public class EcmFileDaoIT
     {
         auditAdapter.setUserId("auditUser");
     }
+
 
     @Test
     @Transactional

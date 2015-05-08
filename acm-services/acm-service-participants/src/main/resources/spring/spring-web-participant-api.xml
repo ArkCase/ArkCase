@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="changeParticipantRoleAPIController" class="com.armedia.acm.services.participants.web.api.ChangeParticipantRoleAPIController">
+        <property name="acmParticipantEventPublisher" ref="acmParticipantEventPublisher"/>
+        <property name="acmParticipantService" ref="acmParticipantService"/>
+    </bean>
+
+    <bean id="listAllParticipantsByObjectTypeAndObjectId" class="com.armedia.acm.services.participants.web.api.ListAllParticipantsByObjectTypeAndObjectId">
+        <property name="acmParticipantService" ref="acmParticipantService"/>
+    </bean>
+
+    <bean id="removeParticipantAPIController" class="com.armedia.acm.services.participants.web.api.RemoveParticipantAPIController">
+        <property name="acmParticipantService" ref="acmParticipantService"/>
+        <property name="acmParticipantEventPublisher" ref="acmParticipantEventPublisher"/>
+    </bean>
+
+    <bean id="addParticipantAPIController" class="com.armedia.acm.services.participants.web.api.AddParticipantAPIController">
+        <property name="acmParticipantEventPublisher" ref="acmParticipantEventPublisher"/>
+        <property name="acmParticipantService" ref="acmParticipantService"/>
+    </bean>
+
+</beans>

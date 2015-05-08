@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +29,7 @@ public class CaseFileUiController
     private AcmPlugin plugin;
 	private FormUrl formUrl;
 	private Map<String, Object> formProperties;
+    private Map<String, Object> notificationProperties;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
@@ -66,6 +68,8 @@ public class CaseFileUiController
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
+        mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
+        mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
 
         mv.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
         mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
@@ -92,35 +96,22 @@ public class CaseFileUiController
     
     private String getCaseFileUrl()
     {
+    	// Default one
+    	String caseFileFormName = CaseFileConstants.OBJECT_TYPE.toLowerCase();
     	if (getFormProperties() != null)
-		{
-			boolean isCaseFile = false;
-			boolean isCaseFilePS = false;
-			
-			if (getFormProperties().containsKey(FrevvoFormName.CASE_FILE + ".id"))
+		{			
+			if (getFormProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
 			{
-				isCaseFile = true;
-			}
-			
-			if (getFormProperties().containsKey(FrevvoFormName.CASE_FILE_PS + ".id"))
-			{
-				isCaseFilePS = true;
-			}
-			
-			// Ark Case File have advantage over PS Case File
-			// NOTE: In the acm-forms.properties should be defined only one - case_file or case_file_ps, otherwise Ark Case File logic will be processed
-			
-			if (isCaseFile)
-			{
-				return formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE);
-			} 
-			else if (isCaseFilePS)
-			{
-				return formUrl.getNewFormUrl(FrevvoFormName.CASE_FILE_PS);
+				String activeFormName = (String) getFormProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
+				
+				if (activeFormName != null && !"".equals(activeFormName))
+				{
+					caseFileFormName = activeFormName;
+				}
 			}
 		}
     	
-    	return null;
+    	return formUrl.getNewFormUrl(caseFileFormName);
     }
 
 	public FormUrl getFormUrl() {
@@ -146,4 +137,12 @@ public class CaseFileUiController
 	public void setFormProperties(Map<String, Object> formProperties) {
 		this.formProperties = formProperties;
 	}
+
+    public Map<String, Object> getNotificationProperties() {
+        return notificationProperties;
+    }
+
+    public void setNotificationProperties(Map<String, Object> notificationProperties) {
+        this.notificationProperties = notificationProperties;
+    }
 }

@@ -4,7 +4,9 @@
 package com.armedia.acm.services.users.model.group;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +47,7 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 	@Column(name = "cm_group_name")
 	private String name;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	@JoinColumn(name = "cm_group_parent_name")
 	@JsonIgnore
 	private AcmGroup parentGroup;
@@ -166,6 +168,26 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 	}
 
 	public void setParentGroup(AcmGroup parentGroup) {
+		if (parentGroup != null)
+		{
+			if (parentGroup.getChildGroups() == null)
+			{
+				parentGroup.setChildGroups(new ArrayList<AcmGroup>());
+			}
+			
+			parentGroup.getChildGroups().add(this);
+
+		}
+		else
+		{
+			if (getParentGroup() != null && 
+				getParentGroup().getChildGroups() != null &&
+				getParentGroup().getChildGroups().contains(this))
+			{
+				getParentGroup().getChildGroups().remove(this);
+			}
+		}
+		
 		this.parentGroup = parentGroup;
 	}
 
@@ -245,7 +267,16 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 		return childGroups;
 	}
 
-	public void setChildGroups(List<AcmGroup> childGroups) {
+	public void setChildGroups(List<AcmGroup> childGroups) 
+	{
+		if (childGroups != null)
+		{
+			for(AcmGroup child : childGroups)
+			{
+				child.setParentGroup(this);
+			}
+		}
+			
 		this.childGroups = childGroups;
 	}
 
@@ -261,8 +292,71 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 		return members;
 	}
 
-	public void setMembers(Set<AcmUser> members) {
+	public void setMembers(Set<AcmUser> members) 
+	{
+		// Bidirectional ManyToMany relation
+		if (members != null)
+		{
+			for (AcmUser member : members)
+			{
+				if (member.getGroups() != null && !member.getGroups().contains(this))
+				{
+					member.getGroups().add(this);
+				}
+			}
+		}
+		
 		this.members = members;
+	}
+	
+	/**
+	 * Because of bidirectional ManyToMany relation, this method should be used for adding
+	 * members to the group. Don't use getMembers().add(..) or getMembers().addAll(..)
+	 * 
+	 * @param member
+	 */
+	public void addMember(AcmUser member)
+	{
+		if (member != null)
+		{
+			if (getMembers() == null)
+			{
+				setMembers(new HashSet<>());
+			}
+			
+			getMembers().add(member);
+			
+			if (member.getGroups() != null && !member.getGroups().contains(this))
+			{
+				member.addGroup(this);
+			}
+		}
+	}
+	
+	/**
+	 * Because of bidirectional ManyToMany relation, this method should be used for removing
+	 * members from the group.
+	 * 
+	 * @param member
+	 */
+	public void removeMember(AcmUser member)
+	{
+		if (member != null)
+		{
+			if (getMembers() != null)
+			{
+				if (member.getGroups().contains(this))
+				{
+					member.getGroups().remove(this);
+				}
+				
+				if (getMembers().contains(member))
+				{
+					getMembers().remove(member);
+				}
+				
+			}
+		}
 	}
 
 	@Override
@@ -286,4 +380,40 @@ public class AcmGroup implements Serializable, AcmEntity, AcmLdapEntity{
 	public void setGroup(boolean group) {
 		this.group = group;
 	}
+	
+	@Override
+    @JsonIgnore
+    public int hashCode() {
+    	if (getName() == null)
+    	{
+    		return 0;
+    	}
+    	else
+    	{
+    		return getName().hashCode();
+    	}
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AcmGroup)) 
+        {
+            return false;
+        }
+        
+        AcmGroup group = (AcmGroup) obj;
+        
+        if (group.getName() == null && getName() == null)
+    	{
+    		return true;
+    	}
+        
+        if (group.getName() == null && getName() != null)
+        {
+        	return false;
+        }
+        
+        return group.getName().equals(getName());
+    }
 }

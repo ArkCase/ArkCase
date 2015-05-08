@@ -6,8 +6,10 @@
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
 	<!-- Rules definitions -->
-    <bean id="assignRule" class="com.armedia.acm.services.notification.model.AssignmentRule">
+    <bean id="assignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="sendExecutor"/>
 		<property name="jpaQuery">
 			<value>
 				<![CDATA[
@@ -36,8 +38,10 @@
 		</property>
     </bean>
 	
-	<bean id="unassignRule" class="com.armedia.acm.services.notification.model.AssignmentRule">
+	<bean id="unassignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="sendExecutor"/>
 		<property name="jpaQuery">
 			<value>
 				<![CDATA[
@@ -65,17 +69,28 @@
 			</value>
 		</property>
     </bean>
+    
+    <bean id="purgeRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>	
+		<property name="queryType" value="SELECT"/>
+		<property name="executor" ref="purgeExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT 
+					    notification
+					FROM 
+						Notification notification 
+					WHERE 
+						notification.status != 'DELETE' 
+					AND
+						notification.created <= :threshold
+				]]>
+			</value>
+		</property>
+    </bean>
 	
-	<!-- Senders Definition -->
-	<bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
-		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-		<property name="propertyFileManager">
-            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
-        </property>
-		<property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-		<property name="muleClient" ref="muleClient" />
-	</bean>
-	
+
 	<!-- Task Scheduler -->
 	<task:scheduler id="notificationTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="notificationTaskScheduler">
@@ -89,6 +104,7 @@
     <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
     	<property name="batchRun" ref="notificationUserBatchRun" />
     	<property name="batchSize" ref="notificationUserBatchSize" />
+    	<property name="purgeDays" ref="notificationPurgeDays" />
     	<property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>

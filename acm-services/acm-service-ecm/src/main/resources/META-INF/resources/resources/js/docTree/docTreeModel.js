@@ -6,13 +6,24 @@
 DocTree.Model = DocTree.Model || {
     create : function(args) {
         this.cacheTree = new Acm.Model.CacheFifo();
-        this.cacheFolder = new Acm.Model.CacheFifo();
+        this.cacheFolderList = new Acm.Model.CacheFifo();
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FOLDER          ,this.onViewRemovedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_DOCUMENT        ,this.onViewRenamedDocument);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FILE            ,this.onViewRenamedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FILE              ,this.onViewMovedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FILE             ,this.onViewCopiedFile);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FOLDER            ,this.onViewMovedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_VERSION         ,this.onViewChangedVersion);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_SENT_EMAIL              ,this.onViewSentEmail);
+
+
+        //---------
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
 
         if (DocTree.Model.Config.create)           {DocTree.Model.Config.create(args);}
         if (DocTree.Model.Key.create)              {DocTree.Model.Key.create(args);}
@@ -28,22 +39,52 @@ DocTree.Model = DocTree.Model || {
         //if not in cache
         //DocTree.Service.retrieveTopFolder(parentType, parentId);
         //
+        var z = 1;
     }
-    ,onViewAddedFolder: function(node, parentId, name) {
-        var folder = {title: name};
-        DocTree.Service.testService(node, parentId, folder);
+    ,onViewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
+        DocTree.Service.createFolder(parentId, folderName, cacheKey, folderNode);
+    }
+    ,onViewRemovedFolder: function(folderId, cacheKey, folderNode) {
+        DocTree.Service.deleteFolder(folderId, cacheKey, folderNode);
+    }
+    ,onViewRemovedFile: function(fileId, cacheKey, folderNode) {
+        DocTree.Service.deleteFile(fileId, cacheKey, folderNode);
+    }
+    ,onViewRenamedFolder: function(name, id, cacheKey, node) {
+        DocTree.Service.renameFolder(name, id, cacheKey, node);
+    }
+    ,onViewRenamedFile: function(name, id, cacheKey, node) {
+        DocTree.Service.renameFile(name, id, cacheKey, node);
+    }
+    ,onViewMovedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
+        DocTree.Service.moveFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, frCacheKey, toCacheKey, node);
+    }
+    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
+        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
+    }
+    ,onViewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+        DocTree.Service.moveFolder(subFolderId, folderId, frCacheKey, toCacheKey, node);
+    }
+    ,onViewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
+    }
+    ,onViewChangedVersion: function(fileId, version, cacheKey, node) {
+        DocTree.Service.setActiveVersion(fileId, version, cacheKey, node);
+    }
+    ,onViewSentEmail: function(emailData){
+        DocTree.Service.sendEmail(emailData);
+    }
 
-    }
+    //---------------
     ,onViewAddedDocument: function(node, parentId, name) {
         var folder = {title: name};
         DocTree.Service.testService2(node, parentId, folder);
     }
-    ,onViewRenamedFolder: function(node, id, parentId, name) {
 
-    }
-    ,onViewRenamedDocument: function(node, id, parentId, name) {
-    }
-
+    ,NODE_TYPE_PREV: "prev"
+    ,NODE_TYPE_NEXT: "next"
+    ,NODE_TYPE_FILE: "file"
+    ,NODE_TYPE_FOLDER: "folder"
 
     ,_objType: null
     ,getObjType: function() {
@@ -70,6 +111,91 @@ DocTree.Model = DocTree.Model || {
         key += "." + DocTree.Model.Config.getMaxRows();
         return key;
     }
+
+    ,findFolderItemIdx: function(objectId, folderList) {
+        var found = -1;
+        if (DocTree.Model.validateFolderList(folderList)) {
+            for (var i = 0; i < folderList.children.length; i++) {
+                if (Acm.goodValue(folderList.children[i].objectId) == objectId) {
+                    found = i;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
+
+    ,fileToSolrData: function(fileData) {
+        var solrData = {};
+        solrData.objectType = "file";
+        if (!Acm.isEmpty(fileData.fileId, 0)) {
+            solrData.objectId       = fileData.fileId;
+        } else if (!Acm.isEmpty(fileData.objectId, 0)) {
+            solrData.objectId       = fileData.objectId;
+        }
+        solrData.created    = Acm.goodValue(fileData.created);
+        solrData.creator    = Acm.goodValue(fileData.creator);
+        solrData.modified   = Acm.goodValue(fileData.modified);
+        solrData.modifier   = Acm.goodValue(fileData.modifier);
+
+        if (!Acm.isEmpty(fileData.fileName)) {
+            solrData.name       = fileData.fileName;
+        } else if (!Acm.isEmpty(fileData.name)) {
+            solrData.name       = fileData.name;
+        }
+
+        if (!Acm.isEmpty(fileData.fileType)) {
+            solrData.type       = fileData.fileType;
+        } else if (!Acm.isEmpty(fileData.type)) {
+            solrData.type       = fileData.type;
+        }
+        solrData.status     = Acm.goodValue(fileData.status);
+        solrData.category   = Acm.goodValue(fileData.category);
+        if (!Acm.isEmpty(fileData.activeVersionTag)) {
+            solrData.version    = fileData.activeVersionTag;
+        } else if (!Acm.isEmpty(fileData.version)) {
+            solrData.version    = fileData.version;
+        }
+
+        if (Acm.isArray(fileData.versions)) {
+            solrData.versionList = [];
+            for (var i = 0; i < fileData.versions.length; i++) {
+                var version = {};
+                version.versionTag = Acm.goodValue(fileData.versions[i].versionTag);
+                solrData.versionList.push(version);
+            }
+        }
+        if (Acm.isArray(fileData.versionList)) {
+            solrData.versionList = [];
+            for (var i = 0; i < fileData.versionList.length; i++) {
+                var version = {};
+                version.versionTag = Acm.goodValue(fileData.versionList[i].versionTag);
+                solrData.versionList.push(version);
+            }
+        }
+        return solrData;
+    }
+    ,folderToSolrData: function(folderData) {
+        var solrData = {};
+        solrData.objectType = "folder";
+        if (!Acm.isEmpty(folderData.id, 0)) {
+            solrData.objectId       = folderData.id;
+        } else if (!Acm.isEmpty(folderData.objectId, 0)) {
+            solrData.objectId       = folderData.objectId;
+        }
+        solrData.created    = Acm.goodValue(folderData.created);
+        solrData.creator    = Acm.goodValue(folderData.creator);
+        solrData.modified   = Acm.goodValue(folderData.modified);
+        solrData.modifier   = Acm.goodValue(folderData.modifier);
+        solrData.name       = Acm.goodValue(folderData.name);
+        if (!Acm.isEmpty(folderData.parentFolderId, 0)) {
+            solrData.folderId   = Acm.goodValue(folderData.parentFolderId, 0);
+        } else if (!Acm.isEmpty(folderData.folderId, 0)) {
+            solrData.folderId   = Acm.goodValue(folderData.folderId, 0);
+        }
+        return solrData;
+    }
+
     ,validateFolderList: function(data) {
         if (Acm.isEmpty(data)) {
             return false;
@@ -79,20 +205,167 @@ DocTree.Model = DocTree.Model || {
         }
         return true;
     }
+    ,validateCreateInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.id)) {
+            return false;
+        }
+        if (0 == data.id) {
+            return false;
+        }
+        if (Acm.isEmpty(data.parentFolderId)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateDeletedFolder: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.deletedFolderId)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateDeletedFile: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.deletedFileId)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateRenamedFolder: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+//to be determined
+//        if (Acm.isEmpty(data.deletedFolderId)) {
+//            return false;
+//        }
+        return true;
+    }
+    ,validateRenamedFile: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileName)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateMoveFileInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder.id)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateCopyFileInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder.id)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateMoveFolderInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.id)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateCopyFolderInfo: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.id)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.parentFolderId)) {
+            return false;
+        }
+        return true;
+    }
     ,validateUploadInfo: function(data) {
         if (Acm.isArrayEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data[0].fileId)) {
+        for (var i = 0; i < data.length; i++) {
+            if (!this.validateUploadInfoItem(data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    ,validateReplaceInfo: function(data) {
+        if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data[0].folder)) {
+        if (Acm.isEmpty(data.fileId)) {
             return false;
         }
-        if (Acm.isNotArray(data[0].versions)) {
+        return true;
+    }
+    ,validateUploadInfoItem: function(data) {
+        if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isNotArray(data[0].tags)) {
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.folder)) {
+            return false;
+        }
+        if (Acm.isNotArray(data.versions)) {
+            return false;
+        }
+        if (Acm.isNotArray(data.tags)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateActiveVersion: function(data) {
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.activeVersionTag)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateSentEmail: function(data){
+        if (Acm.isEmpty(data.state)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.userEmail)) {
             return false;
         }
         return true;
@@ -146,15 +419,15 @@ DocTree.Model = DocTree.Model || {
         ,DEFAULT_SORT_BY: "name"
         ,DEFAULT_SORT_DIRECTION: "ASC"
         ,_setting: {
-//            objType: null
-//            ,objId: 0
-//            ,category: "Document"
-            maxRows: 1000
+            maxRows: 16
             ,sortBy: null
             ,sortDirection: null
-            //,folderId: 0
-            //,start: 0
-            //,totalChildren: 0
+//            ,objType: null
+//            ,objId: 0
+//            ,category: "Document"
+//            ,folderId: 0
+//            ,start: 0
+//            ,totalChildren: 0
         }
         ,getSetting: function() {
             return this._setting;

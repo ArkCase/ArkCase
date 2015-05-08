@@ -41,4 +41,14 @@ public interface FrevvoFormConstants {
 	 */
 	public final static String DOC_URI_PARAMETER_DELIMITER = ":";
 	
+	/**
+	 * Default user key
+	 */
+	public final static String DEFAULT_USER = "*";
+	
+	/**
+	 * THIS WILL BE REMOVED ONCE WE IMPLEMENT GROUP PICKER ON FREVVO SIDE
+	 */
+	public final static String OWNING_GROUP = "owning group";
+	
 }

@@ -5,14 +5,9 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -20,6 +15,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Relationship;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -33,17 +29,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.relation.Relation;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 5/1/14.
@@ -57,6 +51,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     private EcmFileDao ecmFileDao;
 
     private AcmContainerDao containerFolderDao;
+
+    private AcmFolderDao folderDao;
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -301,7 +297,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         String sortBy = "created";
         String sortDirection = "ASC";
 
-        AcmCmisObjectList retval = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+        AcmCmisObjectList retval = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                 start, max, sortBy, sortDirection);
 
         int totalFiles = retval.getTotalChildren();
@@ -313,7 +309,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             start += max;
 
-            AcmCmisObjectList more = findObjects(auth, container, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                     start, max, sortBy, sortDirection);
             retval.getChildren().addAll(more.getChildren());
 
@@ -327,6 +323,33 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return retval;
     }
 
+    @Override
+    public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws  PersistenceException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        List<EcmFileVersion> fileVersionList = file.getVersions();
+        file.setActiveVersionTag(versionTag);
+
+        return getEcmFileDao().save(file);
+    }
+
+    @Override
+    public AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException {
+
+        log.debug("All children objects from folder " + folderId);
+
+        AcmFolder folder = getFolderDao().find(folderId);
+        if( folder == null )
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
+        String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:"+folderId;
+        String filterQuery =
+                category == null ? "fq=hidden_b:false" :
+                        "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
+
+        AcmCmisObjectList retval = findObjects(auth, container, folderId,  EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                startRow, maxRows, sortBy, sortDirection);
+        return retval;
+    }
 
     @Override
     public AcmCmisObjectList listFolderContents(Authentication auth,
@@ -352,12 +375,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 category == null ? "fq=hidden_b:false" :
                         "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
-        return findObjects(auth, container, category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
+        return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
 
 
     }
 
-    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, String category, String query,
+    private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query,
                                           String filterQuery, int startRow, int maxRows, String sortBy,
                                           String sortDirection)
             throws AcmListObjectsFailedException
@@ -371,7 +394,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             JSONArray docs = getSearchResults().getDocuments(results);
             int numFound = getSearchResults().getNumFound(results);
 
-            AcmCmisObjectList retval = buildAcmCmisObjectList(container, category, numFound, sortBy, sortDirection,
+            AcmCmisObjectList retval = buildAcmCmisObjectList(container, folderId, category, numFound, sortBy, sortDirection,
                     startRow, maxRows);
 
             buildChildren(docs, retval);
@@ -402,13 +425,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container, String category, int numFound,
+    private AcmCmisObjectList buildAcmCmisObjectList(AcmContainer container,Long folderId, String category, int numFound,
                                                      String sortBy, String sortDirection, int startRow, int maxRows)
     {
         AcmCmisObjectList retval = new AcmCmisObjectList();
         retval.setContainerObjectId(container.getContainerObjectId());
         retval.setContainerObjectType(container.getContainerObjectType());
-        retval.setFolderId(container.getFolder().getId());
+        retval.setFolderId(folderId);
         retval.setTotalChildren(numFound);
         retval.setCategory(category == null ? "all" : category);
         retval.setSortBy(sortBy);
@@ -454,7 +477,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         object.setMimeType(getSearchResults().extractString(doc, SearchConstants.PROPERTY_MIME_TYPE));
         
         object.setStatus(getSearchResults().extractString(doc, SearchConstants.PROPERTY_STATUS));
-        
+
+        if(object.getObjectType().equals(EcmFileConstants.FILE)){
+            EcmFile file = getEcmFileDao().find(object.getObjectId());
+            if( file!=null ) {
+                object.setVersionList(file.getVersions());
+            }
+        }
+
         return object;
     }
 
@@ -470,20 +500,186 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         sortParam = sortParam + " " + sortDirection;
         return sortParam;
     }
-    
+
+
     @Override
-    public String buildSafeFolderName(String folderName)
-	{    	
-		if (folderName != null)
-		{
-			String regex = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REGEX;
-			String replacement = EcmFileConstants.INVALID_CHARACTERS_IN_FOLDER_NAME_REPLACEMENT;
-			
-			folderName = folderName.replaceAll(regex, replacement);
-		}
-		
-		return folderName;
-	}
+    public EcmFile copyFile(Long fileId,Long targetObjectId,String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        AcmFolder folder = folderDao.find(dstFolderId);
+
+        if( file == null || folder == null) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File or Destination folder not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
+
+        EcmFile result;
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
+
+            if ( message.getInboundPropertyNames().contains(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY)) {
+                MuleException muleException = message.getInboundProperty(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY);
+                if (log.isErrorEnabled()) {
+                    log.error("File can not be copied successfully " + muleException.getMessage(), muleException);
+                }
+                throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
+                        "File " + file.getFileName() + " can not be copied successfully", muleException);
+            }
+
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+
+            String newFileId = cmisObject.getId();
+            EcmFile fileCopy = new EcmFile();
+
+
+            List<EcmFileVersion> versionList = new ArrayList<>();
+            List<EcmFileVersion> versions = file.getVersions();
+            if( versions!=null ) {
+                for (EcmFileVersion fVer : versions) {
+                    EcmFileVersion ver = new EcmFileVersion();
+                    ver.setCmisObjectId(fVer.getCmisObjectId());
+                    ver.setVersionTag(fVer.getVersionTag());
+                    ver.setFile(fVer.getFile());
+                    versionList.add(ver);
+                }
+            }
+
+
+            AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+            fileCopy.setVersionSeriesId(newFileId);
+            fileCopy.setFileType(file.getFileType());
+            fileCopy.setActiveVersionTag(file.getActiveVersionTag());
+            fileCopy.setFileName(cmisObject.getName());
+            fileCopy.setFolder(folder);
+            fileCopy.setContainer(container);
+            fileCopy.setStatus(file.getStatus());
+            fileCopy.setCategory(file.getCategory());
+            fileCopy.setFileMimeType(file.getFileMimeType());
+            fileCopy.setVersions(versionList);
+
+            result = getEcmFileDao().save(fileCopy);
+            return result;
+        } catch ( MuleException e  ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        } catch (AcmCreateObjectFailedException e) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        } catch ( PersistenceException e ){
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
+        }
+    }
+
+    @Override
+    public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType , Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+
+        EcmFile file = getEcmFileDao().find(fileId);
+        AcmFolder folder = getFolderDao().find(dstFolderId);
+        if( file == null  )
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File  not found",null);
+        if( folder == null)
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,dstFolderId,"Folder  not found",null);
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
+        props.put(EcmFileConstants.SRC_FOLDER_ID, file.getFolder().getCmisFolderId());
+
+        AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+
+        EcmFile movedFile;
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            String cmisObjectId = cmisObject.getId();
+
+            file.setVersionSeriesId(cmisObjectId);
+            file.setContainer(container);
+
+            file.setFolder(folder);
+
+            movedFile = getEcmFileDao().save(file);
+            return movedFile;
+        } catch (PersistenceException | MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not move file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_MOVE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not move file",e);
+        }
+    }
+
+    @Override
+    public void deleteFile(Long objectId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+
+        EcmFile file = getEcmFileDao().find(objectId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,objectId,"File not found",null);
+        }
+
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+
+            getEcmFileDao().deleteFile(objectId);
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not delete file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not delete file",e);
+        } catch ( PersistenceException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not delete file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_DELETE_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not delete file",e);
+
+        }
+    }
+
+    @Override
+    public EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+        EcmFile file = getEcmFileDao().find(fileId);
+
+        if( file == null ) {
+            throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+        }
+        Map<String,Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
+        props.put(EcmFileConstants.NEW_FILE_NAME,newFileName);
+
+
+        EcmFile renamedFile;
+        try {
+            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
+            file.setFileName(newFileName);
+            renamedFile = getEcmFileDao().save(file);
+            return renamedFile;
+        } catch ( MuleException e ) {
+            if(log.isErrorEnabled()){
+                log.error("Could not rename file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not rename file",e);
+
+        }
+    }
+
+    @Override
+    public EcmFile findById(Long fileId) {
+        return getEcmFileDao().find(fileId);
+    }
 
     public EcmFileTransaction getEcmFileTransaction()
     {
@@ -587,5 +783,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
+    }
+
+    public AcmFolderDao getFolderDao() {
+        return folderDao;
+    }
+
+    public void setFolderDao(AcmFolderDao folderDao) {
+        this.folderDao = folderDao;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher() {
+        return applicationEventPublisher;
     }
 }

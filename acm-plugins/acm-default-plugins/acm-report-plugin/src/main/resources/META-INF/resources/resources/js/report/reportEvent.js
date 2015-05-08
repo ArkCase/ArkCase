@@ -38,7 +38,7 @@ Report.Event = {
             	pageUrl = pageUrl +"&caseNumber=" + Report.Object.$caseNumber.val(); 
         	}
         	else {
-                Acm.Dialog.error("Case number field was blank or invalid. Please enter a valid case number.");
+                Acm.Dialog.error($.t("report:msg.case-number-invalid"));
                 return false;
         	}
         }
@@ -53,7 +53,7 @@ Report.Event = {
             if (pageUrl.indexOf("?") <= -1) {
                 pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status; 
             } else {
-                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status;; 
+                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status;
             }
             
             // Incident Category, Priority, Owner not added since DB clarification is needed.

@@ -42,4 +42,61 @@
             </createTable>
         </changeSet>
 
+    <changeSet id="2-tag-tables" author="marst">
+
+        <dropColumn tableName="acm_tag" columnName="cm_file_id"/>
+        <dropColumn tableName="acm_tag" columnName="cm_parent_object_id"/>
+        <dropColumn tableName="acm_tag" columnName="cm_parent_object_type"/>
+
+
+        <addColumn tableName="acm_tag">
+            <column name="cm_tag_description" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="acm_tag">
+            <column name="cm_tag_name" type="VARCHAR(256)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <createTable tableName="acm_associated_tag">
+            <column name="cm_associated_tag_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id"/>
+            </column>
+
+            <column name="cm_tag_id" type="NUMBER(32,0)"/>
+
+            <column name="cm_associated_tag_creator" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_associated_tag_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_parent_object_id" type="NUMBER(32,0)">
+                <constraints nullable = "false"/>
+            </column>
+
+            <column name="cm_parent_object_type" type="VARCHAR(128)">
+                <constraints nullable = "false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_associated_tag" unique="true" indexName="idx_tag_object_type">
+            <column name="cm_tag_id" type="NUMBER(32,0)"/>
+            <column name="cm_parent_object_id" type="NUMBER(32,0)"/>
+            <column name="cm_parent_object_type" type="VARCHAR(1024)"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="03-add-new-token-column-in-acm-tag-table" author="marst">
+        <addColumn tableName="acm_tag">
+            <column name="cm_tag_token" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

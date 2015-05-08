@@ -51,7 +51,24 @@ public interface SearchConstants
      * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
      */
     String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+
+    /**
+     * Date format for date-only fields, where the UI does not send a time component, but only the date.
+     */
+    String ISO_DATE_FORMAT = "yyyy-MM-dd";
     
     String SORT_ASC = "ASC";
     String SORT_DESC = "DESC";
+    
+    /**
+     * Key that keeping information which objects to exclude from the search
+     */
+    String OBJECTS_TO_EXCLUDE = "objects.to.exclude";
+    
+    /**
+     * Query operators
+     */
+    String OPERATOR_AND = "AND";
+    String OPERATOR_OR = "OR";
 }

@@ -61,6 +61,15 @@ public class SolrDocument implements SolrBaseDocument {
     ///////////////for ASN /////////////////
     private String notification_type_s;
 
+    private String parent_ref_s;
+
+    private String data_s;
+
+
+    ////for assigned tags/////////////////////
+    private String tag_token_lcs;
+
+
     @Override
     public String getId() {
         return id;
@@ -397,9 +406,34 @@ public class SolrDocument implements SolrBaseDocument {
         this.notification_type_s = notification_type_s;
     }
 
-	@Override
-    public String toString()
+    public void setParent_ref_s(String parent_ref_s)
     {
+        this.parent_ref_s = parent_ref_s;
+    }
+
+    public String getParent_ref_s()
+    {
+        return parent_ref_s;
+    }
+
+    public String getData_s() {
+        return data_s;
+    }
+
+    public void setData_s(String data_s) {
+        this.data_s = data_s;
+    }
+
+    public String getTag_token_lcs() {
+        return tag_token_lcs;
+    }
+
+    public void setTag_token_lcs(String tag_token_lcs) {
+        this.tag_token_lcs = tag_token_lcs;
+    }
+
+    @Override
+    public String toString() {
         return "SolrDocument{" +
                 "id='" + id + '\'' +
                 ", status_s='" + status_s + '\'' +
@@ -443,8 +477,11 @@ public class SolrDocument implements SolrBaseDocument {
                 ", category_s='" + category_s + '\'' +
                 ", cmis_version_series_id_s='" + cmis_version_series_id_s + '\'' +
                 ", mime_type_s='" + mime_type_s + '\'' +
-                ", hidden_b='" + hidden_b + '\'' +
+                ", hidden_b=" + hidden_b +
                 ", notification_type_s='" + notification_type_s + '\'' +
+                ", parent_ref_s='" + parent_ref_s + '\'' +
+                ", data_s='" + data_s + '\'' +
+                ", tag_token_lcs='" + tag_token_lcs + '\'' +
                 '}';
     }
 }

@@ -10,11 +10,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -35,6 +38,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 	private FunctionalAccessEventPublisher eventPublisher;
 	private AcmGroupDao acmGroupDao;
 	private UserDao userDao;
+	private ExecuteSolrQuery executeSolrQuery;
 	
 	@Override
 	public List<String> getApplicationRoles() 
@@ -165,6 +169,68 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		
 		return retval;
 	}
+	
+	@Override
+	public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort, Authentication auth) throws MuleException 
+	{
+		Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
+		String retval = getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
+		
+		return retval;
+	}
+	
+	private Set<String> getAllGroupsForAllRoles(List<String> roles, Map<String, List<String>> rolesToGroups)
+	{
+		// Creating set to avoid duplicates
+        Set<String> groups = new HashSet<>();
+        if (roles != null && rolesToGroups != null)
+        {
+        	for (String role : roles)
+        	{
+        		List<String> groupNames = rolesToGroups.get(role);
+        		
+        		if (groupNames != null)
+        		{
+        			// We need first to get unique group names (because groups can be repeated in different roles)
+        			groups.addAll(new HashSet<>(groupNames));
+        		}
+        	}
+        }
+        
+        return groups;
+	}
+	
+	private String getGroupsFromSolr(List<String> groupNames, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    {
+		if (LOG.isInfoEnabled()) 
+		{
+			LOG.info("Taking groups from Solr with IDs = " + groupNames);
+		}
+		
+		String queryGroupNames = "";
+		if (groupNames != null)
+		{
+			for (int i = 0; i < groupNames.size(); i++)
+			{
+				if (i == groupNames.size() - 1)
+				{
+					queryGroupNames += groupNames.get(i);
+				}
+				else
+				{
+					queryGroupNames += groupNames.get(i) + " OR ";
+				}
+			}
+		}
+		
+		String query = "object_id_s:(" + queryGroupNames + ") AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+		
+		String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
+
+        LOG.debug("Response: " + response);
+
+        return response;
+    }
 
 	public Map<String, String> getApplicationRolesProperties() 
 	{
@@ -233,4 +299,12 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService
 		this.userDao = userDao;
 	}
 
+	public ExecuteSolrQuery getExecuteSolrQuery() {
+		return executeSolrQuery;
+	}
+
+	public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
+		this.executeSolrQuery = executeSolrQuery;
+	}
+	
 }

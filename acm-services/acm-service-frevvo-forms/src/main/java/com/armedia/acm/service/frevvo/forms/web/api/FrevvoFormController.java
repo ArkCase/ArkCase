@@ -20,6 +20,7 @@ import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintFactory;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -47,6 +48,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
 import com.armedia.acm.form.cost.service.CostFactory;
+import com.armedia.acm.form.ebrief.service.EbriefFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
@@ -123,6 +125,10 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private CostsheetEventPublisher costsheetEventPublisher;
 	
 	private FunctionalAccessService functionalAccessService;
+	
+	private ComplaintFactory complaintFactory;
+	
+	private EbriefFactory ebriefFactory;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -553,5 +559,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setFunctionalAccessService(
 			FunctionalAccessService functionalAccessService) {
 		this.functionalAccessService = functionalAccessService;
+	}
+
+	public ComplaintFactory getComplaintFactory() {
+		return complaintFactory;
+	}
+
+	public void setComplaintFactory(ComplaintFactory complaintFactory) {
+		this.complaintFactory = complaintFactory;
+	}
+
+	public EbriefFactory getEbriefFactory() {
+		return ebriefFactory;
+	}
+
+	public void setEbriefFactory(EbriefFactory ebriefFactory) {
+		this.ebriefFactory = ebriefFactory;
 	}
 }

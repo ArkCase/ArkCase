@@ -7,4 +7,13 @@
             id="notificationExceptionResolver"
             class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
+    <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager"
+          destroy-method="shutdownBean">
+        <property name="specificConfigFiles">
+            <list/>
+        </property>
+    </bean>
+
+    <bean id="muleClient" factory-bean="muleContextManager" factory-method="getMuleClient" scope="prototype"/>
+
 </beans>

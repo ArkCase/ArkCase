@@ -79,7 +79,7 @@ public class ChangeCaseStatusDao extends AcmAbstractDao<ChangeCaseStatus>
     					builder.equal(changeCaseStatus.<Long>get("caseId"), caseId)
     			),
     			builder.and(
-    					builder.notEqual(changeCaseStatus.<String>get("status"), "APPROVED")
+    					builder.equal(changeCaseStatus.<String>get("status"), "ACTIVE")
     			)
 		);
 		

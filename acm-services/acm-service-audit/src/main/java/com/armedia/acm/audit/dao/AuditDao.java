@@ -1,6 +1,7 @@
 package com.armedia.acm.audit.dao;
 
 import com.armedia.acm.audit.model.AuditEvent;
+import com.armedia.acm.data.AcmAbstractDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,19 +11,53 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by armdev on 9/4/14.
  */
-public class AuditDao
+public class AuditDao extends AcmAbstractDao<AuditEvent>
 {
-
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @PersistenceContext
     private EntityManager em;
-
+    
+    @Transactional
+    public int purgeAudits(Date threshold)
+    {
+    	int retval = 0;
+    	
+    	Query update = getEm().createQuery("UPDATE " + 
+											    "AuditEvent audit " +
+										   "SET " +
+												"audit.status = 'DELETE' " +
+										   "WHERE " +
+												"audit.status != 'DELETE' " +
+										   "AND " +
+												"audit.eventDate <= :threshold");
+    	
+    	update.setParameter("threshold", threshold);
+    	
+    	try
+    	{
+    		retval = update.executeUpdate();    		
+    	}
+    	catch(Exception e)
+    	{
+    		LOG.error("Cannot purge audits.", e);
+    	}
+    	
+    	return retval;
+    }
+    
     public List<AuditEvent> findAuditsByEventPatternAndObjectId(
             String objectType,
             Long objectId)
@@ -32,6 +67,7 @@ public class AuditDao
                         "FROM   AuditEvent ae " +
                         "WHERE  ae.objectType = :objectType " +
                         "AND    ae.objectId = :objectId " +
+                        "AND 	ae.status != 'DELETE' " +
                         "ORDER BY ae.eventDate";
 
         Query findAudits = getEm().createQuery(queryText);
@@ -47,6 +83,7 @@ public class AuditDao
                         "FROM   AuditEvent ae " +
                         "WHERE  ae.objectType = :objectType " +
                         "AND    ae.objectId = :objectId " +
+                        "AND	ae.status != 'DELETE' " +
                         "ORDER BY ae.eventDate";
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
@@ -64,7 +101,9 @@ public class AuditDao
                 "SELECT COUNT(ae.fullEventType) " +
                         "FROM   AuditEvent ae " +
                         "WHERE  ae.objectType = :objectType " +
-                        "AND    ae.objectId = :objectId ";
+                        "AND    ae.objectId = :objectId " +
+                        "AND 	ae.status != 'DELETE'";
+        
         Query query = getEm().createQuery(queryText);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
@@ -80,6 +119,7 @@ public class AuditDao
         String queryText =
                 "SELECT ae " +
                         "FROM   AuditEvent ae " +
+                		"WHERE ae.status != 'DELETE' " +
                         "ORDER BY ae." + sortBy + " " + sort;
         Query query = getEm().createQuery(queryText);
         query.setFirstResult(startRow);
@@ -95,7 +135,8 @@ public class AuditDao
     {
         String queryText =
                 "SELECT COUNT(ae.fullEventType) " +
-                        "FROM   AuditEvent ae ";
+                        "FROM   AuditEvent ae " +
+                        "WHERE ae.status != 'DELETE'";
         Query query = getEm().createQuery(queryText);
 
 
@@ -111,4 +152,10 @@ public class AuditDao
     public void setEm(EntityManager em) {
         this.em = em;
     }
+
+	@Override
+	protected Class<AuditEvent> getPersistenceClass() 
+	{
+		return AuditEvent.class;
+	}
 }

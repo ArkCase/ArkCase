@@ -7,12 +7,7 @@
        					   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
        					   http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
-	<context:property-placeholder
-        properties-ref="notificationProperties"
-        ignore-unresolvable="true"
-        local-override="false"
-        order="987691"/>
-        
+
     <bean id="notificationProperties"
           class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
@@ -26,6 +21,7 @@
                 <prop key="notification.user.batch.run">true</prop>
                 <prop key="notification.user.batch.frequency">100000</prop>
                 <prop key="notification.user.batch.size">50</prop>
+                <prop key="notification.purge.days">30</prop>
             </props>
         </property>
     </bean>
@@ -49,6 +45,9 @@
 	<bean id="notificationPropertyFileLocation" class="java.lang.String">
 		<constructor-arg value="${user.home}/.acm/notification.properties"/>
 	</bean>
+	<bean id="notificationPurgeDays" class="java.lang.Long">
+		<constructor-arg value="${notification.purge.days}"/>
+	</bean>
 
     <bean id="notificationDao" class="com.armedia.acm.services.notification.dao.NotificationDao"/>
     <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
@@ -56,54 +55,27 @@
     <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
     	<property name="notificationDao" ref="notificationDao"/>
     </bean>
-
-    <bean id="acmNotificationPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-notification"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_ANALYST</value>
-            </list>
-        </property>
+    
+    <!-- Executors -->
+    <bean id="sendExecutor" class="com.armedia.acm.services.notification.service.SendExecutor">
+		<property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+    <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
+    	<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="acmNotificationPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="acmSaveNotificationUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/notification"/>
-                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
-                </bean>
-
-                <bean id="acmDeleteNotificationByIdUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/plugin/notification/{notificationId}"/>
-                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
-                </bean>
-
-                <bean id="acmListNotificationsUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/notification/{user}"/>
-                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
-                </bean>
-
-                <bean id="notificationUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/notification"/>
-                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
-                </bean>
-            </list>
-
-        </property>
     </bean>
+
+    <!-- Senders Definition -->
+    <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
+        <property name="muleClient" ref="muleClient" />
+    </bean>
+
 </beans>

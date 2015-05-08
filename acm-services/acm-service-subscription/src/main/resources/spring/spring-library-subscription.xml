@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--<task:scheduler id="subscriptionEventTaskScheduler" pool-size="1"/>-->
 
-    <task:scheduler id="searchTaskScheduler" pool-size="1"/>
-    <task:scheduled-tasks scheduler="searchTaskScheduler">
+    <task:scheduler id="subscriptionTaskScheduler" pool-size="1"/>
+    <task:scheduled-tasks scheduler="subscriptionTaskScheduler">
         <task:scheduled
                 ref="arm_subscriptionEventBatchInsertJob"
                 method="insertNewSubscriptionEvents"
-                fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
+                fixed-delay="${subscription.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
 
     <bean id="arm_subscriptionEventBatchInsertJob" class="com.armedia.acm.services.subscription.service.SubscriptionEventBatchInsertService">
@@ -65,6 +70,7 @@
         <property name="localOverride" value="false"/>
         <property name="properties">
             <props>
+                <prop key="subscription.batchUpdateFrequencyInMilliseconds">180000</prop>
             </props>
         </property>
     </bean>
@@ -72,54 +78,6 @@
     <bean id="subscriptionPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Search Plugin"/>
         <property name="pluginProperties" ref="subscriptionProperties"/>
-        <property name="privileges">
-            <list>
-                <ref bean="subscribePrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="getSubscriptionsByUser" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="getSubscriptionByUserObjectIdAndType" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="createSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="deleteSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-                <bean id="subscriptionUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/subscription"/>
-                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
-                </bean>
-            </list>
-
-        </property>
-    </bean>
-
-    <bean id="subscribePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-subscription"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_ANALYST</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-            </list>
-        </property>
     </bean>
 
 </beans>

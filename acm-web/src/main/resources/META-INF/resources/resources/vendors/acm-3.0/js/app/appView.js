@@ -6,12 +6,12 @@
 App.View = {
     create : function() {
         if (App.View.MicroData.create)          {App.View.MicroData.create();}
-        if (App.View.ErrorBoard.create)          {App.View.ErrorBoard.create();}
+        if (App.View.MessageBoard.create)          {App.View.MessageBoard.create();}
         if (App.View.Dirty.create)              {App.View.Dirty.create();}
     }
     ,onInitialized: function() {
         if (App.View.MicroData.onInitialized)   {App.View.MicroData.onInitialized();}
-        if (App.View.ErrorBoard.onInitialized)   {App.View.ErrorBoard.onInitialized();}
+        if (App.View.MessageBoard.onInitialized)   {App.View.MessageBoard.onInitialized();}
         if (App.View.Dirty.onInitialized)       {App.View.Dirty.onInitialized();}
     }
 
@@ -50,42 +50,104 @@ App.View = {
         }
     }
 
-    ,ErrorBoard: {
+    ,I18n: {
         create : function() {
-            this.$divBoard  = $("#divEbErrorBoard");
-            this.$divDetail = $("#divEbErrorDetail");
-            this.$btnClose  = $("#btnEbErrorClose");
-            this.$btnDetail = $("#btnEbErrorDetail");
-            this.$labMsg    = $("#labEbErrorMsg");
-            this.$labDetail = $("#labEbErrorDetail");
 
-            this.$btnClose.unbind("click").on("click", function(e) {App.View.ErrorBoard.onClickBtnClose(e, this);});
-            this.$btnDetail.unbind("click").on("click", function(e) {App.View.ErrorBoard.onClickBtnDetail(e, this);});
+        }
+
+    }
+
+    ,MessageBoard: {
+        create : function() {
+            this.$sectionContent = $("#content");                   //this is where all the module data is displayed (tree,tables,topbar etc.)
+            this.$divBoard  = $("#acm-messageBoardContainer");
+            this.$divDetail = $("#divMessageDetail");
+            this.$btnClose  = $("#btnMessageClose");
+            this.$btnDetail = $("#btnMessageDetail");
+            this.$labMsg    = $("#labMessage");
+            this.$labDetail = $("#acm-labelMessageDetail");
+            this.$divModalMsgBoard = $(".modal-header");
+
+            this.$btnClose.unbind("click").on("click", function(e) {App.View.MessageBoard.onClickBtnClose(e, this);});
+            //this.$btnDetail.unbind("click").on("click", function(e) {App.View.MessageBoard.onClickBtnDetail(e, this);});
+            this.$divModalMsgBoard.unbind("click").on("click", "a", function(e) {App.View.MessageBoard.onClickBtnDetail(e, this);});
+            App.View.MessageBoard.resizeMessageBoard();
         }
         ,onInitialized: function() {
+
         }
 
         ,onClickBtnClose: function(event, ctrl) {
-            App.View.ErrorBoard.showDivBoard(false);
+            //clear the lists to
+            //prepare for future errors
+            this.$divModalMsgBoard.find("ul li").remove();
+            App.View.MessageBoard.showDivBoard(false);
+            App.View.MessageBoard.showDivDetail(false);
+
         }
         ,onClickBtnDetail: function(event, ctrl) {
-            App.View.ErrorBoard.showDivDetail(!App.View.ErrorBoard.isDetailShown());
+            var detail = $(event.target).attr('data-msg-detail');
+            detail = Acm.isEmpty(detail)?"Detail unavailable":Acm.goodValue(detail);
+            App.View.MessageBoard.setTextLabDetail(detail);
+            //App.View.MessageBoard.slideDivDetail(!App.View.MessageBoard.isDetailShown());
+            App.View.MessageBoard.showDivDetail(true);
         }
-        ,show: function(msg, detail) {
-            App.View.ErrorBoard.setTextLabMsg(msg);
+        ,fitToContentSize: function(){
+            $(window).resize(function () {
+                App.View.MessageBoard.resizeMessageBoard();
+            });
+        }
 
-            if (Acm.isNotEmpty(detail)) {
-                App.View.ErrorBoard.setTextLabDetail(detail);
-                App.View.ErrorBoard.showBtnDetail(true);
-            } else {
-                App.View.ErrorBoard.showBtnDetail(false);
+        ,useAcmMessageBoard: function(){
+            // refer to the base object member
+            // by default all jtable methods
+            // can be accessed via $.hik.jtable.prototype
+
+            // override using the errorboard instead
+            $.hik.jtable.prototype._showError = function(message){
+                App.View.MessageBoard.show(message);
             }
-            App.View.ErrorBoard.showDivDetail(false);
+        }
+        ,useDefaultJtableErrorDialog: function(){
+            // refer to the base object member
+            // by default all jtable methods
+            // can be accessed via $.hik.jtable.prototype
 
-            App.View.ErrorBoard.showDivBoard(true);
+            var jtableErrorDialog = $.hik.jtable.prototype._showError;
+            $.hik.jtable.prototype._showError = function(){
+                // original method to be used
+                jtableErrorDialog.apply( this, arguments);
+            }
+        }
+        ,addMessagesToMessageBoard: function(msg,detail){
+            if(Acm.isNotEmpty(msg)){
+                if(Acm.isEmpty(detail)){
+                    detail='';
+                }
+                var html="";
+		html+= "<li><div class='acm-message' data-msg-detail='" + detail + "'>" +  msg +
+                        "<a href='#' style='position: absolute;right:50px;' title='Click for Detail...' data-msg-detail='" + detail + "'>" + "Detail...</button></a>" +
+                        "</div></li>";		
+                this.$divModalMsgBoard.find("ul").prepend(html);
+            }
+        }
+
+        ,resizeMessageBoard: function(){
+            var width = this.$sectionContent.width();
+            this.$divModalMsgBoard.css('width', width);
+        }
+
+        ,show: function(msg, detail) {
+            App.View.MessageBoard.showDivDetail(false);
+            App.View.MessageBoard.showDivBoard(false);
+            if(Acm.isNotEmpty(msg)){
+                App.View.MessageBoard.addMessagesToMessageBoard(msg,detail);
+                App.View.MessageBoard.fitToContentSize();
+                App.View.MessageBoard.showDivBoard(true);
+            }
         }
 //        ,close: function() {
-//            App.View.ErrorBoard.showDivBoard(false);
+//            App.View.MessageBoard.showDivBoard(false);
 //        }
         ,setTextLabMsg: function(text) {
             Acm.Object.setText(this.$labMsg, text);
@@ -97,18 +159,31 @@ App.View = {
             Acm.Object.show(this.$btnDetail, show);
         }
         ,showDivBoard: function(show) {
+            // show/hide showed better performance
+            // when there were multiple errors
+            // previously used methods for reference:
+            // .slideDown("slow");
+            // .slideUp("slow");
+
             if (show) {
-                this.$divBoard.slideDown("slow");
+                this.$divBoard.show();
             } else {
-                this.$divBoard.slideUp("slow");
+                this.$divBoard.hide();
             }
         }
 
+        ,showDivDetail: function(show){
+            if (show) {
+                this.$divDetail.show();
+            } else {
+                this.$divDetail.hide();
+            }
+        }
         ,_isDetailShown: false
         ,isDetailShown: function() {
             return this._isDetailShown;
         }
-        ,showDivDetail: function(show) {
+        ,slideDivDetail: function(show) {
             if (show) {
                 this.$divDetail.slideDown("slow");
             } else {

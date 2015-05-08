@@ -40,6 +40,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String description_no_html_tags_parseable;
     private String notes_no_html_tags_parseable;
 
+
     /////////////////// for docs with an incident date ////////////
     private Date incident_date_tdt;
 
@@ -55,6 +56,10 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String assignee_last_name_lcs;
     private String assignee_full_name_lcs;
     private String incident_type_lcs;
+
+
+    ////////////// associated tags ////////////////////
+    private String tag_token_lcs;
 
     /////////////////// for docs with a status date ////////////
     private String status_lcs;
@@ -100,6 +105,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String supervisor_id_s;
     private List<String> child_id_ss;
     private List<String> member_id_ss;
+    private List<String> groups_id_ss;
     private boolean adhocTask_b;
     private String owner_lcs;
     private String business_process_name_lcs;
@@ -115,6 +121,9 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 	private String data_lcs;
 	private String action_lcs;
     private String notification_type_lcs;
+
+
+    private String parent_ref_s;
 
     @JsonIgnore
     public String getEcmFileId() {
@@ -562,7 +571,15 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 		this.member_id_ss = member_id_ss;
 	}
 
-    public void setAdhocTask_b(boolean adhocTask_b)
+    public List<String> getGroups_id_ss() {
+		return groups_id_ss;
+	}
+
+	public void setGroups_id_ss(List<String> groups_id_ss) {
+		this.groups_id_ss = groups_id_ss;
+	}
+
+	public void setAdhocTask_b(boolean adhocTask_b)
     {
         this.adhocTask_b = adhocTask_b;
     }
@@ -678,9 +695,27 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         this.tags_ss = tags_ss;
     }
 
+    public String getTag_token_lcs() {
+        return tag_token_lcs;
+    }
+
+    public void setTag_token_lcs(String tag_token_lcs) {
+        this.tag_token_lcs = tag_token_lcs;
+    }
+
+    public void setParent_ref_s(String parent_ref_s)
+    {
+        this.parent_ref_s = parent_ref_s;
+    }
+
+    public String getParent_ref_s()
+    {
+        return parent_ref_s;
+    }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SolrAdvancedSearchDocument{" +
                 "id='" + id + '\'' +
                 ", object_id_s='" + object_id_s + '\'' +
@@ -731,6 +766,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", supervisor_id_s='" + supervisor_id_s + '\'' +
                 ", child_id_ss=" + child_id_ss +
                 ", member_id_ss=" + member_id_ss +
+                ", groups_id_ss=" + groups_id_ss +
                 ", adhocTask_b=" + adhocTask_b +
                 ", owner_lcs='" + owner_lcs + '\'' +
                 ", business_process_name_lcs='" + business_process_name_lcs + '\'' +
@@ -741,6 +777,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", data_lcs='" + data_lcs + '\'' +
                 ", action_lcs='" + action_lcs + '\'' +
                 ", notification_type_lcs='" + notification_type_lcs + '\'' +
+                ", parent_ref_s='" + parent_ref_s + '\'' +
                 '}';
     }
 }

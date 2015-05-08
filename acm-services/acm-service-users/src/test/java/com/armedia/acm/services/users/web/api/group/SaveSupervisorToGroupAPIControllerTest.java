@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
@@ -52,6 +53,7 @@ public class SaveSupervisorToGroupAPIControllerTest extends EasyMockSupport {
 	private SaveSupervisorToGroupAPIController unit;
 	private Authentication mockAuthentication;
 	private AcmGroupDao mockGroupDao;
+	private UserDao mockUserDao;
 	
 	@Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -63,8 +65,10 @@ public class SaveSupervisorToGroupAPIControllerTest extends EasyMockSupport {
 		setMockMvc(MockMvcBuilders.standaloneSetup(getUnit()).setHandlerExceptionResolvers(getExceptionResolver()).build());
 		setMockAuthentication(createMock(Authentication.class));	
 		setMockGroupDao(createMock(AcmGroupDao.class));
+		setMockUserDao(createMock(UserDao.class));
 		
 		getUnit().setGroupDao(getMockGroupDao());
+		getUnit().setUserDao(getMockUserDao());
     }
 	
 	@Test
@@ -90,8 +94,10 @@ public class SaveSupervisorToGroupAPIControllerTest extends EasyMockSupport {
 		LOG.debug("Input JSON: " + supervisorAsJson);
 		
 		Capture<AcmGroup> found = new Capture<AcmGroup>();
+		Capture<String> userIdCapture = new Capture<String>();
 
 		expect(getMockGroupDao().findByName(group.getName())).andReturn(group);
+		expect(getMockUserDao().findByUserId(capture(userIdCapture))).andReturn(supervisor);
 		expect(getMockGroupDao().save(capture(found))).andReturn(group);
 		expect(getMockAuthentication().getName()).andReturn("user");
 		
@@ -154,6 +160,14 @@ public class SaveSupervisorToGroupAPIControllerTest extends EasyMockSupport {
 
 	public void setMockGroupDao(AcmGroupDao mockGroupDao) {
 		this.mockGroupDao = mockGroupDao;
+	}
+
+	public UserDao getMockUserDao() {
+		return mockUserDao;
+	}
+
+	public void setMockUserDao(UserDao mockUserDao) {
+		this.mockUserDao = mockUserDao;
 	}
 	
 }

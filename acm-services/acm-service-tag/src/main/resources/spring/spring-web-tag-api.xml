@@ -3,7 +3,43 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
+
     <bean id="tagUiController" class="com.armedia.acm.services.tag.web.TagUiController">
         <property name="pluginProperties" ref="tagProperties"/>
     </bean>
+
+    <bean id="listAllTagsAPIController" class="com.armedia.acm.services.tag.web.api.ListAllTagsAPIController">
+        <property name="tagService" ref="tagService"/>
+    </bean>
+
+    <bean id="associateTagAPIController" class="com.armedia.acm.services.tag.web.api.AssociateTagAPIController">
+        <property name="associatedTagEventPublisher" ref="associatedTagEventPublisher"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
+        <property name="tagService" ref="tagService" />
+    </bean>
+
+    <bean id="addNewTagAPIController" class="com.armedia.acm.services.tag.web.api.AddNewTagAPIController">
+        <property name="tagEventPublisher" ref="tagEventPublisher"/>
+        <property name="tagService" ref="tagService"/>
+    </bean>
+
+    <bean id="removeExistingTagAPIController" class="com.armedia.acm.services.tag.web.api.RemoveExistingTagAPIController">
+        <property name="tagService" ref="tagService" />
+        <property name="tagEventPublisher" ref="tagEventPublisher"/>
+    </bean>
+
+    <bean id="updateTagAPIController" class="com.armedia.acm.services.tag.web.api.UpdateTagAPIController">
+        <property name="tagService" ref="tagService"/>
+        <property name="tagEventPublisher" ref="tagEventPublisher"/>
+    </bean>
+
+    <bean id="removeTagAssociationAPIController" class="com.armedia.acm.services.tag.web.api.RemoveTagAssociationAPIController">
+        <property name="associatedTagEventPublisher" ref="associatedTagEventPublisher"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
+    </bean>
+
+    <bean id="listAssociatedTagsByObjectTypeAndIdAPIController" class="com.armedia.acm.services.tag.web.api.ListAssociatedTagsByObjectTypeAndIdAPIController">
+        <property name="associatedTagService" ref="associatedTagService" />
+    </bean>
+
 </beans>

@@ -1,0 +1,371 @@
+#%RAML 0.8
+title: ArkCase Outlook Integration Plugin
+
+/api/v1/plugin/outlook:
+  /inbox:
+    description: Get a page of the user's e-mail items, from their Inbox.
+    get:
+      queryParameters:
+        s:
+          description: Sort field
+          required: false
+          default: dateTimeCreated
+          enum: [ "subject", "dateTimeCreated", "dateTimeReceived", "dateTimeSent", "hasAttachments", "displayTo", "size" ]
+        sortDirection:
+          description: Sort ascending or descending
+          required: false
+          default: ASC
+          enum: [ "ASC", "DESC" ]
+        start:
+          description: Index of the first item to appear in the results
+          required: false
+          default: 0
+          type: integer
+          minimum: 0
+        n:
+          description: Maximum items to include in the results
+          required: false
+          default: 50
+          type: integer
+          minimum: 1
+      responses:
+        200:
+          description: Outlook inbox successfully located and the requested page of results was returned
+          body:
+            application/json:
+              schema:
+                !include outlook-inbox-schema.json
+              example: |
+                {
+                  "totalItems" : 1221,
+                  "moreItemsAvailable" : true,
+                  "currentStartIndex" : 0,
+                  "currentMaxItems" : 50,
+                  "nextStartIndex" : 50,
+                  "currentSortField" : "dateTimeCreated",
+                  "currentSortAscending" : true,
+                  "items" : [{
+                    "id" : "AAMkAGVjMmMzN2QwLWU1ZTctNDY0My05OGFiLTJkNjE1OTc5OTlhMQBGAAAAAACOTzGM1OQ5Sae/JVKnBpIgBwDqBa92g2suSYnILcLYd6tdAASAtjPwAADqBa92g2suSYnILcLYd6tdAScuFPOVAAA=",
+                    "subject" : "Mule in Action, Second Edition - Mobile formats available now",
+                    "created" : "2014-03-10T21:07:35.000+0000",
+                    "modified" : "2014-03-10T21:07:35.000+0000",
+                    "size" : 11374,
+                    "sent" : "2014-03-10T21:15:09.000+0000",
+                    "from" : "support@manning.com",
+                    "read" : true,
+                    "body" : "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>......</html>\n"
+                    }
+                    // more items left out of this example.
+                  ]
+                }
+  /calendar:
+    description: Get a page of the user's calendar items, from their Calendar folder.
+    get:
+      queryParameters:
+        s:
+          description: Sort field
+          required: false
+          default: dateTimeStart
+          enum: [ "subject", "dateTimeCreated", "dateTimeReceived", "dateTimeSent", "hasAttachments", "dateTimeStart" ]
+        sortDirection:
+          description: Sort ascending or descending
+          required: false
+          default: ASC
+          enum: [ "ASC", "DESC" ]
+        start:
+          description: Index of the first item to appear in the results
+          required: false
+          default: 0
+          type: integer
+          minimum: 0
+        n:
+          description: Maximum items to include in the results
+          required: false
+          default: 50
+          type: integer
+          minimum: 1
+      responses:
+        200:
+          description: Outlook calendar folder successfully located and the requested page of results was returned
+          body:
+            application/json:
+              schema:
+                !include outlook-calendar-schema.json
+              example: |
+                {
+                  "totalItems" : 1,
+                  "moreItemsAvailable" : false,
+                  "currentStartIndex" : 0,
+                  "currentMaxItems" : 50,
+                  "nextStartIndex" : -1,
+                  "currentSortField" : "dateTimeStart",
+                  "currentSortAscending" : true
+                  "items" : [{
+                    "id" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
+                    "subject" : "test appointment",
+                    "created" : "2015-04-21T21:20:16.000+0000",
+                    "modified" : "2015-04-21T21:20:16.000+0000",
+                    "body" : "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\n<!-- converted from rtf -->\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style>\n</head>\n<body>\n<font face=\"Times New Roman\" size=\"3\"><a name=\"BM_BEGIN\"></a>\n<div><font face=\"Tahoma, sans-serif\" size=\"2\">The body</font></div>\n</font>\n</body>\n</html>\n",
+                    "size" : 1029,
+                    "sent" : "2015-04-21T21:20:16.000+0000",
+                    "allDayEvent" : false,
+                    "cancelled" : false,
+                    "meeting" : false,
+                    "recurring" : false,
+                    "startDate" : "2015-04-21T21:30:00.000+0000",
+                    "endDate" : "2015-04-21T22:30:00.000+0000"
+                    }
+                  ]
+                }
+    post:
+      description: "Create new appointment"
+      body:
+        application/json:
+          schema:
+            !include outlook-appointment-schema.json
+          example: |
+            {
+                    "subject" : "test appointment",
+                    "body" : "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\n<!-- converted from rtf -->\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style>\n</head>\n<body>\n<font face=\"Times New Roman\" size=\"3\"><a name=\"BM_BEGIN\"></a>\n<div><font face=\"Tahoma, sans-serif\" size=\"2\">The body</font></div>\n</font>\n</body>\n</html>\n",
+                    "size" : 1029,
+                    "allDayEvent" : false,
+                    "cancelled" : false,
+                    "meeting" : false,
+                    "recurring" : false,
+                    "startDate" : "2015-04-21T21:30:00.000+0000",
+                    "endDate" : "2015-04-21T22:30:00.000+0000"
+            }
+      responses:
+        200:
+          description: Outlook appointment successfully inserted
+          body:
+            application/json:
+              schema:
+                !include outlook-appointment-schema.json
+              example: |
+                {
+                  "id" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
+                  "subject" : "test appointment",
+                  "created" : "2015-04-21T21:20:16.000+0000",
+                  "modified" : "2015-04-21T21:20:16.000+0000",
+                  "body" : "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\n<!-- converted from rtf -->\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style>\n</head>\n<body>\n<font face=\"Times New Roman\" size=\"3\"><a name=\"BM_BEGIN\"></a>\n<div><font face=\"Tahoma, sans-serif\" size=\"2\">The body</font></div>\n</font>\n</body>\n</html>\n",
+                  "size" : 1029,
+                  "sent" : "2015-04-21T21:20:16.000+0000",
+                  "allDayEvent" : false,
+                  "cancelled" : false,
+                  "meeting" : false,
+                  "recurring" : false,
+                  "startDate" : "2015-04-21T21:30:00.000+0000",
+                  "endDate" : "2015-04-21T22:30:00.000+0000"
+                }
+  /tasks:
+    description: Get a page of the user's tasks.
+    get:
+      queryParameters:
+        s:
+          description: Sort field
+          required: false
+          default: dueDate
+          enum: [ "dueDate", "startDate", "completeDate", "complete", "percentComplete"]
+        sortDirection:
+          description: Sort ascending or descending
+          required: false
+          default: ASC
+          enum: [ "ASC", "DESC" ]
+        start:
+          description: Index of the first item to appear in the results
+          required: false
+          default: 0
+          type: integer
+          minimum: 0
+        n:
+          description: Maximum items to include in the results
+          required: false
+          default: 50
+          type: integer
+          minimum: 1
+      responses:
+        200:
+          description: Outlook tasks successfully located and the requested page of results was returned
+          body:
+            application/json:
+              schema:
+                !include outlook-tasks-schema.json
+              example: |
+                {
+                    "totalItems": 2,
+                    "moreItemsAvailable": false,
+                    "currentStartIndex": 0,
+                    "currentMaxItems": 50,
+                    "nextStartIndex": -1,
+                    "currentSortField": "due",
+                    "currentSortAscending": true
+                    "items": [{
+                        "id": "AAMkADdiNmVmZjJmLTE1YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p4AADqU67EGpNCTIx6ZCDGbZmMAF4w2hYBAAA=",
+                        "subject": "Task 1",
+                        "created": "2015-04-30T00:38:42.000+0000",
+                        "modified": "2015-04-30T00:38:42.000+0000",
+                        "body": "",
+                        "size": 310,
+                        "sent": "2015-04-30T00:39:17.000+0000",
+                        "dueDate": "2015-04-30T22:00:00.000+0000",
+                        "startDate": null,
+                        "completeDate": null,
+                        "complete": false,
+                        "percentComplete": 0.0
+                    }, {
+                        "id": "AAMkADdiNmVmZjJmLTE1YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p4AADqU67EGpNCTIx6ZCDGbZmMAF4w2hYCAAA=",
+                        "subject": "Task2",
+                        "created": "2015-04-30T00:39:20.000+0000",
+                        "modified": "2015-04-30T00:39:20.000+0000",
+                        "body": "",
+                        "size": 274,
+                        "sent": "2015-04-30T00:39:23.000+0000",
+                        "dueDate": null,
+                        "startDate": null,
+                        "completeDate": null,
+                        "complete": false,
+                        "percentComplete": 0.0
+                    }],
+                }
+    post:
+      description: "Create new task"
+      body:
+        application/json:
+          schema:
+            !include outlook-task-schema.json
+          example: |
+            {
+              "subject": "Task 1",
+              "body": "",
+              "size": 310,
+              "dueDate": "2015-04-30T22:00:00.000+0000",
+              "startDate": null,
+              "completeDate": null,
+              "complete": false,
+              "percentComplete": 0.0
+            }
+      responses:
+        200:
+          description: Outlook contact successfully inserted
+          body:
+            application/json:
+              schema:
+                !include outlook-task-schema.json
+              example: |
+                {
+                  "id": "AAMkADdiNmVmZjJmLTE1YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p4AADqU67EGpNCTIx6ZCDGbZmMAF4w2hYBAAA=",
+                  "subject": "Task 1",
+                  "created": "2015-04-30T00:38:42.000+0000",
+                  "modified": "2015-04-30T00:38:42.000+0000",
+                  "body": "",
+                  "size": 310,
+                  "sent": "2015-04-30T00:39:17.000+0000",
+                  "dueDate": "2015-04-30T22:00:00.000+0000",
+                  "startDate": null,
+                  "completeDate": null,
+                  "complete": false,
+                  "percentComplete": 0.0
+                }
+  /contacts:
+    description: Get a contacts items.
+    get:
+      queryParameters:
+        s:
+          description: Sort field
+          required: false
+          default: completeName
+          enum: [ "surname", "displayName", "companyName", "emailAddress1", "primaryTelephone", "emailAddress2", "completeName" ]
+        sortDirection:
+          description: Sort ascending or descending
+          required: false
+          default: ASC
+          enum: [ "ASC", "DESC" ]
+        start:
+          description: Index of the first item to appear in the results
+          required: false
+          default: 0
+          type: integer
+          minimum: 0
+        n:
+          description: Maximum items to include in the results
+          required: false
+          default: 50
+          type: integer
+          minimum: 1
+      responses:
+        200:
+          description: Outlook contacts successfully located and the requested page of results was returned
+          body:
+            application/json:
+              schema:
+                !include outlook-contacts-schema.json
+              example: |
+               {
+                  "totalItems": 1,
+                  "moreItemsAvailable": false,
+                  "currentStartIndex": 0,
+                  "currentMaxItems": 50,
+                  "nextStartIndex": -1,
+                  "currentSortField": "completeName",
+                  "currentSortAscending": true,
+                  "items": [
+                    {
+                      "id": "EAMkADdiNmVmZjJmLTE2YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p0AADqU67EGpNCTIx6ZCDGbZmMAF4w2ggDAAA=",
+                      "subject": "John Doe",
+                      "created": "2015-04-30T00:02:32.000+0000",
+                      "modified": "2015-04-30T00:02:42.000+0000",
+                      "body": "",
+                      "size": 1089,
+                      "sent": "2015-04-30T00:02:42.000+0000",
+                      "surname": "Doe",
+                      "displayName": "John Doe",
+                      "companyName": "company_com",
+                      "emailAddress1": "john.doe@armedia.com",
+                      "primaryTelephone": null,
+                      "emailAddress2": null,
+                      "completeName": "John Doe"
+                    }
+                  ]
+                }
+    post:
+      description: "Create new contact"
+      body:
+        application/json:
+          schema:
+            !include outlook-contact-schema.json
+          example: |
+            {  
+              "subject":"Subject",
+              "body":"Body",
+              "surname":"Doe",
+              "displayName":"John Doe",
+              "companyName":"Armedia",
+              "emailAddress1":"john.doe@armedia.com",
+              "primaryTelephone":"+55555656456",
+              "completeName":"John Doe"
+            }
+      responses:
+        200:
+          description: Outlook contact successfully inserted
+          body:
+            application/json:
+              schema:
+                !include outlook-contact-schema.json
+              example: |
+                {
+                  "id": "EAMkADdiNmVmZjJmLTE2YWItNGM3Zi1hMWY3LTY4ZThlMGFhOWUwZgBGAAAAAADr6AFdn4/3TLul/2Xu/kMaBwDBgmTjYgBBT7sxwYCnuAMrAF4f4+p0AADqU67EGpNCTIx6ZCDGbZmMAF4w2ggDAAA=",
+                  "subject": "John Doe",
+                  "created": "2015-04-30T00:02:32.000+0000",
+                  "modified": "2015-04-30T00:02:42.000+0000",
+                  "body": "",
+                  "size": 1089,
+                  "sent": "2015-04-30T00:02:42.000+0000",
+                  "surname":"Doe",
+                  "displayName":"John Doe",
+                  "companyName":"company_com",
+                  "emailAddress1":"john.doe@armedia.com",
+                  "primaryTelephone": null,
+                  "emailAddress2": null,
+                  "completeName": "John Doe"
+                }

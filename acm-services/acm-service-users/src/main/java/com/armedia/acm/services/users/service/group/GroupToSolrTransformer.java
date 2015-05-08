@@ -116,7 +116,10 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         	List<String> subGroupIds = new ArrayList<String>();
         	for (AcmGroup subGroup : in.getChildGroups())
         	{
-        		subGroupIds.add(subGroup.getName());
+        		if (!subGroupIds.contains(subGroup.getName()))
+        		{
+        			subGroupIds.add(subGroup.getName());
+        		}
         	}
         	
         	solr.setChild_id_ss(subGroupIds);

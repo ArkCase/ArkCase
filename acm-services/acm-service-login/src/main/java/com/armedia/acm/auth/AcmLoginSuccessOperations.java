@@ -32,7 +32,9 @@ public class AcmLoginSuccessOperations
     public void onSuccessfulAuthentication(HttpServletRequest request,
                                            Authentication authentication)
     {
-        addUserIdToSession(request, authentication);
+        String internalUserId = addAcmUserToSession(request, authentication);
+
+        addUserIdToSession(request, internalUserId);
 
         addPrivilegesToSession(request, authentication);
 
@@ -40,20 +42,16 @@ public class AcmLoginSuccessOperations
 
         addAcmApplicationToSession(request);
 
-        addAcmUserToSession(request, authentication);
-
-        recordAuditPropertyUser(authentication);
+        recordAuditPropertyUser(internalUserId);
     }
 
-    private void recordAuditPropertyUser(Authentication authentication)
+    private void recordAuditPropertyUser(String userId)
     {
-        getAuditPropertyEntityAdapter().setUserId(authentication.getName());
+        getAuditPropertyEntityAdapter().setUserId(userId);
     }
 
-    protected void addUserIdToSession(HttpServletRequest request, Authentication authentication)
+    protected void addUserIdToSession(HttpServletRequest request, String userId)
     {
-        String userId = authentication.getName();
-
         HttpSession session = request.getSession(true);
         session.setAttribute("acm_username", userId);
 
@@ -127,7 +125,7 @@ public class AcmLoginSuccessOperations
 
     }
 
-    protected void addAcmUserToSession(HttpServletRequest request, Authentication authentication)
+    protected String addAcmUserToSession(HttpServletRequest request, Authentication authentication)
     {
         String userId = authentication.getName();
 
@@ -136,6 +134,8 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
 
         session.setAttribute("acm_user", user);
+
+        return user.getUserId();
 
     }
 

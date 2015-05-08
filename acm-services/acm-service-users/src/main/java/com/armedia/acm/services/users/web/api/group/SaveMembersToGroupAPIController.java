@@ -3,7 +3,6 @@
  */
 package com.armedia.acm.services.users.web.api.group;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -19,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.service.group.GroupService;
 
 /**
  * @author riste.tutureski
@@ -33,6 +34,8 @@ public class SaveMembersToGroupAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmGroupDao groupDao;
+	private UserDao userDao;
+	private GroupService groupService;
 	
 	@RequestMapping(value="/group/{groupId}/members/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -48,24 +51,14 @@ public class SaveMembersToGroupAPIController {
 		try
 		{
 			AcmGroup group = getGroupDao().findByName(groupId);
-			
-			if (group.getMembers() == null)
-			{
-				group.setMembers(new HashSet<AcmUser>());
-			}
-			
-			group.getMembers().addAll(members);
+			Set<AcmUser> updatedMembers = getGroupService().updateMembersWithDatabaseInfo(members);
+			group = getGroupService().updateGroupWithMembers(group, updatedMembers);
 			
 			// Add members for all parent groups
 			AcmGroup parent = group.getParentGroup();
 			while (parent != null)
-			{
-				if (parent.getMembers() == null)
-				{
-					parent.setMembers(new HashSet<AcmUser>());
-				}
-				
-				parent.getMembers().addAll(members);
+			{				
+				parent = getGroupService().updateGroupWithMembers(parent, updatedMembers);
 				getGroupDao().save(parent);
 				
 				parent = parent.getParentGroup();
@@ -80,8 +73,7 @@ public class SaveMembersToGroupAPIController {
 			LOG.error("Failed to save members to the group with ID = " + groupId, e);
 			throw new AcmUserActionFailedException("Save Members", "Group", -1L, e.getMessage(), e);
 		}
-    }
-	
+    }	
 
 	public AcmGroupDao getGroupDao() {
 		return groupDao;
@@ -90,5 +82,21 @@ public class SaveMembersToGroupAPIController {
 	public void setGroupDao(AcmGroupDao groupDao) {
 		this.groupDao = groupDao;
 	}
-	
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
+	}
+
+	public GroupService getGroupService() {
+		return groupService;
+	}
+
+	public void setGroupService(GroupService groupService) {
+		this.groupService = groupService;
+	}
+		
 }

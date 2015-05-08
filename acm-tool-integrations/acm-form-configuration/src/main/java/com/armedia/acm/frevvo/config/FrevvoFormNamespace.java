@@ -59,4 +59,14 @@ public class FrevvoFormNamespace {
 	 */
 	public static final String COSTSHEET_NAMESPACE = "http://www.frevvo.com/schemas/_YPmMQL2oEeSmjJjf63cgRw";
 	
+	/**
+	 * This is namespace for EbriefForm object while we creating XML
+	 * 
+	 * The namespace can be found on Frevvo Costsheet form schema. To access the schema,
+	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
+	 * press button "Schema" button under "eBrief" form. The "EBrief.xsd" schema will be downloaded.
+	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
+	 */
+	public static final String EBRIEF_NAMESPACE = "http://www.frevvo.com/schemas/_L9-uIO-DEeS84usjR3uNRQ";
+	
 }

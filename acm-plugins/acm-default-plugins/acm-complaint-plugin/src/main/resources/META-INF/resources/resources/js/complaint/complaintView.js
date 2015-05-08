@@ -18,6 +18,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.create)       {Complaint.View.Participants.create();}
         if (Complaint.View.Location.create)           {Complaint.View.Location.create();}
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
+        if (Complaint.View.OutlookCalendar.create)    {Complaint.View.OutlookCalendar.create();}
         if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
         if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
     }
@@ -35,6 +36,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.onInitialized)   {Complaint.View.Participants.onInitialized();}
         if (Complaint.View.Location.onInitialized)       {Complaint.View.Location.onInitialized();}
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
+        if (Complaint.View.OutlookCalendar.onInitialized) {Complaint.View.OutlookCalendar.onInitialized();}
         if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
         if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
     }
@@ -56,21 +58,32 @@ Complaint.View = Complaint.View || {
             this.treeFilter = Acm.Object.MicroData.getJson("treeFilter");
             this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             this.token      = Acm.Object.MicroData.get("token");
+            this.arkcaseUrl      = Acm.Object.MicroData.get("arkcaseUrl");
+            this.arkcasePort      = Acm.Object.MicroData.get("arkcasePort");
 
             this.formUrls = {};
             this.formUrls.closeComplaintFormUrl          = Acm.Object.MicroData.get("closeComplaintFormUrl");
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
             this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
             this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
-            this.formDocuments = Acm.Object.MicroData.getJson("formDocuments");
 
+            var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
+            var mapDocForms = {};
+            if (Acm.isArray(formDocuments)) {
+                for (var i = 0; i < formDocuments.length; i++) {
+                    var form = Acm.goodValue(formDocuments[i].value);
+                    if (Acm.isNotEmpty(form)) {
+                        mapDocForms[form] = formDocuments[i];
+                    }
+                }
+            }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
             if (Acm.isArray(this.fileTypes)) {
                 for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form =this.fileTypes[i].form;
+                    var form = this.fileTypes[i].form;
                     if (Acm.isNotEmpty(form)) {
                         this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = this.findFormDocumentByForm(form);
+                        var formDocument = mapDocForms[form];
                         if (formDocument) {
                             this.fileTypes[i].label = Acm.goodValue(formDocument.label);
                         }
@@ -82,18 +95,6 @@ Complaint.View = Complaint.View || {
         ,onInitialized: function() {
         }
 
-        ,findFormDocumentByForm: function(form) {
-            var fd = null;
-            if (Acm.isArray(this.formDocuments)) {
-                for (var i = 0; i < this.formDocuments.length; i++) {
-                    if (form == this.formDocuments[i].value) {
-                        fd = this.formDocuments[i];
-                        break;
-                    }
-                }
-            }
-            return fd;
-        }
         ,findFileTypeByType: function(type) {
             var ft = null;
             if (Acm.isArray(this.fileTypes)) {
@@ -145,40 +146,43 @@ Complaint.View = Complaint.View || {
                     data.result = AcmEx.FancyTreeBuilder
                         .reset()
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: "Details"
+                            ,title: $.t("complaint:navigation.leaf-title.details")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_LOCATION
-                            ,title: "Location"
+                            ,title: $.t("complaint:navigation.leaf-title.location")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
-                            ,title: "People"
+                            ,title: $.t("complaint:navigation.leaf-title.people")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: "Documents"
+                            ,title: $.t("complaint:navigation.leaf-title.documents")
 //                            ,folder: true
 //                            ,lazy: true
 //                            ,cache: false
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
-                            ,title: "Tasks"
+                            ,title: $.t("complaint:navigation.leaf-title.tasks")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: "Notes"
+                            ,title: $.t("complaint:navigation.leaf-title.notes")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-                            ,title: "Participants"
+                            ,title: $.t("complaint:navigation.leaf-title.participants")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
-                            ,title: "References"
+                            ,title: $.t("complaint:navigation.leaf-title.references")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: "History"
+                            ,title: $.t("complaint:navigation.leaf-title.history")
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+                            ,title: $.t("complaint:navigation.leaf-title.calendar")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
-                            ,title: "Time"
+                            ,title: $.t("complaint:navigation.leaf-title.time")
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_COST
-                            ,title: "Cost"
+                            ,title: $.t("complaint:navigation.leaf-title.cost")
                         })
                         .getTree();
 
@@ -193,15 +197,15 @@ Complaint.View = Complaint.View || {
         ,getContextMenu: function(node) {
             var key = node.key;
             var menu = [
-                {title: "Menu:" + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
-                {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
-                {title: "Paste", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
+                {title: $.t("complaint:context-menu.menu-title.menu") + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
+                {title: $.t("complaint:context-menu.menu-title.copy"), cmd: "copy", uiIcon: "ui-icon-copy"},
+                {title: $.t("complaint:context-menu.menu-title.paste"), cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
                 {title: "----"},
-                {title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
-                {title: "Delete", cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
-                {title: "More", children: [
-                    {title: "Sub 1", cmd: "sub1"},
-                    {title: "Sub 2", cmd: "sub1"}
+                {title: $.t("complaint:context-menu.menu-title.edit"), cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
+                {title: $.t("complaint:context-menu.menu-title.delete"), cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
+                {title: $.t("complaint:context-menu.menu-title.more"), children: [
+                    {title: $.t("complaint:context-menu.menu-title.sub1"), cmd: "sub1"},
+                    {title: $.t("complaint:context-menu.menu-title.sub2"), cmd: "sub1"}
                 ]}
             ];
             return menu;
@@ -215,7 +219,7 @@ Complaint.View = Complaint.View || {
         ,onInitialized: function() {
         }
         ,onModelRetrievedObjectError: function(error) {
-            Acm.Dialog.error(Acm.goodValue(error.errMsg, "Error occurred for retrieving complaint data"));
+            Acm.Dialog.error(Acm.goodValue(error.errMsg, $.t("complaint:msg.error-retrieving-complaint-data")));
         }
     }
 
@@ -236,10 +240,10 @@ Complaint.View = Complaint.View || {
 
         //---- demo how to use document tree picker ----
         ,onPickDocumentDemo: function() {
-            DocTree.showDocumentDialog({name: "demoDialog"
-                ,title: "My Dialog Title"
-                ,btnOkText: "Select"
-                ,btnCancelText: "Away"
+            DocTree.Dialog.create({name: "demoDialog"
+                ,title: $.t("complaint:document-dialog.title")
+                ,btnOkText: $.t("complaint:document-dialog.btn-ok")
+                ,btnCancelText: $.t("complaint:document-dialog.btn-cancel")
                 ,folderOnly: false
                 ,onClickBtnPrimary : function(event, ctrl) {
                     var a1 = DocTree.View.getSelectedNodes();
@@ -255,7 +259,7 @@ Complaint.View = Complaint.View || {
                 ,onClickBtnDefault : function(event, ctrl) {
                     alert("cancel");
                 }
-            });
+            }).show();
         }
         //---------------------------------------
 
@@ -272,7 +276,7 @@ Complaint.View = Complaint.View || {
                     + "',mode:'create',");
                     //+ "',mode:'edit',xmlId:'816',pdfId:'818',requestId:'813',");
 
-                Acm.Dialog.openWindow(url, "", 860, 700, function() {});
+                Acm.Dialog.openWindow(url, "", 1060, 700, function() {});
             }
         }
 
@@ -378,6 +382,11 @@ Complaint.View = Complaint.View || {
                 }
             	,currentValue: Complaint.Model.Detail.getAssignee(Complaint.View.getActiveComplaint())
             });
+            
+            // This is happen after loading the object and after changing the owning group, for that reason 
+            // we should check here as well.  We need both, assignees and groups for checking - assignees and groups should be loaded. 
+            // If in this stage assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            Complaint.View.Detail.populateRestriction(Complaint.View.getActiveComplaint());
         }
         ,onModelRetrievedGroups: function(groups) {
             var choices = [];
@@ -395,6 +404,11 @@ Complaint.View = Complaint.View || {
                 }
             	,currentValue: Complaint.Model.Detail.getGroup(Complaint.View.getActiveComplaint())
             });
+            
+            // This is happen after loading the object and after changing the owning group, for that reason 
+            // we should check here as well.  We need both, assignees and groups for checking - assignees and groups should be loaded. 
+            // If in this stage assignees or groups are not loaded, checking for assignees and groups will be skipped.
+            Complaint.View.Detail.populateRestriction(Complaint.View.getActiveComplaint());
         }
         ,onModelFoundComplaintTypes: function(complaintTypes) {
             var choices = [];
@@ -465,15 +479,14 @@ Complaint.View = Complaint.View || {
             }
         }
 
-        ,DIRTY_EDITING_DETAIL: "Editing complaint detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare(Complaint.View.Detail.DIRTY_EDITING_DETAIL);
+            App.Object.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
             Complaint.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Complaint.View.Detail.saveDivDetail();
             Complaint.Controller.viewChangedDetail(Complaint.View.getActiveComplaintId(), htmlDetail);
-            App.Object.Dirty.clear(Complaint.View.Detail.DIRTY_EDITING_DETAIL);
+            App.Object.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
         }
 
 
@@ -481,7 +494,7 @@ Complaint.View = Complaint.View || {
             if (Complaint.Model.Detail.validateComplaint(c)) {
                 var assignee = Complaint.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
+
                 var group = Complaint.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
 
@@ -490,9 +503,23 @@ Complaint.View = Complaint.View || {
                 this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
                 this.setTextLnkComplaintType(Acm.goodValue(c.complaintType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
-                this.setTextLnkStatus(Acm.goodValue(c.status));
+                this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
+                
+                Complaint.View.Detail.populateRestriction(c);
             }
+        }
+        
+        ,populateRestriction: function(c) {
+        	if (Complaint.Model.Detail.validateComplaint(c)) {
+	        	var assignee = Complaint.Model.Detail.getAssignee(c);
+	        	var group = Complaint.Model.Detail.getGroup(c);
+	        	var assignees = Complaint.Model.Lookup.getAssignees(c.complaintId);
+	        	var groups = Complaint.Model.Lookup.getGroups(c.complaintId);
+	            
+	            var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
+	            Complaint.View.Action.$chkRestrict.prop('disabled', restrict);
+        	}
         }
 
         ,setTextLabComplaintNumber: function(txt) {
@@ -601,12 +628,12 @@ Complaint.View = Complaint.View || {
                     ,Complaint.View.People.Aliases.createLink
                 ]
                 ,{
-                    title: 'People '
+                    title: $.t("complaint:people.table.title")
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Person'
+                        addNewRecord: $.t("complaint:people.table.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function(postData, jtParams) {
@@ -679,27 +706,27 @@ Complaint.View = Complaint.View || {
                     }
                     ,fields: {
                         assocId: {
-                            title: 'ID'
+                            title: $.t("complaint:people.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }
                         ,title: {
-                            title: 'Title'
+                            title: $.t("complaint:people.table.field.title")
                             ,width: '10%'
                             ,options: Complaint.Model.Lookup.getPersonTitles()
                         }
                         ,givenName: {
-                            title: 'First Name'
+                            title: $.t("complaint:people.table.field.first-name")
                             ,width: '15%'
                         }
                         ,familyName: {
-                            title: 'Last Name'
+                            title: $.t("complaint:people.table.field.last-name")
                             ,width: '15%'
                         }
                         ,personType: {
-                            title: 'Type'
+                            title: $.t("complaint:people.table.field.type")
                             ,options: Complaint.Model.Lookup.getPersonTypes()
                         }
                     }
@@ -872,16 +899,16 @@ Complaint.View = Complaint.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("complaint:contact-method.table.field.type")
                             ,width: '15%'
                             ,options: Complaint.Model.Lookup.getDeviceTypes()
                         }
                         ,value: {
-                            title: 'Value'
+                            title: $.t("complaint:contact-method.table.field.value")
                             ,width: '30%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("complaint:contact-method.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
@@ -889,7 +916,7 @@ Complaint.View = Complaint.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("complaint:contact-method.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1037,16 +1064,16 @@ Complaint.View = Complaint.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("complaint:security-tags.table.field.type")
                             ,width: '15%'
                             ,options: Complaint.Model.Lookup.getSecurityTagTypes()
                         }
                         ,value: {
-                            title: 'Value'
+                            title: $.t("complaint:security-tags.table.field.value")
                             ,width: '30%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("complaint:security-tags.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
@@ -1054,7 +1081,7 @@ Complaint.View = Complaint.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("complaint:security-tags.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1143,7 +1170,7 @@ Complaint.View = Complaint.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Organization'
+                        addNewRecord: $.t("complaint:organizations.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1194,22 +1221,22 @@ Complaint.View = Complaint.View || {
                             ,list: false
                         }
                         , type: {
-                            title: 'Type'
+                            title: $.t("complaint:organizations.table.field.type")
                             ,width: '15%'
                             ,options: Complaint.Model.Lookup.getOrganizationTypes()
                         }
                         , value: {
-                            title: 'Value'
+                            title: $.t("complaint:organizations.table.field.value")
                             ,width: '30%'
                         }
                         , created: {
-                            title: 'Date Added'
+                            title: $.t("complaint:organizations.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
                         }
                         , creator: {
-                            title: 'Added By'
+                            title: $.t("complaint:organizations.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1298,7 +1325,7 @@ Complaint.View = Complaint.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Location'
+                        addNewRecord: $.t("complaint:organizations.addresses.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1384,38 +1411,38 @@ Complaint.View = Complaint.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("complaint:addresses.table.field.type")
                             ,width: '8%'
                             ,options: Complaint.Model.Lookup.getLocationTypes()
                         }
                         ,streetAddress: {
-                            title: 'Address'
+                            title: $.t("complaint:addresses.table.field.address")
                             ,width: '20%'
                         }
                         ,city: {
-                            title: 'City'
+                            title: $.t("complaint:addresses.table.field.city")
                             ,width: '10%'
                         }
                         ,state: {
-                            title: 'State'
+                            title: $.t("complaint:addresses.table.field.state")
                             ,width: '8%'
                         }
                         ,zip: {
-                            title: 'Zip'
+                            title: $.t("complaint:addresses.table.field.zip")
                             ,width: '8%'
                         }
                         ,country: {
-                            title: 'Country'
+                            title: $.t("complaint:addresses.table.field.country")
                             ,width: '8%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("complaint:addresses.table.field.date-added")
                             ,width: '15%'
                             ,create: false
                             ,edit: false
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("complaint:addresses.table.field.added-by")
                             ,width: '15%'
                             ,create: false
                             ,edit: false
@@ -1512,7 +1539,7 @@ Complaint.View = Complaint.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Alias'
+                        addNewRecord: $.t("complaint:aliases.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1563,16 +1590,16 @@ Complaint.View = Complaint.View || {
                             ,list: false
                         }
                         ,type: {
-                            title: 'Type'
+                            title: $.t("complaint:aliases.table.field.type")
                             ,width: '15%'
                             ,options: Complaint.Model.Lookup.getAliasTypes()
                         }
                         ,value: {
-                            title: 'Value'
+                            title: $.t("complaint:aliases.table.field.value")
                             ,width: '30%'
                         }
                         ,created: {
-                            title: 'Date Added'
+                            title: $.t("complaint:aliases.table.field.date-added")
                             ,width: '20%'
                             ,create: false
                             ,edit: false
@@ -1580,7 +1607,7 @@ Complaint.View = Complaint.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: 'Added By'
+                            title: $.t("complaint:aliases.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1648,7 +1675,7 @@ Complaint.View = Complaint.View || {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
 
-        ,uploadForm: function(type, onCloseForm) {
+        ,uploadForm: function(type, folderId, onCloseForm) {
             var complaintId = Complaint.View.getActiveComplaintId();
             var complaint = Complaint.View.getActiveComplaint();
             if (Complaint.Model.Detail.validateComplaint(complaint) )
@@ -1664,8 +1691,14 @@ Complaint.View = Complaint.View || {
                     // the Frevvo form will decode it.
                     var complaintTitle = Acm.goodValue(complaint.complaintTitle);
                     complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-                    url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                    url = url.replace("_data=(", "_data=(type:'complaint'"
+                        + ", complaintId:'" + complaint.complaintId
+                        + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber)
+                        + "',complaintTitle:'" + complaintTitle
+                        + "',complaintPriority:'" + Acm.goodValue(complaint.priority)
+                        + "',folderId:'" + folderId
+                        + "',");
+                    Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
@@ -1750,20 +1783,20 @@ Complaint.View = Complaint.View || {
             var formDocuments = Complaint.View.MicroData.formDocuments;
             var html = "<span>"
                 + "<select class='input-sm form-control input-s-sm inline v-middle'>"
-                + "<option value=''>Document Type</option>";
+                + "<option value=''>" + $.t("complaint:documents-to-retire.form-document.document-type") + "</option>";
 
             if (!Acm.isArrayEmpty(formDocuments)) {
                 for (var i = 0; i < formDocuments.length; i ++) {
                     html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
                 }
 
-                html += "<option value='mr'>Medical Release</option>"
-                + "<option value='gr'>General Release</option>"
-                + "<option value='ev'>eDelivery</option>"
-                + "<option value='sig'>SF86 Signature</option>"
-                + "<option value='noi'>Notice of Investigation</option>"
-                + "<option value='wir'>Witness Interview Request</option>"
-                + "<option value='ot'>Other</option>";
+                html += "<option value='mr'>" + $.t("complaint:documents-to-retire.form-document.medical-release") + "</option>"
+                + "<option value='gr'>" + $.t("complaint:documents-to-retire.form-document.general-release") + "</option>"
+                + "<option value='ev'>" + $.t("complaint:documents-to-retire.form-document.e-delivery") + "</option>"
+                + "<option value='sig'>" + $.t("complaint:documents-to-retire.form-document.sf86-signature") + "</option>"
+                + "<option value='noi'>" + $.t("complaint:documents-to-retire.form-document.notice-of-investigation") + "</option>"
+                + "<option value='wir'>" + $.t("complaint:documents-to-retire.form-document.witness-interview-request") + "</option>"
+                + "<option value='ot'>" + $.t("complaint:documents-to-retire.form-document.other") + "</option>";
             }
 
             html += "</select>"
@@ -1788,7 +1821,7 @@ Complaint.View = Complaint.View || {
                     var complaintTitle = Acm.goodValue(complaint.complaintTitle);
                     complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
                     url = url.replace("_data=(", "_data=(type:'complaint', complaintId:'" + complaint.complaintId + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber) + "',complaintTitle:'" + complaintTitle + "',complaintPriority:'" + Acm.goodValue(complaint.priority) + "',");
-                    Acm.Dialog.openWindow(url, "", 810, $(window).height() - 30, onCloseForm);
+                    Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
@@ -1850,12 +1883,12 @@ Complaint.View = Complaint.View || {
         }
         , createJTableDocuments: function ($s) {
             AcmEx.Object.JTable.usePaging($s, {
-                title: 'Documents'
+                title: $.t("complaint:documents-to-retire.title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
                 , messages: {
-                    addNewRecord: 'Add Document'
+                    addNewRecord: $.t("complaint:documents-to-retire.msg.add-new-record")
                 }
                 , actions: {
                     pagingListAction: function (postData, jtParams, sortMap) {
@@ -1895,7 +1928,7 @@ Complaint.View = Complaint.View || {
                 }
                 , fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("complaint:documents-to-retire.table.field.id")
                         , key: true
                         , list: false
                         , create: false
@@ -1903,7 +1936,7 @@ Complaint.View = Complaint.View || {
                         , defaultvalue: 0
                     }
                     , title: {
-                        title: 'Title'
+                        title: $.t("complaint:documents-to-retire.table.field.title")
                         , width: '50%'
                         , edit: false
                         , create: false
@@ -1915,13 +1948,13 @@ Complaint.View = Complaint.View || {
                         }
                     }
                     , created: {
-                        title: 'Created'
+                        title: $.t("complaint:documents-to-retire.table.field.created")
                         , width: '15%'
                         , edit: false
                         , create: false
                     }
                     , creator: {
-                        title: 'Creator'
+                        title: $.t("complaint:documents-to-retire.table.field.creator")
                         , width: '15%'
                         , edit: false
                         , create: false
@@ -1999,7 +2032,7 @@ Complaint.View = Complaint.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Notes'
+                    title: $.t("complaint:notes.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
@@ -2007,7 +2040,7 @@ Complaint.View = Complaint.View || {
                     ,multiselect: false
                     ,selectingCheckboxes: false
                     ,messages: {
-                        addNewRecord: 'Add Note'
+                        addNewRecord: $.t("complaint:notes.msg.add-new-record")
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
@@ -2059,7 +2092,7 @@ Complaint.View = Complaint.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("complaint:notes.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
@@ -2067,24 +2100,38 @@ Complaint.View = Complaint.View || {
                             ,defaultvalue : 0
                         }
                         ,note: {
-                            title: 'Note'
+                            title: $.t("complaint:notes.table.field.note")
                             ,type: 'textarea'
                             ,width: '50%'
                             ,edit: true
                         }
                         ,created: {
-                            title: 'Created'
+                            title: $.t("complaint:notes.table.field.created")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
                         }
                         ,creator: {
-                            title: 'Author'
+                            title: $.t("complaint:notes.table.field.author")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
                         }
                     } //end field
+                    ,formCreated: function (event, data) {
+                        var $noteForm = $(".jtable-create-form");
+                        //other constraints can be added
+                        //as needed as shown below
+                        var opt = {
+                            resizable: false
+                            //,autoOpen: false,
+                            //height:200,
+                            //width:200,
+                            //modal: true,
+                            //etc..
+                        };
+                        $noteForm.parent().dialog(opt);
+                    }
                     ,recordAdded : function (event, data) {
                         var record = data.record;
                         var complaintId = Complaint.View.getActiveComplaintId();
@@ -2173,7 +2220,7 @@ Complaint.View = Complaint.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'History'
+                    title: $.t("complaint:history.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
@@ -2211,19 +2258,19 @@ Complaint.View = Complaint.View || {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("complaint:history.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }, eventType: {
-                            title: 'Event Name'
+                            title: $.t("complaint:history.table.field.event-name")
                             ,width: '50%'
                         }, eventDate: {
-                            title: 'Date'
+                            title: $.t("complaint:history.table.field.date")
                             ,width: '25%'
                         }, userId: {
-                            title: 'User'
+                            title: $.t("complaint:history.table.field.user")
                             ,width: '25%'
                         }
                     } //end field
@@ -2265,11 +2312,11 @@ Complaint.View = Complaint.View || {
                 for (var i = 0; i < documents.length; i++) {
                     if(Complaint.Model.References.validateReferenceRecord(documents[i])){
                         var record = {};
-                        record.id = Acm.goodValue(documents.targetId, 0);
-                        record.title = Acm.goodValue(documents.targetName);
-                        record.modified = Acm.getDateFromDatetime(documents.modified);
-                        record.type = Acm.goodValue(documents.targetType);
-                        record.status = Acm.goodValue(documents.status);
+                        record.id = Acm.goodValue(documents[i].targetId, 0);
+                        record.title = Acm.goodValue(documents[i].targetName);
+                        record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        record.type = Acm.goodValue(documents[i].targetType);
+                        record.status = Acm.goodValue(documents[i].status);
                         jtData.Records.push(record);
                     }
                 }
@@ -2279,12 +2326,12 @@ Complaint.View = Complaint.View || {
         }
         ,createJTableReferences: function($jt) {
             AcmEx.Object.JTable.useBasic($jt, {
-                    title: 'References'
+                    title: $.t("complaint:references.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Reference'
+                        addNewRecord: $.t("complaint:references.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function(postData, jtParams) {
@@ -2298,7 +2345,7 @@ Complaint.View = Complaint.View || {
                     }
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("complaint:references.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
@@ -2306,7 +2353,7 @@ Complaint.View = Complaint.View || {
                             ,defaultvalue : 0
                         }
                         ,title: {
-                            title: 'Title'
+                            title: $.t("complaint:references.table.field.title")
                             ,width: '30%'
                             ,edit: true
                             ,create: false
@@ -2317,19 +2364,19 @@ Complaint.View = Complaint.View || {
                             }
                         }
                         ,modified: {
-                            title: 'Modified'
+                            title: $.t("complaint:references.table.field.modified")
                             ,width: '14%'
                             ,edit: false
                             ,create: false
                         }
                         ,type: {
-                            title: 'Reference Type'
+                            title: $.t("complaint:references.table.field.reference-type")
                             ,width: '14%'
                             ,edit: false
                             ,create: false
                         }
                         ,status: {
-                            title: 'Status'
+                            title: $.t("complaint:references.table.field.status")
                             ,width: '14%'
                             ,edit: false
                             ,create: false
@@ -2395,7 +2442,7 @@ Complaint.View = Complaint.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Tasks'
+                    title: $.t("complaint:tasks.title")
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
@@ -2403,7 +2450,7 @@ Complaint.View = Complaint.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Task'
+                        addNewRecord: $.t("complaint:tasks.msg.add-new-record")
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
@@ -2437,7 +2484,7 @@ Complaint.View = Complaint.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("complaint:tasks.table.field.id")
                             ,key: true
                             ,list: true
                             ,create: false
@@ -2452,7 +2499,7 @@ Complaint.View = Complaint.View || {
                             }
                         }
                         ,title: {
-                            title: 'Title'
+                            title: $.t("complaint:tasks.table.field.title")
                             ,width: '30%'
                             ,sorting: true //fix me
                             ,display: function (commData) {
@@ -2463,27 +2510,27 @@ Complaint.View = Complaint.View || {
                             }
                         }
                         ,created: {
-                            title: 'Created'
+                            title: $.t("complaint:tasks.table.field.created")
                             ,width: '10%'
                             ,sorting: true //fix me
                         }
                         ,priority: {
-                            title: 'Priority'
+                            title: $.t("complaint:tasks.table.field.priority")
                             ,width: '10%'
                             ,sorting: true //fix me
                         }
                         ,dueDate: {
-                            title: 'Due'
+                            title: $.t("complaint:tasks.table.field.due")
                             ,width: '10%'
                             ,sorting: true //fix me
                         }
                         ,assignee: {
-                            title: 'Assignee'
+                            title: $.t("complaint:tasks.table.field.assignee")
                             ,width: '10%'
                             ,sorting: true //fix me
                         }
                         ,status: {
-                            title: 'Status'
+                            title: $.t("complaint:tasks.table.field.status")
                             ,width: '10%'
                             ,sorting: true //fix me
                         }
@@ -2557,12 +2604,12 @@ Complaint.View = Complaint.View || {
 
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
-                title: 'Participants'
+                title: $.t("complaint:participants.title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
-                    addNewRecord: 'Add Participant'
+                    addNewRecord: $.t("complaint:participants.msg.add-new-record")
                 }
                 ,actions: {
                     listAction: function(postData, jtParams) {
@@ -2601,14 +2648,14 @@ Complaint.View = Complaint.View || {
                 }
                 ,fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("complaint:participants.table.field.id")
                         ,key: true
                         ,list: false
                         ,create: false
                         ,edit: false
                     }
 	                ,type: {
-	                    title: 'Type'
+	                    title: $.t("complaint:participants.table.field.type")
 	                    ,width: '30%'
 	                    ,options: Complaint.Model.Lookup.getParticipantTypes()
 	                    ,display: function (data) {
@@ -2625,7 +2672,7 @@ Complaint.View = Complaint.View || {
 	                    }
 	                }
 	                ,title: {
-	                    title: 'Name'
+	                    title: $.t("complaint:participants.table.field.name")
 	                    ,width: '70%'
 	                    ,dependsOn: 'type'
 	                    ,options: function (data) {
@@ -2729,12 +2776,12 @@ Complaint.View = Complaint.View || {
 
         ,createJTableLocation: function($s) {
             $s.jtable({
-                title: 'Location '
+                title: $.t("complaint:location.title")
                 ,paging: false
                 ,sorting: true
                 ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
-                    addNewRecord: 'Add Location'
+                    addNewRecord: $.t("complaint:location.msg.add-new-record")
                 }
                 ,actions: {
                     listAction: function(postData, jtParams) {
@@ -2774,31 +2821,31 @@ Complaint.View = Complaint.View || {
 
                 ,fields: {
                     id: {
-                        title: 'ID'
+                        title: $.t("complaint:location.table.field.id")
                         ,key: true
                         ,list: false
                         ,create: false
                         ,edit: false
                     }
                     ,address: {
-                        title: 'Address'
+                        title: $.t("complaint:location.table.field.address")
                         ,width: '20%'
                     }
                     ,type: {
-                        title: 'Type'
+                        title: $.t("complaint:location.table.field.type")
                         ,width: '8%'
                         ,options: Complaint.Model.Lookup.getLocationTypes()
                     }
                     ,city: {
-                        title: 'City'
+                        title: $.t("complaint:location.table.field.city")
                         ,width: '20%'
                     }
                     ,state: {
-                        title: 'State'
+                        title: $.t("complaint:location.table.field.state")
                         ,width: '20%'
                     }
                     ,zip: {
-                        title: 'Zip'
+                        title: $.t("complaint:location.table.field.zip")
                         ,width: '10%'
                     }
                 }
@@ -2839,6 +2886,179 @@ Complaint.View = Complaint.View || {
         }
     }
 
+    ,OutlookCalendar: {
+        create: function() {
+            this.$outlookCalendar          = $(".calendar");
+            this.$weekView                 = $("#weekview");
+            this.$monthView                = $("#monthview");
+            this.$dayView                  = $("#dayview");
+            this.$btnRefreshCalendar       = $("#refreshCalendar");
+
+            this.$btnRefreshCalendar.on("click", function(e) {Complaint.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
+
+            this.createOutlookCalendarWidget(this.$outlookCalendar);
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
+        }
+        ,onInitialized: function() {
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            Complaint.View.OutlookCalendar.$outlookCalendar.html("");
+            Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
+        }
+        ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
+            if(outlookCalendarItems.hasError){
+                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
+            }
+            else{
+                Complaint.View.OutlookCalendar.$outlookCalendar.html("");
+                Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
+            }
+        }
+        ,onClickbtnRefreshCalendar: function(){
+            Complaint.Controller.viewRefreshedOutlookCalendar(Complaint.View.getActiveComplaintId());
+        }
+        ,createCalendarSource:function(){
+            var calendarSource = [];
+            var outlookCalendarItems = Complaint.Model.OutlookCalendar.cacheOutlookCalendarItems.get(Complaint.View.getActiveComplaintId());
+            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                for(var i = 0; i<outlookCalendarItems.items.length; i++){
+                    if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
+                        var outlookCalendarItem = {};
+                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
+                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
+                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
+                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
+                        outlookCalendarItem.detail = Complaint.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
+                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
+                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
+                        calendarSource.push(outlookCalendarItem);
+                    }
+                }
+            }
+            return calendarSource;
+        }
+
+        ,makeDetail: function(calendarItem){
+            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
+                var body = Acm.goodValue(calendarItem.body) + "</br>";
+                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
+                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
+                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
+                return detail;
+            }
+        }
+
+        ,createOutlookCalendarWidget: function($s){
+            var calendarSource = this.createCalendarSource();
+            var addDragEvent = function($this){
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+                var eventObject = {
+                    title: $.trim($this.text()), // use the element's text as the event title
+                    className: $this.attr('class').replace('label','')
+                };
+
+                // store the Event Object in the DOM element so we can get to it later
+                $this.data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                $this.draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+            };
+
+            $s.fullCalendar({
+                header: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+                timeFormat: 'h(:mm)t {-h(:mm)t}',
+                displayEventEnd : true,
+                editable: true,
+                //disable fullcalendar droppable as it creates conflict with the doctree's.
+                //looks like fullcalendar uses the generic jquery draggable
+                //we might need to add our own external draggable event handlers
+                //tailored for fullcalendar
+                droppable: false, // this allows things to be dropped onto the calendar !!!
+                drop: function(date, allDay) { // this function is called when something is dropped
+
+                    // retrieve the dropped element's stored Event Object
+                    var originalEventObject = $(this).data('eventObject');
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+
+                    // assign it the date that was reported
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+
+                    // render the event on the calendar
+                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                    this.$outlookCalendar.fullCalendar('renderEvent', copiedEventObject, true);
+
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                    }
+
+                }
+                ,events: calendarSource
+                ,eventRender: function (event, element) {
+                    element.qtip({
+                        content: {
+                            text: Acm.goodValue(event.detail),
+                            title: {
+                                text: Acm.goodValue(event.title)
+                            }
+                        }
+                        ,position: {
+                            my: 'right center',
+                            at: 'left center',
+                            //target: 'mouse',
+                            viewport: $s,
+                            adjust: {
+                                mouse: false,
+                                scroll: false
+                            }
+                        }
+                        ,style: {
+                            classes: "qtip-rounded qtip-shadow"
+                        }
+                        ,show: { solo: true} //, ready: true, when: false
+                        ,hide: { when: 'mouseout', fixed: true}
+                    });
+                }
+            });
+            $('#myEvents').on('change', function(e, item){
+                addDragEvent($(item));
+            });
+
+            $('#myEvents li > div').each(function() {
+                addDragEvent($(this));
+            });
+
+            this.$dayView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'agendaDay')
+            });
+
+            this.$weekView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'agendaWeek')
+            });
+
+            this.$monthView.on('click', function() {
+                $('.calendar').fullCalendar('changeView', 'month')
+            });
+
+        }
+    }
 
     ,Time: {
         create: function() {
@@ -2897,7 +3117,7 @@ Complaint.View = Complaint.View || {
         ,createJTableTime: function($jt) {
             AcmEx.Object.JTable.useBasic($jt
                 , {
-                    title: 'Time Tracking'
+                    title: $.t("complaint:time.title")
                     , sorting: true
                     , actions: {
                         listAction: function (postData, jtParams) {
@@ -2911,13 +3131,13 @@ Complaint.View = Complaint.View || {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("complaint:time.table.field.id")
                             , key: true
                             , list: false
                             , create: false
                             , edit: false
                         }, name: {
-                            title: 'Form Name'
+                            title: $.t("complaint:time.table.field.form-name")
                             , width: '20%'
                             ,display: function(data) {
                                 var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
@@ -2925,16 +3145,16 @@ Complaint.View = Complaint.View || {
                                 return $lnk;
                             }
                         }, username: {
-                            title: 'Username'
+                            title: $.t("complaint:time.table.field.username")
                             , width: '10%'
                         }, hours: {
-                            title: 'Total Hours'
+                            title: $.t("complaint:time.table.field.total-hours")
                             , width: '10%'
                         }, modified: {
-                            title: 'Modified Date'
+                            title: $.t("complaint:time.table.field.modified-date")
                             , width: '10%'
                         }, status: {
-                            title: 'Status'
+                            title: $.t("complaint:time.table.field.status")
                             , width: '10%'
                         }
                     } //end field
@@ -3004,7 +3224,7 @@ Complaint.View = Complaint.View || {
         ,createJTableCost: function($jt) {
             AcmEx.Object.JTable.useBasic($jt
                 ,{
-                    title: 'Cost Tracking'
+                    title: $.t("complaint:cost.title")
                     ,sorting: true
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -3019,13 +3239,13 @@ Complaint.View = Complaint.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("complaint:cost.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }, name: {
-                            title: 'Form Name'
+                            title: $.t("complaint:cost.table.field.form-name")
                             ,width: '20%'
                             ,display: function(data) {
                                 var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
@@ -3033,16 +3253,16 @@ Complaint.View = Complaint.View || {
                                 return $lnk;
                             }
                         }, username: {
-                            title: 'Username'
+                            title: $.t("complaint:cost.table.field.username")
                             ,width: '10%'
                         }, cost: {
-                            title: 'Total Cost'
+                            title: $.t("complaint:cost.table.field.total-cost")
                             ,width: '10%'
                         }, modified: {
-                            title: 'Modified Date'
+                            title: $.t("complaint:cost.table.field.modified-date")
                             ,width: '10%'
                         }, status: {
-                            title: 'Status'
+                            title: $.t("complaint:cost.table.field.status")
                             ,width: '10%'
                         }
                     } //end field

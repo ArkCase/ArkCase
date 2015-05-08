@@ -67,6 +67,7 @@
                 <entry key="correspondence" value="Correspondence"/>
             </map>
         </property>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
@@ -85,67 +86,23 @@
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
+    <!--<bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">-->
+        <!--<property name="ecmFileDao" ref="ecmFileDao"/>-->
+    <!--</bean>-->
+
+    <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
+        <property name="folderDao" ref="acmFolderDao"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
+
+    <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>
+
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="filePrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="alfrescoDownloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/workspace:/SpacesStore/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="alfrescoDownloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/byId/{ecmFileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="documentUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/plugin/document/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="folderListUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="containerListUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/ecm/container/{objectType}/{objectId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="uploadFilePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/service/ecm/upload"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-            </list>
-        </property>
     </bean>
-
-    <bean id="filePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-file-download"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_ANALYST</value>
-            </list>
-        </property>
-    </bean>
-
-
-
+    
 </beans>

@@ -6,7 +6,7 @@
  * @author jwu
  */
 var Application = Application || {
-    run : function() {
+    run : function(context) {
         var acmModules = [];
 
         if ("undefined" != typeof Acm) {
@@ -33,7 +33,7 @@ var Application = Application || {
         if ("undefined" != typeof Complaint) {
             acmModules.push(Complaint);
         }
-        if ( "undefined" != typeof CaseFile ) {
+        if ("undefined" != typeof CaseFile) {
             acmModules.push(CaseFile);
         }
         if ("undefined" != typeof Task) {
@@ -79,23 +79,25 @@ var Application = Application || {
             acmModules.push(AcmDocument);
         }
 
+        this.initI18n(context.path, function() {
+            for (var i = 0; i < acmModules.length; i++) {
+                var module = acmModules[i];
+                if ("undefined" != typeof module) {
+                    if (module.create) {
+                        module.create();
+                    }
+                }
+            }
+            for (var i = 0; i < acmModules.length; i++) {
+                var module = acmModules[i];
+                if ("undefined" != typeof module) {
+                    if (module.onInitialized) {
+                        Acm.deferred(module.onInitialized);
+                    }
+                }
+            }
+        });
 
-        for (var i = 0; i < acmModules.length; i++) {
-            var module = acmModules[i];
-            if ("undefined" != typeof module) {
-                if (module.create) {
-                    module.create();
-                }
-            }
-        }
-        for (var i = 0; i < acmModules.length; i++) {
-            var module = acmModules[i];
-            if ("undefined" != typeof module) {
-                if (module.onInitialized){
-                    Acm.deferred(module.onInitialized);
-                }
-            }
-        }
     }
 
     ,SESSION_DATA_PROFILE               : "AcmProfile"
@@ -118,7 +120,7 @@ var Application = Application || {
     ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
 
     ,initSessionData: function() {
-        sessionStorage.setItem("AcmProfile", null);
+        sessionStorage.setItem(this.SESSION_DATA_PROFILE, null);
 
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_TYPES, null);
@@ -142,5 +144,43 @@ var Application = Application || {
         sessionStorage.setItem("AcmTaskAssignees", null);
         sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
+    }
+
+    ,initI18n: function(contextPath, onDone) {
+        // Get  settings with default language
+        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
+            .done(function(data){
+                var namespaces = ['common'];
+                var lng= data.defaultLang;
+
+                // Get namespaces divided by "," symbol from detailData
+                var names = Acm.Object.MicroData.get("resourceNamespace");
+                if (names) {
+                    names = names.split(',');
+                    for (var i = 0; i < names.length; i++) {
+                        namespaces.push($.trim(names[i]));
+                    }
+                }
+
+                i18n.init({
+                    useLocalStorage: false,
+                    localStorageExpirationTime: 86400000, // 1 week
+                    load: 'current', // Prevent loading of 'en' locale
+                    fallbackLng: false,
+                    lng: lng,
+                    ns:{
+                        namespaces: namespaces
+                    },
+                    lowerCaseLng: true,
+                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+                }, function() {
+                    $('*[data-i18n]').i18n();
+                    onDone();
+                });
+
+                // Send "i18n ready" global event
+                $(document).trigger('i18n-ready');
+
+            });
     }
 }

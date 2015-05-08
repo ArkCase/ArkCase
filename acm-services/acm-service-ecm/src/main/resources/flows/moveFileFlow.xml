@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+      xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      version="CE-3.5.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
+
+    <flow name="moveFile" doc:name="Move a file from one folder location to other">
+        <description>
+            The incoming payload is EcmFile that should be updated. The return payload is the updated CMIS document.
+            If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
+        </description>
+
+        <vm:inbound-endpoint
+                address="vm://moveFile.in"
+                exchange-pattern="request-response"
+                doc:name="Move File">
+        </vm:inbound-endpoint>
+
+        <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
+
+
+        <cmis:move-object objectId="#[message.inboundProperties.cmisObjectId]"
+                          sourceFolderId="#[message.inboundProperties.srcFolderId]"
+                          targetFolderId="#[message.inboundProperties.dstFolderId]"/>
+
+
+		<catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
+            <set-property propertyName="moveException" value="#[exception]"/>
+        </catch-exception-strategy>
+
+    </flow>
+
+</mule>

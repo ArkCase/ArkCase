@@ -36,6 +36,9 @@ public class AuditEvent
 
     @Column(name = "cm_object_id")
     private Long objectId;
+    
+    @Column(name = "cm_audit_status")
+    private String status;
 
 
     public Date getEventDate()
@@ -108,7 +111,15 @@ public class AuditEvent
         this.objectId = objectId;
     }
 
-    @Transient
+    public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Transient
     public String getEventType()
     {
         int lastDot = getFullEventType().lastIndexOf('.');
