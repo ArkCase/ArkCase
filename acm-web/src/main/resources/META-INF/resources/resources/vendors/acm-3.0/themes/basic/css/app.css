@@ -4358,4 +4358,9 @@ tr.dragover {
   overflow:auto;
 }
 
-
+/* email dialog box component classes */
+.acm-emailFormGroup{
+  display: inline-block;
+  width: 100%;
+  text-align: left
+}
