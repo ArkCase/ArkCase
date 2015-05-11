@@ -29,7 +29,7 @@ IssueCollector.Model = {
 
         ,displayIssueCollectorTab: function(issueCollectorFlag){
             if(Acm.isNotEmpty(issueCollectorFlag) && "true" == issueCollectorFlag){
-                IssueCollector.Service.getIssueCollector(issueCollectorFlag);
+                IssueCollector.Service.getIssueCollector();
             }
         }
     }
