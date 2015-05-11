@@ -5,6 +5,7 @@
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
         <property name="applicationName" value="Law Enforcement Application"/>
+        <property name="issueCollectorFlag" value="true"/>
         <property name="topbarActions">
             <list>
                 <ref bean="createComplaintAction"/>
