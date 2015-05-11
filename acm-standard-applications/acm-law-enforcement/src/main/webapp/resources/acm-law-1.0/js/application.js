@@ -7,6 +7,13 @@
  */
 var Application = Application || {
     run : function(context) {
+        if (Acm.isEmpty(context.loginPage)) {
+            App.Model.Login.setLoginStatus(true);
+        }
+
+        //jwu: testing for later work.
+        //var a1 = Application.getPageContext();
+
         var acmModules = [];
 
         if ("undefined" != typeof Acm) {
@@ -102,6 +109,12 @@ var Application = Application || {
 
     }
 
+    ,getPageContext: function() {
+        var context = {};
+        var a1 = Acm.Object.MicroData.getJson("application");
+        context.path = Acm.Object.MicroData.get("contextPath");
+        return context;
+    }
     ,SESSION_DATA_PROFILE               : "AcmProfile"
     ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
     ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
@@ -120,6 +133,11 @@ var Application = Application || {
     ,SESSION_DATA_ADMIN_TREEINFO        : "AcmAdminTreeInfo"
     ,SESSION_DATA_TASK_ASSIGNEES        : "AcmTaskAssignees"
     ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
+
+    ,LOCAL_DATA_LOGIN_STATUS            : "AcmLoginStatus"
+    ,LOCAL_DATA_LAST_IDLE               : "AcmLastIdle"
+    ,LOCAL_DATA_ERROR_COUNT             : "AcmErrorCount"
+
 
     ,initSessionData: function() {
         sessionStorage.setItem(this.SESSION_DATA_PROFILE, null);
@@ -145,6 +163,10 @@ var Application = Application || {
 
         sessionStorage.setItem("AcmTaskAssignees", null);
         sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
+
+        localStorage.setItem(this.LOCAL_DATA_LOGIN_STATUS, null);
+        localStorage.setItem(this.LOCAL_DATA_LAST_IDLE, new Date().getTime());
+        localStorage.setItem(this.LOCAL_DATA_ERROR_COUNT, null);
 
     }
 

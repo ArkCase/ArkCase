@@ -9,7 +9,7 @@ var App = App || {
         if (App.Model.create)              App.Model.create();
         if (App.View.create)               App.View.create();
 
-        this.create_old();
+        //this.create_old();
     }
     ,onInitialized: function() {
         if (App.Controller.onInitialized)  App.Controller.onInitialized();

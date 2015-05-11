@@ -13,6 +13,10 @@ Acm.Model = {
         this.name = name;
     }
 
+    ,LocalData: function(name) {
+        this.name = name;
+    }
+
     ,CacheFifo: function(maxSize) {
         this.maxSize = (Acm.isNotEmpty(maxSize))? maxSize : this.DEFAULT_MAX_CACHE_SIZE;
         this.reset();
@@ -43,6 +47,24 @@ Acm.Model.SessionData.prototype = {
     ,set: function(data) {
         var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
         sessionStorage.setItem(this.name, item);
+    }
+}
+
+//
+//data stored in LocalStorage
+//
+Acm.Model.LocalData.prototype = {
+    getName: function() {
+        return this.name;
+    }
+    ,get: function() {
+        var data = localStorage.getItem(this.name);
+        var item = ("null" === data)? null : JSON.parse(data);
+        return item;
+    }
+    ,set: function(data) {
+        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+        localStorage.setItem(this.name, item);
     }
 }
 

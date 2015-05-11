@@ -5,14 +5,16 @@
  */
 App.View = {
     create : function() {
-        if (App.View.MicroData.create)          {App.View.MicroData.create();}
+        if (App.View.MicroData.create)             {App.View.MicroData.create();}
         if (App.View.MessageBoard.create)          {App.View.MessageBoard.create();}
-        if (App.View.Dirty.create)              {App.View.Dirty.create();}
+        if (App.View.Dirty.create)                 {App.View.Dirty.create();}
+        if (App.View.Login.create)                 {App.View.Login.create();}
     }
     ,onInitialized: function() {
-        if (App.View.MicroData.onInitialized)   {App.View.MicroData.onInitialized();}
+        if (App.View.MicroData.onInitialized)      {App.View.MicroData.onInitialized();}
         if (App.View.MessageBoard.onInitialized)   {App.View.MessageBoard.onInitialized();}
-        if (App.View.Dirty.onInitialized)       {App.View.Dirty.onInitialized();}
+        if (App.View.Dirty.onInitialized)          {App.View.Dirty.onInitialized();}
+        if (App.View.Login.onInitialized)          {App.View.Login.onInitialized();}
     }
 
 
@@ -48,13 +50,6 @@ App.View = {
             }
             return ot;
         }
-    }
-
-    ,I18n: {
-        create : function() {
-
-        }
-
     }
 
     ,MessageBoard: {
@@ -227,49 +222,72 @@ App.View = {
         }
     }
 
-    ,_contextPath: ""
-    ,getContextPath: function() {
-        return this._contextPath;
-    }
-    ,_userName: ""
-    ,getUserName: function() {
-        return this._userName;
+
+    ,Login: {
+        create : function() {
+            $(document).on("mousemove", function(e){App.View.Login.onMouseMove(e);});
+            $(document).on("keypress", function(e){App.View.Login.onKeyPress(e);});
+
+            Acm.Dispatcher.addEventListener(App.Controller.Login.MODEL_DETECTED_IDLE, this.onModelDetectedIdle);
+        }
+        ,onInitialized: function() {
+        }
+        ,onMouseMove: function(event) {
+            App.Model.Login.setLastIdle();
+        }
+        ,onKeyPress: function(event) {
+            App.Model.Login.setLastIdle();
+        }
+        ,onModelDetectedIdle: function() {
+            App.View.gotoPage("/logout");
+        }
+
     }
 
-    //Expect data to be JSON array: [{userId:"xxx" fullName:"xxx" ...},{...} ]
-    ,getApprovers: function() {
-        var data = sessionStorage.getItem("AcmApprovers");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setApprovers: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmApprovers", item);
-    }
-    ,getComplaintTypes: function() {
-        var data = sessionStorage.getItem("AcmComplaintTypes");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setComplaintTypes: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmComplaintTypes", item);
-    }
-    ,getPriorities: function() {
-        var data = sessionStorage.getItem("AcmPriorities");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setPriorities: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmPriorities", item);
-    }
-
-    ,reset: function() {
-        App.View.setApprovers(null);
-        App.View.setComplaintTypes(null);
-        App.View.setPriorities(null);
-    }
+//retired
+//    ,_contextPath: ""
+//    ,getContextPath: function() {
+//        return this._contextPath;
+//    }
+//    ,_userName: ""
+//    ,getUserName: function() {
+//        return this._userName;
+//    }
+//
+//    //Expect data to be JSON array: [{userId:"xxx" fullName:"xxx" ...},{...} ]
+//    ,getApprovers: function() {
+//        var data = sessionStorage.getItem("AcmApprovers");
+//        var item = ("null" === data)? null : JSON.parse(data);
+//        return item;
+//    }
+//    ,setApprovers: function(data) {
+//        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+//        sessionStorage.setItem("AcmApprovers", item);
+//    }
+//    ,getComplaintTypes: function() {
+//        var data = sessionStorage.getItem("AcmComplaintTypes");
+//        var item = ("null" === data)? null : JSON.parse(data);
+//        return item;
+//    }
+//    ,setComplaintTypes: function(data) {
+//        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+//        sessionStorage.setItem("AcmComplaintTypes", item);
+//    }
+//    ,getPriorities: function() {
+//        var data = sessionStorage.getItem("AcmPriorities");
+//        var item = ("null" === data)? null : JSON.parse(data);
+//        return item;
+//    }
+//    ,setPriorities: function(data) {
+//        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+//        sessionStorage.setItem("AcmPriorities", item);
+//    }
+//
+//    ,reset: function() {
+//        App.View.setApprovers(null);
+//        App.View.setComplaintTypes(null);
+//        App.View.setPriorities(null);
+//    }
 
 };
 
