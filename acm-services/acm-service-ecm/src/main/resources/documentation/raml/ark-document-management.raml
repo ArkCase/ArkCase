@@ -4,7 +4,7 @@ title: ArkCase Document Management
 
 /api/v1/service/ecm:
   /container/{objectType}/{objectId}:
-    description: User must be authenticated and must have 'read' access on the object identified by the object type and object id..
+    description: User must be authenticated and must have 'read' access on the object identified by the object type and object id.  API doc last verified on 2015-05-11.
     uriParameters:
       objectType: 
         description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
@@ -31,9 +31,93 @@ title: ArkCase Document Management
       description: Remove the requested file (both metadata and the content file itself)
     get:
       description: Get file metadata      
-  /copyToAnotherContainer:
+  /copyToAnotherContainer/{targetObjectType}/{targetObjectId}:
+    uriParameters:
+      targetObjectType:
+        description: Object type where the file will be moved to.
+        example: CASE_FILE
+        type: string
+        required: true
+      targetObjectId:
+        description: ID for the object that will own the new file.
+        type: integer
+        minimum: 1
+        required: true
     post:
-      description: Copy one or more files to another container
+      description: Copy one or more files to another container.  API doc last verified on 2015-05-11.
+      body:
+        application/json:
+          schema:
+            !include move-copy-file-schema.json
+          example: |
+            {
+              "id" : 141067,
+              "folderId" : 35372
+            }
+      responses:
+        200:
+          description: file copied successfully.
+          body:
+            application/json:
+              schema:
+                !include ecm-file-schema.json
+              example: |
+                {
+                  "fileId" : 143997,
+                  "status" : "ACTIVE",
+                  "created" : "2015-05-11T16:54:32.580-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T16:54:32.580-0400",
+                  "modifier" : "bthomas",
+                  "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
+                  "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
+                  "fileMimeType" : "text/xml",
+                  "folder" : {
+                    "id" : 35372,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "name" : "ROOT",
+                    "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                    "parentFolderId" : null
+                  },
+                  "container" : {
+                    "id" : 33953,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "containerObjectType" : "CASE_FILE",
+                    "containerObjectId" : 2961,
+                    "containerObjectTitle" : "20150204_2961",
+                    "folder" : {
+                      "id" : 35372,
+                      "created" : "2015-02-04T15:50:11.957-0500",
+                      "creator" : "sally-acm",
+                      "modified" : "2015-02-04T15:50:11.957-0500",
+                      "modifier" : "sally-acm",
+                      "name" : "ROOT",
+                      "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                      "parentFolderId" : null
+                    }
+                  },
+                  "fileType" : "ot",
+                  "activeVersionTag" : "1.0",
+                  "category" : "Document",
+                  "versions" : [{
+                      "id" : 143998,
+                      "created" : "2015-05-11T16:54:32.605-0400",
+                      "creator" : "bthomas",
+                      "modified" : "2015-05-11T16:54:32.605-0400",
+                      "modifier" : "bthomas",
+                      "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+                      "versionTag" : "1.0"
+                    }
+                  ],
+                  "tags" : []
+                }
+
   /copyWithinContainer:
     post:
       description: Copy one or more files to an existing folder in the same container
