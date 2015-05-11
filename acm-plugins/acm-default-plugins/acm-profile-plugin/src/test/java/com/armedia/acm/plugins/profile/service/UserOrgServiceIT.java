@@ -54,8 +54,7 @@ public class UserOrgServiceIT extends EasyMockSupport {
         OutlookDTO in = new OutlookDTO();
         in.setOutlookPassword("Armedia123");
         userOrgService.saveOutlookPassword(authentication, in);
-
-
+        
         OutlookDTO outlookDTO = userOrgService.retrieveOutlookPassword(authentication);
         assertNotNull(outlookDTO);
         assertEquals("Armedia123", outlookDTO.getOutlookPassword());
