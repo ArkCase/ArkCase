@@ -2,12 +2,12 @@ package com.armedia.acm.plugins.profile.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.profile.dao.UserOrgDao;
-import com.armedia.acm.plugins.profile.exception.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.model.UserOrgConstants;
 import com.armedia.acm.plugins.profile.service.ProfileEventPublisher;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ public class SaveOutlookPasswordAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ProfileEventPublisher eventPublisher;
-    private UserOrgDao userOrgDao;
+    private UserOrgService userOrgService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -52,10 +52,10 @@ public class SaveOutlookPasswordAPIController
             }
 
             // need the user profile ID for events and error reporting
-            userOrg = getUserOrgDao().getUserOrgForUserId(authentication.getName());
+            userOrg = getUserOrgService().getUserOrgForUserId(authentication.getName());
             userProfileId = userOrg.getUserOrgId();
 
-            getUserOrgDao().saveOutlookPassword(authentication, in);
+            getUserOrgService().saveOutlookPassword(authentication, in);
 
             getEventPublisher().outlookPasswordSavedEvent(userOrg, authentication, ipAddress, true);
 
@@ -89,13 +89,11 @@ public class SaveOutlookPasswordAPIController
         this.eventPublisher = eventPublisher;
     }
 
-    public UserOrgDao getUserOrgDao()
-    {
-        return userOrgDao;
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
     }
 
-    public void setUserOrgDao(UserOrgDao userOrgDao)
-    {
-        this.userOrgDao = userOrgDao;
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
     }
 }

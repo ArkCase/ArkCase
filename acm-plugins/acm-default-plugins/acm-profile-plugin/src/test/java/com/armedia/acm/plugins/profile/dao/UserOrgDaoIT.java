@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.profile.dao;
 
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-profile-plugin-test.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -36,11 +38,9 @@ public class UserOrgDaoIT extends EasyMockSupport {
     }
 
     @Test
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void testSaveAndRetriveOutlookPassword() throws Exception {
-
         expect(authentication.getName()).andReturn("ann-acm").times(2);
-        expect(authentication.getCredentials()).andReturn("AcMd3v$").times(2);
         replayAll();
 
         OutlookDTO in = new OutlookDTO();

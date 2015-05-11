@@ -9,4 +9,9 @@
 
     <bean id="acmUserOrgDao" class="com.armedia.acm.plugins.profile.dao.UserOrgDao"/>
 
+    <bean id="acmUserOrgService" class="com.armedia.acm.plugins.profile.service.UserOrgServiceImpl">
+        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
+    </bean>
+
 </beans>
