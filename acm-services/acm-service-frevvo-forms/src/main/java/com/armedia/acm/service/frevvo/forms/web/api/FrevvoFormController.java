@@ -48,6 +48,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
 import com.armedia.acm.form.cost.service.CostFactory;
+import com.armedia.acm.form.ebrief.service.EbriefFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
@@ -126,6 +127,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private FunctionalAccessService functionalAccessService;
 	
 	private ComplaintFactory complaintFactory;
+	
+	private EbriefFactory ebriefFactory;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -564,5 +567,13 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setComplaintFactory(ComplaintFactory complaintFactory) {
 		this.complaintFactory = complaintFactory;
+	}
+
+	public EbriefFactory getEbriefFactory() {
+		return ebriefFactory;
+	}
+
+	public void setEbriefFactory(EbriefFactory ebriefFactory) {
+		this.ebriefFactory = ebriefFactory;
 	}
 }

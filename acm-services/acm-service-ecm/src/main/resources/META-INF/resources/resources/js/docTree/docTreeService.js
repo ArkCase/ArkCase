@@ -25,6 +25,7 @@ DocTree.Service = {
     ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
     ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"                   //  {folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}
     ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          // {fileId}?versionTag=x.y"
+    ,API_SEND_EMAIL_                  : "/api/latest/service/notification/email"
 
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
@@ -545,5 +546,27 @@ DocTree.Service = {
         }, 1000);
     }
 
+    ,sendEmail: function(emailNotifications) {
+        var url = App.getContextPath() + this.API_SEND_EMAIL_;
+        Acm.Service.call({type: "POST"
+            ,url: url
+            ,data: JSON.stringify(emailNotifications)
+            ,callback: function(response) {
+                if(Acm.isArray(response)){
+                    var failed;
+                    for(var i = 0; i < response.length; i++){
+                        if (DocTree.Model.validateSentEmail(response[i])) {
+                            if("NOT_SENT" == response[i].state){
+                                failed += response[i].userEmail + ";";
+                            }
+                        }
+                    }
+                    if(Acm.isNotEmpty(failed)){
+                        Acm.MessageBoard.show("Email delivery failed to :  ") + failed + "\n" + "Please check provided email addresses and try again";
+                    }
+                }
+            }
+        })
+    }
 };
 
