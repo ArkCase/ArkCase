@@ -40,6 +40,13 @@
                     <property name="url" value="/plugin/notification"/>
                     <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
                 </bean>
+
+                <bean id="acmEmailNotificationUrlPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/notification/email"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>

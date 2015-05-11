@@ -25,6 +25,8 @@ var CaseFile = CaseFile || {
             DocTree.create({name: "caseFile"
                 ,fileTypes     : CaseFile.View.MicroData.fileTypes
                 ,uploadForm    : CaseFile.View.Documents.uploadForm
+                ,arkcaseUrl    : CaseFile.View.MicroData.arkcaseUrl
+                ,arkcasePort    : CaseFile.View.MicroData.arkcasePort
             });
         }
 
