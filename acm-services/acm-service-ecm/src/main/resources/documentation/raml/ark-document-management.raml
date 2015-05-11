@@ -128,6 +128,49 @@ title: ArkCase Document Management
     /{fileId}/{version}:
       get:
         description: Download the requested version of the requested file
+  /folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}:
+    description: Copy a folder.  API doc last verified on 2015-05-11.
+    uriParameters:
+      folderId:
+        description: Id of the folder to be copied.  This folder must not be a top-level root folder; in other words, this folder's parentFolderId property must not be null.
+        required: true
+        type: integer
+        minimum: 1
+      dstFolderId:
+        description: Id of the target folder
+        required: true
+        type: integer
+        minimum: 1
+      targetObjectType:
+        description: Object type of the object that will hold the copied folder
+        type: string
+        required: true
+        example: CASE_FILE
+      targetObjectId:
+        description: Object ID of the object that will hold the copied folder; the dstFolderId must be a folder owned by this object.
+        type: integer
+        required: true
+        minimum: 1
+    post:
+      description: Copy a folder to another location, either in the same container or a different container.  The folder contents are recursively copied to the other location; this recursive copy operation will take time proportional to the number and size of objects to be copied.
+      responses:
+        200:
+          description: Folder copied successfully.
+          body:
+            application/json:
+              schema:
+                !include folder-schema.json
+              example: |
+                {
+                  "id" : 143996,
+                  "created" : "2015-05-11T15:58:46.527-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T15:58:46.527-0400",
+                  "modifier" : "bthomas",
+                  "name" : "another test",
+                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+                  "parentFolderId" : 141019
+                }
   /folder/{folderId}:
       delete:
         description: deletes the requested folder.  
