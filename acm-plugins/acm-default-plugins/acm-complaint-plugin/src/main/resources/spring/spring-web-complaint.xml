@@ -32,7 +32,8 @@
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
 		<property name="formUrl" ref="formResource" />
 		<property name="userActionDao" ref="userActionDao" />	
-		<property name="formProperties" ref="acm-forms-properties" />	
+		<property name="formProperties" ref="acm-forms-properties" />
+        <property name="notificationProperties" ref="notificationProperties" />
     </bean>
         
 </beans>
