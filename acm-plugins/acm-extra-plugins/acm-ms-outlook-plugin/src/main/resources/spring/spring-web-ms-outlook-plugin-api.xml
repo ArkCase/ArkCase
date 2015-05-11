@@ -5,39 +5,39 @@
 
     <bean id="listInboxItemsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListInboxItemsAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="listCalendarItemsAPIController"
           class="com.armedia.acm.plugins.outlook.web.api.ListCalendarItemsAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="listOutlookTasksAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListTasksAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="listContactsAPIController" class="com.armedia.acm.plugins.outlook.web.api.ListContactsAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="createContactItemAPIController"
           class="com.armedia.acm.plugins.outlook.web.api.CreateContactItemAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="createTaskItemAPIController" class="com.armedia.acm.plugins.outlook.web.api.CreateTaskItemAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
     <bean id="createCalendarAppointmentAPIController"
           class="com.armedia.acm.plugins.outlook.web.api.CreateCalendarAppointmentAPIController">
         <property name="outlookService" ref="outlookService"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 </beans>
