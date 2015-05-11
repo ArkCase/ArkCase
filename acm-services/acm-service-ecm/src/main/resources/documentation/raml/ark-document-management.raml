@@ -104,6 +104,39 @@ title: ArkCase Document Management
             application/json:
               schema:
                 !include folder-list-schema.json    
+  /folder/{parentFolderId}/{newFolderName}:
+    description: Create a new folder.  API doc last verified on 2015-05-11.
+    uriParameters:
+      parentFolderId:
+        description: Object ID of the parent folder; the new folder will be a subfolder of this folder.
+        type: integer
+        required: true
+        minimum: 1
+      newFolderName:
+        description: Name of the new folder.
+        type: string
+        required: true
+    put:
+      description: Create a new folder under the requested parent folder.
+      responses:
+        200:
+          description: Folder was created.
+          body:
+            application/json:
+              schema:
+                !include folder-schema.json
+              example: |
+                {
+                  "id" : 143996,
+                  "created" : "2015-05-11T15:58:46.527-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T15:58:46.527-0400",
+                  "modifier" : "bthomas",
+                  "name" : "another test",
+                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+                  "parentFolderId" : 141019
+                }
+      
   /moveToAnotherContainer:
     post:
       description: Move one or more files to another container
