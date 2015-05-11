@@ -76,6 +76,16 @@ public class AcmApplication implements Serializable
         this.issueCollectorFlag = issueCollectorFlag;
     }
 
+    public String toJson() {
+        String json = "[]";
+        ObjectMapper om = new ObjectMapper();
+        try {
+            json =  om.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return json;
+    }
 
     public String getObjectTypesAsJson() {
         String json = "[]";
