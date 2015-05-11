@@ -15,7 +15,6 @@
 
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
-        <span itemprop="application">${sessionScope.acm_application}</span>
         <span itemprop="userName">${sessionScope.acm_username}</span>
         <span itemprop="application">${sessionScope.acm_application.toJson()}</span>
         <span itemprop="objectTypes">${acm_application.getObjectTypesAsJson()}</span>

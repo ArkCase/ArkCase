@@ -20,8 +20,9 @@ App.Model = {
         }
         ,onInitialized: function() {
             Acm.Timer.useTimer("AutoLogout"
-                //,30  //every thirty seconds
-                ,10  //every thirty seconds
+                //,30
+                ,20  //every twenty seconds
+                //,10
                 ,function() {
                     var isLogin = App.Model.Login.isLogin();
                     var sinceIdle = App.Model.Login.getSinceIdle();
