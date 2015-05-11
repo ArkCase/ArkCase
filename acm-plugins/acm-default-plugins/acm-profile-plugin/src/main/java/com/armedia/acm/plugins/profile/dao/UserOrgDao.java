@@ -3,13 +3,10 @@ package com.armedia.acm.plugins.profile.dao;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.profile.exception.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.plugins.profile.model.UserOrgConstants;
-import com.armedia.acm.plugins.profile.util.CryptoUtils;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -24,7 +21,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Base64;
 import java.util.List;
 
 /**
@@ -70,17 +66,10 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
     }
 
     @Transactional
-    public void saveOutlookPassword(Authentication authentication, OutlookDTO in) throws AcmEncryptionException {
+    public void saveOutlookPassword(Authentication authentication, OutlookDTO in)
+    {
         // must use a native update, since we don't want to add a password property to an entity class; since
         // if we did that, the password would end up being passed around in POJOs and JSON objects.
-
-        //encrypt password and encode it to BASE64
-        String md5Hex = getMd5Hex(authentication);
-
-        String password = in.getOutlookPassword();
-        byte [] encryptedPassword = CryptoUtils.encryptData(md5Hex.getBytes(),in.getOutlookPassword().getBytes());
-        in.setOutlookPassword(Base64.getEncoder().encodeToString(encryptedPassword));
-
 
         String sql = "UPDATE acm_user_org uo " +
                 "SET uo.cm_ms_outlook_password = ?1 " +
@@ -100,7 +89,8 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
     }
 
     @Transactional
-    public OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException {
+    public OutlookDTO retrieveOutlookPassword(Authentication authentication)
+    {
         // must use a native query, since we don't want to add a password property to an entity class; since
         // if we did that, the password would end up being passed around in POJOs and JSON objects.
 
@@ -119,13 +109,6 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
 
             String password = (String) o;
 
-            //decrypt password and decode it from BASE64
-            String md5Hex = getMd5Hex(authentication);
-
-            byte[] decryptedPassword = CryptoUtils.decryptData(md5Hex.getBytes(), Base64.getDecoder().decode(password.getBytes()));
-
-            password = new  String(decryptedPassword);
-
             OutlookDTO retval = new OutlookDTO();
             retval.setOutlookPassword(password);
 
@@ -135,13 +118,6 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
         {
             throw new IllegalStateException("No profile for user '" + authentication.getName() + "'");
         }
-    }
-
-    private String getMd5Hex(Authentication authentication){
-        String md5Hex = DigestUtils.md5Hex(authentication.getCredentials().toString());
-
-        //we must use only 16 bytes or we need to install "Cryptography Extension (JCE) Unlimited Strength."
-        return md5Hex.substring(0, 16);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.plugins.profile.dao.UserOrgDao;
-import com.armedia.acm.plugins.profile.exception.AcmEncryptionException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
@@ -26,7 +26,7 @@ public class CreateCalendarAppointmentAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private OutlookService outlookService;
-    private UserOrgDao userOrgDao;
+    private UserOrgService userOrgService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -38,7 +38,7 @@ public class CreateCalendarAppointmentAPIController {
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
-        OutlookDTO outlookDTO = getUserOrgDao().retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(authentication);
 
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         in = outlookService.createOutlookAppointment(outlookUser, WellKnownFolderName.Calendar, in);
@@ -46,12 +46,12 @@ public class CreateCalendarAppointmentAPIController {
         return in;
     }
 
-    public UserOrgDao getUserOrgDao() {
-        return userOrgDao;
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
     }
 
-    public void setUserOrgDao(UserOrgDao userOrgDao) {
-        this.userOrgDao = userOrgDao;
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
     }
 
     public OutlookService getOutlookService() {
