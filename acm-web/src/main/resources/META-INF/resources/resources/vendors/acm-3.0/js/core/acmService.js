@@ -30,14 +30,16 @@ Acm.Service = {
             }
         }
 
-        if (!arg.error) {
-            arg.error = function(xhr, status, error) {
+        if (arg.error) {
+            arg.errorCallback = arg.error;
+        } else {
+            arg.errorCallback = function(xhr, status, error) {
                 //for compatible with v1.0, until refactor to v2.0
 //                if (arg.callback) {
 //                    arg.callback({hasError:true, errorMsg:xhr.responseText});
 //                } else
                 if (arg.success) {
-                    arg.success({hasError:true, errorMsg:xhr.responseText});
+                    arg.success({hasError:true, errorMsg:xhr.responseText, errorCode:xhr.status});
                 }
 
                 //v2.0, after refactor v1.0 to v2.0, remove above and uncomment below
@@ -45,6 +47,12 @@ Acm.Service = {
 //                    arg.callback({hasError:true, errorMsg:xhr.responseText});
 //                }
             };
+        }
+        arg.error = function(xhr, status, error) {
+            var errorCount = App.Model.Login.getErrorCount();
+            App.Model.Login.setErrorCount(errorCount + 1);
+
+            arg.errorCallback(xhr, status, error);
         }
         return jQuery.ajax(arg);
     }
@@ -54,6 +62,10 @@ Acm.Service = {
             ,url: arg.url
             ,data: arg.data
             ,success: function(response) {
+                if (!response.hasError) {
+                    App.Model.Login.setErrorCount(0);
+                }
+
                 Acm.Service._process(response, arg);
             }
         });

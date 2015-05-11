@@ -11,6 +11,7 @@
 <c:set var="vd_angular"            scope="session" value="angular-1.2.18"/>
 <c:set var="js_angular_min"        scope="session" value="angular.min.7931140c.js"/>
 <c:set var="js_angular_route_min"  scope="session" value="angular-route.min.7d4fa7e4.js"/>
+<%--TODO: check if this is the same as the moment-2.10.2--%>
 <c:set var="js_angular_moment"     scope="session" value="moment.min.js"/>
 <c:set var="js_angular_table"      scope="session" value="ng-table.js"/>
 
@@ -20,7 +21,7 @@
 <c:set var="vd_bootstrap"          scope="session" value="bootstrap-3.1.1"/>
 <c:set var="js_bootstrap"          scope="session" value="bootstrap.js"/>
 
-<c:set var="vd_calendar"           scope="session" value="calendar"/>
+<c:set var="vd_calendar"           scope="session" value="calendar-1.6.4"/>
 <c:set var="js_calendar"           scope="session" value="bootstrap_calendar.js"/>
 
 <c:set var="vd_charts"             scope="session" value="charts"/>
@@ -51,7 +52,7 @@
 <c:set var="vd_file-input"         scope="session" value="file-input"/>
 <c:set var="js_file-input"         scope="session" value="bootstrap.file-input.js"/>
 
-<c:set var="vd_fullcalendar"       scope="session" value="fullcalendar"/>
+<c:set var="vd_fullcalendar"       scope="session" value="fullcalendar-1.6.4"/>
 <c:set var="js_fullcalendar"       scope="session" value="fullcalendar.min.js"/>
 
 <c:set var="vd_ie"                 scope="session" value="ie"/>

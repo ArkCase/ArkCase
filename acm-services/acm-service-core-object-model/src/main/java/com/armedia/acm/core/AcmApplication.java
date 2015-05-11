@@ -65,6 +65,17 @@ public class AcmApplication implements Serializable
         this.objectTypes = objectTypes;
     }
 
+    public String toJson() {
+        String json = "[]";
+        ObjectMapper om = new ObjectMapper();
+        try {
+            json =  om.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return json;
+    }
+
     public String getObjectTypesAsJson() {
         String json = "[]";
         ObjectMapper om = new ObjectMapper();
