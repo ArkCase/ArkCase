@@ -58,6 +58,12 @@ title: ArkCase Outlook Integration Plugin
                     // more items left out of this example.
                   ]
                 }
+        400:
+          description: Outlook password should be updated
+          body:
+            text/plain:
+              example: |
+                Bad key or data   
   /calendar:
     description: Get a page of the user's calendar items, from their Calendar folder.
     get:
@@ -117,6 +123,12 @@ title: ArkCase Outlook Integration Plugin
                     }
                   ]
                 }
+        400:
+          description: Outlook password should be updated
+          body:
+            text/plain:
+              example: |
+                Bad key or data 
     post:
       description: "Create new appointment"
       body:
@@ -158,6 +170,12 @@ title: ArkCase Outlook Integration Plugin
                   "startDate" : "2015-04-21T21:30:00.000+0000",
                   "endDate" : "2015-04-21T22:30:00.000+0000"
                 }
+        400:
+          description: Outlook password should be updated
+          body:
+            text/plain:
+              example: |
+                Bad key or data 
   /tasks:
     description: Get a page of the user's tasks.
     get:
@@ -228,6 +246,12 @@ title: ArkCase Outlook Integration Plugin
                         "percentComplete": 0.0
                     }],
                 }
+        400:
+          description: Outlook password should be updated
+          body:
+            text/plain:
+              example: |
+                Bad key or data 
     post:
       description: "Create new task"
       body:
@@ -267,6 +291,12 @@ title: ArkCase Outlook Integration Plugin
                   "complete": false,
                   "percentComplete": 0.0
                 }
+        400:
+          description: Outlook password should be updated
+          body:
+            text/plain:
+              example: |
+                Bad key or data 
   /contacts:
     description: Get a contacts items.
     get:
@@ -328,6 +358,12 @@ title: ArkCase Outlook Integration Plugin
                     }
                   ]
                 }
+        400:
+          description: Outlook password should be updated
+          body:
+            text/plain:
+              example: |
+                Bad key or data 
     post:
       description: "Create new contact"
       body:
