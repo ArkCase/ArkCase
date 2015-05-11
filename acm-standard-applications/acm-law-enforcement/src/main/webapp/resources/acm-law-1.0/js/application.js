@@ -78,7 +78,9 @@ var Application = Application || {
         if ("undefined" != typeof AcmDocument) {
             acmModules.push(AcmDocument);
         }
-
+        if ("undefined" != typeof IssueCollector) {
+            acmModules.push(IssueCollector);
+        }
         this.initI18n(context.path, function() {
             for (var i = 0; i < acmModules.length; i++) {
                 var module = acmModules[i];
