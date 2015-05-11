@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationListener;
 
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 
 /**
  * @author riste.tutureski
@@ -32,29 +33,19 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent> {
 			
 			if (getProperties() != null)
 			{
-				boolean isCaseFile = false;
-				boolean isCaseFilePS = false;
 				
-				if (getProperties().containsKey(FrevvoFormName.CASE_FILE + ".id"))
+				if (getProperties().containsKey(CaseFileConstants.ACTIVE_CASE_FORM_KEY))
 				{
-					isCaseFile = true;
-				}
-				
-				if (getProperties().containsKey(FrevvoFormName.CASE_FILE_PS + ".id"))
-				{
-					isCaseFilePS = true;
-				}
-				
-				// Ark Case File have advantage over PS Case File
-				// NOTE: In the acm-forms.properties should be defined only one - case_file or case_file_ps, otherwise Ark Case File logic will be processed
-				
-				if (isCaseFile)
-				{
-					getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser());
-				} 
-				else if (isCaseFilePS)
-				{
-					getCaseFilePSService().updateXML(event.getCaseFile(), event.getEventUser());
+					String activeFormName = (String) getProperties().get(CaseFileConstants.ACTIVE_CASE_FORM_KEY);
+					
+					if (FrevvoFormName.CASE_FILE.equals(activeFormName))
+					{
+						getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser());
+					}
+					else if (FrevvoFormName.CASE_FILE_PS.equals(activeFormName))
+					{
+						getCaseFilePSService().updateXML(event.getCaseFile(), event.getEventUser());
+					}
 				}
 			}
 		}

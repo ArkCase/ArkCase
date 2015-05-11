@@ -8,6 +8,7 @@
     <title><spring:message code="subscription.page.title" text="Subscription | ACM | ArkCase" /></title>
 
     <div id="microData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">subscription,search</span>
         <span itemprop="search.name">${searchName}</span>
         <span itemprop="search.filters">${searchFilters}</span>
     </div>
@@ -34,9 +35,9 @@
         <div class="row m-t-sm">
             <div class="col-md-12 m-b-sm">
                 <div class="input-group">
-                    <input type="text" class="input-md form-control" id="searchQuery" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>
+                    <input type="text" class="input-md form-control" id="searchQuery" data-i18n="[placeholder]search:label.input-search" placeholder="Type in your search query to find complaints, cases, tasks, and documents.">
                   <span class="input-group-btn">
-                  <button class="btn btn-md btn-default" type="button"><spring:message code="search.submit.text" text="Go!" /></button>
+                  <button class="btn btn-md btn-default" type="button" data-i18n="search:button.go">Go!</button>
                   </span> </div>
             </div>
         </div>

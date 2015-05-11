@@ -38,7 +38,7 @@ Report.Event = {
             	pageUrl = pageUrl +"&caseNumber=" + Report.Object.$caseNumber.val(); 
         	}
         	else {
-                Acm.Dialog.error("Case number field was blank or invalid. Please enter a valid case number.");
+                Acm.Dialog.error($.t("report:msg.case-number-invalid"));
                 return false;
         	}
         }

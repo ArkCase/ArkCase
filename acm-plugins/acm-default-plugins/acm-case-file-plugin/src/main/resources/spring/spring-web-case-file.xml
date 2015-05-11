@@ -7,6 +7,7 @@
         <property name="plugin" ref="acmCasePlugin"/>
 		<property name="formUrl" ref="formResource" />
 		<property name="formProperties" ref="acm-forms-properties" />
+        <property name="notificationProperties" ref="notificationProperties" />
     </bean>
         
 </beans>

@@ -67,4 +67,15 @@
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
     </bean>
+
+    <!-- Senders Definition -->
+    <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
+        <property name="muleClient" ref="muleClient" />
+    </bean>
+
 </beans>
