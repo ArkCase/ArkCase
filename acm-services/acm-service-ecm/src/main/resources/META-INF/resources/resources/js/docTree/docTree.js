@@ -30,8 +30,9 @@ var DocTree = DocTree || {
 
             if (Acm.isEmpty(args.$dlgDocumentPicker)) {
                 args.$dlgDocumentPicker = $("#dlgDocumentPicker");
-                this.$dlgDocumentPicker = args.$dlgDocumentPicker;
             }
+            this.$dlgDocumentPicker = args.$dlgDocumentPicker;
+
             if (Acm.isNotEmpty(args.title)) {
                 args.$dlgDocumentPicker.find('.modal-title').text(args.title);
             }
