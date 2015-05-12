@@ -230,13 +230,14 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
         try {
             Appointment item = null;
 
-            if(recurring){
-                service.deleteItem(new ItemId(itemId),deleteMode, SendCancellationsMode.SendOnlyToAll,AffectedTaskOccurrence.AllOccurrences);
+            if (recurring) {
+                service.deleteItem(new ItemId(itemId), deleteMode, SendCancellationsMode.SendOnlyToAll, AffectedTaskOccurrence.AllOccurrences);
                 //item = Appointment.bindToRecurringMaster(service, new RecurringAppointmentMasterId(itemId));
-            }else {
+            } else {
                 item = Appointment.bind(service, new ItemId(itemId));
+                item.delete(deleteMode);
             }
-           // item.delete(deleteMode);
+            // item.delete(deleteMode);
         } catch (Exception e) {
             throw new AcmOutlookException("Error deleting item with id = " + itemId, e);
         }
