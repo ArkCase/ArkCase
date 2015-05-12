@@ -1,9 +1,10 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -26,19 +27,19 @@ public class CreateTaskItemAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private OutlookService outlookService;
-    private UserOrgDao userOrgDao;
+    private UserOrgService userOrgService;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public OutlookTaskItem createTaskItem(
             @RequestBody OutlookTaskItem in,
             Authentication authentication,
-            HttpSession session) {
+            HttpSession session) throws AcmEncryptionException {
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
-        OutlookDTO outlookDTO = getUserOrgDao().retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(authentication);
 
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         in = outlookService.createOutlookTaskItem(outlookUser, WellKnownFolderName.Tasks, in);
@@ -46,12 +47,12 @@ public class CreateTaskItemAPIController {
         return in;
     }
 
-    public UserOrgDao getUserOrgDao() {
-        return userOrgDao;
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
     }
 
-    public void setUserOrgDao(UserOrgDao userOrgDao) {
-        this.userOrgDao = userOrgDao;
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
     }
 
     public OutlookService getOutlookService() {

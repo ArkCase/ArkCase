@@ -38,6 +38,10 @@ public class CopyFileAPIController {
             HttpSession session
     ) throws AcmUserActionFailedException {
 
+        /**
+         * This API is documented in ark-document-management.raml.  If you update the API, also update the RAML.
+         */
+
         if (log.isInfoEnabled()) {
             log.info("File with id: " + in.getId() + " will be copy into folder with id: " + in.getFolderId());
         }
