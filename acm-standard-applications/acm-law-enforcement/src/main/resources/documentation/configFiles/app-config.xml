@@ -5,6 +5,14 @@
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication">
         <property name="applicationName" value="Law Enforcement Application"/>
+
+        <!--
+            Set "issueCollectorFlag" flag as "true" only if ArkCase instance is inside Armedia network or on the Armedia VPN or
+            ArkCase instance can connect to Armedia's internal JIRA server (http://internal.armedia.com/jira).
+            JIRA issue collector can be utilized only if above criteria are met. If those criteria cannot be met,
+            ,set "issueCollectorFlag" flag as "false".
+        -->
+
         <property name="issueCollectorFlag" value="true"/>
         <property name="topbarActions">
             <list>
