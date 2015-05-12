@@ -114,7 +114,7 @@ Audit.View = Audit.View || {
                             html+= "<label class='label col-sm-12'>" + Acm.goodValue($.t(field.label)) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<input type='text' class='form-control"
-                            + "' id='" + Acm.goodValue($.t(field.name))
+                            + "' id='" + Acm.goodValue(field.name)
                             + "' value='" + Acm.goodValue(field.value)
                             + "' placeholder='" + Acm.goodValue($.t(field.desc)) + "'>"
                             +"</div>";
