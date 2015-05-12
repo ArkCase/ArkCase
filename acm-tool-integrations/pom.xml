@@ -29,7 +29,8 @@
         <module>acm-form-configuration</module>
         <module>acm-report-configuration</module>
     	<module>acm-object-converter</module>
-    <module>acm-object-change-status</module>
+        <module>acm-object-change-status</module>
+        <module>acm-encryption</module>
   </modules>
 
 </project>

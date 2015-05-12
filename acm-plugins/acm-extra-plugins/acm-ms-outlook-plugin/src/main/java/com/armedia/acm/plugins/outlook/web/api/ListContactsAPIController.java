@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
+import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
@@ -21,7 +23,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping({"/api/v1/plugin/outlook", "/api/latest/plugin/outlook"})
 public class ListContactsAPIController {
     private OutlookService outlookService;
-    private UserOrgDao userOrgDao;
+    private UserOrgService userOrgService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -34,12 +36,12 @@ public class ListContactsAPIController {
             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
             Authentication authentication,
             HttpSession session
-    ) {
+    ) throws AcmEncryptionException {
 
         // the user is stored in the session during login.
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
 
-        OutlookDTO outlookDTO = getUserOrgDao().retrieveOutlookPassword(authentication);
+        OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(authentication);
 
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
@@ -51,12 +53,12 @@ public class ListContactsAPIController {
 
     }
 
-    public UserOrgDao getUserOrgDao() {
-        return userOrgDao;
+    public UserOrgService getUserOrgService() {
+        return userOrgService;
     }
 
-    public void setUserOrgDao(UserOrgDao userOrgDao) {
-        this.userOrgDao = userOrgDao;
+    public void setUserOrgService(UserOrgService userOrgService) {
+        this.userOrgService = userOrgService;
     }
 
     public OutlookService getOutlookService() {

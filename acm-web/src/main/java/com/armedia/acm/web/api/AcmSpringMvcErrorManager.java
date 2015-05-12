@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,13 @@ public class AcmSpringMvcErrorManager
     {
         log.error("Last Chance Handler: " + e.getMessage(), e);
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmEncryptionBadKeyOrDataException.class)
+    public void invalidOutlookPassword(HttpServletResponse response, Exception e)
+    {
+        log.error("Invalid outlook password: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
     }
 
     protected void sendResponse(HttpStatus status, HttpServletResponse response, String message)

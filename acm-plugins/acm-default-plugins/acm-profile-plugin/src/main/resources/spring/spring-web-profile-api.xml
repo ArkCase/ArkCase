@@ -20,7 +20,7 @@
 
     <bean id="saveOutlookPasswordAPIController" class="com.armedia.acm.plugins.profile.web.api.SaveOutlookPasswordAPIController">
         <property name="eventPublisher" ref="profileEventPublisher"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
+        <property name="userOrgService" ref="acmUserOrgService"/>
     </bean>
 
 </beans>
