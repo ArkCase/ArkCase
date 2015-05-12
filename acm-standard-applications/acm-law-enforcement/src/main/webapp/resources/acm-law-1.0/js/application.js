@@ -175,12 +175,9 @@ var Application = Application || {
                     resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
                 }, function() {
                     $('*[data-i18n]').i18n();
+                    $(document).trigger('i18n-ready');
                     onDone();
                 });
-
-                // Send "i18n ready" global event
-                $(document).trigger('i18n-ready');
-
             });
     }
 }
