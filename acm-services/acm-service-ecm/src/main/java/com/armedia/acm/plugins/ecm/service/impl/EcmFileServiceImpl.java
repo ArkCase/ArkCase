@@ -656,18 +656,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if( file == null ) {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
         }
-        Map<String,Object> props = new HashMap<>();
-        props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
-        props.put(EcmFileConstants.NEW_FILE_NAME,newFileName);
-
 
         EcmFile renamedFile;
         try {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
             file.setFileName(newFileName);
             renamedFile = getEcmFileDao().save(file);
             return renamedFile;
-        } catch ( MuleException e ) {
+        } catch ( PersistenceException e ) {
             if(log.isErrorEnabled()){
                 log.error("Could not rename file "+e.getMessage(),e);
             }
