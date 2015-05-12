@@ -18,6 +18,7 @@
         <span itemprop="userName">${sessionScope.acm_username}</span>
         <span itemprop="application">${sessionScope.acm_application.toJson()}</span>
         <span itemprop="objectTypes">${acm_application.getObjectTypesAsJson()}</span>
+        <span itemprop="issueCollectorFlag">${acm_application.getIssueCollectorFlag()}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
 </head>
@@ -67,6 +68,14 @@
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarModel.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarView.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarController.js'/>"></script>
+
+
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollector.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorService.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorModel.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorView.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorController.js'/>"></script>
+
 
 <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
