@@ -82,16 +82,20 @@ Topbar.Model = {
                 Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
             }
 
-            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
             Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
         }
 
         ,_pullInterval: 16
         ,_rows: 5
         ,_pull: function(interval) {
-            Acm.Timer.registerListener("AsnWatch"
+            Acm.Timer.useTimer("AsnWatch"
                 ,interval
                 ,function() {
+                    var isLogin = App.Model.Login.isLogin();
+                    if (!isLogin) {
+                        return false;
+                    }
+
                     Topbar.Service.Asn.retrieveAsnList(App.getUserName(),Topbar.Model.Asn._rows);
                     return true;
                 }

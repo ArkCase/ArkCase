@@ -4351,3 +4351,22 @@ tr.dragover {
     border: 2px solid #0B85A1;
 }
 
+/* document detail page - notes table
+ prevent overflow of notes from the notes column*/
+#acm-docDetailLongNote{
+  width:180px;
+  overflow:auto;
+}
+
+/* email dialog box component classes */
+.acm-emailFormGroup{
+  display: inline-block;
+  width: 100%;
+  text-align: left
+}
+
+/*fullcalendar title text */
+.acm-fullCalendarTitleText{
+  font-weight: bold;
+  color: #fff;
+}

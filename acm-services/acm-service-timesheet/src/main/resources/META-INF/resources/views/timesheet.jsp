@@ -8,6 +8,7 @@
 	<jsp:attribute name="endOfHead">
 	    <title><spring:message code="timesheet.page.title" text="Time Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
+            <span itemprop="resourceNamespace">timesheet</span>
             <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
             <span itemprop="objType">TIMESHEET</span>
             <span itemprop="objId">${objId}</span>
@@ -60,7 +61,7 @@
                         <section class="vbox animated fadeInLeft">
                             <section class="scrollable">
                                 <header class="dk header">
-                                    <h3 class="m-b-xs text-black pull-left"><spring:message code="timesheet.page.descShort" text="Time Tracking" /></h3>
+                                    <h3 class="m-b-xs text-black pull-left" data-18n="timesheet:title">Time Tracking</h3>
 
                                     <div class="btn-group inline select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
@@ -74,9 +75,9 @@
 
                                 <div class="wrapper">
                                     <div class="input-group">
-                                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                                        <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]timesheet:label.search" placeholder="Search">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                            <button class="btn btn-sm btn-default" type="button" data-i18n="timesheet:button.go">Go!</button>
                                         </span>
                                     </div>
                                 </div>
@@ -100,7 +101,7 @@
                                         <div class="col-xs-12">
                                             <div class="">
                                                 <div class=" clearfix">
-                                                    <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-title="Timesheet Name"></a> </div>
+                                                    <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-i18n="[data-title]timesheet:label.timesheet-name" data-title="Timesheet Name"></a> </div>
                                                     <small class="text-muted"><a href="#" id="timesheetModifiedDate" ></a></small></div>
                                                 </div>
                                             </div>
@@ -109,7 +110,7 @@
 
 
                                     <div class="row" id="tabTopBlank">
-                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No timesheet is selected)</p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n="timesheet:msg.no-timesheet-selected">(No timesheet is selected)</span></p>
                                     </div>
                                 </div>
 
@@ -120,8 +121,8 @@
                                             <div class="col-md-12">
                                                 <div class="pull-right inline">
                                                     <div class="btn-group">
-                                                        <button class="btn btn-default btn-sm" id = "btnNewTimesheetForm"> New Timesheet </button>
-                                                        <button class="btn btn-default btn-sm" id = "btnEditTimesheetForm"> Edit Timesheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnNewTimesheetForm" data-i18n="timesheet:button.new-timesheet"> New Timesheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnEditTimesheetForm" data-i18n="timesheet:button.edit-timesheet"> Edit Timesheet </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -138,16 +139,16 @@
                                                         <ul class="nav nav-pills pull-right">
                                                             <li>
                                                                 <div class="btn-group padder-v2">
-                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]timesheet:label.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]timesheet:label.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                                     <ul class="dropdown-menu pull-right">
-                                                                        <li><a href="#">Other menu items</a></li>
+                                                                        <li><a href="#" data-i18n="timesheet:label.other-menu-items">Other menu items</a></li>
                                                                     </ul>
                                                                 </div>
                                                             </li>
                                                             <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                                         </ul>
-                                                        </span> <a href="#" class="font-bold">Details</a> </div>
+                                                        </span> <a href="#" class="font-bold" data-i18n="timesheet:label.details">Details</a> </div>
                                                     <div class="panel-body">
                                                         <div class="divDetail"></div>
                                                     </div>

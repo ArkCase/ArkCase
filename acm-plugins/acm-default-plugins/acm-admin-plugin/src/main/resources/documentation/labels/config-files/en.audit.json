@@ -1,0 +1,28 @@
+{
+    "title": "Audit",
+    "label": {
+        "date-from": "From",
+        "date-to": "To"
+    },
+    "button": {
+        "generate-report": "Generate Audit Report"
+    },
+    "object-type": {
+        "label": "Object to audit",
+        "desc": "Object to audit",
+        "values": {
+            "all": "ALL",
+            "case-files": "Case Files",
+            "complaints": "Complaints",
+            "tasks": "Tasks",
+            "files": "Files"
+        }
+    },
+    "object-id": {
+        "label": "Case#, Complaint#...",
+        "desc": "Object Number"
+    },
+    "date-range": {
+        "desc": "Date Range"
+    }
+}

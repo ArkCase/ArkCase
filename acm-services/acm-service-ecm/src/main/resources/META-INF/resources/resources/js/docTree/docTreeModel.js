@@ -19,6 +19,8 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FOLDER            ,this.onViewMovedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_VERSION         ,this.onViewChangedVersion);
+        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_SENT_EMAIL              ,this.onViewSentEmail);
+
 
         //---------
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_DOCUMENT          ,this.onViewAddedDocument);
@@ -68,6 +70,9 @@ DocTree.Model = DocTree.Model || {
     }
     ,onViewChangedVersion: function(fileId, version, cacheKey, node) {
         DocTree.Service.setActiveVersion(fileId, version, cacheKey, node);
+    }
+    ,onViewSentEmail: function(emailData){
+        DocTree.Service.sendEmail(emailData);
     }
 
     //---------------
@@ -352,6 +357,15 @@ DocTree.Model = DocTree.Model || {
             return false;
         }
         if (Acm.isEmpty(data.activeVersionTag)) {
+            return false;
+        }
+        return true;
+    }
+    ,validateSentEmail: function(data){
+        if (Acm.isEmpty(data.state)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.userEmail)) {
             return false;
         }
         return true;

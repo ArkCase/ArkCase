@@ -14,7 +14,7 @@ AcmNotification.View = {
         return {
             fields: {
                 id: {
-                    title: 'ID'
+                    title: $.t("notification:table.field.id")
                     ,key: true
                     ,list: false
                     ,create: false
@@ -22,7 +22,7 @@ AcmNotification.View = {
                     ,sorting: false
                 }
                 ,name: {
-                    title: 'Name'
+                    title: $.t("notification:table.field.name")
                     ,width: '15%'
                     ,list: false
                     ,sorting: false
@@ -31,18 +31,18 @@ AcmNotification.View = {
                     }
                 }
                 ,type: {
-                    title: 'Type'
+                    title: $.t("notification:table.field.type")
                     ,sorting: false
                     ,list: false
                 }
                 ,description: {
-                    title: 'Description'
+                    title: $.t("notification:table.field.description")
                     ,width: '40%'
                     ,sorting: false
                     ,list: true
                 }
                 ,parentId: {
-                    title: 'Parent ID'
+                    title: $.t("notification:table.field.parent-id")
                     ,key: false
                     ,list: false
                     ,create: false
@@ -50,7 +50,7 @@ AcmNotification.View = {
                     ,sorting: false
                 }
                 ,parentName: {
-                    title: 'Object Number'
+                    title: $.t("notification:table.field.parent-name")
                     ,width: '15%'
                     ,sorting: false
                     ,display: function(data) {
@@ -58,11 +58,11 @@ AcmNotification.View = {
                     }
                 }
                 ,parentType: {
-                    title: 'Object Type'
+                    title: $.t("notification:table.field.parent-type")
                     ,sorting: false
                 }
                 ,modified: {
-                    title: 'Modified'
+                    title: $.t("notification:table.field.modified")
                     ,type: 'textarea'
                     ,width: '20%'
                     ,sorting: false

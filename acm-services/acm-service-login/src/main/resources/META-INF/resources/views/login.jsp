@@ -66,6 +66,7 @@
     jQuery(document).ready(function() {
 //        var context = {};
 //        context.path = Acm.Object.MicroData.get("contextPath");
+//        context.loginPage = true;
 //        Application.run(context);
         Login.create();
     });
