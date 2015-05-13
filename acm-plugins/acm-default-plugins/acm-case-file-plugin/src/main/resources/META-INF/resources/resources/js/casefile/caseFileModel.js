@@ -15,7 +15,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
         if (CaseFile.Model.History.create)         {CaseFile.Model.History.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
-        if (CaseFile.Model.OutlookCalendar.create)           {CaseFile.Model.OutlookCalendar.create();}
+        //if (CaseFile.Model.OutlookCalendar.create)           {CaseFile.Model.OutlookCalendar.create();}
         if (CaseFile.Model.Time.create)           {CaseFile.Model.Time.create();}
         if (CaseFile.Model.Cost.create)           {CaseFile.Model.Cost.create();}
 
@@ -35,7 +35,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
         if (CaseFile.Model.History.onInitialized)         {CaseFile.Model.History.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
-        if (CaseFile.Model.OutlookCalendar.onInitialized)           {CaseFile.Model.OutlookCalendar.onInitialized();}
+        //if (CaseFile.Model.OutlookCalendar.onInitialized)           {CaseFile.Model.OutlookCalendar.onInitialized();}
         if (CaseFile.Model.Time.onInitialized)           {CaseFile.Model.Time.onInitialized();}
         if (CaseFile.Model.Cost.onInitialized)           {CaseFile.Model.Cost.onInitialized();}
 
@@ -163,7 +163,7 @@ CaseFile.Model = CaseFile.Model || {
                         ,"tabCorrespondence"
                         ,"tabTime"
                         ,"tabCost"
-                        ,"tabOutlookCalendar"
+                        //,"tabOutlookCalendar"
                     ]
                 }
                 ,{nodeType: "p/CASE_FILE/d"      ,icon: "",tabIds: ["tabDetail"]}
