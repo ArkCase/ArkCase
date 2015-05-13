@@ -4703,15 +4703,15 @@ var _initDashboard = function () {
                 resolve: {
                     model: function ($q, $http) {
                         var q = $q.defer();
-                        //$scope.tasksUrl = App.Object.getContextPath()+ "/plugin/task#{{task.taskId}}";
-                        url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/get";
+                        //$scope.tasksUrl = App.getContextPath()+ "/plugin/task#{{task.taskId}}";
+                        url = App.getContextPath() + "/api/latest/plugin/dashboard/get";
                         return $http.get(url).success(function (data) {
                             q.resolve(data.dashboardConfig);
                         }).error(q.reject), q.promise
                     },
                     widgetsPerRoles: function ($q, $http) {
                         var q = $q.defer();
-                        url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/widgets/get";
+                        url = App.getContextPath() + "/api/latest/plugin/dashboard/widgets/get";
                         return $http.get(url).success(function (data) {
                             q.resolve(data);
                         }).error(q.reject), q.promise
@@ -4787,7 +4787,7 @@ var _initDashboard = function () {
             $scope.collapsible = !1;
 
 
-            appRoot = App.Object.getContextPath();
+            appRoot = App.getContextPath();
             $scope.appRoot = appRoot;
 
             if (dashboardChanged) {
@@ -5002,7 +5002,7 @@ var _initDashboard = function () {
 //        return {
 //            get : function(){
 //                var deferred = $q.defer(),
-//                    url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+//                    url = App.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
 //                $http.get(url).success(function(dataTasks) {
 //                    alert("IN"),
 //                    dataTasks ? deferred.resolve(dataTasks) : deferred.reject()
@@ -5016,7 +5016,7 @@ var _initDashboard = function () {
 //])
         .controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",//  "config", //"usertasks",
             function ($scope, $filter, $http, ngTableParams) {
-                var url = App.Object.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+                var url = App.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
 
 //        $scope.usertasks = usertasks;
 //           config.rowsT = config.rowsT ? config.rowsT :  5;
@@ -5033,7 +5033,7 @@ var _initDashboard = function () {
 //                row.due = moment(row.dueDate).format('MM/DD/YYYY');
 //                row.id = parseInt(row.taskId)
 //                row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
-//                row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
+//                row.taskUrl = App.getContextPath() + "/plugin/task/";
 //                return row
 //            })
 //            $scope.isData = dataT.length > 0 ? true : false
@@ -5075,8 +5075,8 @@ var _initDashboard = function () {
                             row.parentID = row.attachedToObjectId;
                         }
                         row.status = row.taskStartDate != null ? "In Progress" : "Not Started"
-                        row.parentObjectUrl = App.Object.getContextPath() + "/plugin/" + row.parentObject + "/";
-                        row.taskUrl = App.Object.getContextPath() + "/plugin/task/";
+                        row.parentObjectUrl = App.getContextPath() + "/plugin/" + row.parentObject + "/";
+                        row.taskUrl = App.getContextPath() + "/plugin/task/";
                         return row
                     })
                     $scope.isData = dataT.length > 0 ? true : false
@@ -5112,7 +5112,7 @@ var _initDashboard = function () {
         }
     ]).controller("myCasesCtrl", ["$scope", "$filter", "$http", "ngTableParams",
         function ($scope, $filter, $http, ngTableParams) {
-            var url = App.Object.getContextPath() + "/api/latest/plugin/casefile/forUser/" + App.Object.getUserName();
+            var url = App.getContextPath() + "/api/latest/plugin/casefile/forUser/" + App.Object.getUserName();
             var nOfRows = 5;
             if ($scope.numberOfRows) {
                 nOfRows = $scope.numberOfRows;
@@ -5125,7 +5125,7 @@ var _initDashboard = function () {
                     row.priority = row.priority;
                     row.status = row.status;
                     //row.priority = "LOW";
-                    row.caseUrl = App.Object.getContextPath() + "/plugin/casefile/";
+                    row.caseUrl = App.getContextPath() + "/plugin/casefile/";
                     return row;
                 })
                 $scope.isData = dataCa.length > 0 ? true : false
@@ -5161,7 +5161,7 @@ var _initDashboard = function () {
             }
         ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
             function ($scope, $filter, $http, ngTableParams) {
-                var url = App.Object.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
+                var url = App.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
                 var nOfRows = 5;
                 if ($scope.numberOfRows) {
                     nOfRows = $scope.numberOfRows;
@@ -5172,7 +5172,7 @@ var _initDashboard = function () {
                         //row.due=moment(row.dueDate, "YYYY MM D").toDate()
                         row.complaintCreated = moment(row.created).format('MM/DD/YYYY');
                         row.id = parseInt(row.complaintId);
-                        row.complaintUrl = App.Object.getContextPath() + "/plugin/complaint/";
+                        row.complaintUrl = App.getContextPath() + "/plugin/complaint/";
                         return row
                     })
                     $scope.isDataC = dataC.length > 0 ? true : false
@@ -11147,7 +11147,7 @@ var _initDashboard = function () {
             return {
                 get: function (period) {
                     var deferred = $q.defer(),
-                        url = App.Object.getContextPath() + "/api/latest/plugin/casebystatus/" + period;
+                        url = App.getContextPath() + "/api/latest/plugin/casebystatus/" + period;
                     return $http.get(url).success(function (data) {
                         data ? deferred.resolve(data) : deferred.reject()
                     }).error(function () {
@@ -11387,7 +11387,7 @@ var _initDashboard = function () {
             return {
                 getComplaints: function () {
                     var deferred = $q.defer(),
-                        url = App.Object.getContextPath() + "/api/latest/plugin/complaint/list/lastMonth";
+                        url = App.getContextPath() + "/api/latest/plugin/complaint/list/lastMonth";
                     return $http.get(url).success(function (data) {
                         data ? deferred.resolve(data) : deferred.reject()
                     }).error(function () {
@@ -11401,7 +11401,7 @@ var _initDashboard = function () {
             return {
                 getTasks: function (due) {
                     var deferred = $q.defer(),
-                        url = App.Object.getContextPath() + "/api/latest/plugin/task/list/" + due;
+                        url = App.getContextPath() + "/api/latest/plugin/task/list/" + due;
                     return $http.get(url).success(function (data) {
 
                         data ? deferred.resolve(data) : deferred.reject()
