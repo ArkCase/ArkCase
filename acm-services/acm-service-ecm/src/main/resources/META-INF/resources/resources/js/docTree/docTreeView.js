@@ -7,6 +7,8 @@ DocTree.View = DocTree.View || {
     create : function(args) {
         this.parentType = args.parentType;
         this.parentId = args.parentId;
+        this.arkcaseUrl = args.arkcaseUrl;
+        this.arkcasePort = args.arkcasePort;
 
         this.doUploadForm = args.uploadForm;
         this.fileTypes  = args.fileTypes;
@@ -106,6 +108,175 @@ DocTree.View = DocTree.View || {
 
             DocTree.View.$fileInput.removeAttr("multiple");
             DocTree.View.$fileInput.click();
+        }
+    }
+    ,Email:{
+        _isDlgComponentsCreated: false
+        ,isDlgComponentsCreated: function() {
+            return this._isDlgComponentsCreated;
+        }
+        ,setDlgComponentsCreated: function(isDlgComponentsCreated) {
+            this._isDlgComponentsCreated = isDlgComponentsCreated;
+        }
+        ,showEmailDialog: function(nodes){
+            //prepare to create dialog box
+            var args = {
+                name: "Send Email"
+                , title: "Add New Recipients"
+                , prompt: "Enter an email address OR search for users within ArkCase."
+                , btnGoText: "Go!"
+                , btnOkText: "Send Email"
+                , filters: [{key: "Object Type", values: ["USER"]}]
+                , onClickBtnPrimary: function (event, ctrl) {
+                    var emailAddresses = ($dlgSelector.find("#recipientsList").val().split(";"));
+                    if(Acm.isArrayEmpty(emailAddresses) && emailAddresses[0] != ""){
+                        Acm.Dialog.info("Select users to send email");
+                        dlgSendEmail.show();
+                    }
+                    else{
+                        var emailNotifications = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
+                        DocTree.Controller.viewSentEmail(emailNotifications);
+                    }
+                }
+            }
+
+            var dlgSendEmail = SearchBase.Dialog.create(args);
+
+            //get dialog selector
+            var $dlgSelector = dlgSendEmail.getSelector();
+
+            //inject buttons and input area
+            if(!this.isDlgComponentsCreated()) {
+                //create form and add input area for
+                //email addresses
+                var $emailFormGroup = $("<div/>")
+                    .addClass("form-group acm-emailFormGroup")
+                    //.css({"display": "inline-block", "width": "100%", "text-align": "left"})
+                    .text("Enter e-mail addresses separated by \";\" or select from the search above")
+                    .prependTo($dlgSelector.find('.modal-footer'));
+
+                var $edtEmailRecipients = $("<input/>")
+                    .attr("type", "text")
+                    .attr("id", "recipientsList")
+                    .addClass("form-control")
+                    .css("width", "100%")
+                    .appendTo($emailFormGroup)
+                    .val('');
+
+                //create button to add users to recipients
+                var $btnAddUsersToRecipients = $("<button/>")
+                    .attr("type", "button")
+                    .attr("id", "addUsersToRecipients")
+                    .addClass("btn btn-default")
+                    .html("Add Selected Users");
+
+                $dlgSelector.find('button.btn-primary').before($btnAddUsersToRecipients);
+
+                //create a send later checkbox and
+                //send later date picker and time fields
+                var $labelForSendLater = $("<label>")
+                    .attr('for', "sendLater")
+                    .addClass("pull-left")
+                    .text('Send Later');
+
+                var $chkSendLater = $("<input/>")
+                    .attr("type", "checkbox")
+                    .attr("id", "sendLater")
+                    .addClass("pull-left");
+
+                $chkSendLater.appendTo($labelForSendLater);
+                $labelForSendLater.appendTo($dlgSelector.find('.modal-footer'));
+
+                var $edtSendLaterDateTime = $("<span/>")
+                    .attr("id", "datetime")
+                    .addClass("pull-left")
+                    .css("display", "none")
+                    .html("&nbsp;&nbsp;&nbsp");
+
+                var $edtSendLaterDate = $("<input/>")
+                    .attr("type", "text")
+                    .attr("id", "sendLaterDate")
+                    .attr("placeholder", "Click to enter date")
+                    .addClass("input-s-sm");
+
+                var $edtSendLaterTime = $("<p/><input/>")
+                    .attr("type", "text")
+                    .attr("id", "sendLaterTime")
+                    .attr("placeholder", "Click to enter time")
+                    .addClass("input-s-sm");
+
+                $edtSendLaterDate.appendTo($edtSendLaterDateTime);
+                $edtSendLaterTime.appendTo($edtSendLaterDateTime);
+                $edtSendLaterDateTime.appendTo($dlgSelector.find('.modal-footer'));
+                $edtSendLaterDate.datepicker();
+                this.setDlgComponentsCreated(true);
+            }
+            //finally display the dialog box
+            dlgSendEmail.show();
+
+            //event handlers for dialog actions
+            $dlgSelector.find('.modal-footer').on('click', "#addUsersToRecipients", function(e) {
+                DocTree.View.Email._showSelectedEmails(e,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail);
+            });
+
+            $dlgSelector.find('.modal-footer').on('click', "#sendLater", function(e) {
+                $dlgSelector.find("#datetime").slideToggle();
+            });
+
+            $dlgSelector.on("hidden.bs.modal", function(e) {
+                $dlgSelector.find("#recipientsList").val('');
+            });
+        }
+        ,_showSelectedEmails: function(event,$btnAddUsersToRecipients,$edtEmailRecipients,dlgSendEmail){
+            //prevent event from bubbling up the dom
+            event.stopImmediatePropagation();
+            var val= $edtEmailRecipients.val();
+            dlgSendEmail.getSelectedRows().each(function () {
+                var record = $(this).data('record');
+                if(Acm.isNotEmpty(record.email)){
+                    if(Acm.isNotEmpty(val) && val.substr(val.length-1)!= ";") {
+                        val += ";" + Acm.goodValue(record.email);
+                    }
+                    else{
+                        val += Acm.goodValue(record.email);
+                    }
+                    $edtEmailRecipients.val(val);
+                }
+            });
+        }
+        ,_makeEmailData: function(emailAddresses, nodes){
+            var emailNotifications = [];
+            var emailData = {};
+            emailData.emailAddresses = emailAddresses;
+            emailData.title = "ArkCase Documents"
+            emailData.note = DocTree.View.Email._makeEmailNote(nodes);
+            emailNotifications.push(emailData);
+            return emailNotifications;
+        }
+        ,_makeEmailNote: function(nodes){
+            var firstLine = "Please follow the links below to view the document(s): " + "\n\n";
+            var note="";
+            if(Acm.isArray(nodes)){
+                for(var i = 0; i < nodes.length; i++){
+                    var title = Acm.goodValue(nodes[i].data.name) + "\n";
+                    var url = Acm.goodValue(DocTree.View.arkcaseUrl);
+                    if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
+                        url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
+                    }
+                    url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes[i].data.objectId);
+                    note += title + url + "\n\n";
+                }
+            }
+            else{
+                var title = Acm.goodValue(nodes.data.name) + "\n";
+                var url = Acm.goodValue(DocTree.View.arkcaseUrl);
+                if(Acm.isNotEmpty(DocTree.View.arkcasePort)){
+                    url += ":" + Acm.goodValue(DocTree.View.arkcasePort);
+                }
+                url+= App.getContextPath() + "/plugin/document/" + Acm.goodValue(nodes.data.objectId);
+                note += title + url + "\n\n";
+            }
+            return firstLine + note;
         }
     }
 
@@ -329,7 +500,9 @@ DocTree.View = DocTree.View || {
         var fileNode = null;
         for (var i = 0; i < fileNodes.length; i++) {
             var nameOrig = this._getNameOrig(name);
-            if (fileNodes[i].data.name == nameOrig && fileNodes[i].data.type == type) {
+            var nameNode = fileNodes[i].data.name;
+            nameNode = nameNode.replace(/ /g, "_");
+            if (nameNode == nameOrig && fileNodes[i].data.type == type) {
                 fileNode = fileNodes[i];
                 break;
             }
@@ -1456,6 +1629,12 @@ DocTree.View = DocTree.View || {
                 case "edit":
                     break;
                 case "email":
+                    if(batch){
+                        DocTree.View.Email.showEmailDialog(selNodes);
+                    }
+                    else{
+                        DocTree.View.Email.showEmailDialog(node);
+                    }
                     break;
                 case "print":
                     break;

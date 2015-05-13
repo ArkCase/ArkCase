@@ -7,6 +7,13 @@
  */
 var Application = Application || {
     run : function(context) {
+        if (Acm.isEmpty(context.loginPage)) {
+            App.Model.Login.setLoginStatus(true);
+        }
+
+        //jwu: testing for later work.
+        //var a1 = Application.getPageContext();
+
         var acmModules = [];
 
         if ("undefined" != typeof Acm) {
@@ -78,7 +85,9 @@ var Application = Application || {
         if ("undefined" != typeof AcmDocument) {
             acmModules.push(AcmDocument);
         }
-
+        if ("undefined" != typeof IssueCollector) {
+            acmModules.push(IssueCollector);
+        }
         this.initI18n(context.path, function() {
             for (var i = 0; i < acmModules.length; i++) {
                 var module = acmModules[i];
@@ -100,6 +109,12 @@ var Application = Application || {
 
     }
 
+    ,getPageContext: function() {
+        var context = {};
+        var a1 = Acm.Object.MicroData.getJson("application");
+        context.path = Acm.Object.MicroData.get("contextPath");
+        return context;
+    }
     ,SESSION_DATA_PROFILE               : "AcmProfile"
     ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
     ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
@@ -118,6 +133,11 @@ var Application = Application || {
     ,SESSION_DATA_ADMIN_TREEINFO        : "AcmAdminTreeInfo"
     ,SESSION_DATA_TASK_ASSIGNEES        : "AcmTaskAssignees"
     ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
+
+    ,LOCAL_DATA_LOGIN_STATUS            : "AcmLoginStatus"
+    ,LOCAL_DATA_LAST_IDLE               : "AcmLastIdle"
+    ,LOCAL_DATA_ERROR_COUNT             : "AcmErrorCount"
+
 
     ,initSessionData: function() {
         sessionStorage.setItem(this.SESSION_DATA_PROFILE, null);
@@ -144,6 +164,10 @@ var Application = Application || {
         sessionStorage.setItem("AcmTaskAssignees", null);
         sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
+        localStorage.setItem(this.LOCAL_DATA_LOGIN_STATUS, null);
+        localStorage.setItem(this.LOCAL_DATA_LAST_IDLE, new Date().getTime());
+        localStorage.setItem(this.LOCAL_DATA_ERROR_COUNT, null);
+
     }
 
     ,initI18n: function(contextPath, onDone) {
@@ -153,10 +177,13 @@ var Application = Application || {
                 var namespaces = ['common'];
                 var lng= data.defaultLang;
 
-                // Get namespace from detailData
-                var namespace = Acm.Object.MicroData.get("resourceNamespace");
-                if (namespace) {
-                    namespaces.push(namespace);
+                // Get namespaces divided by "," symbol from detailData
+                var names = Acm.Object.MicroData.get("resourceNamespace");
+                if (names) {
+                    names = names.split(',');
+                    for (var i = 0; i < names.length; i++) {
+                        namespaces.push($.trim(names[i]));
+                    }
                 }
 
                 i18n.init({
@@ -172,12 +199,9 @@ var Application = Application || {
                     resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
                 }, function() {
                     $('*[data-i18n]').i18n();
+                    $(document).trigger('i18n-ready');
                     onDone();
                 });
-
-                // Send "i18n ready" global event
-                $(document).trigger('i18n-ready');
-
             });
     }
 }

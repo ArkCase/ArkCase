@@ -236,12 +236,12 @@ var SubscriptionOp = SubscriptionOp || {
 
         ,MicroData: {
             create : function() {
-                this.msgBtnSubscribeText = "Subscribe";
-                this.msgBtnUnsubscribeText = "Unsubscribe";
+                this.msgBtnSubscribeText = $.t("subscription:button.subscribe");
+                this.msgBtnUnsubscribeText = $.t("subscription:button.unsubscribe");
                 this.msgBtnErrorSubscribeText = "N/A";
 
-                this.msgSubscribeSuccess = "Object subscribed";
-                this.msgUnsubscribeSuccess = "Object unsubscribed";
+                this.msgSubscribeSuccess = $.t("subscription:msg.subscribe-success");
+                this.msgUnsubscribeSuccess = $.t("subscription:msg.unsubscribe-success");
             }
             ,onInitialized : function() {}
         }

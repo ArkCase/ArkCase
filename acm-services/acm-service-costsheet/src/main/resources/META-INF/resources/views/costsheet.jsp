@@ -8,6 +8,7 @@
 	<jsp:attribute name="endOfHead">
 	    <title><spring:message code="costsheet.page.title" text="Cost Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
+            <span itemprop="resourceNamespace">costsheet</span>
             <span itemprop="newCostsheetFormUrl">${newCostsheetFormUrl}</span>
             <span itemprop="objType">COSTSHEET</span>
             <span itemprop="objId">${objId}</span>
@@ -58,7 +59,7 @@
                         <section class="vbox animated fadeInLeft">
                             <section class="scrollable">
                                 <header class="dk header">
-                                    <h3 class="m-b-xs text-black pull-left"><spring:message code="costsheet.page.descShort" text="Cost Tracking" /></h3>
+                                    <h3 class="m-b-xs text-black pull-left" data-i18n="costsheet:title">Cost Tracking</h3>
 
                                     <div class="btn-group inline select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
@@ -72,9 +73,9 @@
 
                                 <div class="wrapper">
                                     <div class="input-group">
-                                        <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
+                                        <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]costsheet:label.search" placeholder="Search">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-sm btn-default" type="button">Go!</button>
+                                            <button class="btn btn-sm btn-default" type="button" data-i18n="costsheet:button.go">Go!</button>
                                         </span>
                                     </div>
                                 </div>
@@ -127,7 +128,7 @@
 
 
                                     <div class="row" id="tabTopBlank">
-                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(No costsheet is selected)</p>
+                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n="costsheet:msg.no-costsheet-selected">(No costsheet is selected)</span></p>
                                     </div>
                                 </div>
 
@@ -138,8 +139,8 @@
                                             <div class="col-md-12">
                                                 <div class="pull-right inline">
                                                     <div class="btn-group">
-                                                        <button class="btn btn-default btn-sm" id = "btnNewCostsheetForm"> New Costsheet </button>
-                                                        <button class="btn btn-default btn-sm" id = "btnEditCostsheetForm"> Edit Costsheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnNewCostsheetForm" data-i18n="costsheet:button.new-costsheet"> New Costsheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnEditCostsheetForm" data-i18n="costsheet:button.edit-costsheet"> Edit Costsheet </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -156,16 +157,16 @@
                                                         <ul class="nav nav-pills pull-right">
                                                             <li>
                                                                 <div class="btn-group padder-v2">
-                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]costsheet:label.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]costsheet:label.save" data-title="Save"><i class="fa fa-save"></i></button>
                                                                     <ul class="dropdown-menu pull-right">
-                                                                        <li><a href="#">Other menu items</a></li>
+                                                                        <li><a href="#" data-i18n="costsheet:label.other-menu-items">Other menu items</a></li>
                                                                     </ul>
                                                                 </div>
                                                             </li>
                                                             <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                                         </ul>
-                                                        </span> <a href="#" class="font-bold">Details</a> </div>
+                                                        </span> <a href="#" class="font-bold" data-i18n="costsheet:label.details">Details</a> </div>
                                                     <div class="panel-body">
                                                         <div class="divDetail"></div>
                                                     </div>

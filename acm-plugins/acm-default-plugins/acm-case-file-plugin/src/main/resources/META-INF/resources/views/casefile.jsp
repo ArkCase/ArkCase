@@ -7,12 +7,14 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
+        <span itemprop="arkcasePort">${arkcasePort}</span>
 
         <span itemprop="urlEditCaseFileForm">${editCaseFileFormUrl}</span>
         <span itemprop="urlReinvestigateCaseFileForm">${reinvestigateCaseFileFormUrl}</span>
@@ -429,7 +431,6 @@
 
 
                                     <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
-                                        <aside class="wrapper">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
@@ -441,7 +442,7 @@
                                                 <%--<hr/>--%>
 
                                             <section class="panel no-border bg-light">
-                                                <header class="panel-heading bg-primary clearfix">
+                                                <header class="panel-heading bg-info clearfix">
                                                     <div class="btn-group pull-right" data-toggle="buttons">
                                                         <label class="btn btn-sm btn-bg btn-default active" id="monthview">
                                                             <input type="radio" name="options">
@@ -458,14 +459,13 @@
                                                     </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
 
-                                                <span class="m-t-xs inline text-white" data-i18n="casefile:outlook-calendar.label.calendar">
+                                                <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
                                                   Calendar
                                                 </span>
                                                 </header>
                                                 <div class="calendar">
                                                 </div>
                                             </section>
-                                        </aside>
                                     </div>
 
                                 </div>

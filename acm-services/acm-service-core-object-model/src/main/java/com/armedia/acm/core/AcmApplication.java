@@ -25,6 +25,9 @@ public class AcmApplication implements Serializable
     private List<AcmUserAction> navigatorTabs;
     private List<AcmObjectType> objectTypes;
 
+
+    private Boolean issueCollectorFlag;
+
     private List<AcmObjectType> businessObjects;
 
     public String getApplicationName()
@@ -63,6 +66,25 @@ public class AcmApplication implements Serializable
 
     public void setObjectTypes(List<AcmObjectType> objectTypes) {
         this.objectTypes = objectTypes;
+    }
+
+    public Boolean getIssueCollectorFlag() {
+        return issueCollectorFlag;
+    }
+
+    public void setIssueCollectorFlag(Boolean issueCollectorFlag) {
+        this.issueCollectorFlag = issueCollectorFlag;
+    }
+
+    public String toJson() {
+        String json = "[]";
+        ObjectMapper om = new ObjectMapper();
+        try {
+            json =  om.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
+        return json;
     }
 
     public String getObjectTypesAsJson() {

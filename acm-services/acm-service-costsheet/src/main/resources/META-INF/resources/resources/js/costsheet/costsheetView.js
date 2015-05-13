@@ -99,15 +99,15 @@ Costsheet.View = {
         ,getContextMenu: function(node) {
             var key = node.key;
             var menu = [
-                {title: "Menu:" + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
-                {title: "Copy", cmd: "copy", uiIcon: "ui-icon-copy"},
-                {title: "Paste", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
+                {title: $.t("costsheet:context-menu.menu-title.menu") + key, cmd: "cut", uiIcon: "ui-icon-scissors"},
+                {title: $.t("costsheet:context-menu.menu-title.copy"), cmd: "copy", uiIcon: "ui-icon-copy"},
+                {title: $.t("costsheet:context-menu.menu-title.paste"), cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: false },
                 {title: "----"},
-                {title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
-                {title: "Delete", cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
-                {title: "More", children: [
-                    {title: "Sub 1", cmd: "sub1"},
-                    {title: "Sub 2", cmd: "sub1"}
+                {title: $.t("costsheet:context-menu.menu-title.edit"), cmd: "edit", uiIcon: "ui-icon-pencil", disabled: true },
+                {title: $.t("costsheet:context-menu.menu-title.delete"), cmd: "delete", uiIcon: "ui-icon-trash", disabled: true },
+                {title: $.t("costsheet:context-menu.menu-title.more"), children: [
+                    {title: $.t("costsheet:context-menu.menu-title.sub1"), cmd: "sub1"},
+                    {title: $.t("costsheet:context-menu.menu-title.sub2"), cmd: "sub1"}
                 ]}
             ];
             return menu;
@@ -299,16 +299,15 @@ Costsheet.View = {
             Costsheet.View.Detail.setHtmlDivDetail("");
         }
 
-        ,DIRTY_EDITING_DETAIL: "Editing Costsheet detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare(Costsheet.View.Detail.DIRTY_EDITING_DETAIL);
+            App.Object.Dirty.declare($.t("costsheet:detail.label.editing-costsheet-detail"));
             Costsheet.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Costsheet.View.Detail.saveDivDetail();
             if(Acm.isNotEmpty(htmlDetail)){
                 Costsheet.Controller.viewSavedDetail(Costsheet.View.getActiveCostsheet(), htmlDetail);
-                App.Object.Dirty.clear(Costsheet.View.Detail.DIRTY_EDITING_DETAIL);
+                App.Object.Dirty.clear($.t("costsheet:detail.label.editing-costsheet-detail"));
             }
         }
         ,editDivDetail: function() {
@@ -359,7 +358,7 @@ Costsheet.View = {
             var sortMap = {};
             AcmEx.Object.JTable.useBasic($jt
                 , {
-                    title: 'Person'
+                    title: $.t("costsheet:person.table.title")
                     , sorting: true
                     , actions: {
                         listAction: function (postData, jtParams) {
@@ -380,7 +379,7 @@ Costsheet.View = {
                     }
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("costsheet:person.table.field.id")
                             , key: true
                             , list: false
                             , create: false
@@ -389,17 +388,17 @@ Costsheet.View = {
                             , width: '5%'
                         }
                         , fullName: {
-                            title: 'Full Name'
+                            title: $.t("costsheet:person.table.field.full-name")
                             , width: '10%'
                             , sorting: true
                         }
                         , username: {
-                            title: 'Username'
+                            title: $.t("costsheet:person.table.field.username")
                             , width: '10%'
                             , sorting: true
                         }
                         , role: {
-                            title: 'Role'
+                            title: $.t("costsheet:person.table.field.role")
                             , width: '10%'
                             , sorting: true
                             ,list: false
@@ -452,7 +451,7 @@ Costsheet.View = {
             var sortMap = {};
             AcmEx.Object.JTable.useBasic($jt
                 , {
-                    title: 'Hours Summary'
+                    title: $.t("costsheet:cost-summary.table.title")
                     , sorting: true
                     , actions: {
                         listAction: function (postData, jtParams) {
@@ -474,7 +473,7 @@ Costsheet.View = {
 
                     , fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("costsheet:cost-summary.table.field.id")
                             , key: true
                             , list: false
                             , create: false
@@ -483,7 +482,7 @@ Costsheet.View = {
                             , width: '5%'
                         }
                         , parentId: {
-                            title: 'Parent ID'
+                            title: $.t("costsheet:cost-summary.table.field.parent-id")
                             , width: '10%'
                             , sorting: true
                             ,display: function(data) {
@@ -493,29 +492,29 @@ Costsheet.View = {
                             }
                         }
                         ,parentType: {
-                            title: 'Parent Type'
+                            title: $.t("costsheet:cost-summary.table.field.parent-type")
                             , width: '10%'
                             , sorting: true
                             , list : true
                         }
                         ,parentNumber: {
-                            title: 'Parent Number'
+                            title: $.t("costsheet:cost-summary.table.field.parent-number")
                             , width: '10%'
                             , sorting: true
                             , list : false
                         }
                         , cost: {
-                            title: 'Total Cost'
+                            title: $.t("costsheet:cost-summary.table.field.total-cost")
                             , width: '10%'
                             , sorting: true
                         }
                         , title: {
-                            title: 'Title'
+                            title: $.t("costsheet:cost-summary.table.field.title")
                             , width: '10%'
                             , sorting: true
                         }
                         , description: {
-                            title: 'Description'
+                            title: $.t("costsheet:cost-summary.table.field.description")
                             , width: '10%'
                             , sorting: true
                         }

@@ -452,6 +452,11 @@ var Acm = Acm || {
                 }
             } //for i
         }
+
+        ,useTimer: function(name, count, callback) {
+            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
+            Acm.Timer.registerListener(name, count, callback);
+        }
     }
 
     ,log: function(msg) {

@@ -18,5 +18,6 @@ public class FrevvoFormName {
 	public static final String ELECTRONIC_COMMUNICATION = "electronic_communication";
 	public static final String TIMESHEET = "timesheet";
 	public static final String COSTSHEET = "costsheet";
+	public static final String EBRIEF = "ebrief";
 	
 }

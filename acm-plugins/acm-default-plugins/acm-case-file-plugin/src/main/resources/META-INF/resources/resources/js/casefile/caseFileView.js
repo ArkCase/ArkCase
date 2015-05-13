@@ -62,6 +62,8 @@ CaseFile.View = CaseFile.View || {
             this.treeFilter = Acm.Object.MicroData.getJson("treeFilter");
             this.treeSort   = Acm.Object.MicroData.getJson("treeSort");
             this.token      = Acm.Object.MicroData.get("token");
+            this.arkcaseUrl      = Acm.Object.MicroData.get("arkcaseUrl");
+            this.arkcasePort      = Acm.Object.MicroData.get("arkcasePort");
 
             this.formUrls = {};
             this.formUrls.urlEditCaseFileForm            = Acm.Object.MicroData.get("urlEditCaseFileForm");

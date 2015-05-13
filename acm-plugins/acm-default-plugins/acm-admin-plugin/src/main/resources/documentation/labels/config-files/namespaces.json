@@ -18,5 +18,41 @@
     {
         "id": "task",
         "name": "Tasks"
+    },
+    {
+        "id": "search",
+        "name": "Search"
+    },
+    {
+        "id": "report",
+        "name": "Reports"
+    },
+    {
+        "id": "notification",
+        "name": "Notifications"
+    },
+    {
+        "id": "subscription",
+        "name": "Subscriptions"
+    },
+    {
+        "id": "audit",
+        "name": "Audit"
+    },
+    {
+        "id": "admin",
+        "name": "Administration"
+    },
+    {
+        "id": "tag",
+        "name": "Tags"
+    },
+    {
+        "id": "timesheet",
+        "name":"Time Tracking"
+    },
+    {
+        "id": "costsheet",
+        "name": "Cost Tracking"
     }
 ]

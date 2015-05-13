@@ -8,6 +8,7 @@
 	<jsp:attribute name="endOfHead">
 	    <title><spring:message code="timesheet.page.title" text="Time Tracking | ACM | Armedia Case Management" /></title>
         <div id="detailData" itemscope="true" style="display: none">
+            <span itemprop="resourceNamespace">timesheet</span>
             <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
         </div>
 	</jsp:attribute>
@@ -17,7 +18,7 @@
             <section class="scrollable padder">
                 <section class="row m-b-md">
                     <div class="col-sm-12">
-                        <h3 class="m-b-xs text-black"><spring:message code="timesheetNew.page.descShort" text="New Timesheet" /></h3>
+                        <h3 class="m-b-xs text-black" data-18n="timesheet:wizard.title">New Timesheet</h3>
                     </div>
                 </section>
 

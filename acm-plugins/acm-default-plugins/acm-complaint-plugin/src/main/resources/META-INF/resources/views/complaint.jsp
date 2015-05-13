@@ -8,12 +8,14 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">complaint</span>
+        <span itemprop="resourceNamespace">complaint,subscription,search</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
         <span itemprop="treeSort">${treeSort}</span>
         <span itemprop="token">${token}</span>
+        <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
+        <span itemprop="arkcasePort">${arkcasePort}</span>
 
         <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
         <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
@@ -83,6 +85,7 @@
     <script src="<c:url value='/resources/vendors/${vd_jquery_qtip}/${js_jquery_qtip}'/>"></script>
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_qtip}/${css_jquery_qtip}'/>" type="text/css"/>
 
+    <%@include file="/resources/include/dlgSearch.jspf" %>
     <%@include file="/resources/include/dlgDocTree.jspf" %>
 </jsp:attribute>
 
@@ -303,28 +306,7 @@
                                         </div>
 
 
-                                        <div class="modal fade" id="emailDocs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint:documents-to-retire.email-dialog.buttons.close">Close</span></button>
-                                                        <h4 class="modal-title" id="myModalLabel" data-i18n="complaint:documents-to-retire.email-dialog.title">Send Email</h4>
-                                                    </div>
-                                                    <div class="modal-body">
 
-                                                        <p data-i18n="complaint:documents-to-retire.email-dialog.labels.prompt">Where would you like to email this file?</p>
-
-                                                        <label for="emailaddy" data-i18n="complaint:documents-to-retire.email-dialog.labels.email-address">Email Address</label><br/>
-                                                        <input type="text" id="emailaddy" class="input-lg" data-i18n="[placeholder]complaint:documents-to-retire.email-dialog.labels.email-address" placeholder="Email Address" />
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="complaint:documents-to-retire.email-dialog.buttons.cancel">Cancel</button>
-                                                        <button type="button" class="btn btn-primary" data-i18n="complaint:documents-to-retire.email-dialog.buttons.send-email">Send Email</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                         <table id="treeDoc" class="table table-striped th-sortable table-hover">
                                             <thead>
@@ -420,8 +402,7 @@
                                     </div>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
-                                        <aside class="wrapper">
+                                    <div id="tabOutlookCalendar" style="display:none;">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
@@ -433,7 +414,7 @@
                                                 <%--<hr/>--%>
 
                                             <section class="panel no-border bg-light">
-                                                <header class="panel-heading bg-primary clearfix">
+                                                <header class="panel-heading bg-info clearfix">
                                                     <div class="btn-group pull-right" data-toggle="buttons">
                                                         <label class="btn btn-sm btn-bg btn-default active" id="monthview">
                                                             <input type="radio" name="options">
@@ -450,14 +431,13 @@
                                                     </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
 
-                                                    <span class="m-t-xs inline text-white" data-i18n="complaint:outlook-calendar.label.calendar">
+                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="complaint:outlook-calendar.label.calendar">
                                                       Calendar
                                                     </span>
                                                 </header>
                                                 <div class="calendar">
                                                 </div>
                                             </section>
-                                        </aside>
                                     </div>
 
 

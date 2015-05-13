@@ -564,7 +564,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			}
 			catch(Exception e)
 			{
-				LOG.error("Cannot find groups with privilege = " + owningGroupType + ".");
+				LOG.error("Cannot find groups with privilege = " + privilege + ".", e);
 			}
 		}
 		
