@@ -7,13 +7,11 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,14 +44,12 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -86,23 +82,35 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 
     @Override
 	public Object init() {
-		Object result = "";
+		String result = "";
 		
 		String mode = getRequest().getParameter("mode");
-		String xmlId = getRequest().getParameter("xmlId");
+		String containerIdString = getRequest().getParameter("containerId");
+		String folderIdString = getRequest().getParameter("folderId");
 		
-		if (("edit".equals(mode) || "reinvestigate".equals(mode)) && null != xmlId && !"".equals(xmlId))
+		if (("edit".equals(mode) || "reinvestigate".equals(mode)) && 
+			 null != containerIdString && !"".equals(containerIdString) && 
+			 null != folderIdString && !"".equals(folderIdString))
 		{
+			Long xmlId = null;
 			try{
-				Long id = Long.parseLong(xmlId);
-				result = getEcmFileService().download(id);				
+				Long containerId = Long.parseLong(containerIdString);
+				Long folderId = Long.parseLong(folderIdString);
+				String fileType = getFormName().toLowerCase() + "_xml";
+				
+				EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+				
+				if (ecmFile != null)
+				{
+					xmlId = ecmFile.getId();
+					result = getEcmFileService().download(xmlId);
+				}
 			}
 			catch(Exception e)
 			{
 				LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
 			}
 		}
-		
 		return result;
 	}
     
@@ -238,13 +246,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return xml;
 	}
 	
-	protected void updateXML(String xml, String formName, Long id, Authentication auth)
+	protected void updateXML(String xml, EcmFile ecmFile, Authentication auth)
 	{
-		ObjectAssociation association = getObjectAssociationDao().findChildOfType(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
-		
-		if (association != null)
+		if (ecmFile != null)
 		{
-			EcmFile ecmFile = getEcmFileDao().find(association.getTargetId());
 			AcmMultipartFile file = new AcmMultipartFile();
 			file.setInputStream(new ByteArrayInputStream(xml.getBytes()));
 			
@@ -257,6 +262,30 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 				LOG.error("Failed to update XML file.", e);
 			}    				
 		}
+	}
+	
+	public Object getExistingForm(Long id, Class<?> c)
+	{
+		Object retval = null;
+		
+		if (id != null)
+		{
+			String existingXml = "";
+			try 
+			{
+				// Takeing existing XML for the form
+				existingXml = getEcmFileService().download(id);
+				
+				// Creating Frevvo form from the existing XML
+				retval = convertFromXMLToObject(cleanXML(existingXml), c);
+			} 
+			catch (MuleException e) 
+			{
+				LOG.error("Cannot download file with id=" + id);
+			}
+		}
+		
+		return retval;
 	}
 	
 	public void updateXMLAttachment(MultiValueMap<String, MultipartFile> attachments, String formName, Object form) throws Exception

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -62,7 +63,18 @@ public class ContactMethod implements Serializable, AcmEntity
     @PrePersist
     protected void beforeInsert()
     {
-        if ( getStatus() == null || getStatus().trim().isEmpty() )
+    	checkData();
+    }
+    
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+    	checkData();
+    }
+    
+    private void checkData()
+    {
+    	if ( getStatus() == null || getStatus().trim().isEmpty() )
         {
             setStatus("ACTIVE");
         }
