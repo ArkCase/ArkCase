@@ -4,10 +4,13 @@
 package com.armedia.acm.plugins.person.model.xml;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.addressable.model.xml.WitnessVictimContactMethod;
@@ -35,6 +38,7 @@ public class WitnessVictimPerson extends Person {
 		setId(person.getId());
 		setGivenName(person.getGivenName());
 		setFamilyName(person.getFamilyName());
+		setDateOfBirth(person.getDateOfBirth());
 		
 		if (person.getAddresses() != null)
 		{
@@ -101,6 +105,18 @@ public class WitnessVictimPerson extends Person {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	@Override
+	@XmlElement(name="witnessVictimDOB")
+	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
+	public Date getDateOfBirth() {
+        return super.getDateOfBirth();
+    }
+
+	@Override
+    public void setDateOfBirth(Date dateOfBirth) {
+        super.setDateOfBirth(dateOfBirth);
+    }
 
 	@XmlElement(name="witnessVictimLocation", type=WitnessVictimPostalAddress.class)
 	@Override
@@ -141,6 +157,7 @@ public class WitnessVictimPerson extends Person {
 		person.setId(getId());
 		person.setGivenName(getGivenName());
 		person.setFamilyName(getFamilyName());
+		person.setDateOfBirth(getDateOfBirth());
 		
 		if (getAddresses() != null)
 		{

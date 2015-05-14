@@ -589,5 +589,18 @@
         </insert>
     </changeSet>
     
+    <changeSet id="27-add-person-association-type-primary-victim" author="riste.tutureski">
+    	<insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_value" value="Primary Victim"/>
+            <column name="cm_order" valueNumeric="104"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+    
 </databaseChangeLog>
 

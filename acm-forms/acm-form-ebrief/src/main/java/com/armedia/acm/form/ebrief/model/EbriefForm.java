@@ -20,6 +20,7 @@ import com.armedia.acm.form.ebrief.model.xml.PropertySection;
 import com.armedia.acm.form.ebrief.model.xml.ProsecutorSection;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.DefendantPerson;
 import com.armedia.acm.plugins.person.model.xml.OfficerPerson;
@@ -32,7 +33,7 @@ import com.armedia.acm.plugins.person.model.xml.WitnessVictimPerson;
  *
  */
 @XmlRootElement(name="form_" + FrevvoFormName.EBRIEF, namespace=FrevvoFormNamespace.EBRIEF_NAMESPACE)
-public class EbriefForm {
+public class EbriefForm extends FrevvoForm{
 
 	private Long id;
 	private String type;
