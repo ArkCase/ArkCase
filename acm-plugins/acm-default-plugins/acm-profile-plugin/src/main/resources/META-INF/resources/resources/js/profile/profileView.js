@@ -181,6 +181,7 @@ Profile.View = {
             Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_FAX               ,this.onModelSavedFax);
             Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_WEBSITE           ,this.onModelSavedWebsite);
             Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_SAVED_ECM_FILE_ID       ,this.onModelSavedEcmFileId);
+            Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_RETRIEVED_GROUPS        ,this.onModelRetrievedGroups);
 
         }
         ,onInitialized: function() {
@@ -192,7 +193,7 @@ Profile.View = {
             this.setTextH4FullName     (Acm.goodValue(profileInfo.fullName));
             this.setTextH4Email        (Acm.goodValue(profileInfo.email));
 
-            this.displayGroups(profileInfo.groups);
+            //this.displayGroups(profileInfo.groups);
 
             if (Profile.Model.Info.isReadOnly()) {
                 this.setTextH4Title        (Acm.goodValue(profileInfo.title));
@@ -238,7 +239,7 @@ Profile.View = {
             if (Acm.isArray(groups)) {
                 var html = "";
                 for (var i = 0; i < groups.length; i++) {
-                    html += "<span class='btn-rounded btn-sm btn-info'>" + groups[i] + "</span>";
+                    html += "<span class='btn-rounded btn-sm btn-info'>" + Acm.goodValue(groups[i]) + "</span>";
                 }
                 this.setHtmlGroups(html);
             }
@@ -444,6 +445,11 @@ Profile.View = {
                 alert("Save FildId: " + ecmFileId.errorMsg);
             } else {
                 Profile.View.Info.displayPicture(ecmFileId)
+            }
+        }
+        ,onModelRetrievedGroups: function(groups){
+            if (Acm.isArray(groups)) {
+                Profile.View.Info.displayGroups(groups);
             }
         }
     }
