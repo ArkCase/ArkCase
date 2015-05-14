@@ -7,12 +7,51 @@
  */
 var Application = Application || {
     run : function(context) {
-        if (Acm.isEmpty(context.loginPage)) {
-            App.Model.Login.setLoginStatus(true);
+        if (Acm.isNotEmpty(context.loginPage)) {
+            this.initModules(context);
+        } else {
+            this.initI18n_new(context, this.initModules);
+        }
+    }
+
+    ,initI18n_new: function(context, onDone) {
+        var lng= context.labelSettings.defaultLang;
+        var names = context.resourceNamespace;      // namespaces are divided by "," symbol from detailData
+        var namespaces = ['common'];
+        if (names) {
+            names = names.split(',');
+            for (var i = 0; i < names.length; i++) {
+                namespaces.push($.trim(names[i]));
+            }
         }
 
-        //jwu: testing for later work.
-        //var a1 = Application.getPageContext();
+        i18n.init({
+            useLocalStorage: false,
+            localStorageExpirationTime: 86400000, // 1 week
+            load: 'current', // Prevent loading of 'en' locale
+            fallbackLng: false,
+            lng: lng,
+            ns:{
+                namespaces: namespaces
+            },
+            lowerCaseLng: true,
+            resGetPath: context.path + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+        }, function() {
+            $('*[data-i18n]').i18n();
+            onDone(context);
+        });
+
+        // Send "i18n ready" global event
+        $(document).trigger('i18n-ready');
+
+    }
+
+    ,initModules : function(context) {
+//        $.getJSON(context.path + '/api/latest/service/config/app')
+//            .done(function(data){
+//                var z = 1;
+//            });
+
 
         var acmModules = [];
 
@@ -86,33 +125,29 @@ var Application = Application || {
             acmModules.push(AcmDocument);
         }
 
-        this.initI18n(context.path, function() {
-            for (var i = 0; i < acmModules.length; i++) {
-                var module = acmModules[i];
-                if ("undefined" != typeof module) {
-                    if (module.create) {
-                        module.create();
-                    }
+        for (var i = 0; i < acmModules.length; i++) {
+            var module = acmModules[i];
+            if ("undefined" != typeof module) {
+                if (module.create) {
+                    module.create();
                 }
             }
-            for (var i = 0; i < acmModules.length; i++) {
-                var module = acmModules[i];
-                if ("undefined" != typeof module) {
-                    if (module.onInitialized) {
-                        Acm.deferred(module.onInitialized);
-                    }
+        }
+        for (var i = 0; i < acmModules.length; i++) {
+            var module = acmModules[i];
+            if ("undefined" != typeof module) {
+                if (module.onInitialized) {
+                    Acm.deferred(module.onInitialized);
                 }
             }
-        });
+        }
 
+
+        if (Acm.isEmpty(context.loginPage)) {
+            App.Model.Login.setLoginStatus(true);
+        }
     }
 
-    ,getPageContext: function() {
-        var context = {};
-        var a1 = Acm.Object.MicroData.getJson("application");
-        context.path = Acm.Object.MicroData.get("contextPath");
-        return context;
-    }
     ,SESSION_DATA_PROFILE               : "AcmProfile"
     ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
     ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
@@ -135,6 +170,7 @@ var Application = Application || {
     ,LOCAL_DATA_LOGIN_STATUS            : "AcmLoginStatus"
     ,LOCAL_DATA_LAST_IDLE               : "AcmLastIdle"
     ,LOCAL_DATA_ERROR_COUNT             : "AcmErrorCount"
+    ,LOCAL_DATA_LABEL_SETTINGS          : "AcmLableSettings"
 
 
     ,initSessionData: function() {
@@ -169,6 +205,8 @@ var Application = Application || {
     }
 
     ,initI18n: function(contextPath, onDone) {
+        var labelSettings = Acm.Object.MicroData.get("labelSettings");
+
         // Get  settings with default language
         $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
             .done(function(data){

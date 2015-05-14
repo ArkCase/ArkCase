@@ -40,6 +40,7 @@
     	<module>acm-service-timesheet</module>
         <module>acm-service-costsheet</module>
         <module>acm-service-ms-outlook-integration</module>
+        <module>acm-service-config</module>
     </modules>
 
 

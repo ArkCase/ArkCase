@@ -51,6 +51,16 @@
                 <ref bean="costsheetType"/>
             </list>
         </property>
+        <property name="settings">
+            <map>
+                <!--<entry key="labelSettingsFile" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json" />-->
+                <entry key="labelSettings" value='{"defaultLang": "en"}' />
+                <entry key="issueCollectorFlag" value="true" />
+                <entry key="autoLogoutIdleLimit" value="1200000" />  <!-- 1200000 == 20x60x1000ms = 20min -->
+                <entry key="autoLogoutErrorLimit" value="6" />
+            </map>
+        </property>
+
     </bean>
 
     <!-- top bar buttons -->
@@ -301,4 +311,6 @@
         <property name="url" value="/plugin/costsheet/"/>
     </bean>
     <!-- end of objectTypes -->
+
+
 </beans>
