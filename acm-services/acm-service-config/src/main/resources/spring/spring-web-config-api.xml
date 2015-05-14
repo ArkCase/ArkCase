@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="configApi" class="com.armedia.acm.services.config.web.api.ConfigApiController">
+        <property name="configList">
+            <list>
+                <bean class="com.armedia.acm.services.config.model.AppConfig">
+                    <property name="configName" value="app" />
+                    <property name="acmApplication" ref="acmApplication"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="thisApp" />
+                    <property name="properties" ref="lawEnforcementAppProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="admin" />
+                    <property name="properties" ref="adminPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="alfrescoRma" />
+                    <property name="properties" ref="alfrescoRmaPluginPropertiesForSpring" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="applicationRoleToUserGroup" />
+                    <property name="properties" ref="applicationRoleToUserGroupProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="audit" />
+                    <property name="properties" ref="auditPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="caseFile" />
+                    <property name="properties" ref="caseFilePluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="complaint" />
+                    <property name="properties" ref="complaintPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="cmis" />
+                    <property name="properties" ref="cmisProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="correspondence" />
+                    <property name="properties" ref="correspondencePluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="cost" />
+                    <property name="properties" ref="costProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="dacService" />
+                    <property name="properties" ref="dacServicePluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="dashboard" />
+                    <property name="properties" ref="dashboardPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="datasource" />
+                    <property name="properties" ref="datasourceProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="ecmFileService" />
+                    <property name="properties" ref="ecmFileServiceProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="eventType" />
+                    <property name="properties" ref="eventTypeProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-forms" />
+                    <property name="properties" ref="acm-forms-properties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="msOutlookIntegration" />
+                    <property name="properties" ref="msOutlookIntegrationProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="notification" />
+                    <property name="properties" ref="notificationProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="participant" />
+                    <property name="properties" ref="participantProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="profile" />
+                    <property name="properties" ref="profilePluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-reports" />
+                    <property name="properties" ref="reportPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="reportToGroupsMap" />
+                    <property name="properties" ref="reportToGroupsMapProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-roles" />
+                    <property name="properties" ref="acm-roles-properties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="search" />
+                    <property name="properties" ref="searchProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="solr" />
+                    <property name="properties" ref="searchPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="subscription" />
+                    <property name="properties" ref="subscriptionProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="tag" />
+                    <property name="properties" ref="tagProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="task" />
+                    <property name="properties" ref="taskPluginProperties" />
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="time" />
+                    <property name="properties" ref="timeProperties" />
+                </bean>
+            </list>
+        </property>
+    </bean>
+</beans>

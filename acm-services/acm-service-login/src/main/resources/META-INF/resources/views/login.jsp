@@ -8,9 +8,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <%--<%@include file="/WEB-INF/tagf/global.tagf" %>--%>
     <%@include file="/resources/include/global.jspf" %>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/app.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>
+
     <title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
+        <span itemprop="resourceNamespace"></span>
     </div>
 </head>
 <body>
@@ -64,11 +70,11 @@
 <%--<script type="text/javascript" src="<c:url value='/resources/js/login/loginView.js'/>"></script>--%>
 <script type="text/javascript">
     jQuery(document).ready(function() {
-//        var context = {};
-//        context.path = Acm.Object.MicroData.get("contextPath");
-//        context.loginPage = true;
-//        Application.run(context);
-        Login.create();
+        var context = App.getPageContext();
+        context.loginPage = true;
+        Application.run(context);
+
+        //Login.create();
     });
 </script>
 </body>

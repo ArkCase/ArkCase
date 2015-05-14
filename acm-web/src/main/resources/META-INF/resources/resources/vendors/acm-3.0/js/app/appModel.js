@@ -19,23 +19,26 @@ App.Model = {
 
         }
         ,onInitialized: function() {
-            Acm.Timer.useTimer("AutoLogout"
-                //,30
-                ,20  //every twenty seconds
-                //,10
-                ,function() {
-                    var isLogin = App.Model.Login.isLogin();
-                    var sinceIdle = App.Model.Login.getSinceIdle();
-                    var errorCount = App.Model.Login.getErrorCount();
-                    if (!isLogin || (1200000 < sinceIdle) || (6 < errorCount)) {  //20x60x1000ms=20min
-                        App.Controller.Login.modelDetectedIdle();
-                        return false;
+            var isLogin = App.Model.Login.isLogin();
+            if (isLogin) {
+                Acm.Timer.useTimer("AutoLogout"
+                    //,30
+                    ,20  //every twenty seconds
+                    //,10
+                    ,function() {
+                        var isLogin = App.Model.Login.isLogin();
+                        var sinceIdle = App.Model.Login.getSinceIdle();
+                        var errorCount = App.Model.Login.getErrorCount();
+                        if (!isLogin || (1200000 < sinceIdle) || (6 < errorCount)) {  //20x60x1000ms=20min
+                            App.Controller.Login.modelDetectedIdle();
+                            return false;
 
-                    } else {
-                        return true;
+                        } else {
+                            return true;
+                        }
                     }
-                }
-            );
+                );
+            }
         }
         ,isLogin: function() {
             return Acm.goodValue(this.loginStatus.get(), false);

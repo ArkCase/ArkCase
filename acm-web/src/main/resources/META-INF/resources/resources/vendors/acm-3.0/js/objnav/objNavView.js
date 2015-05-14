@@ -201,7 +201,7 @@ ObjNav.View = {
                 this.beforeActivateOrig = arg.beforeActivate;
             }
             arg.beforeActivate = function(event, data) {
-                if (App.Object.Dirty.isDirty()) {
+                if (App.View.Dirty.isDirty()) {
                     var node = data.node;
                     var key = node.key;
                     if (key == ObjNav.View.Navigator.getActiveKey()) {
