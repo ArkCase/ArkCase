@@ -1,0 +1,66 @@
+{
+    "button": {"go": {
+        "defaultValue": "Go!",
+        "description": "",
+        "value": "Go!"
+    }},
+    "label": {"input-search": {
+        "defaultValue": "Type in your search query to find complaints, cases, tasks, and documents.",
+        "description": "",
+        "value": "Type in your search query to find complaints, cases, tasks, and documents."
+    }},
+    "table": {
+        "field": {
+            "owner": {
+                "defaultValue": "Assignee",
+                "description": "",
+                "value": "Assignee"
+            },
+            "parent-name": {
+                "defaultValue": "Parent",
+                "description": "",
+                "value": "Parent"
+            },
+            "name": {
+                "defaultValue": "Name",
+                "description": "",
+                "value": "Name"
+            },
+            "modified": {
+                "defaultValue": "Modified",
+                "description": "",
+                "value": "Modified"
+            },
+            "id": {
+                "defaultValue": "ID",
+                "description": "",
+                "value": "ID"
+            },
+            "parent-id": {
+                "defaultValue": "Parent ID",
+                "description": "",
+                "value": "Parent ID"
+            },
+            "type": {
+                "defaultValue": "Type",
+                "description": "",
+                "value": "Type"
+            },
+            "title": {
+                "defaultValue": "Title",
+                "description": "",
+                "value": "Title"
+            },
+            "parent-type": {
+                "defaultValue": "Parent Type",
+                "description": "",
+                "value": "Parent Type"
+            }
+        },
+        "title": {
+            "defaultValue": "Search Results",
+            "description": "",
+            "value": "Search Results"
+        }
+    }
+}

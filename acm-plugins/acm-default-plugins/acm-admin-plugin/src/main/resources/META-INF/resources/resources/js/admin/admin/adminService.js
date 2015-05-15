@@ -341,7 +341,7 @@ Admin.Service = {
         API_SETTINGS: "/api/latest/plugin/admin/labelconfiguration/settings"
         ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
         ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
-        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/resource?lang={0}&ns={1}"
+        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource?lang={0}&ns={1}"
 
 
         ,create: function(){
