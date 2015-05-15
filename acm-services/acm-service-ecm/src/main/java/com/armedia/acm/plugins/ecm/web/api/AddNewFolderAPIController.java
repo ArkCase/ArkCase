@@ -37,7 +37,11 @@ public class AddNewFolderAPIController {
             @PathVariable("parentFolderId") Long parentFolderId,
             @PathVariable("newFolderName")  String newFolderName,
             Authentication authentication,
-            HttpSession session)  throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+            HttpSession session)  throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        /**
+         * This API is documented in ark-document-management.raml.  If you update the API, also update the RAML.
+         */
 
         String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
 

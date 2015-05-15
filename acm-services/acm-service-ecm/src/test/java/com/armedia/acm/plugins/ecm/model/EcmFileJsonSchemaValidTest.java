@@ -40,6 +40,18 @@ public class EcmFileJsonSchemaValidTest
         validate("/jsonSchemas/folder-list-schema.json");
     }
 
+    @Test
+    public void validateFolderSchema() throws Exception
+    {
+        validate("/jsonSchemas/folder-schema.json");
+    }
+
+    @Test
+    public void validateMoveCopyFileRequestSchema() throws Exception
+    {
+        validate("/jsonSchemas/move-copy-file-schema.json");
+    }
+
     private void validate(String path) throws IOException, ProcessingException
     {
         Resource schemaResource = new ClassPathResource(path);

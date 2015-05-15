@@ -1,0 +1,60 @@
+{
+    "title": "Cost Tracking",
+    "button": {
+        "go": "Go!",
+        "new-costsheet": "New Costsheet",
+        "edit-costsheet": "Edit Costsheet"
+    },
+    "label": {
+        "search": "Search",
+        "edit": "Edit",
+        "save": "Save",
+        "other-menu-items": "Other menu items",
+        "details": "Details"
+    },
+    "context-menu": {
+        "menu-title": {
+            "menu": "Menu:",
+            "copy": "Copy",
+            "paste": "Paste",
+            "edit": "Edit",
+            "delete": "Delete",
+            "more": "More",
+            "sub1": "Sub 1",
+            "sub2": "Sub 2"
+        }
+    },
+    "detail": {
+        "label": {
+            "editing-costsheet-detail": "Editing Costsheet detail"
+        }
+    },
+    "person": {
+        "table": {
+            "title": "Person",
+            "field": {
+                "id": "ID",
+                "full-name": "Full Name",
+                "username": "Username",
+                "role": "Role"
+            }
+        }
+    },
+    "cost-summary": {
+        "table": {
+            "title": "Hours Summary",
+            "field": {
+                "id": "ID",
+                "parent-id": "Parent ID",
+                "parent-type": "Parent Type",
+                "parent-number": "Parent Number",
+                "total-cost": "Total Cost",
+                "title": "Title",
+                "description": "Description"
+            }
+        }
+    },
+    "msg": {
+        "no-costsheet-selected": "(No costsheet is selected)"
+    }
+}
