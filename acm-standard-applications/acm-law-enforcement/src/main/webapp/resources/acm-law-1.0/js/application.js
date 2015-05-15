@@ -10,11 +10,11 @@ var Application = Application || {
         if (Acm.isNotEmpty(context.loginPage)) {
             this.initModules(context);
         } else {
-            this.initI18n_new(context, this.initModules);
+            this.initI18n(context, this.initModules);
         }
     }
 
-    ,initI18n_new: function(context, onDone) {
+    ,initI18n: function(context, onDone) {
         var lng= context.labelSettings.defaultLang;
         var names = context.resourceNamespace;      // namespaces are divided by "," symbol from detailData
         var namespaces = ['common'];
@@ -204,43 +204,43 @@ var Application = Application || {
 
     }
 
-    ,initI18n: function(contextPath, onDone) {
-        var labelSettings = Acm.Object.MicroData.get("labelSettings");
-
-        // Get  settings with default language
-        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
-            .done(function(data){
-                var namespaces = ['common'];
-                var lng= data.defaultLang;
-
-                // Get namespaces divided by "," symbol from detailData
-                var names = Acm.Object.MicroData.get("resourceNamespace");
-                if (names) {
-                    names = names.split(',');
-                    for (var i = 0; i < names.length; i++) {
-                        namespaces.push($.trim(names[i]));
-                    }
-                }
-
-                i18n.init({
-                    useLocalStorage: false,
-                    localStorageExpirationTime: 86400000, // 1 week
-                    load: 'current', // Prevent loading of 'en' locale
-                    fallbackLng: false,
-                    lng: lng,
-                    ns:{
-                        namespaces: namespaces
-                    },
-                    lowerCaseLng: true,
-                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-                }, function() {
-                    $('*[data-i18n]').i18n();
-                    onDone();
-                });
-
-                // Send "i18n ready" global event
-                $(document).trigger('i18n-ready');
-
-            });
-    }
+//    ,initI18n: function(contextPath, onDone) {
+//        var labelSettings = Acm.Object.MicroData.get("labelSettings");
+//
+//        // Get  settings with default language
+//        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
+//            .done(function(data){
+//                var namespaces = ['common'];
+//                var lng= data.defaultLang;
+//
+//                // Get namespaces divided by "," symbol from detailData
+//                var names = Acm.Object.MicroData.get("resourceNamespace");
+//                if (names) {
+//                    names = names.split(',');
+//                    for (var i = 0; i < names.length; i++) {
+//                        namespaces.push($.trim(names[i]));
+//                    }
+//                }
+//
+//                i18n.init({
+//                    useLocalStorage: false,
+//                    localStorageExpirationTime: 86400000, // 1 week
+//                    load: 'current', // Prevent loading of 'en' locale
+//                    fallbackLng: false,
+//                    lng: lng,
+//                    ns:{
+//                        namespaces: namespaces
+//                    },
+//                    lowerCaseLng: true,
+//                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+//                }, function() {
+//                    $('*[data-i18n]').i18n();
+//                    onDone();
+//                });
+//
+//                // Send "i18n ready" global event
+//                $(document).trigger('i18n-ready');
+//
+//            });
+//    }
 }
