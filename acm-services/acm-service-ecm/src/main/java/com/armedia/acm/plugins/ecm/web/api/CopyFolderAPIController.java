@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.FolderDTO;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class CopyFolderAPIController {
 
     @RequestMapping(value = "/folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmFolder copyFolder(
+    public FolderDTO copyFolder(
             @PathVariable("folderId") Long folderId,
             @PathVariable("dstFolderId") Long dstFolderId,
             @PathVariable("targetObjectType") String targetObjectType,
@@ -56,8 +57,11 @@ public class CopyFolderAPIController {
             }
             AcmFolder folder = getFolderService().copyFolder(folderId,dstFolderId,targetObjectId,targetObjectType);
             getFolderEventPublisher().publishFolderCopiedEvent(source, authentication, ipAddress, true);
-            getFolderEventPublisher().publishFolderCreatedEvent(folder,authentication,ipAddress,true);
-            return folder;
+            getFolderEventPublisher().publishFolderCreatedEvent(folder, authentication, ipAddress, true);
+            FolderDTO folderDTO = new FolderDTO();
+            folderDTO.setOriginalFolderId(folderId);
+            folderDTO.setNewFolder(folder);
+            return folderDTO;
         } catch ( AcmFolderException| AcmCreateObjectFailedException | AcmObjectNotFoundException e ) {
             if (log.isErrorEnabled()) {
                 log.error("Exception occurred while trying to copy folder with id: " + folderId + " to the location with id:" + dstFolderId + "  "+e.getMessage(),e);
