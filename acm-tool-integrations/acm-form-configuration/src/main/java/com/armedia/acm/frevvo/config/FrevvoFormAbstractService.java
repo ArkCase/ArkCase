@@ -421,6 +421,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 
             EcmFile uploaded = getEcmFileService().upload(
                 fileType,
+					attachment.getOriginalFilename(),
                 file,
                 getAuthentication(),
                 targetCmisFolderId,

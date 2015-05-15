@@ -761,6 +761,12 @@
     <changeSet id="files-36-make-object-title-required" author="dmiller">
         <addNotNullConstraint tableName="acm_container" columnName="cm_object_title"/>
     </changeSet>
+    
+    <changeSet id="files-37-add-new-column-internal-file-name" author="marst">
+        <addColumn tableName="acm_file">
+            <column name="cm_internal_file_name" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 
