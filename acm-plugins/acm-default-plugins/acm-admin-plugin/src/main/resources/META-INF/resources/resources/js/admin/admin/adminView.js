@@ -508,42 +508,8 @@ Admin.View = Admin.View || {
                                     var records = [];
                                     var sortedRecords = [];
                                     if (data) {
-                                        tableData = data;
+                                        records = data;
                                         var recordsObj = {};
-
-                                        // Convert values from json to dotted notation
-                                        (function recurse(obj, current) {
-                                            for(var key in obj) {
-                                                var value = obj[key];
-                                                var newKey = (current ? current + "." + key : key);  // joined key with dot
-                                                if(value && typeof value === "object") {
-                                                    recurse(value, newKey);  // it's a nested object, so do it again
-                                                } else {
-                                                    recordsObj[newKey] = value;  // it's not an object, so set the property
-                                                }
-                                            }
-                                        })(data);
-
-                                        // Convert Object to the Array and apply filters if required
-                                        for (var key in recordsObj) {
-                                            var idFilterPassed = true;
-                                            var valueFilterPassed = true;
-
-                                            if (idFilter) {
-                                                idFilterPassed = (key.toLocaleLowerCase().indexOf(idFilter.toLowerCase()) != -1);
-                                            }
-
-                                            if (valueFilter) {
-                                                valueFilterPassed = (recordsObj[key].toLocaleLowerCase().indexOf(valueFilter.toLowerCase()) != -1);
-                                            }
-
-                                            if (idFilterPassed && valueFilterPassed){
-                                                records.push({
-                                                    id: key,
-                                                    value: recordsObj[key]
-                                                });
-                                            }
-                                        }
 
                                         // Sort records if required
                                         if (jtParams.jtSorting) {
@@ -584,46 +550,135 @@ Admin.View = Admin.View || {
                         title: 'ID'
                         , key: true
                         , edit: false
-                        , width: '50%'
+                        , width: '25%'
                     }, value: {
                         title: 'Value'
                         , edit: false
-                        , width: '50%'
+                        , width: '25%'
                         , display: function(data){
+                            var modifiedClass = (data.record.value !== data.record.defaultValue)? 'editable-unsaved': '';
                             var valueEl = $([
-                                '<a href="#" data-id="', data.record.id, '">',
+                                '<a href="#" data-id="', data.record.id, '"class="resource-value ', modifiedClass   ,'" >',
                                 data.record.value,
                                 '</a>'
                             ].join(''));
 
                             AcmEx.Object.XEditable.useEditable(valueEl, {
                                 success: function(response, newValue) {
-                                    var id = $(this).data('id');
-
-                                    // Function uses traslate dotted string to set value of object
-                                    function index(obj,is, value) {
-                                        if (typeof is == 'string')
-                                            return index(obj,is.split('.'), value);
-                                        else if (is.length==1 && value!==undefined)
-                                            return obj[is[0]] = value;
-                                        else if (is.length==0)
-                                            return obj;
-                                        else
-                                            return index(obj[is[0]],is.slice(1), value);
-                                    }
-
-                                    index(tableData, id, newValue);
-
                                     var editLanguage = $('#labelConfigurationLanguage').val();
                                     var editNamespace = $('#labelConfigurationNamespace').val();
-                                    Admin.Service.LabelConfiguration.updateResource(editLanguage, editNamespace, tableData)
-                                    .fail(function(){
-                                        Acm.Dialog.error('Can\'t save resource');
-                                    });
+                                    var id = $(this).data('id');
+                                    var row = $s.jtable('getRowByKey', id);
+                                    if (row) {
+                                        var record = row.data().record;
+                                        Admin.Service.LabelConfiguration.updateResource(
+                                            editLanguage,
+                                            editNamespace,
+                                            {
+                                                id: id,
+                                                value: newValue,
+                                                description: record.description
+                                            }
+                                        )
+                                        .done(function(){
+                                            row.data().record['value'] = newValue;
+                                        })
+                                        .fail(function(){
+                                            Acm.Dialog.error('Can\'t save resource');
+                                        });
+                                    } else {
+                                        console.error('Row '+ id +' was not found');
+                                    }
                                 }
                             });
 
                             return valueEl;
+                        }
+                    }, description: {
+                        title: 'Description'
+                        ,edit: 'false'
+                        ,width: '40%'
+                        ,display: function(data){
+                            var valueEl = $([
+                                '<a href="#" data-id="', data.record.id, '">',
+                                data.record.description,
+                                '</a>'
+                            ].join(''));
+
+                            AcmEx.Object.XEditable.useEditable(valueEl, {
+                                success: function(response, newDescription) {
+                                    var editLanguage = $('#labelConfigurationLanguage').val();
+                                    var editNamespace = $('#labelConfigurationNamespace').val();
+                                    var id = $(this).data('id');
+                                    var row = $s.jtable('getRowByKey', id);
+                                    if (row) {
+                                        var record = row.data().record;
+                                        Admin.Service.LabelConfiguration.updateResource(
+                                            editLanguage,
+                                            editNamespace,
+                                            {
+                                                id: id,
+                                                value: record.value,
+                                                description: newDescription
+                                            }
+                                        )
+                                        .done(function(){
+                                            row.data().record['description'] = newDescription;
+                                        })
+
+                                        .fail(function(){
+                                            Acm.Dialog.error('Can\'t save resource');
+                                        });
+                                    } else {
+                                        console.error('Row '+ id +' was not found');
+                                    }
+                                }
+                            });
+
+                            return valueEl;
+                        }
+
+                    }, revert: {
+                        title: 'Revert',
+                        width: '10%',
+                        display: function(data) {
+                            var revertEl = $([
+                                '<a href="#" data-id="', data.record.id ,'">',
+                                    'Revert',
+                                '</a>'
+                            ].join(''));
+
+                            revertEl.click(function(e){
+                                e.preventDefault();
+                                var editLanguage = $('#labelConfigurationLanguage').val();
+                                var editNamespace = $('#labelConfigurationNamespace').val();
+                                var id = $(this).data('id');
+                                var row = $s.jtable('getRowByKey', id);
+                                if (row) {
+                                    var record = row.data().record;
+
+                                    Admin.Service.LabelConfiguration.updateResource(
+                                        editLanguage,
+                                        editNamespace,
+                                        {
+                                            id: id,
+                                            value: record.defaultValue,
+                                            description: record.description
+                                        }
+                                    )
+                                    .done(function(){
+                                        row.data().record['value'] = record.defaultValue;
+                                        $('.resource-value', row).text(record.defaultValue)
+                                     })
+                                    .fail(function(){
+                                        Acm.Dialog.error('Can\'t revert value');
+                                    });
+                                } else {
+                                    console.error('Row '+ id +' was not found');
+                                }
+                            });
+
+                            return revertEl;
                         }
                     }
                 }

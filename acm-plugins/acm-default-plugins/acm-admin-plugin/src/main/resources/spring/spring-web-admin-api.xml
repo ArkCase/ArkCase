@@ -17,7 +17,12 @@
         <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
     </bean>
 
+    <bean id="labelConfigurationRetrieveAdminResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveAdminResource">
+        <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings/%s.%s.json"/>
+    </bean>
+
     <bean id="labelConfigurationUpdateResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateResource">
+        <property name="adminResourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings/%s.%s.json"/>
         <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
     </bean>
 
