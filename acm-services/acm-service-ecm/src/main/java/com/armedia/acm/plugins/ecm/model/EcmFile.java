@@ -60,6 +60,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_name")
     private String fileName;
 
+    @Column(name = "cm_internal_file_name")
+    private String internalFileName;
+
     @Column(name = "cm_file_mime_type")
     private String fileMimeType;
 
@@ -279,6 +282,14 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     public void setTags(List<AcmAssociatedTag> tags) {
         this.tags = tags;
+    }
+
+    public String getInternalFileName() {
+        return internalFileName;
+    }
+
+    public void setInternalFileName(String internalFileName) {
+        this.internalFileName = internalFileName;
     }
 
     @JsonIgnore

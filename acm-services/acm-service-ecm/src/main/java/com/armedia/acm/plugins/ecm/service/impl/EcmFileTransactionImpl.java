@@ -38,6 +38,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(
+            String originalFileName,
             Authentication authentication,
             String fileType,
             InputStream fileInputStream,
@@ -49,7 +50,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         // by default, files are documents
         String category = "Document";
-        EcmFile retval = addFileTransaction(authentication, fileType, category, fileInputStream, mimeType, fileName,
+        EcmFile retval = addFileTransaction(originalFileName,authentication, fileType, category, fileInputStream, mimeType, fileName,
                 cmisFolderId, container);
 
         return retval;
@@ -57,6 +58,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(
+            String originalFileName,
             Authentication authentication,
             String fileType,
             String fileCategory,
@@ -87,6 +89,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         Document cmisDocument = received.getPayload(Document.class);
         toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
         toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
+        toAdd.setFileName(originalFileName);
+        toAdd.setInternalFileName(fileName);
 
         EcmFileVersion version = new EcmFileVersion();
         version.setCmisObjectId(cmisDocument.getId());
