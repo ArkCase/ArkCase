@@ -346,7 +346,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 category == null ? "fq=hidden_b:false" :
                         "fq=(category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
-        AcmCmisObjectList retval = findObjects(auth, container, folderId,  EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+        AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
                 startRow, maxRows, sortBy, sortDirection);
         return retval;
     }
@@ -511,11 +511,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if( file == null || folder == null) {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File or Destination folder not found",null);
         }
-
+        String internalFileName = createUniqueIdentificator(file.getFileName());
         Map<String,Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
         props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
-
+        props.put(EcmFileConstants.FILE_NAME, internalFileName);
         EcmFile result;
 
         try {
@@ -550,16 +550,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
 
             AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+            //TODO add internalFileName when PR task-1029 will be merged!
             fileCopy.setVersionSeriesId(newFileId);
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(file.getActiveVersionTag());
-            fileCopy.setFileName(cmisObject.getName());
+            fileCopy.setFileName(file.getFileName());
             fileCopy.setFolder(folder);
             fileCopy.setContainer(container);
             fileCopy.setStatus(file.getStatus());
             fileCopy.setCategory(file.getCategory());
             fileCopy.setFileMimeType(file.getFileMimeType());
             fileCopy.setVersions(versionList);
+
 
             result = getEcmFileDao().save(fileCopy);
             return result;
@@ -676,6 +678,22 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
+
+    private String createUniqueIdentificator(String input) {
+        if (input != null && input.length() > 0) {
+            input = input.replace(" ", "_");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmssSSS");
+            String dateString = dateFormat.format(new Date());
+            String[] inputArray = input.split("\\.");
+            if (inputArray != null && inputArray.length == 1) {
+                input = input +  "_" + dateString;
+            }
+            else if (inputArray != null && inputArray.length > 1) {
+                input = input.replace("." + inputArray[inputArray.length - 1], "_" + dateString + "." + inputArray[inputArray.length - 1]);
+            }
+        }
+        return input;
+    }
     @Override
     public EcmFile findById(Long fileId) {
         return getEcmFileDao().find(fileId);
