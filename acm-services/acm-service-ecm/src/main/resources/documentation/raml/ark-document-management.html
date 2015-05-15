@@ -1,0 +1,878 @@
+<!DOCTYPE HTML><html><head><title>ArkCase Document Management API documentation</title><meta http-equiv=X-UA-Compatible content="IE=edge"><meta http-equiv=Content-Type content="text/html; charset=utf-8"><meta name=generator content="https://github.com/kevinrenskers/raml2html 0.31.1"><link rel=stylesheet href=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css><link rel=stylesheet href=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css><script type=text/javascript src=http://code.jquery.com/jquery-1.11.0.min.js></script><script type=text/javascript src=http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js></script><script type=text/javascript src=http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js></script><script type=text/javascript>
+        $(document).ready(function() {
+            $('.page-header pre code, .top-resource-description pre code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+
+            $('[data-toggle]').click(function() {
+                var selector = $(this).data('target') + ' pre code';
+                $(selector).each(function(i, block) {
+                    hljs.highlightBlock(block);
+                });
+            });
+        });
+    </script><style>
+        .hljs {
+            background: transparent;
+        }
+        .parent {
+            color: #999;
+        }
+        .list-group-item > .badge {
+            float: none;
+            margin-right: 6px;
+        }
+        .panel-title > .methods {
+            float: right;
+        }
+        .badge {
+            border-radius: 0;
+            text-transform: uppercase;
+            width: 70px;
+            font-weight: normal;
+            color: #f3f3f6;
+            line-height: normal;
+        }
+        .badge_get {
+            background-color: #63a8e2;
+        }
+        .badge_post {
+            background-color: #6cbd7d;
+        }
+        .badge_put {
+            background-color: #22bac4;
+        }
+        .badge_delete {
+            background-color: #d26460;
+        }
+        .list-group, .panel-group {
+            margin-bottom: 0;
+        }
+        .panel-group .panel+.panel-white {
+            margin-top: 0;
+        }
+        .panel-group .panel-white {
+            border-bottom: 1px solid #F5F5F5;
+            border-radius: 0;
+        }
+        .panel-white:last-child {
+            border-bottom-color: white;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        .panel-white .panel-heading {
+            background: white;
+        }
+        .tab-pane ul {
+            padding-left: 2em;
+        }
+        .tab-pane h2 {
+            font-size: 1.2em;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-pane h3 {
+            font-size: 1.1em;
+        }
+        .tab-content {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+        #sidebar {
+            margin-top: 30px;
+        }
+        .top-resource-description {
+            border-bottom: 1px solid #ddd;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .resource-description {
+            border-bottom: 1px solid #fcfcfc;
+            background: #fcfcfc;
+            padding: 15px 15px 0 15px;
+            margin: -15px -15px 10px -15px;
+        }
+        .panel > .panel-body > .panel-group > .panel:first-child .resource-description {
+            display: none;
+        }
+        .list-group .badge {
+            float: left;
+        }
+        .method_description {
+            margin-left: 85px;
+        }
+        .method_description p:last-child {
+            margin: 0;
+        }
+    </style></head><body data-spy=scroll data-target=#sidebar><div class=container><div class=row><div class=col-md-9 role=main><div class=page-header><h1>ArkCase Document Management API documentation</h1><p></p></div><div class="panel panel-default"><div class=panel-heading><h3 id=_api_v1_service_ecm class=panel-title>/api/v1/service/ecm</h3></div><div class=panel-body><div class=panel-group><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm><span class=parent></span>/api/v1/service/ecm</a> <span class=methods></span></h4></div><div id=panel__api_v1_service_ecm class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_container__objectType___objectId_><span class=parent>/api/v1/service/ecm</span>/container/{objectType}/{objectId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_container__objectType___objectId__get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_service_ecm_container__objectType___objectId_ class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>User must be authenticated and must have &#39;read&#39; access on the object identified by the object type and object id. API doc last verified on 2015-05-11.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_container__objectType___objectId__get class=list-group-item><span class="badge badge_get">get</span><div class=method_description><p>Get list of all files in the requested container; this could take some time if the container has many files.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_container__objectType___objectId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/service/ecm</span>/container/{objectType}/{objectId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get list of all files in the requested container; this could take some time if the container has many files.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_container__objectType___objectId__get_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_service_ecm_container__objectType___objectId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_container__objectType___objectId__get_request><h3>URI Parameters</h3><ul><li><strong>objectType</strong>: <em>required (string)</em><p>Container type, e.g. COMPLAINT, CASE_FILE, TASK</p></li><li><strong>objectId</strong>: <em>required (integer)</em><p>Container id</p></li></ul></div><div class=tab-pane id=_api_v1_service_ecm_container__objectType___objectId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response, object list included.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+     * Folder List Schema
+     */
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "Folder List Schema",
+      "type": "object",
+      "properties": {
+        "containerObjectType": {
+          "type": "string",
+          "description": "Container object type, e.g. COMPLAINT, TASK etc."
+        },
+        "containerObjectId": {
+          "type": "integer",
+          "description": "Container object ID",
+          "minimum": 1
+        },
+        "folderId": {
+          "type": "integer",
+          "description": "Folder ID whose children are included in the children array"
+        },
+        "totalChildren": {
+          "type": "integer",
+          "description": "Total number of child objects in this folder; the folder could have more objects than are in the children array"
+        },
+        "category": {
+          "type": "string",
+          "description": "What category of objects are included in the children array",
+          "enum": [ "Document", "Correspondence", "all" ]
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "The requested sort field"
+        },
+        "sortDirection": {
+          "type": "string",
+          "description": "The requested sort direction",
+          "enum": [ "ASC", "DESC" ]
+        },
+        "startRow": {
+          "type": "integer",
+          "description": "Requested start row",
+          "minimum": 0
+        },
+        "maxRows": {
+          "type": "integer",
+          "description": "Requested number of rows",
+          "minimum": 0
+        },
+        "children": {
+          "type": "array",
+          "description": "List of the immediate children of the requested folder",
+          "uniqueItems": true,
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "properties": {
+              "objectId": {
+                "type": "integer",
+                "description": "Object ID for this object"
+              },
+              "objectType": {
+                "type": "string",
+                "enum": [ "folder", "file" ]
+              },
+              "name": {
+                "type": "string",
+                "description": "object name"
+              },
+              "created": {
+                "type": "string",
+                "description": "create date, in Solr date format"
+              },
+              "modified": {
+                "type": "string",
+                "description": "modified date, in Solr date format"
+              },
+              "creator": {
+                "type": "string"
+              },
+              "modifier": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "description": "The primary version tag for this object; only for files, not for folders"
+              },
+              "type": {
+                "type": "string",
+                "description": "The file type, e.g. close_complaint; only for files, not for folders"
+              },
+              "category": {
+                "type": "string",
+                "description": "The kind object; only for files, not for folders",
+                "enum": [ "Document", "Correspondence" ]
+              }
+            },
+            "required": [ "objectId", "objectType", "name", "created", "modified", "creator", "modifier" ]
+          }
+        }
+      },
+      "required": [ "containerObjectType", "containerObjectId", "folderId", "children", "totalChildren", "category", "sortBy", "sortDirection", "startRow", "maxRows" ]
+    }</code></pre><h2>HTTP status code <a href=http://httpstatus.es/403 target=_blank>403</a></h2><p>User is not authorized to read the requested object type</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_id__fileId_><span class=parent>/api/v1/service/ecm</span>/id/{fileId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_id__fileId__delete><span class="badge badge_delete">delete</span></a> <a href=# data-toggle=modal data-target=#_api_v1_service_ecm_id__fileId__get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_service_ecm_id__fileId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_id__fileId__delete class=list-group-item><span class="badge badge_delete">delete</span><div class=method_description><p>Remove the requested file (both metadata and the content file itself)</p></div><div class=clearfix></div></div><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_id__fileId__get class=list-group-item><span class="badge badge_get">get</span><div class=method_description><p>Get file metadata</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_id__fileId__delete><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_delete">delete</span> <span class=parent>/api/v1/service/ecm</span>/id/{fileId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Remove the requested file (both metadata and the content file itself)</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_id__fileId__delete_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_id__fileId__delete_request><h3>URI Parameters</h3><ul><li><strong>fileId</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_id__fileId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/service/ecm</span>/id/{fileId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get file metadata</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_id__fileId__get_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_id__fileId__get_request><h3>URI Parameters</h3><ul><li><strong>fileId</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId_><span class=parent>/api/v1/service/ecm</span>/copyToAnotherContainer/{targetObjectType}/{targetObjectId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Copy one or more files to another container. API doc last verified on 2015-05-11.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm</span>/copyToAnotherContainer/{targetObjectType}/{targetObjectId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Copy one or more files to another container. API doc last verified on 2015-05-11.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post_request><h3>URI Parameters</h3><ul><li><strong>targetObjectType</strong>: <em>required (string)</em><p>Object type where the file will be moved to.</p></li><li><strong>targetObjectId</strong>: <em>required (integer)</em><p>ID for the object that will own the new file.</p></li></ul><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "ECM Move/Copy File Request Schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "ID of the document to be moved or copied",
+          "minimum": 1
+        },
+        "folderId": {
+          "type": "integer",
+          "description": "ID of the target folder, where the document will be moved or copied to"
+        }
+      },
+      "required": [ "id", "folderId" ]
+    }</code></pre><p><strong>Example</strong>:</p><pre><code>{
+      "id" : 141067,
+      "folderId" : 35372
+    }
+    </code></pre></div><div class=tab-pane id=_api_v1_service_ecm_copyToAnotherContainer__targetObjectType___targetObjectId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>file copied successfully.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+     * Ecm File Schema
+     */
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "ECM File Schema",
+      "type": "object",
+      "properties":
+      {
+        "fileId": {
+          "type": "integer",
+          "description": "unique ID for this ECM file",
+          "minimum": 1
+        },
+        "status": {
+          "type": "string",
+          "description": "File state, most files will be ACTIVE"
+        },
+        "created": {
+          "type": "string",
+          "description": "Date the file was added to the system",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "creator": {
+          "type": "string",
+          "description": "User id that created the file; could be a system user"
+        },
+        "modified": {
+          "type": "string",
+          "description": "Date the file was last modified",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "modifier": {
+          "type": "string",
+          "description": "User id that last updated the file; could be a system user"
+        },
+        "versionSeriesId": {
+          "type": "string",
+          "description": "CMIS Object ID representing every version of this file"
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The name of the file, e.g. MyFile.docx"
+        },
+        "fileMimeType": {
+          "type": "string",
+          "description": "the MIME type of the active version; this convenience property is an alternative to iterating over the fileVersions to find the one with the activeVersionLabel"
+        },
+        "folder": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "unique ID for this folder",
+              "minimum": 1
+            },
+            "creator": {
+              "type": "string",
+              "description": "User id that created the folder; could be a system user"
+            },
+            "modifier": {
+              "type": "string",
+              "description": "User id that last updated the folder; could be a system user"
+            },
+            "created": {
+              "type": "string",
+              "description": "Date the folder was added to the system",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+            },
+            "modified": {
+              "type": "string",
+              "description": "Date the folder was last modified",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+            },
+            "cmisFolderId": {
+              "type": "string",
+              "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+            },
+            "parentFolderId": {
+              "type": "integer",
+              "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string",
+              "description": "Folder name"
+            }
+          }
+        },
+        "container": {
+          "type": "object",
+          "properties": {
+            "created": {
+              "type": "string",
+              "description": "Date the file was added to the system",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+            },
+            "creator": {
+              "type": "string",
+              "description": "User id that created the file; could be a system user"
+            },
+            "modified": {
+              "type": "string",
+              "description": "Date the file was last modified",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+            },
+            "modifier": {
+              "type": "string",
+              "description": "User id that last updated the file; could be a system user"
+            },
+            "containerObjectType":
+            {
+              "type": "string",
+              "description": "Container type.  Example: CASE_FILE"
+            },
+            "containerObjectId":
+            {
+              "type": "integer",
+              "description": "Container object ID",
+              "minimum": 1
+            },
+            "containerObjectTitle":
+            {
+              "type": "string",
+              "description": "Container object number or title.  Example: 20150204_2961"
+            },
+            "folder":
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "unique ID for this folder",
+                  "minimum": 1
+                },
+                "creator": {
+                  "type": "string",
+                  "description": "User id that created the folder; could be a system user"
+                },
+                "modifier": {
+                  "type": "string",
+                  "description": "User id that last updated the folder; could be a system user"
+                },
+                "created": {
+                  "type": "string",
+                  "description": "Date the folder was added to the system",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+                },
+                "modified": {
+                  "type": "string",
+                  "description": "Date the folder was last modified",
+                  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+                },
+                "cmisFolderId": {
+                  "type": "string",
+                  "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+                },
+                "parentFolderId": {
+                  "type": "integer",
+                  "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+                  "minimum": 1
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Folder name"
+                }
+              }
+            }
+          }
+        },
+        "fileType": {
+          "type": "string",
+          "description": "application-defined file type, e.g. other, roi, report"
+        },
+        "activeVersionTag": {
+          "type": "string",
+          "description": "Version tag of the active file version"
+        },
+        "category": {
+          "type": "string",
+          "description": "What sort of document this is.  Examples: Document, Correspondence"
+        },
+        "versions": {
+          "description": "List of file versions",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "unique ID for this version",
+                "minimum": 1
+              },
+              "created": {
+                "type": "string",
+                "description": "Date the version was added to the system",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+              },
+              "creator": {
+                "type": "string",
+                "description": "User id that created the version; could be a system user"
+              },
+              "modified": {
+                "type": "string",
+                "description": "Date the version was last modified",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+              },
+              "modifier": {
+                "type": "string",
+                "description": "User id that last updated the version; could be a system user"
+              },
+              "cmisObjectId": {
+                "type": "string",
+                "description": "CMIS object id that uniquely identifies this version in the CMIS repository"
+              },
+              "versionTag": {
+                "type": "string",
+                "description": "Version label for tis version"
+              }
+            },
+            "required": [ "id", "created", "creator", "modified", "modifier", "cmisObjectId", "versionTag" ]
+          },
+          "minItems": 1
+        },
+        "tags": {
+          "description": "List of tags applied to this file",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "unique ID for this applied tag",
+                "minimum": 1
+              },
+              "created": {
+                "type": "string",
+                "description": "Date the version was added to the system",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+              },
+              "creator": {
+                "type": "string",
+                "description": "User id that created the version; could be a system user"
+              },
+              "parentId": {
+                "type": "integer",
+                "description": "ID of the object this tag applies to",
+                "minimum": 1
+              },
+              "parentType": {
+                "type": "string",
+                "description": "Object type of the object this tag applies to.  Example: CASE_FILE"
+              },
+              "tag": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "unique ID for this tag",
+                    "minimum": 1
+                  },
+                  "created": {
+                    "type": "string",
+                    "description": "Date the tag was added to the system",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+                  },
+                  "creator": {
+                    "type": "string",
+                    "description": "User id that created the tag; could be a system user"
+                  },
+                  "modified": {
+                    "type": "string",
+                    "description": "Date the tag was last modified",
+                    "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+                  },
+                  "modifier": {
+                    "type": "string",
+                    "description": "User id that last updated the tag; could be a system user"
+                  },
+                  "tagText": {
+                    "type": "string",
+                    "description": "User-visible short tag text"
+                  },
+                  "tagDescription": {
+                    "type": "string",
+                    "description": "User-visible longer tag text"
+                  },
+                  "tagName": {
+                    "type": "string",
+                    "description": "Tag symbolic name"
+                  },
+                  "tagToken": {
+                    "type": "string",
+                    "description": "String representation of the tag, guaranteed to be unique"
+                  }
+                }
+              }
+            },
+            "required": [ "id", "created", "creator", "modified", "modifier", "tagText" ]
+          },
+          "minItems": 0
+        }
+      },
+      "required": [ "fileId", "status", "created", "creator", "versionSeriesId", "fileName", "fileMimeType", "folder", "container", "fileType", "activeVersionTag", "category", "versions", "tags" ]
+    }</code></pre><p><strong>Example</strong>:</p><pre><code>{
+      "fileId" : 143997,
+      "status" : "ACTIVE",
+      "created" : "2015-05-11T16:54:32.580-0400",
+      "creator" : "bthomas",
+      "modified" : "2015-05-11T16:54:32.580-0400",
+      "modifier" : "bthomas",
+      "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
+      "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
+      "fileMimeType" : "text/xml",
+      "folder" : {
+        "id" : 35372,
+        "created" : "2015-02-04T15:50:11.957-0500",
+        "creator" : "sally-acm",
+        "modified" : "2015-02-04T15:50:11.957-0500",
+        "modifier" : "sally-acm",
+        "name" : "ROOT",
+        "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+        "parentFolderId" : null
+      },
+      "container" : {
+        "id" : 33953,
+        "created" : "2015-02-04T15:50:11.957-0500",
+        "creator" : "sally-acm",
+        "modified" : "2015-02-04T15:50:11.957-0500",
+        "modifier" : "sally-acm",
+        "containerObjectType" : "CASE_FILE",
+        "containerObjectId" : 2961,
+        "containerObjectTitle" : "20150204_2961",
+        "folder" : {
+          "id" : 35372,
+          "created" : "2015-02-04T15:50:11.957-0500",
+          "creator" : "sally-acm",
+          "modified" : "2015-02-04T15:50:11.957-0500",
+          "modifier" : "sally-acm",
+          "name" : "ROOT",
+          "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+          "parentFolderId" : null
+        }
+      },
+      "fileType" : "ot",
+      "activeVersionTag" : "1.0",
+      "category" : "Document",
+      "versions" : [{
+          "id" : 143998,
+          "created" : "2015-05-11T16:54:32.605-0400",
+          "creator" : "bthomas",
+          "modified" : "2015-05-11T16:54:32.605-0400",
+          "modifier" : "bthomas",
+          "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+          "versionTag" : "1.0"
+        }
+      ],
+      "tags" : []
+    }
+    </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_copyWithinContainer><span class=parent>/api/v1/service/ecm</span>/copyWithinContainer</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_copyWithinContainer_post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_copyWithinContainer class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_copyWithinContainer_post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Copy one or more files to an existing folder in the same container</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_copyWithinContainer_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm</span>/copyWithinContainer</h4></div><div class=modal-body><div class="alert alert-info"><p>Copy one or more files to an existing folder in the same container</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_copyWithinContainer_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_copyWithinContainer_post_request></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_download><span class=parent>/api/v1/service/ecm</span>/download</a> <span class=methods></span></h4></div><div id=panel__api_v1_service_ecm_download class="panel-collapse collapse"><div class=panel-body><div class=list-group></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_download__fileId_><span class=parent>/api/v1/service/ecm/download</span>/{fileId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_download__fileId__get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_service_ecm_download__fileId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_download__fileId__get class=list-group-item><span class="badge badge_get">get</span><div class=method_description><p>Download the active version of the requested file</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_download__fileId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/service/ecm/download</span>/{fileId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Download the active version of the requested file</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_download__fileId__get_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_download__fileId__get_request><h3>URI Parameters</h3><ul><li><strong>fileId</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_download__fileId___version_><span class=parent>/api/v1/service/ecm/download</span>/{fileId}/{version}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_download__fileId___version__get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_service_ecm_download__fileId___version_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_download__fileId___version__get class=list-group-item><span class="badge badge_get">get</span><div class=method_description><p>Download the requested version of the requested file</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_download__fileId___version__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/service/ecm/download</span>/{fileId}/{version}</h4></div><div class=modal-body><div class="alert alert-info"><p>Download the requested version of the requested file</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_download__fileId___version__get_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_download__fileId___version__get_request><h3>URI Parameters</h3><ul><li><strong>fileId</strong>: <em>required (string)</em></li><li><strong>version</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId_><span class=parent>/api/v1/service/ecm</span>/folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId_ class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Copy a folder. API doc last verified on 2015-05-11.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Copy a folder to another location, either in the same container or a different container. The folder contents are recursively copied to the other location; this recursive copy operation will take time proportional to the number and size of objects to be copied.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm</span>/folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Copy a folder to another location, either in the same container or a different container. The folder contents are recursively copied to the other location; this recursive copy operation will take time proportional to the number and size of objects to be copied.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post_request><h3>URI Parameters</h3><ul><li><strong>folderId</strong>: <em>required (integer)</em><p>Id of the folder to be copied. This folder must not be a top-level root folder; in other words, this folder&#39;s parentFolderId property must not be null.</p></li><li><strong>dstFolderId</strong>: <em>required (integer)</em><p>Id of the target folder</p></li><li><strong>targetObjectType</strong>: <em>required (string)</em><p>Object type of the object that will hold the copied folder</p></li><li><strong>targetObjectId</strong>: <em>required (integer)</em><p>Object ID of the object that will hold the copied folder; the dstFolderId must be a folder owned by this object.</p></li></ul></div><div class=tab-pane id=_api_v1_service_ecm_folder_copy__folderId___dstFolderId___targetObjectType___targetObjectId__post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Folder copied successfully.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "ECM Folder Schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "unique ID for this folder",
+          "minimum": 1
+        },
+        "creator": {
+          "type": "string",
+          "description": "User id that created the folder; could be a system user"
+        },
+        "modifier": {
+          "type": "string",
+          "description": "User id that last updated the folder; could be a system user"
+        },
+        "created": {
+          "type": "string",
+          "description": "Date the folder was added to the system",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "modified": {
+          "type": "string",
+          "description": "Date the folder was last modified",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "cmisFolderId": {
+          "type": "string",
+          "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+        },
+        "parentFolderId": {
+          "type": "integer",
+          "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Folder name"
+        }
+      },
+      "required": [ "fileType" ]
+    }</code></pre><p><strong>Example</strong>:</p><pre><code>{
+      "id" : 143996,
+      "created" : "2015-05-11T15:58:46.527-0400",
+      "creator" : "bthomas",
+      "modified" : "2015-05-11T15:58:46.527-0400",
+      "modifier" : "bthomas",
+      "name" : "another test",
+      "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+      "parentFolderId" : 141019
+    }
+    </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_folder__folderId_><span class=parent>/api/v1/service/ecm</span>/folder/{folderId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__folderId__delete><span class="badge badge_delete">delete</span></a></span></h4></div><div id=panel__api_v1_service_ecm_folder__folderId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__folderId__delete class=list-group-item><span class="badge badge_delete">delete</span><div class=method_description><p>deletes the requested folder.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_folder__folderId__delete><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_delete">delete</span> <span class=parent>/api/v1/service/ecm</span>/folder/{folderId}</h4></div><div class=modal-body><div class="alert alert-info"><p>deletes the requested folder.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_folder__folderId__delete_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_folder__folderId__delete_request><h3>URI Parameters</h3><ul><li><strong>folderId</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_folder__folderId___newFolderName_><span class=parent>/api/v1/service/ecm/folder/{folderId}</span>/{newFolderName}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__folderId___newFolderName__post><span class="badge badge_post">post</span></a> <a href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__folderId___newFolderName__put><span class="badge badge_put">put</span></a></span></h4></div><div id=panel__api_v1_service_ecm_folder__folderId___newFolderName_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__folderId___newFolderName__post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Rename the requested folder</p></div><div class=clearfix></div></div><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__folderId___newFolderName__put class=list-group-item><span class="badge badge_put">put</span><div class=method_description><p>Create a new folder under the requested folder</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_folder__folderId___newFolderName__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm/folder/{folderId}</span>/{newFolderName}</h4></div><div class=modal-body><div class="alert alert-info"><p>Rename the requested folder</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_folder__folderId___newFolderName__post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_folder__folderId___newFolderName__post_request><h3>URI Parameters</h3><ul><li><strong>folderId</strong>: <em>required (string)</em></li><li><strong>newFolderName</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_folder__folderId___newFolderName__put><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_put">put</span> <span class=parent>/api/v1/service/ecm/folder/{folderId}</span>/{newFolderName}</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a new folder under the requested folder</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_folder__folderId___newFolderName__put_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_folder__folderId___newFolderName__put_request><h3>URI Parameters</h3><ul><li><strong>folderId</strong>: <em>required (string)</em></li><li><strong>newFolderName</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_folder__objectType___objectId_><span class=parent>/api/v1/service/ecm</span>/folder/{objectType}/{objectId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__objectType___objectId__get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_service_ecm_folder__objectType___objectId_ class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>User must be authenticated and must have &#39;read&#39; access on the requested object.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__objectType___objectId__get class=list-group-item><span class="badge badge_get">get</span><div class=method_description><p>Get list of objects in the root folder of the requested container.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_folder__objectType___objectId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/service/ecm</span>/folder/{objectType}/{objectId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get list of objects in the root folder of the requested container.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_folder__objectType___objectId__get_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_service_ecm_folder__objectType___objectId__get_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_folder__objectType___objectId__get_request><h3>URI Parameters</h3><ul><li><strong>objectType</strong>: <em>required (string)</em><p>Container type, e.g. COMPLAINT, CASE_FILE, TASK</p></li><li><strong>objectId</strong>: <em>required (integer)</em><p>Container id</p></li></ul><h3>Query Parameters</h3><ul><li><strong>s</strong> <em>one of (author,category,created,creator,modified,modifier,name,type,version)</em><p>Sort order</p></li><li><strong>dir</strong> <em>one of (ASC,DESC)</em><p>Sort direction (ascending or descending)</p></li><li><strong>start</strong> <em>(integer)</em><p>Paging support - the starting row.</p></li><li><strong>n</strong> <em>(integer)</em><p>Paging support - the number of rows</p></li><li><strong>category</strong> <em>one of (Correspondence,Document)</em><p>Used to request only documents, only correspondence, or both; to request both documents and correspondence, do not send a category at all</p></li></ul></div><div class=tab-pane id=_api_v1_service_ecm_folder__objectType___objectId__get_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Normal response, object list included.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>/**
+     * Folder List Schema
+     */
+    {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "Folder List Schema",
+      "type": "object",
+      "properties": {
+        "containerObjectType": {
+          "type": "string",
+          "description": "Container object type, e.g. COMPLAINT, TASK etc."
+        },
+        "containerObjectId": {
+          "type": "integer",
+          "description": "Container object ID",
+          "minimum": 1
+        },
+        "folderId": {
+          "type": "integer",
+          "description": "Folder ID whose children are included in the children array"
+        },
+        "totalChildren": {
+          "type": "integer",
+          "description": "Total number of child objects in this folder; the folder could have more objects than are in the children array"
+        },
+        "category": {
+          "type": "string",
+          "description": "What category of objects are included in the children array",
+          "enum": [ "Document", "Correspondence", "all" ]
+        },
+        "sortBy": {
+          "type": "string",
+          "description": "The requested sort field"
+        },
+        "sortDirection": {
+          "type": "string",
+          "description": "The requested sort direction",
+          "enum": [ "ASC", "DESC" ]
+        },
+        "startRow": {
+          "type": "integer",
+          "description": "Requested start row",
+          "minimum": 0
+        },
+        "maxRows": {
+          "type": "integer",
+          "description": "Requested number of rows",
+          "minimum": 0
+        },
+        "children": {
+          "type": "array",
+          "description": "List of the immediate children of the requested folder",
+          "uniqueItems": true,
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "properties": {
+              "objectId": {
+                "type": "integer",
+                "description": "Object ID for this object"
+              },
+              "objectType": {
+                "type": "string",
+                "enum": [ "folder", "file" ]
+              },
+              "name": {
+                "type": "string",
+                "description": "object name"
+              },
+              "created": {
+                "type": "string",
+                "description": "create date, in Solr date format"
+              },
+              "modified": {
+                "type": "string",
+                "description": "modified date, in Solr date format"
+              },
+              "creator": {
+                "type": "string"
+              },
+              "modifier": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string",
+                "description": "The primary version tag for this object; only for files, not for folders"
+              },
+              "type": {
+                "type": "string",
+                "description": "The file type, e.g. close_complaint; only for files, not for folders"
+              },
+              "category": {
+                "type": "string",
+                "description": "The kind object; only for files, not for folders",
+                "enum": [ "Document", "Correspondence" ]
+              }
+            },
+            "required": [ "objectId", "objectType", "name", "created", "modified", "creator", "modifier" ]
+          }
+        }
+      },
+      "required": [ "containerObjectType", "containerObjectId", "folderId", "children", "totalChildren", "category", "sortBy", "sortDirection", "startRow", "maxRows" ]
+    }</code></pre><h2>HTTP status code <a href=http://httpstatus.es/403 target=_blank>403</a></h2><p>User is not authorized to read the requested object type</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_folder__parentFolderId___newFolderName_><span class=parent>/api/v1/service/ecm</span>/folder/{parentFolderId}/{newFolderName}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__parentFolderId___newFolderName__put><span class="badge badge_put">put</span></a></span></h4></div><div id=panel__api_v1_service_ecm_folder__parentFolderId___newFolderName_ class="panel-collapse collapse"><div class=panel-body><div class=resource-description><p>Create a new folder. API doc last verified on 2015-05-11.</p></div><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_folder__parentFolderId___newFolderName__put class=list-group-item><span class="badge badge_put">put</span><div class=method_description><p>Create a new folder under the requested parent folder.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_folder__parentFolderId___newFolderName__put><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_put">put</span> <span class=parent>/api/v1/service/ecm</span>/folder/{parentFolderId}/{newFolderName}</h4></div><div class=modal-body><div class="alert alert-info"><p>Create a new folder under the requested parent folder.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_folder__parentFolderId___newFolderName__put_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_service_ecm_folder__parentFolderId___newFolderName__put_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_folder__parentFolderId___newFolderName__put_request><h3>URI Parameters</h3><ul><li><strong>parentFolderId</strong>: <em>required (integer)</em><p>Object ID of the parent folder; the new folder will be a subfolder of this folder.</p></li><li><strong>newFolderName</strong>: <em>required (string)</em><p>Name of the new folder.</p></li></ul></div><div class=tab-pane id=_api_v1_service_ecm_folder__parentFolderId___newFolderName__put_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>Folder was created.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "ECM Folder Schema",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "unique ID for this folder",
+          "minimum": 1
+        },
+        "creator": {
+          "type": "string",
+          "description": "User id that created the folder; could be a system user"
+        },
+        "modifier": {
+          "type": "string",
+          "description": "User id that last updated the folder; could be a system user"
+        },
+        "created": {
+          "type": "string",
+          "description": "Date the folder was added to the system",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "modified": {
+          "type": "string",
+          "description": "Date the folder was last modified",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "cmisFolderId": {
+          "type": "string",
+          "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+        },
+        "parentFolderId": {
+          "type": "integer",
+          "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Folder name"
+        }
+      },
+      "required": [ "fileType" ]
+    }</code></pre><p><strong>Example</strong>:</p><pre><code>{
+      "id" : 143996,
+      "created" : "2015-05-11T15:58:46.527-0400",
+      "creator" : "bthomas",
+      "modified" : "2015-05-11T15:58:46.527-0400",
+      "modifier" : "bthomas",
+      "name" : "another test",
+      "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+      "parentFolderId" : 141019
+    }
+    </code></pre></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_moveToAnotherContainer><span class=parent>/api/v1/service/ecm</span>/moveToAnotherContainer</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_moveToAnotherContainer_post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_moveToAnotherContainer class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_moveToAnotherContainer_post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Move one or more files to another container</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_moveToAnotherContainer_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm</span>/moveToAnotherContainer</h4></div><div class=modal-body><div class="alert alert-info"><p>Move one or more files to another container</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_moveToAnotherContainer_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_moveToAnotherContainer_post_request></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_moveWithinContainer><span class=parent>/api/v1/service/ecm</span>/moveWithinContainer</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_moveWithinContainer_post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_moveWithinContainer class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_moveWithinContainer_post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Move one or more files to an existing folder in the same container</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_moveWithinContainer_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm</span>/moveWithinContainer</h4></div><div class=modal-body><div class="alert alert-info"><p>Move one or more files to an existing folder in the same container</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_moveWithinContainer_post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_moveWithinContainer_post_request></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_upload><span class=parent>/api/v1/service/ecm</span>/upload</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_upload_post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_upload class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_upload_post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Add a file. User must have "add file" permission on the parent object. File name must be unique in the folder where the file is added. If the parentCmisFolderId is provided, that folder must be within the parent object&#39;s folder tree.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_upload_post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm</span>/upload</h4></div><div class=modal-body><div class="alert alert-info"><p>Add a file. User must have "add file" permission on the parent object. File name must be unique in the folder where the file is added. If the parentCmisFolderId is provided, that folder must be within the parent object&#39;s folder tree.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_upload_post_request data-toggle=tab>Request</a></li><li><a href=#_api_v1_service_ecm_upload_post_response data-toggle=tab>Response</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_upload_post_request><h3>Body</h3><p><strong>Type: multipart/form-data</strong></p><strong>Form Parameters</strong><ul><li><strong>file</strong>: <em>required (file)</em><p>Files to be added; file parts can have any name, so long as the MIME type indicates it is a file. All files in the request will be added to the system.</p></li><li><strong>category</strong>: <em>one of (Document,Correspondence)</em><p>What kind of file is being uploaded.</p></li><li><strong>fileType</strong>: <em>required (string)</em><p>The logical file type ("other", "roi", ...); not the MIME type.</p><p><strong>Example</strong>:</p><pre><code>other, roi, case_file</code></pre></li><li><strong>parentObjectType</strong>: <em>required (string)</em><p>Type tag for the parent object</p><p><strong>Example</strong>:</p><pre><code>CASE_FILE, COMPLAINT, TASK</code></pre></li><li><strong>parentObjectId</strong>: <em>required (integer)</em><p>Object ID for the parent object</p></li><li><strong>parentFolderId</strong>: <em>(string)</em><p>Database object ID for the folder to contain the uploaded file. If given, the folder must be within the parent object&#39;s folder tree; otherwise an exception is thrown. The uploaded file will be placed in the requested folder. If not given, the folder will be placed in the parent object&#39;s root folder.</p></li></ul></div><div class=tab-pane id=_api_v1_service_ecm_upload_post_response><h2>HTTP status code <a href=http://httpstatus.es/200 target=_blank>200</a></h2><p>File successfully added. Body is an array of EcmFile objects.</p><h3>Body</h3><p><strong>Type: application/json</strong></p><p><strong>Schema</strong>:</p><pre><code>{
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "title": "Array of files",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties":
+        {
+          "id": {
+            "type": "integer",
+            "description": "unique ID for this ECM file",
+            "minimum": 1
+          },
+          "cmisVersionSeriesLabel": {
+            "type": "string",
+            "description": "CMIS Object ID representing every version of this file"
+          },
+          "activeVersionLabel": {
+            "type": "string",
+            "description": "Version tag of the active file version"
+          },
+          "fileType": {
+            "type": "string",
+            "description": "application-defined file type, e.g. other, roi, report"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "the MIME type of the active version; this convenience property is an alternative to iterating over the fileVersions to find the one with the activeVersionLabel"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "The name of the file, e.g. MyFile.docx"
+          },
+          "status": {
+            "type": "string",
+            "description": "File state, most files will be ACTIVE"
+          },
+          "participants": {
+            "description": "List of file participants",
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "creator": {
+            "type": "string",
+            "description": "User id that created the file; could be a system user"
+          },
+          "modifier": {
+            "type": "string",
+            "description": "User id that last updated the file; could be a system user"
+          },
+          "created": {
+            "type": "string",
+            "description": "Date the file was added to the system",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+          },
+          "modified": {
+            "type": "string",
+            "description": "Date the file was last modified",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+          },
+          "objectType": {
+            "type": "string",
+            "description": "Object type for this object - the constant value FILE",
+            "pattern": "^FILE$"
+          },
+          "fileVersions": {
+            "description": "List of file versions",
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [ "fileType" ]
+      }    
+    }
+    </code></pre><h2>HTTP status code <a href=http://httpstatus.es/403 target=_blank>403</a></h2><p>User is not authorized to add a file to the container object.</p></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_upload__fileId_><span class=parent>/api/v1/service/ecm/upload</span>/{fileId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_upload__fileId__post><span class="badge badge_post">post</span></a></span></h4></div><div id=panel__api_v1_service_ecm_upload__fileId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_upload__fileId__post class=list-group-item><span class="badge badge_post">post</span><div class=method_description><p>Add a new file version. User must have "version file" permission for the requested file.</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_upload__fileId__post><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_post">post</span> <span class=parent>/api/v1/service/ecm/upload</span>/{fileId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Add a new file version. User must have "version file" permission for the requested file.</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_upload__fileId__post_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_upload__fileId__post_request><h3>URI Parameters</h3><ul><li><strong>fileId</strong>: <em>required (integer)</em><p>ID of the file to be versioned</p></li></ul><h3>Body</h3><p><strong>Type: multipart/form-data</strong></p><strong>Form Parameters</strong><ul><li><strong>file</strong>: <em>required (file)</em><p>The file to be added</p></li></ul></div></div></div></div></div></div></div><div class="panel panel-white"><div class=panel-heading><h4 class=panel-title><a class=collapsed data-toggle=collapse href=#panel__api_v1_service_ecm_versionHistory__fileId_><span class=parent>/api/v1/service/ecm</span>/versionHistory/{fileId}</a> <span class=methods><a href=# data-toggle=modal data-target=#_api_v1_service_ecm_versionHistory__fileId__get><span class="badge badge_get">get</span></a></span></h4></div><div id=panel__api_v1_service_ecm_versionHistory__fileId_ class="panel-collapse collapse"><div class=panel-body><div class=list-group><div href=# data-toggle=modal data-target=#_api_v1_service_ecm_versionHistory__fileId__get class=list-group-item><span class="badge badge_get">get</span><div class=method_description><p>Get the version history for one file</p></div><div class=clearfix></div></div></div></div></div><div class="modal fade" tabindex=0 id=_api_v1_service_ecm_versionHistory__fileId__get><div class=modal-dialog><div class=modal-content><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>&times;</button><h4 class=modal-title id=myModalLabel><span class="badge badge_get">get</span> <span class=parent>/api/v1/service/ecm</span>/versionHistory/{fileId}</h4></div><div class=modal-body><div class="alert alert-info"><p>Get the version history for one file</p></div><ul class="nav nav-tabs"><li class=active><a href=#_api_v1_service_ecm_versionHistory__fileId__get_request data-toggle=tab>Request</a></li></ul><div class=tab-content><div class="tab-pane active" id=_api_v1_service_ecm_versionHistory__fileId__get_request><h3>URI Parameters</h3><ul><li><strong>fileId</strong>: <em>required (string)</em></li></ul></div></div></div></div></div></div></div></div></div></div></div><div class=col-md-3><div id=sidebar class="hidden-print affix" role=complementary><ul class="nav nav-pills nav-stacked"><li><a href=#_api_v1_service_ecm>/api/v1/service/ecm</a></li></ul></div></div></div></div></body></html>

@@ -18,7 +18,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.create)       {Complaint.View.Participants.create();}
         if (Complaint.View.Location.create)           {Complaint.View.Location.create();}
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
-        if (Complaint.View.OutlookCalendar.create)    {Complaint.View.OutlookCalendar.create();}
+        //if (Complaint.View.OutlookCalendar.create)    {Complaint.View.OutlookCalendar.create();}
         if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
         if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
     }
@@ -36,7 +36,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.onInitialized)   {Complaint.View.Participants.onInitialized();}
         if (Complaint.View.Location.onInitialized)       {Complaint.View.Location.onInitialized();}
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
-        if (Complaint.View.OutlookCalendar.onInitialized) {Complaint.View.OutlookCalendar.onInitialized();}
+        //if (Complaint.View.OutlookCalendar.onInitialized) {Complaint.View.OutlookCalendar.onInitialized();}
         if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
         if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
     }
@@ -175,9 +175,9 @@ Complaint.View = Complaint.View || {
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: $.t("complaint:navigation.leaf-title.history")
                         })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+                        /*.addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
                             ,title: $.t("complaint:navigation.leaf-title.calendar")
-                        })
+                        })*/
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
                             ,title: $.t("complaint:navigation.leaf-title.time")
                         })
@@ -480,13 +480,13 @@ Complaint.View = Complaint.View || {
         }
 
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
+            App.View.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
             Complaint.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Complaint.View.Detail.saveDivDetail();
             Complaint.Controller.viewChangedDetail(Complaint.View.getActiveComplaintId(), htmlDetail);
-            App.Object.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
+            App.View.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
         }
 
 

@@ -44,7 +44,8 @@ var App = App || {
         //return App.View.MicroData.contextPath;
     }
     ,getUserName: function() {
-        return App.View.MicroData.userName;
+        return Acm.Object.MicroData.get("userName");
+        //return App.View.MicroData.userName;
     }
 
     ,buildObjectUrl : function(objectType, objectId, defaultUrl) {

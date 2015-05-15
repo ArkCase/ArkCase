@@ -211,7 +211,7 @@ ObjNav.View = {
                             return true;
                         }
                     } else {
-                        var reason = App.Object.Dirty.getFirst();
+                        var reason = App.View.Dirty.getFirst();
                         Acm.Dialog.alert("Need to save data first: " + reason);
                         return false;
                     }

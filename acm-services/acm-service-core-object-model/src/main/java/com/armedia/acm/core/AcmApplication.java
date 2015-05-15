@@ -27,6 +27,8 @@ public class AcmApplication implements Serializable
     private List<AcmObjectType> objectTypes;
     private Map<Object, Object> settings;
 
+    private Boolean issueCollectorFlag;
+
     private List<AcmObjectType> businessObjects;
 
     public String getApplicationName()
@@ -65,6 +67,14 @@ public class AcmApplication implements Serializable
 
     public void setObjectTypes(List<AcmObjectType> objectTypes) {
         this.objectTypes = objectTypes;
+    }
+
+    public Boolean getIssueCollectorFlag() {
+        return issueCollectorFlag;
+    }
+
+    public void setIssueCollectorFlag(Boolean issueCollectorFlag) {
+        this.issueCollectorFlag = issueCollectorFlag;
     }
 
 //    public String toJson() {

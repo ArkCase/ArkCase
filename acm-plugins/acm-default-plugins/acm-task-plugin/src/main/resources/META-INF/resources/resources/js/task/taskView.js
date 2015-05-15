@@ -762,13 +762,13 @@ Task.View = Task.View || {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("task:task-details.label.dirty-editing-detail"));
+            App.View.Dirty.declare($.t("task:task-details.label.dirty-editing-detail"));
             Task.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Task.View.Detail.saveDivDetail();
             Task.Controller.viewChangedDetail(ObjNav.View.Navigator.getActiveObjType(), ObjNav.View.Navigator.getActiveObjId(), htmlDetail);
-            App.Object.Dirty.clear($.t("task:task-details.label.dirty-editing-detail"));
+            App.View.Dirty.clear($.t("task:task-details.label.dirty-editing-detail"));
         }
 
         ,getHtmlDivReworkDetails: function() {
@@ -784,13 +784,13 @@ Task.View = Task.View || {
             return AcmEx.Object.SummerNote.save(this.$divReworkDetails);
         }
         ,onClickBtnEditReworkDetails: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("task:task-details.label.editing-rework-detail"));
+            App.View.Dirty.declare($.t("task:task-details.label.editing-rework-detail"));
             Task.View.Detail.editDivReworkDetails();
         }
         ,onClickBtnSaveReworkDetails: function(event, ctrl) {
             var htmlDetail = Task.View.Detail.saveDivReworkDetails();
             Task.Controller.viewChangedReworkDetails(ObjNav.View.Navigator.getActiveObjType(), ObjNav.View.Navigator.getActiveObjId(), htmlDetail);
-            App.Object.Dirty.clear($.t("task:task-details.label.editing-rework-detail"));
+            App.View.Dirty.clear($.t("task:task-details.label.editing-rework-detail"));
         }
     }
 
