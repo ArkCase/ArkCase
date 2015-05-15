@@ -1,0 +1,19 @@
+#%RAML 0.8
+title: ArCase API Documentation - Config Services
+
+/api/v1/service/config:
+  /{name}:
+    description: User must be authenticated and must have 'read' access on the object identified by the object type and object id.  API doc last verified on 2015-05-11.
+    uriParameters:
+      name: 
+        description: One of the config names defined in ACM3\acm-services\acm-service-config\src\main\resources\spring\spring-web-config-api.xml
+        type: string
+        required: true
+    get:
+      description: Get configuration in the format of JSON.
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Config values
+          
