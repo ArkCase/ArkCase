@@ -20,7 +20,9 @@ import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+import com.armedia.acm.plugins.complaint.service.ComplaintFactory;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -45,10 +47,21 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
+import com.armedia.acm.form.cost.service.CostFactory;
+import com.armedia.acm.form.ebrief.service.EbriefFactory;
+import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
+import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
+import com.armedia.acm.services.costsheet.service.CostsheetService;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
+import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
+import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
@@ -95,6 +108,27 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private RuntimeService activitiRuntimeService;
 	
 	private ComplaintEventPublisher complaintEventPublisher;
+	
+	private TimesheetService timesheetService;
+	private AcmTimesheetDao acmTimesheetDao;
+	private TimeFactory timeFactory;
+	
+	private CostsheetService costsheetService;
+	private AcmCostsheetDao acmCostsheetDao;
+	private CostFactory costFactory;
+	
+	private SearchResults searchResults;
+	
+	private AcmContainerDao acmContainerDao;
+	
+	private TimesheetEventPublisher timesheetEventPublisher;
+	private CostsheetEventPublisher costsheetEventPublisher;
+	
+	private FunctionalAccessService functionalAccessService;
+	
+	private ComplaintFactory complaintFactory;
+	
+	private EbriefFactory ebriefFactory;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -434,5 +468,112 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setComplaintEventPublisher(
 			ComplaintEventPublisher complaintEventPublisher) {
 		this.complaintEventPublisher = complaintEventPublisher;
+	}
+	
+	public TimesheetService getTimesheetService() {
+		return timesheetService;
+	}
+
+	public void setTimesheetService(TimesheetService timesheetService) {
+		this.timesheetService = timesheetService;
+	}
+
+	public AcmTimesheetDao getAcmTimesheetDao() {
+		return acmTimesheetDao;
+	}
+
+	public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao) {
+		this.acmTimesheetDao = acmTimesheetDao;
+	}
+
+	public TimeFactory getTimeFactory() {
+		return timeFactory;
+	}
+
+	public void setTimeFactory(TimeFactory timeFactory) {
+		this.timeFactory = timeFactory;
+	}
+
+	public CostsheetService getCostsheetService() {
+		return costsheetService;
+	}
+
+	public void setCostsheetService(CostsheetService costsheetService) {
+		this.costsheetService = costsheetService;
+	}
+
+	public AcmCostsheetDao getAcmCostsheetDao() {
+		return acmCostsheetDao;
+	}
+
+	public void setAcmCostsheetDao(AcmCostsheetDao acmCostsheetDao) {
+		this.acmCostsheetDao = acmCostsheetDao;
+	}
+
+	public CostFactory getCostFactory() {
+		return costFactory;
+	}
+
+	public void setCostFactory(CostFactory costFactory) {
+		this.costFactory = costFactory;
+	}
+
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
+
+	public AcmContainerDao getAcmContainerDao() {
+		return acmContainerDao;
+	}
+
+	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
+		this.acmContainerDao = acmContainerDao;
+	}
+
+	public TimesheetEventPublisher getTimesheetEventPublisher() {
+		return timesheetEventPublisher;
+	}
+
+	public void setTimesheetEventPublisher(
+			TimesheetEventPublisher timesheetEventPublisher) {
+		this.timesheetEventPublisher = timesheetEventPublisher;
+	}
+
+	public CostsheetEventPublisher getCostsheetEventPublisher() {
+		return costsheetEventPublisher;
+	}
+
+	public void setCostsheetEventPublisher(
+			CostsheetEventPublisher costsheetEventPublisher) {
+		this.costsheetEventPublisher = costsheetEventPublisher;
+	}
+	
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+	
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
+	}
+
+	public ComplaintFactory getComplaintFactory() {
+		return complaintFactory;
+	}
+
+	public void setComplaintFactory(ComplaintFactory complaintFactory) {
+		this.complaintFactory = complaintFactory;
+	}
+
+	public EbriefFactory getEbriefFactory() {
+		return ebriefFactory;
+	}
+
+	public void setEbriefFactory(EbriefFactory ebriefFactory) {
+		this.ebriefFactory = ebriefFactory;
 	}
 }

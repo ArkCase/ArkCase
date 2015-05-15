@@ -9,29 +9,27 @@
 	    <title><spring:message code="caseFileNew.page.title" text="Case File | ACM | Armedia Case Management" /></title>
 	</jsp:attribute>
 
-	<jsp:body>	
-		<section id="content">
-			<section class="vbox">
-				<section class="scrollable padder">
-					<section class="row m-b-md">
-					    <div class="col-sm-12">
-					        <h3 class="m-b-xs text-black"><spring:message code="caseFileNew.page.descShort" text="New Case File" /></h3>
-					    </div>
-					</section>
-					
-					<div class="row">
-						<div class="col-sm-12">
+	<jsp:body>
+        <section class="vbox">
+            <section class="scrollable padder">
+                <section class="row m-b-md">
+                    <div class="col-sm-12">
+                        <h3 class="m-b-xs text-black" data-i18n="casefile:wizard.title">New Case File</h3>
+                    </div>
+                </section>
 
-							<script xmlns="http://www.w3.org/1999/xhtml"
-                    				src="${newCaseFileFormUrl}"
-                    				type="text/javascript">
-							</script>
+                <div class="row">
+                    <div class="col-sm-12">
 
-						</div>
-					</div>
+                        <script xmlns="http://www.w3.org/1999/xhtml"
+                                src="${newCaseFileFormUrl}"
+                                type="text/javascript">
+                        </script>
 
-				</section>
-			</section>
-		</section>
+                    </div>
+                </div>
+
+            </section>
+        </section>
 	</jsp:body>
 </t:layout>

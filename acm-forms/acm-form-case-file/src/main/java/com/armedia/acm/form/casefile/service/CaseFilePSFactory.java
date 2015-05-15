@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,7 @@ public class CaseFilePSFactory
 	private EcmFileDao ecmFileDao;
 	private AcmHistoryDao acmHistoryDao;
 	private EcmFileService ecmFileService;
+    private CaseFilePSService formService;
 
 	
 	public CaseFile asAcmCaseFile(CaseFilePSForm form, CaseFile caseFile)
@@ -193,7 +195,8 @@ public class CaseFilePSFactory
 			retval.setNumber(caseFile.getCaseNumber());
 			retval.setTitle(caseFile.getTitle());
 			retval.setType(caseFile.getCaseType());
-			retval.setCmisFolderId(caseFile.getEcmFolderId());
+            String cmisFolderId = getFormService().findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+			retval.setCmisFolderId(cmisFolderId);
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 			{
@@ -216,7 +219,7 @@ public class CaseFilePSFactory
 		
 		if (caseFile != null)
 		{			
-			ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), FrevvoFormName.CASE_FILE_PS.toLowerCase() + "_xml");
+			ObjectAssociation association = getObjectAssociationDao().findChildOfType(FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), FrevvoFormName.CASE_FILE_PS.toLowerCase() + "_xml");
 			
 			if (association != null)
 			{				
@@ -433,5 +436,14 @@ public class CaseFilePSFactory
 	public void setEcmFileService(EcmFileService ecmFileService) {
 		this.ecmFileService = ecmFileService;
 	}
-	
+
+    public CaseFilePSService getFormService()
+    {
+        return formService;
+    }
+
+    public void setFormService(CaseFilePSService formService)
+    {
+        this.formService = formService;
+    }
 }

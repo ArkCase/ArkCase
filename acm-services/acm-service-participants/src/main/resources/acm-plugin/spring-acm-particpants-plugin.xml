@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="participantPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Participant Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="participantPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="listParticipants" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/participant/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+                <bean id="changeRole" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/participant/{participantId}/{participantType}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+                <bean id="removeParticipant" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url"
+                              value="/api/{version}/service/participant/{userId}/{participantType}/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+                <bean id="addParticipant" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url"
+                              value="/api/{version}/service/participant/{userId}/{participantType}/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="participantPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

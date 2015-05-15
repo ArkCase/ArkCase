@@ -5,9 +5,12 @@ package com.armedia.acm.forms.roi.service;
 
 import java.util.Date;
 
+import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,15 +18,12 @@ import com.armedia.acm.forms.roi.model.ROIForm;
 import com.armedia.acm.forms.roi.model.ReportInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -35,6 +35,7 @@ public class ROIService extends FrevvoFormAbstractService {
 	private ComplaintDao complaintDao;
 	private CaseFileDao caseFileDao;
 	private UserActionDao userActionDao;
+	private ApplicationEventPublisher applicationEventPublisher;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -59,10 +60,9 @@ public class ROIService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception {
 		
-		String ecmFolderId = null;
+		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
-		String parentObjectName = null;
 		
 		ROIForm roiForm = (ROIForm) convertFromXMLToObject(cleanXML(xml), ROIForm.class);
 		
@@ -77,6 +77,8 @@ public class ROIService extends FrevvoFormAbstractService {
 		}
 		
 		String type = roiForm.getReportDetails().getType();
+		String forObjectType = null;
+		String forObjectNumber = null;
 		
 		if ("complaint".equals(type)){
 			Complaint complaint = complaintDao.find(roiForm.getReportDetails().getComplaintId());
@@ -85,11 +87,13 @@ public class ROIService extends FrevvoFormAbstractService {
 				LOG.warn("Cannot find complaint by given complaintId=" + roiForm.getReportDetails().getComplaintId());
 				return false;
 			}
+
+			forObjectType = "Complaint";
+			forObjectNumber = complaint.getComplaintNumber();
 			
-			ecmFolderId = complaint.getEcmFolderId();
+			cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
-			parentObjectName = complaint.getComplaintNumber();		
 
 			// Record user action
 			getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_MODIFIED, getAuthentication().getName());
@@ -101,21 +105,29 @@ public class ROIService extends FrevvoFormAbstractService {
 				LOG.warn("Cannot find case by given caseId=" + roiForm.getReportDetails().getCaseId());
 				return false;
 			}
-			ecmFolderId = caseFile.getEcmFolderId();
+			forObjectType = "Case File";
+			forObjectNumber = caseFile.getCaseNumber();
+
+            cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
-			parentObjectName = caseFile.getCaseNumber();
 			
 			// Record user action
 			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
-		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
+		FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
+
+		ReportOfInvestigationFormEvent event = new ReportOfInvestigationFormEvent(forObjectType, forObjectNumber,
+				parentObjectType, parentObjectId, roiForm, uploadedFiles, getAuthentication().getName(),
+				getUserIpAddress(), true);
+
+		getApplicationEventPublisher().publishEvent(event);
 		
 		return true;
 	}
-	
-	/**
+
+    /**
 	 * Initialization of ROI Form fields
 	 * 
 	 * @return
@@ -129,15 +141,22 @@ public class ROIService extends FrevvoFormAbstractService {
 		
 		roiForm.setReportInformation(reportInformation);
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(roiForm);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(roiForm);
 		
 		return json;
 	}
 
-    @Override
+	public ApplicationEventPublisher getApplicationEventPublisher()
+	{
+		return applicationEventPublisher;
+	}
+
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+	{
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	@Override
     public String getFormName()
     {
         return FrevvoFormName.ROI;
@@ -183,6 +202,5 @@ public class ROIService extends FrevvoFormAbstractService {
 	 */
 	public void setUserActionDao(UserActionDao userActionDao) {
 		this.userActionDao = userActionDao;
-	}	
-
+	}
 }

@@ -21,7 +21,8 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(locations = {
 		"/spring/spring-library-data-source.xml",
         "/spring/spring-library-electronic-signature-dao.xml",
-        "/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 		})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SignatureDaoIT extends BaseTestCase

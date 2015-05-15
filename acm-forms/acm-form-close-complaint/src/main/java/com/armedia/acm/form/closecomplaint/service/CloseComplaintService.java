@@ -3,13 +3,11 @@
  */
 package com.armedia.acm.form.closecomplaint.service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.objectonverter.DateFormats;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 
@@ -31,10 +29,8 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -47,6 +43,8 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
 	private ApplicationEventPublisher applicationEventPublisher;
+	private AcmPluginManager acmPluginManager;
+	private FunctionalAccessService functionalAccessService;
 
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
@@ -58,11 +56,6 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		if (action != null) {
 			if ("init-form-data".equals(action)) {
 				result = initFormData();
-			}
-			
-			if ("search-approvers".equals(action)) {
-				String keyword = getRequest().getParameter("keyword");
-				result = searchApprovers(keyword);
 			}
 			
 			if ("case".equals(action)) {
@@ -146,12 +139,12 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
+        String cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
-                complaint.getEcmFolderId(),
+                cmisFolderId,
                 FrevvoFormName.COMPLAINT.toUpperCase(),
-                complaint.getComplaintId(),
-                complaint.getComplaintNumber());
+                complaint.getComplaintId());
 
 		CloseComplaintFormEvent event = new CloseComplaintFormEvent(
 				complaint.getComplaintNumber(), complaint.getComplaintId(), savedRequest, uploadedFiles, mode,
@@ -172,19 +165,6 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 			information.setDate(new Date());
 		}
 		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CLOSE_COMPLAINT + ".dispositions"), ","));
-
-		// Get Approvers
-		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
-		
-		List<String> approverOptions = new ArrayList<String>();
-		if (acmUsers != null && acmUsers.size() > 0){
-			for (AcmUser acmUser : acmUsers) {
-				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "edit".equals(mode)){
-					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-				}
-			}
-		}
 		
 		ReferExternal referExternal = new ReferExternal();
 		if (!"edit".equals(mode))
@@ -196,45 +176,10 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		referExternal.setContact(contact);
 		
 		closeComplaint.setInformation(information);
-		closeComplaint.setApproverOptions(approverOptions);
 		closeComplaint.setReferExternal(referExternal);
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(closeComplaint);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(closeComplaint);
 
-		return json;
-	}
-	
-	private Object searchApprovers(String keyword){
-		
-		String mode = getRequest().getParameter("mode");
-		CloseComplaintForm closeComplaint = new CloseComplaintForm();
-		
-		List<String> approverOptions = new ArrayList<String>();
-		
-		if (keyword != null){
-			// Get Approvers
-			List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword(keyword);
-
-			if (acmUsers != null && acmUsers.size() > 0){
-				for (AcmUser acmUser : acmUsers) {
-					// Add only users that are not the logged user
-					if (!acmUser.getUserId().equals(getAuthentication().getName())  || "edit".equals(mode)){
-						approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-					}
-				}
-			}
-		}
-		
-		closeComplaint.setApproverOptions(approverOptions);
-		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(closeComplaint);
-		
-		JSONObject json = new JSONObject(jsonString);
-		
 		return json;
 	}
 	
@@ -259,10 +204,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		
 		closeComplaint.setExistingCase(existingCase);
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(closeComplaint);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(closeComplaint);
 		
 		return json;
 	}
@@ -319,5 +261,22 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
 		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
+	}
+
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
 	}
 }

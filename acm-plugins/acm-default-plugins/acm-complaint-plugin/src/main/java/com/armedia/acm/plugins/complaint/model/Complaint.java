@@ -4,37 +4,17 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,20 +83,24 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private PersonAssociation originator;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
+     * This field is only used when the complaint is created. Usually it will be null.  Use the container
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
     private String ecmFolderPath;
 
     /**
-     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
+     * Container folder where the complaint's attachments/content files are stored.
      */
-    @Column(name = "cm_complaint_ecm_folder_id")
-    private String ecmFolderId;
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
+    })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -130,8 +114,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_person_assoc_parent_id")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType = ComplaintConstants.OBJECT_TYPE;
+
     @OneToMany (cascade = {CascadeType.ALL})
-    @JoinColumn(name = "cm_object_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -154,7 +144,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
      * (CloseComplaintRequest POJO).
      */
     @OneToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = false)
+    @JoinColumn(name = "cm_disposition_id", insertable = false, updatable = true)
     private Disposition disposition;
 
     @Column(name = "cm_complaint_restricted_flag", nullable = false)
@@ -190,7 +180,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         for ( AcmParticipant ap : getParticipants() )
         {
             ap.setObjectId(getComplaintId());
-            ap.setObjectType("COMPLAINT");
+            ap.setObjectType(getObjectType());
+        }
+
+        if ( getContainer() != null )
+        {
+            getContainer().setContainerObjectId(getComplaintId());
+            getContainer().setContainerObjectType(getObjectType());
+
+            log.debug("Setting container object title to: " + getComplaintNumber());
+            getContainer().setContainerObjectTitle(getComplaintNumber());
         }
     }
 
@@ -218,6 +217,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     public void setComplaintNumber(String complaintNumber)
     {
         this.complaintNumber = complaintNumber;
+
+        if ( getContainer() != null )
+        {
+            getContainer().setContainerObjectTitle(complaintNumber);
+        }
     }
 
     public String getComplaintType()
@@ -349,16 +353,6 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.ecmFolderPath = ecmFolderPath;
     }
 
-    public String getEcmFolderId()
-    {
-        return ecmFolderId;
-    }
-
-    public void setEcmFolderId(String ecmFolderId)
-    {
-        this.ecmFolderId = ecmFolderId;
-    }
-
     public Collection<ObjectAssociation> getChildObjects()
     {
         return Collections.unmodifiableCollection(childObjects);
@@ -368,7 +362,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     {
         childObjects.add(childObject);
         childObject.setParentName(getComplaintNumber());
-        childObject.setParentType("COMPLAINT");
+        childObject.setParentType(ComplaintConstants.OBJECT_TYPE);
         childObject.setParentId(getComplaintId());
     }
 
@@ -386,9 +380,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return "COMPLAINT";
+        return objectType;
     }
-
 
     @Override
     @JsonIgnore
@@ -409,9 +402,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getComplaintId());
-        personAssoc.setParentType("COMPLAINT");
+        personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
 
-        personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
+        if (personAssoc.getPerson().getPersonAssociations() == null)
+        {
+        	personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+        }
+        
+        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
        
     public Date getDueDate()
@@ -483,6 +481,21 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.restricted = restricted;
     }
 
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setContainer(AcmContainer container)
+    {
+        if ( container != null )
+        {
+            container.setContainerObjectType(getObjectType());
+        }
+
+        this.container = container;
+    }
+
     @Override
     public String toString()
     {
@@ -501,7 +514,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
                 ", status='" + status + '\'' +
                 ", originator=" + originator +
                 ", ecmFolderPath='" + ecmFolderPath + '\'' +
-                ", ecmFolderId='" + ecmFolderId + '\'' +
+                ", container=" + container +
                 ", childObjects=" + childObjects +
                 ", approvers=" + approvers +
                 ", personAssociations=" + personAssociations +

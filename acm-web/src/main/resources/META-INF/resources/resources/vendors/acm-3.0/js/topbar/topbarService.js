@@ -49,30 +49,39 @@ Topbar.Service = {
         }
 
         //,API_RETRIEVE_ASN_LIST_       : "/resources/asn.json"
-        ,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
+        //,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
+        //for now we need 5 recent notifications in descending order by date
+        ,API_RETRIEVE_ASN_LIST_       : "/api/v1/plugin/search/quickSearch"
         ,API_SAVE_ASN                 : "/api/latest/plugin/notification"
         ,API_DELETE_ASN_              : "/api/latest/plugin/notification/"
 
-        ,retrieveAsnList: function(user) {
-            Acm.Service.asyncGet(
-                function(response) {
+        ,retrieveAsnList: function(user,n) {
+            var url = App.getContextPath() + this.API_RETRIEVE_ASN_LIST_;
+            url+= "?q=" + Topbar.Model.Asn.OBJECT_TYPE;
+            url+= "&n=" + n;
+            url+= "&s=" + Topbar.Model.Asn.SORT_FIELD + " " + Topbar.Model.Asn.SORT_ORDER;
+            Acm.Service.call({type: "GET"
+                ,url: url
+                ,callback: function(response) {
                     if (response.hasError) {
                         Topbar.Controller.Asn.modelRetrievedAsnList(response);
                     } else {
-                        if (Topbar.Model.Asn.validateAsnList(response)) {
-                            var asnList = response;
+                        if (Acm.Validator.validateSolrData(response)) {
+                            var asnList = response.response.docs;
                             Topbar.Model.Asn.setAsnList(asnList);
                             Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
+                            return true;
                         }
                     }
                 }
-                ,App.getContextPath() + this.API_RETRIEVE_ASN_LIST_ + user
-            )
+            });
         }
 
         ,saveAsn: function(asn, handler) {
-            Acm.Service.asyncPost(
-                function(response) {
+            Acm.Service.call({type: "POST"
+                ,url: App.getContextPath() + this.API_SAVE_ASN
+                ,data: JSON.stringify(asn)
+                ,callback: function(response) {
                     if (response.hasError) {
                         if (handler) {
                             handler(response);
@@ -89,12 +98,11 @@ Topbar.Service = {
                             } else {
                                 Topbar.Controller.Asn.modelSavedAsn(asn);
                             }
+                            return true;
                         }
                     }
                 }
-                ,App.getContextPath() + this.API_SAVE_ASN
-                ,JSON.stringify(asn)
-            )
+            });
         }
         ,updateAsnAction: function(asnId, action) {
             var asnList = Topbar.Model.Asn.getAsnList();
@@ -133,8 +141,9 @@ Topbar.Service = {
             return true;
         }
         ,deleteAsn: function(asnId) {
-            Acm.Service.asyncDelete(
-                function(response) {
+            Acm.Service.call({type: "DELETE"
+                ,url: App.getContextPath() + this.API_DELETE_ASN_ + asnId
+                ,callback: function(response) {
                     if (response.hasError) {
                             Topbar.Controller.Asn.modelDeleteAsn(response);
 
@@ -147,9 +156,10 @@ Topbar.Service = {
                                         if (asnId == asnList[i].id) {
                                             asnList.splice(i, 1);
                                             Topbar.Controller.Asn.modelDeletedAsn(Acm.Service.responseWrapper(response, asnId));
-                                            return;
+                                            break;
                                         }
                                     }
+                                    return true;
                                 }
                             }
                         }
@@ -165,14 +175,9 @@ Topbar.Service = {
 //
 //
 //                        Topbar.Controller.Asn.modelDeletedAsn(asnId, Acm.Service.responseWrapper(data, data.status));
-                        var a = response;
-                        deletedNotificationId
-                        var z = 1;
-
                     }
                 }
-                ,App.getContextPath() + this.API_DELETE_ASN_ + asnId
-            )
+            });
         }
 
 

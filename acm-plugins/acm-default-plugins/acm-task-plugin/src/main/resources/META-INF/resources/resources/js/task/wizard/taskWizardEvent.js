@@ -11,8 +11,13 @@ TaskWizard.Event = {
 
     ,onClickBtnSave : function(e) {
         var data = TaskWizard.Object.getTaskData();
-        TaskWizard.Service.createAdhocTask(data);
-        e.preventDefault();
+        if(Acm.isEmpty(data.title)){
+            Acm.Dialog.info($.t("task:wizard.msg.please-enter-subject"));
+        }
+        else{
+            TaskWizard.Service.createAdhocTask(data);
+            e.preventDefault();
+        }
     }
 
 
@@ -26,6 +31,7 @@ TaskWizard.Event = {
 
     ,_tryInitOwners: function() {
         var data = TaskWizard.getAssignees();
+        data.sort(TaskWizard.Object.sortAssignees);
         if (Acm.isNotEmpty(data)) {
             TaskWizard.Object.initOwners(data);
             return true;

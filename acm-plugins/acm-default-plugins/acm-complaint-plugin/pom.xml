@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.22-SNAPSHOT</version>
+        <version>3.0.26-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -87,11 +87,6 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-form-configuration</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-converter</artifactId>
             <version>${acm.version}</version>
         </dependency>
@@ -125,7 +120,6 @@
             <artifactId>acm-service-object-history</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
 
         <!-- date time -->
         <dependency>

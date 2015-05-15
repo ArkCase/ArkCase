@@ -7,12 +7,6 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
-    <context:property-placeholder
-            properties-ref="dacServicePluginProperties"
-            ignore-unresolvable="true"
-            local-override="false"
-            order="32837"/>
-
     <bean id="dacServicePluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring

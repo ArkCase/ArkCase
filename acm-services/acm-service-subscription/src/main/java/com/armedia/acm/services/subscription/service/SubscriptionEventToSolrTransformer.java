@@ -57,6 +57,8 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         solr.setParent_name_t(in.getEventObjectName());
         solr.setParent_number_lcs(in.getEventObjectNumber());
 
+        solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
+
         solr.setOwner_lcs(in.getSubscriptionOwner());
 
         return solr;
@@ -69,10 +71,39 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         return null;
     }
 
-    // No implementation needed  because we don't want SubscriptionEvent indexed in the SolrQuickSearch
+
     @Override
     public SolrDocument toSolrQuickSearch(AcmSubscriptionEvent in) {
-        return null;
+
+        SolrDocument solr = new SolrDocument();
+
+        solr.setId(in.getId() + "-"+in.getObjectType());
+        solr.setObject_id_s(in.getId() + "");
+        solr.setObject_type_s(in.getObjectType());
+
+        solr.setCreate_tdt(in.getCreated());
+        solr.setAuthor(in.getCreator());
+        solr.setLast_modified_tdt(in.getModified());
+        solr.setModifier_s(in.getModifier());
+
+        String title;
+        if( in.getEventType() !=null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()) ){
+            title = (String)getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
+        } else if (in.getEventType() !=null) {
+            title = in.getEventType();
+        } else {
+            title = "";
+        }
+        solr.setTitle_parseable(title);
+        solr.setParent_object_id_s(Long.toString(in.getEventObjectId()));
+
+        solr.setParent_ref_s(in.getEventObjectId() + "-" + in.getEventObjectType());
+
+        solr.setParent_object_type_s(in.getEventObjectType());
+
+        solr.setOwner_s(in.getSubscriptionOwner());
+
+        return solr;
     }
 
     @Override

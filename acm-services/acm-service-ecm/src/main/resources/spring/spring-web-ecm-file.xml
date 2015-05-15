@@ -3,12 +3,93 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="fileUploadController" class="com.armedia.acm.plugins.ecm.web.FileUploadController">
+    <bean id="fileUploadController" class="com.armedia.acm.plugins.ecm.web.api.FileUploadAPIController">
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
 
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
         <property name="muleClient" ref="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
     </bean>
+
+    <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
+        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="folderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.FolderListAPIController">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="containerListAPIController" class="com.armedia.acm.plugins.ecm.web.api.ContainerListAPIController">
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="addNewFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.AddNewFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
+    <bean id="moveFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.MoveFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
+    <bean id="renameFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.RenameFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
+    <bean id="deleteFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.DeleteFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
+    <bean id="renameFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.RenameFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
+    <bean id="deleteFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.DeleteFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
+    <bean id="moveFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.MoveFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
+    <bean id="copyFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.CopyFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
+    <bean id="replaceFileAPIController" class="com.armedia.acm.plugins.ecm.web.api.ReplaceFileAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+        <property name="fileTransaction" ref="ecmFileTransaction"/>
+    </bean>
+
+    <bean id="subFolderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.SubFolderListAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+
+
+    <bean id="getEcmFileByIdAPIController" class="com.armedia.acm.plugins.ecm.web.api.GetEcmFileByIdAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="setActiveFileVersionAPIController" class="com.armedia.acm.plugins.ecm.web.api.SetActiveFileVersionAPIController">
+        <property name="fileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    </bean>
+
+    <bean id="copyFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.CopyFolderAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
 </beans>

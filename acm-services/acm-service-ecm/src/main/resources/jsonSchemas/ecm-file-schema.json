@@ -1,0 +1,305 @@
+/**
+ * Ecm File Schema
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ECM File Schema",
+  "type": "object",
+  "properties":
+  {
+    "fileId": {
+      "type": "integer",
+      "description": "unique ID for this ECM file",
+      "minimum": 1
+    },
+    "status": {
+      "type": "string",
+      "description": "File state, most files will be ACTIVE"
+    },
+    "created": {
+      "type": "string",
+      "description": "Date the file was added to the system",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+    },
+    "creator": {
+      "type": "string",
+      "description": "User id that created the file; could be a system user"
+    },
+    "modified": {
+      "type": "string",
+      "description": "Date the file was last modified",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+    },
+    "modifier": {
+      "type": "string",
+      "description": "User id that last updated the file; could be a system user"
+    },
+    "versionSeriesId": {
+      "type": "string",
+      "description": "CMIS Object ID representing every version of this file"
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The name of the file, e.g. MyFile.docx"
+    },
+    "fileMimeType": {
+      "type": "string",
+      "description": "the MIME type of the active version; this convenience property is an alternative to iterating over the fileVersions to find the one with the activeVersionLabel"
+    },
+    "folder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "unique ID for this folder",
+          "minimum": 1
+        },
+        "creator": {
+          "type": "string",
+          "description": "User id that created the folder; could be a system user"
+        },
+        "modifier": {
+          "type": "string",
+          "description": "User id that last updated the folder; could be a system user"
+        },
+        "created": {
+          "type": "string",
+          "description": "Date the folder was added to the system",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "modified": {
+          "type": "string",
+          "description": "Date the folder was last modified",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "cmisFolderId": {
+          "type": "string",
+          "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+        },
+        "parentFolderId": {
+          "type": "integer",
+          "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string",
+          "description": "Folder name"
+        }
+      }
+    },
+    "container": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "description": "Date the file was added to the system",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "creator": {
+          "type": "string",
+          "description": "User id that created the file; could be a system user"
+        },
+        "modified": {
+          "type": "string",
+          "description": "Date the file was last modified",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "modifier": {
+          "type": "string",
+          "description": "User id that last updated the file; could be a system user"
+        },
+        "containerObjectType":
+        {
+          "type": "string",
+          "description": "Container type.  Example: CASE_FILE"
+        },
+        "containerObjectId":
+        {
+          "type": "integer",
+          "description": "Container object ID",
+          "minimum": 1
+        },
+        "containerObjectTitle":
+        {
+          "type": "string",
+          "description": "Container object number or title.  Example: 20150204_2961"
+        },
+        "folder":
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "unique ID for this folder",
+              "minimum": 1
+            },
+            "creator": {
+              "type": "string",
+              "description": "User id that created the folder; could be a system user"
+            },
+            "modifier": {
+              "type": "string",
+              "description": "User id that last updated the folder; could be a system user"
+            },
+            "created": {
+              "type": "string",
+              "description": "Date the folder was added to the system",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+            },
+            "modified": {
+              "type": "string",
+              "description": "Date the folder was last modified",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+            },
+            "cmisFolderId": {
+              "type": "string",
+              "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+            },
+            "parentFolderId": {
+              "type": "integer",
+              "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string",
+              "description": "Folder name"
+            }
+          }
+        }
+      }
+    },
+    "fileType": {
+      "type": "string",
+      "description": "application-defined file type, e.g. other, roi, report"
+    },
+    "activeVersionTag": {
+      "type": "string",
+      "description": "Version tag of the active file version"
+    },
+    "category": {
+      "type": "string",
+      "description": "What sort of document this is.  Examples: Document, Correspondence"
+    },
+    "versions": {
+      "description": "List of file versions",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "unique ID for this version",
+            "minimum": 1
+          },
+          "created": {
+            "type": "string",
+            "description": "Date the version was added to the system",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+          },
+          "creator": {
+            "type": "string",
+            "description": "User id that created the version; could be a system user"
+          },
+          "modified": {
+            "type": "string",
+            "description": "Date the version was last modified",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+          },
+          "modifier": {
+            "type": "string",
+            "description": "User id that last updated the version; could be a system user"
+          },
+          "cmisObjectId": {
+            "type": "string",
+            "description": "CMIS object id that uniquely identifies this version in the CMIS repository"
+          },
+          "versionTag": {
+            "type": "string",
+            "description": "Version label for tis version"
+          }
+        },
+        "required": [ "id", "created", "creator", "modified", "modifier", "cmisObjectId", "versionTag" ]
+      },
+      "minItems": 1
+    },
+    "tags": {
+      "description": "List of tags applied to this file",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "unique ID for this applied tag",
+            "minimum": 1
+          },
+          "created": {
+            "type": "string",
+            "description": "Date the version was added to the system",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+          },
+          "creator": {
+            "type": "string",
+            "description": "User id that created the version; could be a system user"
+          },
+          "parentId": {
+            "type": "integer",
+            "description": "ID of the object this tag applies to",
+            "minimum": 1
+          },
+          "parentType": {
+            "type": "string",
+            "description": "Object type of the object this tag applies to.  Example: CASE_FILE"
+          },
+          "tag": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "unique ID for this tag",
+                "minimum": 1
+              },
+              "created": {
+                "type": "string",
+                "description": "Date the tag was added to the system",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+              },
+              "creator": {
+                "type": "string",
+                "description": "User id that created the tag; could be a system user"
+              },
+              "modified": {
+                "type": "string",
+                "description": "Date the tag was last modified",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+              },
+              "modifier": {
+                "type": "string",
+                "description": "User id that last updated the tag; could be a system user"
+              },
+              "tagText": {
+                "type": "string",
+                "description": "User-visible short tag text"
+              },
+              "tagDescription": {
+                "type": "string",
+                "description": "User-visible longer tag text"
+              },
+              "tagName": {
+                "type": "string",
+                "description": "Tag symbolic name"
+              },
+              "tagToken": {
+                "type": "string",
+                "description": "String representation of the tag, guaranteed to be unique"
+              }
+            }
+          }
+        },
+        "required": [ "id", "created", "creator", "modified", "modifier", "tagText" ]
+      },
+      "minItems": 0
+    }
+  },
+  "required": [ "fileId", "status", "created", "creator", "versionSeriesId", "fileName", "fileMimeType", "folder", "container", "fileType", "activeVersionTag", "category", "versions", "tags" ]
+}

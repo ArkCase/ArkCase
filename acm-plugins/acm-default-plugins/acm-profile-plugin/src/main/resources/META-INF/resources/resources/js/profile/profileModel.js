@@ -8,12 +8,16 @@ Profile.Model = {
         if (Profile.Model.Picture.create)           {Profile.Model.Picture.create();}
         if (Profile.Model.Info.create)              {Profile.Model.Info.create();}
         if (Profile.Model.Subscription.create)      {Profile.Model.Subscription.create();}
+        if (Profile.Model.OutlookPassword.create)     {Profile.Model.OutlookPassword.create();}
     }
     ,onInitialized: function() {
         if (Profile.Model.Picture.onInitialized)            {Profile.Model.Picture.onInitialized();}
         if (Profile.Model.Info.onInitialized)               {Profile.Model.Info.onInitialized();}
         if (Profile.Model.Subscription.onInitialized)       {Profile.Model.Subscription.onInitialized();}
+        if (Profile.Model.OutlookPassword.onInitialized)     {Profile.Model.OutlookPassword.onInitialized();}
     }
+
+    ,DOC_TYPE_USER_PROFILE: "USER_ORG"
 
     ,Picture: {
         create: function() {
@@ -28,13 +32,10 @@ Profile.Model = {
         ,getEcmFileId: function(uploadInfo) {
             var ecmFileId = -1;
             if (uploadInfo) {
-                if (Acm.isArray(uploadInfo.files)) {
-                    if (0 < uploadInfo.files.length) {
-                        var url = Acm.goodValue(uploadInfo.files[0].url); //url in format of "acm/file/123"
-                        var idx = url.lastIndexOf("/");
-                        if (0 <= idx) {
-                            ecmFileId = parseInt(url.substring(idx+1)) || (-1);
-                        }
+                // uploadInfo is an array of EcmFile JSON
+                if (Acm.isArray(uploadInfo)) {
+                    if (0 < uploadInfo.length) {
+                        ecmFileId = Acm.goodValue(uploadInfo[0].fileId);
                     }
                 }
             }
@@ -177,6 +178,28 @@ Profile.Model = {
         }
         ,onViewDeletedSubscription: function(parentId,parentType,userId){
             Profile.Service.Subscription.deleteSubscription(parentId,parentType,userId);
+        }
+    }
+
+    ,OutlookPassword: {
+        create: function () {
+            Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_CHANGED_OUTLOOK_PASSWORD, this.onViewChangedOutlookPassword);
+        }
+        , onInitialized: function () {
+        }
+
+        ,onViewChangedOutlookPassword:function(outlookPasswordToSave){
+            Profile.Service.OutlookPassword.saveOutlookPassword(outlookPasswordToSave);
+        }
+
+        ,validateOutlookPassword: function(data){
+            if(Acm.isEmpty(data)){
+                return false;
+            }
+            if(Acm.isEmpty(data.outlookPassword)){
+                return false;
+            }
+            return true;
         }
     }
 };

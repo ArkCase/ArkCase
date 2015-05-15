@@ -10,7 +10,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -39,8 +38,6 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -115,7 +112,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		
 		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(),
-				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId(), form.getNumber());
+				FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
 		
 		// Log the last user action
 		if (null != form && null != form.getId())
@@ -128,7 +125,12 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		if ( !"edit".equals(mode) )
 		{
 			CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-			workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule());
+			workflowListener.handleNewCaseFile(
+                    getCaseFile(),
+                    frevvoFiles,
+                    getActivitiRuntimeService(),
+                    getFileWorkflowBusinessRule(),
+                    this);
 		}
 
 		return true;
@@ -178,7 +180,8 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		
 		// Add id's and other information to the Frevvo form
 		form.setId(caseFile.getId());
-		form.setCmisFolderId(caseFile.getEcmFolderId());
+        String cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+        form.setCmisFolderId(cmisFolderId);
 		form.setNumber(caseFile.getCaseNumber());
 		
 		// Add Address History id's to the Frevvo form
@@ -401,10 +404,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		caseFileForm.setAddressHistory(addressHistoryList);
 		caseFileForm.setEmploymentHistory(employmentHistoryList);
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(caseFileForm);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(caseFileForm);
 
 		return json;
 	}

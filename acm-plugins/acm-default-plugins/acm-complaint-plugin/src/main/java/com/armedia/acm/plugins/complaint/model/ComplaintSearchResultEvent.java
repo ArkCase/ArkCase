@@ -10,6 +10,7 @@ import java.util.Date;
 public class ComplaintSearchResultEvent extends AcmEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.complaint.search.result";
+    private static final long serialVersionUID = -7440634052215762578L;
 
     public ComplaintSearchResultEvent(ComplaintListView source)
     {

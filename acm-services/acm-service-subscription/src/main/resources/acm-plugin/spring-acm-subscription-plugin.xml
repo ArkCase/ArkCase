@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="subscriptionPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Subscription Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="subscribePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="getSubscriptionsByUser" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="getSubscriptionByUserObjectIdAndType"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="createSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="deleteSubscription" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/service/subscription/{userId}/{objType}/{objId}"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+                <bean id="subscriptionUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/subscription"/>
+                    <property name="requiredPrivilege" ref="subscribePrivilege"/>
+                </bean>
+            </list>
+
+        </property>
+    </bean>
+
+</beans>

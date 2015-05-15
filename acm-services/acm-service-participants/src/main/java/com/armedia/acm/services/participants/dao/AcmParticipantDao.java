@@ -150,4 +150,32 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
         return deleted;
     }
+
+
+    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType,String objectType, Long objectId) {
+
+        Query query = getEm().createQuery(
+                "SELECT par FROM AcmParticipant par " +
+                        "WHERE par.participantType =:participantType " +
+                        "AND par.objectId =:objectId " +
+                        "AND par.objectType =:objectType " +
+                        "AND par.participantLdapId =:userId");
+        query.setParameter("participantType", participantType);
+        query.setParameter("objectId", objectId);
+        query.setParameter("objectType", objectType);
+        query.setParameter("userId", userId);
+
+        List<AcmParticipant> results = query.getResultList();
+        AcmParticipant acmParticipant = null;
+        if (!results.isEmpty()) {
+            acmParticipant = results.get(0);
+        }
+        return acmParticipant;
+    }
+
+    @Transactional
+    public void deleteParticipant(Long id) throws Exception {
+        AcmParticipant participant = getEm().find(getPersistenceClass(),id);
+        getEm().remove(participant);
+    }
 }

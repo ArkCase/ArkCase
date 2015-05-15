@@ -1,8 +1,8 @@
 package com.armedia.acm.correspondence.service;
 
 
-import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -36,9 +36,7 @@ public class CorrespondenceService
      * @param templateName
      * @param parentObjectType
      * @param parentObjectId
-     * @param parentObjectName
      * @param targetCmisFolderId
-     * @param ipAddress
      * @return
      * @throws IOException
      * @throws IllegalArgumentException
@@ -49,9 +47,8 @@ public class CorrespondenceService
             String templateName,
             String parentObjectType,
             Long parentObjectId,
-            String parentObjectName,
-            String targetCmisFolderId,
-            String ipAddress) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException
+            String targetCmisFolderId)
+            throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         CorrespondenceTemplate template = findTemplate(templateName);
 
@@ -70,14 +67,13 @@ public class CorrespondenceService
                     authentication,
                     parentObjectType,
                     parentObjectId,
-                    parentObjectName,
                     targetCmisFolderId,
                     template,
                     new Object[] { parentObjectId },
                     fosToWriteFile,
                     fisForUploadToEcm);
 
-            log.debug("Correspondence CMIS ID: " + retval.getEcmFileId());
+            log.debug("Correspondence CMIS ID: " + retval.getVersionSeriesId());
 
             // TODO: raise event with IP address
 
@@ -119,22 +115,12 @@ public class CorrespondenceService
             String templateName,
             String parentObjectType,
             Long parentObjectId,
-            String parentObjectName,
             String targetCmisFolderId
-    ) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException
+    ) throws IOException, IllegalArgumentException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 
-        String ipAddress = null;
-
-        if ( currentUser.getDetails() != null &&
-                AcmAuthenticationDetails.class.isAssignableFrom(currentUser.getDetails().getClass()) )
-        {
-            ipAddress = ((AcmAuthenticationDetails) currentUser.getDetails()).getRemoteAddress();
-        }
-
-        return generate(currentUser, templateName, parentObjectType, parentObjectId, parentObjectName,
-                targetCmisFolderId, ipAddress);
+        return generate(currentUser, templateName, parentObjectType, parentObjectId, targetCmisFolderId);
     }
 
     public SpringContextHolder getSpringContextHolder()

@@ -26,5 +26,6 @@
     </bean>
 
     <bean id="subscriptionUiController" class="com.armedia.acm.services.subscription.web.SubscriptionUiController">
+        <property name="pluginProperties" ref="subscriptionProperties"/>
     </bean>
 </beans>

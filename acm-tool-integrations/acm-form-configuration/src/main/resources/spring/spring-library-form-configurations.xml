@@ -5,12 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
     
-    <context:property-placeholder
-        properties-ref="acm-forms-properties"
-        ignore-unresolvable="true"
-        local-override="false"
-        order="1"/>
-    	   
+
     <bean id="formResource" class="com.armedia.acm.frevvo.config.FrevvoFormUrl">
         <property name="properties" ref="acm-forms-properties"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>

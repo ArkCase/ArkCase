@@ -1,0 +1,414 @@
+#%RAML 0.8
+title: ArkCase Document Management
+
+
+/api/v1/service/ecm:
+  /container/{objectType}/{objectId}:
+    description: User must be authenticated and must have 'read' access on the object identified by the object type and object id.  API doc last verified on 2015-05-11.
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of all files in the requested container; this could take some time if the container has many files.
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json
+  /id/{fileId}:
+    delete:
+      description: Remove the requested file (both metadata and the content file itself)
+    get:
+      description: Get file metadata      
+  /copyToAnotherContainer/{targetObjectType}/{targetObjectId}:
+    uriParameters:
+      targetObjectType:
+        description: Object type where the file will be moved to.
+        example: CASE_FILE
+        type: string
+        required: true
+      targetObjectId:
+        description: ID for the object that will own the new file.
+        type: integer
+        minimum: 1
+        required: true
+    post:
+      description: Copy one or more files to another container.  API doc last verified on 2015-05-11.
+      body:
+        application/json:
+          schema:
+            !include move-copy-file-schema.json
+          example: |
+            {
+              "id" : 141067,
+              "folderId" : 35372
+            }
+      responses:
+        200:
+          description: file copied successfully.
+          body:
+            application/json:
+              schema:
+                !include ecm-file-schema.json
+              example: |
+                {
+                  "fileId" : 143997,
+                  "status" : "ACTIVE",
+                  "created" : "2015-05-11T16:54:32.580-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T16:54:32.580-0400",
+                  "modifier" : "bthomas",
+                  "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
+                  "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
+                  "fileMimeType" : "text/xml",
+                  "folder" : {
+                    "id" : 35372,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "name" : "ROOT",
+                    "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                    "parentFolderId" : null
+                  },
+                  "container" : {
+                    "id" : 33953,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "containerObjectType" : "CASE_FILE",
+                    "containerObjectId" : 2961,
+                    "containerObjectTitle" : "20150204_2961",
+                    "folder" : {
+                      "id" : 35372,
+                      "created" : "2015-02-04T15:50:11.957-0500",
+                      "creator" : "sally-acm",
+                      "modified" : "2015-02-04T15:50:11.957-0500",
+                      "modifier" : "sally-acm",
+                      "name" : "ROOT",
+                      "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                      "parentFolderId" : null
+                    }
+                  },
+                  "fileType" : "ot",
+                  "activeVersionTag" : "1.0",
+                  "category" : "Document",
+                  "versions" : [{
+                      "id" : 143998,
+                      "created" : "2015-05-11T16:54:32.605-0400",
+                      "creator" : "bthomas",
+                      "modified" : "2015-05-11T16:54:32.605-0400",
+                      "modifier" : "bthomas",
+                      "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+                      "versionTag" : "1.0"
+                    }
+                  ],
+                  "tags" : []
+                }
+
+  /copyWithinContainer:
+    post:
+      description: Copy one or more files to an existing folder in the same container
+  /download:
+    /{fileId}:
+      get:
+        description: Download the active version of the requested file
+    /{fileId}/{version}:
+      get:
+        description: Download the requested version of the requested file
+  /folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}:
+    description: Copy a folder.  API doc last verified on 2015-05-11.
+    uriParameters:
+      folderId:
+        description: Id of the folder to be copied.  This folder must not be a top-level root folder; in other words, this folder's parentFolderId property must not be null.
+        required: true
+        type: integer
+        minimum: 1
+      dstFolderId:
+        description: Id of the target folder
+        required: true
+        type: integer
+        minimum: 1
+      targetObjectType:
+        description: Object type of the object that will hold the copied folder
+        type: string
+        required: true
+        example: CASE_FILE
+      targetObjectId:
+        description: Object ID of the object that will hold the copied folder; the dstFolderId must be a folder owned by this object.
+        type: integer
+        required: true
+        minimum: 1
+    post:
+      description: Copy a folder to another location, either in the same container or a different container.  The folder contents are recursively copied to the other location; this recursive copy operation will take time proportional to the number and size of objects to be copied.
+      responses:
+        200:
+          description: Folder copied successfully.
+          body:
+            application/json:
+              schema:
+                !include folder-schema.json
+              example: |
+                {
+                  "id" : 143996,
+                  "created" : "2015-05-11T15:58:46.527-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T15:58:46.527-0400",
+                  "modifier" : "bthomas",
+                  "name" : "another test",
+                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+                  "parentFolderId" : 141019
+                }
+  /folder/{folderId}:
+      delete:
+        description: deletes the requested folder.  
+      /{newFolderName}:
+        post:
+          description: Rename the requested folder
+        put:
+          description: Create a new folder under the requested folder 
+  /folder/{objectType}/{objectId}:
+    description: User must be authenticated and must have 'read' access on the requested object.
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of objects in the root folder of the requested container. 
+      queryParameters:
+        s:
+          description: Sort order
+          required: false
+          default: name
+          enum: [ "author", "category", "created", "creator", "modified", "modifier", "name", "type", "version" ]
+        dir:
+          description: Sort direction (ascending or descending)
+          required: false
+          enum: ["ASC", "DESC"]
+          default: asc   
+        start:
+          description: Paging support - the starting row.
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+        n:
+          description: Paging support - the number of rows
+          required: false
+          type: integer
+          default: 1000
+          minimum: 0
+        category:
+          description: Used to request only documents, only correspondence, or both; to request both documents and correspondence, do not send a category at all
+          required: false
+          default: null
+          type: string
+          enum: [ "Correspondence", "Document" ]
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json    
+  /folder/{parentFolderId}/{newFolderName}:
+    description: Create a new folder.  API doc last verified on 2015-05-11.
+    uriParameters:
+      parentFolderId:
+        description: Object ID of the parent folder; the new folder will be a subfolder of this folder.
+        type: integer
+        required: true
+        minimum: 1
+      newFolderName:
+        description: Name of the new folder.
+        type: string
+        required: true
+    put:
+      description: Create a new folder under the requested parent folder.
+      responses:
+        200:
+          description: Folder was created.
+          body:
+            application/json:
+              schema:
+                !include folder-schema.json
+              example: |
+                {
+                  "id" : 143996,
+                  "created" : "2015-05-11T15:58:46.527-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T15:58:46.527-0400",
+                  "modifier" : "bthomas",
+                  "name" : "another test",
+                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+                  "parentFolderId" : 141019
+                }
+      
+  /moveToAnotherContainer:
+    post:
+      description: Move one or more files to another container
+  /moveWithinContainer:
+    post:
+      description: Move one or more files to an existing folder in the same container
+  /upload:
+    post:
+      description: Add a file.  User must have "add file" permission on the parent object.  File name must be unique in the folder where the file is added. If the parentCmisFolderId is provided, that folder must be within the parent object's folder tree.  
+      body:
+        multipart/form-data:
+          formParameters:
+            file:
+              description: Files to be added; file parts can have any name, so long as the MIME type indicates it is a file.  All files in the request will be added to the system.
+              type: file
+              required: true  
+            category:
+              description: What kind of file is being uploaded.
+              type: string
+              enum: [ "Document", "Correspondence" ]
+              required: false
+              default: "Document"             
+            fileType:
+              description: The logical file type ("other", "roi", ...); not the MIME type.
+              type: string
+              required: true
+              example: other, roi, case_file
+            parentObjectType:
+              description: Type tag for the parent object
+              type: string
+              required: true
+              example: CASE_FILE, COMPLAINT, TASK
+            parentObjectId:
+              description: Object ID for the parent object
+              type: integer
+              required: true
+            parentFolderId:
+              description: Database object ID for the folder to contain the uploaded file.  If given, the folder must be within the parent object's folder tree; otherwise an exception is thrown.  The uploaded file will be placed in the requested folder.  If not given, the folder will be placed in the parent object's root folder.
+              type: string
+              required: false   
+      responses:
+        403:
+          description: User is not authorized to add a file to the container object.
+        200:
+          description: File successfully added.  Body is an array of EcmFile objects.
+          body:
+            application/json:
+              schema: |
+                {
+                  "$schema": "http://json-schema.org/draft-04/schema#",
+                  "title": "Array of files",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties":
+                    {
+                      "id": {
+                        "type": "integer",
+                        "description": "unique ID for this ECM file",
+                        "minimum": 1
+                      },
+                      "cmisVersionSeriesLabel": {
+                        "type": "string",
+                        "description": "CMIS Object ID representing every version of this file"
+                      },
+                      "activeVersionLabel": {
+                        "type": "string",
+                        "description": "Version tag of the active file version"
+                      },
+                      "fileType": {
+                        "type": "string",
+                        "description": "application-defined file type, e.g. other, roi, report"
+                      },
+                      "mimeType": {
+                        "type": "string",
+                        "description": "the MIME type of the active version; this convenience property is an alternative to iterating over the fileVersions to find the one with the activeVersionLabel"
+                      },
+                      "fileName": {
+                        "type": "string",
+                        "description": "The name of the file, e.g. MyFile.docx"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "File state, most files will be ACTIVE"
+                      },
+                      "participants": {
+                        "description": "List of file participants",
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "creator": {
+                        "type": "string",
+                        "description": "User id that created the file; could be a system user"
+                      },
+                      "modifier": {
+                        "type": "string",
+                        "description": "User id that last updated the file; could be a system user"
+                      },
+                      "created": {
+                        "type": "string",
+                        "description": "Date the file was added to the system",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+                      },
+                      "modified": {
+                        "type": "string",
+                        "description": "Date the file was last modified",
+                        "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+                      },
+                      "objectType": {
+                        "type": "string",
+                        "description": "Object type for this object - the constant value FILE",
+                        "pattern": "^FILE$"
+                      },
+                      "fileVersions": {
+                        "description": "List of file versions",
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        },
+                        "minItems": 1
+                      }
+                    },
+                    "required": [ "fileType" ]
+                  }    
+                }
+    /{fileId}:
+      uriParameters:
+        fileId:
+          description: ID of the file to be versioned
+          type: integer
+          required: true
+      post:
+        description: Add a new file version.  User must have "version file" permission for the requested file.
+        body:
+          multipart/form-data:
+            formParameters:
+              file:
+                description: The file to be added
+                type: file
+                required: true                
+  /versionHistory/{fileId}:
+    get:
+      description: Get the version history for one file
+  
+
+    

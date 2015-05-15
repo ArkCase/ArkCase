@@ -89,5 +89,678 @@
         </update>
     </changeSet>
 
+    <changeSet id="files-05-container-folder-table" author="dmiller">
+        <createTable tableName="acm_container_folder">
+            <column name="cm_container_folder_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_container_folder"/>
+            </column>
+            <column name="cm_container_folder_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_folder_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_folder_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_container_folder_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cmis_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_object_id, cm_object_type"/>
+        <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_cmis_folder_id"/>
+    </changeSet>
+
+    <changeSet id="files-06-populate-container-folder" author="dmiller">
+        <preConditions>
+            <and>
+                <dbms type="oracle"/>
+                <tableExists tableName="acm_complaint"/>
+                <columnExists tableName="acm_complaint" columnName="cm_complaint_ecm_folder_id"/>
+            </and>
+        </preConditions>
+
+        <sql>
+            <comment>Get complaint folder ids</comment>
+            INSERT INTO acm_container_folder
+            SELECT seq_gen_identity.nextval AS cm_container_folder_id,
+                    cm_complaint_created AS cm_container_folder_created,
+                    cm_complaint_creator AS cm_container_folder_creator,
+                    cm_complaint_created AS cm_container_folder_modified,
+                    cm_complaint_creator AS cm_container_folder_modifier,
+                    'COMPLAINT' AS cm_object_type,
+                    cm_complaint_id AS cm_object_id,
+                    cm_complaint_ecm_folder_id AS cm_cmis_folder_id
+            FROM    acm_complaint
+            WHERE   cm_complaint_ecm_folder_id IS NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-07-populate-container-folder-from-case-file" author="dmiller">
+        <preConditions>
+            <and>
+                <dbms type="oracle"/>
+                <tableExists tableName="acm_case_file"/>
+                <columnExists tableName="acm_case_file" columnName="cm_case_ecm_folder_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            <comment>Get case file folder ids</comment>
+            INSERT INTO acm_container_folder
+            SELECT seq_gen_identity.nextval AS cm_container_folder_id,
+                    cm_case_created AS cm_container_folder_created,
+                    cm_case_creator AS cm_container_folder_creator,
+                    cm_case_created AS cm_container_folder_modified,
+                    cm_case_creator AS cm_container_folder_modifier,
+                    'CASE_FILE' AS cm_object_type,
+                    cm_case_id AS cm_object_id,
+                    cm_case_ecm_folder_id AS cm_cmis_folder_id
+            FROM    acm_case_file
+            WHERE   cm_case_ecm_folder_id IS NOT NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-08-populate-container-folder-from-user-profile" author="dmiller">
+        <preConditions>
+            <and>
+                <dbms type="oracle"/>
+                <tableExists tableName="acm_user_org"/>
+                <columnExists tableName="acm_user_org" columnName="cm_profile_ecm_folder_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            INSERT INTO acm_container_folder
+            SELECT seq_gen_identity.nextval AS cm_container_folder_id,
+                    systimestamp AS cm_container_folder_created,
+                    cm_user AS cm_container_folder_creator,
+                    systimestamp AS cm_container_folder_modified,
+                    cm_user AS cm_container_folder_modifier,
+                    'USER_ORG' AS cm_object_type,
+                    cm_user_org_id AS cm_object_id,
+                    cm_profile_ecm_folder_id AS cm_cmis_folder_id
+            FROM    acm_user_org
+            WHERE   cm_profile_ecm_folder_id IS NOT NULL
+        </sql>
+    </changeSet>
+    
+    <changeSet id="files-09-rename-acm-container-folder" author="dmiller">
+        <renameTable oldTableName="acm_container_folder" newTableName="acm_container"/>
+    </changeSet>
+    
+    <changeSet id="files-10-add-acm-folder-table" author="dmiller">
+        <createTable tableName="acm_folder">
+            <column name="cm_folder_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_folder"/>
+            </column>
+            <column name="cm_folder_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_folder_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_folder_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_folder_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cmis_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_folder_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_folder_id" type="NUMBER(32,0)">
+                <constraints nullable="true"
+                             foreignKeyName="fk_folder_parent_id"
+                             referencedTableName="acm_folder"
+                             referencedColumnNames="cm_folder_id"
+                             initiallyDeferred="true"
+                             deferrable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="files-11-populate-folder-from-container-folder" author="dmiller">
+        <preConditions>
+            <and>
+                <dbms type="oracle"/>
+            </and>
+        </preConditions>
+        <sql>
+            INSERT INTO acm_folder
+            SELECT seq_gen_identity.nextval AS cm_folder_id,
+                    ac.cm_container_folder_created AS cm_folder_created,
+                    ac.cm_container_folder_creator AS cm_folder_creator,
+                    ac.cm_container_folder_modified AS cm_folder_modified,
+                    ac.cm_container_folder_modifier AS cm_folder_modifier,
+                    ac.cm_cmis_folder_id AS cm_cmis_folder_id,
+                    'ROOT' AS cm_folder_name,
+                    NULL AS cm_parent_folder_id
+            FROM    acm_container ac
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-12-update-acm-container-structure" author="dmiller">
+        <addColumn tableName="acm_container">
+            <column name="cm_folder_id" type="NUMBER(32,0)">
+                <constraints
+                    foreignKeyName="fk_container_folder_id"
+                    referencedTableName="acm_folder"
+                    referencedColumnNames="cm_folder_id"
+                    deferrable="true"
+                    initiallyDeferred="true"/>
+            </column>
+        </addColumn>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_created" newColumnName="cm_container_created"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator" newColumnName="cm_container_creator"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modified" newColumnName="cm_container_modified"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier" newColumnName="cm_container_modifier"/>
+        <dropPrimaryKey tableName="acm_container" constraintName="pk_container_folder"/>
+        <addPrimaryKey tableName="acm_container" columnNames="cm_container_id" constraintName="pk_container"/>
+    </changeSet>
+
+    <changeSet id="files-13-populate-container-folder-id" author="dmiller">
+        <!-- ANSI standard SQL, should work on any database -->
+        <sql>
+            UPDATE acm_container ac
+            SET cm_folder_id =
+                (SELECT af.cm_folder_id
+                 FROM   acm_folder af
+                 WHERE  af.cm_cmis_folder_id = ac.cm_cmis_folder_id)
+            WHERE EXISTS
+                (SELECT 1
+                 FROM   acm_folder af
+                 WHERE  af.cm_cmis_folder_id = ac.cm_cmis_folder_id)
+            AND  ac.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-14-make-container-folder-id-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_container" columnName="cm_folder_id"/>
+    </changeSet>
+
+    <changeSet id="files-15-add-acm-file-version" author="dmiller">
+        <createTable tableName="acm_file_version">
+            <column name="cm_file_version_id" type="NUMBER(32,0)">
+                <constraints primaryKey="true" primaryKeyName="pk_file_version"/>
+            </column>
+            <column name="cm_file_id" type="NUMBER(32,0)">
+                <constraints nullable="false"
+                             foreignKeyName="fk_file_version_file_id"
+                             referencedTableName="acm_file"
+                             referencedColumnNames="cm_file_id"
+                             deferrable="true"
+                             initiallyDeferred="true"/>
+            </column>
+            <column name="cm_file_version_created" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_version_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_version_modified" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_version_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_version_version_tag" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cmis_object_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="files-16-populate-file-version-from-file" author="dmiller">
+        <preConditions>
+            <and>
+                <dbms type="oracle"/>
+            </and>
+        </preConditions>
+        <sql>
+            INSERT INTO acm_file_version
+            SELECT seq_gen_identity.nextval AS cm_file_version_id,
+                    af.cm_file_id AS cm_file_id,
+                    af.cm_file_created AS cm_file_version_created,
+                    af.cm_file_creator AS cm_file_version_creator,
+                    af.cm_file_modified AS cm_file_version_modified,
+                    af.cm_file_modifier AS cm_file_version_modifier,
+                    '1.0' AS cm_file_version_version_flag,
+                    -- can only get away with the below since this is how Alfresco does things.
+                    af.cm_file_ecm_id || ';1.0' AS cm_cmis_object_id
+            FROM    acm_file af
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-17-update-acm-file-structure" author="dmiller">
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_ecm_id" newColumnName="cm_version_series_id"/>
+        <addColumn tableName="acm_file">
+            <column name="cm_folder_id" type="NUMBER(32,0)">
+                <constraints foreignKeyName="fk_file_folder_id"
+                             referencedTableName="acm_folder"
+                             referencedColumnNames="cm_folder_id"
+                             deferrable="true"
+                             initiallyDeferred="true"/>
+            </column>
+            <column name="cm_file_active_version_tag" type="VARCHAR(1024)" defaultValue="1.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_file_category" type="VARCHAR(128)"/>
+        </addColumn>
+        <dropUniqueConstraint tableName="acm_file" constraintName="uk_file_ecm_id"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id" constraintName="uk_version_series_id"/>
+    </changeSet>
+
+    <changeSet id="files-18-update-new-columns-in-acm-file" author="dmiller">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_object_association"/>
+                <columnExists tableName="acm_object_association" columnName="cm_target_category"/>
+            </and>
+        </preConditions>
+        <!-- ANSI standard SQL, should work on any database -->
+        <sql>
+            UPDATE acm_file af
+            SET cm_file_category =
+                (SELECT DISTINCT aoa.cm_target_category
+                 FROM   acm_object_association aoa
+                 WHERE  aoa.cm_target_type = 'FILE'
+                 AND    aoa.cm_target_category IS NOT NULL
+                 AND    aoa.cm_target_id = af.cm_file_id)
+            WHERE EXISTS
+                (SELECT 1
+                 FROM   acm_object_association aoa
+                 WHERE  aoa.cm_target_type = 'FILE'
+                 AND    aoa.cm_target_category IS NOT NULL
+                 AND    aoa.cm_target_id = af.cm_file_id)
+            AND  af.cm_file_category IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-19-fix-acm-file-category" author="dmiller">
+        <sql>
+            UPDATE acm_file
+            SET    cm_file_category = INITCAP(cm_file_category)
+            WHERE  cm_file_category IS NOT NULL
+        </sql>
+        <sql>
+            UPDATE acm_file
+            SET    cm_file_category = 'Document'
+            WHERE  cm_file_category IS NULL
+            OR     cm_file_category NOT IN ('Document', 'Correspondence')
+        </sql>
+        <addNotNullConstraint tableName="acm_file" columnName="cm_file_category"/>
+    </changeSet>
+
+    <!-- we have multiple acm_object_association rows for the same file (same file is linked to
+         multiple containers, it happens when a complaint is merged into a new case file).
+         So we will try to get the complaint folder id into the existing file objects, then
+         create new files for each case file that also has a file from a complaint... I hope
+         that explanation is clear :-)  Basically, in the future, each ACM_FILE belongs to just the
+         one folder.  -->
+    <changeSet id="files-20-update-file-folder-id-for-task" author="dmiller">
+        <sql>
+            UPDATE acm_file af
+            SET    cm_folder_id =
+                   (SELECT ac.cm_folder_id
+                    FROM   acm_object_association aoa,
+                           acm_container ac
+                    WHERE  aoa.cm_target_type = 'FILE'
+                    AND    aoa.cm_parent_type = 'TASK'
+                    AND    aoa.cm_parent_type = ac.cm_object_type
+                    AND    aoa.cm_parent_id = ac.cm_object_id
+                    AND    aoa.cm_target_id = af.cm_file_id)
+            WHERE EXISTS
+                    (SELECT 1
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type = 'TASK'
+                     AND    aoa.cm_parent_type = ac.cm_object_type
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            AND af.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+    <changeSet id="files-20-update-file-folder-id-for-complaint" author="dmiller">
+        <sql>
+            UPDATE acm_file af
+            SET    cm_folder_id =
+                    (SELECT ac.cm_folder_id
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type = 'COMPLAINT'
+                     AND    aoa.cm_parent_type = ac.cm_object_type
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            WHERE EXISTS
+                    (SELECT 1
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type = 'COMPLAINT'
+                     AND    aoa.cm_parent_type = ac.cm_object_type
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            AND af.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+    <changeSet id="files-21-update-file-folder-id-for-case" author="dmiller">
+        <sql>
+            UPDATE acm_file af
+            SET    cm_folder_id =
+                    (SELECT ac.cm_folder_id
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
+                     AND    ac.cm_object_type = 'CASE_FILE'
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            WHERE EXISTS
+                    (SELECT 1
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type IN ('CASE_FILE', 'CASE')
+                     AND    ac.cm_object_type = 'CASE_FILE'
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            AND af.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+    <changeSet id="files-22-update-file-folder-id-for-profile-images" author="dmiller">
+        <sql>
+            UPDATE acm_file af
+            SET    cm_folder_id =
+                    (SELECT ac.cm_folder_id
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type = 'PROFILE_IMG'
+                     AND    ac.cm_object_type = 'USER_ORG'
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            WHERE EXISTS
+                    (SELECT 1
+                     FROM   acm_object_association aoa,
+                            acm_container ac
+                     WHERE  aoa.cm_target_type = 'FILE'
+                     AND    aoa.cm_parent_type = 'PROFILE_IMG'
+                     AND    ac.cm_object_type = 'USER_ORG'
+                     AND    aoa.cm_parent_id = ac.cm_object_id
+                     AND    aoa.cm_target_id = af.cm_file_id)
+            AND af.cm_folder_id IS NULL
+        </sql>
+    </changeSet>
+
+    <!-- need to fix the unique key on acm_file before inserting the files from cases where those
+         files are also in a complaint -->
+    <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller">
+        <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
+        <addUniqueConstraint tableName="acm_file"
+                             columnNames="cm_version_series_id, cm_folder_id"
+                             constraintName="uk_file_folder"/>
+    </changeSet>
+
+    <!-- add rows to acm_file for files that belong to case files, where the case file was created
+         based on a complaint.  This is to fix the situation where we have one row in acm_file
+         linked to both the old complaint and the new case file. -->
+    <changeSet id="files-24-add-rows-for-case-files-from-complaints" author="dmiller">
+        <preConditions>
+            <dbms type="oracle"/>
+        </preConditions>
+        <sql>
+            INSERT INTO acm_file
+            (
+                cm_file_id,
+                cm_file_status,
+                cm_file_created,
+                cm_file_creator,
+                cm_file_modified,
+                cm_file_modifier,
+                cm_file_mime_type,
+                cm_version_series_id,
+                cm_file_name,
+                cm_file_type,
+                cm_folder_id,
+                cm_file_active_version_tag,
+                cm_file_category
+            )
+            WITH dupes AS
+            (
+                SELECT  aoa.cm_target_id,
+                        COUNT(*) as dupe_count
+                FROM    acm_container ac,
+                        acm_object_association aoa
+                WHERE   aoa.cm_target_type = 'FILE'
+                AND     aoa.cm_parent_type = ac.cm_object_type
+                AND     aoa.cm_parent_id = ac.cm_object_id
+                GROUP BY aoa.cm_target_id
+                having count(*) > 1
+            )
+            SELECT  seq_gen_identity.nextval as cm_file_id,
+                    af.cm_file_status,
+                    af.cm_file_created,
+                    af.cm_file_creator,
+                    af.cm_file_modified,
+                    af.cm_file_modifier,
+                    af.cm_file_mime_type,
+                    af.cm_version_series_id,
+                    af.cm_file_name,
+                    af.cm_file_type,
+                    ac.cm_folder_id,
+                    af.cm_file_active_version_tag,
+                    af.cm_file_category
+            FROM    acm_file af,
+                    acm_object_association aoa,
+                    acm_container ac
+            WHERE   aoa.cm_parent_type= 'CASE_FILE'
+            AND     aoa.cm_target_type = 'FILE'
+            AND     aoa.cm_parent_id = ac.cm_object_id
+            AND     aoa.cm_parent_type = ac.cm_object_type
+            AND     af.cm_file_id IN (SELECT d.cm_target_id FROM dupes d)
+            AND     aoa.cm_target_id = af.cm_file_id
+        </sql>
+    </changeSet>
+
+    <!-- any acm_file rows where the cm_folder_id is still null is an orphan... there's no way we can
+         link them to a folder, short of writing a batch script to crawl Alfresco.  So we will
+         remove them.  -->
+    <changeSet id="files-25-remove-orphan-files" author="dmiller">
+        <delete tableName="acm_file_version">
+            <where>cm_file_id IN (SELECT cm_file_id FROM acm_file WHERE cm_folder_id IS NULL)</where>
+        </delete>
+        <delete tableName="acm_file">
+            <where>cm_folder_id IS NULL</where>
+        </delete>
+    </changeSet>
+
+    <!-- finally time to make cm_folder_id required -->
+    <changeSet id="files-26-make-folder-id-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_file" columnName="cm_folder_id"/>
+    </changeSet>
+
+    <changeSet id="files-27-make-folder-id-unique" author="dmiller">
+        <addUniqueConstraint tableName="acm_folder" columnNames="cm_cmis_folder_id"/>
+    </changeSet>
+
+    <changeSet id="files-28-add-container-id-to-file" author="dmiller">
+        <addColumn tableName="acm_file">
+            <column name="cm_container_id" type="NUMBER(32,0)">
+                <constraints foreignKeyName="fk_file_container_id"
+                             referencedTableName="acm_container"
+                             referencedColumnNames="cm_container_id"
+                             initiallyDeferred="true"
+                             deferrable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-29-populate-file-container-id" author="dmiller">
+        <sql>
+            UPDATE acm_file af
+            SET    af.cm_container_id =
+            (
+                    SELECT ac.cm_container_id
+                    FROM   acm_folder folder,
+                           acm_container ac
+                    WHERE  af.cm_folder_id = folder.cm_folder_id
+                    AND    folder.cm_folder_id = ac.cm_folder_id
+            )
+            WHERE EXISTS
+            (
+                    SELECT ac.cm_container_id
+                    FROM   acm_folder folder,
+                           acm_container ac
+                    WHERE  af.cm_folder_id = folder.cm_folder_id
+                    AND    folder.cm_folder_id = ac.cm_folder_id
+            )
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-30-make-file-container-id-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_file" columnName="cm_container_id"/>
+    </changeSet>
+
+    <changeSet id="files-31-add-container-title" author="dmiller">
+        <addColumn tableName="acm_container">
+            <column name="cm_object_title" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="files-32-update-container-title-case-files" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_case_file"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  acf.cm_case_number
+                    FROM    acm_case_file acf
+                    WHERE   c.cm_object_id = acf.cm_case_id
+                    AND     c.cm_object_type = 'CASE_FILE'
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_case_file acf
+                    WHERE   c.cm_object_id = acf.cm_case_id
+                    AND     c.cm_object_type = 'CASE_FILE'
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-33-update-container-title-complaints" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_complaint"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  ac.cm_complaint_number
+                    FROM    acm_complaint ac
+                    WHERE   c.cm_object_id = ac.cm_complaint_id
+                    AND     c.cm_object_type = 'COMPLAINT'
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_complaint ac
+                    WHERE   c.cm_object_id = ac.cm_complaint_id
+                    AND     c.cm_object_type = 'COMPLAINT'
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-34-update-container-title-user-profiles" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_user_org"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  auo.cm_user
+                    FROM    acm_user_org auo
+                    WHERE   c.cm_object_id = auo.cm_user_org_id
+                    AND     c.cm_object_type = 'USER_ORG'
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    acm_user_org auo
+                    WHERE   c.cm_object_id = auo.cm_user_org_id
+                    AND     c.cm_object_type = 'USER_ORG'
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <!-- This SQL is in general a REALLY BAD IDEA!!! We shouldn't query Activiti directly!
+         I'm only doing this since it's only needed because I keep changing the document management
+         data model during implementation.  -Dave -->
+    <changeSet id="files-35-update-container-title-tasks" author="dmiller">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="act_hi_taskinst"/>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_object_title"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     cm_object_title =
+            (
+                    SELECT  aht.name_
+                    FROM    act_hi_taskinst aht
+                    WHERE   c.cm_object_type = 'TASK'
+                    AND     TO_CHAR(c.cm_object_id) = aht.id_
+            )
+            WHERE   EXISTS
+            (
+                    SELECT  1
+                    FROM    act_hi_taskinst aht
+                    WHERE   c.cm_object_type = 'TASK'
+                    AND     TO_CHAR(c.cm_object_id) = aht.id_
+            )
+            AND     c.cm_object_title IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-36-make-object-title-required" author="dmiller">
+        <addNotNullConstraint tableName="acm_container" columnName="cm_object_title"/>
+    </changeSet>
+
 </databaseChangeLog>
 

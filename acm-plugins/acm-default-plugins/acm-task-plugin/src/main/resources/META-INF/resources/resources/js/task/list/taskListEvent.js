@@ -413,7 +413,8 @@ TaskList.Event = {
          this.$btnNewAttachment = TaskList.Object.$btnNewAttachment;*/
         var count = TaskList.Object.$btnNewAttachment[0].files.length;
         var fd = new FormData();
-        fd.append("taskId", TaskList.getTaskId());
+        fd.append("parentObjectType", Task.Model.DOC_TYPE_TASK);
+        fd.append("parentObjectId", TaskList.getTaskId());
         for(var i = 0; i < count; i++ ){
             fd.append("files[]", TaskList.Object.$btnNewAttachment[0].files[i]);
         }
@@ -475,7 +476,7 @@ TaskList.Event = {
                     "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
                 //url = url.replace("_data=(", "_data=(complaintId:'" + "409" + "',complaintNumber:'" + "20140806_198" + "',mode:'edit',xmlId:'783',pdfId:'785',requestId:'780',");
 
-                Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+                Acm.Dialog.openWindow(url, "", 1060, 700, this.onDone);
             }
         }
         else{
@@ -506,7 +507,7 @@ TaskList.Event = {
                 url = url.replace("_data=(", "_data=(caseId:'" +  parentId + "',caseNumber:'" + parentName +
                     "',mode:'edit',xmlId:" + "'" + reviewDocumentFormXmlId + "'" + ",pdfId:" + "'" + reviewDocumentPdfRenditionId + "'" + ",requestId:" + "'" + workflowRequestId + "'" + ",");
 
-                Acm.Dialog.openWindow(url, "", 860, 700, this.onDone);
+                Acm.Dialog.openWindow(url, "", 1060, 700, this.onDone);
             }
         }
         else{

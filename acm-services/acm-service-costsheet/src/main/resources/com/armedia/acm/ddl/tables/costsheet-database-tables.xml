@@ -1,0 +1,119 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet id="01-create-costsheet-table" author="riste.tutureski">
+	     <createTable tableName="acm_costsheet">
+	         <column name="cm_costsheet_id" type="NUMBER(32,0)">
+	             <constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
+	         </column>
+	         <column name="cm_costsheet_user_id" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_object_id" type="NUMBER(32,0)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_object_type" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_object_number" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_status" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_created" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_creator" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_modified" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_costsheet_modifier" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	     </createTable>
+	 </changeSet>
+
+	 <changeSet id="02-create-cost-table" author="riste.tutureski">
+	     <createTable tableName="acm_cost">
+	         <column name="cm_cost_id" type="NUMBER(32,0)">
+	             <constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
+	         </column>
+	         <column name="cm_cost_costsheet_id" type="NUMBER(32,0))">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_date" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_value" type="NUMBER(32,0)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_title" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_description" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_created" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_creator" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_modified" type="TIMESTAMP WITH TIME ZONE">
+	             <constraints nullable="false"/>
+	         </column>
+	         <column name="cm_cost_modifier" type="VARCHAR(1024)">
+	             <constraints nullable="false"/>
+	         </column>
+	     </createTable>
+	     <addForeignKeyConstraint baseTableName="acm_cost" baseColumnNames="cm_cost_costsheet_id"
+                                 constraintName="fk_cost_costsheet_id"
+                                 referencedTableName="acm_costsheet"
+                                 referencedColumnNames="cm_costsheet_id"
+                                 deferrable="true"
+                                 initiallyDeferred="true"/>
+	 </changeSet>
+	 
+	 <changeSet id="03-change-cost-value-type-precision" author="riste.tutureski">
+	 	<dropColumn tableName="acm_cost" columnName="cm_cost_value"/>
+	 	<addColumn tableName="acm_cost">
+	 		<column name="cm_cost_value" type="NUMBER(32,2)">
+	             <constraints nullable="false"/>
+	        </column>
+	 	</addColumn>
+	 </changeSet>
+	 
+	 <changeSet id="04-remove-nullable-constraint-for-description-in-cost-table" author="riste.tutureski">
+	 	<dropNotNullConstraint tableName="acm_cost" columnName="cm_cost_description"/>
+	 </changeSet>
+	 
+	 <changeSet id="05-add-details-column-in-acm-costsheet-table" author="riste.tutureski">
+	 	<addColumn tableName="acm_costsheet">
+	 		<column name="cm_costsheet_details" type="CLOB">
+	 			<constraints nullable="true"/>
+	 		</column>
+	 	</addColumn>
+	 </changeSet>
+     
+     <changeSet id="06-add-container-id-in-acm-costsheet-table" author="riste.tutureski">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_container_id" type="NUMBER(32,0)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="07-object-type-in-acm-costsheet-table" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COSTSHEET"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="COSTSHEET"
+                              tableName="acm_costsheet"/>
+    </changeSet>
+
+</databaseChangeLog>

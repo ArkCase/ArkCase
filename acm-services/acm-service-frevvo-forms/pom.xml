@@ -4,7 +4,7 @@
 	<parent>
 	  <groupId>com.armedia.acm</groupId>
 	  <artifactId>acm-services</artifactId>
-	  <version>3.0.22-SNAPSHOT</version>
+	  <version>3.0.26-SNAPSHOT</version>
 	</parent>
 	
 	<modelVersion>4.0.0</modelVersion>
@@ -56,6 +56,21 @@
             <artifactId>acm-form-electronic-communication</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-time</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-cost</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-ebrief</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
   	
 		 <!-- spring -->
         <dependency>
@@ -74,6 +89,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 		</dependency>
+		<dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-functional-access-control</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring security -->
         <dependency>

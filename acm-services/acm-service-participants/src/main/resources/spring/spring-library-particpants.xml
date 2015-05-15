@@ -3,5 +3,33 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-       <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
+    <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
+
+    <bean id="acmParticipantService" class="com.armedia.acm.services.participants.service.AcmParticipantService">
+        <property name="participantDao" ref="acmParticipantDao"/>
+    </bean>
+
+    <bean id="acmParticipantEventPublisher" class="com.armedia.acm.services.participants.service.AcmParticipantEventPublisher"/>
+
+
+    <bean id="participantProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/participantPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="participantPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Participant Plugin"/>
+        <property name="pluginProperties" ref="participantProperties"/>
+    </bean>
+
 </beans>

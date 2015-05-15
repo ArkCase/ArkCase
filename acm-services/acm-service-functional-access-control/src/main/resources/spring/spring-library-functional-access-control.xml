@@ -23,6 +23,9 @@
         </property>
         <property name="rolesToGroupsPropertyFileLocation" value="${user.home}/.acm/applicationRoleToUserGroup.properties"/>
         <property name="eventPublisher" ref="functionalAccessEventPublisher" />
+        <property name="acmGroupDao" ref="groupDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+		<property name="executeSolrQuery" ref="executeSolrQuery" />
 	</bean>
 	
     

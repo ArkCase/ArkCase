@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
@@ -139,7 +140,6 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocuments);
-
             getMuleClient().dispatch(queueName, json, null);
             if ( log.isDebugEnabled() )
             {
@@ -151,7 +151,6 @@ public class SendDocumentsToSolr
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
     }
-
 
     public synchronized MuleClient getMuleClient()
     {
@@ -173,6 +172,5 @@ public class SendDocumentsToSolr
     {
         this.contextHolder = contextHolder;
     }
-
 
 }

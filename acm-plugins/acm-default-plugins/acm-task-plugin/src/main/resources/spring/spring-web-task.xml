@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
     <bean id="taskUiController" class="com.armedia.acm.plugins.task.web.TaskUiController">
+        <property name="plugin" ref="taskPlugin"/>
         <property name="formUrl" ref="formResource" />
     </bean>
 

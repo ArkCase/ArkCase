@@ -1,5 +1,6 @@
 package com.armedia.acm.form.casefile.service;
 
+import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -21,7 +22,8 @@ public class CaseFileWorkflowListener
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public void handleNewCaseFile(CaseFile caseFile, FrevvoUploadedFiles files, RuntimeService activitiRuntimeService,
-                                  FileWorkflowBusinessRule fileWorkflowBusinessRule)
+                                  FileWorkflowBusinessRule fileWorkflowBusinessRule,
+                                  FrevvoFormAbstractService formService)
     {
         EcmFile pdfRendition = files.getPdfRendition();
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
@@ -35,12 +37,12 @@ public class CaseFileWorkflowListener
 
         if (configuration.isStartProcess())
         {
-            startBusinessProcess(caseFile, configuration, activitiRuntimeService);
+            startBusinessProcess(caseFile, configuration, activitiRuntimeService, formService);
         }
     }
 
     private void startBusinessProcess(CaseFile caseFile, EcmFileWorkflowConfiguration configuration,
-                                      RuntimeService activitiRuntimeService)
+                                      RuntimeService activitiRuntimeService, FrevvoFormAbstractService formService)
     {
         String processName = configuration.getProcessName();
 
@@ -52,7 +54,8 @@ public class CaseFileWorkflowListener
         pvars.put("CASE_FILE", caseFile.getId());
         pvars.put("REQUEST_TYPE", "BACKGROUND_INVESTIGATION");
         pvars.put("REQUEST_ID", caseFile.getId());
-        pvars.put("OBJECT_FOLDER_ID", caseFile.getEcmFolderId());
+        String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+        pvars.put("OBJECT_FOLDER_ID", cmisFolderId);
         pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
         pvars.put("taskPriority", configuration.getTaskPriority());
 

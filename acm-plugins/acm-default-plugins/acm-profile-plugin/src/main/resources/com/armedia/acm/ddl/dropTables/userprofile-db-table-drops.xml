@@ -1,0 +1,14 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="userprofile-db-drops-01-drop-ecmfolder-id-column" author="dmiller">
+        <preConditions>
+            <columnExists tableName="acm_user_org" columnName="cm_profile_ecm_folder_id"/>
+        </preConditions>
+        <dropColumn tableName="acm_user_org" columnName="cm_profile_ecm_folder_id"/>
+    </changeSet>
+
+</databaseChangeLog>

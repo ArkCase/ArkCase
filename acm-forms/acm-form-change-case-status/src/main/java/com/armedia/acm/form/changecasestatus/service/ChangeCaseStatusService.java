@@ -3,9 +3,6 @@
  */
 package com.armedia.acm.form.changecasestatus.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,11 +12,7 @@ import com.armedia.acm.form.changecasestatus.model.ChangeCaseStatusFormEvent;
 import com.armedia.acm.form.config.ResolveInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -32,11 +25,8 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -136,12 +126,12 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
         }
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
+        String cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
-                caseFile.getEcmFolderId(),
+                cmisFolderId,
                 FrevvoFormName.CASE_FILE.toUpperCase(),
-                caseFile.getId(),
-                caseFile.getCaseNumber());
+                caseFile.getId());
 		
 		ChangeCaseStatusFormEvent event = new ChangeCaseStatusFormEvent(caseFile.getCaseNumber(), caseFile.getId(), savedRequest, uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
 		getApplicationEventPublisher().publishEvent(event);
@@ -166,27 +156,14 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 			information.setDate(new Date());
 		}
 		information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".statuses"), ","));
-		
-		// Get Approvers
-		List<AcmUser> acmUsers = getUserDao().findByFullNameKeyword("");
-		
-		List<String> approverOptions = new ArrayList<String>();
-		if (acmUsers != null && acmUsers.size() > 0){
-			for (AcmUser acmUser : acmUsers) {
-				// Add only users that are not the logged user
-				if (!acmUser.getUserId().equals(getAuthentication().getName()) || "edit".equals(mode)){
-					approverOptions.add(acmUser.getUserId() + "=" + acmUser.getFullName());
-				}
-			}
-		}
+
+		String caseResolutions = (String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".resolutions");
+		List<String> resolutions = convertToList(caseResolutions, ",");
+		changeCaseStatus.setResolutions(resolutions);
 		
 		changeCaseStatus.setInformation(information);
-		changeCaseStatus.setApproverOptions(approverOptions);
     	
-		Gson gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
-		String jsonString = gson.toJson(changeCaseStatus);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(changeCaseStatus);
 
 		return json;
     }

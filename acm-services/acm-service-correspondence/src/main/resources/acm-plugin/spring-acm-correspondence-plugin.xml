@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <bean id="acmGenerateCorrespondencePluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Correspondence Generation Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmGenerateCorrespondencePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmPostCorrespondencePrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/correspondence/{templateName}"/>
+                    <property name="requiredPrivilege" ref="acmGenerateCorrespondencePrivilege"/>
+                </bean>
+                <bean id="acmListCorrespondenceTemplatesPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/correspondence/listTemplates"/>
+                    <property name="requiredPrivilege" ref="acmGenerateCorrespondencePrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

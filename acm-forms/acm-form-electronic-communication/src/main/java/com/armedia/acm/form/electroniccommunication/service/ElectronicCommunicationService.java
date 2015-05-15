@@ -15,14 +15,11 @@ import com.armedia.acm.form.electroniccommunication.model.ElectronicCommunicatio
 import com.armedia.acm.form.electroniccommunication.model.ElectronicCommunicationInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -50,10 +47,9 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception {
 
-		String ecmFolderId = null;
+		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
-		String parentObjectName = null;
 		
 		ElectronicCommunicationForm form = (ElectronicCommunicationForm) convertFromXMLToObject(cleanXML(xml), ElectronicCommunicationForm.class);
 		
@@ -77,10 +73,9 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 				return false;
 			}
 			
-			ecmFolderId = complaint.getEcmFolderId();
+			cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
-			parentObjectName = complaint.getComplaintNumber();		
 
 			// Record user action
 			getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_MODIFIED, getAuthentication().getName());
@@ -92,16 +87,15 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 				LOG.warn("Cannot find case by given caseId=" + form.getDetails().getCaseId());
 				return false;
 			}
-			ecmFolderId = caseFile.getEcmFolderId();
+			cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
-			parentObjectName = caseFile.getCaseNumber();
 			
 			// Record user action
 			getUserActionExecutor().execute(caseFile.getId(), AcmUserActionName.LAST_CASE_MODIFIED, getAuthentication().getName());
 		}
 			
-		saveAttachments(attachments, ecmFolderId, parentObjectType, parentObjectId, parentObjectName);
+		saveAttachments(attachments, cmisFolderId, parentObjectType, parentObjectId);
 		
 		return true;
 	}
@@ -114,10 +108,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 		
 		form.setInformation(information);
 		
-		Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
-		String jsonString = gson.toJson(form);
-		
-		JSONObject json = new JSONObject(jsonString);
+		JSONObject json = createResponse(form);
 		
 		return json;
 	}
