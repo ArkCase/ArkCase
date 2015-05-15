@@ -5,13 +5,30 @@ Acm.Model = {
     onInitialized: function() {
     }
 
+    ,Variable: function(initValue) {
+        this.value = initValue;
+    }
+
     ,SessionData: function(name) {
         this.name = name;
     }
 
+    ,LocalData: function(name) {
+        this.name = name;
+    }
+
     ,CacheFifo: function(maxSize) {
-        this.maxSize = maxSize;
+        this.maxSize = (Acm.isNotEmpty(maxSize))? maxSize : this.DEFAULT_MAX_CACHE_SIZE;
         this.reset();
+    }
+}
+
+Acm.Model.Variable.prototype = {
+    get: function() {
+        return this.value;
+    }
+    ,set: function(value) {
+        this.value = value;
     }
 }
 
@@ -34,13 +51,32 @@ Acm.Model.SessionData.prototype = {
 }
 
 //
+//data stored in LocalStorage
+//
+Acm.Model.LocalData.prototype = {
+    getName: function() {
+        return this.name;
+    }
+    ,get: function() {
+        var data = localStorage.getItem(this.name);
+        var item = ("null" === data)? null : JSON.parse(data);
+        return item;
+    }
+    ,set: function(data) {
+        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
+        localStorage.setItem(this.name, item);
+    }
+}
+
+//
 // First in first out aging cache
 //
 // If a key is already exist, put() updates the value.
 // An key can be locked, so that it has higher priority not to be aged first.
 //
 Acm.Model.CacheFifo.prototype = {
-    get: function(key) {
+    DEFAULT_MAX_CACHE_SIZE: 8
+    ,get: function(key) {
         for (var i = 0; i < this.size; i++) {
             if (this.keys[i] == key) {
                 return this.cache[key];

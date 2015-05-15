@@ -1,0 +1,110 @@
+<div class="modal fade" id="dlgDocTreeDnd" tabindex="-1" role="dialog" aria-labelledby="h4DocTreeDnd" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="complaint:documents-to-retire.create-folder-dialog.buttons.close">Close</span></button>
+                <h4 class="modal-title" id="h4DocTreeDnd">Drag and Drop</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="btn-group ">
+                    <label>
+                        <input type="radio" name="op">
+                        <span>Replace document </span>&nbsp;&nbsp;&nbsp;<span>(If more then one files are dropped, only first one is used) </span>
+                        <br/>
+                    </label>
+                    <label>
+                        <input type="radio" name="op">
+                        <span >Create document(s) in parent folder</span>
+                        <br/>
+                    </label>
+                    <label>
+                        <input type="radio" name="op">
+                        <span >Create document(s) in folder</span>
+                        <br/>
+                    </label>
+                </div>
+                <br/>
+
+                <div>
+                    <label for="selDocTreeFileTypes" >File Type: </label>
+                    <select id="selDocTreeFileTypes">
+                        <option value="" selected>[Please provide a file type]</option>
+                    </select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >Cancel</button>
+                <button type="button" class="btn btn-primary" >OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dlgDocumentPicker" tabindex="-1" role="dialog" aria-labelledby="labDoTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="labDoTitle">Choose Document</h4>
+            </div>
+            <header class="header bg-gradient b-b clearfix">
+                <div class="row m-t-sm">
+                    <div class="col-md-12 m-b-sm">
+                        <%--<div class="input-group">--%>
+                            <%--<input type="text" class="input-md form-control" id="edtPoSearch" placeholder='<spring:message code="search.input.placeholder" text="Type in your search query to find complaints, cases, tasks, and documents." />'>--%>
+                            <%--<span class="input-group-btn">--%>
+                            <%--&lt;%&ndash;<button class="btn btn-md btn-default" type="button"><spring:message code="search.submit.text" text="Go!" /></button>&ndash;%&gt;--%>
+                            <%--<button class="btn btn-md" type="button"><spring:message code="search.submit.text" text="Go!" /></button>--%>
+                            <%--</span> </div>--%>
+                    </div>
+                </div>
+            </header>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <section class="panel b-a">
+                            <div class="panel-heading b-b bg-info">
+                                <a href="#" class="font-bold">Documents </a>
+                            </div>
+
+                            <table id="treeDocumentPicker" class="table table-striped th-sortable table-hover">
+                                <thead>
+                                <tr>
+                                    <th><span class='fancytree-checkbox'></span></th>
+                                    <th>ID</th>
+                                    <th width="40%">Title</th>
+                                    <th>Type</th>
+                                    <th>Created</th>
+                                    <th>Author</th>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+

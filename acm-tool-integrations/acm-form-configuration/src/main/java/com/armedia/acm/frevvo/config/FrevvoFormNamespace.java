@@ -24,7 +24,7 @@ public class FrevvoFormNamespace {
 	 * 
 	 * The namespace can be found on Frevvo Case File form schema. To access the schema,
 	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
-	 * press button "Schema" button under "Case File" form. The "Dase File.xsd" schema will be downloaded.
+	 * press button "Schema" button under "Case File" form. The "Case File.xsd" schema will be downloaded.
 	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
 	 */
 	public static final String CASE_FILE_NAMESPACE = "http://www.frevvo.com/schemas/_jTrYoLXwEeSNKN7wfymqgA";
@@ -34,9 +34,39 @@ public class FrevvoFormNamespace {
 	 * 
 	 * The namespace can be found on Frevvo Case File form schema. To access the schema,
 	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
-	 * press button "Schema" button under "Case File" form. The "Dase File.xsd" schema will be downloaded.
+	 * press button "Schema" button under "Case File" form. The "Case File.xsd" schema will be downloaded.
 	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
 	 */
 	public static final String CASE_FILE_PS_NAMESPACE = "http://www.frevvo.com/schemas/_CquK8HoPEeS1j4PPlP9imA";
+	
+	/**
+	 * This is namespace for TimesheetForm object while we creating XML
+	 * 
+	 * The namespace can be found on Frevvo Timesheet form schema. To access the schema,
+	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
+	 * press button "Schema" button under "Timesheet" form. The "Timesheet.xsd" schema will be downloaded.
+	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
+	 */
+	public static final String TIMESHEET_NAMESPACE = "http://www.frevvo.com/schemas/_K2MQkLxHEeSms-PrS7te7w";
+	
+	/**
+	 * This is namespace for CostsheetForm object while we creating XML
+	 * 
+	 * The namespace can be found on Frevvo Costsheet form schema. To access the schema,
+	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
+	 * press button "Schema" button under "Costsheet" form. The "Costsheet.xsd" schema will be downloaded.
+	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
+	 */
+	public static final String COSTSHEET_NAMESPACE = "http://www.frevvo.com/schemas/_YPmMQL2oEeSmjJjf63cgRw";
+	
+	/**
+	 * This is namespace for EbriefForm object while we creating XML
+	 * 
+	 * The namespace can be found on Frevvo Costsheet form schema. To access the schema,
+	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
+	 * press button "Schema" button under "eBrief" form. The "EBrief.xsd" schema will be downloaded.
+	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
+	 */
+	public static final String EBRIEF_NAMESPACE = "http://www.frevvo.com/schemas/_L9-uIO-DEeS84usjR3uNRQ";
 	
 }

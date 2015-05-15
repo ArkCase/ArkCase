@@ -11,5 +11,9 @@
     <bean id="getAuditAPIController" class="com.armedia.acm.plugins.audit.web.api.GetAuditAPIController">
     	<property name="auditDao" ref="auditDao" />
     </bean>
+    
+    <bean id="getAuditByObjectTypeAndObjectIdAPIController" class="com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController">
+        <property name="auditDao" ref="auditDao"/>
+    </bean>
 
 </beans>

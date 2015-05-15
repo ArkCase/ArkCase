@@ -1,74 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+
+    <bean id="ecmFileServiceProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/ecmFileService.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="ecm.defaultBasePath">/Sites/acm/documentLibrary</prop>
+                <prop key="ecm.defaultPath.COMPLAINT">/Complaints</prop>
+                <prop key="ecm.defaultPath.TASK">/Tasks</prop>
+                <prop key="ecm.defaultPath.CASE_FILE">/Case Files</prop>
+            </props>
+        </property>
+    </bean>
 
     <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
+    <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerDao"/>
+    <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
 
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
         <lookup-method name="getMuleClient" bean="muleClient"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
         <property name="ecmFileTransaction" ref="ecmFileTransaction"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
-    </bean>
-
-    <bean id="documentToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.DocumentToSolrTrasnformer">
-        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="containerFolderDao" ref="acmContainerFolderDao"/>
+        <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="solrQuery" ref="executeSolrQuery"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="sortParameterNameToCmisFieldName">
+            <map>
+                <entry key="name" value="name_lcs"/>
+                <entry key="type" value="type_s"/>
+                <entry key="created" value="create_tdt"/>
+                <entry key="author" value="author"/>
+                <entry key="version" value="version_s"/>
+                <entry key="modified" value="last_modified_tdt"/>
+                <entry key="creator" value="author"/>
+                <entry key="modifier" value="modifier_s"/>
+                <entry key="category" value="category_s"/>
+            </map>
+        </property>
+        <property name="solrObjectTypeToAcmType">
+            <map>
+                <entry key="FILE" value="file"/>
+                <entry key="FOLDER" value="folder"/>
+            </map>
+        </property>
+        <property name="categoryMap">
+            <map>
+                <entry key="document" value="Document"/>
+                <entry key="correspondence" value="Correspondence"/>
+            </map>
+        </property>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
+    <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
+        <property name="dao" ref="acmContainerFolderDao"/>
+    </bean>
+
+    <bean id="acmFolderToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmFolderToSolrTransformer">
+        <property name="dao" ref="acmFolderDao"/>
+    </bean>
+
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
+    <!--<bean id="ecmFileTagChangeListener" class="com.armedia.acm.plugins.ecm.service.EcmFileAssociatedTagChangeListener">-->
+        <!--<property name="ecmFileDao" ref="ecmFileDao"/>-->
+    <!--</bean>-->
+
+    <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
+        <property name="folderDao" ref="acmFolderDao"/>
+        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="fileService" ref="ecmFileService"/>
+    </bean>
+
+    <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
+
+    <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>
+
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="fileDownloadPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/{fileId}"/>
-                    <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
-                </bean>
-                <bean id="alfrescoDownloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/workspace:/SpacesStore/{fileId}"/>
-                    <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
-                </bean>
-                <bean id="alfrescoDownloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/byId/{ecmFileId}"/>
-                    <property name="requiredPrivilege" ref="fileDownloadPrivilege"/>
-                </bean>
-
-            </list>
-        </property>
     </bean>
-
-    <bean id="fileDownloadPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-file-download"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_ANALYST</value>
-            </list>
-        </property>
-    </bean>
-
-
-
+    
 </beans>

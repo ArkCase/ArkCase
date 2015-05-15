@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <bean id="profilePluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Profile Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="profilePrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/profile"/>
+                    <property name="requiredPrivilege" ref="profilePrivilege"/>
+                </bean>
+                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/profile/get/{userId}"/>
+                    <property name="requiredPrivilege" ref="profilePrivilege"/>
+                </bean>
+                <bean id="profileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/profile/userOrgInfo/set"/>
+                    <property name="requiredPrivilege" ref="profilePrivilege"/>
+                </bean>
+                <bean id="saveOutlookPassword" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/profile/outlook"/>
+                    <property name="requiredPrivilege" ref="profilePrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

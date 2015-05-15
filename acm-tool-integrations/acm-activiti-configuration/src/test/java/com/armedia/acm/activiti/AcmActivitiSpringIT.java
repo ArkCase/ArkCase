@@ -21,10 +21,11 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-        "classpath:/spring/spring-library-activiti-configuration.xml",
-        "classpath:/spring/spring-library-data-source.xml",
-        "classpath:/spring/spring-library-test-activiti-configuration.xml",
-        "classpath:/spring/spring-library-context-holder.xml"
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-test-activiti-configuration.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml"
 })
 public class AcmActivitiSpringIT
 {
@@ -69,7 +70,7 @@ public class AcmActivitiSpringIT
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("key", "Grateful Dead");
 
-        ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcess", processVariables);
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("TestActivitiSpringProcessUnitTest", processVariables);
         assertNotNull(pi);
 
         Task userTask = taskService.createTaskQuery().processInstanceId(pi.getId()).singleResult();

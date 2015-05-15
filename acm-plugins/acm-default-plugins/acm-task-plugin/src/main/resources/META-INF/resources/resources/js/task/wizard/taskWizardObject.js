@@ -56,6 +56,13 @@ TaskWizard.Object = {
             Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.object_id_s, val.name);
 	    });
 	}
+    ,sortAssignees: function (previous,next) {
+        if (previous.name < next.name)
+            return -1;
+        if (previous.name > next.name)
+            return 1;
+        return 0;
+    }
 
 	/**
 	 * Get the assignee field value
@@ -293,7 +300,7 @@ TaskWizard.Object = {
         var data = {};
         var t = TaskOld.getTask();
         data.assignee = this.getSelectValueSelOwners();
-        if(data.assignee == null){data.assignee = App.getUserName();}
+        if(data.assignee == "null"){data.assignee = App.getUserName();}
         data.attachedToObjectType = t.attachedToObjectType;
         data.attachedToObjectName = this.getValueEdtComplaint();
         data.title = this.getValueEdtSubject();

@@ -15,7 +15,9 @@ Admin.Service = {
         }
         ,API_GROUP                  : "/api/latest/users/group/"
         ,API_RETRIEVE_GROUPS        : "/api/latest/users/groups/get?n=50&s=create_date_tdt desc"
-        ,API_RETRIEVE_USERS         : "/api/v1/plugin/search/advanced/USER"
+        // In this URL "n" was not provided. For that reason it always back the default value (which is 10).
+        // If the application have more than 10 users, the rest of the users will not be shown in the organization hierarchy.
+        ,API_RETRIEVE_USERS         : "/api/v1/plugin/search/advanced/USER?n=10000"
         ,API_FACET_SEARCH_          : "/api/v1/plugin/search/facetedSearch?q="
 
 
@@ -335,6 +337,139 @@ Admin.Service = {
 
 
     }
+    ,LabelConfiguration: {
+        API_SETTINGS: "/api/latest/plugin/admin/labelconfiguration/settings"
+        ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
+        ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
+        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/resource?lang={0}&ns={1}"
+
+
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+        },
+
+        retrieveSettings: function(){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_SETTINGS;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve resource settings:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+        updateSettings: function(settings){
+            var $dfd =jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_SETTINGS;
+            Acm.Service.asyncPut(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url
+                ,JSON.stringify(settings, null, 4)
+            );
+            return $dfd.promise();
+        },
+
+        retrieveLanguages: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RETRIEVE_LANGUAGES;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve resource languages:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+
+        retrieveNamespaces: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RETRIEVE_NAMESPACES;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve resource namespaces:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,retrieveResource: function(lang, namespace){
+            var $dfd = jQuery.Deferred();
+
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESOURCE.format(lang, namespace);
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve labels resource:" + response.errorMsg;
+                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+        ,updateResource: function(lang, namespace, resource){
+            var $dfd =jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESOURCE.format(lang, namespace);
+            Acm.Service.asyncPut(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url
+                ,JSON.stringify(resource, null, 4)
+            );
+            return $dfd.promise();
+        }
+    }
+
 
     ,Correspondence : {
 

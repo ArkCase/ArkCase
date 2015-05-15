@@ -10,27 +10,36 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <%@include file="/WEB-INF/tagf/global.tagf" %>
+    <%--<%@include file="/WEB-INF/tagf/global.tagf" %>--%>
+    <%@include file="/resources/include/global.jspf" %>
 
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
         <span itemprop="userName">${sessionScope.acm_username}</span>
+        <span itemprop="application">${sessionScope.acm_application.toJson()}</span>
         <span itemprop="objectTypes">${acm_application.getObjectTypesAsJson()}</span>
+        <span itemprop="issueCollectorFlag">${acm_application.getIssueCollectorFlag()}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
 </head>
 <body class="">
 <section class="vbox">
-    <%@include file="/WEB-INF/tagf/topbar.tagf"%>
+    <%--<%@include file="/WEB-INF/tagf/topbar.tagf"%>--%>
+    <%@include file="/resources/include/topbar.jspf" %>
 
     <section>
         <section class="hbox stretch">
-            <%@include file="/WEB-INF/tagf/sidebar.tagf"%>
-
-            <jsp:doBody/>
+            <%--<%@include file="/WEB-INF/tagf/sidebar.tagf"%>--%>
+            <%@include file="/resources/include/sidebar.jspf" %>
+            <section id="content">
+                <%--<%@include file="/WEB-INF/tagf/msgBoard.tagf"%>--%>
+                <%@include file="/resources/include/msgBoard.jspf" %>
+                <jsp:doBody/>
+            </section>
         </section>
     </section>
-    <%@include file="/WEB-INF/tagf/footer.tagf"%>
+    <%--<%@include file="/WEB-INF/tagf/footer.tagf"%>--%>
+    <%@include file="/resources/include/footer.jspf" %>
 </section>
 
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_underscore}/${js_underscore}'/>"></script>
@@ -60,6 +69,14 @@
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarView.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/sidebar/sidebarController.js'/>"></script>
 
+
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollector.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorService.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorModel.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorView.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/issueCollector/issueCollectorController.js'/>"></script>
+
+
 <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
@@ -76,11 +93,14 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        Application.run();
+        var context = {};
+        context.path = Acm.Object.MicroData.get("contextPath");
+        Application.run(context);
     });
 </script>
 
-<%@include file="/WEB-INF/tagf/dialog.tagf" %>
+<%--<%@include file="/WEB-INF/tagf/dialog.tagf" %>--%>
+<%--<%@include file="/resources/include/dialog.jspf" %>--%>
 
 </body>
 </html>

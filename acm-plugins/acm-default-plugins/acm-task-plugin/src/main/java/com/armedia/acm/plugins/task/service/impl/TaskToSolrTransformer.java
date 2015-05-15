@@ -51,10 +51,11 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setObject_type_s("TASK");
         doc.setObject_sub_type_s(in.getBusinessProcessName());
         doc.setPriority_lcs(in.getPriority());
-        doc.setParent_type_s(in.getAttachedToObjectType());
-        if ( in.getAttachedToObjectId() != null )
+        doc.setParent_type_s(in.getParentObjectType());
+        if ( in.getParentObjectId() != null )
         {
-            doc.setParent_id_s(Long.toString(in.getAttachedToObjectId()));
+            doc.setParent_id_s(Long.toString(in.getParentObjectId()));
+            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
         }
         doc.setName(in.getTitle());
         doc.setStatus_lcs(in.getStatus());
@@ -98,8 +99,13 @@ public class TaskToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmT
         doc.setOwner_s(in.getOwner());
         doc.setId(in.getId() + "-TASK");
         doc.setPriority_s(in.getPriority());
-        doc.setParent_object_type_s(in.getAttachedToObjectType());
-        doc.setParent_object_id_i(in.getAttachedToObjectId());
+        doc.setParent_object_type_s(in.getParentObjectType());
+        doc.setParent_object_id_i(in.getParentObjectId());
+
+        if ( in.getParentObjectId() != null )
+        {
+            doc.setParent_ref_s(Long.toString(in.getParentObjectId()) + "-" + in.getParentObjectType());
+        }
         doc.setDue_tdt(in.getDueDate());
         doc.setAdhocTask_b(in.isAdhocTask());
         doc.setObject_type_s("TASK");

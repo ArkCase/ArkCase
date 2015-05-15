@@ -3,11 +3,16 @@
  */
 package com.armedia.acm.forms.roi.service;
 
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.commons.io.IOUtils;
+import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,16 +32,23 @@ import com.google.gson.GsonBuilder;
 @ContextConfiguration(locations = {
     "classpath:/spring/spring-roi-service-test.xml"    
 })
-public class ROIServiceTest {
+public class ROIServiceTest extends EasyMockSupport
+{
 
 	@Autowired
 	private ROIService roiServiceTest;
+
+	private UserDao mockUserDao;
 	
 	private Gson gson;
 	
 	@Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+	{
 		gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+
+		mockUserDao = createMock(UserDao.class);
+		roiServiceTest.setUserDao(mockUserDao);
     }
 	
 	@Test
@@ -45,8 +57,14 @@ public class ROIServiceTest {
 		
 		ROIForm form = gson.fromJson(expected, ROIForm.class);
 		form.getReportInformation().setDate(new Date());
-		
-		assertEquals(gson.toJson(form), roiServiceTest.get("init-form-data").toString());
+
+		replayAll();
+
+		Object initFormData = roiServiceTest.get("init-form-data");
+
+		verifyAll();
+
+		assertEquals(gson.toJson(form), initFormData.toString());
 	}
 
 }

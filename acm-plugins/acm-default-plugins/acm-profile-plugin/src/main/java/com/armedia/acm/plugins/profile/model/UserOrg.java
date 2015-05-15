@@ -1,16 +1,13 @@
 package com.armedia.acm.plugins.profile.model;
 
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 20.10.2014.
@@ -66,18 +63,22 @@ public class UserOrg implements Serializable{
     @Column(name="cm_mobile_phone")
     private String mobilePhoneNumber;
 
+    @Column(name="cm_object_type")
+    private String objectType  = UserOrgConstants.OBJECT_TYPE;
+
     /**
-     * This field is only used when the profile is created. Usually it will be null.  Use the ecmFolderId
+     * This field is only used when the profile is created. Usually it will be null.  Use the container folder
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
     private String ecmFolderPath;
 
     /**
-     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
+     * Container folder where the case file's attachments/content files are stored.
      */
-    @Column(name = "cm_profile_ecm_folder_id")
-    private String ecmFolderId;
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
 
     @Column(name = "cm_ecm_fileId")
     private Long ecmFileId;
@@ -93,23 +94,34 @@ public class UserOrg implements Serializable{
     @JoinColumn(name = "cm_organization")
     private Organization organization;
 
+    @PrePersist
+    public void beforeInsert()
+    {
+        setupChildPointers();
+    }
+
+    @PreUpdate
+    public void beforeUpdate()
+    {
+        setupChildPointers();
+    }
+
+    private void setupChildPointers()
+    {
+        if ( getContainer() != null )
+        {
+            getContainer().setContainerObjectId(getUserOrgId());
+            getContainer().setContainerObjectType(UserOrgConstants.OBJECT_TYPE);
+            getContainer().setContainerObjectTitle(getUser().getUserId());
+        }
+    }
+
     public String getEcmFolderPath() {
         return ecmFolderPath;
     }
 
     public void setEcmFolderPath(String ecmFolderPath) {
         this.ecmFolderPath = ecmFolderPath;
-    }
-
-    public String getEcmFolderId() {
-        return ecmFolderId;
-    }
-
-    public void setEcmFolderId(String ecmFolderId) {
-        if ( log.isDebugEnabled() ) {
-            log.debug("Set folder ID to '" + ecmFolderId + "'");
-        }
-        this.ecmFolderId = ecmFolderId;
     }
 
     public Organization getOrganization() {
@@ -254,5 +266,19 @@ public class UserOrg implements Serializable{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
+    }
+
+    public String getObjectType() {
+        return objectType;
     }
 }

@@ -46,17 +46,43 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         </scripting:transformer>
 
+        <scripting:transformer name="ensureCaseFileContainerExists">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    import com.armedia.acm.plugins.ecm.model.AcmContainer;
+                    import com.armedia.acm.plugins.ecm.model.AcmFolder;
+
+                    if ( payload.getContainer() == null )
+                    {
+                        AcmContainer container = new AcmContainer();
+                        payload.setContainer(container);
+                        payload.getContainer().setContainerObjectType(payload.getObjectType());
+                        payload.getContainer().setContainerObjectTitle(payload.getCaseNumber());
+                    }
+
+                    if ( payload.getContainer().getFolder() == null )
+                    {
+                        AcmFolder folder = new AcmFolder();
+                        folder.setName("ROOT");
+                        payload.getContainer().setFolder(folder);
+                    }
+
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+
+        </scripting:transformer>
+
         <choice>
             <when expression="#[payload.ecmFolderPath != null]">
                 <processor-chain>
-                    <!-- store the case file in a flow variable so the enricher can see it -->
-                    <set-variable variableName="caseFile" value="#[message.payload]"/>
+                    <!-- store the container folder in a flow variable so the enricher can see it -->
+                    <set-variable variableName="folder" value="#[message.payload.container.folder]"/>
                     <!-- update the case file with the ID of the folder -->
-                    <enricher  source="#[message.payload.id]" target="#[flowVars['caseFile'].ecmFolderId]">
+                    <enricher  source="#[message.payload.id]" target="#[flowVars['folder'].cmisFolderId]">
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
-                    <logger category="com.armedia.acm.plugins.casefile" level="DEBUG"
-                             message="Folder Id: #[payload.ecmFolderId]"/>
                 </processor-chain>
             </when>
             <otherwise>

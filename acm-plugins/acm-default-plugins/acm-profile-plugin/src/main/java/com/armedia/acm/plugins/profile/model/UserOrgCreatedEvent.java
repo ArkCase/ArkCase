@@ -7,14 +7,12 @@ import com.armedia.acm.event.AcmEvent;
  */
 public class UserOrgCreatedEvent extends UserOrgPersistentEvent {
 
-        private static final String EVENT_TYPE = "com.armedia.acm.profile.userorg.created";
-
         public UserOrgCreatedEvent(UserOrg source) {
             super(source);
         }
 
         @Override
         public String getEventType() {
-            return EVENT_TYPE;
+            return UserOrgConstants.EVENT_TYPE_USER_PROFILE_CREATED;
         }
 }

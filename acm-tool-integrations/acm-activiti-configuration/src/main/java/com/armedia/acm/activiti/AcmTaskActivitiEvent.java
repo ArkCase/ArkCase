@@ -22,7 +22,8 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
     private String businessProcessName;
 
 
-    public AcmTaskActivitiEvent(Task source, String taskEvent, Long parentObjectId, String parentObjectType, String parentObjectName, String buisenesProcessName) {
+    public AcmTaskActivitiEvent(Task source, String taskEvent, Long parentObjectId, String parentObjectType, String parentObjectName)
+    {
         super(source);
         setSucceeded(true);
         setObjectType("TASK");
@@ -42,9 +43,6 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent {
         setParentObjectId(parentObjectId);
         setParentObjectType(parentObjectType);
         setParentObjectName(parentObjectName);
-
-        //TODO IMPORTANT!!!! Find a way to provide buisenesProcessName to set it bellow
-        setBusinessProcessName("");
     }
 
     private String determinePriority(int priority)

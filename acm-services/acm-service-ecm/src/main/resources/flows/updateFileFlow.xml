@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
     <flow name="updateFile" doc:name="Update the existing file with new version">
         <description>
-            The incoming payload is EcmFile that should be updated. The return payload is CMIS ObjectId after check-in process is finished.
+            The incoming payload is EcmFile that should be updated. The return payload is the updated CMIS document.
             If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
         </description>
 
@@ -37,6 +37,8 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 					   checkinComment="Updating file with new version"
 					   major="true"
 					   mimeType="#[message.inboundProperties.mimeType]"/>
+
+        <cmis:get-object-by-id objectId="#[payload.id]"/>
 					   
 		<catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>

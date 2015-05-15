@@ -39,6 +39,19 @@
         <property name="caseFileFactory" ref="caseFileFactory"/>
         <property name="caseFilePSFactory" ref="caseFilePSFactory"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
+        <property name="timesheetService" ref="timesheetService" />
+        <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
+        <property name="timeFactory" ref="timeFactory"/>
+        <property name="costsheetService" ref="costsheetService" />
+        <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+        <property name="costFactory" ref="costFactory"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="timesheetEventPublisher" ref="timesheetEventPublisher"/>
+        <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
+        <property name="functionalAccessService" ref="functionalAccessService"/>
+        <property name="complaintFactory" ref="complaintFactory"/>
+        <property name="ebriefFactory" ref="ebriefFactory"/>
 	</bean>
 
 </beans>

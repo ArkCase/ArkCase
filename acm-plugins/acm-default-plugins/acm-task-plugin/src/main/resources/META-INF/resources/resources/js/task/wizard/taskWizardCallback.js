@@ -22,12 +22,12 @@ TaskWizard.Callback = {
         }
 
         if (!success) {
-            Acm.Dialog.error("Failed to retrieve assignees");
+            Acm.Dialog.error($.t("task:wizard.msg.failed-to-retrieve-assignees"));
         }
     }
     ,onTaskCreated : function(Callback, response) {
         if (response.hasError) {
-            Acm.Dialog.error("Failed to create new task:"  +response.errorMsg);
+            Acm.Dialog.error($.t("task:wizard.msg.failed-to-create-new-task")  +response.errorMsg);
         } else {
             if (Acm.isNotEmpty(response.taskId)) {
                 TaskWizard.Object.setTaskData(response);

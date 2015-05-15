@@ -6,95 +6,16 @@
     <bean id="noteDao" class="com.armedia.acm.services.note.dao.NoteDao"/>
     <bean id="noteEventPublisher" class="com.armedia.acm.services.note.service.NoteEventPublisher"/>
 
-    <bean id="acmSaveNotePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-save-note"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_INVESTIGATOR</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_ANALYST</value>
-            </list>
-        </property>
-    </bean>
-
     <bean id="acmSaveNotePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Note Service Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="acmSaveNotePrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="acmSaveNoteUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/note"/>
-                    <property name="requiredPrivilege" ref="acmSaveNotePrivilege"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="acmDeleteNoteByIdPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-note-delete"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_INVESTIGATOR</value>
-            </list>
-        </property>
     </bean>
 
     <bean id="acmDeleteNoteByIdPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Delete Note Service Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="acmDeleteNoteByIdPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="acmDeleteNoteByIdUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/plugin/note/{noteId}"/>
-                    <property name="requiredPrivilege" ref="acmDeleteNoteByIdPrivilege"/>
-                </bean>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="acmListNotesPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
-        <property name="privilegeName" value="acm-note-delete"/>
-        <property name="applicationRolesWithPrivilege">
-            <list>
-                <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
-                <value>ROLE_CALLCENTER</value>
-                <value>ROLE_ADMINISTRATOR</value>
-                <value>ROLE_INVESTIGATOR</value>
-            </list>
-        </property>
     </bean>
 
     <bean id="acmListNotesPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Delete Note Service Plugin"/>
-        <property name="privileges">
-            <list>
-                <ref bean="acmListNotesPrivilege"/>
-            </list>
-        </property>
-        <property name="urlPrivileges">
-            <list>
-                <bean id="acmListNotesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/note/{parentType}/{parentId}"/>
-                    <property name="requiredPrivilege" ref="acmListNotesPrivilege"/>
-                </bean>
-            </list>
-        </property>
     </bean>
 
 </beans>

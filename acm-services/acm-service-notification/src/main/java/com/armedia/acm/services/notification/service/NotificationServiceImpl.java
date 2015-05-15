@@ -33,6 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private boolean batchRun;
     private int batchSize;
+    private int purgeDays;
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
     private NotificationDao notificationDao;
@@ -90,45 +91,23 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		do
 		{
-			notifications = getNotificationDao().executeQuery(lastRun, firstResult, maxResult, rule.getJpaQuery());
+			Map<String, Object> properties = getJpaProperties(rule, lastRun);
+			notifications = getNotificationDao().executeQuery(properties, firstResult, maxResult, rule.getJpaQuery(), rule.getQueryType());
 			
 			if ( !notifications.isEmpty() )
             {
 				firstResult += maxResult;
 				
-				for (Notification notification : notifications)
-				{
-					// Send notification
-					notification = send(notification);	
-					
-					// Save notification to database
-					Notification saved = getNotificationDao().save(notification);
-					
-					// Raise an event
-					ApplicationNotificationEvent event = new ApplicationNotificationEvent(saved, NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
-					getNotificationEventPublisher().publishNotificationEvent(event);
-				}
+				notifications.stream()
+				             .map(element -> rule.getExecutor().execute(element))
+				             .map(element -> getNotificationDao().save(element))
+				             .forEach(element -> {
+				            	 ApplicationNotificationEvent event = new ApplicationNotificationEvent(element, NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
+								 getNotificationEventPublisher().publishNotificationEvent(event);
+				             });
             }
 		}
 		while ( !notifications.isEmpty() );
-	}
-	
-	@Override
-	public Notification send(Notification notification) 
-	{
-		// Get all registered senders
-		Map<String, NotificationSender> senders = getSpringContextHolder().getAllBeansOfType(NotificationSender.class);
-		
-		if (senders != null)
-		{
-			for (NotificationSender sender : senders.values())
-			{
-				// Send notification
-				notification = sender.send(notification);
-			}
-		}
-				
-		return notification;
 	}
 	
 	/**
@@ -152,6 +131,11 @@ public class NotificationServiceImpl implements NotificationService {
         return date;
     }
 	
+	/**
+	 * Save last run date in the properties file
+	 * 
+	 * @param dateFormat
+	 */
 	private void setLastRunDate(SimpleDateFormat dateFormat)
 	{
 		String lastRunDate = dateFormat.format(new Date());
@@ -160,6 +144,41 @@ public class NotificationServiceImpl implements NotificationService {
 		properties.put(NotificationConstants.SOLR_LAST_RUN_DATE_PROPERTY_KEY, lastRunDate);
 		
 		getPropertyFileManager().storeMultiple(properties, getNotificationPropertyFileLocation(), false);
+	}
+	
+	/**
+	 * Create needed JPA query properties. In the DAO we have logic which one should be excluded
+	 * 
+	 * @param rule
+	 * @param lastRun
+	 * @return
+	 */
+	private Map<String, Object> getJpaProperties(NotificationRule rule, Date lastRun)
+	{
+		Map<String, Object> jpaProperties = rule.getJpaProperties();
+		
+		if (jpaProperties == null)
+		{
+			jpaProperties = new HashMap<>();
+		}
+		
+		jpaProperties.put("lastRunDate", lastRun);
+		jpaProperties.put("threshold", createPurgeThreshold());
+		
+		return jpaProperties;
+	}
+	
+	/**
+	 * Create purge date threshold: today-days
+	 * 
+	 * @return
+	 */
+	private Date createPurgeThreshold()
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -getPurgeDays());
+		
+		return calendar.getTime();
 	}
 
 	public boolean isBatchRun() {
@@ -176,6 +195,14 @@ public class NotificationServiceImpl implements NotificationService {
 
 	public void setBatchSize(int batchSize) {
 		this.batchSize = batchSize;
+	}
+
+	public int getPurgeDays() {
+		return purgeDays;
+	}
+
+	public void setPurgeDays(int purgeDays) {
+		this.purgeDays = purgeDays;
 	}
 
 	public PropertyFileManager getPropertyFileManager() {

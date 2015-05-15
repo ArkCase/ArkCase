@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-
-import org.apache.chemistry.opencmis.client.api.ObjectId;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.mule.api.MuleException;
@@ -27,8 +30,8 @@ import java.util.Map;
 public class EcmFileTransactionImpl implements EcmFileTransaction
 {
     private MuleClient muleClient;
-
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private EcmFileDao ecmFileDao;
+    private AcmFolderDao folderDao;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -41,15 +44,13 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String mimeType,
             String fileName,
             String cmisFolderId,
-            String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName)
+            AcmContainer container)
             throws MuleException
     {
         // by default, files are documents
-        String category = "DOCUMENT";
+        String category = "Document";
         EcmFile retval = addFileTransaction(authentication, fileType, category, fileInputStream, mimeType, fileName,
-                cmisFolderId, parentObjectType, parentObjectId, parentObjectName);
+                cmisFolderId, container);
 
         return retval;
     }
@@ -63,31 +64,19 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String mimeType,
             String fileName,
             String cmisFolderId,
-            String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName)
+            AcmContainer container)
             throws MuleException
     {
         EcmFile toAdd = new EcmFile();
         toAdd.setFileMimeType(mimeType);
         toAdd.setFileName(fileName);
         toAdd.setFileType(fileType);
-
-        ObjectAssociation parent = new ObjectAssociation();
-        parent.setParentId(parentObjectId);
-        parent.setParentType(parentObjectType);
-        parent.setParentName(parentObjectName);
-        parent.setCategory(fileCategory);
-        parent.setTargetSubtype(fileType);
-        toAdd.addParentObject(parent);
+        toAdd.setCategory(fileCategory);
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFolderId", cmisFolderId);
+        messageProps.put("cmisFolderId", cmisFolderId);
         messageProps.put("inputStream", fileInputStream);
-        messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
         MuleMessage received = getMuleClient().send("vm://addFile.in", toAdd, messageProps);
-        EcmFile saved = received.getPayload(EcmFile.class);
 
         MuleException e = received.getInboundProperty("saveException");
         if ( e != null )
@@ -95,6 +84,21 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throw e;
         }
 
+        Document cmisDocument = received.getPayload(Document.class);
+        toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+        toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
+
+        EcmFileVersion version = new EcmFileVersion();
+        version.setCmisObjectId(cmisDocument.getId());
+        version.setVersionTag(cmisDocument.getVersionLabel());
+        toAdd.getVersions().add(version);
+
+        AcmFolder folder = getFolderDao().findByCmisFolderId(cmisFolderId);
+        toAdd.setFolder(folder);
+
+        toAdd.setContainer(container);
+
+        EcmFile saved = getEcmFileDao().save(toAdd);
         return saved;
     }
     
@@ -105,31 +109,30 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             InputStream fileInputStream)
             throws MuleException
     {
- 
+
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", ecmFile.getEcmFileId());
+        messageProps.put("ecmFileId", FolderAndFilesUtils.getActiveVersionCmisId(ecmFile));
         messageProps.put("fileName", ecmFile.getFileName());
         messageProps.put("mimeType", ecmFile.getFileMimeType());
         messageProps.put("inputStream", fileInputStream);
-        messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-
-
-
 
         MuleMessage received = getMuleClient().send("vm://updateFile.in", ecmFile, messageProps);
-        ObjectId objectId = received.getPayload(ObjectId.class);
 
         MuleException e = received.getInboundProperty("updateException");
         if ( e != null )
         {
             throw e;
         }
-        
-        if (null == objectId || !objectId.getId().replaceAll(";.*", "").equals(ecmFile.getEcmFileId()))
-        {
-        	throw new RuntimeException("Updating of the file " + ecmFile.getFileName() + " failed.");
-        }
+
+        Document cmisDocument = received.getPayload(Document.class);
+        ecmFile.setActiveVersionTag(cmisDocument.getVersionLabel());
+
+        EcmFileVersion version = new EcmFileVersion();
+        version.setCmisObjectId(cmisDocument.getId());
+        version.setVersionTag(cmisDocument.getVersionLabel());
+        ecmFile.getVersions().add(version);
+
+        ecmFile = getEcmFileDao().save(ecmFile);
 
         return ecmFile;
     }
@@ -138,7 +141,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public String downloadFileTransaction(EcmFile ecmFile) throws MuleException {
     	try 
 		{			
-			MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", ecmFile.getEcmFileId(), null);
+			MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), null);
 			
 			String result = getContent((ContentStream) message.getPayload());
 			
@@ -195,14 +198,24 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.muleClient = muleClient;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    public EcmFileDao getEcmFileDao()
     {
-        return auditPropertyEntityAdapter;
+        return ecmFileDao;
     }
 
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
     {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+        this.ecmFileDao = ecmFileDao;
+    }
+
+    public AcmFolderDao getFolderDao()
+    {
+        return folderDao;
+    }
+
+    public void setFolderDao(AcmFolderDao folderDao)
+    {
+        this.folderDao = folderDao;
     }
 
 }

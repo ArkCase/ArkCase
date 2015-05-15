@@ -94,6 +94,8 @@ public class GetProfileInfoAPIController {
             groups.add(role.getRoleName());
         }
 
+        profileDTO.setUserOrgId(userOrgInfo.getUserOrgId());
+
         profileDTO.setGroups(groups);
 
         profileDTO.setEmail(userOrgInfo.getUser().getMail());

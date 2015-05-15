@@ -27,184 +27,220 @@
 </jsp:attribute>
 
 <jsp:body>
-    <section id="content">
-        <section class="vbox">
-            <header class="header m-b-xs b-light hidden-print">
-                <h3 class="m-b-xs text-black">User Profile</h3>
-            </header>
-            <section class="scrollable">
-                <section class="hbox stretch">
-                    <aside class="aside-lg bg-light lter b-r">
-                        <section class="vbox">
-                            <section class="scrollable">
-                                <div class="wrapper">
-                                    <section class="panel no-border bg-gradient lt">
-                                        <div class="panel-body">
-                                            <div class="row">
+    <section class="vbox">
+        <header class="header m-b-xs b-light hidden-print">
 
-                                                <div class="col-xs-6 text-center">
-
-                                                    <div class="thumb-lg avatar"> <img id="picture" src="" default="<c:url value='/'/>resources/vendors/${acm_theme}/images/nopic.png" class="dker"></div>
-
-                                                    <div>
-                                                        <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
-                                                        <img id="picLoading" src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ajax-loader.gif" class="dker" style="display:none;">
-                                                        <form id="formPicture" style="display:none;">
-                                                            <input type="file" id="file" name="file">
-                                                                <%--<input type="submit">--%>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-
-                                                    <h4 id="fullName"></h4>
-                                                    <h4><a href="#" id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
-                                                        <%--<small> Agent </small>--%>
+            <div class="pull-right inline">
+                <div class="btn-group">
+                    <button class="btn btn-default btn-sm" data-title="Change Password" data-toggle="modal" data-target="#changePassword"><i class="fa fa-key"></i> Change Password</button>
 
 
-                                                    <h4 id="email"></h4>
-                                                    <small> E-mail Address </small>
-                                                </div>
-                                            </div>
+                    <div class="modal fade in" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×<span class="sr-only">Change Password</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <section class="row">
+                                        <div class="col-sm-12">
+                                            <%--not used at the moment--%>
+                                            <%--<label for="currentpassword" class="label">Enter your current password.</label>
+                                            <input id="currentpassword" type="password" class="form-control" placeholder="Enter your current password.">
+                                            <hr>--%>
+                                            <label for="newpass" class="label">Enter your new password.</label>
+                                            <input id="newpass" type="password" class="form-control" placeholder="Enter your new password.">
+                                            <br>
+                                            <label for="newpassagain" class="label">Enter your new password again.</label>
+                                            <input id="newpassagain" type="password" class="form-control" placeholder="Enter your new password again.">
                                         </div>
                                     </section>
-
-                                    <section class="panel panel-default bg-gradient">
-                                        <h4 class="padder">Groups</h4>
-                                        <ul class="list-group">
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-xs-12" id="groups">
-
-                                                            <%--<span class="btn-rounded btn-sm btn-info"> Richmond Field Office</span>--%>
-                                                            <%--<span class="btn-rounded btn-sm btn-info"> Internal Affairs</span>--%>
-                                                            <%--<span class="btn-rounded btn-sm btn-info"> Forensic Accountants</span>--%>
-                                                            <%--<span class="btn-rounded btn-sm btn-info"> Group 4</span>--%>
-                                                            <%--<span class="btn-rounded btn-sm btn-info"> Group 5</span>--%>
-
-
-
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </section>
-
-
-                                    <section class="panel panel-default bg-gradient">
-
-
-                                            <%--<h4 class="padder">Subscriptions</h4>--%>
-
-                                            <%--<table class="table table-striped b-light">--%>
-                                            <%--<thead>--%>
-                                            <%--<tr>--%>
-
-                                            <%--<th class="th-sortable" data-toggle="class">Type</th>--%>
-                                            <%--<th>ID</th>--%>
-                                            <%--<th>Title</th>--%>
-                                            <%--<th>Date</th>--%>
-                                            <%--<th width="30"></th>--%>
-                                            <%--</tr>--%>
-                                            <%--</thead>--%>
-                                            <%--<tbody>--%>
-                                            <%--<tr>--%>
-
-                                            <%--<td>[Object]</td>--%>
-                                            <%--<td>[ID]</td>--%>
-                                            <%--<td>[Title]</td>--%>
-                                            <%--<td>MM/DD/YYYY</td>--%>
-
-                                            <%--<td><a href="#" class="active" data-toggle="class"><i class="fa fa-times text-danger text-active"></i><i class="fa  fa-check-circle text-success text"></i></a></td>--%>
-                                            <%--</tr>--%>
-                                            <%--</tr>--%>
-
-                                            <%--</tbody>--%>
-                                            <%--</table>--%>
-
-
-                                            <%--<footer class="panel-footer">--%>
-                                            <%--<div class="row">--%>
-                                            <%--<div class="col-sm-5 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>--%>
-                                            <%--<div class="col-sm-7 text-right text-center-xs">--%>
-                                            <%--<ul class="pagination pagination-sm m-t-none m-b-none">--%>
-                                            <%--<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>--%>
-                                            <%--<li><a href="#">1</a></li>--%>
-                                            <%--<li><a href="#">2</a></li>--%>
-                                            <%--<li><a href="#">3</a></li>--%>
-                                            <%--<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>--%>
-                                            <%--</ul>--%>
-                                            <%--</div>--%>
-                                            <%--</div>--%>
-                                            <%--</footer>--%>
-
-                                        <div id="divSubscriptions" style="width:100%"></div>
-                                    </section>
-
-
                                 </div>
-                            </section>
-                        </section>
-                    </aside>
-                    <aside class="col-lg-4 b-l no-padder">
-                        <section class="vbox">
-                            <section class="scrollable">
-                                <div class="wrapper">
-                                    <section class="panel panel-default">
-                                        <h4 class="padder">Contact Information</h4>
-                                        <ul class="list-group">
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <h4><a href="#" id="location" data-type="text" data-pk="1" data-title="Enter Location"></a></h4>
-                                                        <small>Location </small>
-
-                                                        <h4><a href="#" id="imaccount" data-type="text" data-pk="1" data-title="Enter IM Account"></a> (<a href="#" id="imsystem" data-type="text" data-pk="1" data-title="Enter IM System"></a>)</h4>
-                                                        <small> IM Account </small> </div>
-                                                    <div class="col-xs-6">
-                                                        <h4><a href="#" id="officephone" data-type="text" data-pk="1" data-title="Enter Office Phone Number"></a></h4>
-                                                        <small> Office Phone </small>
-                                                        <h4><a href="#" id="mobilephone" data-type="text" data-pk="1" data-title="Enter Mobile Phone Number"></a></h4>
-                                                        <small> Mobile Phone </small> </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </section>
-                                    <section class="panel panel-default">
-                                        <h4 class="padder">Company Details</h4>
-                                        <ul class="list-group">
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <h4><a href="#" id="company" data-type="text" data-pk="1" data-title="Enter Company Name"></a></h4>
-                                                        <small> Company Name </small>
-                                                        <h4><a href="#" id="street" data-type="text" data-pk="1" data-title="Enter Street"></a></h4>
-                                                        <small> Address 1 </small>
-                                                        <h4><a href="#" id="address2" data-type="text" data-pk="1" data-title="Enter Address 2"></a></h4>
-                                                        <small> Address 2 </small>
-                                                        <h4><a href="#" id="city" data-type="text" data-pk="1" data-title="Enter City"></a></h4>
-                                                        <small> City </small>
-                                                        <h4><a href="#" id="state" data-type="text" data-pk="1" data-title="Enter State"></a></h4>
-                                                        <small> State </small>
-                                                        <h4><a href="#" id="zip" data-type="text" data-pk="1" data-title="Enter ZIP"></a></h4>
-                                                        <small> ZIP </small> </div>
-                                                    <div class="col-xs-6">
-                                                        <h4><a href="#" id="mainphone" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
-                                                        <small> Main Office Phone </small>
-                                                        <h4><a href="#" id="fax" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
-                                                        <small> Fax </small>
-                                                        <h4><a href="#" id="website" data-type="text" data-pk="1" data-title="Enter Website Address"></a></h4>
-                                                        <small> Website </small> </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </section>
-                                    <section class="panel panel-default"></section>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Change Password</button>
                                 </div>
-                            </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="m-b-xs text-black">User Profile</h3>
+        </header>
+        <section class="scrollable">
+            <section class="hbox stretch">
+                <aside class="aside-lg bg-light lter b-r">
+                    <section class="vbox">
+                        <section class="scrollable">
+                            <div class="wrapper">
+                                <section class="panel no-border bg-gradient lt">
+                                    <div class="panel-body">
+                                        <div class="row">
+
+                                            <div class="col-xs-6 text-center">
+
+                                                <div class="thumb-lg avatar"> <img id="picture" src="" default="<c:url value='/'/>resources/vendors/${acm_theme}/images/nopic.png" class="dker"></div>
+
+                                                <div>
+                                                    <a id="lnkChangePicture" href="#">&nbsp;&nbsp;&nbsp;&nbsp;<u>Change Picture</u></a>
+                                                    <img id="picLoading" src="<c:url value='/'/>resources/vendors/${acm_theme}/images/ajax-loader.gif" class="dker" style="display:none;">
+                                                    <form id="formPicture" style="display:none;">
+                                                        <input type="file" id="file" name="file">
+                                                            <%--<input type="submit">--%>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6">
+
+                                                <h4 id="fullName"></h4>
+                                                <h4><a href="#" class='acm-word-wrap' id="title" data-type="text" data-pk="1" data-title="Enter Title"></a></h4>
+                                                    <%--<small> Agent </small>--%>
+
+
+                                                <h4 id="email"></h4>
+                                                <small> E-mail Address </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="panel panel-default bg-gradient">
+                                    <h4 class="padder">Groups</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-12" id="groups">
+
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Richmond Field Office</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Internal Affairs</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Forensic Accountants</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Group 4</span>--%>
+                                                        <%--<span class="btn-rounded btn-sm btn-info"> Group 5</span>--%>
+
+
+
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </section>
+
+
+                                <section class="panel panel-default bg-gradient">
+
+
+                                        <%--<h4 class="padder">Subscriptions</h4>--%>
+
+                                        <%--<table class="table table-striped b-light">--%>
+                                        <%--<thead>--%>
+                                        <%--<tr>--%>
+
+                                        <%--<th class="th-sortable" data-toggle="class">Type</th>--%>
+                                        <%--<th>ID</th>--%>
+                                        <%--<th>Title</th>--%>
+                                        <%--<th>Date</th>--%>
+                                        <%--<th width="30"></th>--%>
+                                        <%--</tr>--%>
+                                        <%--</thead>--%>
+                                        <%--<tbody>--%>
+                                        <%--<tr>--%>
+
+                                        <%--<td>[Object]</td>--%>
+                                        <%--<td>[ID]</td>--%>
+                                        <%--<td>[Title]</td>--%>
+                                        <%--<td>MM/DD/YYYY</td>--%>
+
+                                        <%--<td><a href="#" class="active" data-toggle="class"><i class="fa fa-times text-danger text-active"></i><i class="fa  fa-check-circle text-success text"></i></a></td>--%>
+                                        <%--</tr>--%>
+                                        <%--</tr>--%>
+
+                                        <%--</tbody>--%>
+                                        <%--</table>--%>
+
+
+                                        <%--<footer class="panel-footer">--%>
+                                        <%--<div class="row">--%>
+                                        <%--<div class="col-sm-5 hidden-xs"> <small class="text-muted inline m-t-sm m-b-sm">Showing 1-50 of 50 items</small> </div>--%>
+                                        <%--<div class="col-sm-7 text-right text-center-xs">--%>
+                                        <%--<ul class="pagination pagination-sm m-t-none m-b-none">--%>
+                                        <%--<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>--%>
+                                        <%--<li><a href="#">1</a></li>--%>
+                                        <%--<li><a href="#">2</a></li>--%>
+                                        <%--<li><a href="#">3</a></li>--%>
+                                        <%--<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>--%>
+                                        <%--</ul>--%>
+                                        <%--</div>--%>
+                                        <%--</div>--%>
+                                        <%--</footer>--%>
+
+                                    <div id="divSubscriptions" style="width:100%"></div>
+                                </section>
+
+
+                            </div>
                         </section>
-                    </aside>
-                </section>
+                    </section>
+                </aside>
+                <aside class="col-lg-4 b-l no-padder">
+                    <section class="vbox">
+                        <section class="scrollable">
+                            <div class="wrapper">
+                                <section class="panel panel-default">
+                                    <h4 class="padder">Contact Information</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" class='acm-word-wrap' id="location" data-type="text" data-pk="1" data-title="Enter Location"></a></h4>
+                                                    <small>Location </small>
+
+                                                    <h4><a href="#" class='acm-word-wrap' id="imaccount" data-type="text" data-pk="1" data-title="Enter IM Account"></a> (<a href="#" class='acm-word-wrap' id="imsystem" data-type="text" data-pk="1" data-title="Enter IM System"></a>)</h4>
+                                                    <small> IM Account </small> </div>
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" class='acm-word-wrap' id="officephone" data-type="text" data-pk="1" data-title="Enter Office Phone Number"></a></h4>
+                                                    <small> Office Phone </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="mobilephone" data-type="text" data-pk="1" data-title="Enter Mobile Phone Number"></a></h4>
+                                                    <small> Mobile Phone </small> </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </section>
+                                <section class="panel panel-default">
+                                    <h4 class="padder">Company Details</h4>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <div class="row">
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" class='acm-word-wrap' id="company" data-type="text" data-pk="1" data-title="Enter Company Name"></a></h4>
+                                                    <small> Company Name </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="street" data-type="text" data-pk="1" data-title="Enter Street"></a></h4>
+                                                    <small> Address 1 </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="address2" data-type="text" data-pk="1" data-title="Enter Address 2"></a></h4>
+                                                    <small> Address 2 </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="city" data-type="text" data-pk="1" data-title="Enter City"></a></h4>
+                                                    <small> City </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="state" data-type="text" data-pk="1" data-title="Enter State"></a></h4>
+                                                    <small> State </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="zip" data-type="text" data-pk="1" data-title="Enter ZIP"></a></h4>
+                                                    <small> ZIP </small> </div>
+                                                <div class="col-xs-6">
+                                                    <h4><a href="#" class='acm-word-wrap' id="mainphone" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
+                                                    <small> Main Office Phone </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="fax" data-type="text" data-pk="1" data-title="Enter Main Office Phone"></a></h4>
+                                                    <small> Fax </small>
+                                                    <h4><a href="#" class='acm-word-wrap' id="website" data-type="text" data-pk="1" data-title="Enter Website Address"></a></h4>
+                                                    <small> Website </small> </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </section>
+                                <section class="panel panel-default"></section>
+                            </div>
+                        </section>
+                    </section>
+                </aside>
             </section>
         </section>
     </section>

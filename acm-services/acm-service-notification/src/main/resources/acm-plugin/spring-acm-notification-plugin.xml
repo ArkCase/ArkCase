@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+
+
+    <bean id="acmNotificationPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
+        <property name="pluginName" value="Save Notification Service Plugin"/>
+        <property name="privileges">
+            <list>
+                <ref bean="acmNotificationPrivilege"/>
+            </list>
+        </property>
+        <property name="urlPrivileges">
+            <list>
+                <bean id="acmSaveNotificationUrlPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/notification"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
+
+                <bean id="acmDeleteNotificationByIdUrlPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/notification/{notificationId}"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
+
+                <bean id="acmListNotificationsUrlPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/notification/{user}"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
+
+                <bean id="notificationUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/plugin/notification"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
+
+                <bean id="acmEmailNotificationUrlPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/notification/email"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+</beans>

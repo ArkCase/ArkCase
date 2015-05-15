@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.complaint.*;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
@@ -49,7 +50,9 @@ import static org.junit.Assert.assertTrue;
                 "/spring/spring-library-search.xml",
                 "/spring/spring-library-ecm-file.xml",
                 "/spring/spring-library-particpants.xml",
-                "/spring/spring-library-activemq.xml"
+                "/spring/spring-library-activemq.xml",
+                "/spring/spring-library-property-file-manager.xml",
+                "/spring/spring-library-person.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -70,7 +73,10 @@ public class ComplaintServiceIT
     private AuditPropertyEntityAdapter auditAdapter;
 
     @Autowired
-    ComplaintEventPublisher complaintEventPublisher;
+    private ComplaintEventPublisher complaintEventPublisher;
+
+    @Autowired
+    private ComplaintFactory complaintFactory;
 
     @Before
     public void setUp() throws Exception
@@ -80,6 +86,7 @@ public class ComplaintServiceIT
         service = new ComplaintService();
         service.setSaveComplaintTransaction(saveComplaintTransaction);
         service.setComplaintEventPublisher(complaintEventPublisher);
+        service.setComplaintFactory(complaintFactory);
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);

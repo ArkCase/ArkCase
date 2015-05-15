@@ -43,7 +43,34 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     {
                         message.getInboundProperty("auditAdapter").setUserId(user);
                     }
-                    payload.ecmFolderPath="/Sites/acm/documentLibrary/User Profile/"+user;
+
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+        </scripting:transformer>
+
+        <scripting:transformer name="userOrgFolderTransformer">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    import com.armedia.acm.plugins.ecm.model.AcmFolder;
+                    import com.armedia.acm.plugins.ecm.model.AcmContainer;
+
+                    if ( payload.container == null )
+                    {
+                        payload.container = new AcmContainer();
+                    }
+
+                    if ( payload.container.folder == null )
+                    {
+                        payload.container.folder = new AcmFolder();
+
+                        String user = message.getInboundProperty("acmUser") == null ? null :
+                          message.getInboundProperty("acmUser").name;
+                        payload.ecmFolderPath = "/Sites/acm/documentLibrary/User Profile/"+user;
+                        payload.container.folder.name = user;
+                    }
+
                     return payload;
                     ]]>
                 </scripting:text>
@@ -54,14 +81,12 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <choice>
             <when expression="#[payload.ecmFolderPath != null]">
                 <processor-chain>
-                    <!-- store the userOrg (Profile info) in a flow variable so the enricher can see it -->
-                    <set-variable variableName="userOrg" value="#[message.payload]"/>
+                    <!-- store the container folder in a flow variable so the enricher can see it -->
+                    <set-variable variableName="folder" value="#[message.payload.container.folder]"/>
                     <!-- update the userOrg with the ID of the folder -->
-                    <enricher source="#[message.payload.id]" target="#[flowVars['userOrg'].ecmFolderId]">
+                    <enricher source="#[message.payload.id]" target="#[flowVars['folder'].cmisFolderId]">
                         <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
-                    <logger category="com.armedia.acm.plugins.profile" level="DEBUG"
-                            message="Folder Id: #[payload.ecmFolderId]"/>
                 </processor-chain>
             </when>
             <otherwise>

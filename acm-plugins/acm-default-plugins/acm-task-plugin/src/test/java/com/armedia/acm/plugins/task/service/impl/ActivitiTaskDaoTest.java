@@ -132,6 +132,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setOwner(owner);
         in.setCreateDate(start);
         in.setReworkInstructions("rework instructions");
+        in.setParentObjectId(2500L);
+        in.setParentObjectType("parent object type");
 
         TaskOutcome selected = new TaskOutcome();
         selected.setName("outcome name");
@@ -160,6 +162,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "DETAILS", details);
         mockTaskService.setVariable(taskId.toString(), "REWORK_INSTRUCTIONS", in.getReworkInstructions());
         mockTaskService.setVariableLocal(taskId.toString(), "outcome", in.getTaskOutcome().getName());
+        mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_ID", 2500L);
+        mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
 
         // data access and assignment rules
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(in);

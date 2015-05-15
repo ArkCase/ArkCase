@@ -130,6 +130,9 @@ Topbar.View = {
             this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
             this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
 
+            // AFDP-931 we don't want the notification popups right now.
+            // Modification - As per AFDP-905, we want 5 recent notifications to show up when
+            // user clicks the notification icon, but no popups should appear
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_SAVED_ASN                 ,this.onModelSavedAsn);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_ACTION        ,this.onModelUpdatedAsnAction);
@@ -232,7 +235,7 @@ Topbar.View = {
             if (asnList) {
                 for (var i = 0; i < asnList.length; i++) {
                     var asn = asnList[i];
-                    if (this.isNewStatus(asn.status)) {
+                    if (this.isNewStatus(asn.status_s)) {
                         this._asnListNew.push(asn);
                     } else {
                         this._asnListOld.push(asn);
@@ -250,7 +253,7 @@ Topbar.View = {
             var asnListNew = this.getAsnListNew();
             for (var i = 0; i < asnList.length; i++) {
                 var asn = asnList[i];
-                if (this.isNewStatus(asn.status)) {
+                if (this.isNewStatus(asn.status_s)) {
                     var found = null;
                     for (var j = 0; j < asnListNew.length; j++) {
                         var asnNew = asnListNew[j];
@@ -279,7 +282,7 @@ Topbar.View = {
                 var found = null;
                 for (var j = 0; j < asnList.length; j++) {
                     var asn = asnList[j];
-                    if (this.isNewStatus(asn.status)) {
+                    if (this.isNewStatus(asn.status_s)) {
                         if (asn.id == asnNew.id) {
                             found =asn;
                             break;
@@ -372,7 +375,8 @@ Topbar.View = {
         ,showNewAsn: function(asnList) {
             var visibleAsnList = Acm.Object.isVisible(this.$divAsnList);
             var visibleAsnHeader = Acm.Object.isVisible(this.$divAsnList.prev());
-            if (!visibleAsnList) {          //no list is shown, popup new ASNs
+            //don't show popups
+            /*if (!visibleAsnList) {          //no list is shown, popup new ASNs
                 var asnListNew = Topbar.View.Asn.buildAsnListNew(asnList);
                 if (0 < asnListNew.length) {
                     this.$divAsnList.empty();
@@ -382,7 +386,8 @@ Topbar.View = {
                     this.$sectionAsn.fadeIn();
                 }
 
-            } else if (!visibleAsnHeader) { //ASN popup is already shown, update new ASN
+            } else*/
+            if (!visibleAsnHeader) { //ASN popup is already shown, update new ASN
                 var newMore = Topbar.View.Asn.getAsnListNewMore(asnList);
                 if (0 < newMore.length) {
                     this._buildAsnUi(newMore, this.UI_TYPE_POPUP);
@@ -509,13 +514,14 @@ Topbar.View = {
         }
         ,_buildAsnUi: function(asnList, uiType) {
             var countTotal = Topbar.Model.Asn.getAsnCount(asnList);
-            //for (var i = countTotal-1; i >= 0; i--) {
-            for (var i = 0; i < countTotal; i++) {
+            //recent first
+            for (var i = countTotal-1; i >= 0; i--) {
+            //for (var i = 0; i < countTotal; i++) {
                 var asn = asnList[i];
                 if (asn && asn.id) {
 
                     var isFlash = Acm.isNotEmpty(asn.flash);
-                    var isAuto = (Topbar.Model.Asn.STATUS_AUTO == Acm.goodValue(asn.status));
+                    var isAuto = (Topbar.Model.Asn.STATUS_AUTO == Acm.goodValue(asn.status_s));
 
                     var canMark = false;
                     var canDelete = false;
@@ -534,25 +540,26 @@ Topbar.View = {
                     } else {
                         canMark = true;
                         canDelete = true;
-                        canAck = (this.UI_TYPE_LIST == uiType) && (Topbar.Model.Asn.STATUS_NEW == Acm.goodValue(asn.status));
-                        canClose = (this.UI_TYPE_POPUP == uiType) && (Topbar.Model.Asn.STATUS_NEW == Acm.goodValue(asn.status));
+                        canAck = (this.UI_TYPE_LIST == uiType) && (Topbar.Model.Asn.STATUS_NEW == Acm.goodValue(asn.status_s));
+                        canClose = (this.UI_TYPE_POPUP == uiType) && (Topbar.Model.Asn.STATUS_NEW == Acm.goodValue(asn.status_s));
                     }
                     var canGo = Acm.isNotEmpty(asn.data);
-                    var styleRefined = this._getStyle(asn.status, uiType);
+                    var styleRefined = this._getStyle(asn.status_s, uiType);
 
                     var msg = "<div class='" + this.ASN_DEFAULT_STYLE + " "
                             + styleRefined
                             + "><a href=''#'><span class='pull-left thumb-sm text-center'>"
                             + "<i class='fa fa-file fa-2x text-success'></i></span>"
                             + "<span class='media-body block m-b-none'>"
-                            + Acm.goodValue(asn.note)
+                            + Acm.goodValue(asn.title_parseable)
                             + "<br><small class='text-muted'>"
-                            + Acm.goodValue(asn.created)
+                            + Acm.getDateFromDatetime(asn.create_tdt)
                             + "</small></span></a><input type='hidden' name='asnId' value='"
                             + Acm.goodValue(asn.id)
                             + "' />"
                         ;
-                    if (canMark) {
+                    //disable action buttons for now
+                    /*if (canMark) {
                         msg += "<input type='button' name='mark' value='Mark'/>";
                     }
                     if (canDelete) {
@@ -577,7 +584,7 @@ Topbar.View = {
                     if (canCloseAuto) {
                         msg += "<small class='text-muted'><span>5</span> sec</small>";
                         msg += "<input type='button' name='closeAuto' value='Close'/>";
-                    }
+                    }*/
                     msg += "</div>";
 
                     $(msg).hide().prependTo(this.$divAsnList)
@@ -861,13 +868,14 @@ Topbar.View = {
                     var countNew = 0;
                     for (var i = 0; i < countTotal; i++) {
                         var asn = asnList[i];
-                        if (Topbar.View.Asn.isNewStatus(Acm.goodValue(asn.status))) {
+                        if (Topbar.View.Asn.isNewStatus(Acm.goodValue(asn.status_s))) {
                             countNew++;
                         }
                     }
                     if (this._lastCountTotal != countTotal || this._lastCountNew != countNew) {
                         Topbar.View.Asn.Counter.setTextSpanCntWarning(countTotal);
-                        Topbar.View.Asn.Counter.warnSpanCntWarning(0 < countNew);
+                        //disable change of icon since user cannot take any action
+                        //Topbar.View.Asn.Counter.warnSpanCntWarning(0 < countNew);
                         this._lastCountTotal = countTotal;
                         this._lastCountNew = countNew;
                     }

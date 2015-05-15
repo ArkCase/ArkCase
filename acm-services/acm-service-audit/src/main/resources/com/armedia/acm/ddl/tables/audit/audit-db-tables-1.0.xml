@@ -71,6 +71,12 @@
             <column name="cm_object_id"/>
         </createIndex>
     </changeSet>
+    
+    <changeSet id="05-add-status-column-in-acm-audit-log-table" author="riste.tutureski">
+    	<addColumn tableName="acm_audit_log">
+    		<column name="cm_audit_status" type="VARCHAR(1024)" defaultValue="DRAFT" />
+    	</addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 

@@ -7,20 +7,34 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.frevvo.model.FrevvoForm;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.frevvo.model.Strings;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +43,20 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.file.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * @author riste.tutureski
@@ -59,6 +79,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private AcmUserActionExecutor userActionExecutor;
     private MuleClient muleClient;
     private ObjectAssociationDao objectAssociationDao;
+    private FunctionalAccessService functionalAccessService;
+    private SearchResults searchResults;
+	private AcmPluginManager acmPluginManager;
+	private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
     @Override
 	public Object init() {
@@ -81,6 +105,15 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		return result;
 	}
+    
+    @Override
+    public JSONObject createResponse(Object object)
+    {
+    	String jsonString = getGson().toJson(object);
+		JSONObject json = new JSONObject(jsonString);
+		
+		return json;
+    }
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -132,8 +165,30 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	
-	@Override
+
+    public String findFolderId(AcmContainer container, String objectType, Long id)
+    {
+        // hopefully the container has it, but sometimes the container isn't set on the parent object
+        if ( container != null )
+        {
+            return container.getFolder().getCmisFolderId();
+        }
+
+        AcmContainer found = null;
+        try
+        {
+            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            return found.getFolder().getCmisFolderId();
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            return null;
+        }
+
+    }
+
+    @Override
 	public UserActionDao getUserActionDao() {
 		return userActionDao;
 	}
@@ -185,7 +240,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	
 	protected void updateXML(String xml, String formName, Long id, Authentication auth)
 	{
-		ObjectAssociation association = getObjectAssociationDao().findFrevvoXMLAssociation(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
+		ObjectAssociation association = getObjectAssociationDao().findChildOfType(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
 		
 		if (association != null)
 		{
@@ -229,8 +284,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
             MultiValueMap<String, MultipartFile> attachments,
             String targetCmisFolderId,
             String parentObjectType,
-            Long parentObjectId,
-            String parentObjectName) throws AcmCreateObjectFailedException
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
 	{
         FrevvoUploadedFiles retval = new FrevvoUploadedFiles();
 
@@ -277,7 +331,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                                 targetCmisFolderId,
                                 parentObjectType,
                                 parentObjectId,
-                                parentObjectName,
                                 xmlAttachment);
                         }
                         retval.setFormXml(formXml);
@@ -316,7 +369,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	                                targetCmisFolderId,
 	                                parentObjectType,
 	                                parentObjectId,
-	                                parentObjectName,
 	                                pdfAttachment);
                         }
                         retval.setPdfRendition(pdfRendition);
@@ -336,7 +388,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                                     targetCmisFolderId,
                                     parentObjectType,
                                     parentObjectId,
-                                    parentObjectName,
                                     attachment);
                             retval.getUploadedFiles().add(uploaded);
                         }
@@ -353,9 +404,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                             String targetCmisFolderId,
                             String parentObjectType,
                             Long parentObjectId,
-                            String parentObjectName,
                             MultipartFile attachment)
-            throws AcmCreateObjectFailedException
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         try
         {
@@ -375,8 +425,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 getAuthentication(),
                 targetCmisFolderId,
                 parentObjectType,
-                parentObjectId,
-                parentObjectName);
+                parentObjectId);
 
             return uploaded;
         }
@@ -408,6 +457,201 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		}
 		
 		return null;
+	}
+	
+	public FrevvoForm populateEditInformation(FrevvoForm form, AcmContainer container, String formName)
+	{		
+		Long containerId = null;
+		Long folderId = null;
+		
+		if (container != null)
+		{
+			containerId = container.getId();
+			
+			if (container.getFolder() != null)
+			{
+				folderId = container.getFolder().getId();
+			}
+		}
+		
+		// Set edit mode
+		form.setMode(FrevvoFormConstants.EDIT);
+		
+		if (containerId != null && folderId != null)
+		{
+			// Set xml id
+			EcmFile ecmFileXML = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName + "_xml");
+			
+			if (ecmFileXML != null && ecmFileXML.getId() != null)
+			{
+				form.setXmlId(ecmFileXML.getId().toString());
+			}
+			
+			// Set pdf id
+			EcmFile ecmFilePDF = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName);
+			
+			if (ecmFilePDF != null && ecmFilePDF.getId() != null)
+			{
+				form.setPdfId(ecmFilePDF.getId().toString());
+			}
+		}
+		
+		return form;
+	}
+	
+	public String getDocUriParameter(String parameterName)
+	{		
+		String docUriParameters = getRequest().getParameter(FrevvoFormConstants.DOC_URI_PARAMETERS_HOLDER_NAME);
+		
+		if (docUriParameters != null && parameterName != null)
+		{
+			String[] parameters = docUriParameters.split(FrevvoFormConstants.DOC_URI_PARAMETERS_DELIMITER);
+			
+			if (parameters != null)
+			{
+				for (String parameterNameValuePair : parameters)
+				{
+					String[] parameterArray = parameterNameValuePair.split(FrevvoFormConstants.DOC_URI_PARAMETER_DELIMITER);
+					
+					if (parameterArray != null && parameterArray.length > 0)
+					{
+						if (parameterName.equals(parameterArray[0]))
+						{
+							if (parameterArray.length > 1)
+							{
+								return parameterArray[1];
+							}
+							else
+							{
+								return "";
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return "";
+	}
+	
+	public String getDocUriParameters()
+	{		
+		return getRequest().getParameter(FrevvoFormConstants.DOC_URI_PARAMETERS_HOLDER_NAME);
+	}
+	
+	/**
+	 * This method will return map that need Frevvo form for participant section
+	 * 
+	 * @param participantTypes
+	 * @param formName
+	 * @return
+	 */
+	public Strings getOwningGroups(String owningGroupType, String formName)
+	{		
+		if (owningGroupType != null)
+		{
+				
+			String privilege = (String) getProperties().get(formName + "." + owningGroupType.replace(" ", "_") + ".privilege");
+			
+			try
+			{
+				List<String> rolesForPrivilege = getAcmPluginManager().getRolesForPrivilege(privilege);
+				Map<String, List<String>> rolesToGroups = getFunctionalAccessService().getApplicationRolesToGroups();
+				
+				Map<String, String> groups = getGroups(rolesForPrivilege, rolesToGroups, 0, 1000, "name ASC", getAuthentication());		
+				
+				return getGroupsList(groups);
+			}
+			catch(Exception e)
+			{
+				LOG.error("Cannot find groups with privilege = " + privilege + ".", e);
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * This method will return all groups in list that need Frevvo
+	 * 
+	 * @param groups
+	 * @return
+	 */
+	private Strings getGroupsList(Map<String, String> groups)
+	{
+		Strings options = new Strings();
+		
+		if (groups != null)
+		{
+			for (Entry<String, String> entry : groups.entrySet())
+			{
+				String groupId = entry.getKey();
+				String groupName = entry.getValue();
+		        
+		        options.add(groupId + "=" + groupName);
+			}
+		}
+		
+		return options;
+	}
+	
+	/**
+	 * This method will return the groups in id-name format
+	 * 
+	 * @param roles
+	 * @param rolesToGroups
+	 * @param startRow
+	 * @param maxRows
+	 * @param sort
+	 * @param auth
+	 * @return
+	 * @throws MuleException
+	 */
+	private Map<String, String> getGroups(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+	{
+		Map<String, String> groups = new HashMap<>();
+		
+		String groupsFromSolr = getFunctionalAccessService().getGroupsByPrivilege(roles, rolesToGroups, startRow, maxRows, sort, auth);
+		
+		if (groupsFromSolr != null)
+		{
+			JSONArray docs = getSearchResults().getDocuments(groupsFromSolr);
+			
+			if (docs != null)
+			{
+				for (int i = 0; i < docs.length(); i++)
+				{
+					String key = getSearchResults().extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_OBJECT_ID_S);
+					String value = getSearchResults().extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME);
+					
+					groups.put(key, value);
+				}
+			}
+		}
+		
+		return groups;
+	}
+	
+	public Map<String, String> getParticipantsPrivilegeTypes(List<String> participantTypes, String formName)
+	{
+		Map<String, String> retval = new HashMap<>();
+		
+		if (participantTypes != null)
+		{
+			for (String participantType : participantTypes)
+			{
+				String[] participantTypeArray = participantType.split("=");
+				if (participantTypeArray != null && participantTypeArray.length == 2)
+				{
+					String key = participantTypeArray[0];
+					String value = (String) getProperties().get(formName + "." + key.replace(" ", "_") + ".privilege.type");
+					
+					retval.put(key, value);
+				}
+			}
+		}
+		
+		return retval;
 	}
 
     @Override
@@ -465,5 +709,37 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao) {
 		this.objectAssociationDao = objectAssociationDao;
 	}
-	
+
+	public FunctionalAccessService getFunctionalAccessService() {
+		return functionalAccessService;
+	}
+
+	public void setFunctionalAccessService(
+			FunctionalAccessService functionalAccessService) {
+		this.functionalAccessService = functionalAccessService;
+	}
+
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
+
+	public AcmPluginManager getAcmPluginManager() {
+		return acmPluginManager;
+	}
+
+	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+		this.acmPluginManager = acmPluginManager;
+	}
+
+	public Gson getGson() {
+		return gson;
+	}
+
+	public void setGson(Gson gson) {
+		this.gson = gson;
+	}	
 }

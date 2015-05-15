@@ -13,6 +13,30 @@
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
+    <bean id="labelConfigurationRetrieveResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveResource">
+        <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
+    </bean>
+
+    <bean id="labelConfigurationUpdateResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateResource">
+        <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
+    </bean>
+
+    <bean id="labelConfigurationRetrieveLanguages" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveLanguages">
+        <property name="languagesFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/languages.json"/>
+    </bean>
+
+    <bean id="labelConfigurationRetrieveNamespaces" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveNamespaces">
+        <property name="namespacesFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/namespaces.json"/>
+    </bean>
+
+    <bean id="labelConfigurationRetrieveSettings" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveSettings">
+        <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json"/>
+    </bean>
+
+    <bean id="labelConfigurationUpdateSettings" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateSettings">
+        <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json"/>
+    </bean>
+
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
 
 </beans>

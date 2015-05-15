@@ -1,0 +1,561 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="personnelSecurityBackgroundInvestigation" name="Personnel Security Background Investigation" isExecutable="true">
+    <exclusiveGateway id="addressWaiverGateway"/>
+    <startEvent id="start" name="Background Investigation Started"/>
+    <parallelGateway id="verifyGateway"/>
+    <userTask id="addressTask" name="Verify Address History '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="verifyAddressOutcome" name="verifyAddressOutcome" type="enum" required="true">
+          <activiti:value id="COMPLETE" name="Complete"/>
+          <activiti:value id="REQUEST_WAIVER" name="Request Waiver"/>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <userTask id="employmentTask" name="Verify Employment History '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="verifyEmploymentOutcome" name="verifyEmploymentOutcome" type="enum" required="true">
+          <activiti:value id="COMPLETE" name="Complete"/>
+          <activiti:value id="REQUEST_WAIVER" name="Request Waiver"/>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <userTask id="eVerifyTask" name="eVerify '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="eVerifyOutcome" name="eVerifyOutcome" type="enum" required="true">
+          <activiti:value id="COMPLETE" name="Complete"/>
+          <activiti:value id="REQUEST_WAIVER" name="Request Waiver"/>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <userTask id="addressWaiverTask" name="Review Address Waiver Request" activiti:assignee="samuel-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="addressWaiverOutcome" name="addressWaiverOutcome" type="enum" required="true">
+          <activiti:value id="GRANT_WAIVER" name="Grant Address Waiver"/>
+          <activiti:value id="DENY_WAIVER" name="Deny Address Waiver"/>
+        </activiti:formProperty>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[addressWaiverReviewer]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="employmentWaiverTask" name="Review Employment Waiver Request" activiti:assignee="samuel-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="employmentWaiverOutcome" name="employmentWaiverOutcome" type="enum" required="true">
+          <activiti:value id="GRANT_WAIVER" name="Grant Employment Waiver"/>
+          <activiti:value id="DENY_WAIVER" name="Deny Employment Waiver"/>
+        </activiti:formProperty>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[employentWaiverReviewer]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="eVerifyWaiverTask" name="Review eVerify Waiver Request" activiti:assignee="samuel-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="eVerifyWaiverOutcome" name="eVerifyWaiverOutcome" type="enum" required="true">
+          <activiti:value id="GRANT_WAIVER" name="Grant eVerify Waiver"/>
+          <activiti:value id="DENY_WAIVER" name="Deny eVerify Waiver"/>
+        </activiti:formProperty>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[everifyWaiverReviewer]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="cvsExportTask" name="Generate CVS Export" activiti:expression="#{clearanceVerificationSystemExportService.exportDeterminationRecord(adjudicator, OBJECT_ID, OBJECT_FOLDER_ID, SUBJECT_LAST_NAME, adjudicationOutcome)}"/>
+    <userTask id="adjudicationTask" name="Adjudicate Clearance Request '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="adjudicationOutcome" name="adjudicationOutcome" type="enum" required="true">
+          <activiti:value id="GRANT_CLEARANCE" name="Grant Clearance"/>
+          <activiti:value id="DENY_CLEARANCE" name="Deny Clearance"/>
+        </activiti:formProperty>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[adjudicator]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[closer]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="clearanceDeniedTask" name="Generate Clearance Denied correspondence" activiti:expression="#{correspondenceService.generate('ClearanceDenied.docx', 'CASE_FILE', OBJECT_ID, OBJECT_FOLDER_ID)}"/>
+    <serviceTask id="clearanceGrantedTask" name="Generate Clearance Granted Correspondence" activiti:expression="#{correspondenceService.generate('ClearanceGranted.docx', 'CASE_FILE', OBJECT_ID, OBJECT_FOLDER_ID)}"/>
+    <userTask id="issueClearanceTask" name="Issue Clearance '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="issueClearanceOutcome" name="issueClearanceOutcome" type="enum" required="true">
+          <activiti:value id="COMPLETE" name="Complete"/>
+        </activiti:formProperty>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[clearanceIssuer]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+        <activiti:taskListener event="complete" class="org.activiti.engine.impl.bpmn.listener.ScriptTaskListener">
+          <activiti:field name="language">
+            <activiti:string><![CDATA[javascript]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="resultVariable">
+            <activiti:string><![CDATA[closer]]></activiti:string>
+          </activiti:field>
+          <activiti:field name="script">
+            <activiti:string><![CDATA[task.assignee]]></activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <endEvent id="end"/>
+    <parallelGateway id="verifyTasksCompletedGateway"/>
+    <exclusiveGateway id="employmentWaiverGateway"/>
+    <exclusiveGateway id="eVerifyWaiverGateway"/>
+    <sequenceFlow id="employmentWaiverOutcome" sourceRef="employmentWaiverTask" targetRef="employmentWaiverGateway"/>
+    <sequenceFlow id="eVerifyWaiverOutcome" sourceRef="eVerifyWaiverTask" targetRef="eVerifyWaiverGateway"/>
+    <sequenceFlow id="toEmploymentVerify" sourceRef="verifyGateway" targetRef="employmentTask"/>
+    <sequenceFlow id="toEVerify" sourceRef="verifyGateway" targetRef="eVerifyTask"/>
+    <sequenceFlow id="eVerifyOutcome" sourceRef="eVerifyTask" targetRef="sid-C4271CAB-1DE1-48DE-921A-BD36AC9DFDEE"/>
+    <sequenceFlow id="addressWaiverOutcome" sourceRef="addressWaiverTask" targetRef="addressWaiverGateway"/>
+    <sequenceFlow id="employmentOutcome" sourceRef="employmentTask" targetRef="sid-B82F3F16-236B-4746-BEFC-E482007B6BF6"/>
+    <sequenceFlow id="addressOutcome" sourceRef="addressTask" targetRef="sid-AD5B299D-B274-4151-B22C-49201C248A1B"/>
+    <serviceTask id="sid-45F71BED-C633-49B5-BCE4-225807030BED" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Waiver')}"/>
+    <serviceTask id="sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Waiver')}"/>
+    <serviceTask id="sid-6A168DE3-6579-45EA-A262-F35264B77585" name="Record 'Waiver' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Waiver')}"/>
+    <sequenceFlow id="sid-651D8EE2-B855-4A3B-A7C8-1050F80EC770" sourceRef="sid-6A168DE3-6579-45EA-A262-F35264B77585" targetRef="sid-F2B1956F-BC8D-4338-9C9B-4863D14690B3"/>
+    <serviceTask id="sid-0441797A-AFEC-4696-9198-BC8B5C349BFD" name="Record 'Adjudication' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Adjudication')}"/>
+    <serviceTask id="sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D" name="Record 'Clearance Issued' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Issued')}"/>
+    <serviceTask id="sid-3CCDB716-DA05-4426-8FF2-9934534FC10D" name="Record 'Closed' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Closed')}"/>
+    <sequenceFlow id="sid-00EDB086-C917-49F7-88D0-4E6F68C2C17D" sourceRef="sid-45F71BED-C633-49B5-BCE4-225807030BED" targetRef="sid-779BE976-2645-4D2B-92DA-F72910276383"/>
+    <sequenceFlow id="sid-D2B23CE3-7EDB-4BBE-8C42-457FEFE7F904" sourceRef="adjudicationTask" targetRef="sid-0441797A-AFEC-4696-9198-BC8B5C349BFD"/>
+    <sequenceFlow id="sid-500DFB54-F30E-4430-870F-5A46074F943F" sourceRef="clearanceGrantedTask" targetRef="issueClearanceTask"/>
+    <sequenceFlow id="sid-A221E679-DABE-4591-92F7-6153D8EBF518" sourceRef="issueClearanceTask" targetRef="sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D"/>
+    <sequenceFlow id="sid-469FC1FD-037D-4051-A9F2-7A317CB1DD5A" sourceRef="sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D" targetRef="sid-EA587A72-BEC1-4B4F-A182-BEDFDB449841"/>
+    <sequenceFlow id="sid-358E95C5-3C4B-48D4-99E5-2D6A347CE852" sourceRef="clearanceDeniedTask" targetRef="sid-EA587A72-BEC1-4B4F-A182-BEDFDB449841"/>
+    <sequenceFlow id="toAddressVerify" sourceRef="verifyGateway" targetRef="addressTask"/>
+    <sequenceFlow id="sid-00090E68-826B-48A3-8185-01797F74C936" sourceRef="addressWaiverGateway" targetRef="addressTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${addressWaiverOutcome == 'DENY_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-DCF6E6DF-C8FA-4C74-B46E-C290E11BD4DE" sourceRef="sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A" targetRef="sid-C67517AF-7FC3-430E-AD6F-E4C6F29B0D66"/>
+    <sequenceFlow id="sid-AE22CEE2-8228-464D-BF2E-8868E0C4E0F1" sourceRef="employmentWaiverGateway" targetRef="employmentTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${employmentWaiverOutcome == 'DENY_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-B279C548-D21F-41AC-AB84-748936796412" sourceRef="employmentWaiverGateway" targetRef="sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${employmentWaiverOutcome == 'GRANT_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-636718C2-DD84-474A-94CB-754EDE754149" sourceRef="eVerifyWaiverGateway" targetRef="sid-6A168DE3-6579-45EA-A262-F35264B77585">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${eVerifyWaiverOutcome == 'GRANT_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="eVerifyWaiverDenied" sourceRef="eVerifyWaiverGateway" targetRef="eVerifyTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${eVerifyWaiverOutcome == 'DENY_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="clearanceGranted" sourceRef="sid-9E4FB79E-A61C-421F-B1BE-9E48D2A09EA1" targetRef="clearanceGrantedTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${adjudicationOutcome == 'GRANT_CLEARANCE'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-34B55AC6-E7AA-4305-827E-4A042D1CED8C" sourceRef="sid-0441797A-AFEC-4696-9198-BC8B5C349BFD" targetRef="cvsExportTask"/>
+    <sequenceFlow id="clearanceDenied" sourceRef="sid-9E4FB79E-A61C-421F-B1BE-9E48D2A09EA1" targetRef="clearanceDeniedTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${adjudicationOutcome == 'DENY_CLEARANCE'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-AD008E7C-81C2-4B8B-B8F7-9411B6646DA8" sourceRef="cvsExportTask" targetRef="sid-9E4FB79E-A61C-421F-B1BE-9E48D2A09EA1"/>
+    <sequenceFlow id="sid-5D60CCB0-C797-4CB3-894F-C1283CBB5FE4" sourceRef="addressWaiverGateway" targetRef="sid-45F71BED-C633-49B5-BCE4-225807030BED">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${addressWaiverOutcome == 'GRANT_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="sid-CBC99638-0F95-464C-9654-D94C70E55F15" name="Record 'Initiated' Milestone" activiti:expression="#{milestoneService.saveMilestone(OBJECT_ID, 'CASE_FILE', 'Initiated')}"/>
+    <sequenceFlow id="startToVerifyTasks" sourceRef="start" targetRef="sid-15E9C66F-8B6A-40F0-A6DB-7500CB845BA3"/>
+    <sequenceFlow id="sid-04EC4C1F-FD3E-45BC-AE48-F74EF959F4B3" sourceRef="sid-CBC99638-0F95-464C-9654-D94C70E55F15" targetRef="verifyGateway"/>
+    <userTask id="sid-8C2E8ABF-8338-4EEC-91F2-02839945DA61" name="Verify SF86 Packet '${OBJECT_NAME}'" activiti:assignee="ann-acm" activiti:dueDate="${taskDueDateExpression}" activiti:priority="${taskPriority}">
+      <extensionElements>
+        <activiti:formProperty id="sf86Outcome" name="sf86Outcome" type="enum" required="true">
+          <activiti:value id="COMPLETE" name="Complete"/>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-A2275633-0F9D-47A2-B3DB-3730A316A157" sourceRef="verifyGateway" targetRef="sid-8C2E8ABF-8338-4EEC-91F2-02839945DA61"/>
+    <serviceTask id="sid-15E9C66F-8B6A-40F0-A6DB-7500CB845BA3" name="Set Case Status to 'ACTIVE'" activiti:expression="#{caseFileStateService.changeCaseFileState(OBJECT_ID, 'ACTIVE')}"/>
+    <sequenceFlow id="sid-B56A461A-FB1E-405D-98A4-F8E1FE6C6E20" sourceRef="sid-15E9C66F-8B6A-40F0-A6DB-7500CB845BA3" targetRef="sid-CBC99638-0F95-464C-9654-D94C70E55F15"/>
+    <serviceTask id="sid-A796EEE5-F3E1-432F-B451-937FC927A22A" name="Set Case Status to 'CLOSED'" activiti:expression="#{caseFileStateService.changeCaseFileState(OBJECT_ID, 'CLOSED')}"/>
+    <sequenceFlow id="sid-DAF39AAD-DB5C-45F5-A151-333CC44F2AAF" sourceRef="sid-A796EEE5-F3E1-432F-B451-937FC927A22A" targetRef="end"/>
+    <sequenceFlow id="sid-8840D92F-93DD-4E2F-AA78-44D90560C590" sourceRef="sid-EA587A72-BEC1-4B4F-A182-BEDFDB449841" targetRef="sid-3CCDB716-DA05-4426-8FF2-9934534FC10D"/>
+    <sequenceFlow id="sid-13ADB7ED-1B46-4719-B456-06DD48543D70" sourceRef="sid-3CCDB716-DA05-4426-8FF2-9934534FC10D" targetRef="sid-A796EEE5-F3E1-432F-B451-937FC927A22A"/>
+    <sequenceFlow id="sid-89543346-B36D-4E46-9673-128108D6A87C" sourceRef="sid-B82F3F16-236B-4746-BEFC-E482007B6BF6" targetRef="sid-C67517AF-7FC3-430E-AD6F-E4C6F29B0D66">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${verifyEmploymentOutcome == 'COMPLETE'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-4D2375AE-C3D9-4C2B-A29C-AA3A32848626" sourceRef="sid-C4271CAB-1DE1-48DE-921A-BD36AC9DFDEE" targetRef="sid-F2B1956F-BC8D-4338-9C9B-4863D14690B3">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${eVerifyOutcome == 'COMPLETE'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-2B475FEC-812B-487E-AB5C-363285AAB40D" sourceRef="sid-8C2E8ABF-8338-4EEC-91F2-02839945DA61" targetRef="verifyTasksCompletedGateway"/>
+    <sequenceFlow id="eVerifyToWaiver" sourceRef="sid-C4271CAB-1DE1-48DE-921A-BD36AC9DFDEE" targetRef="eVerifyWaiverTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${eVerifyOutcome == 'REQUEST_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-D8498A52-72DC-4133-BE78-244431CF23A5" sourceRef="verifyTasksCompletedGateway" targetRef="adjudicationTask"/>
+    <sequenceFlow id="sid-8A189904-51D0-4533-9D57-77F3B3B32595" sourceRef="sid-AD5B299D-B274-4151-B22C-49201C248A1B" targetRef="sid-779BE976-2645-4D2B-92DA-F72910276383">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${verifyAddressOutcome == 'COMPLETE'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-5F9AD9DF-B6DF-4566-A552-10C461402ECD" sourceRef="sid-779BE976-2645-4D2B-92DA-F72910276383" targetRef="verifyTasksCompletedGateway"/>
+    <inclusiveGateway id="sid-AD5B299D-B274-4151-B22C-49201C248A1B"/>
+    <sequenceFlow id="addressToWaiver" sourceRef="sid-AD5B299D-B274-4151-B22C-49201C248A1B" targetRef="addressWaiverTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${verifyAddressOutcome == 'REQUEST_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <inclusiveGateway id="sid-779BE976-2645-4D2B-92DA-F72910276383"/>
+    <inclusiveGateway id="sid-B82F3F16-236B-4746-BEFC-E482007B6BF6"/>
+    <inclusiveGateway id="sid-C67517AF-7FC3-430E-AD6F-E4C6F29B0D66"/>
+    <inclusiveGateway id="sid-C4271CAB-1DE1-48DE-921A-BD36AC9DFDEE"/>
+    <inclusiveGateway id="sid-F2B1956F-BC8D-4338-9C9B-4863D14690B3"/>
+    <sequenceFlow id="sid-1B911593-2B8D-4DD1-BCC2-79869AEEFA95" sourceRef="sid-F2B1956F-BC8D-4338-9C9B-4863D14690B3" targetRef="verifyTasksCompletedGateway"/>
+    <sequenceFlow id="employmentToWaiver" sourceRef="sid-B82F3F16-236B-4746-BEFC-E482007B6BF6" targetRef="employmentWaiverTask">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${verifyEmploymentOutcome == 'REQUEST_WAIVER'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-644DD6A0-A052-44CD-A84D-F6E010E77A6F" sourceRef="sid-C67517AF-7FC3-430E-AD6F-E4C6F29B0D66" targetRef="verifyTasksCompletedGateway"/>
+    <inclusiveGateway id="sid-9E4FB79E-A61C-421F-B1BE-9E48D2A09EA1"/>
+    <inclusiveGateway id="sid-EA587A72-BEC1-4B4F-A182-BEDFDB449841"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_personnelSecurityBackgroundInvestigation">
+    <bpmndi:BPMNPlane bpmnElement="personnelSecurityBackgroundInvestigation" id="BPMNPlane_personnelSecurityBackgroundInvestigation">
+      <bpmndi:BPMNShape bpmnElement="addressWaiverGateway" id="BPMNShape_addressWaiverGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="420.0" y="420.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="375.0" y="25.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="verifyGateway" id="BPMNShape_verifyGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="895.0" y="105.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="addressTask" id="BPMNShape_addressTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="525.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="employmentTask" id="BPMNShape_employmentTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="865.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="eVerifyTask" id="BPMNShape_eVerifyTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="1260.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="addressWaiverTask" id="BPMNShape_addressWaiverTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="390.0" y="295.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="employmentWaiverTask" id="BPMNShape_employmentWaiverTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="745.0" y="295.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="eVerifyWaiverTask" id="BPMNShape_eVerifyWaiverTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="1035.0" y="285.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cvsExportTask" id="BPMNShape_cvsExportTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="1320.0" y="735.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="adjudicationTask" id="BPMNShape_adjudicationTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="975.0" y="735.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="clearanceDeniedTask" id="BPMNShape_clearanceDeniedTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="745.0" y="1030.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="clearanceGrantedTask" id="BPMNShape_clearanceGrantedTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="745.0" y="895.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="issueClearanceTask" id="BPMNShape_issueClearanceTask">
+        <omgdc:Bounds height="80.0" width="100.0" x="885.0" y="895.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="28.0" width="28.0" x="1185.0" y="1256.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="verifyTasksCompletedGateway" id="BPMNShape_verifyTasksCompletedGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="895.0" y="660.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="employmentWaiverGateway" id="BPMNShape_employmentWaiverGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="775.0" y="420.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="eVerifyWaiverGateway" id="BPMNShape_eVerifyWaiverGateway">
+        <omgdc:Bounds height="40.0" width="40.0" x="1065.0" y="420.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-45F71BED-C633-49B5-BCE4-225807030BED" id="BPMNShape_sid-45F71BED-C633-49B5-BCE4-225807030BED">
+        <omgdc:Bounds height="80.0" width="100.0" x="390.0" y="510.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A" id="BPMNShape_sid-44BDD3AD-5E4E-4261-8E91-96DBC6A59C1A">
+        <omgdc:Bounds height="80.0" width="100.0" x="745.0" y="510.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-6A168DE3-6579-45EA-A262-F35264B77585" id="BPMNShape_sid-6A168DE3-6579-45EA-A262-F35264B77585">
+        <omgdc:Bounds height="80.0" width="100.0" x="1035.0" y="510.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0441797A-AFEC-4696-9198-BC8B5C349BFD" id="BPMNShape_sid-0441797A-AFEC-4696-9198-BC8B5C349BFD">
+        <omgdc:Bounds height="80.0" width="100.0" x="1140.0" y="735.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D" id="BPMNShape_sid-1BECB0F0-1100-4BDB-AAB2-A04F5BBFCE1D">
+        <omgdc:Bounds height="80.0" width="100.0" x="1020.0" y="895.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-3CCDB716-DA05-4426-8FF2-9934534FC10D" id="BPMNShape_sid-3CCDB716-DA05-4426-8FF2-9934534FC10D">
+        <omgdc:Bounds height="80.0" width="100.0" x="1350.0" y="1125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-CBC99638-0F95-464C-9654-D94C70E55F15" id="BPMNShape_sid-CBC99638-0F95-464C-9654-D94C70E55F15">
+        <omgdc:Bounds height="80.0" width="100.0" x="865.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-8C2E8ABF-8338-4EEC-91F2-02839945DA61" id="BPMNShape_sid-8C2E8ABF-8338-4EEC-91F2-02839945DA61">
+        <omgdc:Bounds height="80.0" width="100.0" x="165.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-15E9C66F-8B6A-40F0-A6DB-7500CB845BA3" id="BPMNShape_sid-15E9C66F-8B6A-40F0-A6DB-7500CB845BA3">
+        <omgdc:Bounds height="80.0" width="100.0" x="570.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-A796EEE5-F3E1-432F-B451-937FC927A22A" id="BPMNShape_sid-A796EEE5-F3E1-432F-B451-937FC927A22A">
+        <omgdc:Bounds height="80.0" width="100.0" x="1350.0" y="1230.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-AD5B299D-B274-4151-B22C-49201C248A1B" id="BPMNShape_sid-AD5B299D-B274-4151-B22C-49201C248A1B">
+        <omgdc:Bounds height="40.0" width="40.0" x="630.0" y="315.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-779BE976-2645-4D2B-92DA-F72910276383" id="BPMNShape_sid-779BE976-2645-4D2B-92DA-F72910276383">
+        <omgdc:Bounds height="40.0" width="40.0" x="630.0" y="585.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-B82F3F16-236B-4746-BEFC-E482007B6BF6" id="BPMNShape_sid-B82F3F16-236B-4746-BEFC-E482007B6BF6">
+        <omgdc:Bounds height="40.0" width="40.0" x="895.0" y="315.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C67517AF-7FC3-430E-AD6F-E4C6F29B0D66" id="BPMNShape_sid-C67517AF-7FC3-430E-AD6F-E4C6F29B0D66">
+        <omgdc:Bounds height="40.0" width="40.0" x="895.0" y="585.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C4271CAB-1DE1-48DE-921A-BD36AC9DFDEE" id="BPMNShape_sid-C4271CAB-1DE1-48DE-921A-BD36AC9DFDEE">
+        <omgdc:Bounds height="40.0" width="40.0" x="1290.0" y="375.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-F2B1956F-BC8D-4338-9C9B-4863D14690B3" id="BPMNShape_sid-F2B1956F-BC8D-4338-9C9B-4863D14690B3">
+        <omgdc:Bounds height="40.0" width="40.0" x="1179.0" y="585.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9E4FB79E-A61C-421F-B1BE-9E48D2A09EA1" id="BPMNShape_sid-9E4FB79E-A61C-421F-B1BE-9E48D2A09EA1">
+        <omgdc:Bounds height="40.0" width="40.0" x="495.0" y="915.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-EA587A72-BEC1-4B4F-A182-BEDFDB449841" id="BPMNShape_sid-EA587A72-BEC1-4B4F-A182-BEDFDB449841">
+        <omgdc:Bounds height="40.0" width="40.0" x="1380.0" y="1050.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-8840D92F-93DD-4E2F-AA78-44D90560C590" id="BPMNEdge_sid-8840D92F-93DD-4E2F-AA78-44D90560C590">
+        <omgdi:waypoint x="1400.3989361702127" y="1089.6010638297873"/>
+        <omgdi:waypoint x="1400.2116402116403" y="1125.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="eVerifyWaiverDenied" id="BPMNEdge_eVerifyWaiverDenied">
+        <omgdi:waypoint x="1066.0" y="441.0"/>
+        <omgdi:waypoint x="990.0" y="441.0"/>
+        <omgdi:waypoint x="990.0" y="220.0"/>
+        <omgdi:waypoint x="1260.0" y="220.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-13ADB7ED-1B46-4719-B456-06DD48543D70" id="BPMNEdge_sid-13ADB7ED-1B46-4719-B456-06DD48543D70">
+        <omgdi:waypoint x="1400.0" y="1205.0"/>
+        <omgdi:waypoint x="1400.0" y="1230.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="addressToWaiver" id="BPMNEdge_addressToWaiver">
+        <omgdi:waypoint x="630.4378881987577" y="335.4378881987578"/>
+        <omgdi:waypoint x="490.0" y="335.0030959752322"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="clearanceDenied" id="BPMNEdge_clearanceDenied">
+        <omgdi:waypoint x="515.5" y="954.5"/>
+        <omgdi:waypoint x="515.5" y="1070.0"/>
+        <omgdi:waypoint x="745.0" y="1070.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1B911593-2B8D-4DD1-BCC2-79869AEEFA95" id="BPMNEdge_sid-1B911593-2B8D-4DD1-BCC2-79869AEEFA95">
+        <omgdi:waypoint x="1183.650417827298" y="609.650417827298"/>
+        <omgdi:waypoint x="930.849582172702" y="675.849582172702"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-04EC4C1F-FD3E-45BC-AE48-F74EF959F4B3" id="BPMNEdge_sid-04EC4C1F-FD3E-45BC-AE48-F74EF959F4B3">
+        <omgdi:waypoint x="915.0" y="80.0"/>
+        <omgdi:waypoint x="915.0" y="105.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B279C548-D21F-41AC-AB84-748936796412" id="BPMNEdge_sid-B279C548-D21F-41AC-AB84-748936796412">
+        <omgdi:waypoint x="795.5038865823054" y="459.4961134176946"/>
+        <omgdi:waypoint x="795.0097834671467" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="clearanceGranted" id="BPMNEdge_clearanceGranted">
+        <omgdi:waypoint x="534.5413043478261" y="935.4586956521739"/>
+        <omgdi:waypoint x="745.0" y="935.0021691973969"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="employmentOutcome" id="BPMNEdge_employmentOutcome">
+        <omgdi:waypoint x="915.1731601731602" y="260.0"/>
+        <omgdi:waypoint x="915.4130434782609" y="315.4130434782609"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A221E679-DABE-4591-92F7-6153D8EBF518" id="BPMNEdge_sid-A221E679-DABE-4591-92F7-6153D8EBF518">
+        <omgdi:waypoint x="985.0" y="935.0"/>
+        <omgdi:waypoint x="1020.0" y="935.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="eVerifyToWaiver" id="BPMNEdge_eVerifyToWaiver">
+        <omgdi:waypoint x="1295.4939271255062" y="389.50607287449395"/>
+        <omgdi:waypoint x="1135.0" y="325.39943342776206"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="startToVerifyTasks" id="BPMNEdge_startToVerifyTasks">
+        <omgdi:waypoint x="405.0" y="40.0"/>
+        <omgdi:waypoint x="570.0" y="40.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="addressWaiverOutcome" id="BPMNEdge_addressWaiverOutcome">
+        <omgdi:waypoint x="440.0" y="375.0"/>
+        <omgdi:waypoint x="440.0" y="420.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-469FC1FD-037D-4051-A9F2-7A317CB1DD5A" id="BPMNEdge_sid-469FC1FD-037D-4051-A9F2-7A317CB1DD5A">
+        <omgdi:waypoint x="1120.0" y="935.0"/>
+        <omgdi:waypoint x="1400.0" y="935.0"/>
+        <omgdi:waypoint x="1400.4259259259259" y="1050.4259259259259"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-00090E68-826B-48A3-8185-01797F74C936" id="BPMNEdge_sid-00090E68-826B-48A3-8185-01797F74C936">
+        <omgdi:waypoint x="420.5" y="440.5"/>
+        <omgdi:waypoint x="326.5" y="440.5"/>
+        <omgdi:waypoint x="326.5" y="220.0"/>
+        <omgdi:waypoint x="525.0" y="220.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-2B475FEC-812B-487E-AB5C-363285AAB40D" id="BPMNEdge_sid-2B475FEC-812B-487E-AB5C-363285AAB40D">
+        <omgdi:waypoint x="215.0" y="260.0"/>
+        <omgdi:waypoint x="215.0" y="680.0"/>
+        <omgdi:waypoint x="895.0" y="680.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-D2B23CE3-7EDB-4BBE-8C42-457FEFE7F904" id="BPMNEdge_sid-D2B23CE3-7EDB-4BBE-8C42-457FEFE7F904">
+        <omgdi:waypoint x="1075.0" y="775.0"/>
+        <omgdi:waypoint x="1140.0" y="775.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-358E95C5-3C4B-48D4-99E5-2D6A347CE852" id="BPMNEdge_sid-358E95C5-3C4B-48D4-99E5-2D6A347CE852">
+        <omgdi:waypoint x="845.0" y="1070.0412881915772"/>
+        <omgdi:waypoint x="1380.48347107438" y="1070.48347107438"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toEVerify" id="BPMNEdge_toEVerify">
+        <omgdi:waypoint x="934.9375" y="125.0625"/>
+        <omgdi:waypoint x="1310.0" y="125.0625"/>
+        <omgdi:waypoint x="1310.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-D8498A52-72DC-4133-BE78-244431CF23A5" id="BPMNEdge_sid-D8498A52-72DC-4133-BE78-244431CF23A5">
+        <omgdi:waypoint x="915.5" y="699.5"/>
+        <omgdi:waypoint x="915.5" y="775.0"/>
+        <omgdi:waypoint x="975.0" y="775.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="employmentToWaiver" id="BPMNEdge_employmentToWaiver">
+        <omgdi:waypoint x="895.3591549295775" y="335.35915492957747"/>
+        <omgdi:waypoint x="845.0" y="335.006993006993"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-AD008E7C-81C2-4B8B-B8F7-9411B6646DA8" id="BPMNEdge_sid-AD008E7C-81C2-4B8B-B8F7-9411B6646DA8">
+        <omgdi:waypoint x="1370.0" y="815.0"/>
+        <omgdi:waypoint x="1370.0" y="865.0"/>
+        <omgdi:waypoint x="515.0" y="865.0"/>
+        <omgdi:waypoint x="516.9081693500298" y="916.9081693500298"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-89543346-B36D-4E46-9673-128108D6A87C" id="BPMNEdge_sid-89543346-B36D-4E46-9673-128108D6A87C">
+        <omgdi:waypoint x="915.5" y="354.5"/>
+        <omgdi:waypoint x="915.5" y="585.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="employmentWaiverOutcome" id="BPMNEdge_employmentWaiverOutcome">
+        <omgdi:waypoint x="795.0" y="375.0"/>
+        <omgdi:waypoint x="795.0" y="420.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-500DFB54-F30E-4430-870F-5A46074F943F" id="BPMNEdge_sid-500DFB54-F30E-4430-870F-5A46074F943F">
+        <omgdi:waypoint x="845.0" y="935.0"/>
+        <omgdi:waypoint x="885.0" y="935.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5D60CCB0-C797-4CB3-894F-C1283CBB5FE4" id="BPMNEdge_sid-5D60CCB0-C797-4CB3-894F-C1283CBB5FE4">
+        <omgdi:waypoint x="440.41284403669727" y="459.58715596330273"/>
+        <omgdi:waypoint x="440.1826484018265" y="510.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-DCF6E6DF-C8FA-4C74-B46E-C290E11BD4DE" id="BPMNEdge_sid-DCF6E6DF-C8FA-4C74-B46E-C290E11BD4DE">
+        <omgdi:waypoint x="845.0" y="573.0290456431535"/>
+        <omgdi:waypoint x="901.1221590909091" y="598.8778409090909"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8A189904-51D0-4533-9D57-77F3B3B32595" id="BPMNEdge_sid-8A189904-51D0-4533-9D57-77F3B3B32595">
+        <omgdi:waypoint x="650.6299841560825" y="354.3700158439175"/>
+        <omgdi:waypoint x="652.2340439739875" y="587.2340439739875"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="eVerifyOutcome" id="BPMNEdge_eVerifyOutcome">
+        <omgdi:waypoint x="1310.003663003663" y="260.0"/>
+        <omgdi:waypoint x="1310.4264705882354" y="375.4264705882353"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="eVerifyWaiverOutcome" id="BPMNEdge_eVerifyWaiverOutcome">
+        <omgdi:waypoint x="1085.0" y="365.0"/>
+        <omgdi:waypoint x="1085.0" y="420.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toAddressVerify" id="BPMNEdge_toAddressVerify">
+        <omgdi:waypoint x="895.5" y="125.5"/>
+        <omgdi:waypoint x="575.0" y="125.5"/>
+        <omgdi:waypoint x="575.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4D2375AE-C3D9-4C2B-A29C-AA3A32848626" id="BPMNEdge_sid-4D2375AE-C3D9-4C2B-A29C-AA3A32848626">
+        <omgdi:waypoint x="1310.22397094431" y="414.77602905569006"/>
+        <omgdi:waypoint x="1307.5" y="605.0"/>
+        <omgdi:waypoint x="1218.5883720930233" y="605.4116279069767"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B56A461A-FB1E-405D-98A4-F8E1FE6C6E20" id="BPMNEdge_sid-B56A461A-FB1E-405D-98A4-F8E1FE6C6E20">
+        <omgdi:waypoint x="670.0" y="40.0"/>
+        <omgdi:waypoint x="865.0" y="40.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-34B55AC6-E7AA-4305-827E-4A042D1CED8C" id="BPMNEdge_sid-34B55AC6-E7AA-4305-827E-4A042D1CED8C">
+        <omgdi:waypoint x="1240.0" y="775.0"/>
+        <omgdi:waypoint x="1320.0" y="775.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="toEmploymentVerify" id="BPMNEdge_toEmploymentVerify">
+        <omgdi:waypoint x="915.3272727272728" y="144.6727272727273"/>
+        <omgdi:waypoint x="915.009009009009" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5F9AD9DF-B6DF-4566-A552-10C461402ECD" id="BPMNEdge_sid-5F9AD9DF-B6DF-4566-A552-10C461402ECD">
+        <omgdi:waypoint x="665.2465219128461" y="609.7534780871539"/>
+        <omgdi:waypoint x="872.2298644623702" y="669.4556313910671"/>
+        <omgdi:waypoint x="898.9555347190123" y="676.0444652809877"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-651D8EE2-B855-4A3B-A7C8-1050F80EC770" id="BPMNEdge_sid-651D8EE2-B855-4A3B-A7C8-1050F80EC770">
+        <omgdi:waypoint x="1135.0" y="574.235807860262"/>
+        <omgdi:waypoint x="1185.355882352941" y="598.6441176470588"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A2275633-0F9D-47A2-B3DB-3730A316A157" id="BPMNEdge_sid-A2275633-0F9D-47A2-B3DB-3730A316A157">
+        <omgdi:waypoint x="895.5" y="125.5"/>
+        <omgdi:waypoint x="215.0" y="125.5"/>
+        <omgdi:waypoint x="215.0" y="180.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-DAF39AAD-DB5C-45F5-A151-333CC44F2AAF" id="BPMNEdge_sid-DAF39AAD-DB5C-45F5-A151-333CC44F2AAF">
+        <omgdi:waypoint x="1350.0" y="1270.0"/>
+        <omgdi:waypoint x="1213.0" y="1270.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="addressOutcome" id="BPMNEdge_addressOutcome">
+        <omgdi:waypoint x="575.9869281045752" y="260.0"/>
+        <omgdi:waypoint x="640.0690789473684" y="324.93092105263156"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-AE22CEE2-8228-464D-BF2E-8868E0C4E0F1" id="BPMNEdge_sid-AE22CEE2-8228-464D-BF2E-8868E0C4E0F1">
+        <omgdi:waypoint x="775.5" y="440.5"/>
+        <omgdi:waypoint x="704.5" y="440.5"/>
+        <omgdi:waypoint x="704.5" y="220.0"/>
+        <omgdi:waypoint x="865.0" y="220.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-644DD6A0-A052-44CD-A84D-F6E010E77A6F" id="BPMNEdge_sid-644DD6A0-A052-44CD-A84D-F6E010E77A6F">
+        <omgdi:waypoint x="915.3716216216217" y="624.6283783783783"/>
+        <omgdi:waypoint x="915.1333333333333" y="660.1333333333333"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-00EDB086-C917-49F7-88D0-4E6F68C2C17D" id="BPMNEdge_sid-00EDB086-C917-49F7-88D0-4E6F68C2C17D">
+        <omgdi:waypoint x="490.0" y="563.1828978622327"/>
+        <omgdi:waypoint x="633.8815789473684" y="601.1184210526316"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-636718C2-DD84-474A-94CB-754EDE754149" id="BPMNEdge_sid-636718C2-DD84-474A-94CB-754EDE754149">
+        <omgdi:waypoint x="1085.5" y="459.5"/>
+        <omgdi:waypoint x="1085.5" y="510.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

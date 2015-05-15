@@ -348,6 +348,17 @@ a.list-group-item:focus {
   border: 1px solid rgba(0,0,0,0.1);
 }
 
+#subNav section.scrollable div.wrapper section.panel.panel-default.portlet-item ul.list-group.alt.panel-body li.list-group-item div.media div.btn-group.pull-right.open ul.dropdown-menu {
+	position: relative;
+  z-index: 10000 !important;
+}
+
+.tagmenu span.dropdown-toggle {
+	margin-left: -40px;
+	margin-top: -2px;
+	position: absolute;
+}
+
 ul.typeahead.dropdown-menu {
 	width: 220px;
 	margin-left: -30px;
@@ -1514,6 +1525,7 @@ div.panel-body.max-200 {
 .navbar-brand img {
   margin-top: -4px;
   vertical-align: middle;
+  max-width: 100%;
 }
 .nav-primary li > a > i {
   margin: -8px -10px;
@@ -1590,7 +1602,8 @@ ul.nav.nav-main li.active {
     display: none !important;
   }
   .nav-xs .scrollable {
-    overflow: visible;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
   .nav-xs .nav-primary > ul > li > a {
     position: relative;
@@ -1606,6 +1619,7 @@ ul.nav.nav-main li.active {
     vertical-align: middle;
     height: 50px;
     width: 70px;
+    display:none;
   }
   .nav-xs .nav-primary > ul > li > a span.pull-right {
     display: none !important;
@@ -1613,7 +1627,7 @@ ul.nav.nav-main li.active {
   .nav-xs .nav-primary > ul > li > a i {
     width: auto;
     float: none;
-    display: block;
+    display: inline;
     font-size: 16px;
     margin: 0;
     line-height: 50px;
@@ -4282,4 +4296,77 @@ h3.m-b-xs.text-black {
 
 #facets div.facets h6 {
 	font-weight: bold;
+}
+
+
+
+#cloud a.tag1 { font-size: 0.7em; font-weight: 100; } #cloud a.tag2 { font-size: 0.8em; font-weight: 200; } #cloud a.tag3 { font-size: 0.9em; font-weight: 300; } #cloud a.tag4 { font-size: 1.0em; font-weight: 400; } #cloud a.tag5 { font-size: 1.2em; font-weight: 500; } #cloud a.tag6 { font-size: 1.4em; font-weight: 600; } #cloud a.tag7 { font-size: 1.6em; font-weight: 700; } #cloud a.tag8 { font-size: 1.8em; font-weight: 800; } #cloud a.tag9 { font-size: 2.2em; font-weight: 900; } #cloud a.tag10 { font-size: 2.5em; font-weight: 900; }
+
+
+
+#cloud { padding: 2px; line-height: 3em; text-align: center; } #cloud a { padding: 0px; }
+#cloud { margin: 0; } #cloud li { display: inline; }
+
+
+/* for ui-contextmenu */
+.ui-menu {
+    /*width: 180px;*/
+    /*font-size: 63%;*/
+    width: 240px;
+    font-size: 100%;
+}
+.ui-menu kbd {
+    float: right;
+}
+
+.acm-word-wrap{
+  word-wrap: break-word;
+}
+.acm-message {
+  color:#000000;
+  font-weight: bold;
+  margin:0px;
+  text-align: left
+}
+
+#acm-messageBoardContainer {
+  background-color:lightyellow;
+  position: absolute;
+  width:100%;
+  height:auto;
+  opacity:0.9;
+  display: none;
+  z-index:1;
+}
+
+#acm-labelMessageDetail {
+  position:relative;
+  left:40px;
+  color:#000000;
+  font-weight: bold;
+}
+
+/* external file drag and drop to doc tree hilite */
+tr.dragover {
+    border: 2px solid #0B85A1;
+}
+
+/* document detail page - notes table
+ prevent overflow of notes from the notes column*/
+#acm-docDetailLongNote{
+  width:180px;
+  overflow:auto;
+}
+
+/* email dialog box component classes */
+.acm-emailFormGroup{
+  display: inline-block;
+  width: 100%;
+  text-align: left
+}
+
+/*fullcalendar title text */
+.acm-fullCalendarTitleText{
+  font-weight: bold;
+  color: #fff;
 }

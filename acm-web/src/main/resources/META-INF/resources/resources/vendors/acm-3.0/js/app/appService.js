@@ -9,7 +9,7 @@ App.Service = {
     create : function() {
     }
 
-    ,API_GET_APPROVERS             : "/api/latest/users/withPrivilege/acm-complaint-approve"
+    ,API_GET_APPROVERS             : "/api/latest/service/functionalaccess/users/acm-complaint-approve"
     ,API_GET_COMPLAINT_TYPES       : "/api/latest/plugin/complaint/types"
     ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
 

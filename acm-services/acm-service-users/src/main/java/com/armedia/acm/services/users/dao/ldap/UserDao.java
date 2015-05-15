@@ -2,8 +2,11 @@ package com.armedia.acm.services.users.dao.ldap;
 
 
 import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.users.model.*;
-
+import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserRole;
+import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.RoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +18,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +31,20 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public AcmUser findByUserId(String userId)
     {
         return getEntityManager().find(AcmUser.class, userId);
+    }
+
+    public AcmUser findByUserIdAnyCase(String userId)
+    {
+        String jpql =
+                "SELECT u " +
+                        "FROM AcmUser u " +
+                        "WHERE LOWER(u.userId) = :lowerUserId";
+        TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
+
+        query.setParameter("lowerUserId", userId.toLowerCase());
+
+        AcmUser user = query.getSingleResult();
+        return user;
     }
 
     public AcmUser quietFindByUserId(String userId)
@@ -158,7 +174,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager().createQuery(
-                "UPDATE AcmUser au set au.userState = :state, au.userModified = :now WHERE au.userDirectoryName = :directoryName"
+                "UPDATE AcmUser au set au.userState = :state, au.modified = :now WHERE au.userDirectoryName = :directoryName"
         );
         markInvalid.setParameter("state", "INVALID");
         markInvalid.setParameter("now", new Date());

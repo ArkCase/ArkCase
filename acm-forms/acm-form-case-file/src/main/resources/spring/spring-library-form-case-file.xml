@@ -9,7 +9,9 @@
     	<property name="acmHistoryDao" ref="acmHistoryDao" />
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
-    	<property name="ecmFileService" ref="ecmFileService" />    	
+    	<property name="ecmFileService" ref="ecmFileService" />
+    	<property name="userDao" ref="userJpaDao" />
+    	<property name="acmParticipantDao" ref="acmParticipantDao" />
     </bean>
     
     <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService">
@@ -23,7 +25,8 @@
     	<property name="acmHistoryDao" ref="acmHistoryDao" />
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
-    	<property name="ecmFileService" ref="ecmFileService" />    	
+    	<property name="ecmFileService" ref="ecmFileService" />
+        <property name="formService" ref="caseFilePSService"/>
     </bean>
     
     <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService">

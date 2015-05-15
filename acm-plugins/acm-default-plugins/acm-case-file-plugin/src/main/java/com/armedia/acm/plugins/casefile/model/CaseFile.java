@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -9,10 +10,12 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -22,7 +25,6 @@ import java.util.*;
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
-    public static final String OBJECT_TYPE = "CASE_FILE";
 
     @Id
     @Column(name = "cm_case_id")
@@ -74,8 +76,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @Column(name = "cm_case_priority")
     private String priority;
 
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType = CaseFileConstants.OBJECT_TYPE;
+
     @OneToMany (cascade = {CascadeType.ALL})
-    @JoinColumn(name = "cm_object_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -93,8 +101,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     private List<String> approvers;
 
     /**
-     * This field is only used when the complaint is created. Usually it will be null.  Use the ecmFolderId
-     * to get the CMIS object ID of the complaint folder.
+     * This field is only used when the case file is created. Usually it will be null.  Use the container
+     * to get the CMIS object ID of the case file folder.
      */
     @Transient
     private String ecmFolderPath;
@@ -119,6 +127,20 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @Column(name = "cm_case_restricted_flag", nullable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumns({
+            @JoinColumn(name = "cm_parent_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")
+    })
+    private Collection<ObjectAssociation> childObjects = new ArrayList<>();
+
+    /**
+     * Container folder where the case file's attachments/content files are stored.
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container = new AcmContainer();
 
     @PrePersist
     protected void beforeInsert()
@@ -153,6 +175,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
+
+        if ( getContainer() != null )
+        {
+            getContainer().setContainerObjectId(getId());
+            getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle(getCaseNumber());
+        }
     }
 
     @PreUpdate
@@ -160,22 +189,19 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     {
         setupChildPointers();
     }
+
     private void personAssociationResolver (PersonAssociation personAssoc)
     {
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
 
-        personAssoc.getPerson().setPersonAssociations(Arrays.asList(personAssoc));
+        if (personAssoc.getPerson().getPersonAssociations() == null)
+        {
+        	personAssoc.getPerson().setPersonAssociations(new ArrayList<PersonAssociation>());
+        }
+        
+        personAssoc.getPerson().getPersonAssociations().addAll(Arrays.asList(personAssoc));
     }
-    /**
-     * CMIS object ID of the folder where the complaint's attachments/content files are stored.
-     */
-    @Column(name = "cm_case_ecm_folder_id")
-    private String ecmFolderId;
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "cm_parent_id")
-    private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     public Collection<ObjectAssociation> getChildObjects()
     {
@@ -188,6 +214,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         childObject.setParentName(getCaseNumber());
         childObject.setParentType(getObjectType());
         childObject.setParentId(getId());
+    }
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
     }
 
     public PersonAssociation getOriginator() {
@@ -308,17 +344,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.ecmFolderPath = ecmFolderPath;
     }
 
-    public String getEcmFolderId()
-    {
-        return ecmFolderId;
-    }
-
-    public void setEcmFolderId(String ecmFolderId)
-    {
-        this.ecmFolderId = ecmFolderId;
-    }
-
-
     public Date getClosed()
     {
         return closed;
@@ -370,49 +395,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
 
     public void setParticipants(List<AcmParticipant> participants) {
         this.participants = participants;
-    }
-
-    public void setAssignee(String assigneeUserId)
-    {
-        boolean found = false;
-        if ( participants != null )
-        {
-            for ( AcmParticipant p : participants )
-            {
-                if ( "assignee".equals(p.getParticipantType() ) )
-                {
-                    p.setParticipantLdapId(assigneeUserId);
-                    found = true;
-                    break;
-                }
-            }
-        }
-
-        if ( ! found && assigneeUserId != null )
-        {
-            AcmParticipant p = new AcmParticipant();
-            p.setParticipantLdapId(assigneeUserId);
-            p.setParticipantType("assignee");
-            p.setObjectType(getObjectType());
-            p.setObjectId(getId());
-            participants.add(p);
-        }
-    }
-
-    public String getAssignee()
-    {
-        if ( participants != null )
-        {
-            for ( AcmParticipant p : participants )
-            {
-                if ( "assignee".equals(p.getParticipantType() ) )
-                {
-                    return p.getParticipantLdapId();
-                }
-            }
-        }
-
-        return null;
     }
 
     @JsonGetter
@@ -493,8 +475,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JsonIgnore
     public String getObjectType()
     {
-        return OBJECT_TYPE;
+        return objectType;
     }
+
 
     @Override
     public String toString()
@@ -523,8 +506,8 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", milestones=" + milestones +
                 ", originator=" + originator +
                 ", restricted=" + restricted +
-                ", ecmFolderId='" + ecmFolderId + '\'' +
                 ", childObjects=" + childObjects +
+                ", container=" + container +
                 '}';
     }
 }

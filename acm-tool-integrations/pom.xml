@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.0.22-SNAPSHOT</version>
+        <version>3.0.26-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -29,6 +29,8 @@
         <module>acm-form-configuration</module>
         <module>acm-report-configuration</module>
     	<module>acm-object-converter</module>
+        <module>acm-object-change-status</module>
+        <module>acm-encryption</module>
   </modules>
 
 </project>

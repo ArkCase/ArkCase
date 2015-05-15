@@ -1,10 +1,12 @@
 package com.armedia.acm.plugins.task.model;
 
-import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
@@ -19,6 +21,8 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private Long taskId;
     private String priority;
     private String title;
+
+    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date dueDate;
     private String attachedToObjectType;
     private String attachedToObjectName;
@@ -32,8 +36,14 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private String status;
     private Integer percentComplete;
     private String details;
+
+    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date createDate;
+
+    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date taskStartDate;
+
+    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date taskFinishedDate;
     private Long taskDurationInMillis;
     private String workflowRequestType;
@@ -47,6 +57,36 @@ public class AcmTask implements AcmAssignedObject, Serializable
     private List<TaskOutcome> availableOutcomes = new ArrayList<>();
     private TaskOutcome taskOutcome;
     private List<AcmParticipant> participants;
+
+    private AcmContainer container;
+
+    /**
+     * ecmFolderPath is a transient property; it is set by business rules when the task is created, and is used
+     * to create the right folder.  For existing tasks, container has the folderId.
+     */
+    private transient String ecmFolderPath;
+    private Long parentObjectId;
+    private String parentObjectType;
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
+    }
+
+    public String getEcmFolderPath()
+    {
+        return ecmFolderPath;
+    }
+
+    public void setEcmFolderPath(String ecmFolderPath)
+    {
+        this.ecmFolderPath = ecmFolderPath;
+    }
 
     public Long getTaskId()
     {
@@ -396,5 +436,25 @@ public class AcmTask implements AcmAssignedObject, Serializable
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
+    }
+
+    public void setParentObjectId(Long parentObjectId)
+    {
+        this.parentObjectId = parentObjectId;
+    }
+
+    public Long getParentObjectId()
+    {
+        return parentObjectId;
+    }
+
+    public void setParentObjectType(String parentObjectType)
+    {
+        this.parentObjectType = parentObjectType;
+    }
+
+    public String getParentObjectType()
+    {
+        return parentObjectType;
     }
 }

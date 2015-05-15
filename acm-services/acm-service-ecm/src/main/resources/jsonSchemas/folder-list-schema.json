@@ -1,0 +1,103 @@
+/**
+ * Folder List Schema
+ */
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Folder List Schema",
+  "type": "object",
+  "properties": {
+    "containerObjectType": {
+      "type": "string",
+      "description": "Container object type, e.g. COMPLAINT, TASK etc."
+    },
+    "containerObjectId": {
+      "type": "integer",
+      "description": "Container object ID",
+      "minimum": 1
+    },
+    "folderId": {
+      "type": "integer",
+      "description": "Folder ID whose children are included in the children array"
+    },
+    "totalChildren": {
+      "type": "integer",
+      "description": "Total number of child objects in this folder; the folder could have more objects than are in the children array"
+    },
+    "category": {
+      "type": "string",
+      "description": "What category of objects are included in the children array",
+      "enum": [ "Document", "Correspondence", "all" ]
+    },
+    "sortBy": {
+      "type": "string",
+      "description": "The requested sort field"
+    },
+    "sortDirection": {
+      "type": "string",
+      "description": "The requested sort direction",
+      "enum": [ "ASC", "DESC" ]
+    },
+    "startRow": {
+      "type": "integer",
+      "description": "Requested start row",
+      "minimum": 0
+    },
+    "maxRows": {
+      "type": "integer",
+      "description": "Requested number of rows",
+      "minimum": 0
+    },
+    "children": {
+      "type": "array",
+      "description": "List of the immediate children of the requested folder",
+      "uniqueItems": true,
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "properties": {
+          "objectId": {
+            "type": "integer",
+            "description": "Object ID for this object"
+          },
+          "objectType": {
+            "type": "string",
+            "enum": [ "folder", "file" ]
+          },
+          "name": {
+            "type": "string",
+            "description": "object name"
+          },
+          "created": {
+            "type": "string",
+            "description": "create date, in Solr date format"
+          },
+          "modified": {
+            "type": "string",
+            "description": "modified date, in Solr date format"
+          },
+          "creator": {
+            "type": "string"
+          },
+          "modifier": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string",
+            "description": "The primary version tag for this object; only for files, not for folders"
+          },
+          "type": {
+            "type": "string",
+            "description": "The file type, e.g. close_complaint; only for files, not for folders"
+          },
+          "category": {
+            "type": "string",
+            "description": "The kind object; only for files, not for folders",
+            "enum": [ "Document", "Correspondence" ]
+          }
+        },
+        "required": [ "objectId", "objectType", "name", "created", "modified", "creator", "modifier" ]
+      }
+    }
+  },
+  "required": [ "containerObjectType", "containerObjectId", "folderId", "children", "totalChildren", "category", "sortBy", "sortDirection", "startRow", "maxRows" ]
+}

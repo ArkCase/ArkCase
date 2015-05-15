@@ -16,5 +16,16 @@
 	<bean id="saveApplicationRolesToGroupsAPIController" class="com.armedia.acm.services.functionalaccess.web.api.SaveApplicationRolesToGroupsAPIController">
 		<property name="functionalAccessService" ref="functionalAccessService"/>
 	</bean>
+	
+	<bean id="getGroupsByPrivilegeAPIController" class="com.armedia.acm.services.functionalaccess.web.api.GetGroupsByPrivilegeAPIController">
+		<property name="pluginManager" ref="acmPluginManager"/>
+        <property name="userDao" ref="userJpaDao"/>
+		<property name="functionalAccessService" ref="functionalAccessService"/>
+	</bean>
+	
+	<bean id="getUsersByPrivilegeAndGroupAPIController" class="com.armedia.acm.services.functionalaccess.web.api.GetUsersByPrivilegeAndGroupAPIController">
+		<property name="pluginManager" ref="acmPluginManager"/>
+		<property name="functionalAccessService" ref="functionalAccessService"/>
+	</bean>
     
 </beans>

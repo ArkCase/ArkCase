@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +39,9 @@ import static org.junit.Assert.*;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-drools-monitor.xml"
+        "/spring/spring-library-drools-monitor.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-person.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
@@ -71,6 +75,14 @@ public class ComplaintDaoIT
 
         Complaint complaint = complaintFactory.complaint();
         complaint.setRestricted(true);
+
+        AcmContainer acf = new AcmContainer();
+        AcmFolder af = new AcmFolder();
+        af.setCmisFolderId("cmisFolderId");
+        af.setName("folderName");
+        acf.setFolder(af);
+
+        complaint.setContainer(acf);
 
         complaint = complaintDao.save(complaint);
 

@@ -5,16 +5,16 @@
  */
 var App = App || {
     create : function() {
+        if (App.Controller.create)         App.Controller.create();
         if (App.Model.create)              App.Model.create();
         if (App.View.create)               App.View.create();
-        if (App.Controller.create)         App.Controller.create();
 
-        this.create_old();
+        //this.create_old();
     }
     ,onInitialized: function() {
+        if (App.Controller.onInitialized)  App.Controller.onInitialized();
         if (App.Model.onInitialized)       App.Model.onInitialized();
         if (App.View.onInitialized)        App.View.onInitialized();
-        if (App.Controller.onInitialized)  App.Controller.onInitialized();
     }
 
     ,getContextPath: function() {
@@ -57,15 +57,8 @@ var App = App || {
     ,OBJTYPE_PEOPLE:    "PEOPLE"
     ,OBJTYPE_PERSON:    "PERSON"
     ,OBJTYPE_BUSINESS_PROCESS: "BUSINESS_PROCESS"
-
-
-    ,getContextPath_old: function() {
-        return App.Object.getContextPath();
-    }
-    ,getUserName_old: function() {
-        return App.Object.getUserName();
-    }
-
+    ,OBJTYPE_TIMESHEET:        "TIMESHEET"
+    ,OBJTYPE_COSTSHEET:        "COSTSHEET"
 
 
     //fix me: make it plugin independent
@@ -81,6 +74,13 @@ var App = App || {
         sessionStorage.setItem("AcmComplaintTreeInfo", data);
     }
 
+
+    ,getContextPath_old: function() {
+        return App.Object.getContextPath();
+    }
+    ,getUserName_old: function() {
+        return App.Object.getUserName();
+    }
     ,buildObjectUrl_old : function(objectType, objectId)
     {
         var url = App.getContextPath();

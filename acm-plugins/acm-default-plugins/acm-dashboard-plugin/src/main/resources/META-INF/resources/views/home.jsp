@@ -6,6 +6,10 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="dashboard.page.title" text="Dashboard | ACM | Armedia Case Management" /></title>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">dashboard</span>
+    </div>
+
 
     <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_angular}/css/sample.test.css'/>" />
 
@@ -41,20 +45,20 @@
 </jsp:attribute>
 
 <jsp:body>
-<section id="content">
-<section class="vbox">
-<section class="scrollable">
+    <section class="vbox">
+        <section class="scrollable">
 
-    <div class="container" ng-app="sample" style="width:100%">
-        <div ng-view />
-    </div>
+            <div id="dashboard-app-container" class="container" style="width:100%">
+                <div ng-view />
+            </div>
 
-<%--</section>--%>
-<footer class="footer bg-white b-t b-light">
-    <p>Powered by ArkCase</p>
-</footer>
-</section>
-</section>
+            <%--</section>--%>
+            <footer class="footer bg-white b-t b-light">
+                <p data-i18n="dashboard:label.powered-by-arkcase">Powered by ArkCase</p>
+            </footer>
+        </section>
+    </section>
+
 </jsp:body>
 </t:layout>
 
