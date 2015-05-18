@@ -1,1 +1,47 @@
-{"table":{"field":{"parent-name":{"value":"Object Number","defaultValue":"Object Number","description":""},"name":{"value":"Name","defaultValue":"Name","description":""},"description":{"value":"Description","defaultValue":"Description","description":""},"modified":{"value":"Modified","defaultValue":"Modified","description":""},"id":{"value":"ID","defaultValue":"ID","description":""},"parent-id":{"value":"Parent ID","defaultValue":"Parent ID","description":""},"type":{"value":"Type","defaultValue":"Type","description":""},"key":{"value":"Description222sd","defaultValue":"Description222sd","description":""},"parent-type":{"value":"Object Type","defaultValue":"Object Type","description":""}}}}
+{"table": {"field": {
+    "parent-name": {
+        "defaultValue": "Object Number",
+        "description": "",
+        "value": "Object Number"
+    },
+    "name": {
+        "defaultValue": "Name",
+        "description": "",
+        "value": "Name"
+    },
+    "description": {
+        "defaultValue": "Description",
+        "description": "",
+        "value": "Description"
+    },
+    "modified": {
+        "defaultValue": "Modified",
+        "description": "",
+        "value": "Modified"
+    },
+    "id": {
+        "defaultValue": "ID",
+        "description": "",
+        "value": "ID"
+    },
+    "parent-id": {
+        "defaultValue": "Parent ID",
+        "description": "",
+        "value": "Parent ID"
+    },
+    "type": {
+        "defaultValue": "Type",
+        "description": "",
+        "value": "Type"
+    },
+    "key": {
+        "defaultValue": "Description",
+        "description": "",
+        "value": "Description"
+    },
+    "parent-type": {
+        "defaultValue": "Object Type",
+        "description": "",
+        "value": "Object Type"
+    }
+}}}
