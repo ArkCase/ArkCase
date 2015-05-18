@@ -60,6 +60,9 @@
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <!--<property name="muleClient" ref="muleClient"/>-->
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+        <property name="outlookFolderService" ref="outlookService"/>
+        <property name="outlookService" ref="outlookService"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
     
     <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
