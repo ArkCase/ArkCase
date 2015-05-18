@@ -432,7 +432,7 @@ Admin.View = Admin.View || {
                 settingsDeferred,
                 langsDeferred,
                 nsDeferred
-            ).done(function(settings, languages, namespaces){
+            ).done(function(settings, languages, namespaces) {
                 // Fill Languages options
                 context.settings = settings;
                 var langOptions = [];
@@ -455,6 +455,7 @@ Admin.View = Admin.View || {
                 $('#labelConfigurationLanguage').prop('disabled', false);
 
 
+                // Generate namespaces options
                 var nsOptions = [];
                 _.forEach(namespaces, function(nsItem){
                     nsOptions.push($('<option value="{0}">{1}</option>'.format(nsItem.id, nsItem.name)));
@@ -470,7 +471,21 @@ Admin.View = Admin.View || {
         }
 
         ,onLabelConfigurationFilterChanged: function(e) {
-            AcmEx.Object.JTable.load(Admin.View.LabelConfiguration.$divLabelConfiguration);
+            // Create keyup  processing delay to prevent often jTable rendering
+            if (this._changeDelayTimer) {
+                window.clearTimeout(Admin.View.LabelConfiguration._changeFilterDelayTimer)
+            }
+            Admin.View.LabelConfiguration._changeFilterDelayTimer = window.setTimeout(function(){
+                var $s = e.data.$s;
+                var loadData = e.data.loadData;
+                $s.jtable('load', {loadData: loadData});
+            }, 300);
+        }
+
+        ,onLangNamespaceChanged: function(e){
+            var $s = e.data.$s;
+            var loadData = e.data.loadData;
+            $s.jtable('load', {loadData: loadData});
         }
 
         ,onClickApplyDefaultLanguageBtn: function(e) {
@@ -481,11 +496,11 @@ Admin.View = Admin.View || {
         }
 
         ,createJTableLabelConfiguration: function ($s) {
-            $('#labelConfigurationIdFilter, #labelConfigurationValueFilter').bind('keyup change', $s, this.onLabelConfigurationFilterChanged);
-            $('#labelConfigurationNamespace').change($s, this.onLabelConfigurationFilterChanged);
-            $('#labelConfigurationLanguage').change($s, this.onLabelConfigurationFilterChanged);
+            $('#labelConfigurationIdFilter, #labelConfigurationValueFilter').bind('keyup change', {$s: $s, loadData: false}, this.onLabelConfigurationFilterChanged);
+            $('#labelConfigurationNamespace, #labelConfigurationLanguage').change({$s: $s, loadData: true}, this.onLangNamespaceChanged);
 
             var tableData = null;
+            var context = Admin.View.LabelConfiguration;
 
             $s.jtable({
                 //title: 'Label Configuration'
@@ -500,46 +515,75 @@ Admin.View = Admin.View || {
                         var editNamespace = $('#labelConfigurationNamespace').val();
 
 
-                        return $.Deferred(function($dfd){
-                            var rc = {};
-                            Admin.Service.LabelConfiguration.retrieveResource(editLanguage, editNamespace)
-                                .done(function(data){
+                        var processRecords = function (records) {
+                            var processedRecords = [];
+                            if (records) {
+                                // Apply filters to records
+                                processedRecords = _.filter(records, function(item){
+                                    var idFilterPassed = true;
+                                    var valueFilterPassed = true;
 
-                                    var records = [];
-                                    var sortedRecords = [];
-                                    if (data) {
-                                        records = data;
-                                        var recordsObj = {};
-
-                                        // Sort records if required
-                                        if (jtParams.jtSorting) {
-                                            var params = jtParams.jtSorting.split(' ');
-                                            var fieldId = params[0];
-                                            var sortDir = params[1];
-                                            sortedRecords = _.sortBy(records, fieldId);
-                                            if (sortDir === 'DESC') {
-                                                sortedRecords.reverse();
-                                            }
-                                        } else {
-                                            sortedRecords = records;
-                                        }
-
+                                    if (idFilter) {
+                                        idFilterPassed = (item.id.toLocaleLowerCase().indexOf(idFilter.toLowerCase()) != -1);
                                     }
 
-                                    rc = {
-                                        Result: 'OK',
-                                        Records: sortedRecords
+                                    if (valueFilter) {
+                                        valueFilterPassed = (item.value.toLocaleLowerCase().indexOf(valueFilter.toLowerCase()) != -1);
                                     }
-                                    $dfd.resolve(rc);
-                                })
-                                .fail(function(){
-                                    rc = {
-                                        Result: 'OK',
-                                        Records: []
-                                    }
-                                    $dfd.resolve(rc);
+
+                                    return idFilterPassed && valueFilterPassed;
                                 });
-                        });
+
+                                // Add reset value
+                                for (var i = 0; i < processedRecords.length; i++) {
+                                    processedRecords[i].reset = (processedRecords[i].value != processedRecords[i].defaultValue);
+                                }
+
+                                // Sort records if required
+                                if (jtParams.jtSorting) {
+                                    var params = jtParams.jtSorting.split(' ');
+                                    var fieldId = params[0];
+                                    var sortDir = params[1];
+                                    processedRecords = _.sortBy(processedRecords, fieldId);
+                                    if (sortDir === 'DESC') {
+                                        processedRecords.reverse();
+                                    }
+                                } else {
+                                    processedRecords = records;
+                                }
+                            }
+                            return (processedRecords);
+                        }
+
+                        // Prevent server request for filtering ans sorting
+                        if (!Admin.Service.LabelConfiguration._data || postData && postData.loadData) {
+                            return $.Deferred(function($dfd){
+                                var rc = {};
+                                Admin.Service.LabelConfiguration.retrieveResource(editLanguage, editNamespace)
+                                    .done(function(data) {
+                                        Admin.Service.LabelConfiguration._data = data;
+                                        rc = {
+                                            Result: 'OK',
+                                            Records: []
+                                        }
+                                        $dfd.resolve(rc);
+                                        // This HACK helps to clear lastPostData of jTable to prevent excess server request.
+                                        $s.jtable('load', {loadData: false});
+                                    })
+                                    .fail(function(){
+                                        rc = {
+                                            Result: 'OK',
+                                            Records: []
+                                        }
+                                        $dfd.resolve(rc);
+                                    });
+                            });
+                        } else {
+                            return {
+                                Result: 'OK',
+                                Records: processRecords(Admin.Service.LabelConfiguration._data)
+                            }
+                        }
                     }, createAction: function (postData, jtParams) {
                         return {
                             "Result": "OK"
@@ -581,7 +625,15 @@ Admin.View = Admin.View || {
                                             }
                                         )
                                         .done(function(){
-                                            row.data().record['value'] = newValue;
+                                            $s.jtable('updateRecord', {
+                                                record: {
+                                                    id: id,
+                                                    value: newValue,
+                                                    defaultValue: record.defaultValue,
+                                                    description: record.description
+                                                },
+                                                clientOnly: true
+                                            });
                                         })
                                         .fail(function(){
                                             Acm.Dialog.error('Can\'t save resource');
@@ -597,7 +649,7 @@ Admin.View = Admin.View || {
                     }, description: {
                         title: 'Description'
                         ,edit: 'false'
-                        ,width: '40%'
+                        ,width: '35%'
                         ,display: function(data){
                             var valueEl = $([
                                 '<a href="#" data-id="', data.record.id, '">',
@@ -623,9 +675,16 @@ Admin.View = Admin.View || {
                                             }
                                         )
                                         .done(function(){
-                                            row.data().record['description'] = newDescription;
+                                            $s.jtable('updateRecord', {
+                                                record: {
+                                                    id: id,
+                                                    value: record.value,
+                                                    defaultValue: record.defaultValue,
+                                                    description: newDescription
+                                                },
+                                                clientOnly: true
+                                            });
                                         })
-
                                         .fail(function(){
                                             Acm.Dialog.error('Can\'t save resource');
                                         });
@@ -638,52 +697,65 @@ Admin.View = Admin.View || {
                             return valueEl;
                         }
 
-                    }, revert: {
-                        title: 'Revert',
-                        width: '10%',
+                    }, reset: {
+                        title: 'Default Value',
+                        width: '15%',
                         display: function(data) {
-                            var revertEl = $([
-                                '<a href="#" data-id="', data.record.id ,'">',
-                                    'Revert',
-                                '</a>'
-                            ].join(''));
+                            var revertEl = '';
+                            data.record.reset = 'A';
+                            if  (data.record.value != data.record.defaultValue) {
+                                data.record.reset = 'B';
+                                revertEl = $([
+                                    '<a href="#" data-id="', data.record.id ,'">',
+                                    'Reset',
+                                    '</a>'
+                                ].join(''));
 
-                            revertEl.click(function(e){
-                                e.preventDefault();
-                                var editLanguage = $('#labelConfigurationLanguage').val();
-                                var editNamespace = $('#labelConfigurationNamespace').val();
-                                var id = $(this).data('id');
-                                var row = $s.jtable('getRowByKey', id);
-                                if (row) {
-                                    var record = row.data().record;
+                                revertEl.click(function(e){
+                                    e.preventDefault();
+                                    var editLanguage = $('#labelConfigurationLanguage').val();
+                                    var editNamespace = $('#labelConfigurationNamespace').val();
+                                    var id = $(this).data('id');
+                                    var row = $s.jtable('getRowByKey', id);
+                                    if (row) {
+                                        var record = row.data().record;
 
-                                    Admin.Service.LabelConfiguration.updateResource(
-                                        editLanguage,
-                                        editNamespace,
-                                        {
-                                            id: id,
-                                            value: record.defaultValue,
-                                            description: record.description
-                                        }
-                                    )
-                                    .done(function(){
-                                        row.data().record['value'] = record.defaultValue;
-                                        $('.resource-value', row).text(record.defaultValue)
-                                     })
-                                    .fail(function(){
-                                        Acm.Dialog.error('Can\'t revert value');
-                                    });
-                                } else {
-                                    console.error('Row '+ id +' was not found');
-                                }
-                            });
+                                        Admin.Service.LabelConfiguration.updateResource(
+                                            editLanguage,
+                                            editNamespace,
+                                            {
+                                                id: id,
+                                                value: record.defaultValue,
+                                                description: record.description
+                                            }
+                                        )
+                                        .done(function(){
+                                            $s.jtable('updateRecord', {
+                                                record: {
+                                                    id: id,
+                                                    value: record.defaultValue,
+                                                    defaultValue: record.defaultValue,
+                                                    description: record.description
+                                                },
+                                                clientOnly: true
+                                            });
+                                        })
+                                        .fail(function(){
+                                            Acm.Dialog.error('Can\'t reset to default value');
+                                        });
+                                    } else {
+                                        console.error('Row '+ id +' was not found');
+                                    }
+                                });
+
+                            }
 
                             return revertEl;
                         }
                     }
                 }
             });
-            $s.jtable('load');
+            $s.jtable('load', {loadData: true});
         }
     }
 
