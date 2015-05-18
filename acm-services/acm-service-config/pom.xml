@@ -15,11 +15,11 @@
 
     <dependencies>
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
-        <!--<dependency>-->
-            <!--<groupId>org.liquibase</groupId>-->
-            <!--<artifactId>liquibase-core</artifactId>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
@@ -45,12 +45,12 @@
             <!--<version>${acm.version}</version>-->
         <!--</dependency>-->
 
-        <!--<dependency>-->
-            <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
-            <!--<artifactId>acm-cmis-configuration</artifactId>-->
-            <!--<version>${acm.version}</version>-->
-            <!--<scope>runtime</scope>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-cmis-configuration</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>-->
