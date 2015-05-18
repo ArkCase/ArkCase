@@ -1,9 +1,13 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
 import com.armedia.acm.service.outlook.dao.OutlookDao;
+import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
+import com.armedia.acm.service.outlook.model.OutlookFolder;
+import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -19,7 +23,12 @@ import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
 import microsoft.exchange.webservices.data.enumeration.DateTimePrecision;
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
+import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.enumeration.FolderPermissionReadAccess;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+import microsoft.exchange.webservices.data.exception.ServiceLocalException;
+import microsoft.exchange.webservices.data.property.complex.FolderPermission;
+import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +39,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
@@ -49,10 +61,19 @@ public class ExchangeWebServicesOutlookDaoIT
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+//    private String validUser = "ann.acm@armedia.com";
     private String validUser = "ann.acm@armedia.com";
     private String validPassword = "Armedia123";
 
+    private String validUser1 = "ian.acm@armedia.com";
+    private String validPassword1 = "Armedia123";
+
+    private String validUser2 = "albert.acm@armedia.com";
+    private String validPassword2 = "Armedia123";
+
     private AcmOutlookUser user = new AcmOutlookUser("ann-acm", validUser, validPassword);
+    private AcmOutlookUser user1 = new AcmOutlookUser("ian-acm", validUser1, validPassword1);
+    private AcmOutlookUser user2 = new AcmOutlookUser("albert-acm", validUser2, validPassword2);
 
     @Autowired
     @Qualifier("exchangeWebServicesOutlookDao")
@@ -106,7 +127,6 @@ public class ExchangeWebServicesOutlookDaoIT
 
         for ( Item item : items.getItems() )
         {
-            System.out.println(((Appointment)item).getRecurrence());
             log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
         }
 
@@ -277,6 +297,73 @@ public class ExchangeWebServicesOutlookDaoIT
 
     private void verifyFilledItemDetails(OutlookItem outlookItem) {
         assertNotNull(outlookItem.getId());
+    }
+
+    @Test
+    public void testFindFolders() throws Exception {
+        ExchangeService service = dao.connect(user);
+
+        FindFoldersResults items = dao.findFolders(
+                service, WellKnownFolderName.Calendar, 0, 15,
+                "subject", true);
+
+        assertNotNull(items);
+
+        log.info("Total items: " + items.getTotalCount() + "; more? " + items.isMoreAvailable());
+
+        for ( Folder folder : items.getFolders()) {
+            log.info("Display Name: {}; ID: {};", folder.getDisplayName(), folder.getId().getUniqueId());
+            for(FolderPermission permission:folder.getPermissions().getItems()){
+                log.info("User Display Name: {}; Level: {};", permission.getUserId().getDisplayName(), permission.getPermissionLevel());
+            }
+        }
+    }
+
+    @Test
+    public void testCreateAndDeleteFolder() throws Exception {
+        ExchangeService service = dao.connect(user);
+        OutlookFolder newFolderData = new OutlookFolder();
+        newFolderData.setDisplayName("Folder Test");
+        OutlookFolder createdFolder = dao.createFolder(service, user.getEmailAddress(), WellKnownFolderName.Calendar, newFolderData);
+        assertNotNull(createdFolder.getId());
+
+        dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+    }
+
+    @Test
+    public void testAddRemovePrivilegesToFolder() throws InterruptedException, ServiceLocalException {
+        //create folder
+        ExchangeService service = dao.connect(user);
+        OutlookFolder newFolderData = new OutlookFolder();
+        newFolderData.setDisplayName("FolderWithPrivileges");
+        OutlookFolder createdFolder = dao.createFolder(service, user.getEmailAddress(), WellKnownFolderName.Calendar, newFolderData);
+        assertNotNull(createdFolder.getId());
+
+        Folder folder =  dao.getFolder(service, createdFolder.getId());
+        assertEquals(3, folder.getPermissions().getItems().size());
+
+        //add privileges to user1
+        OutlookFolderPermission permission = new OutlookFolderPermission();
+        permission.setEmail(user1.getEmailAddress());
+        permission.setLevel(FolderPermissionLevel.Custom);
+        permission.setReadItems(FolderPermissionReadAccess.FullDetails);
+        permission.setFolderVisible(true);
+
+        List<OutlookFolderPermission> permissionList = new ArrayList<>();
+        permissionList.add(permission);
+        dao.addFolderPermissions(service, createdFolder.getId(), permissionList);
+
+        folder =  dao.getFolder(service, createdFolder.getId());
+        assertEquals(4, folder.getPermissions().getItems().size());
+
+        //remove the privileges to the user1
+        dao.removeFolderPermissions(service, createdFolder.getId(), permissionList);
+
+        folder =  dao.getFolder(service, createdFolder.getId());
+        assertEquals(3, folder.getPermissions().getItems().size());
+
+        //delete the folder
+        dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
     }
 
 }

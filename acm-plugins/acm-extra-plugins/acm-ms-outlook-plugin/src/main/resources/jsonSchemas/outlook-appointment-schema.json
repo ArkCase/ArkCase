@@ -53,6 +53,10 @@
     "body": {
       "type": "string",
       "description": "Message body, in HTML 4.01 format"
+    },
+    "folderId": {
+      "type": "string",
+      "description": "shared folder id"
     }
   }
 }

@@ -101,7 +101,7 @@ public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport 
         Capture<AcmOutlookUser> outlookUserCapture = new Capture<>();
         Capture<OutlookCalendarItem> apointmentItemCapture = new Capture<>();
         appointmentItem.setId("some_fake_id");
-        expect(outlookService.createOutlookAppointment(capture(outlookUserCapture), eq(WellKnownFolderName.Calendar), capture(apointmentItemCapture))).andReturn(appointmentItem);
+        expect(outlookService.createOutlookAppointment(capture(outlookUserCapture), capture(apointmentItemCapture))).andReturn(appointmentItem);
 
         replayAll();
 

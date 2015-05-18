@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
 import com.armedia.acm.crypto.exceptions.AcmEncryptionException;
-import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
@@ -31,6 +30,7 @@ public class ListCalendarItemsAPIController
     @RequestMapping(value = "/calendar", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public OutlookResults<OutlookCalendarItem> inbox(
+            @RequestParam(value = "folderId", required = false) String folderId,
             @RequestParam(value = "s", required = false, defaultValue = "dateTimeStart") String sort,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
@@ -47,7 +47,7 @@ public class ListCalendarItemsAPIController
 
         boolean ascendingSort = "ASC".equals(sortDirection);
 
-        OutlookResults<OutlookCalendarItem> results = getOutlookService().findCalendarItems(outlookUser, startRow, maxRows, sort, ascendingSort);
+        OutlookResults<OutlookCalendarItem> results = getOutlookService().findCalendarItems(folderId, outlookUser, startRow, maxRows, sort, ascendingSort);
 
         return results;
 

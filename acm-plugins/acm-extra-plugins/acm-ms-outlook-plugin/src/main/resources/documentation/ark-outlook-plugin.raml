@@ -53,9 +53,8 @@ title: ArkCase Outlook Integration Plugin
                     "sent" : "2014-03-10T21:15:09.000+0000",
                     "from" : "support@manning.com",
                     "read" : true,
-                    "body" : "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<html>......</html>\n"
+                    "body" : "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\n<!-- converted from rtf -->\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style>\n</head>\n<body>\n<font face=\"Times New Roman\" size=\"3\"><a name=\"BM_BEGIN\"></a>\n<div><font face=\"Tahoma, sans-serif\" size=\"2\">The body</font></div>\n</font>\n</body>\n</html>\n",
                     }
-                    // more items left out of this example.
                   ]
                 }
         400:
@@ -65,9 +64,13 @@ title: ArkCase Outlook Integration Plugin
               example: |
                 Bad key or data   
   /calendar:
-    description: Get a page of the user's calendar items, from their Calendar folder.
+    description: Get a page of the user's calendar items, from their Calendar folder or shared caledendar folder.
     get:
       queryParameters:
+        folderId:
+          description: shared calendar folderId
+          required: false
+          default: null
         s:
           description: Sort field
           required: false
@@ -118,6 +121,7 @@ title: ArkCase Outlook Integration Plugin
                     "cancelled" : false,
                     "meeting" : false,
                     "recurring" : false,
+                    "folderId" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
                     "startDate" : "2015-04-21T21:30:00.000+0000",
                     "endDate" : "2015-04-21T22:30:00.000+0000"
                     }
@@ -137,6 +141,7 @@ title: ArkCase Outlook Integration Plugin
             !include outlook-appointment-schema.json
           example: |
             {
+                    "folderId" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
                     "subject" : "test appointment",
                     "body" : "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<meta name=\"Generator\" content=\"Microsoft Exchange Server\">\n<!-- converted from rtf -->\n<style><!-- .EmailQuote { margin-left: 1pt; padding-left: 4pt; border-left: #800000 2px solid; } --></style>\n</head>\n<body>\n<font face=\"Times New Roman\" size=\"3\"><a name=\"BM_BEGIN\"></a>\n<div><font face=\"Tahoma, sans-serif\" size=\"2\">The body</font></div>\n</font>\n</body>\n</html>\n",
                     "size" : 1029,
@@ -167,6 +172,7 @@ title: ArkCase Outlook Integration Plugin
                   "cancelled" : false,
                   "meeting" : false,
                   "recurring" : false,
+                  "folderId" : "AAMkAGViZGY3MDgxLTVlNzctNGYxOC05NmNmLTE3ODU4MTUzZjVmYQBGAAAAAABpUanqXKTXRLK9dLKLqaekBwDV4qlLqpBoRJcWhdjfOX8rASgFlOzCAADV4qlLqpBoRJcWhdjfOX8rASgFlPkhAAA=",
                   "startDate" : "2015-04-21T21:30:00.000+0000",
                   "endDate" : "2015-04-21T22:30:00.000+0000"
                 }
