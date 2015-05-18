@@ -74,7 +74,11 @@
             <artifactId>acm-service-data-access-control</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ms-outlook-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

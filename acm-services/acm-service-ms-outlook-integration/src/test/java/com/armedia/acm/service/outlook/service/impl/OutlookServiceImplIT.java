@@ -3,10 +3,12 @@ package com.armedia.acm.service.outlook.service.impl;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
+import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -25,6 +27,7 @@ import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -35,6 +38,9 @@ public class OutlookServiceImplIT
 {
     @Autowired
     private OutlookService outlookService;
+
+    @Autowired
+    private OutlookFolderService outlookFolderService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -173,5 +179,14 @@ public class OutlookServiceImplIT
         assertNotNull(outlookItem.getId());
     }
 
+    @Test
+    public void createCreateDeleteFolderWithSystemUser() throws Exception
+    {
+        OutlookFolder folder = new OutlookFolder();
+        folder.setDisplayName("some folder");
+        folder = outlookFolderService.createFolder(WellKnownFolderName.Calendar, folder);
+
+        outlookFolderService.deleteFolder(folder.getId(),DeleteMode.HardDelete);
+    }
 
 }

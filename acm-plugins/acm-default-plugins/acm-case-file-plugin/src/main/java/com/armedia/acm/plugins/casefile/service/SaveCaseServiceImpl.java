@@ -4,16 +4,33 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.OutlookFolder;
+import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
+import com.armedia.acm.service.outlook.service.OutlookFolderService;
+import com.armedia.acm.service.outlook.service.OutlookService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.enumeration.FolderPermissionReadAccess;
+import microsoft.exchange.webservices.data.enumeration.PermissionScope;
+import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +43,16 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileEventUtility caseFileEventUtility;
     private MuleClient muleClient;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private OutlookService outlookService;
+    private OutlookFolderService outlookFolderService;
+    private UserDao userDao;
+
+    @Value("#{'${casefile.participants-types-as-outlook-permission}'.trim().replaceAll(\"\\s*(?=,)|(?<=,)\\s*\", \"\").split(',')}")
+    private List<String> participantsTypesForOutlookFolder;
+    @Value("${casefile.auto_create_calendar_folder}")
+    private boolean autoCreateFolderForCaseFile;
+    @Value("${casefile.delete_calendar_folder_after_case_closed}")
+    private boolean autoDeleteFolderAfterCaseClosed;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -37,7 +64,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         if ( newCase )
         {
             in.setCreator(auth.getName());
-
         }
 
         in.setModified(new Date());
@@ -70,8 +96,49 @@ public class SaveCaseServiceImpl implements SaveCaseService
         {
         	getCaseFileEventUtility().raiseEvent(retval, "updated", new Date(), ipAddress, auth.getName(), auth);
         }
-                
+        //create calendar folder
+        if (autoCreateFolderForCaseFile) {
+            OutlookFolder folder = new OutlookFolder();
+            folder.setDisplayName(in.getTitle() + "(" + saved.getCaseNumber() + ")");
+            folder = outlookFolderService.createFolder(WellKnownFolderName.Calendar, folder);
+            caseFileDao.insertOutlookFolderId(in.getId(), folder.getId());
+            saved.setCalendarFolderId(folder.getId());
+            if (saved.getCalendarFolderId() != null && saved.getCalendarFolderId().length() > 0)
+                updateFolderParticipants(saved);
+        }
         return saved;
+    }
+
+    private void updateFolderParticipants(CaseFile caseFile) {
+        if(participantsTypesForOutlookFolder==null || participantsTypesForOutlookFolder.size()<1) {
+            log.warn("There are not defined participants types to include");
+            return;
+        }
+        for(AcmParticipant ap:caseFile.getParticipants()){
+            if (participantsTypesForOutlookFolder.contains(ap.getParticipantType())) {
+                //add participant to access calendar folder
+                AcmUser user = userDao.findByUserId(ap.getParticipantLdapId());
+                OutlookFolderPermission outlookFolderPermission = new OutlookFolderPermission();
+                outlookFolderPermission.setEmail(user.getMail());
+                switch (ap.getParticipantType()) {
+                    case "follower":
+                        outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
+                        break;
+                    case "assignee":
+                        outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
+                        break;
+                    case "approver":
+                        outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
+                        break;
+                }
+                try {
+                    outlookFolderService.addFolderPermission(caseFile.getCalendarFolderId(), outlookFolderPermission);
+                } catch (Exception e) {
+                    log.error("Can't add permission for user: {}, reason: ",user,e.getMessage() );
+                }
+            }
+        }
+
     }
 
     public CaseFileDao getCaseFileDao()
@@ -122,5 +189,17 @@ public class SaveCaseServiceImpl implements SaveCaseService
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public void setOutlookService(OutlookService outlookService) {
+        this.outlookService = outlookService;
+    }
+
+    public void setOutlookFolderService(OutlookFolderService outlookFolderService) {
+        this.outlookFolderService = outlookFolderService;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 }

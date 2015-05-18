@@ -6,16 +6,16 @@ import java.util.List;
  * Created by nebojsha on 09.05.2015.
  */
 public class OutlookFolder extends OutlookItem {
-    private OutlookFolder parent;
+    private String parentId;
     private String displayName;
     private List<OutlookFolderPermission> permissions;
 
-    public OutlookFolder getParent() {
-        return parent;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setParent(OutlookFolder parent) {
-        this.parent = parent;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public String getDisplayName() {
