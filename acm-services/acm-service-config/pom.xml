@@ -15,18 +15,18 @@
 
     <dependencies>
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.liquibase</groupId>-->
+            <!--<artifactId>liquibase-core</artifactId>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-spring-data-source</artifactId>
-            <version>${acm.version}</version>
-            <scope>runtime</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.armedia.acm.acm-tool-integrations</groupId>-->
+            <!--<artifactId>acm-spring-data-source</artifactId>-->
+            <!--<version>${acm.version}</version>-->
+            <!--<scope>runtime</scope>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>com.armedia.acm.acm-services</groupId>-->
             <!--<artifactId>acm-service-data</artifactId>-->
@@ -57,11 +57,11 @@
             <!--<artifactId>acm-object-association-plugin</artifactId>-->
             <!--<version>${acm.version}</version>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-configuration</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.armedia.acm.acm-services</groupId>-->
+            <!--<artifactId>acm-service-configuration</artifactId>-->
+            <!--<version>${acm.version}</version>-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>com.armedia.acm.acm-services</groupId>-->
             <!--<artifactId>acm-service-ecm</artifactId>-->
@@ -104,11 +104,11 @@
         <!--</dependency>-->
 
         <!-- preconditions -->
-        <dependency>
-            <groupId>com.google.collections</groupId>
-            <artifactId>google-collections</artifactId>
-            <version>${google-collections.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.collections</groupId>-->
+            <!--<artifactId>google-collections</artifactId>-->
+            <!--<version>${google-collections.version}</version>-->
+        <!--</dependency>-->
 
 
         <!-- logging -->
@@ -149,11 +149,11 @@
             <version>${fasterxml-jackson-core.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.code.gson</groupId>-->
+            <!--<artifactId>gson</artifactId>-->
+            <!--<version>${gson.version}</version>-->
+        <!--</dependency>-->
 
         <!-- servlet -->
         <dependency>
@@ -174,11 +174,11 @@
             <artifactId>spring-test</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.oracle</groupId>-->
+            <!--<artifactId>jdbc</artifactId>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
 
         <!-- spring -->
         <dependency>
