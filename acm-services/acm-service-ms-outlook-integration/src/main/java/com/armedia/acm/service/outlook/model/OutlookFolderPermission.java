@@ -3,12 +3,13 @@ package com.armedia.acm.service.outlook.model;
 import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.enumeration.FolderPermissionReadAccess;
 import microsoft.exchange.webservices.data.enumeration.PermissionScope;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Created by nebojsha on 09.05.2015.
  */
 public class OutlookFolderPermission {
-    private String userId;
+    private String email;
     private FolderPermissionLevel level;
     private boolean canCreateItems;
     private boolean canCreateSubFolders;
@@ -19,12 +20,16 @@ public class OutlookFolderPermission {
     private PermissionScope deleteItems;
     private FolderPermissionReadAccess readItems;
 
-    public String getUserId() {
-        return userId;
+    public OutlookFolderPermission() {
+        level = FolderPermissionLevel.Custom;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public FolderPermissionLevel getLevel() {
@@ -97,5 +102,10 @@ public class OutlookFolderPermission {
 
     public void setReadItems(FolderPermissionReadAccess readItems) {
         this.readItems = readItems;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

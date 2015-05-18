@@ -3,10 +3,14 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
-       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+       <context:annotation-config/>
 
        <cache:annotation-driven cache-manager="cacheManager"/>
        <bean id="cacheManager" class="org.springframework.cache.concurrent.ConcurrentMapCacheManager"/>
@@ -16,10 +20,10 @@
               <property name="ignoreResourceNotFound" value="true"/>
               <property name="localOverride" value="false"/>
               <property name="properties">
-                     <props>
-                            <prop key="outlook.integration.enabled">true</prop>
-                            <prop key="outlook.exchange.server.version">Exchange2007_SP1</prop>
-                     </props>
+                  <props>
+                      <prop key="outlook.integration.enabled">true</prop>
+                      <prop key="outlook.exchange.server.version">Exchange2007_SP1</prop>
+                  </props>
               </property>
        </bean>
 
