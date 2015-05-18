@@ -14,7 +14,7 @@
     },
 
     "navigation": {
-        "label" :{
+        "label": {
             "navigation": "Navigation",
             "help": "Help",
             "my-profile": "My Profile",
@@ -24,14 +24,14 @@
             "complaints": "Complaints",
             "search": "Search",
             "case-files": "Case Files",
-            "dashboard":"Dashboard",
+            "dashboard": "Dashboard",
             "administration": "Administration",
             "audit": "Audit",
             "reports": "Reports",
             "subscriptions": "Subscriptions",
             "notifications": "Notifications",
             "time-tracing": "Time Tracking",
-            "cost-tracking" :"Cost Tracking",
+            "cost-tracking": "Cost Tracking",
             "tags": "Tags"
         }
     },

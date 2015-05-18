@@ -1,1 +1,76 @@
-{"button":{"subscribe":{"value":"Subscribe","defaultValue":"Subscribe","description":""},"unsubscribe":{"value":"Unsubscribe","defaultValue":"Unsubscribe","description":""},"na":{"value":"N/A","defaultValue":"N/A","description":""}},"msg":{"subscribe-success":{"value":"Object subscribed","defaultValue":"Object subscribed","description":""},"unsubscribe-success":{"value":"Object unsubscribed","defaultValue":"Object unsubscribed","description":""}},"table":{"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"name":{"value":"Name","defaultValue":"Name","description":""},"type":{"value":"Type","defaultValue":"Type","description":""},"event":{"value":"Event","defaultValue":"Event","description":""},"parent-id":{"value":"Parent ID","defaultValue":"Parent ID","description":""},"parent-name":{"value":"Parent","defaultValue":"Parent","description":""},"parent-type":{"value":"Parent Type","defaultValue":"Parent Type","description":""},"owner":{"value":"Owner","defaultValue":"Owner","description":""},"modified":{"value":"Modified","defaultValue":"Modified","description":""}}}}
+{"button": {
+    "subscribe": {
+        "value": "Subscribe",
+        "defaultValue": "Subscribe",
+        "description": ""
+    },
+    "unsubscribe": {
+        "value": "Unsubscribe",
+        "defaultValue": "Unsubscribe",
+        "description": ""
+    },
+    "na": {
+        "value": "N/A",
+        "defaultValue": "N/A",
+        "description": ""
+    }
+}, "msg": {
+    "subscribe-success": {
+        "value": "Object subscribed",
+        "defaultValue": "Object subscribed",
+        "description": ""
+    },
+    "unsubscribe-success": {
+        "value": "Object unsubscribed",
+        "defaultValue": "Object unsubscribed",
+        "description": ""
+    }
+}, "table": {
+    "field": {
+        "id": {
+            "value": "ID",
+            "defaultValue": "ID",
+            "description": ""
+        },
+        "name": {
+            "value": "Name",
+            "defaultValue": "Name",
+            "description": ""
+        },
+        "type": {
+            "value": "Type",
+            "defaultValue": "Type",
+            "description": ""
+        },
+        "event": {
+            "value": "Event",
+            "defaultValue": "Event",
+            "description": ""
+        },
+        "parent-id": {
+            "value": "Parent ID",
+            "defaultValue": "Parent ID",
+            "description": ""
+        },
+        "parent-name": {
+            "value": "Parent",
+            "defaultValue": "Parent",
+            "description": ""
+        },
+        "parent-type": {
+            "value": "Parent Type",
+            "defaultValue": "Parent Type",
+            "description": ""
+        },
+        "owner": {
+            "value": "Owner",
+            "defaultValue": "Owner",
+            "description": ""
+        },
+        "modified": {
+            "value": "Modified",
+            "defaultValue": "Modified",
+            "description": ""
+        }
+    }
+}}

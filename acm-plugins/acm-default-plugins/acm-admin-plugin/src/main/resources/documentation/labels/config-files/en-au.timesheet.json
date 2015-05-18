@@ -1,71 +1,71 @@
 {
-  "title": "Time Tracking",
-  "label":{
-    "edit": "Edit",
-    "save": "Save",
-    "search": "Search",
-    "timesheet-name": "Timesheet Name",
-    "other-menu-items": "Other menu items",
-    "details": "Details"
-  },
-
-  "button":{
-    "go": "Go!",
-    "new-timesheet":"New Timesheet",
-    "edit-timesheet":"Edit Timesheet"
-
-  },
-  "msg": {
-    "no-timesheet-selected": "(No timesheet is selected)"
-  },
-  "context-menu": {
-    "menu-title": {
-      "menu": "Menu:",
-      "copy": "Copy",
-      "paste": "Paste",
-      "edit": "Edit",
-      "delete": "Delete",
-      "more": "More",
-      "sub1": "Sub 1",
-      "sub2": "Sub 2"
-    }
-  },
-
-  "detail": {
+    "title": "Time Tracking",
     "label": {
-      "last-modified": "Last Modified",
-      "editing-timesheet-detail": "Editing Timesheet detail"
-    }
-  },
+        "edit": "Edit",
+        "save": "Save",
+        "search": "Search",
+        "timesheet-name": "Timesheet Name",
+        "other-menu-items": "Other menu items",
+        "details": "Details"
+    },
 
-  "person": {
-    "table":{
-      "title": "Person",
-      "field": {
-        "id": "ID",
-        "full-name": "Full Name",
-        "username": "Username",
-        "role": "Role"
-      }
-    }
-  },
+    "button": {
+        "go": "Go!",
+        "new-timesheet": "New Timesheet",
+        "edit-timesheet": "Edit Timesheet"
 
-  "time-summary": {
-    "table": {
-      "title": "Hours Summary",
-      "field": {
-        "id": "ID",
-        "parent-id": "Parent ID",
-        "parent-type": "Parent Type",
-        "code": "Code",
-        "total-hours": "Total Hours",
-        "charged-date": "Date Charged",
-        "modified-date": "Modified Date"
-      }
-    }
-  },
+    },
+    "msg": {
+        "no-timesheet-selected": "(No timesheet is selected)"
+    },
+    "context-menu": {
+        "menu-title": {
+            "menu": "Menu:",
+            "copy": "Copy",
+            "paste": "Paste",
+            "edit": "Edit",
+            "delete": "Delete",
+            "more": "More",
+            "sub1": "Sub 1",
+            "sub2": "Sub 2"
+        }
+    },
 
-  "wizard": {
-    "title": "New Timesheet"
-  }
+    "detail": {
+        "label": {
+            "last-modified": "Last Modified",
+            "editing-timesheet-detail": "Editing Timesheet detail"
+        }
+    },
+
+    "person": {
+        "table": {
+            "title": "Person",
+            "field": {
+                "id": "ID",
+                "full-name": "Full Name",
+                "username": "Username",
+                "role": "Role"
+            }
+        }
+    },
+
+    "time-summary": {
+        "table": {
+            "title": "Hours Summary",
+            "field": {
+                "id": "ID",
+                "parent-id": "Parent ID",
+                "parent-type": "Parent Type",
+                "code": "Code",
+                "total-hours": "Total Hours",
+                "charged-date": "Date Charged",
+                "modified-date": "Modified Date"
+            }
+        }
+    },
+
+    "wizard": {
+        "title": "New Timesheet"
+    }
 }

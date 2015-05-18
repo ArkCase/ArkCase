@@ -1,1 +1,1250 @@
-{"title":{"value":"Tasks","defaultValue":"Tasks","description":""},"navigation":{"search":{"search":{"value":"Search","defaultValue":"Search","description":""},"btn-go":{"value":"Go!","defaultValue":"Go!","description":""}},"leaf-title":{"task-details":{"value":"Task Details","defaultValue":"Task Details","description":""},"rework-details":{"value":"Rework Details","defaultValue":"Rework Details","description":""},"documents-under-review":{"value":"Documents Under Review","defaultValue":"Documents Under Review","description":""},"attachments":{"value":"Attachments","defaultValue":"Attachments","description":""},"notes":{"value":"Notes","defaultValue":"Notes","description":""},"workflow-overview":{"value":"Workflow Overview","defaultValue":"Workflow Overview","description":""},"history":{"value":"History","defaultValue":"History","description":""},"details":{"value":"Details","defaultValue":"Details","description":""},"reject-comments":{"value":"Reject Comments","defaultValue":"Reject Comments","description":""}}},"context-menu":{"menu-title":{"menu":{"value":"Menu:","defaultValue":"Menu:","description":""},"copy":{"value":"Copy","defaultValue":"Copy","description":""},"paste":{"value":"Paste","defaultValue":"Paste","description":""},"edit":{"value":"Edit","defaultValue":"Edit","description":""},"delete":{"value":"Delete","defaultValue":"Delete","description":""},"more":{"value":"More","defaultValue":"More","description":""},"sub1":{"value":"Sub 1","defaultValue":"Sub 1","description":""},"sub2":{"value":"Sub 2","defaultValue":"Sub 2","description":""}}},"header":{"label":{"enter-parent-title":{"value":"Enter Parent Title","defaultValue":"Enter Parent Title","description":""},"enter-subject-type":{"value":"Enter Subject Type","defaultValue":"Enter Subject Type","description":""},"subject-type":{"value":"Subject Type","defaultValue":"Subject Type","description":""},"enter-incident-date":{"value":"Enter Incident Date","defaultValue":"Enter Incident Date","description":""},"incident-date":{"value":"Incident Date","defaultValue":"Incident Date","description":""},"enter-priority":{"value":"Enter Priority","defaultValue":"Enter Priority","description":""},"priority":{"value":"Priority","defaultValue":"Priority","description":""},"enter-assignee":{"value":"Enter Assignee","defaultValue":"Enter Assignee","description":""},"assigned-to":{"value":"Assigned To","defaultValue":"Assigned To","description":""},"enter-owning-group":{"value":"Enter Owning Group","defaultValue":"Enter Owning Group","description":""},"owning-group":{"value":"Owning Group","defaultValue":"Owning Group","description":""},"enter-task-subject":{"value":"Enter Task Subject","defaultValue":"Enter Task Subject","description":""},"enter-completion-percent":{"value":"Enter % of Completion","defaultValue":"Enter % of Completion","description":""},"completion-percent":{"value":"% of Completion","defaultValue":"% of Completion","description":""},"enter-owner":{"value":"Enter Owner","defaultValue":"Enter Owner","description":""},"assignee":{"value":"Assignee","defaultValue":"Assignee","description":""},"enter-start-date":{"value":"Enter Start Date","defaultValue":"Enter Start Date","description":""},"start-date":{"value":"Start Date","defaultValue":"Start Date","description":""},"enter-due-date":{"value":"Enter Due Date","defaultValue":"Enter Due Date","description":""},"due-date":{"value":"Due Date","defaultValue":"Due Date","description":""},"enter-task-state":{"value":"Enter Task State","defaultValue":"Enter Task State","description":""},"state":{"value":"State","defaultValue":"State","description":""}},"button":{"reject":{"value":"Reject","defaultValue":"Reject","description":""},"reject-task":{"value":"Reject Task","defaultValue":"Reject Task","description":""},"delete":{"value":"Delete","defaultValue":"Delete","description":""},"delete-task":{"value":"Delete Task","defaultValue":"Delete Task","description":""},"complete":{"value":"Complete","defaultValue":"Complete","description":""},"complete-task":{"value":"Complete Task","defaultValue":"Complete Task","description":""},"subscribe":{"value":"Subscribe","defaultValue":"Subscribe","description":""}}},"task-details":{"error-value":{"value":"(Error)","defaultValue":"(Error)","description":""},"button":{"edit":{"value":"Edit","defaultValue":"Edit","description":""},"save":{"value":"Save","defaultValue":"Save","description":""}},"label":{"other-menu-items":{"value":"Other Menu Items","defaultValue":"Other Menu Items","description":""},"task-details":{"value":"Task Details","defaultValue":"Task Details","description":""},"must-enter-details":{"value":"Must enter rework details","defaultValue":"Must enter rework details","description":""},"dirty-editing-detail":{"value":"Editing task detail","defaultValue":"Editing task detail","description":""},"editing-rework-detail":{"value":"Editing rework detail","defaultValue":"Editing rework detail","description":""}}},"notes":{"table":{"title":{"value":"Note","defaultValue":"Note","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"note":{"value":"Note","defaultValue":"Note","description":""},"created":{"value":"Created","defaultValue":"Created","description":""},"creator":{"value":"Author","defaultValue":"Author","description":""}}},"msg":{"add-new-record":{"value":"Add Note","defaultValue":"Add Note","description":""}}},"history":{"table":{"title":{"value":"History","defaultValue":"History","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"event-name":{"value":"Event Name","defaultValue":"Event Name","description":""},"date":{"value":"Date","defaultValue":"Date","description":""},"user":{"value":"User","defaultValue":"User","description":""}}}},"workflow":{"table":{"title":{"value":"Workflow Overview","defaultValue":"Workflow Overview","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"participant":{"value":"Participant","defaultValue":"Participant","description":""},"role":{"value":"Role","defaultValue":"Role","description":""},"status":{"value":"Status","defaultValue":"Status","description":""},"start-date-time":{"value":"Date/Time","defaultValue":"Date/Time","description":""},"end-date-time":{"value":"Date/Time","defaultValue":"Date/Time","description":""}}}},"attachments-to-retire":{"table":{"title":{"value":"Attachments","defaultValue":"Attachments","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"title":{"value":"Title","defaultValue":"Title","description":""},"created":{"value":"Created","defaultValue":"Created","description":""},"creator":{"value":"Creator","defaultValue":"Creator","description":""}}},"msg":{"add-new-record":{"value":"Add Document","defaultValue":"Add Document","description":""}}},"documents-under-review":{"table":{"title":{"value":"Documents Under Review","defaultValue":"Documents Under Review","description":""},"toolbar":{"edit-close-request":{"value":"Edit Close Complaint Request","defaultValue":"Edit Close Complaint Request","description":""},"change-case-status":{"value":"Change Case Status","defaultValue":"Change Case Status","description":""}},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"title":{"value":"Title","defaultValue":"Title","description":""},"created":{"value":"Created","defaultValue":"Created","description":""},"author":{"value":"Author","defaultValue":"Author","description":""},"status":{"value":"Status","defaultValue":"Status","description":""}}}},"reject-comments":{"table":{"title":{"value":"Reject Comments","defaultValue":"Reject Comments","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"comment":{"value":"Comment","defaultValue":"Comment","description":""},"created":{"value":"Created","defaultValue":"Created","description":""},"author":{"value":"Author","defaultValue":"Author","description":""}}}},"rework-details":{"button":{"edit":{"value":"Edit","defaultValue":"Edit","description":""},"save":{"value":"Save","defaultValue":"Save","description":""}},"label":{"other-menu-items":{"value":"Other Menu Items","defaultValue":"Other Menu Items","description":""},"rework-details":{"value":"Rework Details","defaultValue":"Rework Details","description":""}}},"attachments":{"label":{"attachments":{"value":"Attachments","defaultValue":"Attachments","description":""}},"table":{"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"title":{"value":"Title","defaultValue":"Title","description":""},"type":{"value":"Type","defaultValue":"Type","description":""},"created":{"value":"Created","defaultValue":"Created","description":""},"author":{"value":"Author","defaultValue":"Author","description":""},"version":{"value":"Version","defaultValue":"Version","description":""},"status":{"value":"Status","defaultValue":"Status","description":""}}}},"close-complaint":{"button":{"close-complaint":{"value":"Close Complaint","defaultValue":"Close Complaint","description":""},"edit-close-complaint":{"value":"Edit Close Complaint","defaultValue":"Edit Close Complaint","description":""},"change-case-status":{"value":"Change Case Status","defaultValue":"Change Case Status","description":""}}},"signature":{"label":{"electronic-signatures":{"value":"Electronic Signatures","defaultValue":"Electronic Signatures","description":""}},"table":{"field":{"signed-by":{"value":"Signed By","defaultValue":"Signed By","description":""},"date":{"value":"Date","defaultValue":"Date","description":""}}}},"chat":{"label":{"approvers":{"value":"Approvers","defaultValue":"Approvers","description":""},"collaborators":{"value":"Collaborators","defaultValue":"Collaborators","description":""},"watchers":{"value":"Watchers","defaultValue":"Watchers","description":""}},"button":{"new-participant":{"value":"Participant","defaultValue":"Participant","description":""}}},"create-new-folder-dialog":{"title":{"value":"Create Folder","defaultValue":"Create Folder","description":""},"body":{"value":"Enter a name for the folder you would like to create:","defaultValue":"Enter a name for the folder you would like to create:","description":""},"label":{"folder-name":{"value":"Folder Name","defaultValue":"Folder Name","description":""}},"button":{"ok":{"value":"Create Folder","defaultValue":"Create Folder","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"close":{"value":"Close","defaultValue":"Close","description":""}}},"email-documents-dialog":{"title":{"value":"Send Email","defaultValue":"Send Email","description":""},"body":{"value":"Where would you like to email this file?","defaultValue":"Where would you like to email this file?","description":""},"label":{"email-address":{"value":"Email Address","defaultValue":"Email Address","description":""}},"button":{"ok":{"value":"Send Email","defaultValue":"Send Email","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"close":{"value":"Close","defaultValue":"Close","description":""}}},"signature-dialog":{"title":{"value":"Electronically Sign","defaultValue":"Electronically Sign","description":""},"label":{"password":{"value":"Password","defaultValue":"Password","description":""}},"button":{"close":{"value":"Close","defaultValue":"Close","description":""},"ok":{"value":"Confirm","defaultValue":"Confirm","description":""}}},"assign-dialog":{"title":{"value":"Assign Task","defaultValue":"Assign Task","description":""},"label":{"who-assign-task-to":{"value":"Who would you like to assign this task to?","defaultValue":"Who would you like to assign this task to?","description":""}},"button":{"search-people":{"value":"Search people..","defaultValue":"Search people..","description":""},"close":{"value":"Close","defaultValue":"Close","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"ok":{"value":"Assign Task","defaultValue":"Assign Task","description":""},"go":{"value":"Go!","defaultValue":"Go!","description":""}},"table":{"field":{"first-name":{"value":"First Name","defaultValue":"First Name","description":""},"last-name":{"value":"Last Name","defaultValue":"Last Name","description":""},"username":{"value":"Username","defaultValue":"Username","description":""},"organization":{"value":"Organization","defaultValue":"Organization","description":""},"showing-items":{"value":"Showing 20-30 of 50 items","defaultValue":"Showing 20-30 of 50 items","description":""}},"value":{"first-name":{"value":"[First Name]","defaultValue":"[First Name]","description":""},"last-name":{"value":"[Last Name]","defaultValue":"[Last Name]","description":""},"username":{"value":"[Username]","defaultValue":"[Username]","description":""},"organization":{"value":"[Organization]","defaultValue":"[Organization]","description":""}}}},"reassign-dialog":{"title":{"value":"Reassign Task","defaultValue":"Reassign Task","description":""},"label":{"who-reassign-task-to":{"value":"Who would you like to reassign this task to?","defaultValue":"Who would you like to reassign this task to?","description":""}},"button":{"search-people":{"value":"Search people..","defaultValue":"Search people..","description":""},"close":{"value":"Close","defaultValue":"Close","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"ok":{"value":"Reassign Task","defaultValue":"Reassign Task","description":""},"go":{"value":"Go!","defaultValue":"Go!","description":""}},"table":{"field":{"first-name":{"value":"First Name","defaultValue":"First Name","description":""},"last-name":{"value":"Last Name","defaultValue":"Last Name","description":""},"username":{"value":"Username","defaultValue":"Username","description":""},"organization":{"value":"Organization","defaultValue":"Organization","description":""},"showing-items":{"value":"Showing 20-30 of 50 items","defaultValue":"Showing 20-30 of 50 items","description":""}},"value":{"first-name":{"value":"[First Name]","defaultValue":"[First Name]","description":""},"last-name":{"value":"[Last Name]","defaultValue":"[Last Name]","description":""},"username":{"value":"[Username]","defaultValue":"[Username]","description":""},"organization":{"value":"[Organization]","defaultValue":"[Organization]","description":""}}}},"unassign-dialog":{"title":{"value":"Unassign Task","defaultValue":"Unassign Task","description":""},"label":{"sure-to-unassign":{"value":"Are you sure you want to unassign this task?","defaultValue":"Are you sure you want to unassign this task?","description":""},"reason":{"value":"Reason","defaultValue":"Reason","description":""}},"button":{"close":{"value":"Close","defaultValue":"Close","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"ok":{"value":"Unassign Task","defaultValue":"Unassign Task","description":""}}},"approve-dialog":{"title":{"value":"Approve Task","defaultValue":"Approve Task","description":""},"label":{"sure-to-approve":{"value":"Are you sure you want to approve this task?","defaultValue":"Are you sure you want to approve this task?","description":""},"reason":{"value":"Reason","defaultValue":"Reason","description":""}},"button":{"close":{"value":"Close","defaultValue":"Close","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"ok":{"value":"Approve Task","defaultValue":"Approve Task","description":""}}},"reject-dialog":{"title":{"value":"Rejet Task","defaultValue":"Rejet Task","description":""},"label":{"sure-to-reject":{"value":"Are you sure you want to reject this task?","defaultValue":"Are you sure you want to reject this task?","description":""},"task-will-return-to-owner":{"value":"This task will be returned to the owner:","defaultValue":"This task will be returned to the owner:","description":""},"select-people":{"value":"Or select some other people from below:","defaultValue":"Or select some other people from below:","description":""},"show-items":{"value":"Showing 0-0 of 0 items","defaultValue":"Showing 0-0 of 0 items","description":""}},"table":{"field":{"first-name":{"value":"First Name","defaultValue":"First Name","description":""},"last-name":{"value":"Last Name","defaultValue":"Last Name","description":""},"username":{"value":"Username","defaultValue":"Username","description":""},"organization":{"value":"Organization","defaultValue":"Organization","description":""}}},"button":{"search-button":{"value":"Search people..","defaultValue":"Search people..","description":""},"go":{"value":"Go!","defaultValue":"Go!","description":""},"close":{"value":"Close","defaultValue":"Close","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"ok":{"value":"Reject Task","defaultValue":"Reject Task","description":""}}},"delete-dialog":{"title":{"value":"Delete Task","defaultValue":"Delete Task","description":""},"label":{"sure-to-delete":{"value":"Are you sure you want to delete this task?","defaultValue":"Are you sure you want to delete this task?","description":""},"reason":{"value":"Reason","defaultValue":"Reason","description":""}},"button":{"close":{"value":"Close","defaultValue":"Close","description":""},"cancel":{"value":"Cancel","defaultValue":"Cancel","description":""},"ok":{"value":"Delete Task","defaultValue":"Delete Task","description":""}}},"msg":{"no-task-data":{"value":"(No task data)","defaultValue":"(No task data)","description":""}},"wizard":{"title":{"value":"New Task","defaultValue":"New Task","description":""},"label":{"assign-to":{"value":"Assign To","defaultValue":"Assign To","description":""},"select-assignee":{"value":"Select Assignee","defaultValue":"Select Assignee","description":""},"associate-complaint-case":{"value":"Associate with Complaint or Case","defaultValue":"Associate with Complaint or Case","description":""},"complaint-or-case":{"value":"Complaint or Case #","defaultValue":"Complaint or Case #","description":""},"subject":{"value":"Subject","defaultValue":"Subject","description":""},"start-date":{"value":"Start Date","defaultValue":"Start Date","description":""},"status":{"value":"Status","defaultValue":"Status","description":""},"select-status":{"value":"Select Status","defaultValue":"Select Status","description":""},"active":{"value":"Active","defaultValue":"Active","description":""},"due-date":{"value":"Due Date","defaultValue":"Due Date","description":""},"priority":{"value":"Priority","defaultValue":"Priority","description":""},"select-priority":{"value":"Select Priority","defaultValue":"Select Priority","description":""},"low":{"value":"Low","defaultValue":"Low","description":""},"medium":{"value":"Medium","defaultValue":"Medium","description":""},"high":{"value":"High","defaultValue":"High","description":""},"expedited":{"value":"Expedited","defaultValue":"Expedited","description":""},"complete-percents":{"value":"% Complete","defaultValue":"% Complete","description":""},"notes":{"value":"Notes","defaultValue":"Notes","description":""}},"button":{"save":{"value":"Save","defaultValue":"Save","description":""}},"msg":{"failed-to-retrieve-assignees":{"value":"Failed to retrieve assignees","defaultValue":"Failed to retrieve assignees","description":""},"failed-to-create-new-task":{"value":"Failed to create new task:","defaultValue":"Failed to create new task:","description":""},"please-enter-subject":{"value":"Please enter a subject","defaultValue":"Please enter a subject","description":""}}}}
+{"title": {
+    "value": "Tasks",
+    "defaultValue": "Tasks",
+    "description": ""
+}, "navigation": {
+    "search": {
+        "search": {
+            "value": "Search",
+            "defaultValue": "Search",
+            "description": ""
+        },
+        "btn-go": {
+            "value": "Go!",
+            "defaultValue": "Go!",
+            "description": ""
+        }
+    },
+    "leaf-title": {
+        "task-details": {
+            "value": "Task Details",
+            "defaultValue": "Task Details",
+            "description": ""
+        },
+        "rework-details": {
+            "value": "Rework Details",
+            "defaultValue": "Rework Details",
+            "description": ""
+        },
+        "documents-under-review": {
+            "value": "Documents Under Review",
+            "defaultValue": "Documents Under Review",
+            "description": ""
+        },
+        "attachments": {
+            "value": "Attachments",
+            "defaultValue": "Attachments",
+            "description": ""
+        },
+        "notes": {
+            "value": "Notes",
+            "defaultValue": "Notes",
+            "description": ""
+        },
+        "workflow-overview": {
+            "value": "Workflow Overview",
+            "defaultValue": "Workflow Overview",
+            "description": ""
+        },
+        "history": {
+            "value": "History",
+            "defaultValue": "History",
+            "description": ""
+        },
+        "details": {
+            "value": "Details",
+            "defaultValue": "Details",
+            "description": ""
+        },
+        "reject-comments": {
+            "value": "Reject Comments",
+            "defaultValue": "Reject Comments",
+            "description": ""
+        }
+    }
+}, "context-menu": {
+    "menu-title": {
+        "menu": {
+            "value": "Menu:",
+            "defaultValue": "Menu:",
+            "description": ""
+        },
+        "copy": {
+            "value": "Copy",
+            "defaultValue": "Copy",
+            "description": ""
+        },
+        "paste": {
+            "value": "Paste",
+            "defaultValue": "Paste",
+            "description": ""
+        },
+        "edit": {
+            "value": "Edit",
+            "defaultValue": "Edit",
+            "description": ""
+        },
+        "delete": {
+            "value": "Delete",
+            "defaultValue": "Delete",
+            "description": ""
+        },
+        "more": {
+            "value": "More",
+            "defaultValue": "More",
+            "description": ""
+        },
+        "sub1": {
+            "value": "Sub 1",
+            "defaultValue": "Sub 1",
+            "description": ""
+        },
+        "sub2": {
+            "value": "Sub 2",
+            "defaultValue": "Sub 2",
+            "description": ""
+        }
+    }
+}, "header": {
+    "label": {
+        "enter-parent-title": {
+            "value": "Enter Parent Title",
+            "defaultValue": "Enter Parent Title",
+            "description": ""
+        },
+        "enter-subject-type": {
+            "value": "Enter Subject Type",
+            "defaultValue": "Enter Subject Type",
+            "description": ""
+        },
+        "subject-type": {
+            "value": "Subject Type",
+            "defaultValue": "Subject Type",
+            "description": ""
+        },
+        "enter-incident-date": {
+            "value": "Enter Incident Date",
+            "defaultValue": "Enter Incident Date",
+            "description": ""
+        },
+        "incident-date": {
+            "value": "Incident Date",
+            "defaultValue": "Incident Date",
+            "description": ""
+        },
+        "enter-priority": {
+            "value": "Enter Priority",
+            "defaultValue": "Enter Priority",
+            "description": ""
+        },
+        "priority": {
+            "value": "Priority",
+            "defaultValue": "Priority",
+            "description": ""
+        },
+        "enter-assignee": {
+            "value": "Enter Assignee",
+            "defaultValue": "Enter Assignee",
+            "description": ""
+        },
+        "assigned-to": {
+            "value": "Assigned To",
+            "defaultValue": "Assigned To",
+            "description": ""
+        },
+        "enter-owning-group": {
+            "value": "Enter Owning Group",
+            "defaultValue": "Enter Owning Group",
+            "description": ""
+        },
+        "owning-group": {
+            "value": "Owning Group",
+            "defaultValue": "Owning Group",
+            "description": ""
+        },
+        "enter-task-subject": {
+            "value": "Enter Task Subject",
+            "defaultValue": "Enter Task Subject",
+            "description": ""
+        },
+        "enter-completion-percent": {
+            "value": "Enter % of Completion",
+            "defaultValue": "Enter % of Completion",
+            "description": ""
+        },
+        "completion-percent": {
+            "value": "% of Completion",
+            "defaultValue": "% of Completion",
+            "description": ""
+        },
+        "enter-owner": {
+            "value": "Enter Owner",
+            "defaultValue": "Enter Owner",
+            "description": ""
+        },
+        "assignee": {
+            "value": "Assignee",
+            "defaultValue": "Assignee",
+            "description": ""
+        },
+        "enter-start-date": {
+            "value": "Enter Start Date",
+            "defaultValue": "Enter Start Date",
+            "description": ""
+        },
+        "start-date": {
+            "value": "Start Date",
+            "defaultValue": "Start Date",
+            "description": ""
+        },
+        "enter-due-date": {
+            "value": "Enter Due Date",
+            "defaultValue": "Enter Due Date",
+            "description": ""
+        },
+        "due-date": {
+            "value": "Due Date",
+            "defaultValue": "Due Date",
+            "description": ""
+        },
+        "enter-task-state": {
+            "value": "Enter Task State",
+            "defaultValue": "Enter Task State",
+            "description": ""
+        },
+        "state": {
+            "value": "State",
+            "defaultValue": "State",
+            "description": ""
+        }
+    },
+    "button": {
+        "reject": {
+            "value": "Reject",
+            "defaultValue": "Reject",
+            "description": ""
+        },
+        "reject-task": {
+            "value": "Reject Task",
+            "defaultValue": "Reject Task",
+            "description": ""
+        },
+        "delete": {
+            "value": "Delete",
+            "defaultValue": "Delete",
+            "description": ""
+        },
+        "delete-task": {
+            "value": "Delete Task",
+            "defaultValue": "Delete Task",
+            "description": ""
+        },
+        "complete": {
+            "value": "Complete",
+            "defaultValue": "Complete",
+            "description": ""
+        },
+        "complete-task": {
+            "value": "Complete Task",
+            "defaultValue": "Complete Task",
+            "description": ""
+        },
+        "subscribe": {
+            "value": "Subscribe",
+            "defaultValue": "Subscribe",
+            "description": ""
+        }
+    }
+}, "task-details": {
+    "error-value": {
+        "value": "(Error)",
+        "defaultValue": "(Error)",
+        "description": ""
+    },
+    "button": {
+        "edit": {
+            "value": "Edit",
+            "defaultValue": "Edit",
+            "description": ""
+        },
+        "save": {
+            "value": "Save",
+            "defaultValue": "Save",
+            "description": ""
+        }
+    },
+    "label": {
+        "other-menu-items": {
+            "value": "Other Menu Items",
+            "defaultValue": "Other Menu Items",
+            "description": ""
+        },
+        "task-details": {
+            "value": "Task Details",
+            "defaultValue": "Task Details",
+            "description": ""
+        },
+        "must-enter-details": {
+            "value": "Must enter rework details",
+            "defaultValue": "Must enter rework details",
+            "description": ""
+        },
+        "dirty-editing-detail": {
+            "value": "Editing task detail",
+            "defaultValue": "Editing task detail",
+            "description": ""
+        },
+        "editing-rework-detail": {
+            "value": "Editing rework detail",
+            "defaultValue": "Editing rework detail",
+            "description": ""
+        }
+    }
+}, "notes": {
+    "table": {
+        "title": {
+            "value": "Note",
+            "defaultValue": "Note",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "note": {
+                "value": "Note",
+                "defaultValue": "Note",
+                "description": ""
+            },
+            "created": {
+                "value": "Created",
+                "defaultValue": "Created",
+                "description": ""
+            },
+            "creator": {
+                "value": "Author",
+                "defaultValue": "Author",
+                "description": ""
+            }
+        }
+    },
+    "msg": {
+        "add-new-record": {
+            "value": "Add Note",
+            "defaultValue": "Add Note",
+            "description": ""
+        }
+    }
+}, "history": {
+    "table": {
+        "title": {
+            "value": "History",
+            "defaultValue": "History",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "event-name": {
+                "value": "Event Name",
+                "defaultValue": "Event Name",
+                "description": ""
+            },
+            "date": {
+                "value": "Date",
+                "defaultValue": "Date",
+                "description": ""
+            },
+            "user": {
+                "value": "User",
+                "defaultValue": "User",
+                "description": ""
+            }
+        }
+    }
+}, "workflow": {
+    "table": {
+        "title": {
+            "value": "Workflow Overview",
+            "defaultValue": "Workflow Overview",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "participant": {
+                "value": "Participant",
+                "defaultValue": "Participant",
+                "description": ""
+            },
+            "role": {
+                "value": "Role",
+                "defaultValue": "Role",
+                "description": ""
+            },
+            "status": {
+                "value": "Status",
+                "defaultValue": "Status",
+                "description": ""
+            },
+            "start-date-time": {
+                "value": "Date/Time",
+                "defaultValue": "Date/Time",
+                "description": ""
+            },
+            "end-date-time": {
+                "value": "Date/Time",
+                "defaultValue": "Date/Time",
+                "description": ""
+            }
+        }
+    }
+}, "attachments-to-retire": {
+    "table": {
+        "title": {
+            "value": "Attachments",
+            "defaultValue": "Attachments",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "title": {
+                "value": "Title",
+                "defaultValue": "Title",
+                "description": ""
+            },
+            "created": {
+                "value": "Created",
+                "defaultValue": "Created",
+                "description": ""
+            },
+            "creator": {
+                "value": "Creator",
+                "defaultValue": "Creator",
+                "description": ""
+            }
+        }
+    },
+    "msg": {
+        "add-new-record": {
+            "value": "Add Document",
+            "defaultValue": "Add Document",
+            "description": ""
+        }
+    }
+}, "documents-under-review": {
+    "table": {
+        "title": {
+            "value": "Documents Under Review",
+            "defaultValue": "Documents Under Review",
+            "description": ""
+        },
+        "toolbar": {
+            "edit-close-request": {
+                "value": "Edit Close Complaint Request",
+                "defaultValue": "Edit Close Complaint Request",
+                "description": ""
+            },
+            "change-case-status": {
+                "value": "Change Case Status",
+                "defaultValue": "Change Case Status",
+                "description": ""
+            }
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "title": {
+                "value": "Title",
+                "defaultValue": "Title",
+                "description": ""
+            },
+            "created": {
+                "value": "Created",
+                "defaultValue": "Created",
+                "description": ""
+            },
+            "author": {
+                "value": "Author",
+                "defaultValue": "Author",
+                "description": ""
+            },
+            "status": {
+                "value": "Status",
+                "defaultValue": "Status",
+                "description": ""
+            }
+        }
+    }
+}, "reject-comments": {
+    "table": {
+        "title": {
+            "value": "Reject Comments",
+            "defaultValue": "Reject Comments",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "comment": {
+                "value": "Comment",
+                "defaultValue": "Comment",
+                "description": ""
+            },
+            "created": {
+                "value": "Created",
+                "defaultValue": "Created",
+                "description": ""
+            },
+            "author": {
+                "value": "Author",
+                "defaultValue": "Author",
+                "description": ""
+            }
+        }
+    }
+}, "rework-details": {
+    "button": {
+        "edit": {
+            "value": "Edit",
+            "defaultValue": "Edit",
+            "description": ""
+        },
+        "save": {
+            "value": "Save",
+            "defaultValue": "Save",
+            "description": ""
+        }
+    },
+    "label": {
+        "other-menu-items": {
+            "value": "Other Menu Items",
+            "defaultValue": "Other Menu Items",
+            "description": ""
+        },
+        "rework-details": {
+            "value": "Rework Details",
+            "defaultValue": "Rework Details",
+            "description": ""
+        }
+    }
+}, "attachments": {
+    "label": {
+        "attachments": {
+            "value": "Attachments",
+            "defaultValue": "Attachments",
+            "description": ""
+        }
+    },
+    "table": {
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "title": {
+                "value": "Title",
+                "defaultValue": "Title",
+                "description": ""
+            },
+            "type": {
+                "value": "Type",
+                "defaultValue": "Type",
+                "description": ""
+            },
+            "created": {
+                "value": "Created",
+                "defaultValue": "Created",
+                "description": ""
+            },
+            "author": {
+                "value": "Author",
+                "defaultValue": "Author",
+                "description": ""
+            },
+            "version": {
+                "value": "Version",
+                "defaultValue": "Version",
+                "description": ""
+            },
+            "status": {
+                "value": "Status",
+                "defaultValue": "Status",
+                "description": ""
+            }
+        }
+    }
+}, "close-complaint": {
+    "button": {
+        "close-complaint": {
+            "value": "Close Complaint",
+            "defaultValue": "Close Complaint",
+            "description": ""
+        },
+        "edit-close-complaint": {
+            "value": "Edit Close Complaint",
+            "defaultValue": "Edit Close Complaint",
+            "description": ""
+        },
+        "change-case-status": {
+            "value": "Change Case Status",
+            "defaultValue": "Change Case Status",
+            "description": ""
+        }
+    }
+}, "signature": {
+    "label": {
+        "electronic-signatures": {
+            "value": "Electronic Signatures",
+            "defaultValue": "Electronic Signatures",
+            "description": ""
+        }
+    },
+    "table": {
+        "field": {
+            "signed-by": {
+                "value": "Signed By",
+                "defaultValue": "Signed By",
+                "description": ""
+            },
+            "date": {
+                "value": "Date",
+                "defaultValue": "Date",
+                "description": ""
+            }
+        }
+    }
+}, "chat": {
+    "label": {
+        "approvers": {
+            "value": "Approvers",
+            "defaultValue": "Approvers",
+            "description": ""
+        },
+        "collaborators": {
+            "value": "Collaborators",
+            "defaultValue": "Collaborators",
+            "description": ""
+        },
+        "watchers": {
+            "value": "Watchers",
+            "defaultValue": "Watchers",
+            "description": ""
+        }
+    },
+    "button": {
+        "new-participant": {
+            "value": "Participant",
+            "defaultValue": "Participant",
+            "description": ""
+        }
+    }
+}, "create-new-folder-dialog": {
+    "title": {
+        "value": "Create Folder",
+        "defaultValue": "Create Folder",
+        "description": ""
+    },
+    "body": {
+        "value": "Enter a name for the folder you would like to create:",
+        "defaultValue": "Enter a name for the folder you would like to create:",
+        "description": ""
+    },
+    "label": {
+        "folder-name": {
+            "value": "Folder Name",
+            "defaultValue": "Folder Name",
+            "description": ""
+        }
+    },
+    "button": {
+        "ok": {
+            "value": "Create Folder",
+            "defaultValue": "Create Folder",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        }
+    }
+}, "email-documents-dialog": {
+    "title": {
+        "value": "Send Email",
+        "defaultValue": "Send Email",
+        "description": ""
+    },
+    "body": {
+        "value": "Where would you like to email this file?",
+        "defaultValue": "Where would you like to email this file?",
+        "description": ""
+    },
+    "label": {
+        "email-address": {
+            "value": "Email Address",
+            "defaultValue": "Email Address",
+            "description": ""
+        }
+    },
+    "button": {
+        "ok": {
+            "value": "Send Email",
+            "defaultValue": "Send Email",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        }
+    }
+}, "signature-dialog": {
+    "title": {
+        "value": "Electronically Sign",
+        "defaultValue": "Electronically Sign",
+        "description": ""
+    },
+    "label": {
+        "password": {
+            "value": "Password",
+            "defaultValue": "Password",
+            "description": ""
+        }
+    },
+    "button": {
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "ok": {
+            "value": "Confirm",
+            "defaultValue": "Confirm",
+            "description": ""
+        }
+    }
+}, "assign-dialog": {
+    "title": {
+        "value": "Assign Task",
+        "defaultValue": "Assign Task",
+        "description": ""
+    },
+    "label": {
+        "who-assign-task-to": {
+            "value": "Who would you like to assign this task to?",
+            "defaultValue": "Who would you like to assign this task to?",
+            "description": ""
+        }
+    },
+    "button": {
+        "search-people": {
+            "value": "Search people..",
+            "defaultValue": "Search people..",
+            "description": ""
+        },
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "ok": {
+            "value": "Assign Task",
+            "defaultValue": "Assign Task",
+            "description": ""
+        },
+        "go": {
+            "value": "Go!",
+            "defaultValue": "Go!",
+            "description": ""
+        }
+    },
+    "table": {
+        "field": {
+            "first-name": {
+                "value": "First Name",
+                "defaultValue": "First Name",
+                "description": ""
+            },
+            "last-name": {
+                "value": "Last Name",
+                "defaultValue": "Last Name",
+                "description": ""
+            },
+            "username": {
+                "value": "Username",
+                "defaultValue": "Username",
+                "description": ""
+            },
+            "organization": {
+                "value": "Organization",
+                "defaultValue": "Organization",
+                "description": ""
+            },
+            "showing-items": {
+                "value": "Showing 20-30 of 50 items",
+                "defaultValue": "Showing 20-30 of 50 items",
+                "description": ""
+            }
+        },
+        "value": {
+            "first-name": {
+                "value": "[First Name]",
+                "defaultValue": "[First Name]",
+                "description": ""
+            },
+            "last-name": {
+                "value": "[Last Name]",
+                "defaultValue": "[Last Name]",
+                "description": ""
+            },
+            "username": {
+                "value": "[Username]",
+                "defaultValue": "[Username]",
+                "description": ""
+            },
+            "organization": {
+                "value": "[Organization]",
+                "defaultValue": "[Organization]",
+                "description": ""
+            }
+        }
+    }
+}, "reassign-dialog": {
+    "title": {
+        "value": "Reassign Task",
+        "defaultValue": "Reassign Task",
+        "description": ""
+    },
+    "label": {
+        "who-reassign-task-to": {
+            "value": "Who would you like to reassign this task to?",
+            "defaultValue": "Who would you like to reassign this task to?",
+            "description": ""
+        }
+    },
+    "button": {
+        "search-people": {
+            "value": "Search people..",
+            "defaultValue": "Search people..",
+            "description": ""
+        },
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "ok": {
+            "value": "Reassign Task",
+            "defaultValue": "Reassign Task",
+            "description": ""
+        },
+        "go": {
+            "value": "Go!",
+            "defaultValue": "Go!",
+            "description": ""
+        }
+    },
+    "table": {
+        "field": {
+            "first-name": {
+                "value": "First Name",
+                "defaultValue": "First Name",
+                "description": ""
+            },
+            "last-name": {
+                "value": "Last Name",
+                "defaultValue": "Last Name",
+                "description": ""
+            },
+            "username": {
+                "value": "Username",
+                "defaultValue": "Username",
+                "description": ""
+            },
+            "organization": {
+                "value": "Organization",
+                "defaultValue": "Organization",
+                "description": ""
+            },
+            "showing-items": {
+                "value": "Showing 20-30 of 50 items",
+                "defaultValue": "Showing 20-30 of 50 items",
+                "description": ""
+            }
+        },
+        "value": {
+            "first-name": {
+                "value": "[First Name]",
+                "defaultValue": "[First Name]",
+                "description": ""
+            },
+            "last-name": {
+                "value": "[Last Name]",
+                "defaultValue": "[Last Name]",
+                "description": ""
+            },
+            "username": {
+                "value": "[Username]",
+                "defaultValue": "[Username]",
+                "description": ""
+            },
+            "organization": {
+                "value": "[Organization]",
+                "defaultValue": "[Organization]",
+                "description": ""
+            }
+        }
+    }
+}, "unassign-dialog": {
+    "title": {
+        "value": "Unassign Task",
+        "defaultValue": "Unassign Task",
+        "description": ""
+    },
+    "label": {
+        "sure-to-unassign": {
+            "value": "Are you sure you want to unassign this task?",
+            "defaultValue": "Are you sure you want to unassign this task?",
+            "description": ""
+        },
+        "reason": {
+            "value": "Reason",
+            "defaultValue": "Reason",
+            "description": ""
+        }
+    },
+    "button": {
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "ok": {
+            "value": "Unassign Task",
+            "defaultValue": "Unassign Task",
+            "description": ""
+        }
+    }
+}, "approve-dialog": {
+    "title": {
+        "value": "Approve Task",
+        "defaultValue": "Approve Task",
+        "description": ""
+    },
+    "label": {
+        "sure-to-approve": {
+            "value": "Are you sure you want to approve this task?",
+            "defaultValue": "Are you sure you want to approve this task?",
+            "description": ""
+        },
+        "reason": {
+            "value": "Reason",
+            "defaultValue": "Reason",
+            "description": ""
+        }
+    },
+    "button": {
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "ok": {
+            "value": "Approve Task",
+            "defaultValue": "Approve Task",
+            "description": ""
+        }
+    }
+}, "reject-dialog": {
+    "title": {
+        "value": "Rejet Task",
+        "defaultValue": "Rejet Task",
+        "description": ""
+    },
+    "label": {
+        "sure-to-reject": {
+            "value": "Are you sure you want to reject this task?",
+            "defaultValue": "Are you sure you want to reject this task?",
+            "description": ""
+        },
+        "task-will-return-to-owner": {
+            "value": "This task will be returned to the owner:",
+            "defaultValue": "This task will be returned to the owner:",
+            "description": ""
+        },
+        "select-people": {
+            "value": "Or select some other people from below:",
+            "defaultValue": "Or select some other people from below:",
+            "description": ""
+        },
+        "show-items": {
+            "value": "Showing 0-0 of 0 items",
+            "defaultValue": "Showing 0-0 of 0 items",
+            "description": ""
+        }
+    },
+    "table": {
+        "field": {
+            "first-name": {
+                "value": "First Name",
+                "defaultValue": "First Name",
+                "description": ""
+            },
+            "last-name": {
+                "value": "Last Name",
+                "defaultValue": "Last Name",
+                "description": ""
+            },
+            "username": {
+                "value": "Username",
+                "defaultValue": "Username",
+                "description": ""
+            },
+            "organization": {
+                "value": "Organization",
+                "defaultValue": "Organization",
+                "description": ""
+            }
+        }
+    },
+    "button": {
+        "search-button": {
+            "value": "Search people..",
+            "defaultValue": "Search people..",
+            "description": ""
+        },
+        "go": {
+            "value": "Go!",
+            "defaultValue": "Go!",
+            "description": ""
+        },
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "ok": {
+            "value": "Reject Task",
+            "defaultValue": "Reject Task",
+            "description": ""
+        }
+    }
+}, "delete-dialog": {
+    "title": {
+        "value": "Delete Task",
+        "defaultValue": "Delete Task",
+        "description": ""
+    },
+    "label": {
+        "sure-to-delete": {
+            "value": "Are you sure you want to delete this task?",
+            "defaultValue": "Are you sure you want to delete this task?",
+            "description": ""
+        },
+        "reason": {
+            "value": "Reason",
+            "defaultValue": "Reason",
+            "description": ""
+        }
+    },
+    "button": {
+        "close": {
+            "value": "Close",
+            "defaultValue": "Close",
+            "description": ""
+        },
+        "cancel": {
+            "value": "Cancel",
+            "defaultValue": "Cancel",
+            "description": ""
+        },
+        "ok": {
+            "value": "Delete Task",
+            "defaultValue": "Delete Task",
+            "description": ""
+        }
+    }
+}, "msg": {
+    "no-task-data": {
+        "value": "(No task data)",
+        "defaultValue": "(No task data)",
+        "description": ""
+    }
+}, "wizard": {
+    "title": {
+        "value": "New Task",
+        "defaultValue": "New Task",
+        "description": ""
+    },
+    "label": {
+        "assign-to": {
+            "value": "Assign To",
+            "defaultValue": "Assign To",
+            "description": ""
+        },
+        "select-assignee": {
+            "value": "Select Assignee",
+            "defaultValue": "Select Assignee",
+            "description": ""
+        },
+        "associate-complaint-case": {
+            "value": "Associate with Complaint or Case",
+            "defaultValue": "Associate with Complaint or Case",
+            "description": ""
+        },
+        "complaint-or-case": {
+            "value": "Complaint or Case #",
+            "defaultValue": "Complaint or Case #",
+            "description": ""
+        },
+        "subject": {
+            "value": "Subject",
+            "defaultValue": "Subject",
+            "description": ""
+        },
+        "start-date": {
+            "value": "Start Date",
+            "defaultValue": "Start Date",
+            "description": ""
+        },
+        "status": {
+            "value": "Status",
+            "defaultValue": "Status",
+            "description": ""
+        },
+        "select-status": {
+            "value": "Select Status",
+            "defaultValue": "Select Status",
+            "description": ""
+        },
+        "active": {
+            "value": "Active",
+            "defaultValue": "Active",
+            "description": ""
+        },
+        "due-date": {
+            "value": "Due Date",
+            "defaultValue": "Due Date",
+            "description": ""
+        },
+        "priority": {
+            "value": "Priority",
+            "defaultValue": "Priority",
+            "description": ""
+        },
+        "select-priority": {
+            "value": "Select Priority",
+            "defaultValue": "Select Priority",
+            "description": ""
+        },
+        "low": {
+            "value": "Low",
+            "defaultValue": "Low",
+            "description": ""
+        },
+        "medium": {
+            "value": "Medium",
+            "defaultValue": "Medium",
+            "description": ""
+        },
+        "high": {
+            "value": "High",
+            "defaultValue": "High",
+            "description": ""
+        },
+        "expedited": {
+            "value": "Expedited",
+            "defaultValue": "Expedited",
+            "description": ""
+        },
+        "complete-percents": {
+            "value": "% Complete",
+            "defaultValue": "% Complete",
+            "description": ""
+        },
+        "notes": {
+            "value": "Notes",
+            "defaultValue": "Notes",
+            "description": ""
+        }
+    },
+    "button": {
+        "save": {
+            "value": "Save",
+            "defaultValue": "Save",
+            "description": ""
+        }
+    },
+    "msg": {
+        "failed-to-retrieve-assignees": {
+            "value": "Failed to retrieve assignees",
+            "defaultValue": "Failed to retrieve assignees",
+            "description": ""
+        },
+        "failed-to-create-new-task": {
+            "value": "Failed to create new task:",
+            "defaultValue": "Failed to create new task:",
+            "description": ""
+        },
+        "please-enter-subject": {
+            "value": "Please enter a subject",
+            "defaultValue": "Please enter a subject",
+            "description": ""
+        }
+    }
+}}

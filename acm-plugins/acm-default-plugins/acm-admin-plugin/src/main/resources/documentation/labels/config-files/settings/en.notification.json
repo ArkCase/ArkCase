@@ -1,47 +1,49 @@
-{"table": {"field": {
-    "parent-name": {
-        "defaultValue": "Object Number",
-        "description": "",
-        "value": "Object Number"
-    },
-    "name": {
-        "defaultValue": "Name",
-        "description": "",
-        "value": "Name"
-    },
-    "description": {
-        "defaultValue": "Description",
-        "description": "",
-        "value": "Description"
-    },
-    "modified": {
-        "defaultValue": "Modified",
-        "description": "",
-        "value": "Modified"
-    },
-    "id": {
-        "defaultValue": "ID",
-        "description": "",
-        "value": "ID"
-    },
-    "parent-id": {
-        "defaultValue": "Parent ID",
-        "description": "",
-        "value": "Parent ID"
-    },
-    "type": {
-        "defaultValue": "Type",
-        "description": "",
-        "value": "Type"
-    },
-    "key": {
-        "defaultValue": "Description",
-        "description": "",
-        "value": "Description"
-    },
-    "parent-type": {
-        "defaultValue": "Object Type",
-        "description": "",
-        "value": "Object Type"
+{"table": {
+    "field": {
+        "parent-name": {
+            "defaultValue": "Object Number",
+            "description": "",
+            "value": "Object Number"
+        },
+        "name": {
+            "defaultValue": "Name",
+            "description": "",
+            "value": "Name"
+        },
+        "description": {
+            "defaultValue": "Description",
+            "description": "",
+            "value": "Description"
+        },
+        "modified": {
+            "defaultValue": "Modified",
+            "description": "",
+            "value": "Modified"
+        },
+        "id": {
+            "defaultValue": "ID",
+            "description": "",
+            "value": "ID"
+        },
+        "parent-id": {
+            "defaultValue": "Parent ID",
+            "description": "",
+            "value": "Parent ID"
+        },
+        "type": {
+            "defaultValue": "Type",
+            "description": "",
+            "value": "Type"
+        },
+        "key": {
+            "defaultValue": "Description",
+            "description": "",
+            "value": "Description"
+        },
+        "parent-type": {
+            "defaultValue": "Object Type",
+            "description": "",
+            "value": "Object Type"
+        }
     }
-}}}
+}}

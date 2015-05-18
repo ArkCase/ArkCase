@@ -1,21 +1,21 @@
 {
-  "navigation": {
-      "title": "Report",
-      "label": {
-          "report": "Report",
-          "choose-report": "Choose Report",
-          "case-number": "Case Number",
-          "state": "State",
-          "choose-state": "Choose State",
-          "date-range": "Date Range",
-          "date-from": "From",
-          "date-to": "To",
-          "generate-report": "Generate report",
-          "report-message": "To run a report, select a report name, enter criteria, and click Generate Report"
-      }
-  },
+    "navigation": {
+        "title": "Report",
+        "label": {
+            "report": "Report",
+            "choose-report": "Choose Report",
+            "case-number": "Case Number",
+            "state": "State",
+            "choose-state": "Choose State",
+            "date-range": "Date Range",
+            "date-from": "From",
+            "date-to": "To",
+            "generate-report": "Generate report",
+            "report-message": "To run a report, select a report name, enter criteria, and click Generate Report"
+        }
+    },
 
-  "msg":{
-    "case-number-invalid": "Case number field was blank or invalid. Please enter a valid case number."
-  }
+    "msg": {
+        "case-number-invalid": "Case number field was blank or invalid. Please enter a valid case number."
+    }
 }

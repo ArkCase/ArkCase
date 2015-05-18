@@ -1,27 +1,27 @@
 {
     "title": "Complaints",
     "header": {
-      "labels": {
-        "enter-complaint-title": "Enter Complaint Title",
-        "incident-date": "Incident Date",
-        "enter-incident-date": "Enter Incident Date",
-        "priority": "Priority",
-        "enter-priority": "Enter Priority",
-        "assigned-to": "Assigned To",
-        "enter-assignee": "Enter Assignee",
-        "owning-group": "Owning Group",
-        "enter-owning-group": "Enter Owning Group",
-        "enter-due-date": "Enter Due Date",
-        "due-date": "Due Date",
-        "incident-category": "Incident Category",
-        "enter-incident-category": "Enter Incident Category",
-        "state": "State"
-      },
-      "buttons": {
-        "close-complaint": "Close Complaint",
-        "subscribe": "Subscribe",
-        "restrict": "Restrict ?"
-      }
+        "labels": {
+            "enter-complaint-title": "Enter Complaint Title",
+            "incident-date": "Incident Date",
+            "enter-incident-date": "Enter Incident Date",
+            "priority": "Priority",
+            "enter-priority": "Enter Priority",
+            "assigned-to": "Assigned To",
+            "enter-assignee": "Enter Assignee",
+            "owning-group": "Owning Group",
+            "enter-owning-group": "Enter Owning Group",
+            "enter-due-date": "Enter Due Date",
+            "due-date": "Due Date",
+            "incident-category": "Incident Category",
+            "enter-incident-category": "Enter Incident Category",
+            "state": "State"
+        },
+        "buttons": {
+            "close-complaint": "Close Complaint",
+            "subscribe": "Subscribe",
+            "restrict": "Restrict ?"
+        }
     },
     "navigation": {
         "leaf-title": {
