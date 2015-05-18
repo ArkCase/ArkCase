@@ -32,13 +32,19 @@ public class ConfigApiController {
             @PathVariable("name") String name
             ,Authentication authentication
             ,HttpSession session
-    ) throws AcmUserActionFailedException  {
-        return configList.stream()
-                .filter(x -> x.getConfigName().equals(name))
-                .findFirst()
-                .get()
-                .getConfigAsJson()
-                ;
+    ) {
+        String rc = "{}";
+        try {
+            rc =  configList.stream()
+                    .filter(x -> x.getConfigName().equals(name))
+                    .findFirst()
+                    .get()
+                    .getConfigAsJson()
+                    ;
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage());
+        }
+        return rc;
     }
 
     public List<AcmConfig> getConfigList() {
