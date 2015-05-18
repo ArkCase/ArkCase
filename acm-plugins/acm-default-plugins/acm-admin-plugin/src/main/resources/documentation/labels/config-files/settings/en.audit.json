@@ -1,1 +1,77 @@
-{"title":{"value":"Audit","defaultValue":"Audit","description":""},"label":{"date-from":{"value":"From","defaultValue":"From","description":""},"date-to":{"value":"To","defaultValue":"To","description":""}},"button":{"generate-report":{"value":"Generate Audit Report","defaultValue":"Generate Audit Report","description":""}},"object-type":{"label":{"value":"Object to audit","defaultValue":"Object to audit","description":""},"desc":{"value":"Object to audit","defaultValue":"Object to audit","description":""},"values":{"all":{"value":"ALL","defaultValue":"ALL","description":""},"case-files":{"value":"Case Files","defaultValue":"Case Files","description":""},"complaints":{"value":"Complaints","defaultValue":"Complaints","description":""},"tasks":{"value":"Tasks","defaultValue":"Tasks","description":""},"files":{"value":"Files","defaultValue":"Files","description":""}}},"object-id":{"label":{"value":"Case#, Complaint#...","defaultValue":"Case#, Complaint#...","description":""},"desc":{"value":"Object Number","defaultValue":"Object Number","description":""}},"date-range":{"desc":{"value":"Date Range","defaultValue":"Date Range","description":""}}}
+{"title": {
+    "value": "Audit",
+    "defaultValue": "Audit",
+    "description": ""
+}, "label": {
+    "date-from": {
+        "value": "From",
+        "defaultValue": "From",
+        "description": ""
+    },
+    "date-to": {
+        "value": "To",
+        "defaultValue": "To",
+        "description": ""
+    }
+}, "button": {
+    "generate-report": {
+        "value": "Generate Audit Report",
+        "defaultValue": "Generate Audit Report",
+        "description": ""
+    }
+}, "object-type": {
+    "label": {
+        "value": "Object to audit",
+        "defaultValue": "Object to audit",
+        "description": ""
+    },
+    "desc": {
+        "value": "Object to audit",
+        "defaultValue": "Object to audit",
+        "description": ""
+    },
+    "values": {
+        "all": {
+            "value": "ALL",
+            "defaultValue": "ALL",
+            "description": ""
+        },
+        "case-files": {
+            "value": "Case Files",
+            "defaultValue": "Case Files",
+            "description": ""
+        },
+        "complaints": {
+            "value": "Complaints",
+            "defaultValue": "Complaints",
+            "description": ""
+        },
+        "tasks": {
+            "value": "Tasks",
+            "defaultValue": "Tasks",
+            "description": ""
+        },
+        "files": {
+            "value": "Files",
+            "defaultValue": "Files",
+            "description": ""
+        }
+    }
+}, "object-id": {
+    "label": {
+        "value": "Case#, Complaint#...",
+        "defaultValue": "Case#, Complaint#...",
+        "description": ""
+    },
+    "desc": {
+        "value": "Object Number",
+        "defaultValue": "Object Number",
+        "description": ""
+    }
+}, "date-range": {
+    "desc": {
+        "value": "Date Range",
+        "defaultValue": "Date Range",
+        "description": ""
+    }
+}}

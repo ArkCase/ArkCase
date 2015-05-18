@@ -1,14 +1,18 @@
 {
-    "button": {"go": {
-        "defaultValue": "Go!",
-        "description": "",
-        "value": "Go!"
-    }},
-    "label": {"input-search": {
-        "defaultValue": "Type in your search query to find complaints, cases, tasks, and documents.",
-        "description": "",
-        "value": "Type in your search query to find complaints, cases, tasks, and documents."
-    }},
+    "button": {
+        "go": {
+            "defaultValue": "Go!",
+            "description": "",
+            "value": "Go!"
+        }
+    },
+    "label": {
+        "input-search": {
+            "defaultValue": "Type in your search query to find complaints, cases, tasks, and documents.",
+            "description": "",
+            "value": "Type in your search query to find complaints, cases, tasks, and documents."
+        }
+    },
     "table": {
         "field": {
             "owner": {

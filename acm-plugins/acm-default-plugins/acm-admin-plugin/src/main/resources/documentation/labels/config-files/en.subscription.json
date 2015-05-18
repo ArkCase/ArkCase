@@ -1,24 +1,24 @@
 {
-  "button":{
-    "subscribe" : "Subscribe",
-    "unsubscribe" : "Unsubscribe",
-    "na": "N/A"
-  },
-  "msg": {
-    "subscribe-success": "Object subscribed",
-    "unsubscribe-success": "Object unsubscribed"
-  },
-  "table": {
-    "field": {
-      "id": "ID",
-      "name": "Name",
-      "type": "Type",
-      "event": "Event",
-      "parent-id": "Parent ID",
-      "parent-name": "Parent",
-      "parent-type": "Parent Type",
-      "owner": "Owner",
-      "modified": "Modified"
+    "button": {
+        "subscribe": "Subscribe",
+        "unsubscribe": "Unsubscribe",
+        "na": "N/A"
+    },
+    "msg": {
+        "subscribe-success": "Object subscribed",
+        "unsubscribe-success": "Object unsubscribed"
+    },
+    "table": {
+        "field": {
+            "id": "ID",
+            "name": "Name",
+            "type": "Type",
+            "event": "Event",
+            "parent-id": "Parent ID",
+            "parent-name": "Parent",
+            "parent-type": "Parent Type",
+            "owner": "Owner",
+            "modified": "Modified"
+        }
     }
-  }
 }

@@ -1,1 +1,179 @@
-{"title":{"value":"Cost Tracking","defaultValue":"Cost Tracking","description":""},"button":{"go":{"value":"Go!","defaultValue":"Go!","description":""},"new-costsheet":{"value":"New Costsheet","defaultValue":"New Costsheet","description":""},"edit-costsheet":{"value":"Edit Costsheet","defaultValue":"Edit Costsheet","description":""}},"label":{"search":{"value":"Search","defaultValue":"Search","description":""},"edit":{"value":"Edit","defaultValue":"Edit","description":""},"save":{"value":"Save","defaultValue":"Save","description":""},"other-menu-items":{"value":"Other menu items","defaultValue":"Other menu items","description":""},"details":{"value":"Details","defaultValue":"Details","description":""}},"context-menu":{"menu-title":{"menu":{"value":"Menu:","defaultValue":"Menu:","description":""},"copy":{"value":"Copy","defaultValue":"Copy","description":""},"paste":{"value":"Paste","defaultValue":"Paste","description":""},"edit":{"value":"Edit","defaultValue":"Edit","description":""},"delete":{"value":"Delete","defaultValue":"Delete","description":""},"more":{"value":"More","defaultValue":"More","description":""},"sub1":{"value":"Sub 1","defaultValue":"Sub 1","description":""},"sub2":{"value":"Sub 2","defaultValue":"Sub 2","description":""}}},"detail":{"label":{"editing-costsheet-detail":{"value":"Editing Costsheet detail","defaultValue":"Editing Costsheet detail","description":""}}},"person":{"table":{"title":{"value":"Person","defaultValue":"Person","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"full-name":{"value":"Full Name","defaultValue":"Full Name","description":""},"username":{"value":"Username","defaultValue":"Username","description":""},"role":{"value":"Role","defaultValue":"Role","description":""}}}},"cost-summary":{"table":{"title":{"value":"Hours Summary","defaultValue":"Hours Summary","description":""},"field":{"id":{"value":"ID","defaultValue":"ID","description":""},"parent-id":{"value":"Parent ID","defaultValue":"Parent ID","description":""},"parent-type":{"value":"Parent Type","defaultValue":"Parent Type","description":""},"parent-number":{"value":"Parent Number","defaultValue":"Parent Number","description":""},"total-cost":{"value":"Total Cost","defaultValue":"Total Cost","description":""},"title":{"value":"Title","defaultValue":"Title","description":""},"description":{"value":"Description","defaultValue":"Description","description":""}}}},"msg":{"no-costsheet-selected":{"value":"(No costsheet is selected)","defaultValue":"(No costsheet is selected)","description":""}}}
+{"title": {
+    "value": "Cost Tracking",
+    "defaultValue": "Cost Tracking",
+    "description": ""
+}, "button": {
+    "go": {
+        "value": "Go!",
+        "defaultValue": "Go!",
+        "description": ""
+    },
+    "new-costsheet": {
+        "value": "New Costsheet",
+        "defaultValue": "New Costsheet",
+        "description": ""
+    },
+    "edit-costsheet": {
+        "value": "Edit Costsheet",
+        "defaultValue": "Edit Costsheet",
+        "description": ""
+    }
+}, "label": {
+    "search": {
+        "value": "Search",
+        "defaultValue": "Search",
+        "description": ""
+    },
+    "edit": {
+        "value": "Edit",
+        "defaultValue": "Edit",
+        "description": ""
+    },
+    "save": {
+        "value": "Save",
+        "defaultValue": "Save",
+        "description": ""
+    },
+    "other-menu-items": {
+        "value": "Other menu items",
+        "defaultValue": "Other menu items",
+        "description": ""
+    },
+    "details": {
+        "value": "Details",
+        "defaultValue": "Details",
+        "description": ""
+    }
+}, "context-menu": {
+    "menu-title": {
+        "menu": {
+            "value": "Menu:",
+            "defaultValue": "Menu:",
+            "description": ""
+        },
+        "copy": {
+            "value": "Copy",
+            "defaultValue": "Copy",
+            "description": ""
+        },
+        "paste": {
+            "value": "Paste",
+            "defaultValue": "Paste",
+            "description": ""
+        },
+        "edit": {
+            "value": "Edit",
+            "defaultValue": "Edit",
+            "description": ""
+        },
+        "delete": {
+            "value": "Delete",
+            "defaultValue": "Delete",
+            "description": ""
+        },
+        "more": {
+            "value": "More",
+            "defaultValue": "More",
+            "description": ""
+        },
+        "sub1": {
+            "value": "Sub 1",
+            "defaultValue": "Sub 1",
+            "description": ""
+        },
+        "sub2": {
+            "value": "Sub 2",
+            "defaultValue": "Sub 2",
+            "description": ""
+        }
+    }
+}, "detail": {
+    "label": {
+        "editing-costsheet-detail": {
+            "value": "Editing Costsheet detail",
+            "defaultValue": "Editing Costsheet detail",
+            "description": ""
+        }
+    }
+}, "person": {
+    "table": {
+        "title": {
+            "value": "Person",
+            "defaultValue": "Person",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "full-name": {
+                "value": "Full Name",
+                "defaultValue": "Full Name",
+                "description": ""
+            },
+            "username": {
+                "value": "Username",
+                "defaultValue": "Username",
+                "description": ""
+            },
+            "role": {
+                "value": "Role",
+                "defaultValue": "Role",
+                "description": ""
+            }
+        }
+    }
+}, "cost-summary": {
+    "table": {
+        "title": {
+            "value": "Hours Summary",
+            "defaultValue": "Hours Summary",
+            "description": ""
+        },
+        "field": {
+            "id": {
+                "value": "ID",
+                "defaultValue": "ID",
+                "description": ""
+            },
+            "parent-id": {
+                "value": "Parent ID",
+                "defaultValue": "Parent ID",
+                "description": ""
+            },
+            "parent-type": {
+                "value": "Parent Type",
+                "defaultValue": "Parent Type",
+                "description": ""
+            },
+            "parent-number": {
+                "value": "Parent Number",
+                "defaultValue": "Parent Number",
+                "description": ""
+            },
+            "total-cost": {
+                "value": "Total Cost",
+                "defaultValue": "Total Cost",
+                "description": ""
+            },
+            "title": {
+                "value": "Title",
+                "defaultValue": "Title",
+                "description": ""
+            },
+            "description": {
+                "value": "Description",
+                "defaultValue": "Description",
+                "description": ""
+            }
+        }
+    }
+}, "msg": {
+    "no-costsheet-selected": {
+        "value": "(No costsheet is selected)",
+        "defaultValue": "(No costsheet is selected)",
+        "description": ""
+    }
+}}
