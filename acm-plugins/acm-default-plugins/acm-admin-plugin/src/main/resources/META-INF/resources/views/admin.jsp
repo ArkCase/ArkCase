@@ -309,7 +309,7 @@
                                                 </div>
                                             </section>
 
-                                            <form class="form-inline">
+                                            <form class="form-inline pull-left">
                                                 <div class="form-group">
                                                     <label>Default language</label>
                                                     <select id="labelConfigurationDefaultLanguage" disabled class="form-control">
@@ -317,6 +317,12 @@
                                                 </div>
                                                 <button id="labelConfigurationApplyDefaultLanguage" disabled class="btn btn-default">Apply</button>
                                             </form>
+
+                                            <div class="pull-right">
+                                                <button id="labelConfigurationResetCurrentResources" disabled class="btn btn-danger">Reset Current Module Resources</button>
+                                                <button id="labelConfigurationResetAllResources" disabled class="btn btn-danger">Reset All Resources</button>
+                                            </div>
+
 
                                         </div>
                                     </div>
