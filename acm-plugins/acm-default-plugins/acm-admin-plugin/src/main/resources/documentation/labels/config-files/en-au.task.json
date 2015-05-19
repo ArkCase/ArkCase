@@ -14,7 +14,8 @@
       "workflow-overview": "Workflow Overview",
       "history" :"History",
       "details": "Details",
-      "reject-comments": "Reject Comments"
+      "reject-comments": "Reject Comments",
+      "electronic-signatures": "Electronic Signatures"
     }
   },
 
@@ -212,6 +213,7 @@
     },
     "table":{
       "field": {
+        "id": "ID",
         "signed-by": "Signed By",
         "date": "Date"
       }
