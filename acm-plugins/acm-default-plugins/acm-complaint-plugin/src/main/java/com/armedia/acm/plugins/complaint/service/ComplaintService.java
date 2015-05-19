@@ -29,6 +29,7 @@ import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
@@ -149,7 +150,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         
         getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
 
-        complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint);
+        complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint, complaint);
 
         return complaint;
     }
@@ -158,12 +159,20 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     {
     	if (complaint != null)
     	{
-    		ComplaintForm form = getComplaintFactory().asFrevvoComplaint(complaint);
+    		// First find the XML that is already in the system and create Frevvo form
+    		Long containerId = complaint.getContainer().getId();
+    		Long folderId = complaint.getContainer().getFolder().getId();
+    		String fileType = FrevvoFormName.COMPLAINT.toLowerCase() + "_xml";
+    		
+    		EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+    		ComplaintForm form = (ComplaintForm) getExistingForm(ecmFile.getId(), ComplaintForm.class);
+    		
+    		form = getComplaintFactory().asFrevvoComplaint(complaint, form);
     		
     		if (form != null)
     		{
     			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), auth);		
+    			updateXML(xml, ecmFile, auth);		
     		}
     	}
     }
