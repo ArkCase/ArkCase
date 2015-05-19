@@ -241,6 +241,13 @@ var Acm = Acm || {
         }
         return d;
     }
+    ,getFrevvoDateFromDateTime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            d = moment(dt).format($.t("common:date.frevvo"))
+        }
+        return d;
+    }
     ,getCurrentDay: function() {
         var d = new Date();
         return this.dateToString(d);

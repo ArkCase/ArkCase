@@ -7,7 +7,6 @@ package com.armedia.acm.form.casefile.service;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
-import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -53,7 +52,7 @@ public class CaseFileFactory extends FrevvoFormFactory
 		caseFile.setTitle(form.getCaseTitle());
 		caseFile.setCaseType(form.getCaseType());
 		caseFile.setDetails(form.getCaseDescription());
-		caseFile.setParticipants(asAcmParticipants(form.getParticipants(), form.getOwningGroup(), FrevvoFormName.CASE_FILE));
+		caseFile.setParticipants(getParticipants(caseFile.getParticipants(),form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
 
 		if (form.getInitiator() != null)
 		{
@@ -83,28 +82,31 @@ public class CaseFileFactory extends FrevvoFormFactory
 		return caseFile;
 	}
 	
-	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, FrevvoFormAbstractService formService)
+	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, CaseFileForm form, FrevvoFormAbstractService formService)
 	{		
-		CaseFileForm retval = new CaseFileForm();
+		if (form == null)
+		{
+			form = new CaseFileForm();
+		}
 		
 		if (caseFile != null)
 		{
-			retval.setId(caseFile.getId());
-			retval.setCaseTitle(caseFile.getTitle());
-			retval.setCaseType(caseFile.getCaseType());
-			retval.setCaseNumber(caseFile.getCaseNumber());
-			retval.setCaseDescription(caseFile.getDetails());
+			form.setId(caseFile.getId());
+			form.setCaseTitle(caseFile.getTitle());
+			form.setCaseType(caseFile.getCaseType());
+			form.setCaseNumber(caseFile.getCaseNumber());
+			form.setCaseDescription(caseFile.getDetails());
             String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-			retval.setCmisFolderId(cmisFolderId);
-			retval.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
-			retval.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
+            form.setCmisFolderId(cmisFolderId);
+            form.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
+            form.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
 			
 			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 			{
 				InitiatorPerson initiator = new InitiatorPerson(caseFile.getOriginator().getPerson());
 				initiator.setType(caseFile.getOriginator().getPersonType());
 				
-				retval.setInitiator(initiator);
+				form.setInitiator(initiator);
 			}
 			
 			if (caseFile.getPersonAssociations() != null)
@@ -121,11 +123,11 @@ public class CaseFileFactory extends FrevvoFormFactory
 					}
 				}
 				
-				retval.setPeople(people);
+				form.setPeople(people);
 			}
 		}
 		
-		return retval;
+		return form;
 	}
 
 	public ObjectAssociationDao getObjectAssociationDao() {
