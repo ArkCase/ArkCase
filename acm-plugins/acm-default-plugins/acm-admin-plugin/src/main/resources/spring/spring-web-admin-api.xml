@@ -42,6 +42,12 @@
         <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json"/>
     </bean>
 
+    <bean id="labelConfigurationResetResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationResetResource">
+        <property name="adminResourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings/%s.%s.json"/>
+        <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
+    </bean>
+
+
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
 
 </beans>

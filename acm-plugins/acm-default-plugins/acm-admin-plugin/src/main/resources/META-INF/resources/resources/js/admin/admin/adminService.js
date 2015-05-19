@@ -342,6 +342,7 @@ Admin.Service = {
         ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
         ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
         ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource?lang={0}&ns={1}"
+        ,API_RESET_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource/reset?lang={0}&ns={1}"
 
 
         ,create: function(){
@@ -465,6 +466,26 @@ Admin.Service = {
                 }
                 ,url
                 ,JSON.stringify(resource, null, 4)
+            );
+            return $dfd.promise();
+        }
+        ,resetResource: function(langs, namespaces){
+            var $dfd =jQuery.Deferred();
+            var lng = _.isArray(langs) ? langs.join(',') : langs;
+            var ns = _.isArray(namespaces) ? namespaces.join(',') : namespaces;
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESET_RESOURCE.format(lng, ns);
+            Acm.Service.asyncPost(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url
             );
             return $dfd.promise();
         }

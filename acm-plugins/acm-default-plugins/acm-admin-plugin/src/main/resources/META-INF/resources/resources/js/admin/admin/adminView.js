@@ -437,6 +437,7 @@ Admin.View = Admin.View || {
                 context.settings = settings;
                 var langOptions = [];
                 var defLangOptions = [];
+                Admin.Service.LabelConfiguration._namespaces = namespaces;
 
 
                 _.forEach(languages, function(langItem){
@@ -454,6 +455,8 @@ Admin.View = Admin.View || {
                 $('#labelConfigurationLanguage').html(langOptions);
                 $('#labelConfigurationLanguage').prop('disabled', false);
 
+                $('#labelConfigurationResetAllResources').prop('disabled', false);
+                $('#labelConfigurationResetCurrentResources').prop('disabled', false);
 
                 // Generate namespaces options
                 var nsOptions = [];
@@ -495,9 +498,30 @@ Admin.View = Admin.View || {
             Admin.Service.LabelConfiguration.updateSettings(this.settings);
         }
 
+        ,onClickResetAllResourcesBtn: function(e) {
+            var namespaces = _.pluck(Admin.Service.LabelConfiguration._namespaces, 'id');
+            var $s = e.data.$s;
+            Admin.Service.LabelConfiguration.resetResource($('#labelConfigurationLanguage').val(), namespaces)
+                .done(function(){
+                    $s.jtable('load', {loadData: true});
+                });
+        }
+
+        ,onClickResetCurrentResourcesBtn: function(e) {
+            var $s = e.data.$s;
+            Admin.Service.LabelConfiguration.resetResource($('#labelConfigurationLanguage').val(), $('#labelConfigurationNamespace').val())
+                .done(function(){
+                    $s.jtable('load', {loadData: true});
+                });
+        }
+
         ,createJTableLabelConfiguration: function ($s) {
             $('#labelConfigurationIdFilter, #labelConfigurationValueFilter').bind('keyup change', {$s: $s, loadData: false}, this.onLabelConfigurationFilterChanged);
             $('#labelConfigurationNamespace, #labelConfigurationLanguage').change({$s: $s, loadData: true}, this.onLangNamespaceChanged);
+
+            $("#labelConfigurationResetAllResources").click({$s: $s}, $.proxy(this.onClickResetAllResourcesBtn, this));
+            $("#labelConfigurationResetCurrentResources").click({$s: $s}, $.proxy(this.onClickResetCurrentResourcesBtn, this));
+
 
             var tableData = null;
             var context = Admin.View.LabelConfiguration;
