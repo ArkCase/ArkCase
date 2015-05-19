@@ -237,11 +237,11 @@ Profile.View = {
         }
         ,displayGroups: function(groups) {
             if (Acm.isArray(groups)) {
-                var html = "";
                 for (var i = 0; i < groups.length; i++) {
-                    html += "<span class='btn-rounded btn-sm btn-info'>" + Acm.goodValue(groups[i]) + "</span>";
+                    $("<span/>")
+                        .addClass("btn-rounded btn-sm btn-info")
+                        .text(Acm.goodValue(groups[i])).appendTo(this.$divGroups);
                 }
-                this.setHtmlGroups(html);
             }
         }
 
