@@ -22,21 +22,22 @@ TaskWizard.Event = {
 
 
     ,onPostInit: function() {
-        var data = TaskWizard.getAssignees();
-        if (Acm.isEmpty(data)) {
-            TaskWizard.Service.getAssignees();
-        }
-        Acm.keepTrying(TaskWizard.Event._tryInitOwners, 8, 200);
     }
 
-    ,_tryInitOwners: function() {
-        var data = TaskWizard.getAssignees();
-        data.sort(TaskWizard.Object.sortAssignees);
-        if (Acm.isNotEmpty(data)) {
-            TaskWizard.Object.initOwners(data);
-            return true;
-        } else {
-            return false;
-        }
+    ,onClickBtnChooseAssignee: function() {
+        SearchBase.showSearchDialog({name: "New Assignee"
+            ,title: "Add New Assignee"
+            ,prompt: "Enter to search for user.."
+            ,btnGoText: "Search Now!"
+            ,btnOkText: "Select"
+            ,btnCancelText: "Cancel"
+            ,filters: [{key: "Object Type", values: ["USER"]}]
+            ,onClickBtnPrimary : function(event, ctrl) {
+                SearchBase.Dialog.getSelectedRows().each(function () {
+                    var record = $(this).data('record');
+                    TaskWizard.Object.setValueEdtAssignee(Acm.goodValue(record.name) + " (" + Acm.goodValue(record.id) + ")");
+                });
+            }
+        });
     }
 };
