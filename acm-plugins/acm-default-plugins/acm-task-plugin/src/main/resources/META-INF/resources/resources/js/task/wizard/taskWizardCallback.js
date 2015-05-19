@@ -7,14 +7,14 @@
  */
 TaskWizard.Callback = {
     create : function() {
-        Acm.Dispatcher.addEventListener(this.EVENT_ASSIGNEES_RETRIEVED, this.onAssigneesRetrieved);
+        //Acm.Dispatcher.addEventListener(this.EVENT_ASSIGNEES_RETRIEVED, this.onAssigneesRetrieved);
         Acm.Dispatcher.addEventListener(this.EVENT_TASK_CREATED, this.onTaskCreated);
     }
 
     ,EVENT_ASSIGNEES_RETRIEVED  : "task-wizard-get-assignees"
     ,EVENT_TASK_CREATED		    : "task-wizard-task-created"
 
-    ,onAssigneesRetrieved : function(Callback, response) {
+    /*,onAssigneesRetrieved : function(Callback, response) {
         var success = false;
         if (response) {
             TaskWizard.setAssignees(response.response.docs);
@@ -24,7 +24,7 @@ TaskWizard.Callback = {
         if (!success) {
             Acm.Dialog.error($.t("task:wizard.msg.failed-to-retrieve-assignees"));
         }
-    }
+    }*/
     ,onTaskCreated : function(Callback, response) {
         if (response.hasError) {
             Acm.Dialog.error($.t("task:wizard.msg.failed-to-create-new-task")  +response.errorMsg);

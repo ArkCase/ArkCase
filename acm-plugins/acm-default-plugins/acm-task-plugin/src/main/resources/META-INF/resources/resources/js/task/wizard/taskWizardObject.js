@@ -21,7 +21,7 @@ TaskWizard.Object = {
         this.$btnSave          = $("#saveBtn");
         this.$btnSave.click(function(e) {TaskWizard.Event.onClickBtnSave(e);});
 
-        this.$selOwners        = $("#assignee");
+        this.$edtAssignee        = $("#assignee");
         this.$edtComplaint     = $("#complaintId");
         this.setValueEdtComplaint(Acm.goodValue(reference));
         this.useTypeAhead(this.$edtComplaint);
@@ -44,6 +44,8 @@ TaskWizard.Object = {
         this.$selTaskFlags     = $("#taskFlags");
         this.$selTaskFlags.chosen();
 
+        this.$btnChooseAssignee = $("#chooseAssignee");
+        this.$btnChooseAssignee.on("click", function(e) {TaskWizard.Event.onClickBtnChooseAssignee(e, this);});
 
 //        this.$divDetail.summernote({
 //            height: 300
@@ -51,7 +53,7 @@ TaskWizard.Object = {
 
     }
 
-	,initOwners: function(data) {
+	/*,initOwners: function(data) {
 	    $.each(data, function(idx, val) {
             Acm.Object.appendSelect(TaskWizard.Object.$selOwners, val.object_id_s, val.name);
 	    });
@@ -62,13 +64,22 @@ TaskWizard.Object = {
         if (previous.name > next.name)
             return 1;
         return 0;
-    }
+    }*/
 
 	/**
 	 * Get the assignee field value
 	 */
-    ,getSelectValueSelOwners: function() {
-        return Acm.Object.getSelectValue(this.$selOwners);
+    ,getValueEdtAssigneeUserId: function() {
+        var assignee = Acm.Object.getValue(this.$edtAssignee);
+        var assigneeUserId = "";
+        if(Acm.isNotEmpty(assignee)){
+            var assigneeUserId = assignee.substring(assignee.indexOf("(") + 1, assignee.length - 1);
+        }
+        return assigneeUserId;
+    }
+
+    ,setValueEdtAssignee: function(val) {
+        Acm.Object.setValue(this.$edtAssignee, val);
     }
     
 	/**
@@ -299,8 +310,8 @@ TaskWizard.Object = {
     ,getTaskData : function() {
         var data = {};
         var t = TaskOld.getTask();
-        data.assignee = this.getSelectValueSelOwners();
-        if(data.assignee == "null"){data.assignee = App.getUserName();}
+        data.assignee = this.getValueEdtAssigneeUserId();
+        if(Acm.isEmpty(data.assignee)){data.assignee = App.getUserName();}
         data.attachedToObjectType = t.attachedToObjectType;
         data.attachedToObjectName = this.getValueEdtComplaint();
         data.title = this.getValueEdtSubject();
