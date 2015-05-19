@@ -18,6 +18,8 @@ Task.Model = Task.Model || {
         //if (Task.Model.Attachments.create)                          {Task.Model.Attachments.create();}
         if (Task.Model.DocumentUnderReview.create)                  {Task.Model.DocumentUnderReview.create();}
         if (Task.Model.RejectComments.create)                       {Task.Model.RejectComments.create();}
+        if (Task.Model.ElectronicSignature.create)                       {Task.Model.ElectronicSignature.create();}
+
     }
     ,onInitialized: function() {
         if (Task.Service.onInitialized)                             {Task.Service.onInitialized();}
@@ -33,7 +35,9 @@ Task.Model = Task.Model || {
         //if (Task.Model.Attachments.onInitialized)                   {Task.Model.Attachments.onInitialized();}
         if (Task.Model.DocumentUnderReview.onInitialized)           {Task.Model.DocumentUnderReview.onInitialized();}
         if (Task.Model.RejectComments.onInitialized)                {Task.Model.RejectComments.onInitialized();}
-    }
+        if (Task.Model.ElectronicSignature.onInitialized)                       {Task.Model.ElectronicSignature.onInitialized();}
+
+        }
 
     ,interface: {
         apiListObjects: function() {
@@ -193,6 +197,7 @@ Task.Model = Task.Model || {
             ,NODE_TYPE_PART_DOCUMENTS    : "doc"
             ,NODE_TYPE_PART_REWORK       : "rewk"
             ,NODE_TYPE_PART_REJECT       : "rej"
+            ,NODE_TYPE_PART_SIGNATURE    : "sig"
 
             ,nodeTypeMap: [
                 {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
@@ -206,6 +211,7 @@ Task.Model = Task.Model || {
                         ,"tabReworkInstructions"
                         ,"tabWorkflowOverview"
                         ,"tabAttachments"
+                        ,"tabSignature"
                     ]}
                 ,{nodeType: "p/ADHOC"     ,icon: "i i-checkmark"    ,tabIds:
                     ["tabDetails"
@@ -214,6 +220,8 @@ Task.Model = Task.Model || {
                         ,"tabRejectComments"
                         ,"tabWorkflowOverview"
                         ,"tabAttachments"
+                        ,"tabSignature"
+
                     ]}
                 ,{nodeType: "p/TASK/det"      ,icon: "",tabIds: ["tabDetails"]}
                 ,{nodeType: "p/TASK/note"     ,icon: "",tabIds: ["tabNotes"]}
@@ -222,12 +230,15 @@ Task.Model = Task.Model || {
                 ,{nodeType: "p/TASK/att"      ,icon: "",tabIds: ["tabAttachments"]}
                 ,{nodeType: "p/TASK/doc"      ,icon: "",tabIds: ["tabDocuments"]}
                 ,{nodeType: "p/TASK/rewk"     ,icon: "",tabIds: ["tabReworkInstructions"]}
+                ,{nodeType: "p/TASK/sig"      ,icon: "",tabIds: ["tabSignature"]}
                 ,{nodeType: "p/ADHOC/det"     ,icon: "",tabIds: ["tabDetails"]}
                 ,{nodeType: "p/ADHOC/note"    ,icon: "",tabIds: ["tabNotes"]}
                 ,{nodeType: "p/ADHOC/his"     ,icon: "",tabIds: ["tabHistory"]}
                 ,{nodeType: "p/ADHOC/wkfl"    ,icon: "",tabIds: ["tabWorkflowOverview"]}
                 ,{nodeType: "p/ADHOC/att"     ,icon: "",tabIds: ["tabAttachments"]}
                 ,{nodeType: "p/ADHOC/rej"     ,icon: "",tabIds: ["tabRejectComments"]}
+                ,{nodeType: "p/ADHOC/sig"     ,icon: "",tabIds: ["tabSignature"]}
+
             ]
         }
     }
@@ -390,8 +401,13 @@ Task.Model = Task.Model || {
             Acm.Dispatcher.addEventListener(Task.Controller.VIEW_COMPLETED_TASK                , this.onViewCompletedTask);
             Acm.Dispatcher.addEventListener(Task.Controller.VIEW_DELETED_TASK                  , this.onViewDeletedTask);
             Acm.Dispatcher.addEventListener(Task.Controller.VIEW_RETRIEVED_USERS               , this.onViewRetrievedUsers);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_SIGNED_TASK                   , this.onViewSignedTask);
+
         }
         ,onInitialized: function() {
+        }
+        ,onViewSignedTask: function(taskId, $formSignature){
+            Task.Service.Detail.signTask(taskId, $formSignature);
         }
         ,onViewRetrievedUsers: function(start, n, sortDirection, searchKeyword, exclude){
             Task.Service.Detail.retrieveUsers(start, n, sortDirection, searchKeyword, exclude);
@@ -804,5 +820,43 @@ Task.Model = Task.Model || {
 
     }
 
+    ,ElectronicSignature: {
+        create : function() {
+            this.cacheElectronicSignatures = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
+
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onModelRetrievedObject: function(){
+            Task.Service.ElectronicSignature.retrieveSignatures(ObjNav.Model.getObjectId());
+        }
+        ,validateElectronicSignatures: function(data) {
+            if (Acm.isArrayEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateElectronicSignature: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.signatureId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.signedBy)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.signedDate)) {
+                return false;
+            }
+            return true;
+        }
+    }
 };
 
