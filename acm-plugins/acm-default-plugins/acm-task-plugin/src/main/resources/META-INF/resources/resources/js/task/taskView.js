@@ -18,6 +18,7 @@ Task.View = Task.View || {
         if (Task.View.WorkflowOverview.create)                      {Task.View.WorkflowOverview.create();}
         if (Task.View.Attachments.create)                           {Task.View.Attachments.create();}
         if (Task.View.RejectComments.create)                        {Task.View.RejectComments.create();}
+        if (Task.View.ElectronicSignature.create)                   {Task.View.ElectronicSignature.create();}
 
     }
     ,onInitialized: function() {
@@ -34,6 +35,8 @@ Task.View = Task.View || {
         if (Task.View.WorkflowOverview.onInitialized)               {Task.View.WorkflowOverview.onInitialized();}
         if (Task.View.Attachments.onInitialized)                    {Task.View.Attachments.onInitialized();}
         if (Task.View.RejectComments.onInitialized)                 {Task.View.RejectComments.onInitialized();}
+        if (Task.View.ElectronicSignature.onInitialized)            {Task.View.ElectronicSignature.onInitialized();}
+
     }
 
     ,getActiveTask: function() {
@@ -158,6 +161,9 @@ Task.View = Task.View || {
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: $.t("task:navigation.leaf-title.history")
                         })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
+                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
+                        })
                         .getTree();
 
                     break;
@@ -182,6 +188,9 @@ Task.View = Task.View || {
                         })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
                             ,title: $.t("task:navigation.leaf-title.history")
+                        })
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
+                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
                         })
                         .getTree();
 
@@ -435,6 +444,14 @@ Task.View = Task.View || {
 
             this.$lnkPriority       = $("#priority");
 
+            //electronic signature
+            this.$btnSignature = $("#btnSignature");
+            this.$btnSignConfirm    = $("#signatureConfirmBtn");
+            this.$formSignature     = $("#signatureConfirmForm");
+            this.$modalSignConfirm  = $("#signatureModal");
+            this.$btnSignConfirm.on("click", function(e) {Task.View.Detail.onClickBtnSignConfirm(e,this,Task.View.Detail.$formSignature);});
+
+
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_ASSIGNEES          ,this.onModelRetrievedAssignees);
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_PRIORITIES         ,this.onModelRetrievedPriorities);
 
@@ -452,7 +469,6 @@ Task.View = Task.View || {
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_COMPLETED_TASK              ,this.onModelCompletedTask);
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_DELETED_NOTE                ,this.onModelDeletedTask);
             //Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_USERS             ,this.onModelRetrievedUsers);
-
 
         }
         ,onInitialized: function() {
@@ -516,6 +532,7 @@ Task.View = Task.View || {
             Task.View.Detail.$btnCompleteTask.hide();
             Task.View.Detail.$btnDeleteTask.hide();
             Task.View.RejectTask.$btnRejectTask.hide();
+            Task.View.Detail.$btnSignature.hide();
         }
 
         ,hideDynamicWorkflowButtons: function(){
@@ -538,11 +555,13 @@ Task.View = Task.View || {
                 if(task.completed != true){
                     Task.View.Detail.$btnCompleteTask.show();
                     Task.View.Detail.$btnDeleteTask.show();
+                    Task.View.Detail.$btnSignature.show();
                 }
 
                 if (Acm.isNotEmpty(task.owner) && Acm.isNotEmpty(task.assignee)) {
                     if((task.owner != task.assignee)){
                         Task.View.RejectTask.$btnRejectTask.show();
+                        Task.View.Detail.$btnSignature.show();
                     }
                 }
             }
@@ -561,6 +580,7 @@ Task.View = Task.View || {
                             Task.View.Detail.$btnGroup.append(html).append(" ");
                             Task.View.Detail.$btnFromAvailableOutcomes = $("#" + availableOutcomes[i].name);
                             Task.View.Detail.$btnFromAvailableOutcomes.show();
+                            Task.View.Detail.$btnSignature.show();
                         }
                     }
                 }
@@ -612,6 +632,13 @@ Task.View = Task.View || {
 
         ,onClickBtnCompleteTask:function(event,ctrl){
             Task.Controller.viewCompletedTask();
+        }
+
+        //electronic signature
+        ,onClickBtnSignConfirm : function(event,ctrl,$formSignature) {
+            var taskId = ObjNav.View.Navigator.getActiveObjId();
+            Task.View.Detail.$modalSignConfirm.modal('hide');
+            Task.Controller.viewSignedTask(taskId,$formSignature);
         }
 
         ,onModelCompletedTask: function(task) {
@@ -2154,5 +2181,96 @@ Task.View = Task.View || {
             $s.jtable('load');
         }
     }
-};
+
+        ,ElectronicSignature: {
+            create: function() {
+                this.$divElectronicSignature          = $("#divElectronicSignature");
+                this.createJTableElectronicSignature(this.$divElectronicSignature);
+
+                Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+                Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+                Acm.Dispatcher.addEventListener(Task.Controller.MODEL_SIGNED_TASK           ,this.onModelSignedTask);
+                Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_ELECTRONIC_SIGNATURES, this.onModelRetrievedElectronicSignatures);
+
+            }
+            ,onInitialized: function() {
+            }
+
+            ,onViewSelectedObject: function(objType, objId) {
+                AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+            }
+            ,onModelRetrievedObject: function(objData) {
+                AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+            }
+            ,onModelSignedTask: function(electronicSignatures){
+                if(electronicSignatures.hasError){
+                    Acm.MessageBoard.show("Failed to electronically sign task. Incorrect parameters", electronicSignatures.errorMsg);
+                }
+                else{
+                    AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+                }
+            }
+            ,onModelRetrievedElectronicSignatures: function(electronicSignatures){
+                if(electronicSignatures.hasError){
+                    Acm.MessageBoard.show("Failed to retrieve signature list", electronicSignatures.errorMsg);
+                }
+                else{
+                    AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+                }
+            }
+            ,_makeJtData: function(electronicSignatures) {
+                var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                if (!Acm.isArrayEmpty(electronicSignatures)) {
+                    for (var i = 0; i < electronicSignatures.length; i++) {
+                        if(Task.Model.ElectronicSignature.validateElectronicSignature(electronicSignatures[i])){
+                            var Record = {};
+                            Record.signedDate = Acm.getDateFromDatetime(electronicSignatures[i].signedDate)
+                            Record.user = Acm.__FixMe__getUserFullName(electronicSignatures[i].signedBy);
+                            jtData.Records.push(Record);
+                        }
+                    }
+                    jtData.TotalRecordCount = electronicSignatures.length;
+                }
+                return jtData;
+            }
+            , createJTableElectronicSignature: function ($s) {
+                $s.jtable({
+                    title: $.t("task:signature.label.electronic-signatures")
+                    , sorting: true
+                    , actions: {
+                        listAction: function (postData, jtParams) {
+                            var taskId = ObjNav.View.Navigator.getActiveObjId();
+                            var electronicSignatures = Task.Model.ElectronicSignature.cacheElectronicSignatures.get(taskId);
+                            if(Task.Model.ElectronicSignature.validateElectronicSignatures(electronicSignatures)){
+                                return Task.View.ElectronicSignature._makeJtData(electronicSignatures);
+                            }
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+                    }
+                    , fields: {
+                        id: {
+                            title: $.t("task:signature.table.field.id")
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
+                        }
+                        , signedDate: {
+                            title: $.t("task:signature.table.field.date")
+                            , edit: false
+                            ,create: false
+                        }
+                        , user: {
+                            title: $.t("task:signature.table.field.signed-by")
+                            , edit: false
+                            , create: false
+                        }
+                    }
+                });
+
+                $s.jtable('load');
+            }
+        }
+
+    };
 
