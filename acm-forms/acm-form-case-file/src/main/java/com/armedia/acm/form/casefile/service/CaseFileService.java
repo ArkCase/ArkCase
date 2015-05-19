@@ -158,13 +158,11 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		}
 		
 		caseFile = getCaseFileFactory().asAcmCaseFile(form, caseFile);
-		HttpSession session = getRequest().getSession();
-		String ipAddress = (String) session.getAttribute("acm_ip_address");
 		
 		// Save Case file
 		try
         {
-			caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), ipAddress);
+			caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), getUserIpAddress());
         }
 		catch (MuleException | PersistenceException e)
         {
