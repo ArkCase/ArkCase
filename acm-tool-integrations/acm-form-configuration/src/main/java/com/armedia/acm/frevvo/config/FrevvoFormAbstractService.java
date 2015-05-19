@@ -93,12 +93,10 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			 null != folderIdString && !"".equals(folderIdString))
 		{
 			Long xmlId = null;
-			try{
-				Long containerId = Long.parseLong(containerIdString);
-				Long folderId = Long.parseLong(folderIdString);
+			try
+			{
 				String fileType = getFormName().toLowerCase() + "_xml";
-				
-				EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+				EcmFile ecmFile = getEcmFile(containerIdString, folderIdString, fileType);
 				
 				if (ecmFile != null)
 				{
@@ -288,6 +286,30 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return retval;
 	}
 	
+	public Object getExistingForm(Long id, Class<?> c)
+	{
+		Object retval = null;
+		
+		if (id != null)
+		{
+			String existingXml = "";
+			try 
+			{
+				// Takeing existing XML for the form
+				existingXml = getEcmFileService().download(id);
+				
+				// Creating Frevvo form from the existing XML
+				retval = convertFromXMLToObject(cleanXML(existingXml), c);
+			} 
+			catch (MuleException e) 
+			{
+				LOG.error("Cannot download file with id=" + id);
+			}
+		}
+		
+		return retval;
+	}
+	
 	public void updateXMLAttachment(MultiValueMap<String, MultipartFile> attachments, String formName, Object form) throws Exception
 	{
 		String updatedXmlFile = convertFromObjectToXML(form);
@@ -322,8 +344,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
 			{
 				String mode = getRequest().getParameter("mode");
-				String xmlId = getRequest().getParameter("xmlId");
-				String pdfId = getRequest().getParameter("pdfId");
+				String containerIdString = getRequest().getParameter("containerId");
+				String folderIdString = getRequest().getParameter("folderId");
 				
                 if ( entry.getKey().startsWith("form_"))
                 {
@@ -336,17 +358,11 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                         EcmFile formXml = null;
                         
                         // Update XML form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
+                        if ("edit".equals(mode) && 
+                        	null != containerIdString && !"".equals(containerIdString) &&
+                        	null != folderIdString && !"".equals(folderIdString))
                         {
-                        	EcmFile file = null;
-                        	try{
-                        		Long id = Long.parseLong(xmlId);
-                        		file = getEcmFileDao().find(id);
-                        	}
-                        	catch(Exception e)
-                        	{
-                        		LOG.warn("The file with id=" + xmlId + " is not found. The update will not proceed.");
-                        	}
+            				EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase() + "_xml");
                         	
                         	formXml = getEcmFileService().update(
                         			file,
@@ -375,17 +391,12 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                         EcmFile pdfRendition = null;
                         
                         // Update PDF form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) && null != pdfId && !"".equals(pdfId))
+                        if ("edit".equals(mode) && 
+                    		null != containerIdString && !"".equals(containerIdString) &&
+                        	null != folderIdString && !"".equals(folderIdString))
                         {
-                        	EcmFile file = null;
-                        	try{
-                        		Long id = Long.parseLong(pdfId);
-                        		file = getEcmFileDao().find(id);
-                        	}
-                        	catch(Exception e)
-                        	{
-                        		LOG.warn("The file with id=" + pdfId + " is not found. The update will not proceed.");
-                        	}
+                        	EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase());
+                        	
                         	pdfRendition = getEcmFileService().update(
                         			file,
                         			pdfAttachment,
@@ -464,6 +475,24 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
             throw new AcmCreateObjectFailedException("file", e.getMessage(), e);
         }
     }
+    
+    private EcmFile getEcmFile(String containerIdString, String folderIdString, String fileType)
+    {
+    	EcmFile ecmFile = null;
+    	
+    	try{
+    		Long containerId = Long.parseLong(containerIdString);
+    		Long folderId = Long.parseLong(folderIdString);
+    		
+    		ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+		}
+		catch(Exception e)
+		{
+			LOG.warn("EcmFile with for containerId=" + containerIdString + " and folderId=" + folderIdString  +" is not found.");
+		}
+		
+		return ecmFile;
+    }
 
     public String cleanXML(String xml)
 	{
@@ -505,25 +534,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		// Set edit mode
 		form.setMode(FrevvoFormConstants.EDIT);
-		
-		if (containerId != null && folderId != null)
-		{
-			// Set xml id
-			EcmFile ecmFileXML = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName + "_xml");
-			
-			if (ecmFileXML != null && ecmFileXML.getId() != null)
-			{
-				form.setXmlId(ecmFileXML.getId().toString());
-			}
-			
-			// Set pdf id
-			EcmFile ecmFilePDF = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName);
-			
-			if (ecmFilePDF != null && ecmFilePDF.getId() != null)
-			{
-				form.setPdfId(ecmFilePDF.getId().toString());
-			}
-		}
+		form.setContainerId(containerId);
+		form.setFolderId(folderId);
 		
 		return form;
 	}

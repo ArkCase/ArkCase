@@ -63,16 +63,16 @@ public class ContactMethod implements Serializable, AcmEntity
     @PrePersist
     protected void beforeInsert()
     {
-    	checkData();
+    	setData();
     }
     
     @PreUpdate
     protected void beforeUpdate()
     {
-    	checkData();
+    	setData();
     }
     
-    private void checkData()
+    private void setData()
     {
     	if ( getStatus() == null || getStatus().trim().isEmpty() )
         {

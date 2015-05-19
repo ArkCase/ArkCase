@@ -7,7 +7,6 @@ package com.armedia.acm.form.casefile.service;
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
-import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
@@ -53,7 +52,7 @@ public class CaseFileFactory extends FrevvoFormFactory
 		caseFile.setTitle(form.getCaseTitle());
 		caseFile.setCaseType(form.getCaseType());
 		caseFile.setDetails(form.getCaseDescription());
-		caseFile.setParticipants(asAcmParticipants(form.getParticipants(), form.getOwningGroup(), FrevvoFormName.CASE_FILE));
+		caseFile.setParticipants(getParticipants(caseFile.getParticipants(),form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
 
 		if (form.getInitiator() != null)
 		{
