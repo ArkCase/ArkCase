@@ -1325,7 +1325,7 @@ Complaint.View = Complaint.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: $.t("complaint:organizations.addresses.msg.add-new-record")
+                        addNewRecord: $.t("complaint:addresses.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {

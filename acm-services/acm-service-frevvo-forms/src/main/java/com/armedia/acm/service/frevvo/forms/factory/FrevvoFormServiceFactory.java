@@ -10,6 +10,7 @@ import com.armedia.acm.form.closecomplaint.service.CloseComplaintService;
 import com.armedia.acm.form.cost.service.CostService;
 import com.armedia.acm.form.ebrief.service.EbriefService;
 import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
+import com.armedia.acm.form.project.service.ProjectService;
 import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
@@ -287,6 +288,34 @@ public class FrevvoFormServiceFactory {
             service.setSaveCaseService(frevvoFormController.getSaveCaseService());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setEbriefFactory(frevvoFormController.getEbriefFactory());
+            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
+            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
+            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            
+            return service;
+		}
+		
+		if (FrevvoFormName.PROJECT.equals(name))
+        {
+            String contextPath = request.getServletContext().getContextPath();
+
+            ProjectService service = new ProjectService();
+
+            service.setEcmFileService(frevvoFormController.getEcmFileService());
+            service.setServletContextPath(contextPath);
+            service.setProperties(frevvoFormController.getProperties());
+            service.setRequest(request);
+            service.setAuthentication(authentication);
+            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
+            service.setUserDao(frevvoFormController.getUserDao());
+            service.setUserActionDao(frevvoFormController.getUserActionDao());
+            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setSearchResults(frevvoFormController.getSearchResults());
+            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
+            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
+            service.setSaveCaseService(frevvoFormController.getSaveCaseService());
+            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setProjectFactory(frevvoFormController.getProjectFactory());
             service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());

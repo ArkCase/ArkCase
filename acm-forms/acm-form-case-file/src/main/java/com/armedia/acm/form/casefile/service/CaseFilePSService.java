@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -354,12 +355,20 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
     {
     	if (caseFile != null)
     	{    		
-    		CaseFilePSForm form = getCaseFilePSFactory().asFrevvoCaseFile(caseFile, null);
+    		// First find the XML that is already in the system and create Frevvo form
+    		Long containerId = caseFile.getContainer().getId();
+    		Long folderId = caseFile.getContainer().getFolder().getId();
+    		String fileType = FrevvoFormName.CASE_FILE_PS.toLowerCase() + "_xml";
+    		
+    		EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+    		CaseFilePSForm form = (CaseFilePSForm) getExistingForm(ecmFile.getId(), CaseFilePSForm.class);
+    		
+    		form = getCaseFilePSFactory().asFrevvoCaseFile(caseFile, null);
     		
     		if (form != null)
     		{
     			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), auth);		
+    			updateXML(xml, ecmFile, auth);		
     		}
     	}
     }

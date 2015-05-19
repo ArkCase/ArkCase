@@ -109,9 +109,12 @@ public class ComplaintFactory extends FrevvoFormFactory
         return retval;
     }
     
-    public ComplaintForm asFrevvoComplaint(Complaint complaint)
+    public ComplaintForm asFrevvoComplaint(Complaint complaint, ComplaintForm complaintForm)
     {
-    	ComplaintForm complaintForm = new ComplaintForm();
+    	if (complaintForm == null)
+    	{
+    		complaintForm = new ComplaintForm();
+    	}
     	
     	complaintForm.setComplaintId(complaint.getComplaintId());
     	complaintForm.setComplaintNumber(complaint.getComplaintNumber());
