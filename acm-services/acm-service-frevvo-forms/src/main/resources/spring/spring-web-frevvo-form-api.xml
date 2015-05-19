@@ -52,6 +52,7 @@
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="complaintFactory" ref="complaintFactory"/>
         <property name="ebriefFactory" ref="ebriefFactory"/>
+        <property name="projectFactory" ref="projectFactory"/>
 	</bean>
 
 </beans>
