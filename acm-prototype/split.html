@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Split Cases | ACM | Armedia Case Management</title>
+<title>Split Complaints | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -39,8 +39,7 @@
                             
                             
                             
-                              <button class="btn btn-info btn-sm"><i class="fa fa-save"></i> Save Changes</button>
-                            
+                          
                             
                   <button class="btn btn-default btn-sm" data-toggle="tooltip" data-title="Close Document" onClick="window.close();"><i class="fa fa-times"></i></button>
                 </div>
@@ -59,7 +58,8 @@
                       <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-url="/post" data-title="Enter Complaint Title"> New Complaint Title</a></h4>
                     </div>
                     <div class="col-xs-6  b-r text-right">
-                      <h5><a href="#" id="complaintID" >[New Complaint ID]</a></h5>
+                      <div class="h4 font-bold"><a href="#" id="complaintID" >[Complaint ID]</a></div>
+                      <small class="text-muted">Original Complaint</small>
                     </div>
                   </div>
                   <div class="row">
@@ -88,54 +88,32 @@
                 <div class="wrapper ">
                   <div class="row">
                     <div class="col-md-12">
+                    
                       <section class="panel b-a ">
                         <div class="panel-heading b-b bg-info">
-                          <ul class="nav nav-pills pull-right">
-                            <li></li>
-                            <li> </li>
-                          </ul>
-                          </span> <a href="#" class="font-bold">Split Complaint</a></div>
+                           <a href="#" class="font-bold">Split Complaint</a> <span class="navbar-right">All selected objects will be moved to the new complaint; all unselected objects will remain in the original complaint.</span></div>
                        <form id="wizardform" method="get" action="">
                     <div class="panel panel-default">
                       <div class="panel-heading">
+               
+                        
+                        
                         <ul class="nav nav-tabs font-bold">
-                          <li class="active"><a href="#initiator" data-toggle="tab">Intiator</a></li>
                           <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                           <li class=""><a href="#people" data-toggle="tab">People</a></li>
                            <li class=""><a href="#documents" data-toggle="tab">Documents</a></li>
                            <li class=""><a href="#evidence" data-toggle="tab">Evidence</a></li>
                            <li class=""><a href="#participants" data-toggle="tab">Participants</a></li>
                            <li class=""><a href="#notes" data-toggle="tab">Notes</a></li>
-                           <li class=""><a href="#tasks" data-toggle="tab">Tasks</a></li>
+                           <li class=" pull-right"><a href="#summary" data-toggle="tab">Summary</a></li>
                         </ul>
+                        
+                        
                       </div>
                       <div class="panel-body no-padder">
                        
                         <div class="tab-content">
-                          <div class="tab-pane active panel-body no-padder" id="initiator">                            
-                     
-                                <table class="table table-striped th-sortable table-hover">
-                                  <thead>
-                                    <tr>
-                                    <th width="10"><input type="checkbox" /></th>
-                                      <th>First Name</th>
-                                      <th>Last Name</th>
-                                      <th>Title</th>
-                                      <th>Role</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="odd gradeA">
-                                    <td><input type="checkbox" /></td>
-                                      <td>[First Name]</td>
-                                      <td>[First Name]</td>
-                                      <td>[Title]</td>
-                                      <td>[Role]</td>
-                                    
-                                    </tr>
-                                  </tbody>
-                                </table>
-                          </div>
+                        
                           <div class="tab-pane panel-body" id="details">
                           
                           
@@ -150,18 +128,20 @@
                                   <thead>
                                     <tr>
                                     <th width="10"><input type="checkbox" /></th>
+                                    <th>Title</th>
                                       <th>First Name</th>
                                       <th>Last Name</th>
-                                      <th>Title</th>
+                                      
                                       <th>Role</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr class="odd gradeA">
                                     <td><input type="checkbox" /></td>
+                                    <td>[Title]</td>
                                       <td>[First Name]</td>
                                       <td>[First Name]</td>
-                                      <td>[Title]</td>
+                                      
                                       <td>[Role]</td>
                                     
                                     </tr>
@@ -273,51 +253,186 @@
                                     <td><input type="checkbox" /></td>
                                       <td>[Note]</td>
                                       <td>[Created]</td>
-                                      <td><select name="select" class="input-sm form-control input-s-sm inline v-middle">
-                                        <option value="0">Choose Action</option>
-                                        <option value="1">Delete</option>
-                                        
-                                      </select></td>
+                                      <td>[Author]</td>
                                     </tr>
                                   </tbody>
                                 </table>
                                  
                                  </div>
-                           <div class="tab-pane panel-body no-padder" id="tasks">
+                         
                            
-                           
-                           <table class="table table-striped th-sortable table-hover">
+                            <div class="tab-pane panel-body" id="summary">
+                            
+                            
+                            <h2>Summary</h2>
+                            
+                            <h3>Initiator</h3>
+                             <table class="table table-striped th-sortable table-hover">
                                   <thead>
                                     <tr>
-                                    <th width="10"><input type="checkbox" /></th>
-                                      <th>ID</th>
+                                   
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
                                       <th>Title</th>
-                                      <th>Created</th>
-                                      <th>Priority</th>
-                                      <th>Due</th>
-                                      <th>Status</th>
+                                      <th>Role</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     <tr class="odd gradeA">
-                                    <td><input type="checkbox" /></td>
-                                      <td>[ID]</td>
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
                                       <td>[Title]</td>
-                                      <td>[Created]</td>
-                                      <td>[Priority]</td>
-                                      <td>[Due]</td>
-                                      <td>[Status]</td>
+                                      <td>[Role]</td>
+                                    
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                
+                                
+                                <h3>Details</h3>
+                                
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer blandit pellentesque tincidunt. Ut tristique sed augue non mollis. Praesent luctus massa nisl, eu iaculis felis mollis sed. Nullam sit amet urna at nisi lobortis pharetra a vitae diam. Proin porttitor velit quis justo fermentum, sed porttitor enim vulputate. Ut pulvinar mauris vitae pellentesque pharetra. Sed scelerisque leo in libero tincidunt tincidunt. Fusce dictum vulputate suscipit. Duis at sodales libero. In placerat in urna quis condimentum. Suspendisse lacinia odio lobortis aliquam mattis. Praesent felis mauris, volutpat vitae eleifend sed, ultricies eget massa. Donec aliquet luctus ultrices. Phasellus nec lobortis nulla, eget bibendum turpis. Proin semper a tortor eget pulvinar.</p>
+
+<p>Donec faucibus augue vitae est porttitor venenatis. Etiam enim sem, malesuada non laoreet pellentesque, auctor ac augue. Nulla facilisi. Nullam sit amet dui magna. Aliquam leo velit, semper sit amet faucibus eu, pretium et tellus. Donec tempor leo et porttitor rutrum. Quisque lobortis cursus augue, a porta purus egestas eu. Pellentesque iaculis ipsum velit, eget gravida velit ornare sed. In at sem vitae leo cursus aliquam. Fusce vitae erat rhoncus, ultricies leo eget, ultrices est. In condimentum congue porttitor.</p>
+                            
+                            
+                            <h3>People</h3>
+                               <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                   
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Title</th>
+                                      <th>Role</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
+                                      <td>[Title]</td>
+                                      <td>[Role]</td>
+                                    
+                                    </tr>
+                                  </tbody>
+                                </table>
+                                
+                                
+                                 <h3>Documents</h3>
+                            
+                            
+                            
+                            <table id="treetable2" class="table table-striped th-sortable table-hover">
+                                <thead>
+                                  <tr>
+                                    <th>ID</th>
+                                    <th width="40%">Title</th>
+                                    <th>Type</th>
+                                    <th>Created</th>
+                                    <th>Author</th>
+                                    <th>Version</th>
+                                    <th>Status</th>
+                                    <th colspan="2"></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            
+                             <h3>Evidence</h3>
+                             
+                              <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                      <th>ID</th>
+                                      <th>Location</th>
+                                     
+                                       <th>Title</th>
+                                      <th>Added</th>
+                                      <th>Type</th>
+                                      <th>Collected By</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[ID]</td>
+                                      <td>[Location]</td>
+                                      
+                                      <td><a href="evidence.html" target="_blank">[Title]</a></td>
+                                      <td>[Added]</td>
+                                      <td>[Type]</td>
+                                      <td>[Collected By]</td>
                                       
                                     </tr>
                                   </tbody>
                                 </table>
-                           
-                           </div>
+                                
+                                 <h3>Participants</h3>
+                                <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                   
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Title</th>
+                                      <th>Role</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[First Name]</td>
+                                      <td>[First Name]</td>
+                                      <td>[Title]</td>
+                                      <td>[Role]</td>
+                                    
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            
+                            
+                             <h3>Notes</h3>
+                             
+                                    <table class="table table-striped th-sortable table-hover">
+                                  <thead>
+                                    <tr>
+                                      <th width="70%">Note</th>
+                                      <th >Created</th>
+                                      <th >Author</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd gradeA">
+                                      <td>[Note]</td>
+                                      <td>[Created]</td>
+                                      <td>[Author]</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                               
+                                
+                                <hr />
+                            
+                            <div class="text-center">
+                                <button class="btn btn-info btn-lg"><i class="fa fa-save"></i> Split Case</button>
+                            </div>
+                            
+                            </div>
                           
                           <ul class="pager wizard m-b-sm">
                             <li class="previous first" style="display:none;"><a href="#">First</a></li>
                             <li class="previous"><a href="#">Previous</a></li>
-                            <li class="next last disabled" style="display:none;"><a href="#">Last</a></li>
+                            <li class="next last disabled" style="display:none"><a href="#">Split Complaint</a></li>
                             <li class="next disabled"><a href="#">Next</a></li>
                           </ul>
                         </div>
@@ -492,6 +607,57 @@ $(function() {
 	]}
 ]
     });
+	
+	
+	
+	
+	
+	    $("#treetable2").fancytree({
+
+
+			extensions: ["table"],
+			checkbox: false,
+			table: {
+        indentation: 10,      // indent 20px per node level
+        nodeColumnIdx: 1,     // render the node title into the 2nd column
+        checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+      },
+	  renderColumns: function(event, data) {
+        var node = data.node,
+        $tdList = $(node.tr).find(">td");
+        // (index #0 is rendered by fancytree by adding the checkbox)
+        $tdList.eq(1).text("[ID]");
+		
+		
+		
+		
+		$tdList.eq(3).text(node.data.type);
+		$tdList.eq(4).text(node.data.created);
+		$tdList.eq(5).text(node.data.author);
+		$tdList.eq(6).text(node.data.version);
+		$tdList.eq(7).text(node.data.status);
+		$tdList.eq(8).html(node.data.action);
+		
+		
+		
+        // (index #2 is rendered by fancytree)
+        //$tdList.eq(3).text(node.key);
+        //$tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
+      },
+	
+        source: [
+	{"title": "Folder 1", "expanded": true, "folder": true, "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Add Subfolder</a></li><li><a href='#'>Add Document</a></li><li><a href='#'>Delete Subfolder</a></li></ul></div>",  "children": [
+		
+			{"title": "Document 1", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 2", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 3", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"},
+			{"title": "Document 4", "type":"[type]", "created":"[created]", "author":"[author]", "version":"[version]", "due":"[due]", "status":"[status]", "action":"<div class='btn-group'><button type='buton' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button><ul class='dropdown-menu'><li><a href='#'>Download</a></li><li><a href='#'>Replace</a></li><li><a href='#'>History</a></li><li><a href='#'>Delete</a></li><li><a href='#'>Copy</a></li><li><a href='#'>Move</a></li><li><a href='#'>Edit</a></li><li><a href='#'>View</a></li></ul></div>"}
+
+		
+	]}
+]
+    });
+	
 	});
 	</script>
 
