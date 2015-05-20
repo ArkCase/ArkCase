@@ -59,7 +59,7 @@ public class LabelConfigurationResetResource {
                     generateResourceNode(adminResourceObj);
 
                     // Save generated resource
-                    String resourceFileName = String.format(resourcesFilesLocation, lang, ns);
+                    String resourceFileName = String.format(resourcesFilesLocation, langIter, nsIter);
                     File resourceFile = FileUtils.getFile(resourceFileName);
                     FileUtils.writeStringToFile(resourceFile, adminResourceObj.toString(4));
                 } catch (Exception e) {
@@ -68,8 +68,6 @@ public class LabelConfigurationResetResource {
                     }
                     throw new AcmLabelConfigurationException("Reset resource error", e);
                 }
-
-
             }
         }
     }
