@@ -49,6 +49,7 @@ import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
 import com.armedia.acm.form.cost.service.CostFactory;
 import com.armedia.acm.form.ebrief.service.EbriefFactory;
+import com.armedia.acm.form.project.service.ProjectFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
@@ -129,6 +130,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private ComplaintFactory complaintFactory;
 	
 	private EbriefFactory ebriefFactory;
+	
+	private ProjectFactory projectFactory;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -575,5 +578,13 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setEbriefFactory(EbriefFactory ebriefFactory) {
 		this.ebriefFactory = ebriefFactory;
+	}
+
+	public ProjectFactory getProjectFactory() {
+		return projectFactory;
+	}
+
+	public void setProjectFactory(ProjectFactory projectFactory) {
+		this.projectFactory = projectFactory;
 	}
 }

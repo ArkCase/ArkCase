@@ -5,6 +5,7 @@ package com.armedia.acm.frevvo.config;
 
 import java.util.Map;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,7 @@ public class FrevvoFormUrl implements FormUrl {
 	public static final String HOST = "frevvo.host";
 	public static final String PORT = "frevvo.port";
 	public static final String URI = "frevvo.uri";
+	public static final String TIMEZONE = "frevvo.timezone";
 
 	private Map<String, Object> properties;
 	private AuthenticationTokenService authenticationTokenService;
@@ -95,6 +97,7 @@ public class FrevvoFormUrl implements FormUrl {
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
 		String service = (String) properties.get(SERVICE);
 		String redirect = (String) properties.get(REDIRECT);
+		String timezone = (String) properties.get(TIMEZONE);
 		
 		if (tenant != null) {
 			uri = uri.replace("{tenant}", tenant);			
@@ -130,6 +133,10 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		if (redirect != null) {
 			uri = uri.replace("{frevvo_browser_redirect_baseUrl}", redirect);
+		}
+		
+		if (timezone != null) {
+			uri = uri.replace("{frevvo_timezone}", timezone);
 		}
 		
 		String url = getBaseUrl() + uri; 
