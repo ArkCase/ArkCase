@@ -38,5 +38,4 @@
     </bean>
 
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
-
 </beans>
