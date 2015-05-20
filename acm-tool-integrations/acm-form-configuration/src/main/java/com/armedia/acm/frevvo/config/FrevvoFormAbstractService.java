@@ -116,6 +116,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     public JSONObject createResponse(Object object)
     {
     	String jsonString = getGson().toJson(object);
+
+		LOG.debug("returning JSON: " + jsonString);
 		JSONObject json = new JSONObject(jsonString);
 		
 		return json;

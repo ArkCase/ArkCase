@@ -179,7 +179,11 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 					response.getOutputStream().write(((String) result).getBytes(Charset.forName("UTF-8")));
 					response.getOutputStream().flush();			
 				}else if (result instanceof JSONObject){
-					response.addHeader("X-JSON", ((JSONObject) result).toString());
+					response.addHeader("X-JSON", result.toString());
+				}
+				else
+				{
+					LOG.warn("Unknown response type for action '" + action + "', response type is: " + result.getClass().getName());
 				}
 			}else{
 				LOG.warn("Empty response.");

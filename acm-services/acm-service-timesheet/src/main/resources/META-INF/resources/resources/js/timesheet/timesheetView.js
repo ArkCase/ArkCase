@@ -205,14 +205,14 @@ Timesheet.View = {
         }
 
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("timesheet:detail.label.editing-timesheet-detail"));
+            App.View.Dirty.declare($.t("timesheet:detail.label.editing-timesheet-detail"));
             Timesheet.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Timesheet.View.Detail.saveDivDetail();
             if(Acm.isNotEmpty(htmlDetail)){
                 Timesheet.Controller.viewSavedDetail(Timesheet.View.getActiveTimesheet(), htmlDetail);
-                App.Object.Dirty.clear($.t("timesheet:detail.label.editing-timesheet-detail"));
+                App.View.Dirty.clear($.t("timesheet:detail.label.editing-timesheet-detail"));
             }
         }
         ,getHtmlDivDetail: function() {
