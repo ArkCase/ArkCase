@@ -54,11 +54,8 @@ import java.util.stream.Collectors;
 public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    @Value("${outlook.exchange.system_user_email}")
     private String systemUserEmail;
-    @Value("${outlook.exchange.system_user_email_password}")
     private String systemUserEmailPassword;
-    @Value("${outlook.exchange.system_user_id}")
     private String systemUserId;
 
     private OutlookDao dao;
@@ -501,5 +498,17 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         outlookFolderPermission.setReadItems(outlookFolderPermission.getReadItems());
 
         return outlookFolderPermission;
+    }
+
+    public void setSystemUserEmail(String systemUserEmail) {
+        this.systemUserEmail = systemUserEmail;
+    }
+
+    public void setSystemUserEmailPassword(String systemUserEmailPassword) {
+        this.systemUserEmailPassword = systemUserEmailPassword;
+    }
+
+    public void setSystemUserId(String systemUserId) {
+        this.systemUserId = systemUserId;
     }
 }

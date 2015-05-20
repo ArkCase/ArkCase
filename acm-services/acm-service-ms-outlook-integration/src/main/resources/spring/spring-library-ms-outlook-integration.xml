@@ -30,6 +30,9 @@
 
        <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
               <property name="dao" ref="exchangeWebServicesOutlookDao"/>
+           <property name="systemUserEmail" value="${outlook.exchange.system_user_email}"/>
+           <property name="systemUserEmailPassword" value="${outlook.exchange.system_user_email_password}"/>
+           <property name="systemUserId" value="${outlook.exchange.system_user_id}"/>
        </bean>
 
        <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
