@@ -27,6 +27,7 @@
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
         <property name="formService" ref="caseFilePSService"/>
+        <property name="personService" ref="personService" />
     </bean>
     
     <bean id="caseFilePSService" class="com.armedia.acm.form.casefile.service.CaseFilePSService">

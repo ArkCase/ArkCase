@@ -8,9 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 import org.eclipse.persistence.indirection.IndirectList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
@@ -18,13 +20,17 @@ import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonIdentification;
 import com.armedia.acm.plugins.person.model.xml.DefendantPerson;
+import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.model.xml.OfficerPerson;
 import com.armedia.acm.plugins.person.model.xml.PoliceWitnessPerson;
 import com.armedia.acm.plugins.person.model.xml.VictimPerson;
 import com.armedia.acm.plugins.person.model.xml.WitnessVictimPerson;
+import com.armedia.acm.plugins.person.service.PersonService;
 
 /**
  * @author riste.tutureski
@@ -33,6 +39,8 @@ import com.armedia.acm.plugins.person.model.xml.WitnessVictimPerson;
 public class EbriefFactory extends FrevvoFormFactory{
 	
 	private Logger LOG = LoggerFactory.getLogger(getClass());
+	private PersonAssociationDao personAssociationDao;
+	private PersonService personService;
 	
 	public CaseFile asAcmCaseFile(EbriefForm form, CaseFile caseFile)
 	{
@@ -45,7 +53,7 @@ public class EbriefFactory extends FrevvoFormFactory{
 		caseFile.setTitle(EbriefConstants.EBRIEF);
 		caseFile.setCaseType(form.getType());
 		caseFile.setDetails(form.getNotes());
-		caseFile.setParticipants(asAcmParticipants(form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
+		caseFile.setParticipants(getParticipants(caseFile.getParticipants(), form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
 		caseFile.setPersonAssociations(getPersonAssociations(form));
 		
 		return caseFile;
@@ -119,11 +127,22 @@ public class EbriefFactory extends FrevvoFormFactory{
 		{
 			List<PersonAssociation> paArrayLocal = persons.stream()
 														  .map(person -> {
-															  PersonAssociation pa = new PersonAssociation();
+															  String personType = getPersonService().getPersonType((FrevvoPerson) person);
+															  
+															  PersonAssociation pa = getPersonAssociationDao().findByPersonIdPersonTypeParentIdParentTypeSilent(person.getId(), personType, id, FrevvoFormName.CASE_FILE.toUpperCase());
+															  
+															  if (pa == null)
+															  {
+																  pa = new PersonAssociation();
+															  }
+															  
+															  List<String> keys = getPersonService().getPersonIdentificationKeys((FrevvoPerson) person);
+															  person = getPersonService().addPersonIdentifications(keys, person);
+															  
 															  pa.setPerson(person.returnBase());
-															  pa.setPersonType(getPersonType(person));
+															  pa.setPersonType(personType);
 															  pa.setParentId(id);
-															  pa.setParentType(FrevvoFormName.CASE_FILE);
+															  pa.setParentType(FrevvoFormName.CASE_FILE.toUpperCase());
 															  return pa;
 														  })
 														  .collect(Collectors.toList());
@@ -132,39 +151,6 @@ public class EbriefFactory extends FrevvoFormFactory{
 		}
 		
 		return paArray;
-	}
-	
-	private String getPersonType(Person person)
-	{
-		if (person != null)
-		{
-			if (person instanceof WitnessVictimPerson)
-			{
-				return ((WitnessVictimPerson) person).getType();
-			}
-			
-			if (person instanceof DefendantPerson)
-			{
-				return ((DefendantPerson) person).getType();
-			}
-			
-			if (person instanceof VictimPerson)
-			{
-				return ((VictimPerson) person).getType();
-			}
-			
-			if (person instanceof OfficerPerson)
-			{
-				return ((OfficerPerson) person).getType();
-			}
-			
-			if (person instanceof PoliceWitnessPerson)
-			{
-				return ((PoliceWitnessPerson) person).getType();
-			}
-		}
-		
-		return null;
 	}
 	
 	private List<Person> getWitnessVictims(List<PersonAssociation> pas)
@@ -180,6 +166,10 @@ public class EbriefFactory extends FrevvoFormFactory{
 			   				     .map(element -> {
 			   				    	WitnessVictimPerson wvp = new WitnessVictimPerson(element);
 			   				    	wvp.setType(EbriefConstants.WITNESS);
+			   				    	
+			   				    	List<PersonIdentification> personIdentifications = element.getPersonIdentification();
+			   				    	wvp = (WitnessVictimPerson) getPersonService().setPersonIdentifications(personIdentifications, wvp);
+			   				    	
 			   				    	return wvp;
 			   				     })
 			   				     .collect(Collectors.toList());
@@ -193,6 +183,10 @@ public class EbriefFactory extends FrevvoFormFactory{
 			   				     .map(element -> {
 			   				    	WitnessVictimPerson wvp = new WitnessVictimPerson(element);
 			   				    	wvp.setType(EbriefConstants.VICTIM);
+			   				    	
+			   				    	List<PersonIdentification> personIdentifications = element.getPersonIdentification();
+			   				    	wvp = (WitnessVictimPerson) getPersonService().setPersonIdentifications(personIdentifications, wvp);
+			   				    	
 			   				    	return wvp;
 			   				      })
 			   				     .collect(Collectors.toList());
@@ -215,6 +209,9 @@ public class EbriefFactory extends FrevvoFormFactory{
 			{
 				defendant = new DefendantPerson(p);
 				defendant.setType(EbriefConstants.DEFENDANT);
+				
+				List<PersonIdentification> personIdentifications = p.getPersonIdentification();
+				defendant = (DefendantPerson) getPersonService().setPersonIdentifications(personIdentifications, defendant);
 			}
 		}
 		
@@ -233,6 +230,9 @@ public class EbriefFactory extends FrevvoFormFactory{
 			{
 				victim = new VictimPerson(p);
 				victim.setType(EbriefConstants.PRIMARY_VICTIM);
+				
+				List<PersonIdentification> personIdentifications = p.getPersonIdentification();
+				victim = (VictimPerson) getPersonService().setPersonIdentifications(personIdentifications, victim);
 			}
 		}
 		
@@ -251,6 +251,9 @@ public class EbriefFactory extends FrevvoFormFactory{
 			{
 				officer = new OfficerPerson(p);
 				officer.setType(EbriefConstants.INVESTIGATING_OFFICER);
+				
+				List<PersonIdentification> personIdentifications = p.getPersonIdentification();
+				officer = (OfficerPerson) getPersonService().setPersonIdentifications(personIdentifications, officer);
 			}
 		}
 		
@@ -267,6 +270,10 @@ public class EbriefFactory extends FrevvoFormFactory{
 										     .map(element -> {
 										    	 PoliceWitnessPerson pwp = new PoliceWitnessPerson(element);
 										    	 pwp.setType(EbriefConstants.POLICE_WITNESS);
+										    	 
+										    	 List<PersonIdentification> personIdentifications = element.getPersonIdentification();
+										    	 pwp = (PoliceWitnessPerson) getPersonService().setPersonIdentifications(personIdentifications, pwp);
+													
 										    	 return pwp;
 										     })
 										     .collect(Collectors.toList());;
@@ -325,6 +332,22 @@ public class EbriefFactory extends FrevvoFormFactory{
 		}
 		
 		return null;
+	}
+
+	public PersonAssociationDao getPersonAssociationDao() {
+		return personAssociationDao;
+	}
+
+	public void setPersonAssociationDao(PersonAssociationDao personAssociationDao) {
+		this.personAssociationDao = personAssociationDao;
+	}
+
+	public PersonService getPersonService() {
+		return personService;
+	}
+
+	public void setPersonService(PersonService personService) {
+		this.personService = personService;
 	}
 	
 }
