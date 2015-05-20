@@ -163,8 +163,6 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
 
             Objects.requireNonNull(service, "Service cannot be null");
 
-            Folder folder = Folder.bind(service, wellKnownFolderName);
-
             ItemView view = new ItemView(maxItems, start);
 
             PropertyDefinition orderBy =
@@ -466,7 +464,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             folder  = Folder.bind(service, wellKnownFolderName);
         } catch (Exception e) {
             log.warn("Folder not found with id={}", wellKnownFolderName);
-            throw new AcmOutlookItemNotFoundException("Folder not found with id=" + wellKnownFolderName.name(), e);
+            throw new AcmOutlookItemNotFoundException("Folder not found with name=" + wellKnownFolderName.name(), e);
         }
         return folder;
     }

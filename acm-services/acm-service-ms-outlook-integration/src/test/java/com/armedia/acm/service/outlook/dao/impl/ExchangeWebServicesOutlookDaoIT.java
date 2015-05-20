@@ -64,15 +64,11 @@ public class ExchangeWebServicesOutlookDaoIT
     private String validUser = "***REMOVED***";
     private String validPassword = "AcMd3v$";
 
-    private String validUser1 = "ian.acm@armedia.com";
-    private String validPassword1 = "Armedia123";
-
-    private String validUser2 = "albert.acm@armedia.com";
-    private String validPassword2 = "Armedia123";
+    private String validUser1 = "***REMOVED***";
+    private String validPassword1 = "AcMd3v$";
 
     private AcmOutlookUser user = new AcmOutlookUser("ann-acm", validUser, validPassword);
     private AcmOutlookUser user1 = new AcmOutlookUser("ian-acm", validUser1, validPassword1);
-    private AcmOutlookUser user2 = new AcmOutlookUser("albert-acm", validUser2, validPassword2);
 
     @Autowired
     @Qualifier("exchangeWebServicesOutlookDao")
@@ -364,5 +360,4 @@ public class ExchangeWebServicesOutlookDaoIT
         //delete the folder
         dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
     }
-
 }

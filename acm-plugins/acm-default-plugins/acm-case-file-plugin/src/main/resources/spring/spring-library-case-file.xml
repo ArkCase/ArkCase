@@ -66,6 +66,7 @@
         <property name="autoCreateFolderForCaseFile" value="${casefile.auto_create_calendar_folder}"/>
         <property name="autoDeleteFolderAfterCaseClosed" value="${casefile.delete_calendar_folder_after_case_closed}"/>
         <property name="participantsTypesForOutlookFolder" value="${casefile.participants-types-as-outlook-permission}"/>
+
     </bean>
     
     <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
