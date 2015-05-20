@@ -6,5 +6,6 @@
     "fail-reason": "Reason",
     "login-button": "Log In",
     "forgot-password": "Forgot password?",
-    "footer": "ArkCase <br>&copy; 2014, 2015"
+    "footer": "ArkCase",
+    "copy-right": "2014, 2015"
 }
