@@ -41,11 +41,9 @@ var App = App || {
 
     ,getContextPath: function() {
         return Acm.Object.MicroData.get("contextPath");
-        //return App.View.MicroData.contextPath;
     }
     ,getUserName: function() {
         return Acm.Object.MicroData.get("userName");
-        //return App.View.MicroData.userName;
     }
 
     ,buildObjectUrl : function(objectType, objectId, defaultUrl) {
@@ -64,6 +62,107 @@ var App = App || {
         window.location.href = App.getContextPath() + url;
     }
 
+    ,I18n: {
+        init: function(context, onDone) {
+            App.Model.I18n.init();
+
+            var lng = App.Model.I18n.getLng();
+
+            if (Acm.isNotEmpty(context.loginPage)) {
+                var resLogin = null;
+                if (Acm.isNotEmpty(lng)) {
+                    resLogin = App.Model.I18n.getResource(lng, "login");
+                }
+
+                if (Acm.isEmpty(resLogin)) {
+                    onDone(context);
+                    //patch up login page with default labels
+                } else {
+                    App.I18n._doInit(context, onDone, lng, true);
+                }
+
+            } else {
+                if (App.Model.I18n.isCurrentLng()) {
+                    App.I18n._doInit(context, onDone, lng, false);
+
+                } else {
+                    App.Service.I18n.retrieveSettings()
+                        .done(function() {
+                            var lng = App.Model.I18n.getLng();
+                            App.I18n._doInit(context, onDone, lng, false);
+                            var z = 1;
+                        })
+                        .fail(function() {
+                            var z = 2;
+                        })
+                    ;
+                }
+            }
+
+        }
+
+        ,_doInit: function(context, onDone, lng, loginPage) {
+            //
+            // help out login page by retrieving and caching a copy for future use
+            //
+            if (!loginPage) {
+                if (!App.Model.I18n.isCurrentResource(lng, "login")) {
+                    App.Service.I18n.retrieveResource(lng, "login");
+                }
+            }
+
+            var names = context.resourceNamespace;      // namespaces are divided by "," symbol from detailData
+            var namespaces = ['common'];
+            if (names) {
+                names = names.split(',');
+                for (var i = 0; i < names.length; i++) {
+                    namespaces.push($.trim(names[i]));
+                }
+            }
+
+            i18n.init({
+                useLocalStorage: false,
+                localStorageExpirationTime: 86400000, // 1 week
+                load: 'current', // Prevent loading of 'en' locale
+                fallbackLng: false,
+                lng: lng,
+                ns:{
+                    namespaces: namespaces
+                }
+                ,lowerCaseLng: true
+                ,customLoad: function(lng, ns, options, loadComplete) {
+                    var res = App.Model.I18n.getResource(lng, ns);
+                    if (loginPage) {
+                        if (Acm.isNotEmpty(res)) {
+                            loadComplete(null, res);
+                        } else {
+                            loadComplete("Resource error - " + lng + "." + ns, null);
+                        }
+
+                    } else {
+                        if (App.Model.I18n.isCurrentResource(lng, ns)) {
+                            loadComplete(null, res);
+
+                        } else {
+                            App.Service.I18n.retrieveResource(lng, ns)
+                                .done(function(data) {
+                                    var res = App.Model.I18n.getResource(lng, ns);
+                                    loadComplete(null, res);
+                                })
+                                .fail(function(data) {
+                                    loadComplete("Resource error - " + lng + "." + ns, null);
+                                })
+                            ;
+                        }
+                    }
+                }
+            }, function() {
+                $('*[data-i18n]').i18n();
+                onDone(context);
+                $(document).trigger('i18n-ready');
+            });
+        }
+    }
 //retired
 //    ,create_old : function() {
 //        App.Object.create();

@@ -16,7 +16,7 @@
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
         <span itemprop="userName">${sessionScope.acm_username}</span>
-        <span itemprop="labelSettings">${sessionScope.acm_application.getSettings().get("labelSettings")}</span>
+        <%--<span itemprop="labelSettings">${sessionScope.acm_application.getSettings().get("labelSettings")}</span>--%>
         <span itemprop="objectTypes">${acm_application.getObjectTypesAsJson()}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
