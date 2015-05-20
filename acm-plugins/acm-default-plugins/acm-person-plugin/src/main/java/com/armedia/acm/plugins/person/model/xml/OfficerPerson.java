@@ -4,9 +4,11 @@
 package com.armedia.acm.plugins.person.model.xml;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -18,12 +20,15 @@ import com.armedia.acm.plugins.person.model.Person;
  * @author riste.tutureski
  *
  */
-public class OfficerPerson extends Person {
+public class OfficerPerson extends Person implements FrevvoPerson {
 
 	private static final long serialVersionUID = 601307053343844821L;
 	
 	private String type;
 	private String leaveDated;
+	private String rank;
+	private String idNumber;
+	private List<String> personIdentificationKeys = Arrays.asList("leaveDated", "rank", "idNumber");
 	
 	public OfficerPerson()
 	{
@@ -58,6 +63,7 @@ public class OfficerPerson extends Person {
         	setContactMethods(contactMethods);
         }
 		
+		setPersonIdentification(person.getPersonIdentification());
 	}
 
 	@XmlElement(name="officerId")
@@ -132,6 +138,34 @@ public class OfficerPerson extends Person {
 	public void setLeaveDated(String leaveDated) {
 		this.leaveDated = leaveDated;
 	}
+	
+	@XmlElement(name="officerRank")
+	public String getRank() {
+		return rank;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
+	@XmlElement(name="officerIDNumber")
+	public String getIdNumber() {
+		return idNumber;
+	}
+
+	public void setIdNumber(String idNumber) {
+		this.idNumber = idNumber;
+	}
+
+	@XmlTransient
+	@Override
+	public List<String> getPersonIdentificationKeys() {
+		return personIdentificationKeys;
+	}
+
+	public void setPersonIdentificationKeys(List<String> personIdentificationKeys) {
+		this.personIdentificationKeys = personIdentificationKeys;
+	}
 
 	@Override
 	public Person returnBase()
@@ -164,6 +198,7 @@ public class OfficerPerson extends Person {
         	person.setContactMethods(contactMethods);
         }
 		
+		person.setPersonIdentification(getPersonIdentification());
 		
 		return person;
 	}

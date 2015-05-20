@@ -111,7 +111,7 @@ public class BoxOneSection {
 		this.remandedAt = remandedAt;
 	}
 
-	@XmlElement(name="boxOneRemandedReason")
+	@XmlElement(name="boxOneRemandReason")
 	public String getRemandedReason() {
 		return remandedReason;
 	}

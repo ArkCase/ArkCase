@@ -4,10 +4,12 @@
 package com.armedia.acm.plugins.person.model.xml;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.armedia.acm.objectonverter.adapter.DateFrevvoAdapter;
@@ -21,12 +23,13 @@ import com.armedia.acm.plugins.person.model.Person;
  * @author riste.tutureski
  *
  */
-public class VictimPerson extends Person {
+public class VictimPerson extends Person implements FrevvoPerson {
 
 	private static final long serialVersionUID = 601307053343844821L;
 	
 	private String type;
 	private String notifiedOutcome;
+	private List<String> personIdentificationKeys = Arrays.asList("notifiedOutcome");
 	
 	public VictimPerson()
 	{
@@ -62,6 +65,7 @@ public class VictimPerson extends Person {
         	setContactMethods(contactMethods);
         }
 		
+		setPersonIdentification(person.getPersonIdentification());
 	}
 
 	@XmlElement(name="victimId")
@@ -98,6 +102,7 @@ public class VictimPerson extends Person {
     }
 
 	@XmlElement(name="victimType")
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -148,6 +153,16 @@ public class VictimPerson extends Person {
 	public void setNotifiedOutcome(String notifiedOutcome) {
 		this.notifiedOutcome = notifiedOutcome;
 	}
+	
+	@XmlTransient
+	@Override
+	public List<String> getPersonIdentificationKeys() {
+		return personIdentificationKeys;
+	}
+
+	public void setPersonIdentificationKeys(List<String> personIdentificationKeys) {
+		this.personIdentificationKeys = personIdentificationKeys;
+	}
 
 	@Override
 	public Person returnBase()
@@ -181,6 +196,7 @@ public class VictimPerson extends Person {
         	person.setContactMethods(contactMethods);
         }
 		
+		person.setPersonIdentification(getPersonIdentification());
 		
 		return person;
 	}

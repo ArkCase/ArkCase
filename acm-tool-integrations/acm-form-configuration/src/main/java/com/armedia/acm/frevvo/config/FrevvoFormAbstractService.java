@@ -273,31 +273,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			String existingXml = "";
 			try 
 			{
-				// Takeing existing XML for the form
-				existingXml = getEcmFileService().download(id);
-				
-				// Creating Frevvo form from the existing XML
-				retval = convertFromXMLToObject(cleanXML(existingXml), c);
-			} 
-			catch (MuleException e) 
-			{
-				LOG.error("Cannot download file with id=" + id);
-			}
-		}
-		
-		return retval;
-	}
-	
-	public Object getExistingForm(Long id, Class<?> c)
-	{
-		Object retval = null;
-		
-		if (id != null)
-		{
-			String existingXml = "";
-			try 
-			{
-				// Takeing existing XML for the form
+				// Taking existing XML for the form
 				existingXml = getEcmFileService().download(id);
 				
 				// Creating Frevvo form from the existing XML

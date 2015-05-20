@@ -3,7 +3,12 @@
  */
 package com.armedia.acm.plugins.person.model.xml;
 
+
+import java.util.Arrays;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.armedia.acm.plugins.person.model.Person;
 
@@ -11,11 +16,13 @@ import com.armedia.acm.plugins.person.model.Person;
  * @author riste.tutureski
  *
  */
-public class DefendantPerson extends Person {
+public class DefendantPerson extends Person implements FrevvoPerson  {
 
 	private static final long serialVersionUID = 601307053343844821L;
 	
 	private String type;
+	private String subType;
+	private List<String> personIdentificationKeys = Arrays.asList("subType");
 	
 	public DefendantPerson()
 	{
@@ -27,7 +34,7 @@ public class DefendantPerson extends Person {
 		setId(person.getId());
 		setGivenName(person.getGivenName());
 		setFamilyName(person.getFamilyName());
-		
+		setPersonIdentification(person.getPersonIdentification());
 	}
 
 	@XmlElement(name="defendantId")
@@ -71,6 +78,25 @@ public class DefendantPerson extends Person {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	@XmlElement(name="defendantSubType")
+	public String getSubType() {
+		return subType;
+	}
+
+	public void setSubType(String subType) {
+		this.subType = subType;
+	}
+	
+	@XmlTransient
+	@Override
+	public List<String> getPersonIdentificationKeys() {
+		return personIdentificationKeys;
+	}
+
+	public void setPersonIdentificationKeys(List<String> personIdentificationKeys) {
+		this.personIdentificationKeys = personIdentificationKeys;
+	}
 
 	@Override
 	public Person returnBase()
@@ -79,7 +105,8 @@ public class DefendantPerson extends Person {
 		
 		person.setId(getId());
 		person.setGivenName(getGivenName());
-		person.setFamilyName(getFamilyName());		
+		person.setFamilyName(getFamilyName());
+		person.setPersonIdentification(getPersonIdentification());
 		
 		return person;
 	}

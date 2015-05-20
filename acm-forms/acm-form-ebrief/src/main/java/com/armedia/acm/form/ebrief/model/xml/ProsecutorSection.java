@@ -175,7 +175,7 @@ public class ProsecutorSection {
 		this.amountSought = amountSought;
 	}
 	
-	@XmlElement(name="prosecutorLicenseExpiryDate")
+	@XmlElement(name="prosecutorLicenceExpiryDate")
 	@XmlJavaTypeAdapter(value=DateFrevvoAdapter.class)
 	public Date getLicenceExpiryDate() {
 		return licenceExpiryDate;
