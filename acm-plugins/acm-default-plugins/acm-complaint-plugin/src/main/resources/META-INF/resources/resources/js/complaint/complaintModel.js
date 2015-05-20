@@ -19,7 +19,7 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
         if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
-        if (Complaint.Model.OutlookCalendar.create)           {Complaint.Model.OutlookCalendar.create();}
+        //if (Complaint.Model.OutlookCalendar.create)           {Complaint.Model.OutlookCalendar.create();}
         if (Complaint.Model.Time.create)                  {Complaint.Model.Time.create();}
         if (Complaint.Model.Cost.create)                  {Complaint.Model.Cost.create();}
     }
@@ -38,7 +38,7 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
         if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
         if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
-        if (Complaint.Model.OutlookCalendar.onInitialized)           {Complaint.Model.OutlookCalendar.onInitialized();}
+        //if (Complaint.Model.OutlookCalendar.onInitialized)           {Complaint.Model.OutlookCalendar.onInitialized();}
         if (Complaint.Model.Time.onInitialized)           {Complaint.Model.Time.onInitialized();}
         if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
@@ -160,7 +160,7 @@ Complaint.Model = Complaint.Model || {
                         ,"tabHistory"
                         ,"tabTime"
                         ,"tabCost"
-                        ,"tabOutlookCalendar"
+                        //,"tabOutlookCalendar"
                     ]}
                 ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
                 ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
