@@ -74,11 +74,10 @@ var App = App || {
                     resLogin = App.Model.I18n.getResource(lng, "login");
                 }
 
-                if (Acm.isEmpty(resLogin)) {
-                    onDone(context);
-                    //patch up login page with default labels
-                } else {
+                if (Acm.isNotEmpty(resLogin)) {
                     App.I18n._doInit(context, onDone, lng, true);
+                } else {
+                    onDone(context);
                 }
 
             } else {

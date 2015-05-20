@@ -63,7 +63,8 @@
         <p>
             <!--special char not working for i18n here -->
             <%--<small data-i18n="login:footer">ArkCase <br>&copy; 2014, 2015</small>--%>
-            <small>ArkCase <br>&copy; 2014, 2015</small>
+            <small><span data-i18n="login:footer">ArkCase</span> <br>&copy; <span data-i18n="login:copy-right">2014, 2015</span></small>
+            <%--<small>ArkCase <br>&copy; 2014, 2015</small>--%>
         </p>
     </div>
 </footer>
