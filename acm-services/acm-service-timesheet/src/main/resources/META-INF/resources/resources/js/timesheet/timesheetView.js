@@ -139,7 +139,7 @@ Timesheet.View = {
                 var editTimesheetFormUrl = Timesheet.View.MicroData.formUrls.editTimesheetFormUrl;
                 if(Timesheet.Model.Detail.validateTimesheet(Timesheet.View.getActiveTimesheet())){
                     var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
-                    editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
+                    editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getFrevvoDateFromDateTime(startDate) + "',");
                     editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
                     Acm.Dialog.openWindow(editTimesheetFormUrl, "", 1060, 700, function() {
                         Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());

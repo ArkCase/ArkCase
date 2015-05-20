@@ -17,6 +17,8 @@ Task.Service = {
         //if (Task.Service.Attachments.create)         {Task.Service.Attachments.create();}
         if (Task.Service.DocumentUnderReview.create) {Task.Service.DocumentUnderReview.create();}
         if (Task.Service.RejectComments.create)      {Task.Service.RejectComments.create();}
+        if (Task.Service.ElectronicSignature.create)      {Task.Service.ElectronicSignature.create();}
+
     }
     ,onInitialized: function() {
         if (Task.Service.Lookup.onInitialized)              {Task.Service.Lookup.onInitialized();}
@@ -29,6 +31,8 @@ Task.Service = {
         //if (Task.Service.Attachments.onInitialized)         {Task.Service.Attachments.onInitialized();}
         if (Task.Service.DocumentUnderReview.onInitialized) {Task.Service.DocumentUnderReview.onInitialized();}
         if (Task.Service.RejectComments.onInitialized)      {Task.Service.RejectComments.onInitialized();}
+        if (Task.Service.ElectronicSignature.onInitialized)      {Task.Service.ElectronicSignature.onInitialized();}
+
     }
 
     ,Lookup: {
@@ -184,6 +188,7 @@ Task.Service = {
         ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask"
         ,API_DELETE_TASK           : "/api/latest/plugin/task/deleteTask/"
         ,API_RETRIEVE_USERS        : "/api/latest/plugin/search/usersSearch"
+        ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
 
         ,saveDetail: function(nodeType, taskId, details) {
             var task = Task.Model.findTask(nodeType, taskId);
@@ -342,6 +347,27 @@ Task.Service = {
                     }
                 }
                 ,url
+            )
+        }
+
+        ,signTask : function(taskId,$formSignature) {
+            var url = App.getContextPath() + this.API_SIGN_TASK + Task.Model.DOC_TYPE_TASK + "/" + taskId;
+            var form = $formSignature
+            Acm.Service.asyncPostForm(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelSignedTask(response);
+                    } else {
+                        if(Task.Model.ElectronicSignature.validateElectronicSignature(response)){
+                            var taskId = response.objectId;
+                            var electronicSignatures = Task.Model.ElectronicSignature.cacheElectronicSignatures.get(taskId);
+                            electronicSignatures.push(response);
+                            Task.Controller.modelSignedTask(response);
+                        }
+                    }
+                }
+                ,url
+                ,form
             )
         }
     }
@@ -638,6 +664,32 @@ Task.Service = {
             )
         }
     }
+    ,ElectronicSignature: {
+        create: function(){
+        }
+        ,onInitialized: function(){
+        }
 
+        ,API_RETRIEVE_ELECTRONIC_SIGNATURE : "/api/latest/plugin/signature/find/"
+
+        ,retrieveSignatures : function(taskId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_ELECTRONIC_SIGNATURE;
+            url+= Task.Model.DOC_TYPE_TASK + "/" + taskId;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedElectronicSignatures(response);
+
+                    } else {
+                        if (Task.Model.ElectronicSignature.validateElectronicSignatures(response)) {
+                            Task.Model.ElectronicSignature.cacheElectronicSignatures.put(taskId, response);
+                            Task.Controller.modelRetrievedElectronicSignatures(response);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 };
 

@@ -302,30 +302,11 @@ CaseFile.View = CaseFile.View || {
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var xmlId = '';
-            	var pdfId = '';
-            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
-            		for (var i = 0; i < c.childObjects.length; i++) {
-            			var child = c.childObjects[i];
-            			
-            			if (child.targetType != null && child.targetType == 'FILE' && 
-            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
-            			    child.targetName.substr(-4) == '.xml') 
-            			{
-            				xmlId = child.targetId;
-            			}
-            			
-            			if (child.targetType != null && child.targetType == 'FILE' && 
-            				child.targetName != null && child.targetName.indexOf('Case_File_') == 0&&
-            			    child.targetName.substr(-4) == '.pdf') 
-            			{
-            				pdfId = child.targetId;
-            			}
-            		}
-            	}
-            	
+            	var containerId = c.container.id;
+            	var folderId = c.container.folder.id;
+
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
-            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',xmlId:'" + xmlId + "',pdfId:'" + pdfId + "',");
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
             	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
                     ,function() {
                         CaseFile.Controller.viewChangedCaseFile(caseFileId);
@@ -394,21 +375,11 @@ CaseFile.View = CaseFile.View || {
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var xmlId = '';
-            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
-            		for (var i = 0; i < c.childObjects.length; i++) {
-            			var child = c.childObjects[i];
-            			
-            			if (child.targetType != null && child.targetType == 'FILE' && 
-            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
-            			    child.targetName.substr(-4) == '.xml') 
-            			{
-            				xmlId = child.targetId;
-            			}
-            		}
-            	}
+            	var containerId = c.container.id;
+            	var folderId = c.container.folder.id;
+            	
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
-            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
             	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
                     ,function() {
             			// TODO: When James will find solution, we should change this
