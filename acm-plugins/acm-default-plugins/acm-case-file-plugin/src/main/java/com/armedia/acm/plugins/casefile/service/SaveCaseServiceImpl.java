@@ -202,8 +202,13 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.userDao = userDao;
     }
 
-    public void setParticipantsTypesForOutlookFolder(List<String> participantsTypesForOutlookFolder) {
-        this.participantsTypesForOutlookFolder = participantsTypesForOutlookFolder;
+    public void setParticipantsTypesForOutlookFolder(String participantsTypesForOutlookFolder) {
+        this.participantsTypesForOutlookFolder = new ArrayList<>();
+        if (participantsTypesForOutlookFolder != null && participantsTypesForOutlookFolder.length() > 0){
+            for (String s : participantsTypesForOutlookFolder.replaceAll(",[\\s]*", ",").split(",")) {
+                this.participantsTypesForOutlookFolder.add(s);
+            }
+        }
     }
 
     public void setAutoCreateFolderForCaseFile(boolean autoCreateFolderForCaseFile) {
