@@ -9,12 +9,14 @@ App.View = {
         if (App.View.MessageBoard.create)          {App.View.MessageBoard.create();}
         if (App.View.Dirty.create)                 {App.View.Dirty.create();}
         if (App.View.Login.create)                 {App.View.Login.create();}
+        if (App.View.I18n.create)                  {App.View.I18n.create();}
     }
     ,onInitialized: function() {
         if (App.View.MicroData.onInitialized)      {App.View.MicroData.onInitialized();}
         if (App.View.MessageBoard.onInitialized)   {App.View.MessageBoard.onInitialized();}
         if (App.View.Dirty.onInitialized)          {App.View.Dirty.onInitialized();}
         if (App.View.Login.onInitialized)          {App.View.Login.onInitialized();}
+        if (App.View.I18n.onInitialized)           {App.View.I18n.onInitialized();}
     }
 
 
@@ -24,7 +26,7 @@ App.View = {
 
     ,MicroData: {
         create : function() {
-            this.contextPath = Acm.Object.MicroData.get("contextPath");
+            //this.contextPath = Acm.Object.MicroData.get("contextPath");
             this.userName    = Acm.Object.MicroData.get("userName");
             this.objectTypes = Acm.Object.MicroData.getJson("objectTypes");
         }
@@ -244,6 +246,24 @@ App.View = {
 
     }
 
+    ,I18n: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+            var error = App.View.I18n.getError();
+            if (error) {
+                App.View.MessageBoard.show(error);
+            }
+        }
+
+        ,_error: null
+        ,getError: function() {
+            return this._error;
+        }
+        ,setError: function(error) {
+            this._error = error;
+        }
+    }
 
 //retired
 //    ,_contextPath: ""

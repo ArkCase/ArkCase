@@ -7,44 +7,9 @@
  */
 var Application = Application || {
     run : function(context) {
-        if (Acm.isNotEmpty(context.loginPage)) {
-            this.initModules(context);
-        } else {
-            this.initI18n(context, this.initModules);
-        }
+        App.I18n.init(context, this.initModules)
     }
 
-    ,initI18n: function(context, onDone) {
-        var lng= context.labelSettings.defaultLang;
-        var names = context.resourceNamespace;      // namespaces are divided by "," symbol from detailData
-        var namespaces = ['common'];
-        if (names) {
-            names = names.split(',');
-            for (var i = 0; i < names.length; i++) {
-                namespaces.push($.trim(names[i]));
-            }
-        }
-
-        i18n.init({
-            useLocalStorage: false,
-            localStorageExpirationTime: 86400000, // 1 week
-            load: 'current', // Prevent loading of 'en' locale
-            fallbackLng: false,
-            lng: lng,
-            ns:{
-                namespaces: namespaces
-            },
-            lowerCaseLng: true,
-            resGetPath: context.path + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-        }, function() {
-            $('*[data-i18n]').i18n();
-            onDone(context);
-        });
-
-        // Send "i18n ready" global event
-        $(document).trigger('i18n-ready');
-
-    }
 
     ,initModules : function(context) {
 //        $.getJSON(context.path + '/api/latest/service/config/app')
@@ -172,8 +137,11 @@ var Application = Application || {
     ,LOCAL_DATA_ERROR_COUNT             : "AcmErrorCount"
     ,LOCAL_DATA_LABEL_SETTINGS          : "AcmLableSettings"
 
+    ,LOCAL_DATA_I18N                    : "AcmI18n"
+    ,SESSION_DATA_I18N_FLAGS            : "AcmI18nFlags"
 
-    ,initSessionData: function() {
+
+    ,initStorageData: function() {
         sessionStorage.setItem(this.SESSION_DATA_PROFILE, null);
 
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
@@ -188,6 +156,8 @@ var Application = Application || {
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_GROUPS, null);
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_USERS, null);
 
+        sessionStorage.setItem(this.SESSION_DATA_I18N_FLAGS, null);
+
         sessionStorage.setItem("AcmQuickSearchTerm", null);
         sessionStorage.setItem("AcmAsnList", null);
         sessionStorage.setItem("AcmAsnData", null);
@@ -198,49 +168,47 @@ var Application = Application || {
         sessionStorage.setItem("AcmTaskAssignees", null);
         sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
-        localStorage.setItem(this.LOCAL_DATA_LOGIN_STATUS, null);
-        localStorage.setItem(this.LOCAL_DATA_LAST_IDLE, new Date().getTime());
-        localStorage.setItem(this.LOCAL_DATA_ERROR_COUNT, null);
-
+        var contextPath = App.getContextPath();
+        localStorage.setItem(this.LOCAL_DATA_LOGIN_STATUS + contextPath, null);
+        localStorage.setItem(this.LOCAL_DATA_LAST_IDLE + contextPath, new Date().getTime());
+        localStorage.setItem(this.LOCAL_DATA_ERROR_COUNT + contextPath, null);
     }
 
-//    ,initI18n: function(contextPath, onDone) {
-//        var labelSettings = Acm.Object.MicroData.get("labelSettings");
-//
-//        // Get  settings with default language
-//        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
-//            .done(function(data){
-//                var namespaces = ['common'];
-//                var lng= data.defaultLang;
-//
-//                // Get namespaces divided by "," symbol from detailData
-//                var names = Acm.Object.MicroData.get("resourceNamespace");
-//                if (names) {
-//                    names = names.split(',');
-//                    for (var i = 0; i < names.length; i++) {
-//                        namespaces.push($.trim(names[i]));
-//                    }
-//                }
-//
-//                i18n.init({
-//                    useLocalStorage: false,
-//                    localStorageExpirationTime: 86400000, // 1 week
-//                    load: 'current', // Prevent loading of 'en' locale
-//                    fallbackLng: false,
-//                    lng: lng,
-//                    ns:{
-//                        namespaces: namespaces
-//                    },
-//                    lowerCaseLng: true,
-//                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-//                }, function() {
-//                    $('*[data-i18n]').i18n();
-//                    onDone();
-//                });
-//
-//                // Send "i18n ready" global event
-//                $(document).trigger('i18n-ready');
-//
-//            });
-//    }
+    ,initI18n_orig: function(contextPath, onDone) {
+        // Get  settings with default language
+        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
+            .done(function(data){
+                var namespaces = ['common'];
+                var lng= data.defaultLang;
+
+                // Get namespaces divided by "," symbol from detailData
+                var names = Acm.Object.MicroData.get("resourceNamespace");
+                if (names) {
+                    names = names.split(',');
+                    for (var i = 0; i < names.length; i++) {
+                        namespaces.push($.trim(names[i]));
+                    }
+                }
+
+                i18n.init({
+                    useLocalStorage: false,
+                    localStorageExpirationTime: 86400000, // 1 week
+                    load: 'current', // Prevent loading of 'en' locale
+                    fallbackLng: false,
+                    lng: lng,
+                    ns:{
+                        namespaces: namespaces
+                    },
+                    lowerCaseLng: true,
+                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
+                }, function() {
+                    $('*[data-i18n]').i18n();
+                    onDone();
+                });
+
+                // Send "i18n ready" global event
+                $(document).trigger('i18n-ready');
+
+            });
+    }
 }
