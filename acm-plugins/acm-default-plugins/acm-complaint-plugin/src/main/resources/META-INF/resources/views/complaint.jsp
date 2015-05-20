@@ -6,7 +6,7 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
+    <title data-i18n="complaint:window-title">Complaints | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="resourceNamespace">complaint,subscription,search</span>
         <span itemprop="objType">COMPLAINT</span>

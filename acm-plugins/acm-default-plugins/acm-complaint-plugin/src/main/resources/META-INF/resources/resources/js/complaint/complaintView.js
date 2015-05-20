@@ -480,13 +480,13 @@ Complaint.View = Complaint.View || {
         }
 
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
+            App.View.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
             Complaint.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Complaint.View.Detail.saveDivDetail();
             Complaint.Controller.viewChangedDetail(Complaint.View.getActiveComplaintId(), htmlDetail);
-            App.Object.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
+            App.View.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
         }
 
 
