@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.commons.io.IOUtils;
@@ -45,7 +46,7 @@ public class ROIServiceTest extends EasyMockSupport
 	@Before
     public void setUp() throws Exception
 	{
-		gson = new GsonBuilder().setDateFormat("M/dd/yyyy").create();
+		gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
 		mockUserDao = createMock(UserDao.class);
 		roiServiceTest.setUserDao(mockUserDao);
