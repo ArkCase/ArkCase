@@ -31,9 +31,11 @@ public class PeoplePostalAddress extends PostalAddress{
 		setCreator(postalAddress.getCreator());
 		setType(postalAddress.getType());
 		setStreetAddress(postalAddress.getStreetAddress());
+		setStreetAddress2(postalAddress.getStreetAddress2());
 		setCity(postalAddress.getCity());
 		setState(postalAddress.getState());
 		setZip(postalAddress.getZip());
+		setCountry(postalAddress.getCountry());
 	}
 	
 	@XmlElement(name="peopleLocationId")

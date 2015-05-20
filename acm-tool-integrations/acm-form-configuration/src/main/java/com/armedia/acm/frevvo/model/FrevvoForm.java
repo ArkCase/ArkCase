@@ -12,8 +12,8 @@ import javax.xml.bind.annotation.XmlElement;
 public class FrevvoForm {
 
 	private String mode;
-	private String xmlId;
-	private String pdfId;
+	private Long containerId;
+	private Long folderId;
 	private String docUriParameters;
 	
 	@XmlElement(name="mode")
@@ -24,23 +24,23 @@ public class FrevvoForm {
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
-	
-	@XmlElement(name="xmlId")
-	public String getXmlId() {
-		return xmlId;
+
+	@XmlElement(name="containerId")
+	public Long getContainerId() {
+		return containerId;
 	}
-	
-	public void setXmlId(String xmlId) {
-		this.xmlId = xmlId;
+
+	public void setContainerId(Long containerId) {
+		this.containerId = containerId;
 	}
-	
-	@XmlElement(name="pdfId")
-	public String getPdfId() {
-		return pdfId;
+
+	@XmlElement(name="folderId")
+	public Long getFolderId() {
+		return folderId;
 	}
-	
-	public void setPdfId(String pdfId) {
-		this.pdfId = pdfId;
+
+	public void setFolderId(Long folderId) {
+		this.folderId = folderId;
 	}
 
 	@XmlElement(name="docUriParameters")
