@@ -14,7 +14,8 @@
       "workflow-overview": "Workflow Overview",
       "history" :"History",
       "details": "Details",
-      "reject-comments": "Reject Comments"
+      "reject-comments": "Reject Comments",
+      "electronic-signatures": "Electronic Signatures"
     }
   },
 
@@ -212,6 +213,7 @@
     },
     "table":{
       "field": {
+        "id": "ID",
         "signed-by": "Signed By",
         "date": "Date"
       }
@@ -397,7 +399,7 @@
     "title": "New Task",
     "label": {
       "assign-to": "Assign To",
-      "select-assignee": "Select Assignee",
+      "choose-assignee": "Please choose assignee by clicking the button above",
       "associate-complaint-case": "Associate with Complaint or Case",
       "complaint-or-case": "Complaint or Case #",
       "subject": "Subject",
@@ -416,6 +418,7 @@
       "notes": "Notes"
     },
     "button": {
+      "choose-assignee": "Choose Assignee",
       "save": "Save"
     },
     "msg": {
