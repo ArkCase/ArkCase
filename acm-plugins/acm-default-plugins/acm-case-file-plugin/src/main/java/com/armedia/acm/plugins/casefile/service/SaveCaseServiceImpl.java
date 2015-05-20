@@ -49,11 +49,8 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private OutlookFolderService outlookFolderService;
     private UserDao userDao;
 
-    @Value("#{'${casefile.participants-types-as-outlook-permission}'.trim().replaceAll(\"\\s*(?=,)|(?<=,)\\s*\", \"\").split(',')}")
     private List<String> participantsTypesForOutlookFolder;
-    @Value("${casefile.auto_create_calendar_folder}")
     private boolean autoCreateFolderForCaseFile;
-    @Value("${casefile.delete_calendar_folder_after_case_closed}")
     private boolean autoDeleteFolderAfterCaseClosed;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -203,5 +200,17 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    public void setParticipantsTypesForOutlookFolder(List<String> participantsTypesForOutlookFolder) {
+        this.participantsTypesForOutlookFolder = participantsTypesForOutlookFolder;
+    }
+
+    public void setAutoCreateFolderForCaseFile(boolean autoCreateFolderForCaseFile) {
+        this.autoCreateFolderForCaseFile = autoCreateFolderForCaseFile;
+    }
+
+    public void setAutoDeleteFolderAfterCaseClosed(boolean autoDeleteFolderAfterCaseClosed) {
+        this.autoDeleteFolderAfterCaseClosed = autoDeleteFolderAfterCaseClosed;
     }
 }
