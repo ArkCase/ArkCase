@@ -646,13 +646,13 @@ CaseFile.View = CaseFile.View || {
 
         ,DIRTY_EDITING_DETAIL: "Editing case detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
+            App.View.Dirty.declare(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
             CaseFile.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = CaseFile.View.Detail.saveDivDetail();
             CaseFile.Controller.viewChangedDetail(CaseFile.View.getActiveCaseFileId(), htmlDetail);
-            App.Object.Dirty.clear(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
+            App.View.Dirty.clear(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
         }
         ,onClickRestrictCheckbox: function(event,ctrl){
             var restriction = ($(ctrl).prop('checked')) ? true : false;
