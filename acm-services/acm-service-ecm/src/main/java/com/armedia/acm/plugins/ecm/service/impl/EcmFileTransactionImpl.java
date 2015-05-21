@@ -90,7 +90,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
         toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
         toAdd.setFileName(originalFileName);
-        toAdd.setInternalFileName(fileName);
 
         EcmFileVersion version = new EcmFileVersion();
         version.setCmisObjectId(cmisDocument.getId());
