@@ -38,8 +38,8 @@ public class OutlookServiceImplIT
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    private String validUser = "ann.acm@armedia.com";
-    private String validPassword = "Armedia123";
+    private String validUser = "ann-acm@armedia.com";
+    private String validPassword = "AcMd3v$";
 
     private AcmOutlookUser user = new AcmOutlookUser("ann-acm", validUser, validPassword);
 
