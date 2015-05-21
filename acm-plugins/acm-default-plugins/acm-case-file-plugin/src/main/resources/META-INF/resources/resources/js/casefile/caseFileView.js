@@ -18,7 +18,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.History.create)         {CaseFile.View.History.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
-        //if (CaseFile.View.OutlookCalendar.create) {CaseFile.View.OutlookCalendar.create();}
+        if (CaseFile.View.OutlookCalendar.create) {CaseFile.View.OutlookCalendar.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
 
@@ -40,7 +40,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.onInitialized)      {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.History.onInitialized)         {CaseFile.View.History.onInitialized();}
         if (CaseFile.View.Correspondence.onInitialized)  {CaseFile.View.Correspondence.onInitialized();}
-        //if (CaseFile.View.OutlookCalendar.onInitialized) {CaseFile.View.OutlookCalendar.onInitialized();}
+        if (CaseFile.View.OutlookCalendar.onInitialized) {CaseFile.View.OutlookCalendar.onInitialized();}
         if (CaseFile.View.Time.onInitialized)            {CaseFile.View.Time.onInitialized();}
         if (CaseFile.View.Cost.onInitialized)            {CaseFile.View.Cost.onInitialized();}
     }
@@ -203,9 +203,9 @@ CaseFile.View = CaseFile.View || {
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
                             ,title: $.t("casefile:navigation.leaf-title.correspondence")
                         })
-                        /*.addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
                             ,title: "Calendar"
-                        })*/
+                        })
                         .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
                             ,title: $.t("casefile:navigation.leaf-title.time")
                         })
@@ -302,30 +302,11 @@ CaseFile.View = CaseFile.View || {
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var xmlId = '';
-            	var pdfId = '';
-            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
-            		for (var i = 0; i < c.childObjects.length; i++) {
-            			var child = c.childObjects[i];
-            			
-            			if (child.targetType != null && child.targetType == 'FILE' && 
-            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
-            			    child.targetName.substr(-4) == '.xml') 
-            			{
-            				xmlId = child.targetId;
-            			}
-            			
-            			if (child.targetType != null && child.targetType == 'FILE' && 
-            				child.targetName != null && child.targetName.indexOf('Case_File_') == 0&&
-            			    child.targetName.substr(-4) == '.pdf') 
-            			{
-            				pdfId = child.targetId;
-            			}
-            		}
-            	}
-            	
+            	var containerId = c.container.id;
+            	var folderId = c.container.folder.id;
+
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
-            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',xmlId:'" + xmlId + "',pdfId:'" + pdfId + "',");
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
             	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
                     ,function() {
                         CaseFile.Controller.viewChangedCaseFile(caseFileId);
@@ -394,21 +375,11 @@ CaseFile.View = CaseFile.View || {
         	var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var xmlId = '';
-            	if (Acm.isNotEmpty(c.childObjects) && c.childObjects.length > 0) {
-            		for (var i = 0; i < c.childObjects.length; i++) {
-            			var child = c.childObjects[i];
-            			
-            			if (child.targetType != null && child.targetType == 'FILE' && 
-            			    child.targetName != null && child.targetName.indexOf('form_case_file_') == 0 &&
-            			    child.targetName.substr(-4) == '.xml') 
-            			{
-            				xmlId = child.targetId;
-            			}
-            		}
-            	}
+            	var containerId = c.container.id;
+            	var folderId = c.container.folder.id;
+            	
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
-            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',xmlId:'" + xmlId + "',");
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
             	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
                     ,function() {
             			// TODO: When James will find solution, we should change this
@@ -675,13 +646,13 @@ CaseFile.View = CaseFile.View || {
 
         ,DIRTY_EDITING_DETAIL: "Editing case detail"
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
+            App.View.Dirty.declare(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
             CaseFile.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = CaseFile.View.Detail.saveDivDetail();
             CaseFile.Controller.viewChangedDetail(CaseFile.View.getActiveCaseFileId(), htmlDetail);
-            App.Object.Dirty.clear(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
+            App.View.Dirty.clear(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
         }
         ,onClickRestrictCheckbox: function(event,ctrl){
             var restriction = ($(ctrl).prop('checked')) ? true : false;

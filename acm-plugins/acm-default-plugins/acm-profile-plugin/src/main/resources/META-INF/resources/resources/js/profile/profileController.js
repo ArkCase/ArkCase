@@ -177,6 +177,12 @@ Profile.Controller = {
     ,modelSavedOutlookPassword: function(savedOutlookPassword){
         Acm.Dispatcher.fireEvent(this.MODEL_SAVED_OUTLOOK_PASSWORD, savedOutlookPassword);
     }
+
+    //groups
+    ,MODEL_RETRIEVED_GROUPS        : "profile-model-retrieved-groups"                           //param: groups
+    ,modelRetrievedGroups: function(groups){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_GROUPS, groups);
+    }
 };
 
 

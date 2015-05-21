@@ -5002,7 +5002,7 @@ var _initDashboard = function () {
 //        return {
 //            get : function(){
 //                var deferred = $q.defer(),
-//                    url = App.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+//                    url = App.getContextPath() + "/api/latest/plugin/task/forUser/" + App.getUserName();
 //                $http.get(url).success(function(dataTasks) {
 //                    alert("IN"),
 //                    dataTasks ? deferred.resolve(dataTasks) : deferred.reject()
@@ -5016,7 +5016,7 @@ var _initDashboard = function () {
 //])
         .controller("myTasksCtrl", ["$scope", "$filter", "$http", "ngTableParams",//  "config", //"usertasks",
             function ($scope, $filter, $http, ngTableParams) {
-                var url = App.getContextPath() + "/api/latest/plugin/task/forUser/" + App.Object.getUserName();
+                var url = App.getContextPath() + "/api/latest/plugin/task/forUser/" + App.getUserName();
 
 //        $scope.usertasks = usertasks;
 //           config.rowsT = config.rowsT ? config.rowsT :  5;
@@ -5112,7 +5112,7 @@ var _initDashboard = function () {
         }
     ]).controller("myCasesCtrl", ["$scope", "$filter", "$http", "ngTableParams",
         function ($scope, $filter, $http, ngTableParams) {
-            var url = App.getContextPath() + "/api/latest/plugin/casefile/forUser/" + App.Object.getUserName();
+            var url = App.getContextPath() + "/api/latest/plugin/casefile/forUser/" + App.getUserName();
             var nOfRows = 5;
             if ($scope.numberOfRows) {
                 nOfRows = $scope.numberOfRows;
@@ -5161,7 +5161,7 @@ var _initDashboard = function () {
             }
         ]).controller("myComplaintsCtrl", ["$scope", "$filter", "$http", "ngTableParams",
             function ($scope, $filter, $http, ngTableParams) {
-                var url = App.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.Object.getUserName();
+                var url = App.getContextPath() + "/api/latest/plugin/complaint/forUser/" + App.getUserName();
                 var nOfRows = 5;
                 if ($scope.numberOfRows) {
                     nOfRows = $scope.numberOfRows;
@@ -11623,7 +11623,7 @@ var _initDashboard = function () {
                 '<table ng-table="tableParams" class="table"><tr ng-repeat="c' +
                 '' +
                 '' +
-                'omplaint in $data"><td data-title="\''+ $.t('plugins.new-complaints.label.complaint-number') +'\'" sortable="\'complaintNumber\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintNumber}}</a></td><td data-title="\''+ $.t('plugins.new-complaints.label.title') +'\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\''+ $.t('plugins.new-complaints.label.priority') +'\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
+                'omplaint in $data"><td data-title="\''+ $.t('dashboard:plugins.new-complaints.label.complaint-number') +'\'" sortable="\'complaintNumber\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintNumber}}</a></td><td data-title="\''+ $.t('dashboard:plugins.new-complaints.label.title') +'\'" sortable="\'complaintTitle\'"><a ng-href="{{complaint.complaintUrl}}{{complaint.id}}">{{complaint.complaintTitle}}</a></td><td data-title="\''+ $.t('dashboard:plugins.new-complaints.label.priority') +'\'" sortable="\'priority\'">{{complaint.priority}}</td><td data-title="\'Created\'" sortable="\'complaintCreated\'">{{complaint.complaintCreated}}</td><td data-title="\'Status\'" sortable="\'status\'">{{complaint.status}}</td></tr></table></div></div></div>'),
 
                 //This si with filters
 //            $templateCache.put("scripts/widgets/mycomplaints/edit.html", '<form role="form"><div class="form-group"></div></form>'),
