@@ -72,6 +72,7 @@ Profile.Model = {
             } else {
                 Profile.Service.Info.retrieveProfileInfo(App.getUserName());
             }
+            Profile.Service.Info.retrieveGroups(App.getUserName());
         }
 
         //,_profileInfo: null
@@ -84,6 +85,15 @@ Profile.Model = {
 
         ,isReadOnly: function() {
             return false;
+        }
+        ,validateGroups: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.groups_id_ss)) {
+                return false;
+            }
+            return true;
         }
 
 
