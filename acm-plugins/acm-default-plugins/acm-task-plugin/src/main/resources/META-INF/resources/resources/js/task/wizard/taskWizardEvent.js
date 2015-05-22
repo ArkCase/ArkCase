@@ -25,12 +25,12 @@ TaskWizard.Event = {
     }
 
     ,onClickBtnChooseAssignee: function() {
-        SearchBase.showSearchDialog({name: "New Assignee"
-            ,title: "Add New Assignee"
-            ,prompt: "Enter to search for user.."
-            ,btnGoText: "Search Now!"
-            ,btnOkText: "Select"
-            ,btnCancelText: "Cancel"
+        SearchBase.Dialog.create({name: "New Assignee"
+            ,title: $.t("search:dialog.taskwizard.title")
+            ,prompt: $.t("search:dialog.taskwizard.prompt")
+            ,btnGoText: $.t("search:dialog.taskwizard.btnGoText")
+            ,btnOkText: $.t("search:dialog.taskwizard.btnOkText")
+            ,btnCancelText: $.t("search:dialog.taskwizard.btnCancelText")
             ,filters: [{key: "Object Type", values: ["USER"]}]
             ,onClickBtnPrimary : function(event, ctrl) {
                 SearchBase.Dialog.getSelectedRows().each(function () {
@@ -38,6 +38,6 @@ TaskWizard.Event = {
                     TaskWizard.Object.setValueEdtAssignee(Acm.goodValue(record.name) + " (" + Acm.goodValue(record.id) + ")");
                 });
             }
-        });
+        }).show();
     }
 };
