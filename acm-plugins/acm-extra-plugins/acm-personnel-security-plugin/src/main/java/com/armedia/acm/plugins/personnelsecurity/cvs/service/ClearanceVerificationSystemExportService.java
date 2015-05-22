@@ -55,6 +55,7 @@ public class ClearanceVerificationSystemExportService
         {
             // TODO: use JMS to handle this upload via Mule so we get some retry logic
             getEcmFileService().upload(
+                    PersonnelSecurityConstants.CVS_FILE_NAME,
                     PersonnelSecurityConstants.CVS_FILE_TYPE,
                     PersonnelSecurityConstants.CVS_FILE_CATEGORY,
                     recordInputStream,

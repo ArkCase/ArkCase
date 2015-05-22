@@ -29,11 +29,11 @@ document.writeln('<script type="text/javascript" src="/frevvo/arkcase/rich-texta
 
 // Import ArkCase libs
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/app.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appCallback.js"></script>');
+//document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appCallback.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appController.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appEvent.js"></script>');
+//document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appEvent.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appModel.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appObject.js"></script>');
+//document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appObject.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appService.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/app/appView.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/core/acm.js"></script>');
