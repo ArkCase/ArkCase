@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by sergey.kolomiets on 4/24/15.
@@ -29,20 +32,32 @@ public class LabelConfigurationResetResource {
     })
     @ResponseBody
     public void updateResource(
-            @RequestParam("lang") String lang,
-            @RequestParam("ns") String ns,
             @RequestBody String resource,
             HttpServletResponse response, boolean isInline) throws IOException, AcmLabelConfigurationException {
 
+        List<String> namespaces = new ArrayList<>();
+        List<String> langs = new ArrayList<>();
 
-
-        String[] namespaces = ns.split("\\,");
-        String[] langs = lang.split("\\,");
+        try {
+            JSONObject resourceObject = new JSONObject(resource);
+            JSONArray nsJsonArray = resourceObject.getJSONArray("ns");
+            for (int i = 0; i < nsJsonArray.length(); i++) {
+                namespaces.add(nsJsonArray.getString(i));
+            }
+            JSONArray langJsonArray = resourceObject.getJSONArray("lng");
+            for (int i = 0; i < langJsonArray.length(); i++) {
+                langs.add(langJsonArray.getString(i));
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error(String.format("Wrong reset parameter '%s' ", resource));
+            }
+            throw new AcmLabelConfigurationException("Reset resource error", e);
+        }
 
         // Go through the files and reset values
         for (String langIter: langs) {
             for(String nsIter : namespaces) {
-
                 try {
                     String adminResourceFileName = String.format(adminResourcesFilesLocation, langIter, nsIter);
                     // Load resources file and convert it to the JSONObject
@@ -73,7 +88,7 @@ public class LabelConfigurationResetResource {
     }
 
 
-    private void resetValues(JSONObject resObject) {
+    private void resetValues(JSONObject resObject) throws AcmLabelConfigurationException {
         Iterator keys = resObject.keys();
         while(keys.hasNext()) {
             String key = (String) keys.next();
@@ -81,23 +96,31 @@ public class LabelConfigurationResetResource {
             // We've got leaf of tree
             if (resObject.get(key) instanceof JSONObject) {
                 JSONObject item = resObject.getJSONObject(key);
-                if (item.has("value") && item.has("defaultValue") && item.has("description")) {
-                    if ((item.get("value") instanceof String)
+                boolean isResource = item.has("value") && item.has("defaultValue") && item.has("description");
+                if (isResource) {
+                    boolean isResourceValid = (item.get("value") instanceof String)
                             && (item.get("defaultValue") instanceof String)
-                            && (item.get("description") instanceof String)) {
-
+                            && (item.get("description") instanceof String);
+                    if (isResourceValid) {
                         item.put("value", item.getString("defaultValue"));
+                    } else {
+                        if (log.isErrorEnabled()) {
+                            log.error(String.format("Resource file format is broken"));
+                        }
                     }
                 } else {
                     resetValues(item);
                 }
             } else {
-                // Something is wrong... This is unreachable point
+                if (log.isErrorEnabled()) {
+                    log.error(String.format("Resource file format is broken"));
+                }
+                throw new AcmLabelConfigurationException("Resource file format is broken");
             }
         }
     }
 
-    private void generateResourceNode(JSONObject resObject) {
+    private void generateResourceNode(JSONObject resObject) throws AcmLabelConfigurationException {
         Iterator keys = resObject.keys();
         while(keys.hasNext()) {
             String key = (String) keys.next();
@@ -105,22 +128,29 @@ public class LabelConfigurationResetResource {
             // We've got leaf of tree
             if (resObject.get(key) instanceof JSONObject) {
                 JSONObject item = resObject.getJSONObject(key);
-                if (item.has("value") && item.has("defaultValue") && item.has("description")) {
-                    if ((item.get("value") instanceof String)
+                boolean isResource = item.has("value") && item.has("defaultValue") && item.has("description");
+                if (isResource) {
+                    boolean isResourceValid = (item.get("value") instanceof String)
                             && (item.get("defaultValue") instanceof String)
-                            && (item.get("description") instanceof String)) {
-
-
-
+                            && (item.get("description") instanceof String);
+                    if (isResourceValid) {
                         // Get path of value and store it into the array
                         String value = item.getString("value");
                         resObject.put(key, value);
+                    } else {
+                        if (log.isErrorEnabled()) {
+                            log.error(String.format("Resource file format is broken"));
+                        }
+                        throw new AcmLabelConfigurationException("Resource file format is broken");
                     }
                 } else {
                     generateResourceNode(item);
                 }
             } else {
-                // Something is wrong... This is unreachable point
+                if (log.isErrorEnabled()) {
+                    log.error(String.format("Resource file format is broken"));
+                }
+                throw new AcmLabelConfigurationException("Resource file format is broken");
             }
         }
     }

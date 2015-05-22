@@ -57,7 +57,7 @@ public class LabelConfigurationRetrieveAdminResource {
         }
     }
 
-    private void processNode(JSONObject resObject, JSONArray resArray, String path) {
+    private void processNode(JSONObject resObject, JSONArray resArray, String path) throws AcmLabelConfigurationException {
         Iterator keys = resObject.keys();
         while(keys.hasNext()) {
             String key = (String) keys.next();
@@ -74,12 +74,12 @@ public class LabelConfigurationRetrieveAdminResource {
             // We've got leaf of tree
             if (resObject.get(key) instanceof JSONObject) {
                 JSONObject item = resObject.getJSONObject(key);
-                if (item.has("value") && item.has("defaultValue") && item.has("description")) {
-                    if ((item.get("value") instanceof String)
+                boolean isResource = item.has("value") && item.has("defaultValue") && item.has("description");
+                if (isResource) {
+                    boolean isResourceValid = (item.get("value") instanceof String)
                             && (item.get("defaultValue") instanceof String)
-                            && (item.get("description") instanceof String)) {
-
-
+                            && (item.get("description") instanceof String);
+                    if (isResourceValid) {
                         // Get path of value and store it into the array
                         JSONObject value = new JSONObject();
 
@@ -89,12 +89,20 @@ public class LabelConfigurationRetrieveAdminResource {
                         value.put("defaultValue", item.getString("defaultValue"));
                         value.put("description", item.getString("description"));
                         resArray.put(value);
+                    } else {
+                        if (log.isErrorEnabled()) {
+                            log.error(String.format("Resource file format is broken"));
+                        }
+                        throw new AcmLabelConfigurationException("Resource file format is broken");
                     }
                 } else {
                     processNode(item, resArray, newPath);
                 }
             } else {
-                // Something is wrong... This is unreachable point
+                if (log.isErrorEnabled()) {
+                    log.error(String.format("Resource file format is broken"));
+                }
+                throw new AcmLabelConfigurationException("Resource file format is broken");
             }
         }
     }
