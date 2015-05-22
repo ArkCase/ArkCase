@@ -329,6 +329,13 @@
             <releases><enabled>false</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
+	
+	<!-- needed for Mule since codehaus went belly-up -->
+	<repository>
+	  <id>Camunda</id>
+          <name>Camunda mule deps host</name>
+	  <url>https://app.camunda.com/nexus/content/repositories/public/</url>
+	</repository>
     </repositories>
 
     <build>
