@@ -18,5 +18,14 @@
             "owner": "Assignee",
             "modified": "Modified"
         }
+    },
+    "dialog": {
+        "taskwizard": {
+            "title": "Choose New Assignee",
+            "prompt": "Enter to search for assignee",
+            "btnGoText": "Search now",
+            "btnOkText": "Select",
+            "btnCancelText": "Cancel"
+        }
     }
 }
