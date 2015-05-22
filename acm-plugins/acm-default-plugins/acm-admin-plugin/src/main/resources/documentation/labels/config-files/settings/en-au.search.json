@@ -66,5 +66,35 @@
             "description": "",
             "value": "Search Results"
         }
+    },
+    "dialog": {
+        "taskwizard": {
+            "title": {
+                "value": "Choose New Assignee",
+                "defaultValue": "Choose New Assignee",
+                "description": ""
+            },
+            "prompt": {
+                "value": "Enter to search for assignee",
+                "defaultValue": "Enter to search for assignee",
+                "description": ""
+
+            },
+            "btnGoText": {
+                "value": "Search now",
+                "defaultValue": "Search now",
+                "description": ""
+            },
+            "btnOkText": {
+                "value": "Select",
+                "defaultValue": "Select",
+                "description": ""
+            },
+            "btnCancelText": {
+                "value": "Cancel",
+                "defaultValue": "Cancel",
+                "description": ""
+            }
+        }
     }
 }
