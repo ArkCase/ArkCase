@@ -8,7 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="taskNew.page.title" text="Task | ACM | Armedia Case Management" /></title>
     <div id="wizardData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">task</span>
+        <span itemprop="resourceNamespace">task,search</span>
         <span itemprop="parentType">${parentType}</span>
         <span itemprop="reference">${reference}</span>
     </div>
@@ -24,6 +24,18 @@
     <script type="text/javascript" src="<c:url value='/resources/js/task/wizard/taskWizardService.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/task/wizard/taskWizardCallback.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBase.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseService.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/search/searchBaseController.js'/>"></script>
+
+
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
+
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
+
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_datepicker}/${js_datepicker}'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_parsley}/${js_parsley}'/>"></script>
@@ -36,6 +48,9 @@
 
     <!-- Multi-Select Field WYSIWYG -->
     <script type="text/javascript" charset="utf-8" src="<c:url value='/resources/vendors/${vd_chosen}/${js_chosen}'/>"></script>
+
+    <%@include file="/resources/include/dlgSearch.jspf" %>
+
 </jsp:attribute>
 
 <jsp:body>
@@ -52,13 +67,22 @@
 
 
                 <div class="row wrapper">
+
+                </div>
+                <div class="row wrapper">
+                    <div class="col-sm-6">
+                        <button class="btn btn-default btn-sm pull-left" data-i18n="[data-title]task:wizard.button.choose-assignee" data-toggle="tooltip" id = "chooseAssignee" data-title="Choose assignee">
+                            <i class="fa fa-user"></i>
+                            <span data-i18n="task:wizard.button.choose-assignee">Choose Assignee
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row wrapper">
                     <div class="col-sm-6">
                         <label  class="label" data-i18n="task:wizard.label.assign-to">Assign To</label>
-
-                        <%--<select data-placeholder="Choose Assignees..." id="assignee" class="form-control" multiple style="width:350px;" >--%>
-                        <select class="input-sm form-control inline v-middle" id="assignee">
-                            <option value="null" data-i18n="task:wizard.label.select-assignee">Select Assignee</option>
-                        </select>
+                        <input type="text" class="input-sm form-control" data-i18n="[placeholder]task:wizard.label.choose-assignee" placeholder="Please choose assignee by clicking the button above" id="assignee" style="background-color: white;" readonly>
                     </div>
 
                     <div class="col-sm-6">
