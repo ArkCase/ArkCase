@@ -71,6 +71,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public EcmFile upload(
+            String originalFileName,
             String fileType,
             String fileCategory,
             InputStream fileContents,
@@ -90,6 +91,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+                    originalFileName,
                     authentication,
                     fileType,
                     fileCategory,
@@ -111,6 +113,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     @Override
     public EcmFile upload(
             String fileType,
+            String originalFileName,
             MultipartFile file,
             Authentication authentication,
             String targetCmisFolderId,
@@ -128,6 +131,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+                    originalFileName,
                     authentication,
                     fileType,
                     file.getInputStream(),
