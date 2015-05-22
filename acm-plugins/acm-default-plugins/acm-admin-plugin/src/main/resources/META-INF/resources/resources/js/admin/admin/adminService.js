@@ -341,7 +341,8 @@ Admin.Service = {
         API_SETTINGS: "/api/latest/plugin/admin/labelconfiguration/settings"
         ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
         ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
-        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/resource?lang={0}&ns={1}"
+        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource?lang={0}&ns={1}"
+        ,API_RESET_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource/reset"
 
 
         ,create: function(){
@@ -369,6 +370,7 @@ Admin.Service = {
 
             return $dfd.promise();
         },
+
         updateSettings: function(settings){
             var $dfd =jQuery.Deferred();
             var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_SETTINGS;
@@ -449,6 +451,7 @@ Admin.Service = {
 
             return $dfd.promise();
         }
+
         ,updateResource: function(lang, namespace, resource){
             var $dfd =jQuery.Deferred();
             var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESOURCE.format(lang, namespace);
@@ -465,6 +468,32 @@ Admin.Service = {
                 }
                 ,url
                 ,JSON.stringify(resource, null, 4)
+            );
+            return $dfd.promise();
+        }
+
+        ,resetResource: function(langs, namespaces){
+            var $dfd =jQuery.Deferred();
+            var lng = _.isArray(langs) ? langs: [langs];
+            var ns = _.isArray(namespaces) ? namespaces: [namespaces];
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESET_RESOURCE.format(lng, ns);
+            var data = {
+                lng: lng,
+                ns: ns
+            }
+            Acm.Service.asyncPost(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url,
+                JSON.stringify(data, null, 4)
             );
             return $dfd.promise();
         }
