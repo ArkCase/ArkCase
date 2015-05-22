@@ -1,34 +1,204 @@
 {
-    "window-title": "Case Files | ACM | Ark Case Management",
-    "title": "Case",
-    "header": {
-        "buttons": {
-            "edit": "Edit",
-            "edit-case-file": "Edit Case File",
-            "change-case-status": "Change Case Status",
-            "consolidate": "Consolidate",
-            "consolidate-case": "Consolidate Case",
-            "reinvestigate": "Reinvestigate",
-            "reinvestigate-case-file": "Reinvestigate Case File",
-            "subscribe": "Subscribe",
-            "restrict": "Restrict ?"
+    "msg": {
+        "no-case-selected": "(No case is selected)",
+        "error-retrieving-casefile-data": "Error occurred for retrieving casefile data"
+    },
+    "consolidate-case-dialog": {
+        "btn-cancel": "Cancel",
+        "title": "Consolidate Case",
+        "enter-case-like-consolidate": "Enter the case you would like to consolidate with:",
+        "btn-ok": "Consolidate Case",
+        "btn-close": "Close"
+    },
+    "notes": {
+        "msg": {"add-new-record": "Add Note"},
+        "table": {
+            "field": {
+                "note": "Note",
+                "creator": "Author",
+                "created": "Created",
+                "id": "ID"
+            },
+            "title": "Notes"
+        }
+    },
+    "cost": {"table": {
+        "field": {
+            "total-cost": "Total Cost",
+            "modified-date": "Modified Date",
+            "id": "ID",
+            "form-name": "Form Name",
+            "username": "Username",
+            "status": "Status"
         },
-        "labels": {
-            "enter-case-title": "Enter Case Title",
-            "enter-incident-date": "Enter Incident Date",
-            "create-date": "Create Date",
-            "enter-priority": "Enter Priority",
-            "priority": "Priority",
-            "priority-high": "High",
-            "enter-assignee": "Enter Assignee",
-            "assigned-to": "Assigned To",
-            "enter-owning-group": "Enter Owning Group",
-            "owning-group": "Owning Group",
-            "enter-subject-type": "Enter Subject Type",
-            "case-type": "Case Type",
-            "enter-due-date": "Enter Due Date",
-            "due-date": "Due Date",
-            "state": "State"
+        "label": {"costsheet": "Costsheet"},
+        "title": "Cost Tracking"
+    }},
+    "references": {
+        "msg": {"add-new-record": "Add Reference"},
+        "table": {
+            "field": {
+                "modified": "Modified",
+                "id": "ID",
+                "title": "Title",
+                "reference-type": "Reference Type",
+                "status": "Status"
+            },
+            "title": "References"
+        }
+    },
+    "email-documents-dialog": {
+        "btn-cancel": "Cancel",
+        "label": {"email-address": "Email Address"},
+        "title": "Send Email",
+        "body": "Where would you like to email this file?",
+        "btn-ok": "Send Email",
+        "btn-close": "Close"
+    },
+    "documents": {
+        "msg": {"add-new-record": "Add Document"},
+        "form-document": {
+            "witness-interview-request": "Witness Interview Request",
+            "other": "Other",
+            "medical-release": "Medical Release",
+            "general-release": "General Release",
+            "e-delivery": "eDelivery",
+            "sf86-signature": "SF86 Signature",
+            "notice-of-investigation": "Notice of Investigation",
+            "document-type": "Document Type"
+        },
+        "title": "Documents",
+        "table": {
+            "field": {
+                "added-by": "Creator",
+                "date-added": "Created",
+                "id": "ID",
+                "title": "Title"
+            },
+            "title": "Documents"
+        }
+    },
+    "correspondence": {
+        "msg": {"add-new-record": "Add Correspondence"},
+        "form-document": {
+            "witness-interview-request": "Witness Interview Request",
+            "clearance-denied": "Clearance Denied",
+            "clearance-granted": "Clearance Granted",
+            "medical-release": "Medical Release",
+            "general-release": "General Release",
+            "notice-of-investigation": "Notice of Investigation"
+        },
+        "table": {
+            "field": {
+                "creator": "Creator",
+                "created": "Created",
+                "id": "ID",
+                "title": "Title"
+            },
+            "title": "Correspondence"
+        }
+    },
+    "history": {"table": {
+        "field": {
+            "date": "Date",
+            "event-name": "Event Name",
+            "id": "ID",
+            "user": "User"
+        },
+        "title": "History"
+    }},
+    "outlook-calendar": {
+        "msg": {"error-occurred": "Error occurred while retrieving calendar items."},
+        "label": {
+            "calendar": "Calendar",
+            "week": "Week",
+            "month": "Month",
+            "start": "Start:",
+            "refresh": "Refresh",
+            "end": "End:",
+            "day": "Day"
+        }
+    },
+    "title": "Case",
+    "change-case-status-dialog": {
+        "btn-cancel": "Cancel",
+        "title": "Change Case Status",
+        "body": "Are you sure you want to change the status for this case?",
+        "btn-ok": "Change Case Status",
+        "btn-close": "Close"
+    },
+    "people": {
+        "msg": {"add-new-record": "Add Person"},
+        "table": {
+            "security-tags": {
+                "msg": {"add-new-record": "Add Device"},
+                "addresses": {
+                    "msg": {"add-new-record": "Add Location"},
+                    "table": {
+                        "field": {
+                            "zip": "Zip",
+                            "country": "Country",
+                            "address": "Address",
+                            "city": "City",
+                            "added-by": "Added By",
+                            "date-added": "Date Added",
+                            "state": "State",
+                            "type": "Type"
+                        },
+                        "title": "Locations"
+                    }
+                },
+                "aliases": {
+                    "msg": {"add-new-record": "Add Alias"},
+                    "table": {
+                        "field": {
+                            "added-by": "Added By",
+                            "date-added": "Date Added",
+                            "type": "Type",
+                            "value": "Value"
+                        },
+                        "title": "Aliases"
+                    }
+                },
+                "organizations": {
+                    "msg": {"add-new-record": "Add Organization"},
+                    "table": {
+                        "field": {
+                            "added-by": "Added By",
+                            "date-added": "Date Added",
+                            "type": "Type",
+                            "value": "Value"
+                        },
+                        "title": "Organizations"
+                    }
+                },
+                "table": {"field": {
+                    "added-by": "Added By",
+                    "date-added": "Date Added",
+                    "type": "Type",
+                    "value": "Value"
+                }}
+            },
+            "field": {
+                "id": "ID",
+                "title": "Title",
+                "type": "Type",
+                "first-name": "First Name",
+                "last-name": "Last Name"
+            },
+            "title": "People ",
+            "contact-methods": {
+                "msg": {"add-new-record": "Add Device"},
+                "table": {
+                    "field": {
+                        "added-by": "Added By",
+                        "date-added": "Date Added",
+                        "type": "Type",
+                        "value": "Value"
+                    },
+                    "title": "Communication Devices"
+                }
+            }
         }
     },
     "navigation": {
@@ -37,338 +207,119 @@
             "btn-go": "Go!"
         },
         "leaf-title": {
-            "details": "Details",
-            "people": "People",
-            "documents": "Documents",
-            "participants": "Participants",
             "notes": "Notes",
-            "tasks": "Tasks",
+            "cost": "Cost",
             "references": "References",
-            "history": "History",
+            "documents": "Documents",
             "correspondence": "Correspondence",
+            "details": "Details",
+            "history": "History",
             "time": "Time",
-            "cost": "Cost"
+            "people": "People",
+            "tasks": "Tasks",
+            "participants": "Participants"
         }
     },
-    "context-menu": {
-        "menu-title": {
-            "menu": "Menu:",
-            "copy": "Copy",
-            "paste": "Paste",
-            "edit": "Edit",
-            "delete": "Delete",
-            "more": "More",
-            "sub1": "Sub 1",
-            "sub2": "Sub 2"
-        }
-    },
-    "change-case-status-dialog": {
-        "btn-close": "Close",
-        "btn-cancel": "Cancel",
-        "btn-ok": "Change Case Status",
-        "title": "Change Case Status",
-        "body": "Are you sure you want to change the status for this case?"
-    },
-    "consolidate-case-dialog": {
-        "btn-close": "Close",
-        "btn-cancel": "Cancel",
-        "btn-ok": "Consolidate Case",
-        "title": "Consolidate Case",
-        "enter-case-like-consolidate": "Enter the case you would like to consolidate with:"
-    },
+    "context-menu": {"menu-title": {
+        "sub2": "Sub 2",
+        "edit": "Edit",
+        "more": "More",
+        "sub1": "Sub 1",
+        "copy": "Copy",
+        "paste": "Paste",
+        "menu": "Menu:",
+        "delete": "Delete"
+    }},
     "create-new-folder-dialog": {
-        "btn-close": "Close",
         "btn-cancel": "Cancel",
-        "btn-ok": "Create Folder",
+        "label": {"folder-name": "Folder Name"},
         "title": "Create Folder",
         "body": "Enter a name for the folder you would like to create:",
-        "label": {
-            "folder-name": "Folder Name"
+        "btn-ok": "Create Folder",
+        "btn-close": "Close"
+    },
+    "header": {
+        "buttons": {
+            "reinvestigate-case-file": "Reinvestigate Case File",
+            "change-case-status": "Change Case Status",
+            "consolidate": "Consolidate",
+            "edit": "Edit",
+            "subscribe": "Subscribe",
+            "edit-case-file": "Edit Case File",
+            "consolidate-case": "Consolidate Case",
+            "restrict": "Restrict ?",
+            "reinvestigate": "Reinvestigate"
+        },
+        "labels": {
+            "enter-owning-group": "Enter Owning Group",
+            "enter-incident-date": "Enter Incident Date",
+            "case-type": "Case Type",
+            "assigned-to": "Assigned To",
+            "owning-group": "Owning Group",
+            "priority-high": "High",
+            "priority": "Priority",
+            "enter-due-date": "Enter Due Date",
+            "enter-priority": "Enter Priority",
+            "enter-assignee": "Enter Assignee",
+            "enter-case-title": "Enter Case Title",
+            "create-date": "Create Date",
+            "due-date": "Due Date",
+            "enter-subject-type": "Enter Subject Type",
+            "state": "State"
         }
     },
-    "email-documents-dialog": {
-        "btn-close": "Close",
-        "btn-cancel": "Cancel",
-        "btn-ok": "Send Email",
-        "title": "Send Email",
-        "body": "Where would you like to email this file?",
-        "label": {
-            "email-address": "Email Address"
-        }
-    },
+    "wizard": {"title": "New Case File"},
     "detail": {
-        "error-value": "(Error)",
+        "other-menu-items": "Other menu items",
         "buttons": {
             "edit": "Edit",
             "save": "Save"
         },
-        "other-menu-items": "Other menu items",
-        "details": "Details"
+        "details": "Details",
+        "error-value": "(Error)"
     },
-    "people": {
+    "time": {"table": {
+        "field": {
+            "total-hours": "Total Hours",
+            "modified-date": "Modified Date",
+            "id": "ID",
+            "form-name": "Form Name",
+            "username": "Username",
+            "status": "Status"
+        },
+        "label": {"timesheet": "Timesheet"},
+        "title": "Time Tracking"
+    }},
+    "tasks": {
+        "msg": {"add-new-record": "Add Task"},
+        "buttons": {
+            "complete-task-outcome": "Complete Task Outcome",
+            "complete": "Complete",
+            "complete-task": "Complete Task"
+        },
         "table": {
-            "title": "People ",
             "field": {
+                "created": "Created",
+                "due-date": "Due",
+                "action": "Action",
                 "id": "ID",
+                "assignee": "Assignee",
                 "title": "Title",
-                "first-name": "First Name",
-                "last-name": "Last Name",
-                "type": "Type"
+                "priority": "Priority",
+                "status": "Status"
             },
-            "contact-methods": {
-                "table": {
-                    "title": "Communication Devices",
-                    "field": {
-                        "type": "Type",
-                        "value": "Value",
-                        "date-added": "Date Added",
-                        "added-by": "Added By"
-                    }
-                },
-                "msg": {
-                    "add-new-record": "Add Device"
-                }
-            },
-            "security-tags": {
-                "table": {
-                    "field": {
-                        "type": "Type",
-                        "value": "Value",
-                        "date-added": "Date Added",
-                        "added-by": "Added By"
-                    }
-                },
-                "organizations": {
-                    "table": {
-                        "title": "Organizations",
-                        "field": {
-                            "type": "Type",
-                            "value": "Value",
-                            "date-added": "Date Added",
-                            "added-by": "Added By"
-                        }
-                    },
-                    "msg": {
-                        "add-new-record": "Add Organization"
-                    }
-                },
-                "addresses": {
-                    "table": {
-                        "title": "Locations",
-                        "field": {
-                            "type": "Type",
-                            "address": "Address",
-                            "city": "City",
-                            "state": "State",
-                            "zip": "Zip",
-                            "country": "Country",
-                            "date-added": "Date Added",
-                            "added-by": "Added By"
-                        }
-                    },
-                    "msg": {
-                        "add-new-record": "Add Location"
-                    }
-                },
-                "aliases": {
-                    "table": {
-                        "title": "Aliases",
-                        "field": {
-                            "type": "Type",
-                            "value": "Value",
-                            "date-added": "Date Added",
-                            "added-by": "Added By"
-                        }
-                    },
-                    "msg": {
-                        "add-new-record": "Add Alias"
-                    }
-                },
-                "msg": {
-                    "add-new-record": "Add Device"
-                }
-            }
-        },
-        "msg": {
-            "add-new-record": "Add Person"
-        }
-    },
-    "documents": {
-        "title": "Documents",
-        "table": {
-            "title": "Documents",
-            "field": {
-                "id": "ID",
-                "title": "Title",
-                "date-added": "Created",
-                "added-by": "Creator"
-            }
-        },
-        "form-document": {
-            "document-type": "Document Type",
-            "medical-release": "Medical Release",
-            "general-release": "General Release",
-            "e-delivery": "eDelivery",
-            "sf86-signature": "SF86 Signature",
-            "notice-of-investigation": "Notice of Investigation",
-            "witness-interview-request": "Witness Interview Request",
-            "other": "Other"
-        },
-        "msg": {
-            "add-new-record": "Add Document"
+            "title": "Tasks"
         }
     },
     "participants": {
+        "msg": {"add-new-record": "Add Participant"},
         "table": {
-            "title": "Participants",
             "field": {
+                "name": "Name",
                 "id": "ID",
-                "type": "Type",
-                "name": "Name"
-            }
-        },
-        "msg": {
-            "add-new-record": "Add Participant"
-        }
-    },
-    "notes": {
-        "table": {
-            "title": "Notes",
-            "field": {
-                "id": "ID",
-                "note": "Note",
-                "created": "Created",
-                "creator": "Author"
-            }
-        },
-        "msg": {
-            "add-new-record": "Add Note"
-        }
-    },
-    "tasks": {
-        "buttons": {
-            "complete": "Complete",
-            "complete-task": "Complete Task",
-            "complete-task-outcome": "Complete Task Outcome"
-        },
-        "table": {
-            "title": "Tasks",
-            "field": {
-                "id": "ID",
-                "title": "Title",
-                "assignee": "Assignee",
-                "created": "Created",
-                "priority": "Priority",
-                "due-date": "Due",
-                "status": "Status",
-                "action": "Action"
-            }
-        },
-        "msg": {
-            "add-new-record": "Add Task"
-        }
-    },
-    "references": {
-        "table": {
-            "title": "References",
-            "field": {
-                "id": "ID",
-                "title": "Title",
-                "modified": "Modified",
-                "reference-type": "Reference Type",
-                "status": "Status"
-            }
-        },
-        "msg": {
-            "add-new-record": "Add Reference"
-        }
-    },
-    "history": {
-        "table": {
-            "title": "History",
-            "field": {
-                "id": "ID",
-                "event-name": "Event Name",
-                "date": "Date",
-                "user": "User"
-            }
-        }
-    },
-    "correspondence": {
-        "form-document": {
-            "medical-release": "Medical Release",
-            "general-release": "General Release",
-            "clearance-granted": "Clearance Granted",
-            "clearance-denied": "Clearance Denied",
-            "notice-of-investigation": "Notice of Investigation",
-            "witness-interview-request": "Witness Interview Request"
-        },
-        "table": {
-            "title": "Correspondence",
-            "field": {
-                "id": "ID",
-                "title": "Title",
-                "created": "Created",
-                "creator": "Creator"
-            }
-        },
-        "msg": {
-            "add-new-record": "Add Correspondence"
-        }
-    },
-    "time": {
-        "table": {
-            "title": "Time Tracking",
-            "field": {
-                "id": "ID",
-                "form-name": "Form Name",
-                "username": "Username",
-                "total-hours": "Total Hours",
-                "modified-date": "Modified Date",
-                "status": "Status"
+                "type": "Type"
             },
-            "label": {
-                "timesheet": "Timesheet"
-            }
+            "title": "Participants"
         }
-    },
-    "cost": {
-        "table": {
-            "title": "Cost Tracking",
-            "field": {
-                "id": "ID",
-                "form-name": "Form Name",
-                "username": "Username",
-                "total-cost": "Total Cost",
-                "modified-date": "Modified Date",
-                "status": "Status"
-            },
-            "label": {
-                "costsheet": "Costsheet"
-            }
-        }
-    },
-    "outlook-calendar": {
-        "label": {
-            "month": "Month",
-            "week": "Week",
-            "day": "Day",
-            "calendar": "Calendar",
-            "start": "Start:",
-            "end": "End:",
-            "refresh": "Refresh"
-        },
-        "msg": {
-            "error-occurred": "Error occurred while retrieving calendar items."
-        }
-    },
-    "msg": {
-        "no-case-selected": "(No case is selected)",
-        "error-retrieving-casefile-data": "Error occurred for retrieving casefile data"
-    },
-
-    "wizard": {
-        "title": "New Case File"
     }
-
 }
