@@ -109,27 +109,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public AcmFolder renameFolder( Long folderId, String newFolderName ) throws AcmUserActionFailedException {
 
         AcmFolder folder = getFolderDao().find(folderId);
-
         AcmFolder renamedFolder;
-
-        Map<String,Object> properties = new HashMap<>();
-        properties.put(AcmFolderConstants.ACM_FOLDER_ID,folder.getCmisFolderId());
-        properties.put(AcmFolderConstants.NEW_FOLDER_NAME,newFolderName);
-
         try{
-
-            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_RENAME_FOLDER, folder, properties);
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
-
             folder.setName(newFolderName);
-
             renamedFolder = getFolderDao().save(folder);
-
             if ( log.isDebugEnabled() ) {
-               log.debug("Folder name is changed to "+ cmisObject.getName());
+               log.debug("Folder name is changed to "+ newFolderName);
             }
             return renamedFolder;
-        }  catch ( MuleException e ) {
+        }  catch ( Exception e ) {
             if ( log.isErrorEnabled() ){
                 log.error("Folder "+folder.getName()+" was not renamed successfully" + e.getMessage(),e);
             }
