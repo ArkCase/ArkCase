@@ -353,7 +353,7 @@
   },
 
   "reject-dialog": {
-    "title": "Rejet Task",
+    "title": "Reject Task",
     "label": {
       "sure-to-reject": "Are you sure you want to reject this task?",
       "task-will-return-to-owner": "This task will be returned to the owner:",
