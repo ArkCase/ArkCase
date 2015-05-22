@@ -89,7 +89,9 @@ var Application = Application || {
         if ("undefined" != typeof AcmDocument) {
             acmModules.push(AcmDocument);
         }
-
+        if ("undefined" != typeof CaseFileSplit) {
+            acmModules.push(CaseFileSplit);
+        }
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
