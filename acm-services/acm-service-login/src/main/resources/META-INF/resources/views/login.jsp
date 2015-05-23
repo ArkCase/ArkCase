@@ -42,10 +42,10 @@
                         <c:if test="${not empty param.login_error}">
                             <c:set var="username" value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"/>
                         </c:if>
-                        <input type="text" name="j_username" value="${username}" placeholder="Username" class="form-control no-border"/>
+                        <input type="text" name="j_username" value="${username}" data-i18n="[placeholder]login:placeholder-username" placeholder="Username" class="form-control no-border"/>
                     </div>
                     <div class="list-group-item">
-                        <input type="password" name="j_password" placeholder="Password" class="form-control no-border"/>
+                        <input type="password" name="j_password" data-i18n="[placeholder]login:placeholder-password" placeholder="Password" class="form-control no-border"/>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary btn-block" data-i18n="login:login-button">Log In</button>
@@ -61,8 +61,6 @@
 <footer id="footer">
     <div class="text-center padder">
         <p>
-            <!--special char not working for i18n here -->
-            <%--<small data-i18n="login:footer">ArkCase <br>&copy; 2014, 2015</small>--%>
             <small><span data-i18n="login:footer">ArkCase</span> <br>&copy; <span data-i18n="login:copy-right">2014, 2015</span></small>
             <%--<small>ArkCase <br>&copy; 2014, 2015</small>--%>
         </p>

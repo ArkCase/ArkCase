@@ -7,18 +7,8 @@
  */
 var Application = Application || {
     run : function(context) {
-        App.I18n.init(context, this.initModules)
-    }
 
-
-    ,initModules : function(context) {
-//        $.getJSON(context.path + '/api/latest/service/config/app')
-//            .done(function(data){
-//                var z = 1;
-//            });
-
-
-        var acmModules = [];
+        var acmModules = this.acmModules = [];
 
         if ("undefined" != typeof Acm) {
             acmModules.push(Acm);
@@ -90,6 +80,51 @@ var Application = Application || {
             acmModules.push(AcmDocument);
         }
 
+
+        Application.prepareModules();
+
+
+        if (Acm.isEmpty(context.loginPage)) {
+            App.Model.Login.setLoginStatus(true);
+            Application.configModules();
+        }
+
+        var promiseConfig = App.checkConfig(context);
+        var promiseI18n = App.initI18n(context);
+
+        $.when(promiseConfig, promiseI18n).done(function() {
+            Application.createModules(context);
+            Application.initModules(context);
+        });
+    }
+
+
+    ,prepareModules : function() {
+        var acmModules = Application.acmModules;
+        for (var i = 0; i < acmModules.length; i++) {
+            var module = acmModules[i];
+            if ("undefined" != typeof module) {
+                if (module.prepare) {
+                    module.prepare();
+                }
+            }
+        }
+    }
+
+    ,configModules : function() {
+        var acmModules = Application.acmModules;
+        for (var i = 0; i < acmModules.length; i++) {
+            var module = acmModules[i];
+            if ("undefined" != typeof module) {
+                if (module.config) {
+                    module.config();
+                }
+            }
+        }
+    }
+
+    ,createModules : function(context) {
+        var acmModules = Application.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
@@ -98,6 +133,10 @@ var Application = Application || {
                 }
             }
         }
+    }
+
+    ,initModules : function(context) {
+        var acmModules = Application.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
@@ -106,14 +145,9 @@ var Application = Application || {
                 }
             }
         }
-
-
-        if (Acm.isEmpty(context.loginPage)) {
-            App.Model.Login.setLoginStatus(true);
-        }
     }
 
-    ,SESSION_DATA_PROFILE               : "AcmProfile"
+
     ,SESSION_DATA_COMPLAINT_ASSIGNEES   : "AcmComplaintApprovers"
     ,SESSION_DATA_COMPLAINT_TYPES       : "AcmComplaintTypes"
     ,SESSION_DATA_COMPLAINT_PRIORITIES  : "AcmComplaintPriorities"
@@ -124,25 +158,14 @@ var Application = Application || {
     ,SESSION_DATA_CASE_FILE_PRIORITIES  : "AcmCasePriorities"
     ,SESSION_DATA_CASE_FILE_GROUPS		: "AcmCaseGroups"
     ,SESSION_DATA_CASE_FILE_USERS		: "AcmCaseUsers"
-    ,SESSION_DATA_QUICK_SEARCH_TERM     : "AcmQuickSearchTerm"
-    ,SESSION_DATA_ASN_LIST              : "AcmAsnList"
-    ,SESSION_DATA_ASN_DATA              : "AcmAsnData"
     ,SESSION_DATA_COMPLAINT_TREEINFO    : "AcmComplaintTreeInfo"
     ,SESSION_DATA_ADMIN_TREEINFO        : "AcmAdminTreeInfo"
     ,SESSION_DATA_TASK_ASSIGNEES        : "AcmTaskAssignees"
     ,SESSION_DATA_TASK_PRIORITIES       : "AcmTaskPriorities"
 
-    ,LOCAL_DATA_LOGIN_STATUS            : "AcmLoginStatus"
-    ,LOCAL_DATA_LAST_IDLE               : "AcmLastIdle"
-    ,LOCAL_DATA_ERROR_COUNT             : "AcmErrorCount"
-    ,LOCAL_DATA_LABEL_SETTINGS          : "AcmLableSettings"
 
-    ,LOCAL_DATA_I18N                    : "AcmI18n"
-    ,SESSION_DATA_I18N_FLAGS            : "AcmI18nFlags"
-
-
-    ,initStorageData: function() {
-        sessionStorage.setItem(this.SESSION_DATA_PROFILE, null);
+    ,resetStorageData: function() {
+        App.Model.Storage.reset();
 
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_ASSIGNEES, null);
         sessionStorage.setItem(this.SESSION_DATA_COMPLAINT_TYPES, null);
@@ -156,59 +179,44 @@ var Application = Application || {
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_GROUPS, null);
         sessionStorage.setItem(this.SESSION_DATA_CASE_FILE_USERS, null);
 
-        sessionStorage.setItem(this.SESSION_DATA_I18N_FLAGS, null);
-
-        sessionStorage.setItem("AcmQuickSearchTerm", null);
-        sessionStorage.setItem("AcmAsnList", null);
-        sessionStorage.setItem("AcmAsnData", null);
-        sessionStorage.setItem("AcmCaseFileTreeInfo", null);
-        sessionStorage.setItem("AcmComplaintTreeInfo", null);
-        sessionStorage.setItem("AcmAdminTreeInfo", null);
+//        sessionStorage.setItem("AcmCaseFileTreeInfo", null);
+//        sessionStorage.setItem("AcmComplaintTreeInfo", null);
+//        sessionStorage.setItem("AcmAdminTreeInfo", null);
 
         sessionStorage.setItem("AcmTaskAssignees", null);
         sessionStorage.setItem(this.SESSION_DATA_TASK_PRIORITIES, null);
 
-        var contextPath = App.getContextPath();
-        localStorage.setItem(this.LOCAL_DATA_LOGIN_STATUS + contextPath, null);
-        localStorage.setItem(this.LOCAL_DATA_LAST_IDLE + contextPath, new Date().getTime());
-        localStorage.setItem(this.LOCAL_DATA_ERROR_COUNT + contextPath, null);
     }
 
-    ,initI18n_orig: function(contextPath, onDone) {
-        // Get  settings with default language
-        $.getJSON(contextPath + '/api/latest/plugin/admin/labelconfiguration/settings')
-            .done(function(data){
-                var namespaces = ['common'];
-                var lng= data.defaultLang;
+//    ,CONFIG_NAME_APP : "app"
+//    ,CONFIG_NAME_THIS_APP : "thisApp"
+//    ,CONFIG_NAME_ADMIN : "admin"
+//    ,CONFIG_NAME_ALFARESCO_RMA : "alfrescoRma"
+//    ,CONFIG_NAME_APPLICATION_ROLE_TO_USER_GROUP : "applicationRoleToUserGroup"
+//    ,CONFIG_NAME_AUDIT : "audit"
+//    ,CONFIG_NAME_CASE_FILE : "caseFile"
+//    ,CONFIG_NAME_COMPLAINT : "complaint"
+//    ,CONFIG_NAME_CMIS : "cmis"
+//    ,CONFIG_NAME_CORRESPONDENCE : "correspondence"
+//    ,CONFIG_NAME_COST : "cost"
+//    ,CONFIG_NAME_DACSERVICE : "dacService"
+//    ,CONFIG_NAME_DASHBOARD : "dashboard"
+//    ,CONFIG_NAME_DATASOURCE : "datasource"
+//    ,CONFIG_NAME_ECM_FILE_SERVICE : "ecmFileService"
+//    ,CONFIG_NAME_EVENT_TYPE : "eventType"
+//    ,CONFIG_NAME_ACM_FORMS : "acm-forms"
+//    ,CONFIG_NAME_MS_OUTLOOK_INTEGRATION : "msOutlookIntegration"
+//    ,CONFIG_NAME_NOTIFICATION : "notification"
+//    ,CONFIG_NAME_PARTICIPANT : "participant"
+//    ,CONFIG_NAME_PROFILE : "profile"
+//    ,CONFIG_NAME_ACM_REPORTS : "acm-reports"
+//    ,CONFIG_NAME_REPORT_TO_GROUPS_MAP : "reportToGroupsMap"
+//    ,CONFIG_NAME_ACM_ROLES : "acm-roles"
+//    ,CONFIG_NAME_SEARCH : "search"
+//    ,CONFIG_NAME_SOLR : "solr"
+//    ,CONFIG_NAME_SUBSCRIPTION : "subscription"
+//    ,CONFIG_NAME_TAG : "tag"
+//    ,CONFIG_NAME_TASK : "task"
+//    ,CONFIG_NAME_TIME : "time"
 
-                // Get namespaces divided by "," symbol from detailData
-                var names = Acm.Object.MicroData.get("resourceNamespace");
-                if (names) {
-                    names = names.split(',');
-                    for (var i = 0; i < names.length; i++) {
-                        namespaces.push($.trim(names[i]));
-                    }
-                }
-
-                i18n.init({
-                    useLocalStorage: false,
-                    localStorageExpirationTime: 86400000, // 1 week
-                    load: 'current', // Prevent loading of 'en' locale
-                    fallbackLng: false,
-                    lng: lng,
-                    ns:{
-                        namespaces: namespaces
-                    },
-                    lowerCaseLng: true,
-                    resGetPath: contextPath + '/api/latest/plugin/admin/labelconfiguration/resource?lang=__lng__&ns=__ns__'
-                }, function() {
-                    $('*[data-i18n]').i18n();
-                    onDone();
-                });
-
-                // Send "i18n ready" global event
-                $(document).trigger('i18n-ready');
-
-            });
-    }
 }

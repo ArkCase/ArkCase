@@ -322,7 +322,10 @@ AcmEx.Object = {
         ,setDate: function($s, txt) {
             if (txt) {
                 // Apply internal format  'MM/DD/YYYY' to date
-                txt = moment(txt, $.t("common:date.short")).format('MM/DD/YYYY')
+                txt = moment(txt, $.t("common:date.short")).format('MM/DD/YYYY');
+                //jwu:
+                //     no need to i18n "short", it is an internal string
+                //     need to read format from config, but prefer to pass the format as argument, not to mingle with $.t or config functions here
                 $s.editable("setValue", txt, true);  //true = use internal format
             } else {
                 Acm.Object.setText($s, "Unknown");
