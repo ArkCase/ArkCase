@@ -99,7 +99,7 @@
                                                     <%--<small> Agent </small>--%>
 
 
-                                                <h4 id="email"></h4>
+                                                <h4 id="email" class='acm-word-wrap'></h4>
                                                 <small> E-mail Address </small>
                                             </div>
                                         </div>
