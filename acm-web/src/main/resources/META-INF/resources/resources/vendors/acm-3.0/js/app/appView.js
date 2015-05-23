@@ -250,18 +250,10 @@ App.View = {
         create : function() {
         }
         ,onInitialized: function() {
-            var error = App.View.I18n.getError();
+            var error = App.Model.I18n.getLastError();
             if (error) {
                 App.View.MessageBoard.show(error);
             }
-        }
-
-        ,_error: null
-        ,getError: function() {
-            return this._error;
-        }
-        ,setError: function(error) {
-            this._error = error;
         }
     }
 

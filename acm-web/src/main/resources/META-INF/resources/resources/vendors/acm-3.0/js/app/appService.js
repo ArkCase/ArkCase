@@ -7,6 +7,8 @@
  */
 App.Service = {
     create : function() {
+        if (App.Service.I18n.create)             {App.Service.I18n.create();}
+        if (App.Service.Config.create)           {App.Service.Config.create();}
     }
 
     ,I18n: {
@@ -46,6 +48,33 @@ App.Service = {
                             var res = response;
                             App.Model.I18n.setResource(lng, ns, res);
                             App.Model.I18n.setCurrentResource(lng, ns, true);
+                            return true;
+                        }
+                    }
+                } //end callback
+            })
+        }
+
+    }
+
+    ,Config: {
+        create: function() {
+        }
+
+        ,API_GET_CONFIG:  "/api/latest/service/config/" //?name=' + name;
+
+        ,retrieveConfig: function(name) {
+            return Acm.Service.call({type: "GET"
+                ,url: App.getContextPath() + this.API_GET_CONFIG + name
+                ,callback: function(response) {
+                    if (response.hasError) {
+                        ;
+
+                    } else {
+                        if (App.Model.Config.validateConfig(response)) {
+                            var cfg = response;
+                            App.Model.Config.setConfig(name, cfg);
+                            App.Model.Config.setCurrent(name, true);
                             return true;
                         }
                     }
