@@ -61,7 +61,7 @@ App.Service = {
         create: function() {
         }
 
-        ,API_GET_CONFIG:  "/api/latest/service/config/" //?name=' + name;
+        ,API_GET_CONFIG:  "/api/latest/service/config/" //{name}
 
         ,retrieveConfig: function(name) {
             return Acm.Service.call({type: "GET"
