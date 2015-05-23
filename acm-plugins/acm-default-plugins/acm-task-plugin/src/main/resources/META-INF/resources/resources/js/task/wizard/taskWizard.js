@@ -14,16 +14,7 @@ var TaskWizard = TaskWizard || {
 
         Acm.deferred(TaskWizard.Event.onPostInit);
     }
-    //get assignees
-    ,getAssignees: function() {
-        var data = sessionStorage.getItem("AcmTaskAssignees");
-        var item = ("null" === data)? null : JSON.parse(data);
-        return item;
-    }
-    ,setAssignees: function(data) {
-        var item = (Acm.isEmpty(data))? null : JSON.stringify(data);
-        sessionStorage.setItem("AcmTaskAssignees", item);
-    }
+
     ,Object: {}
     ,Event:{}
     ,Page: {}
