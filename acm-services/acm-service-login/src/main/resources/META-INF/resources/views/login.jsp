@@ -14,7 +14,7 @@
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>
 
     <%--<title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>--%>
-    <title data-i18n="login:window-title">ACM | ArkCase</title>
+    <title data-i18n="login:page-title">ACM | ArkCase</title>
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
         <span itemprop="resourceNamespace">login</span>

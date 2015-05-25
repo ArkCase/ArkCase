@@ -81,7 +81,7 @@ var Application = Application || {
         }
 
 
-        Application.prepareModules();
+        Application.prepareModules(context);
 
 
         if (Acm.isEmpty(context.loginPage)) {
@@ -99,25 +99,25 @@ var Application = Application || {
     }
 
 
-    ,prepareModules : function() {
+    ,prepareModules : function(context) {
         var acmModules = Application.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
                 if (module.prepare) {
-                    module.prepare();
+                    module.prepare(context);
                 }
             }
         }
     }
 
-    ,configModules : function() {
+    ,configModules : function(context) {
         var acmModules = Application.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
                 if (module.config) {
-                    module.config();
+                    module.config(context);
                 }
             }
         }
@@ -129,7 +129,7 @@ var Application = Application || {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
                 if (module.create) {
-                    module.create();
+                    module.create(context);
                 }
             }
         }
@@ -141,7 +141,10 @@ var Application = Application || {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
                 if (module.onInitialized) {
-                    Acm.deferred(module.onInitialized);
+                    //Acm.deferred(module.onInitialized);
+                    Acm.deferredTimer(module.onInitialized).done(function(fn) {
+                        fn(context);
+                    });
                 }
             }
         }

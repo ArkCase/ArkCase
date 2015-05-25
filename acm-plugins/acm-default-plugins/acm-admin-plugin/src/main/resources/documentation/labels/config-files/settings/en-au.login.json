@@ -1,0 +1,46 @@
+{
+    "page-title": {"value": "ACM | ArkCase"
+        ,"defaultValue": "ACM | ArkCase"
+        ,"description": ""
+    }
+    ,"title": {"value": "Login"
+        ,"defaultValue": "Login"
+        ,"description": ""
+    }
+    ,"instruction": {"value": "Enter your username and password."
+        ,"defaultValue": "Enter your username and password."
+        ,"description": ""
+    }
+    ,"placeholder-username": {"value": "Username"
+        ,"defaultValue": "Username"
+        ,"description": ""
+    }
+    ,"placeholder-password": {"value": "Password"
+        ,"defaultValue": "Password"
+        ,"description": ""
+    }
+    ,"fail-message": {"value": "Your login attempt was not successful, try again."
+        ,"defaultValue": "Your login attempt was not successful, try again."
+        ,"description": ""
+    }
+    ,"fail-reason": {"value": "Reason"
+        ,"defaultValue": "Reason"
+        ,"description": ""
+    }
+    ,"login-button": {"value": "Log In"
+        ,"defaultValue": "Log In"
+        ,"description": ""
+    }
+    ,"forgot-password": {"value": "Forgot password?"
+        ,"defaultValue": "v"
+        ,"description": ""
+    }
+    ,"footer": {"value": "ArkCase"
+        ,"defaultValue": "ArkCase"
+        ,"description": ""
+    }
+    ,"copy-right": {"value": "2014, 2015"
+        ,"defaultValue": "2014, 2015"
+        ,"description": ""
+    }
+}

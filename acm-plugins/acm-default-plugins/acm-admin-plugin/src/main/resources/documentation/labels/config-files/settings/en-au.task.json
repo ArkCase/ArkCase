@@ -1,4 +1,8 @@
-{"title": {
+{"page-title": {
+    "value": "Tasks | ACM | Ark Case Management",
+    "defaultValue": "Tasks | ACM | Ark Case Management",
+    "description": ""
+}, "title": {
     "value": "Tasks",
     "defaultValue": "Tasks",
     "description": ""
