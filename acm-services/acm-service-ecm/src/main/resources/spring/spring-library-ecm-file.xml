@@ -32,6 +32,7 @@
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
@@ -70,6 +71,8 @@
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
+
+
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
@@ -95,7 +98,10 @@
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
+
+    <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 

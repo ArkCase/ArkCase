@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -69,6 +70,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private SearchResults searchResults;
 
+    private FolderAndFilesUtils folderAndFilesUtils;
+
     @Override
     public EcmFile upload(
             String fileType,
@@ -90,6 +93,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+                    fileType,
                     authentication,
                     fileType,
                     fileCategory,
@@ -110,6 +114,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     public EcmFile upload(
+            String originalFileName,
             String fileType,
             MultipartFile file,
             Authentication authentication,
@@ -128,6 +133,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(
+                    originalFileName,
                     authentication,
                     fileType,
                     file.getInputStream(),
@@ -511,7 +517,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         if( file == null || folder == null) {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File or Destination folder not found",null);
         }
-        String internalFileName = createUniqueIdentificator(file.getFileName());
+        String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String,Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
         props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
@@ -550,7 +556,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
 
             AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
-            //TODO add internalFileName when PR task-1029 will be merged!
             fileCopy.setVersionSeriesId(newFileId);
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(file.getActiveVersionTag());
@@ -597,7 +602,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
         props.put(EcmFileConstants.SRC_FOLDER_ID, file.getFolder().getCmisFolderId());
 
-        AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
 
         EcmFile movedFile;
 
@@ -678,22 +683,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
     }
 
-
-    private String createUniqueIdentificator(String input) {
-        if (input != null && input.length() > 0) {
-            input = input.replace(" ", "_");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmssSSS");
-            String dateString = dateFormat.format(new Date());
-            String[] inputArray = input.split("\\.");
-            if (inputArray != null && inputArray.length == 1) {
-                input = input +  "_" + dateString;
-            }
-            else if (inputArray != null && inputArray.length > 1) {
-                input = input.replace("." + inputArray[inputArray.length - 1], "_" + dateString + "." + inputArray[inputArray.length - 1]);
-            }
-        }
-        return input;
-    }
     @Override
     public EcmFile findById(Long fileId) {
         return getEcmFileDao().find(fileId);
@@ -813,5 +802,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     public ApplicationEventPublisher getApplicationEventPublisher() {
         return applicationEventPublisher;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }

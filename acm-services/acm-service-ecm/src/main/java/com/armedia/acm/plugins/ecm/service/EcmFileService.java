@@ -45,6 +45,7 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
+            String originalFileName,
             String fileType,
             MultipartFile file,
             Authentication authentication,

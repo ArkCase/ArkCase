@@ -30,6 +30,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher applicationEventPublisher;
 
+    private FolderAndFilesUtils folderAndFilesUtils;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/download/byId/{ecmFileId}", method = RequestMethod.GET)
@@ -57,7 +59,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             event.setSucceeded(true);
 
             getApplicationEventPublisher().publishEvent(event);
-            String cmisFileId = FolderAndFilesUtils.getActiveVersionCmisId(ecmFile);
+            String cmisFileId = getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile);
             download(cmisFileId, response,inline);
         }
         else
@@ -203,5 +205,13 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
