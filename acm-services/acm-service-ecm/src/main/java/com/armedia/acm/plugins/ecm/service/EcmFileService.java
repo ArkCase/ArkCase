@@ -48,7 +48,6 @@ public interface EcmFileService
     EcmFile upload(
             String originalFileName,
             String fileType,
-            String originalFileName,
             MultipartFile file,
             Authentication authentication,
             String targetCmisFolderId,
