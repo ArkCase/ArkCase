@@ -32,6 +32,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -82,6 +83,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
 	private AcmPluginManager acmPluginManager;
+	private FolderAndFilesUtils folderAndFilesUtils;
 	private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
     @Override
@@ -420,7 +422,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 true);
 
             EcmFile uploaded = getEcmFileService().upload(
-                fileType,
+				attachment.getOriginalFilename(),
+				fileType,
                 file,
                 getAuthentication(),
                 targetCmisFolderId,
@@ -741,5 +744,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 
 	public void setGson(Gson gson) {
 		this.gson = gson;
-	}	
+	}
+
+	public FolderAndFilesUtils getFolderAndFilesUtils() {
+		return folderAndFilesUtils;
+	}
+
+	public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+		this.folderAndFilesUtils = folderAndFilesUtils;
+	}
 }
