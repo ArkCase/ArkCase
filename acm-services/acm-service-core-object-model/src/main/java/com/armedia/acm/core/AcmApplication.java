@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +25,7 @@ public class AcmApplication implements Serializable
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
     private List<AcmObjectType> objectTypes;
-
+    private Map<Object, Object> settings;
 
     private Boolean issueCollectorFlag;
 
@@ -76,16 +77,16 @@ public class AcmApplication implements Serializable
         this.issueCollectorFlag = issueCollectorFlag;
     }
 
-    public String toJson() {
-        String json = "[]";
-        ObjectMapper om = new ObjectMapper();
-        try {
-            json =  om.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-        }
-        return json;
-    }
+//    public String toJson() {
+//        String json = "[]";
+//        ObjectMapper om = new ObjectMapper();
+//        try {
+//            json =  om.writeValueAsString(this);
+//        } catch (JsonProcessingException e) {
+//            log.error(e.getMessage());
+//        }
+//        return json;
+//    }
 
     public String getObjectTypesAsJson() {
         String json = "[]";
@@ -119,5 +120,13 @@ public class AcmApplication implements Serializable
         }
 
         throw new IllegalArgumentException("No such business object with name '" + name + "'");
+    }
+
+    public Map<Object, Object> getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Map<Object, Object> settings) {
+        this.settings = settings;
     }
 }

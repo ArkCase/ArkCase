@@ -172,7 +172,7 @@
                             <div class="btn-group-task">
                                 <!-- TODO: when data-toggle is modal, the tooltip won't come up
                                 -->
-                                <%--<button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>--%>
+                                <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
                                 <!-- from the mockup -->
                                 <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
@@ -458,6 +458,15 @@
 
                     <div class="row" id="tabSignature" style="display:none;">
                         <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divElectronicSignature" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <%--<div class="row" id="tabSignature" style="display:none;">
+                        <div class="col-md-12">
                             <section class="panel b-a ">
                                 <div class="panel-heading b-b bg-info">
                                     <ul class="nav nav-pills pull-right">
@@ -478,7 +487,7 @@
                                 </div>
                             </section>
                         </div>
-                    </div>
+                    </div>--%>
 
 
                 </div>

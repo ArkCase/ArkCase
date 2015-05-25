@@ -18,7 +18,9 @@
               <property name="properties">
                      <props>
                             <prop key="outlook.integration.enabled">true</prop>
-                            <prop key="outlook.exchange.server.version">Exchange2007_SP1</prop>
+                            <prop key="outlook.exchange.server.version">Exchange2010_SP2</prop>
+                            <prop key="outlook.exchange.enable.autodiscovery">false</prop>
+                            <prop key="outlook.exchange.client-access-server">***REMOVED***</prop>
                      </props>
               </property>
        </bean>
@@ -30,6 +32,8 @@
 
        <bean id="exchangeWebServicesOutlookDao" class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
               <property name="exchangeVersion" value="${outlook.exchange.server.version}"/>
+              <property name="autodiscoveryEnabled" value="${outlook.exchange.enable.autodiscovery}"/>
+              <property name="clientAccessServer" value="${outlook.exchange.client-access-server}"/>
               <property name="sortFields">
                      <map>
                             <entry key="subject" value-ref="propertyDefinitionSubject"/>
