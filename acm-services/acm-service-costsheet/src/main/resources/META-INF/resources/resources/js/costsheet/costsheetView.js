@@ -300,14 +300,14 @@ Costsheet.View = {
         }
 
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("costsheet:detail.label.editing-costsheet-detail"));
+            App.View.Dirty.declare($.t("costsheet:detail.label.editing-costsheet-detail"));
             Costsheet.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Costsheet.View.Detail.saveDivDetail();
             if(Acm.isNotEmpty(htmlDetail)){
                 Costsheet.Controller.viewSavedDetail(Costsheet.View.getActiveCostsheet(), htmlDetail);
-                App.Object.Dirty.clear($.t("costsheet:detail.label.editing-costsheet-detail"));
+                App.View.Dirty.clear($.t("costsheet:detail.label.editing-costsheet-detail"));
             }
         }
         ,editDivDetail: function() {

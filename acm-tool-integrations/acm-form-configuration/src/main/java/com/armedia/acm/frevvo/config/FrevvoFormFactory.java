@@ -4,6 +4,7 @@
 package com.armedia.acm.frevvo.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -209,6 +210,47 @@ public class FrevvoFormFactory {
 		}
 		
 		return null;
+	}
+	
+	public AcmParticipant getDefautParticipant(List<AcmParticipant> participants)
+	{
+		if (participants != null)
+		{
+			for (AcmParticipant participant : participants)
+			{
+				if (FrevvoFormConstants.DEFAULT_USER.equals(participant.getParticipantType()))
+				{
+					return participant;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public List<AcmParticipant> getParticipants(List<AcmParticipant> participants, List<ParticipantItem> items, OwningGroupItem groupItem, String formName)
+	{
+		// Get Default participant if exist
+		AcmParticipant defaultParticipant = null;
+		if (participants != null)
+		{
+			defaultParticipant = getDefautParticipant(participants);
+		}
+		
+		// Create participants
+		List<AcmParticipant> retval = asAcmParticipants(items, groupItem, formName);
+		
+		if (retval == null)
+		{
+			retval = new ArrayList<AcmParticipant>();
+		}
+		
+		if (defaultParticipant != null)
+		{
+			retval.addAll(Arrays.asList(defaultParticipant));
+		}
+		
+		return retval;
 	}
 	
 	public UserDao getUserDao() {

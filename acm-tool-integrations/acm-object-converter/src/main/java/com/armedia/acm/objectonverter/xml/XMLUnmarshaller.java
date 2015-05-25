@@ -5,6 +5,7 @@ package com.armedia.acm.objectonverter.xml;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -18,6 +19,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.google.common.base.Charsets;
 
 /**
  * @author riste.tutureski
@@ -34,7 +36,7 @@ public class XMLUnmarshaller implements AcmUnmarshaller
 		Object obj = null;
 		try
 		{
-			InputStream inputStream = new ByteArrayInputStream(source.getBytes());
+			InputStream inputStream = new ByteArrayInputStream(source.getBytes(Charsets.UTF_8));
 	        DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 	        Document document = documentBuilder.parse(inputStream);
 	        Element element = document.getDocumentElement();
