@@ -4,7 +4,10 @@
  * @author jwu
  */
 var Acm = Acm || {
-    create : function() {
+    prepare: function(context) {
+        Acm.Service.setContextPath(context.path);
+    }
+    ,create : function() {
         Acm.Dialog.create();
         Acm.Dispatcher.create();
         Acm.Ajax.create();
