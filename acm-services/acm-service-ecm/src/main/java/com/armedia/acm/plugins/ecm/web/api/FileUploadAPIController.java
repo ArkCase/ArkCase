@@ -130,7 +130,6 @@ public class FileUploadAPIController
                         EcmFile temp = getEcmFileService().upload(
                                 attachment.getOriginalFilename(),
                                 fileType,
-                                attachment.getOriginalFilename(),
                                 f,
                                 authentication,
                                 folderCmisId,
