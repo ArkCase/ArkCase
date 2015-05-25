@@ -13,6 +13,7 @@ import java.io.InputStream;
 public interface EcmFileTransaction
 {
         EcmFile addFileTransaction(
+                String originalFileName,
                 Authentication authentication,
                 String fileType,
                 InputStream fileInputStream,
@@ -23,6 +24,7 @@ public interface EcmFileTransaction
                 throws MuleException;
 
         EcmFile addFileTransaction(
+                String originalFileName,
                 Authentication authentication,
                 String fileType,
                 String fileCategory,
