@@ -1,4 +1,4 @@
-    package com.armedia.acm.correspondence.service;
+package com.armedia.acm.correspondence.service;
 
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.utils.PoiWordGenerator;
@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
@@ -90,7 +89,6 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         correspondenceTemplate.setNumberFormatString(numberFormat);
     }
 
-
     @Test
     public void generate() throws Exception
     {
@@ -154,4 +152,7 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
 
         assertEquals(correspondenceTemplate.getTemplateFilename(), capturedResource.getFilename());
     }
+
+
+
 }

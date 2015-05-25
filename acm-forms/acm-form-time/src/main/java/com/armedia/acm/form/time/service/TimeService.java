@@ -175,26 +175,36 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 	
 	private Object initFormData()
 	{
+		LOG.debug("In initFormData");
 		String userId = getAuthentication().getName();
+
+		LOG.debug("Looking for user");
         AcmUser user = getUserDao().findByUserId(userId);
-		
+
+		LOG.debug("Creating time form");
 		TimeForm form = new TimeForm();
-		
+
+		LOG.debug("Setting user actions");
 		// Set user
 		form.setUser(userId);
 		form.setUserOptions(Arrays.asList(userId + "=" + user.getFullName()));
 		
 		// Set period (now)
 		form.setPeriod(new Date());
-		
+
+		LOG.debug("setting form types");
 		List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".types"), ",");
-		
+
+		LOG.debug("setting charge codes");
 		// Set charge codes for each type and details for them
 		OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.TIMESHEET, types);
-		
+
+		LOG.debug("getting options");
 		Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
+		LOG.debug("getting detail maps");
 		Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
-		
+
+		LOG.debug("creating time item");
 		TimeItem item = new TimeItem();
 		item.setTypeOptions(types);
 		item.setCodeOptions(codeOptions);
@@ -202,10 +212,14 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 		form.setItems(Arrays.asList(item));
 		
 		// Init Statuses
+		LOG.debug("setting statuses");
 		form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".statuses"), ","));
-		
+
+		LOG.debug("Creating json");
 		// Create JSON and back to the Frevvo form
 		JSONObject json = createResponse(form);
+
+		LOG.debug("JSON to return  - " + json.toString());
 
 		return json;
 	}
@@ -231,7 +245,7 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 	@Override
 	public String getSolrResponse(String objectType)
 	{
-		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
+		String jsonResults = getTimesheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 25, SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
 		
 		return jsonResults;
 	}

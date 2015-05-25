@@ -75,7 +75,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
         $scope.saveAuthorized = function() {
             angular.forEach($scope.widgets, function(widget) {
                 if(angular.equals(widget.name, $scope.selectedWidget.name)) {
-                    var url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/widgets/set",
+                    var url = App.getContextPath() + "/api/latest/plugin/dashboard/widgets/set",
                     postObject = new Object;
                     postObject.widgetName = widget.widgetName;
                     postObject.widgetAuthorizedRoles = [];
@@ -129,7 +129,7 @@ var app = angular.module('config', ['ngTable','dashboardConfigServices'])
            angular.forEach($scope.widgets[idx].widgetAuthorizedRoles ,function(role) {
                allRoles += role.name;
            });
-           var url = App.Object.getContextPath() + "/api/latest/plugin/dashboard/widgets/set",
+           var url = App.getContextPath() + "/api/latest/plugin/dashboard/widgets/set",
                postObject = new Object;
                postObject.widgetName = $scope.widgets[idx].widgetName;
                postObject.widgetAuthorizedRoles = $scope.widgets[idx].widgetAuthorizedRoles;
