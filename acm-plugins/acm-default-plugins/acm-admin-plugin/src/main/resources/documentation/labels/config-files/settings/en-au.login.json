@@ -32,7 +32,7 @@
         ,"description": ""
     }
     ,"forgot-password": {"value": "Forgot password?"
-        ,"defaultValue": "v"
+        ,"defaultValue": "Forgot password?"
         ,"description": ""
     }
     ,"footer": {"value": "ArkCase"
