@@ -9,6 +9,7 @@ import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -47,7 +48,10 @@ public class ListTasksAPIController {
 
         boolean ascendingSort = "ASC".equals(sortDirection);
 
-        OutlookResults<OutlookTaskItem> results = getOutlookService().findTaskItems(outlookUser, startRow, maxRows, sort, ascendingSort);
+        //Append all filters for searching in filterCollection
+        SearchFilter.SearchFilterCollection filterCollection = new SearchFilter.SearchFilterCollection();
+
+        OutlookResults<OutlookTaskItem> results = getOutlookService().findTaskItems(outlookUser, startRow, maxRows, sort, ascendingSort, filterCollection);
 
         return results;
 

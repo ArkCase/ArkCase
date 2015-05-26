@@ -13,6 +13,13 @@
     <description>Enable integration with Microsoft Outlook / Exchange Services</description>
 
     <dependencies>
+        <!-- caching -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>${ehcache.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-files-property-file-manager</artifactId>
@@ -29,7 +36,10 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>

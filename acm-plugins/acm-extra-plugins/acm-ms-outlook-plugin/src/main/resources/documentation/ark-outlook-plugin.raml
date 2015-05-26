@@ -93,6 +93,16 @@ title: ArkCase Outlook Integration Plugin
           default: 50
           type: integer
           minimum: 1
+        startSearchStartDate:
+          description: Start Date for searcing calendar for appointment start date, date pattern ("yyyy-MM-dd'T'HH:mm:ss'Z'") as string
+          required: false
+          default: null
+          type: string
+        endSearchStartDate:
+          description: End Date for searcing calendar for appointment start date, date pattern ("yyyy-MM-dd'T'HH:mm:ss'Z'") as string
+          required: false
+          default: null
+          type: string
       responses:
         200:
           description: Outlook calendar folder successfully located and the requested page of results was returned

@@ -9,6 +9,7 @@
 
     <bean id="authenticationEhCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
         <property name="configLocation" value="classpath:/ehcache/authenticationTokenCacheConfig.xml"/>
+        <property name="cacheManagerName" value="acm-service-authentication-token"/>
     </bean>
 
     <bean id="authenticationTokenCache" factory-bean="authenticationCacheManager" factory-method="getCache">

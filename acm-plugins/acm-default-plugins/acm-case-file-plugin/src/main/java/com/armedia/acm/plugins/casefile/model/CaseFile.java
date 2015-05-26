@@ -142,9 +142,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @Column(name = "cm_case_cal_folder_id", nullable = true)
-    private String calendarFolderId;
-
     @PrePersist
     protected void beforeInsert()
     {
@@ -481,14 +478,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         return objectType;
     }
 
-    public String getCalendarFolderId() {
-        return calendarFolderId;
-    }
-
-    public void setCalendarFolderId(String calendarFolderId) {
-        this.calendarFolderId = calendarFolderId;
-    }
-
     @Override
     public String toString()
     {
@@ -518,7 +507,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", restricted=" + restricted +
                 ", childObjects=" + childObjects +
                 ", container=" + container +
-                ", calendarFolderId=" + calendarFolderId +
                 '}';
     }
 }

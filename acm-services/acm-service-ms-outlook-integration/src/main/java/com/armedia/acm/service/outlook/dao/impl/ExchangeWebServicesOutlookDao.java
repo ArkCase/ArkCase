@@ -18,7 +18,6 @@ import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
-import microsoft.exchange.webservices.data.core.service.folder.SearchFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.item.Contact;
 import microsoft.exchange.webservices.data.core.service.item.Item;
@@ -29,24 +28,23 @@ import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
 import microsoft.exchange.webservices.data.enumeration.*;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
-import microsoft.exchange.webservices.data.property.complex.DelegateUser;
 import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
-import microsoft.exchange.webservices.data.property.complex.UserId;
 import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.Recurrence;
 import microsoft.exchange.webservices.data.property.complex.time.OlsonTimeZoneDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
-import microsoft.exchange.webservices.data.property.definition.PropertyDefinitionBase;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.FolderView;
 import microsoft.exchange.webservices.data.search.ItemView;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -63,6 +61,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ExchangeVersion exchangeVersion = ExchangeVersion.Exchange2007_SP1;
     private Map<String, PropertyDefinition> sortFields;
+    private Cache outlookUserConnectionCache;
+
     private final PropertySet standardProperties = new PropertySet(
             BasePropertySet.IdOnly,
             ItemSchema.Subject,
@@ -88,6 +88,15 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
         Objects.requireNonNull(user.getOutlookPassword(), "Password cannot be null");
         Objects.requireNonNull(user.getEmailAddress(), "E-mail address cannot be null");
 
+        Cache.ValueWrapper found = getOutlookUserConnectionCache().get(user.getEmailAddress());
+
+        if (found == null || found.get() == null) {
+            log.debug("Exchange service not found in cache for user({}), continue with authentication", user.getEmailAddress());
+        } else {
+            log.debug("Exchange service found in cache for user({})", user.getEmailAddress());
+            return (ExchangeService) found.get();
+        }
+
         ExchangeService service = new ExchangeService(getExchangeVersion());
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
         service.setCredentials(credentials);
@@ -102,7 +111,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             {
                 service.setUrl(getClientAccessServer());
             }
-
+            getOutlookUserConnectionCache().put(user.getEmailAddress(), service);
             return service;
         } catch (Exception e) {
             log.error("Could not connect to Exchange: " + e.getMessage(), e);
@@ -111,11 +120,11 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
     }
 
     @Override
-    @CacheEvict(value = "outlook-connection-cache", key = "#user.emailAddress")
     public void disconnect(AcmOutlookUser user) {
         // EWS apparently has no concept of "logging out" so the whole point of this method is to
         // remove the connection from the connection cache.
-        log.info("Exchange session has been removed from session cache");
+        getOutlookUserConnectionCache().evict(user.getEmailAddress());
+        log.info("Exchange session for user({}) has been removed from session cache", user.getEmailAddress());
     }
 
 
@@ -127,11 +136,12 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             int start,
             int maxItems,
             String sortProperty,
-            boolean sortAscending)
+            boolean sortAscending,
+            SearchFilter filter)
             throws AcmOutlookFindItemsFailedException {
 
         Folder folder = getFolder(service, wellKnownFolderName);
-        return findItems(service, folder, extraFieldsToRetrieve, start, maxItems, sortProperty, sortAscending);
+        return findItems(service, folder, extraFieldsToRetrieve, start, maxItems, sortProperty, sortAscending, filter);
     }
 
     @Override
@@ -140,13 +150,13 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             String folderId,
             PropertySet extraFieldsToRetrieve,
             int start,
-            int maxItems,
-            String sortProperty,
-            boolean sortAscending)
+            int maxItems, String sortProperty,
+            boolean sortAscending,
+            SearchFilter filter)
             throws AcmOutlookFindItemsFailedException {
 
         Folder folder = getFolder(service, folderId);
-        return findItems(service, folder, extraFieldsToRetrieve, start, maxItems, sortProperty, sortAscending);
+        return findItems(service, folder, extraFieldsToRetrieve, start, maxItems, sortProperty, sortAscending, filter);
     }
 
     private FindItemsResults<Item> findItems(
@@ -156,7 +166,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             int start,
             int maxItems,
             String sortProperty,
-            boolean sortAscending)
+            boolean sortAscending,
+            SearchFilter filter)
             throws AcmOutlookFindItemsFailedException {
         try {
             log.debug("finding items");
@@ -173,7 +184,9 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
 
             view.getOrderBy().add(orderBy, sortDirection);
 
-            FindItemsResults<Item> findResults = service.findItems(folder.getId(), view);
+            FindItemsResults<Item> findResults = filter == null ?
+                    service.findItems(folder.getId(), view):
+                    service.findItems(folder.getId(), filter, view);
 
             PropertySet allProperties = new PropertySet();
 
@@ -294,12 +307,10 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
 
             if (recurring) {
                 service.deleteItem(new ItemId(itemId), deleteMode, SendCancellationsMode.SendOnlyToAll, AffectedTaskOccurrence.AllOccurrences);
-                //item = Appointment.bindToRecurringMaster(service, new RecurringAppointmentMasterId(itemId));
             } else {
                 item = Appointment.bind(service, new ItemId(itemId));
                 item.delete(deleteMode);
             }
-            // item.delete(deleteMode);
         } catch (Exception e) {
             throw new AcmOutlookException("Error deleting item with id = " + itemId, e);
         }
@@ -335,12 +346,12 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             folder.getPermissions().add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.None));
             folder.getPermissions().add(new FolderPermission(owner, FolderPermissionLevel.Owner));
             //add extra permissions
-            if (newFolder.getPermissions() != null && newFolder.getPermissions().size() > 0) {
+            if (newFolder.getPermissions() != null && !newFolder.getPermissions().isEmpty()) {
                 addFolderPermissions(folder, newFolder.getPermissions());
             }
-
+            if(!StringUtils.isEmpty(parentFolder.getFolderClass()))
+                folder.setFolderClass(parentFolder.getFolderClass());
             folder.save(parentFolder.getId());
-
             newFolder.setId(folder.getId().getUniqueId());
         } catch (Exception e) {
             log.error("Can't create folder.", e);
@@ -492,8 +503,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
         FolderPermission fp = new FolderPermission(ofp.getEmail(), ofp.getLevel());
         if(ofp.getLevel().equals(FolderPermissionLevel.Custom)){
             //Write
-            fp.setCanCreateItems(ofp.isCanCreateItems());
-            fp.setCanCreateSubFolders(ofp.isCanCreateSubFolders());
+            fp.setCanCreateItems(ofp.canCreateItems());
+            fp.setCanCreateSubFolders(ofp.canCreateSubFolders());
             fp.setEditItems(ofp.getEditItems());
 
             //Delete items
@@ -544,5 +555,13 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
     public void setClientAccessServer(URI clientAccessServer)
     {
         this.clientAccessServer = clientAccessServer;
+    }
+
+    public Cache getOutlookUserConnectionCache() {
+        return outlookUserConnectionCache;
+    }
+
+    public void setOutlookUserConnectionCache(Cache outlookUserConnectionCache) {
+        this.outlookUserConnectionCache = outlookUserConnectionCache;
     }
 }

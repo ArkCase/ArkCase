@@ -96,7 +96,7 @@
           },
           "folderId": {
             "type": "string",
-            "description": "shared folder id"
+            "description": "parent folder id"
           }
         }
       }

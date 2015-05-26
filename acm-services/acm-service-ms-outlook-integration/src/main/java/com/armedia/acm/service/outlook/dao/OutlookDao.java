@@ -18,6 +18,7 @@ import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -40,7 +41,8 @@ public interface OutlookDao {
             int start,
             int maxItems,
             String sortProperty,
-            boolean sortAscending)
+            boolean sortAscending,
+            SearchFilter filter)
             throws AcmOutlookFindItemsFailedException;
 
     FindItemsResults<Item> findItems(
@@ -50,7 +52,8 @@ public interface OutlookDao {
             int start,
             int maxItems,
             String sortProperty,
-            boolean sortAscending)
+            boolean sortAscending,
+            SearchFilter filter)
             throws AcmOutlookFindItemsFailedException;
 
     OutlookCalendarItem createCalendarAppointment(

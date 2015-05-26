@@ -39,6 +39,7 @@ import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,15 +55,12 @@ import java.util.stream.Collectors;
 public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private String systemUserEmail;
-    private String systemUserEmailPassword;
-    private String systemUserId;
 
     private OutlookDao dao;
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                         boolean sortAscending)
+                                                         boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -74,7 +72,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         );
 
         FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Inbox, mailProperties, start,
-                maxItems, sortField, sortAscending);
+                maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookMailItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -88,7 +86,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookTaskItem> findTaskItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                         boolean sortAscending)
+                                                         boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -102,7 +100,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         );
 
         FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Tasks, taskProperties, start,
-            maxItems, sortField, sortAscending);
+            maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookTaskItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -189,6 +187,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             oci.setRecurring(appt.getIsRecurring());
             oci.setStartDate(appt.getStart());
             oci.setEndDate(appt.getEnd());
+            oci.setFolderId(item.getParentFolderId().getUniqueId());
 
             return oci;
         }
@@ -240,7 +239,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookCalendarItem> findCalendarItems(String folderId, AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                                 boolean sortAscending)
+                                                                 boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -256,9 +255,9 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
 
         FindItemsResults<Item> items = folderId != null ?
-                getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending) :
+                getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter) :
                 getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start,
-                maxItems, sortField, sortAscending);
+                maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookCalendarItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -272,7 +271,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                               boolean sortAscending)
+                                                               boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -288,7 +287,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         );
 
         FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Contacts, contactProperties, start,
-                maxItems, sortField, sortAscending);
+                maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookContactItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -358,11 +357,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         return getDao().createFolder(service, user.getEmailAddress(), parentFolderName, newFolder);
     }
 
-    @Override
-    public OutlookFolder createFolder(WellKnownFolderName parentFolderName,
-                                      OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException {
-        return createFolder(getAcmSystemOutlookUser(), parentFolderName, newFolder);
-    }
 
     @Override
     public OutlookFolder getFolder(AcmOutlookUser user, String folderId) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException {
@@ -386,22 +380,11 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
-    public void deleteFolder(String folderId,
-                             DeleteMode deleteMode) throws AcmOutlookItemNotFoundException {
-        deleteFolder(getAcmSystemOutlookUser(), folderId, deleteMode);
-    }
-
-    @Override
     public void addFolderPermission(AcmOutlookUser user,
                                     String folderId,
                                     OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException {
         ExchangeService service = connect(user);
         getDao().addFolderPermission(service, folderId, permission);
-    }
-
-    @Override
-    public void addFolderPermission(String folderId, OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException {
-        addFolderPermission(getAcmSystemOutlookUser(), folderId, permission);
     }
 
     @Override
@@ -413,14 +396,9 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
-    public void removeFolderPermission(String folderId, OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException {
-        removeFolderPermission(getAcmSystemOutlookUser(), folderId, permission);
-    }
+    public void updateFolderPermissions(AcmOutlookUser user, String calendarFolderId, List<OutlookFolderPermission> folderPermissions) {
 
-    @Override
-    public void updateFolderPermissions(String calendarFolderId, List<OutlookFolderPermission> folderPermissions) {
-
-        List<OutlookFolderPermission> existingFolderPermissions = getFolder(getAcmSystemOutlookUser(), calendarFolderId).getPermissions();
+        List<OutlookFolderPermission> existingFolderPermissions = getFolder(user, calendarFolderId).getPermissions();
         List<OutlookFolderPermission> folderPermissionsToBeAdded = new LinkedList<>();
         List<OutlookFolderPermission> folderPermissionsToBeRemoved = new ArrayList<>(existingFolderPermissions);
 
@@ -433,7 +411,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
         for (OutlookFolderPermission outlookFolderPermission : folderPermissionsToBeAdded) {
             try {
-                addFolderPermission(calendarFolderId, outlookFolderPermission);
+                addFolderPermission(user, calendarFolderId, outlookFolderPermission);
             } catch (Exception e) {
                 log.error("Can't add permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
             }
@@ -442,7 +420,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         for (OutlookFolderPermission outlookFolderPermission : folderPermissionsToBeRemoved) {
             try {
                 if(!outlookFolderPermission.isFolderOwner())
-                    removeFolderPermission(calendarFolderId, outlookFolderPermission);
+                    removeFolderPermission(user, calendarFolderId, outlookFolderPermission);
             } catch (Exception e) {
                 log.error("Can't remove permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
             }
@@ -462,10 +440,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setDao(OutlookDao dao)
     {
         this.dao = dao;
-    }
-
-    private AcmOutlookUser getAcmSystemOutlookUser() {
-        return new AcmOutlookUser(systemUserId, systemUserEmail, systemUserEmailPassword);
     }
 
     private OutlookFolder mapFolderToOutlookFolder(Folder folder) throws ServiceLocalException {
@@ -498,17 +472,5 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         outlookFolderPermission.setReadItems(outlookFolderPermission.getReadItems());
 
         return outlookFolderPermission;
-    }
-
-    public void setSystemUserEmail(String systemUserEmail) {
-        this.systemUserEmail = systemUserEmail;
-    }
-
-    public void setSystemUserEmailPassword(String systemUserEmailPassword) {
-        this.systemUserEmailPassword = systemUserEmailPassword;
-    }
-
-    public void setSystemUserId(String systemUserId) {
-        this.systemUserId = systemUserId;
     }
 }
