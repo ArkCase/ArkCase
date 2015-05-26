@@ -17,6 +17,7 @@ public class OutlookCalendarItem extends OutlookItem
     private TimeZone timeZone;
     private Date endDate;
     private Date recurringEndDate;
+    private String folderId;
 
     public void setAllDayEvent(Boolean allDayEvent)
     {
@@ -102,6 +103,14 @@ public class OutlookCalendarItem extends OutlookItem
         this.recurringInterval = recurringInterval;
     }
 
+    public String getFolderId() {
+        return folderId;
+    }
+
+    public void setFolderId(String folderId) {
+        this.folderId = folderId;
+    }
+
     @Override
     public String toString()
     {
@@ -113,6 +122,7 @@ public class OutlookCalendarItem extends OutlookItem
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", recurringEndDate=" + recurringEndDate +
+                ", folderId=" + folderId +
                 "} " + super.toString();
     }
 }

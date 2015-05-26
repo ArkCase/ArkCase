@@ -8,6 +8,7 @@ import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -46,7 +47,10 @@ public class ListInboxItemsAPIController
 
         boolean ascendingSort = "ASC".equals(sortDirection);
 
-        OutlookResults<OutlookMailItem> results = getOutlookService().findMailItems(outlookUser, startRow, maxRows, sort, ascendingSort);
+        //Append all filters for searching in filterCollection
+        SearchFilter.SearchFilterCollection filterCollection = new SearchFilter.SearchFilterCollection();
+
+        OutlookResults<OutlookMailItem> results = getOutlookService().findMailItems(outlookUser, startRow, maxRows, sort, ascendingSort, filterCollection);
 
         return results;
 
