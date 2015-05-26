@@ -192,6 +192,11 @@
                                         </div>
                                     </div>
 
+                                        <%--<c:import url="ribbon-ebrief.jspf">--%>
+                                        <%--<c:import url="ribbon-case.jsp"></c:import>--%>
+                                        <%--<jsp:include page="ribbon-case.jsp" />--%>
+                                        <%--<jsp:include page="abcd" + "/acm-law" + "2.jsp" />--%>
+
                                     <div class="row" id="tabTopBlank">
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n=casefile:"msg.no-case-selected">(No case is selected)</span></p>
                                     </div>
