@@ -60,12 +60,10 @@
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <!--<property name="muleClient" ref="muleClient"/>-->
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="outlookFolderService" ref="outlookService"/>
-        <property name="outlookService" ref="outlookService"/>
+        <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="autoCreateFolderForCaseFile" value="${casefile.auto_create_calendar_folder}"/>
         <property name="autoDeleteFolderAfterCaseClosed" value="${casefile.delete_calendar_folder_after_case_closed}"/>
-        <property name="participantsTypesForOutlookFolder" value="${casefile.participants-types-as-outlook-permission}"/>
 
     </bean>
     

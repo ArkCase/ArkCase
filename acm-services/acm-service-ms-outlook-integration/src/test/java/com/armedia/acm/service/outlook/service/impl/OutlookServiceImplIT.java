@@ -49,7 +49,7 @@ public class OutlookServiceImplIT
     @Test
     public void tasks()
     {
-        OutlookResults<OutlookTaskItem> tasks = outlookService.findTaskItems(user, 0, 5, "subject", true);
+        OutlookResults<OutlookTaskItem> tasks = outlookService.findTaskItems(user, 0, 5, "subject", true, null);
 
         assertNotNull(tasks);
 
@@ -59,7 +59,7 @@ public class OutlookServiceImplIT
     @Test
     public void messages()
     {
-        OutlookResults<OutlookMailItem> messages = outlookService.findMailItems(user, 0, 5, "subject", true);
+        OutlookResults<OutlookMailItem> messages = outlookService.findMailItems(user, 0, 5, "subject", true, null);
 
         assertNotNull(messages);
 
@@ -69,7 +69,7 @@ public class OutlookServiceImplIT
     @Test
     public void calendarItems()
     {
-        OutlookResults<OutlookCalendarItem> appts = outlookService.findCalendarItems(null, user, 0, 5, "subject", true);
+        OutlookResults<OutlookCalendarItem> appts = outlookService.findCalendarItems(null, user, 0, 5, "subject", true, null);
 
         assertNotNull(appts);
 
@@ -79,7 +79,7 @@ public class OutlookServiceImplIT
     @Test
     public void contacts()
     {
-        OutlookResults<OutlookContactItem> contacts = outlookService.findContactItems(user, 0, 5, "subject", true);
+        OutlookResults<OutlookContactItem> contacts = outlookService.findContactItems(user, 0, 5, "subject", true, null);
 
         assertNotNull(contacts);
 
@@ -176,14 +176,5 @@ public class OutlookServiceImplIT
         assertNotNull(outlookItem.getId());
     }
 
-    @Test
-    public void createCreateDeleteFolderWithSystemUser() throws Exception
-    {
-        OutlookFolder folder = new OutlookFolder();
-        folder.setDisplayName("some folder");
-        folder = outlookFolderService.createFolder(WellKnownFolderName.Calendar, folder);
-
-        outlookFolderService.deleteFolder(folder.getId(),DeleteMode.HardDelete);
-    }
 
 }

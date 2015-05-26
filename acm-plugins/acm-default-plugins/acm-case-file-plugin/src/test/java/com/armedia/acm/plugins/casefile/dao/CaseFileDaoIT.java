@@ -111,7 +111,7 @@ public class CaseFileDaoIT
         caseFileDao.insertOutlookFolderId(saved.getId(), "someFolderId");
 
         CaseFile updatedCaseFile = caseFileDao.find(saved.getId());
-        assertEquals("someFolderId", updatedCaseFile.getCalendarFolderId());
+        assertEquals("someFolderId", updatedCaseFile.getContainer().getCalendarFolderId());
     }
 
 

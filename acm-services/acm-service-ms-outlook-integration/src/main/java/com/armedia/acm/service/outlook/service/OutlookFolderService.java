@@ -19,9 +19,6 @@ public interface OutlookFolderService {
                                WellKnownFolderName parentFolderName,
                                OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
 
-    OutlookFolder createFolder(WellKnownFolderName parentFolderName,
-                               OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
-
     OutlookFolder getFolder(AcmOutlookUser user,
                             String folderId) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
 
@@ -29,15 +26,8 @@ public interface OutlookFolderService {
                       String folderId,
                       DeleteMode deleteMode) throws AcmOutlookItemNotFoundException;
 
-    void deleteFolder(String folderId,
-                      DeleteMode deleteMode) throws AcmOutlookItemNotFoundException;
-
     void addFolderPermission(AcmOutlookUser user,
                              String folderId,
-                             OutlookFolderPermission permission)
-            throws AcmOutlookItemNotFoundException;
-
-    void addFolderPermission(String folderId,
                              OutlookFolderPermission permission)
             throws AcmOutlookItemNotFoundException;
 
@@ -45,8 +35,5 @@ public interface OutlookFolderService {
                                 String folderId,
                                 OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException;
 
-    void removeFolderPermission(String folderId,
-                                OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException;
-
-    void updateFolderPermissions(String calendarFolderId, List<OutlookFolderPermission> folderPermissionsToBeAdded);
+    void updateFolderPermissions(AcmOutlookUser user, String calendarFolderId, List<OutlookFolderPermission> folderPermissionsToBeAdded);
 }

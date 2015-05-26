@@ -1,8 +1,7 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
 import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.service.outlook.exception.AcmOutlookConnectionFailedException;
-import com.armedia.acm.service.outlook.exception.AcmOutlookFindItemsFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
@@ -30,6 +29,7 @@ import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -39,13 +39,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -81,7 +85,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         FindItemsResults<Item> mailItems = dao.findItems(
                 service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5,
-                "subject", true);
+                "subject", true, null);
 
         assertNotNull(mailItems);
 
@@ -97,7 +101,7 @@ public class ExchangeWebServicesOutlookDaoIT
         log.info("Body of first message: " + ( mailItems.getItems().get(0).getBody()));
 
         mailItems = dao.findItems(
-                service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false);
+                service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false, null);
         log.info("--- descending: ");
 
         for ( Item item : mailItems.getItems() )
@@ -114,7 +118,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         FindItemsResults<Item> items = dao.findItems(
                 service, WellKnownFolderName.Calendar, new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType, AppointmentSchema.Recurrence), 0, 15,
-                "subject", true);
+                "subject", true, null);
 
         assertNotNull(items);
 
@@ -122,16 +126,16 @@ public class ExchangeWebServicesOutlookDaoIT
 
         for ( Item item : items.getItems() )
         {
-            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
+            Appointment appointment = (Appointment) item;
+            log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
         }
 
-        //service.loadPropertiesForItems(mailItems.getItems(), new PropertySet(ItemSchema.Body));
 
         log.info("Body of first message: " + (items.getItems().get(0).getBody()));
 
         items = dao.findItems(
                 service, WellKnownFolderName.Calendar, new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType), 0, 15,
-                "subject", false);
+                "subject", false, null);
         log.info("--- descending: ");
 
         for ( Item item : items.getItems() )
@@ -142,13 +146,55 @@ public class ExchangeWebServicesOutlookDaoIT
     }
 
     @Test
+    public void appointmentItemsWithFilter() throws Exception
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date startSearchDate = sdf.parse("2015-03-09");
+        Date endSearchDate = sdf.parse("2015-03-11");
+
+        ExchangeService service = dao.connect(user);
+        SearchFilter.IsGreaterThan isGreaterThanFilter = new SearchFilter.IsGreaterThan(AppointmentSchema.Start, startSearchDate);
+        SearchFilter.IsLessThan isLessThanFilter = new SearchFilter.IsLessThan(AppointmentSchema.Start, endSearchDate);
+
+        SearchFilter.SearchFilterCollection collection = new SearchFilter.SearchFilterCollection();
+        collection.add(isGreaterThanFilter);
+        collection.add(isLessThanFilter);
+
+        FindItemsResults<Item> items = dao.findItems(
+                service, WellKnownFolderName.Calendar,
+                new PropertySet(ItemSchema.Subject,
+                        AppointmentSchema.Start,
+                        AppointmentSchema.AppointmentType,
+                        AppointmentSchema.Recurrence),
+                0, 15,
+                "subject",
+                true,
+                collection);
+
+        assertNotNull(items);
+
+        log.info("Total items: " + items.getTotalCount() + "; more? " + items.isMoreAvailable());
+
+        for ( Item item : items.getItems() )
+        {
+            Appointment appointment = (Appointment) item;
+            log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
+            assertFalse(startSearchDate.after(appointment.getStart()));
+            assertFalse(endSearchDate.before(appointment.getStart()));
+
+        }
+
+
+    }
+
+    @Test
     public void taskItems() throws Exception
     {
         ExchangeService service = dao.connect(user);
 
         FindItemsResults<Item> taskItems = dao.findItems(
                 service, WellKnownFolderName.Tasks, new PropertySet(ItemSchema.Body, TaskSchema.DueDate), 0, 5,
-                "subject", true);
+                "subject", true, null);
 
         assertNotNull(taskItems);
 
@@ -359,5 +405,45 @@ public class ExchangeWebServicesOutlookDaoIT
 
         //delete the folder
         dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+    }
+
+    @Test
+    public void testNotAllowedListFolder() throws InterruptedException, ServiceLocalException {
+        //create folder
+        ExchangeService service = dao.connect(user);
+        ExchangeService service1 = dao.connect(user1);
+        OutlookFolder newFolderData = new OutlookFolder();
+        newFolderData.setDisplayName("FolderWithPrivileges");
+        OutlookFolder createdFolder = dao.createFolder(service, user.getEmailAddress(), WellKnownFolderName.Calendar, newFolderData);
+        assertNotNull(createdFolder.getId());
+
+        try {
+            dao.findItems(service1, createdFolder.getId(),
+                    new PropertySet(ItemSchema.Subject,
+                            AppointmentSchema.Start,
+                            AppointmentSchema.AppointmentType,
+                            AppointmentSchema.Recurrence), 0, 15,
+                    "subject", true, null);
+        } catch (AcmOutlookItemNotFoundException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage().contains("Folder not found"));
+        }catch (Exception e) {
+            log.error("Error:", e);
+            fail();
+        } finally {
+            //delete the folder
+            if (createdFolder.getId() != null)
+                dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+        }
+    }
+
+    @Test
+    public void testCachingUserSessions(){
+        ExchangeService service = dao.connect(user);
+        ExchangeService service1 = dao.connect(user);
+        assertEquals(service, service1);
+        dao.disconnect(user);
+        ExchangeService service2 = dao.connect(user);
+        assertNotEquals(service, service2);
     }
 }

@@ -75,8 +75,8 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-ms-outlook-integration</artifactId>
+            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
+            <artifactId>acm-ms-outlook-plugin</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <!-- JSON -->

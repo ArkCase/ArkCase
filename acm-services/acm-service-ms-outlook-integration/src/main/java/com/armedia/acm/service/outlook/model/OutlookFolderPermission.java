@@ -14,9 +14,9 @@ public class OutlookFolderPermission {
     private FolderPermissionLevel level;
     private boolean canCreateItems;
     private boolean canCreateSubFolders;
-    private boolean isFolderOwner;
-    private boolean isFolderVisible;
-    private boolean isFolderContact;
+    private boolean folderOwner;
+    private boolean folderVisible;
+    private boolean folderContact;
     private PermissionScope editItems;
     private PermissionScope deleteItems;
     private FolderPermissionReadAccess readItems;
@@ -41,7 +41,7 @@ public class OutlookFolderPermission {
         this.level = level;
     }
 
-    public boolean isCanCreateItems() {
+    public boolean canCreateItems() {
         return canCreateItems;
     }
 
@@ -49,7 +49,7 @@ public class OutlookFolderPermission {
         this.canCreateItems = canCreateItems;
     }
 
-    public boolean isCanCreateSubFolders() {
+    public boolean canCreateSubFolders() {
         return canCreateSubFolders;
     }
 
@@ -58,27 +58,27 @@ public class OutlookFolderPermission {
     }
 
     public boolean isFolderOwner() {
-        return isFolderOwner;
+        return folderOwner;
     }
 
-    public void setFolderOwner(boolean isFolderOwner) {
-        this.isFolderOwner = isFolderOwner;
+    public void setFolderOwner(boolean folderOwner) {
+        this.folderOwner = folderOwner;
     }
 
     public boolean isFolderVisible() {
-        return isFolderVisible;
+        return folderVisible;
     }
 
-    public void setFolderVisible(boolean isFolderVisible) {
-        this.isFolderVisible = isFolderVisible;
+    public void setFolderVisible(boolean folderVisible) {
+        this.folderVisible = folderVisible;
     }
 
     public boolean isFolderContact() {
-        return isFolderContact;
+        return folderContact;
     }
 
-    public void setFolderContact(boolean isFolderContact) {
-        this.isFolderContact = isFolderContact;
+    public void setFolderContact(boolean folderContact) {
+        this.folderContact = folderContact;
     }
 
     public PermissionScope getEditItems() {

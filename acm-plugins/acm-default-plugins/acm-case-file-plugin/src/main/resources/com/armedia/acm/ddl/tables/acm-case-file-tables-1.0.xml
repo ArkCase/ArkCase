@@ -232,10 +232,4 @@
                               defaultNullValue="CASE_FILE"
                               tableName="acm_case_file"/>
     </changeSet>
-
-    <changeSet id="case-file-18-add-calendar-folder-id-case-file-table" author="nebojsha.davidovikj">
-        <addColumn tableName="acm_case_file">
-            <column name="cm_case_cal_folder_id" type="VARCHAR(255)"/>
-        </addColumn>
-    </changeSet>
 </databaseChangeLog>
