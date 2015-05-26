@@ -65,11 +65,13 @@ public class RenameFolderAPIController {
             if (log.isErrorEnabled()) {
                 log.error("Exception occurred while trying to rename folder with id: " + objectId);
             }
+            getFolderEventPublisher().publishFolderRenamedEvent(source, authentication, ipAddress, false);
             throw e;
         } catch (AcmObjectNotFoundException e) {
             if (log.isErrorEnabled()) {
                 log.error("Exception occurred while trying to rename folder with id: " + objectId);
             }
+            getFolderEventPublisher().publishFolderRenamedEvent(source, authentication, ipAddress, false);
             throw e;
         }
     }
