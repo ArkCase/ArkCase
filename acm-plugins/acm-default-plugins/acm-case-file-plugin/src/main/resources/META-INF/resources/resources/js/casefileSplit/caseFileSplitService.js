@@ -88,7 +88,7 @@ CaseFileSplit.Service = {
         ,onInitialized: function() {
         }
 
-        ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
+        ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-case-approve?n=1000&s=name asc"
         ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
         ,API_GET_ASSIGNEES             : "/api/latest/service/functionalaccess/users/acm-case-approve"
 
