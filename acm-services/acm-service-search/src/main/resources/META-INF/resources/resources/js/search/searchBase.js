@@ -19,36 +19,6 @@ var SearchBase = SearchBase || {
         if (SearchBase.View.onInitialized)       {SearchBase.View.onInitialized();}
     }
 
-    //
-    //this function is retiring. Please use SearchBase.Dialog.create(args).show(); instead
-    //
-    ,showSearchDialog: function(args) {
-
-
-//        if (Acm.isEmpty(args.$edtSearch)) {
-//            args.$edtSearch = $("#edtPoSearch");
-//        }
-//        if (Acm.isEmpty(args.$btnSearch)) {
-//            args.$btnSearch = args.$edtSearch.next().find("button");
-//        }
-//        if (Acm.isEmpty(args.$divFacets)) {
-//            args.$divFacets = $("#divPoFacets");
-//        }
-//        if (Acm.isEmpty(args.$divResults)) {
-//            args.$divResults = $("#divPoResults");
-//        }
-//        if (!args.jtArgs) {
-//            args.jtArgs = {multiselect:true, selecting:true, selectingCheckboxes:true};
-//        }
-//        this.create(args);
-//
-//        Acm.deferred(SearchBase.onInitialized);
-//
-//        SearchBase.View.showDialog(args);
-
-        SearchBase.Dialog.create(args).show();
-    }
-
     ,Dialog: {
         create: function(args) {
             if (Acm.isEmpty(args.$edtSearch)) {
