@@ -165,6 +165,8 @@ title: ArkCase Document Management
                 !include folder-schema.json
               example: |
                 {
+                  "originalFolderId":567,
+                  "newFolder":{
                   "id" : 143996,
                   "created" : "2015-05-11T15:58:46.527-0400",
                   "creator" : "bthomas",
@@ -173,6 +175,7 @@ title: ArkCase Document Management
                   "name" : "another test",
                   "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
                   "parentFolderId" : 141019
+                  }
                 }
   /folder/{folderId}:
       delete:
