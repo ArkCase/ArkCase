@@ -19,5 +19,6 @@ public class FrevvoFormName {
 	public static final String TIMESHEET = "timesheet";
 	public static final String COSTSHEET = "costsheet";
 	public static final String EBRIEF = "ebrief";
+	public static final String PROJECT = "project";
 	
 }

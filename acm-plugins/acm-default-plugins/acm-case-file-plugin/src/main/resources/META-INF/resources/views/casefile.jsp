@@ -5,7 +5,7 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title><spring:message code="caseFile.page.title" text="Case Files | ACM | Ark Case Management" /></title>
+    <title data-i18n="casefile:window-title">Case Files | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
         <span itemprop="resourceNamespace">casefile,search,subscription</span>
         <span itemprop="objType">CASE_FILE</span>
@@ -228,6 +228,9 @@
                                                     <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
                                                 </button>
                                                 <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
+                                                </button>
+                                                <button class="btn btn-default btn-sm" id="btnSplitCase" data-i18n="[data-title]casefile:header.buttons.split-case"data-title="Split Case"><i class="fa fa-code-fork"></i>
+                                                    <span data-i18n="casefile:header.buttons.split-case">Split Case</span>
                                                 </button>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">

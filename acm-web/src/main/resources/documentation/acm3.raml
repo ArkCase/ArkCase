@@ -17,6 +17,204 @@ securitySchemes:
       type: x-Token Authentication
 
 /plugin:
+  /admin:
+    /labelconfiguration/resource:
+      get:
+        description: Get resources for specified language and namespace.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        queryParameters:
+          lang:
+            type: string
+            description: Language identifier  of resourece.
+            required: true
+            example: en en-au ru de
+          ns:
+            type: string
+            description: Resource namespace. Typically it is plugin name.
+            required: true
+            example: common dashboard
+        responses:
+          500:
+            description: Resource file not found.
+          200: 
+            description: Resource file found.
+            body:
+              application/json:
+                example: |
+                  {
+                    "title": "Complaints",
+                    "table": {
+                      "fields": {
+                        "id": "ID",
+                        "name": "User Name",
+                        "dob": "Birthday Date
+                      }
+                    }
+                  }
+    /labelconfiguration/admin-resource:
+      get:
+        description: Get extended resource file that required for labels management.
+        queryParameters:
+          lang:
+            type: string
+            description: Language identifier  of resourece.
+            required: true
+            example: en au-en ru de
+          ns:
+            type: string
+            description: Resource namespace. Typically it is plugin name.
+            required: true
+            example: common dashboard
+        responses:
+          500:
+            description: Resource file not found.
+          200: 
+            description: Resource file found.
+            body:
+              application/json:
+                example: |
+                  [
+                    {
+                      "id":"plugins.news.label.enter-feed-url",
+                      "defaultValue":"Enter Feed url",
+                      "description":"",
+                      "value":"Enter Feed url"
+                    },{
+                      "id":"plugins.news.label.description",
+                      "defaultValue":"Displays a RSS/Atom feed",
+                      "description":"",
+                      "value":"Displays a RSS/Atom feed"
+                      }
+                  ]
+      put:
+        description: Update resource record value and description
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        queryParameters:
+          lang:
+            type: string
+            description: Language identifier  of resourece.
+            required: true
+            example: en au-en ru de
+          ns:
+            type: string
+            description: Resource namespace. Typically it is plugin name.
+            required: true
+            example: common dashboard
+        body:
+          application/json:
+            example: |
+              {
+                id: "navigation.label.administration", 
+                value: "New Administration",
+                description: "New Description"
+              }
+        responses:
+          500:
+            description: Resource file was not updated successfully.
+          200: 
+            description: Resource file was updated successfully.
+    /labelconfiguration/languages:
+      get:
+        description: Get list of available languages.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        responses:
+          500:
+            description: Languages not found.
+          200:
+            description: Languages found.
+            body:
+              application/json:
+                example: |
+                  [
+                    "en",
+                    "en-au"
+                  ]
+              
+    /labelconfiguration/namespaces:
+      get: 
+        description: Get list of available namespaces.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        responses:
+          500:
+            description: Namespaces not found.
+          200:
+            description: Namespaces found.
+            body:
+              application/json:
+                example: |
+                  [
+                    {
+                        "id": "common",
+                        "name": "Common"
+                    },
+                    {
+                        "id": "complaint",
+                        "name": "Complaints"
+                    },
+                    {
+                        "id": "casefile",
+                        "name": "Case Files"
+                    },
+                    {
+                        "id": "dashboard",
+                        "name": "Dashboard"
+                    },
+                    {
+                        "id": "task",
+                        "name": "Tasks"
+                    },
+                    {
+                        "id": "search",
+                        "name": "Search"
+                    }
+                  ]                  
+                  
+    /labelconfiguration/settings:
+      get:        
+        description: Get label configuration settings.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        responses:
+          500:
+            description: Settings file not found.
+          200:
+            description: settings file  found.
+            body:
+              application/json:
+                example: |
+                  {
+                      "defaultLang": "en"
+                  }
+      put: 
+        description: Update settings label configuration file.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        body:
+          application/json:
+            example: |
+              {
+                defaultLang: "en-au"
+              }
+        responses:
+          500:
+            description: Settings file was not updated successfully.
+          200: 
+            description: Settings file was updated successfully.
+      
+    /labelconfiguration/admin-resource/reset:
+      post:
+        description: Reset values of resources to default values.
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+        body:
+          application/json:
+            example: |
+              {
+                lng: ["en", 'ru'], 
+                ns: ["common", "dashboard"]
+              }
+        responses:
+          500:
+            description: Resource files were not updated successfully.
+          200:
+            description: Resource files were updated successfully.
   /casefile:
     post:
       description: create a a new case file, or update an existing one.
