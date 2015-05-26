@@ -19,6 +19,11 @@
             "defaultValue": "Change Case Status",
             "description": ""
         },
+        "split-case": {
+            "value": "Split Case",
+            "defaultValue": "Split Case",
+            "description": ""
+        },
         "consolidate": {
             "value": "Consolidate",
             "defaultValue": "Consolidate",
