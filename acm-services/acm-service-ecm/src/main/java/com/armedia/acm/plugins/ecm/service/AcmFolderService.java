@@ -14,7 +14,7 @@ public interface AcmFolderService {
 
     AcmFolder addNewFolder(Long parentFolderId, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException;
+    AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
 
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
 
