@@ -1,9 +1,9 @@
 /**
- * FileDTO schema
+ * Copy FileDTO schema
  */
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "File DTO Schema",
+  "title": "Copy File DTO Schema",
   "type": "object",
   "properties": {
     "originalId": {
