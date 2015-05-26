@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,10 +32,12 @@ public class AcmMultipartFile implements MultipartFile {
 	}
 	
 	public AcmMultipartFile(String name, String originalFileName, String contentType, boolean empty, long size, byte[] bytes, InputStream inputStream, boolean uniqueFileName){
+
+		FolderAndFilesUtils folderAndFilesUtils = new FolderAndFilesUtils();
 		if (uniqueFileName)
 		{
-			this.name = createUniqueIdentificator(name);	
-			this.originalFilename = createUniqueIdentificator(originalFileName);
+			this.name = folderAndFilesUtils.createUniqueIdentificator(name);
+			this.originalFilename = folderAndFilesUtils.createUniqueIdentificator(originalFileName);
 		}
 		else
 		{
@@ -116,29 +119,4 @@ public class AcmMultipartFile implements MultipartFile {
 	public void transferTo(File dest) throws IOException, IllegalStateException {
 		FileCopyUtils.copy(bytes, dest);
 	}
-	
-	private String createUniqueIdentificator(String input)
-	{
-		if (input != null && input.length() > 0)
-		{
-			input = input.replace(" ", "_");
-			
-			SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmssSSS");
-			String dateString = dateFormat.format(new Date());
-			
-			String[] inputArray = input.split("\\.");
-			
-			if (inputArray != null && inputArray.length == 1)
-			{
-				input = input +  "_" + dateString;
-			} 
-			else if (inputArray != null && inputArray.length > 1)
-			{
-				input = input.replace("." + inputArray[inputArray.length - 1], "_" + dateString + "." + inputArray[inputArray.length - 1]);
-			}
-		}
-		
-		return input;
-	}
-
 }

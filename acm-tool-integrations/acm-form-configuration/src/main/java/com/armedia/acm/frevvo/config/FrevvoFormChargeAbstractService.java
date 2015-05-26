@@ -28,6 +28,7 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 
 	private SearchResults searchResults;
 	private AcmContainerDao AcmContainerDao;
+
 	
 	/**
 	 * This method will return all charge codes by type and their details (like title)
@@ -206,7 +207,7 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
 	
 	public AcmContainer createContainer(String rootFolder, String userId, Long objectId, String objectType, String name) throws AcmCreateObjectFailedException
 	{
-		String path = rootFolder + "/" + userId + "/" + FolderAndFilesUtils.buildSafeFolderName(name);
+		String path = rootFolder + "/" + userId + "/" + getFolderAndFilesUtils().buildSafeFolderName(name);
 		AcmContainer container = getAcmContainerDao().findByObjectTypeAndIdOrCreate(objectType, objectId, path, name);
 		
 		if (container != null)

@@ -1,0 +1,183 @@
+{
+    "new-folder": {"value": "New Folder"
+        ,"defaultValue": "New Folder"
+        ,"description": ""
+    }
+    ,"wait-upload": {"value": "Uploading "
+        ,"defaultValue": "Uploading"
+        ,"description": ""
+    }
+    ,"confirm-version": {"value": "Are you sure to set back to older version?"
+        ,"defaultValue": "Are you sure to set back to older version?"
+        ,"description": ""
+    }
+    ,"error": {
+        "retrieve-folder-list": {"value": "Error occurred when retrieving folder list "
+            ,"defaultValue": "Error occurred when retrieving folder list "
+            ,"description": ""
+        }
+        ,"create-folder": {"value": "Error occurred when creating folder "
+            ,"defaultValue": "Error occurred when creating folder "
+            ,"description": ""
+        }
+        ,"delete-folder": {"value": "Error occurred when deleting folder "
+            ,"defaultValue": "Error occurred when deleting folder "
+            ,"description": ""
+        }
+        ,"rename-folder": {"value": "Error occurred when renaming folder "
+            ,"defaultValue": "Error occurred when renaming folder "
+            ,"description": ""
+        }
+        ,"move-folder": {"value": "Error occurred when moving folder "
+            ,"defaultValue": "Error occurred when moving folder "
+            ,"description": ""
+        }
+        ,"copy-folder": {"value": "Error occurred when copying folder "
+            ,"defaultValue": "Error occurred when copying folder "
+            ,"description": ""
+        }
+        ,"upload-file": {"value": "Error occurred when uploading files "
+            ,"defaultValue": "Error occurred when uploading files "
+            ,"description": ""
+        }
+        ,"replace-file": {"value": "Error occurred when uploading files "
+            ,"defaultValue": "Error occurred when uploading files "
+            ,"description": ""
+        }
+        ,"delete-file": {"value": "Error occurred when deleting file "
+            ,"defaultValue": "Error occurred when deleting file "
+            ,"description": ""
+        }
+        ,"rename-file": {"value": "Error occurred when renaming file "
+            ,"defaultValue": "Error occurred when renaming file "
+            ,"description": ""
+        }
+        ,"move-file": {"value": "Error occurred when moving file "
+            ,"defaultValue": "Error occurred when moving file "
+            ,"description": ""
+        }
+        ,"copy-file": {"value": "Error occurred when copying file "
+            ,"defaultValue": "Error occurred when copying file "
+            ,"description": ""
+        }
+        ,"set-version": {"value": "Error occurred when setting version "
+            ,"defaultValue": "Error occurred when setting version "
+            ,"description": ""
+        }
+    }
+
+    ,"menu": {
+        "title-separator": {"value": "----"
+            ,"defaultValue": "----"
+            ,"description": ""
+            }
+        ,"title-new-folder": {"value": "New Folder <kbd>Ctrl+N</kbd>"
+            ,"defaultValue": "New Folder <kbd>Ctrl+N</kbd>"
+            ,"description": ""
+            }
+        ,"title-new-file": {"value": "New Document"
+            ,"defaultValue": "New Document"
+            ,"description": ""
+            }
+        ,"title-rename": {"value": "Rename <kbd>[F2]</kbd>"
+            ,"defaultValue": "Rename <kbd>[F2]</kbd>"
+            ,"description": ""
+            }
+        ,"title-cut": {"value": "Cut <kbd>Ctrl+X</kbd>"
+            ,"defaultValue": "Cut <kbd>Ctrl+X</kbd>"
+            ,"description": ""
+            }
+        ,"title-copy": {"value": "Copy <kbd>Ctrl+C</kbd>"
+            ,"defaultValue": "Copy <kbd>Ctrl+C</kbd>"
+            ,"description": ""
+            }
+        ,"title-paste": {"value": "Paste <kbd>Ctrl+V</kbd>"
+            ,"defaultValue": "Paste <kbd>Ctrl+V</kbd>"
+            ,"description": ""
+            }
+        ,"title-delete": {"value": "Delete <kbd>Ctrl+D</kbd>"
+            ,"defaultValue": "Delete <kbd>Ctrl+D</kbd>"
+            ,"description": ""
+            }
+        ,"title-open": {"value": "Open"
+            ,"defaultValue": "Open"
+            ,"description": ""
+            }
+        ,"title-edit": {"value": "Edit"
+            ,"defaultValue": "Edit"
+            ,"description": ""
+            }
+        ,"title-download": {"value": "Download"
+            ,"defaultValue": "Download"
+            ,"description": ""
+        }
+        ,"title-replace": {"value": "Replace"
+            ,"defaultValue": "Replace"
+            ,"description": ""
+        }
+        ,"title-email": {"value": "Email"
+            ,"defaultValue": "Email"
+            ,"description": ""
+        }
+        ,"title-print": {"value": "Print <kbd>Ctrl+P</kbd>"
+            ,"defaultValue":    "Print <kbd>Ctrl+P</kbd>"
+            ,"description": ""
+        }
+    }
+    ,"tree": {
+        "tooltip-prev-items": {"value": "Review previous items"
+            ,"defaultValue": "Review previous items"
+            ,"description": ""
+        }
+        ,"prev-items": {"value": " items above..."
+            ,"defaultValue": " items above..."
+            ,"description": ""
+        }
+        ,"tooltip-more-items": {"value": "Load more items"
+            ,"defaultValue": "Load more items"
+            ,"description": ""
+        }
+        ,"more-items-begin": {"value": "More items..."
+            ,"defaultValue": "More items..."
+            ,"description": ""
+        }
+        ,"more-items": {"value": " more items..."
+            ,"defaultValue": " more items..."
+            ,"description": ""
+        }
+    }
+    ,"email": {
+        "title": {"value": "Add New Recipients"
+            ,"defaultValue": "Add New Recipients"
+            ,"description": ""
+        }
+        ,"prompt": {"value": "Enter an email address OR search for users within ArkCase."
+            ,"defaultValue": "Enter an email address OR search for users within ArkCase."
+            ,"description": ""
+        }
+        ,"btnTextGo": {"value": "Go!"
+            ,"defaultValue": "Go!"
+            ,"description": ""
+        }
+        ,"btnTextOk": {"value": "Send Email"
+            ,"defaultValue": "Send Email"
+            ,"description": ""
+        }
+        ,"select-user-info": {"value": "Select users to send email"
+            ,"defaultValue": "Select users to send email"
+            ,"description": ""
+        }
+        ,"instruct-email": {"value": "Enter e-mail addresses separated by \";\" or select from the search above"
+            ,"defaultValue": "Enter e-mail addresses separated by \";\" or select from the search above"
+            ,"description": ""
+        }
+        ,"instruct-date": {"value": "Click to enter date"
+            ,"defaultValue": "Click to enter date"
+            ,"description": ""
+        }
+        ,"instruct-time": {"value": "Click to enter time"
+            ,"defaultValue": "Click to enter time"
+            ,"description": ""
+        }
+    }
+}

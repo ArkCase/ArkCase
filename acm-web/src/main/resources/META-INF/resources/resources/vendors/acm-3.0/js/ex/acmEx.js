@@ -13,9 +13,6 @@ var AcmEx = AcmEx || {
         if (AcmEx.Object.onInitialize)  {AcmEx.Object.onInitialize()};
     }
 
-
-
-
     //
     // Depth first tree builder for fancytree (more accurately a forest builder)
     //

@@ -44,7 +44,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <!--create new copy document -->
         <cmis:create-document-by-id-from-content folderId="#[flowVars['dstFolderObject'].id]"
-                                filename="#[message.payload.fileName]"
+                                filename="#[message.inboundProperties.fileName]"
                                 mimeType="#[message.payload.fileMimeType]"
                                 versioningState="MAJOR"
                                 objectType="cmis:document"
