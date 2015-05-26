@@ -22,6 +22,7 @@ import java.util.List;
 public interface EcmFileService
 {
     EcmFile upload(
+            String originalFileName,
             String fileType,
             String fileCategory,
             InputStream fileContents,
@@ -45,6 +46,7 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
+            String originalFileName,
             String fileType,
             MultipartFile file,
             Authentication authentication,

@@ -165,5 +165,19 @@ Task.Controller = Task.Controller || {
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_PRIORITIES, priorities);
     }
 
+    //electronic signature
+    ,MODEL_RETRIEVED_ELECTRONIC_SIGNATURES : "task-model-retrieved-electronic-signature"
+    ,modelRetrievedElectronicSignatures: function(electronicSignatures){
+        Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ELECTRONIC_SIGNATURES, electronicSignatures);
+    }
+    ,VIEW_SIGNED_TASK                   : "task-view-signed-task"
+    ,viewSignedTask: function(taskId,$formSignature){
+        Acm.Dispatcher.fireEvent(this.VIEW_SIGNED_TASK, taskId,$formSignature);
+    }
+    ,MODEL_SIGNED_TASK                   : "task-model-signed-task"
+    ,modelSignedTask: function(electronicSignatures){
+        Acm.Dispatcher.fireEvent(this.MODEL_SIGNED_TASK, electronicSignatures);
+
+    }
 };
 

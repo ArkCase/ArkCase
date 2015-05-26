@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -57,6 +58,8 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             ItemSchema.LastModifiedTime,
             ItemSchema.Body,
             ItemSchema.Size);
+    private boolean autodiscoveryEnabled;
+    private URI clientAccessServer;
 
     @Override
     @Cacheable(value = "outlook-connection-cache", key = "#user.emailAddress")
@@ -69,8 +72,17 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
         ExchangeCredentials credentials = new WebCredentials(user.getEmailAddress(), user.getOutlookPassword());
         service.setCredentials(credentials);
 
-        try {
-            service.autodiscoverUrl(user.getEmailAddress(), redirectionUrl -> true);
+        try
+        {
+            if ( isAutodiscoveryEnabled() )
+            {
+                service.autodiscoverUrl(user.getEmailAddress(), redirectionUrl -> true);
+            }
+            else
+            {
+                service.setUrl(getClientAccessServer());
+            }
+
             return service;
         } catch (Exception e) {
             log.error("Could not connect to Exchange: " + e.getMessage(), e);
@@ -97,7 +109,9 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             boolean sortAscending)
             throws AcmOutlookFindItemsFailedException {
         try {
-            log.debug("finding tasks");
+            log.debug("finding items");
+
+            Objects.requireNonNull(service, "Service cannot be null");
 
             Folder folder = Folder.bind(service, wellKnownFolderName);
 
@@ -257,5 +271,25 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
 
     public void setExchangeVersion(ExchangeVersion exchangeVersion) {
         this.exchangeVersion = exchangeVersion;
+    }
+
+    public boolean isAutodiscoveryEnabled()
+    {
+        return autodiscoveryEnabled;
+    }
+
+    public void setAutodiscoveryEnabled(boolean autodiscoveryEnabled)
+    {
+        this.autodiscoveryEnabled = autodiscoveryEnabled;
+    }
+
+    public URI getClientAccessServer()
+    {
+        return clientAccessServer;
+    }
+
+    public void setClientAccessServer(URI clientAccessServer)
+    {
+        this.clientAccessServer = clientAccessServer;
     }
 }
