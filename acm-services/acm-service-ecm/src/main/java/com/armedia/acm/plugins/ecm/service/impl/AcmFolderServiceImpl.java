@@ -54,7 +54,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder folder = getFolderDao().find(parentFolderId);
 
         //TODO Change this static method call with a spring bean call after merge of other PR's
-        String safeName = FolderAndFilesUtils.buildSafeFolderName(newFolderName);
+        String safeName = getFolderAndFilesUtils().buildSafeFolderName(newFolderName);
 
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());

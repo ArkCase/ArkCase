@@ -4,6 +4,10 @@
         "name": "Common"
     },
     {
+        "id": "login",
+        "name": "Login"
+    },
+    {
         "id": "complaint",
         "name": "Complaints"
     },
@@ -54,5 +58,9 @@
     {
         "id": "costsheet",
         "name": "Cost Tracking"
+    },
+    {
+        "id": "doctree",
+        "name": "Document Management"
     }
 ]

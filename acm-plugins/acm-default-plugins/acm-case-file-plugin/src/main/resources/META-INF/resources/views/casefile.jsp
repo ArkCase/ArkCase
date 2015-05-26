@@ -5,9 +5,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title data-i18n="casefile:window-title">Case Files | ACM | Ark Case Management</title>
+    <title data-i18n="casefile:page-title">Case Files | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search,subscription</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription,doctree</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -192,6 +192,11 @@
                                         </div>
                                     </div>
 
+                                        <%--<c:import url="ribbon-ebrief.jspf">--%>
+                                        <%--<c:import url="ribbon-case.jsp"></c:import>--%>
+                                        <%--<jsp:include page="ribbon-case.jsp" />--%>
+                                        <%--<jsp:include page="abcd" + "/acm-law" + "2.jsp" />--%>
+
                                     <div class="row" id="tabTopBlank">
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n=casefile:"msg.no-case-selected">(No case is selected)</span></p>
                                     </div>
@@ -228,6 +233,9 @@
                                                     <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
                                                 </button>
                                                 <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
+                                                </button>
+                                                <button class="btn btn-default btn-sm" id="btnSplitCase" data-i18n="[data-title]casefile:header.buttons.split-case"data-title="Split Case"><i class="fa fa-code-fork"></i>
+                                                    <span data-i18n="casefile:header.buttons.split-case">Split Case</span>
                                                 </button>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
