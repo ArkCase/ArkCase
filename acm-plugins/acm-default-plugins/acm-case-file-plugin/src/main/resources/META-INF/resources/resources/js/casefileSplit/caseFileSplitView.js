@@ -6,7 +6,7 @@
 CaseFileSplit.View = CaseFileSplit.View || {
     create : function() {
         if (CaseFileSplit.View.MicroData.create)       {CaseFileSplit.View.MicroData.create();}
-        if (CaseFileSplit.View.Navigator.create)       {CaseFileSplit.View.Navigator.create();}
+        if (CaseFileSplit.View.BootstrapWizard.create)       {CaseFileSplit.View.BootstrapWizard.create();}
         if (CaseFileSplit.View.Detail.create)          {CaseFileSplit.View.Detail.create();}
         if (CaseFileSplit.View.People.create)    	  {CaseFileSplit.View.People.create();}
         if (CaseFileSplit.View.Documents.create)       {CaseFileSplit.View.Documents.create();}
@@ -15,7 +15,7 @@ CaseFileSplit.View = CaseFileSplit.View || {
     }
     ,onInitialized: function() {
         if (CaseFileSplit.View.MicroData.onInitialized)       {CaseFileSplit.View.MicroData.onInitialized();}
-        if (CaseFileSplit.View.Navigator.onInitialized)          {CaseFileSplit.View.Navigator.onInitialized();}
+        if (CaseFileSplit.View.BootstrapWizard.onInitialized)          {CaseFileSplit.View.BootstrapWizard.onInitialized();}
         if (CaseFileSplit.View.Detail.onInitialized)          {CaseFileSplit.View.Detail.onInitialized();}
         if (CaseFileSplit.View.People.onInitialized)          {CaseFileSplit.View.People.onInitialized();}
         if (CaseFileSplit.View.Documents.onInitialized)       {CaseFileSplit.View.Documents.onInitialized();}
@@ -35,7 +35,7 @@ CaseFileSplit.View = CaseFileSplit.View || {
         }
     }
 
-    ,Navigator: {
+    ,BootstrapWizard: {
         create: function() {
             this.bootstrapWizardForm = $("#wizardform");
             this.tabPanes            = $(".tab-pane");
@@ -56,10 +56,10 @@ CaseFileSplit.View = CaseFileSplit.View || {
                     var $total = navigation.find('li').length;
                     var $current = index+1;
                     if($total == $current){
-                        CaseFileSplit.View.Navigator.tabPanes.show();
+                        CaseFileSplit.View.BootstrapWizard.tabPanes.show();
                     }
                     else{
-                        CaseFileSplit.View.Navigator.tabPanes.hide();
+                        CaseFileSplit.View.BootstrapWizard.tabPanes.hide();
                         var activeTab = navigation.find('li.active a').attr('href');
                         $(activeTab).show();
                     }
@@ -196,9 +196,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
-                    ,messages: {
-                        addNewRecord: $.t("casefile:people.msg.add-new-record")
-                    }
                     ,actions: {
                         listAction: function(postData, jtParams) {
                             var rc = AcmEx.Object.JTable.getEmptyRecords();
