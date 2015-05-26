@@ -117,7 +117,7 @@ public class FileUploadAPIController
                 {
                     for (final MultipartFile attachment : attachmentsList)
                     {
-                        AcmMultipartFile f = new AcmMultipartFile(
+                            AcmMultipartFile f = new AcmMultipartFile(
                                 attachment.getName(),
                                 attachment.getOriginalFilename(),
                                 attachment.getContentType(),
@@ -128,8 +128,8 @@ public class FileUploadAPIController
                                 true);
 
                         EcmFile temp = getEcmFileService().upload(
-                                fileType,
                                 attachment.getOriginalFilename(),
+                                fileType,
                                 f,
                                 authentication,
                                 folderCmisId,

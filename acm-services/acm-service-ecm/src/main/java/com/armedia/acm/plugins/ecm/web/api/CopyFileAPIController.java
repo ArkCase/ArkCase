@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.FileDTO;
 import com.armedia.acm.plugins.ecm.model.MoveCopyFileDto;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by marjan.stefanoski on 02.04.2015.
@@ -30,7 +34,7 @@ public class CopyFileAPIController {
 
     @RequestMapping(value = "/copyToAnotherContainer/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile copyFile(
+    public FileDTO copyFile(
             @RequestBody MoveCopyFileDto in,
             @PathVariable("targetObjectType") String targetObjectType,
             @PathVariable("targetObjectId") Long targetObjectId,
@@ -53,7 +57,10 @@ public class CopyFileAPIController {
                 log.info("File with id: " + in.getId() + " successfully copied to the location with id: " + in.getFolderId());
             }
             getFileEventPublisher().publishFileCopiedEvent(copyFile,authentication,ipAddress,true);
-            return copyFile;
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setNewFile(copyFile);
+            fileDTO.setOriginalId(Long.toString(in.getId()));
+            return fileDTO;
         } catch (AcmUserActionFailedException e) {
             if (log.isErrorEnabled()) {
                 log.error("Exception occurred while trying to copy file with id: " + in.getId() + " to the location with id:" + in.getFolderId());

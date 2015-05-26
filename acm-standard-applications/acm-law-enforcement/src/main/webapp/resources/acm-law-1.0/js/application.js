@@ -79,6 +79,9 @@ var Application = Application || {
         if ("undefined" != typeof AcmDocument) {
             acmModules.push(AcmDocument);
         }
+        if ("undefined" != typeof CaseFileSplit) {
+            acmModules.push(CaseFileSplit);
+        }
 
 
         Application.prepareModules(context);

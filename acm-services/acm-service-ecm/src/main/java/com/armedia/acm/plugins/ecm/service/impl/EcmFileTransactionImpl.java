@@ -32,6 +32,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private MuleClient muleClient;
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -114,7 +115,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", FolderAndFilesUtils.getActiveVersionCmisId(ecmFile));
+        messageProps.put("ecmFileId", getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile));
         messageProps.put("fileName", ecmFile.getFileName());
         messageProps.put("mimeType", ecmFile.getFileMimeType());
         messageProps.put("inputStream", fileInputStream);
@@ -221,4 +222,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.folderDao = folderDao;
     }
 
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
+    }
 }
