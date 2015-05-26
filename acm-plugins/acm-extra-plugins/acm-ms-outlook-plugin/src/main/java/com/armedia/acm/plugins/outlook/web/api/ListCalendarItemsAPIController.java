@@ -21,15 +21,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 @RequestMapping({ "/api/v1/plugin/outlook", "/api/latest/plugin/outlook" })
 public class ListCalendarItemsAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    DateFormat searchDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private DateTimeFormatter searchDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private OutlookService outlookService;
     private UserOrgService userOrgService;
 
