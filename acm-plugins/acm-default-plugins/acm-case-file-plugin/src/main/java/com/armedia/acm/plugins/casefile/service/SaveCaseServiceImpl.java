@@ -94,7 +94,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     }
 
     public void createOutlookFolder(CaseFile caseFile) {
-        outlookContainerCalendarService.createFolder(caseFile.getCaseNumber(),
+        outlookContainerCalendarService.createFolder(caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
                 caseFile.getContainer(), caseFile.getParticipants());
     }
 
