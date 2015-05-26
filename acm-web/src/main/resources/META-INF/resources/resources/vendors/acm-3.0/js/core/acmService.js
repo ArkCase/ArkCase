@@ -7,6 +7,15 @@ Acm.Service = {
     create: function() {
     }
 
+
+    ,_contextPath: null
+    ,getContextPath: function() {
+        return this._contextPath;
+    }
+    ,setContextPath: function(contextPath) {
+        this._contextPath = contextPath;
+    }
+
     ,ajax: function(arg) {
         if (!arg.type) {
             arg.type = 'GET';
@@ -17,6 +26,14 @@ Acm.Service = {
         if (!arg.dataType) {
             arg.dataType = 'json';
         }
+
+        var contextPath = this.getContextPath();
+        if (contextPath) {
+            if (0 != arg.url.indexOf(contextPath)) {
+                arg.url = contextPath + arg.url;
+            }
+        }
+
         if (Acm.isNotEmpty(arg.data)) {
             if (Acm.isEmpty(arg.contentType)) {
                 arg.contentType = "application/json; charset=utf-8";
