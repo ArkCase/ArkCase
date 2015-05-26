@@ -284,12 +284,14 @@ CaseFile.View = CaseFile.View || {
             this.$edtConsolidateCase       = $("#edtConsolidateCase");
             this.$btnEditCaseFile    	   = $("#btnEditCaseFile");
             this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus");
+            this.$btnSplitCase             = $("#btnSplitCase");
             this.$btnConsolidateCase       = $("#btnConsolidateCase");
             this.$btnReinvestigateCaseFile = $("#btnReinvestigate");
             this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
             this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
             this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
+            this.$btnSplitCase            .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
@@ -334,7 +336,10 @@ CaseFile.View = CaseFile.View || {
                 }
             });
         }
-
+        ,onClickBtnSplitCase: function(event,ctrl){
+            var url = App.getContextPath() + "/plugin/casefile/split/" + CaseFile.View.getActiveCaseFileId();
+            window.open(url);
+        }
         //---- demo how to use object picker ----
         ,onPickObjectDemo: function() {
             SearchBase.Dialog.create({name: "demoDialog"
