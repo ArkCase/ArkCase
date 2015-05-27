@@ -5,9 +5,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title data-i18n="casefile:window-title">Case Files | ACM | Ark Case Management</title>
+    <title data-i18n="casefile:page-title">Case Files | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search,subscription</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription,doctree</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -191,6 +191,11 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                        <%--<c:import url="ribbon-ebrief.jspf">--%>
+                                        <%--<c:import url="ribbon-case.jsp"></c:import>--%>
+                                        <%--<jsp:include page="ribbon-case.jsp" />--%>
+                                        <%--<jsp:include page="abcd" + "/acm-law" + "2.jsp" />--%>
 
                                     <div class="row" id="tabTopBlank">
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n=casefile:"msg.no-case-selected">(No case is selected)</span></p>

@@ -45,7 +45,7 @@ Profile.Model = {
     }
     ,Info: {
         create: function() {
-            this._profileInfo    = new Acm.Model.SessionData("AcmProfile");
+            this._profileInfo    = new Acm.Model.SessionData(App.Model.Storage.SESSION_DATA_PROFILE);
 
             Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_UPLOADED_PICTURE        ,this.onModelUploadedPicture);
 
