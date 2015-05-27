@@ -183,7 +183,7 @@ DocTree.Service = {
     ,replaceFile: function(formData, fileId, cacheKey, callerData) {
         return $.Deferred(function($dfd){
             var url = DocTree.Service.API_REPLACE_FILE_ + fileId;
-            Acm.Service.ajax({type: 'POST'
+            return Acm.Service.ajax({type: 'POST'
                 ,url: url
                 ,data: formData
                 ,processData: false
@@ -366,9 +366,9 @@ DocTree.Service = {
         )
     }
     ,moveFile: function(objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_MOVE_FILE_ + objType + "/" + objId;
+        var url = this.API_MOVE_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        Acm.Service.call({type: "POST"
+        return Acm.Service.call({type: "POST"
             ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
@@ -404,9 +404,9 @@ DocTree.Service = {
         })
     }
     ,copyFile: function(objType, objId, folderId, fileId, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_COPY_FILE_ + objType + "/" + objId;
+        var url = this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        Acm.Service.call({type: "POST"
+        return Acm.Service.call({type: "POST"
             ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
@@ -435,8 +435,8 @@ DocTree.Service = {
         })
     }
     ,moveFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, callerData) {
-        var url = App.getContextPath() + this.API_MOVE_FOLDER_ + subFolderId + "/" + folderId;
-        Acm.Service.call({type: "POST"
+        var url = this.API_MOVE_FOLDER_ + subFolderId + "/" + folderId;
+        return Acm.Service.call({type: "POST"
             ,url: url
             ,callback: function(response) {
                 if (response.hasError) {
@@ -473,8 +473,8 @@ DocTree.Service = {
     ,copyFolder: function(objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
 //        var url = App.getContextPath() + this.API_COPY_FOLDER_ + objType + "/" + objId;
 //        var data = {"id": subFolderId, "folderId": folderId};
-        var url = App.getContextPath() + this.API_COPY_FOLDER_ + subFolderId + "/" + folderId + "/" + objType + "/" + objId;
-        Acm.Service.call({type: "POST"
+        var url = this.API_COPY_FOLDER_ + subFolderId + "/" + folderId + "/" + objType + "/" + objId;
+        return Acm.Service.call({type: "POST"
             ,url: url
             //,data: JSON.stringify(data)
             ,callback: function(response) {
@@ -511,8 +511,8 @@ DocTree.Service = {
     }
 
     ,setActiveVersion: function(fileId, version, cacheKey, callerData) {
-        var url = App.getContextPath() + this.API_SET_ACTIVE_VERSION_ + fileId + "?versionTag=" + version;
-        Acm.Service.call({type: "POST"
+        var url = this.API_SET_ACTIVE_VERSION_ + fileId + "?versionTag=" + version;
+        return Acm.Service.call({type: "POST"
             ,url: url
             ,callback: function(response) {
                 if (response.hasError) {
@@ -550,7 +550,7 @@ DocTree.Service = {
 
     ,sendEmail: function(emailNotifications) {
         var url = App.getContextPath() + this.API_SEND_EMAIL_;
-        Acm.Service.call({type: "POST"
+        return Acm.Service.call({type: "POST"
             ,url: url
             ,data: JSON.stringify(emailNotifications)
             ,callback: function(response) {
@@ -564,6 +564,7 @@ DocTree.Service = {
                         }
                     }
                     if(Acm.isNotEmpty(failed)){
+                        //jwu: missed it at the code review. We do not want to have UI code in model/service
                         Acm.MessageBoard.show("Email delivery failed to :  ") + failed + "\n" + "Please check provided email addresses and try again";
                     }
                 }
