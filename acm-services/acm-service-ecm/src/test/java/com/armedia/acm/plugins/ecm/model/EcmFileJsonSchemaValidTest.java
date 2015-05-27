@@ -63,6 +63,14 @@ public class EcmFileJsonSchemaValidTest
     {
         validate("/jsonSchemas/copy-folder-dto-schema.json");
     }
+
+    @Test
+    public void deleteFileResultsSchema() throws Exception
+    {
+        validate("/jsonSchemas/delete-file-results-schema.json");
+    }
+
+
     private void validate(String path) throws IOException, ProcessingException
     {
         Resource schemaResource = new ClassPathResource(path);
