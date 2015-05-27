@@ -12,12 +12,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 11/3/14.
@@ -28,12 +29,14 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
     private InputStream mockIs;
     private EcmFileService mockFileService;
     private Authentication mockAuthentication;
+    private HttpServletRequest mockRequest;
 
     @Before
     public void setUp() throws Exception
     {
         mockIs = createMock(InputStream.class);
         mockAuthentication = createMock(Authentication.class);
+        mockRequest = createMock(HttpServletRequest.class);
 
         unit = new FrevvoTestService();
 
@@ -41,6 +44,7 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         unit.setEcmFileService(mockFileService);
 
         unit.setAuthentication(mockAuthentication);
+        unit.setRequest(mockRequest);
     }
 
     @Test
@@ -62,8 +66,13 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         attachments.put("form_" + unit.getFormName(), files);
 
         Capture<MultipartFile> capturedFile = new Capture<>();
+        Capture<String> fileName = new Capture<>();
 
+        expect(mockRequest.getParameter("mode")).andReturn("create");
+        expect(mockRequest.getParameter("containerId")).andReturn("501");
+        expect(mockRequest.getParameter("folderId")).andReturn("502");
         expect(mockFileService.upload(
+                capture(fileName),
                 eq(unit.getFormName() + "_xml"),
                 capture(capturedFile),
                 eq(unit.getAuthentication()),
@@ -80,5 +89,8 @@ public class FrevvoFormAbstractServiceTest extends EasyMockSupport
         MultipartFile found = capturedFile.getValue();
 
         assertEquals(found.getSize(), formXml.getSize());
+
+        String actualFilename = fileName.getValue();
+        assertTrue(actualFilename.startsWith("form-orig"));
     }
 }
