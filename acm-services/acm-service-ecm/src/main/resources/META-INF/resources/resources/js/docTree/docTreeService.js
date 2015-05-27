@@ -30,6 +30,7 @@ DocTree.Service = {
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
         var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        //var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
         if (0 < folderId) {
             url += "/" + folderId;
         }
@@ -140,9 +141,8 @@ DocTree.Service = {
 
     ,uploadFiles: function(formData, cacheKey, callerData) {
         return $.Deferred(function($dfd){
-            var url = App.getContextPath() + DocTree.Service.API_UPLOAD_FILE;
             Acm.Service.ajax({type: 'POST'
-                ,url: url
+                ,url: DocTree.Service.API_UPLOAD_FILE
                 ,data: formData
                 ,processData: false
                 ,contentType: false
@@ -150,6 +150,7 @@ DocTree.Service = {
                     if (response.hasError) {
                         DocTree.Controller.modelUploadedFiles(response, callerData);
                         $dfd.reject();
+
                     } else {
                         var uploadedFiles = null;
                         if (DocTree.Model.validateUploadInfo(response)) {
@@ -181,7 +182,7 @@ DocTree.Service = {
     }
     ,replaceFile: function(formData, fileId, cacheKey, callerData) {
         return $.Deferred(function($dfd){
-            var url = App.getContextPath() + DocTree.Service.API_REPLACE_FILE_ + fileId;
+            var url = DocTree.Service.API_REPLACE_FILE_ + fileId;
             Acm.Service.ajax({type: 'POST'
                 ,url: url
                 ,data: formData
@@ -224,8 +225,8 @@ DocTree.Service = {
     }
 
     ,createFolder: function(parentId, folderName, cacheKey, callerData) {
-        var url = App.getContextPath() + this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
-        Acm.Service.call({type: "PUT"
+        var url = this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
+        return Acm.Service.call({type: "PUT"
             ,url: url
             ,callback: function(response) {
                 if (response.hasError) {
@@ -252,8 +253,8 @@ DocTree.Service = {
         });
     }
     ,deleteFolder: function(folderId, cacheKey, callerData) {
-        var url = App.getContextPath() + this.API_DELETE_FOLDER_ + folderId;
-        Acm.Service.call({type: "DELETE"
+        var url = this.API_DELETE_FOLDER_ + folderId;
+        return Acm.Service.call({type: "DELETE"
             ,url : url
             ,callback: function(response) {
                 if (response.hasError) {
@@ -275,12 +276,13 @@ DocTree.Service = {
                     }
                 } //end else if
             }
-        })
+        });
     }
     ,deleteFile: function(fileId, cacheKey, callerData) {
-        var url = App.getContextPath() + this.API_DELETE_FILE_ + fileId;
-        Acm.Service.asyncDelete(
-            function(response) {
+        var url = this.API_DELETE_FILE_ + fileId;
+        return Acm.Service.call({type: "DELETE"
+            ,url: url
+            ,callback: function(response) {
                 if (response.hasError) {
                     DocTree.Controller.modelDeletedFile(response, fileId, cacheKey, callerData);
 
@@ -295,14 +297,14 @@ DocTree.Service = {
                                     folderList.totalChildren--;
                                     DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                     DocTree.Controller.modelDeletedFile(response, fileId, cacheKey, callerData);
+                                    return true;
                                 }
                             }
                         }
                     }
                 } //end else
             }
-            ,url
-        )
+        });
     }
     ,renameFolder: function(folderName, folderId, cacheKey, callerData) {
         var url = App.getContextPath() + this.API_RENAME_FOLDER_ + folderId + "/" + folderName;

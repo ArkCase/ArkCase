@@ -123,6 +123,25 @@ CaseFile.Model = CaseFile.Model || {
         return ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, objId);
     }
 
+    ,Config: {
+        CONFIG_NAME_CASE_FILE : "caseFile"
+        ,request: function() {
+            App.Model.Config.requestConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE).done(function(data) {
+                var cfg = App.Model.Config.getConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE);
+                if (Acm.isNotEmpty(cfg)) {
+                    var myCfg = App.Model.Config.getMyConfig();
+                    var settings = cfg;
+                    if (Acm.isNotEmpty(settings)) {
+                        myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
+                        myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
+                        myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
+                    }
+                }
+                var z = 1;
+            });
+        }
+    }
+
     ,Tree: {
         create: function() {
             if (CaseFile.Model.Tree.Key.create)        {CaseFile.Model.Tree.Key.create();}
