@@ -7,50 +7,51 @@
       "type": "integer",
       "description": "unique ID for the original folder"
     },
-    "newFolder":{
-        "id":{
-            "type": "integer",
-            "description": "unique ID for this folder",
-            "minimum": 1
-        }
-        ,
-        "creator": {
-            "type": "string",
-            "description": "User id that created the folder; could be a system user"
-        }
-        ,
-        "modifier": {
-            "type": "string",
-            "description": "User id that last updated the folder; could be a system user"
+    "newFolder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "unique ID for this folder",
+          "minimum": 1
         },
-        "created":{
+        "creator": {
+          "type": "string",
+          "description": "User id that created the folder; could be a system user"
+        },
+        "modifier": {
+          "type": "string",
+          "description": "User id that last updated the folder; could be a system user"
+        },
+        "created": {
           "type": "string",
           "description": "Date the folder was added to the system",
           "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
-        }
-        ,
-        "modified":
-        {
-            "type": "string",
-            "description": "Date the folder was last modified",
-            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
         },
-        "cmisFolderId":{
-            "type": "string",
-            "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
-        }
-        ,
+        "modified": {
+          "type": "string",
+          "description": "Date the folder was last modified",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}[+-][0-9]{4}$"
+        },
+        "cmisFolderId": {
+          "type": "string",
+          "description": "CMIS Folder ID uniquely identifying this folder in the CMIS repository"
+        },
         "parentFolderId": {
-            "type": "integer",
-            "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
-            "minimum": 1
+          "type": "integer",
+          "description": "ID of the parent folder; if null, this folder is a top-level folder and has no parent",
+          "minimum": 1
         },
-        "name":{
-            "type": "string",
-            "description": "Folder name"
+        "name": {
+          "type": "string",
+          "description": "Folder name"
         }
-        },
+      },
       "required": ["fileType"]
+    }
     },
-  "required": ["originalFolderId","newFolder"]
+    "required": [
+      "originalFolderId",
+      "newFolder"
+    ]
 }
