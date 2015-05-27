@@ -4,6 +4,10 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -26,6 +30,11 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileEventUtility caseFileEventUtility;
     private MuleClient muleClient;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private OutlookContainerCalendarService outlookContainerCalendarService;
+    private UserDao userDao;
+
+    private boolean autoCreateFolderForCaseFile;
+    private boolean autoDeleteFolderAfterCaseClosed;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -37,7 +46,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         if ( newCase )
         {
             in.setCreator(auth.getName());
-
         }
 
         in.setModified(new Date());
@@ -62,6 +70,16 @@ public class SaveCaseServiceImpl implements SaveCaseService
             throw e;
         }
 
+        //create calendar folder
+        if (autoCreateFolderForCaseFile && newCase) {
+            createOutlookFolder(saved);
+        }
+
+        if (!newCase && !StringUtils.isEmpty(saved.getContainer().getCalendarFolderId())) {
+            //update folder participants
+            updateOutlookFolderPerticipants(saved);
+        }
+
         if ( newCase )
         {
             getCaseFileEventUtility().raiseEvent(retval, retval.getStatus(), new Date(), ipAddress, auth.getName(), auth);
@@ -70,8 +88,20 @@ public class SaveCaseServiceImpl implements SaveCaseService
         {
         	getCaseFileEventUtility().raiseEvent(retval, "updated", new Date(), ipAddress, auth.getName(), auth);
         }
-                
+
+
         return saved;
+    }
+
+    public void createOutlookFolder(CaseFile caseFile) {
+        outlookContainerCalendarService.createFolder(caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
+                caseFile.getContainer(), caseFile.getParticipants());
+    }
+
+    private void updateOutlookFolderPerticipants(CaseFile caseFile) {
+        AcmContainer container = caseFile.getContainer();
+        outlookContainerCalendarService.updateFolderParticipants(container.getCalendarFolderId(),
+                caseFile.getParticipants());
     }
 
     public CaseFileDao getCaseFileDao()
@@ -122,5 +152,21 @@ public class SaveCaseServiceImpl implements SaveCaseService
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public void setOutlookContainerCalendarService(OutlookContainerCalendarService outlookContainerCalendarService) {
+        this.outlookContainerCalendarService = outlookContainerCalendarService;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public void setAutoCreateFolderForCaseFile(boolean autoCreateFolderForCaseFile) {
+        this.autoCreateFolderForCaseFile = autoCreateFolderForCaseFile;
+    }
+
+    public void setAutoDeleteFolderAfterCaseClosed(boolean autoDeleteFolderAfterCaseClosed) {
+        this.autoDeleteFolderAfterCaseClosed = autoDeleteFolderAfterCaseClosed;
     }
 }
