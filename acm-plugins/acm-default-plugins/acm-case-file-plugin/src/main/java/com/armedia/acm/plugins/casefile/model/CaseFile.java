@@ -478,7 +478,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         return objectType;
     }
 
-
     @Override
     public String toString()
     {
