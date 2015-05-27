@@ -41,6 +41,12 @@ public class EcmFileJsonSchemaValidTest
     }
 
     @Test
+    public void validateCopyFileDtoSchema() throws Exception
+    {
+        validate("/jsonSchemas/copy-file-dto-schema.json");
+    }
+
+    @Test
     public void validateFolderSchema() throws Exception
     {
         validate("/jsonSchemas/folder-schema.json");
