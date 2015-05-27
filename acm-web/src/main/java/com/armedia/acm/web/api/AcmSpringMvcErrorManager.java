@@ -6,6 +6,7 @@ import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.crypto.exceptions.AcmEncryptionBadKeyOrDataException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -68,6 +69,13 @@ public class AcmSpringMvcErrorManager
     {
         log.error("Invalid outlook password: " + e.getMessage(), e);
         sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
+
+    @ExceptionHandler(AcmOutlookItemNotFoundException.class)
+    public void outlookItemNotFound(HttpServletResponse response, Exception e)
+    {
+        log.error("Requested item not found: " + e.getMessage(), e);
+        sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
     }
 
     protected void sendResponse(HttpStatus status, HttpServletResponse response, String message)
