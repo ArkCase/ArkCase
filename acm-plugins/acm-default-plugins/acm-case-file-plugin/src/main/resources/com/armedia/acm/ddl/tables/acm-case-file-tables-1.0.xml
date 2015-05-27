@@ -232,5 +232,4 @@
                               defaultNullValue="CASE_FILE"
                               tableName="acm_case_file"/>
     </changeSet>
-
 </databaseChangeLog>

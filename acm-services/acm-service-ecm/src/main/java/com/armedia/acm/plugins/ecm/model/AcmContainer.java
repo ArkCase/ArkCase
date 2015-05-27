@@ -58,6 +58,9 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @JoinColumn(name = "cm_folder_id")
     private AcmFolder folder;
 
+    @Column(name = "cm_outlook_folder_id", nullable = true)
+    private String calendarFolderId;
+
     @Override
     public Date getCreated()
     {
@@ -161,5 +164,13 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     public void setContainerObjectTitle(String containerObjectTitle)
     {
         this.containerObjectTitle = containerObjectTitle;
+    }
+
+    public String getCalendarFolderId() {
+        return calendarFolderId;
+    }
+
+    public void setCalendarFolderId(String calendarFolderId) {
+        this.calendarFolderId = calendarFolderId;
     }
 }
