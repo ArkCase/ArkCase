@@ -11,6 +11,8 @@
       "description": "unique ID for the original ECM file"
     },
     "newFile": {
+      "type":"object",
+      "properties": {
       "fileId": {
         "type": "integer",
         "description": "unique ID for this ECM file",
@@ -332,6 +334,7 @@
       "versions",
       "tags"
     ]
+  }
   },
   "required": ["originalId","newFile"]
 }
