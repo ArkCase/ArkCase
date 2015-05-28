@@ -27,10 +27,108 @@ title: ArkCase Document Management
               schema:
                 !include folder-list-schema.json
   /id/{fileId}:
+    uriParameters:
+      fileId:
+        description: Object ID of the desired file.
+        type: integer
+        minimum: 1
+        required: true
     delete:
       description: Remove the requested file (both metadata and the content file itself)
+      responses:
+        200:
+          description: File was deleted.
+          body:
+            application/json: 
+              schema:
+                !include delete-file-results-schema.json
+              example: |
+                {
+                  "Message" : "File deleted successfully: ",
+                  "name" : "form_close_complaint_14112014141531007.xml",
+                  "deletedFileId" : 4478
+                }
+        400:
+          description: File could not be deleted
+          body:
+            text/plain:
+              example: The body will contain an error message.
+        403:
+            description: User is not authorized to delete the file.
+            
     get:
-      description: Get file metadata      
+      description: Get file metadata
+      responses:
+        200: 
+          description: File found; metadata is in the response body
+          body:
+            application/json:
+              schema:
+                !include ecm-file-schema.json
+              example: |
+                {
+                  "fileId" : 143997,
+                  "status" : "ACTIVE",
+                  "created" : "2015-05-11T16:54:32.580-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T16:54:32.580-0400",
+                  "modifier" : "bthomas",
+                  "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
+                  "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
+                  "fileMimeType" : "text/xml",
+                  "folder" : {
+                    "id" : 35372,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "name" : "ROOT",
+                    "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                    "parentFolderId" : null
+                  },
+                  "container" : {
+                    "id" : 33953,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "containerObjectType" : "CASE_FILE",
+                    "containerObjectId" : 2961,
+                    "containerObjectTitle" : "20150204_2961",
+                    "folder" : {
+                      "id" : 35372,
+                      "created" : "2015-02-04T15:50:11.957-0500",
+                      "creator" : "sally-acm",
+                      "modified" : "2015-02-04T15:50:11.957-0500",
+                      "modifier" : "sally-acm",
+                      "name" : "ROOT",
+                      "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                      "parentFolderId" : null
+                    }
+                  },
+                  "fileType" : "ot",
+                  "activeVersionTag" : "1.0",
+                  "category" : "Document",
+                  "versions" : [{
+                      "id" : 143998,
+                      "created" : "2015-05-11T16:54:32.605-0400",
+                      "creator" : "bthomas",
+                      "modified" : "2015-05-11T16:54:32.605-0400",
+                      "modifier" : "bthomas",
+                      "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+                      "versionTag" : "1.0"
+                    }
+                  ],
+                  "tags" : []
+                }
+      
+        400:
+          description: File could not be deleted
+          body:
+            text/plain:
+              example: The body will contain an error message.
+        403:
+            description: User is not authorized to delete the file.
   /copyToAnotherContainer/{targetObjectType}/{targetObjectId}:
     uriParameters:
       targetObjectType:
@@ -63,64 +161,71 @@ title: ArkCase Document Management
                 !include copy-file-dto-schema.json
               example: |
                 {
-                  "originalId":3435,
-                  "newFile": {
-                    "fileId" : 143997,
+                  "originalId" : "25435",
+                  "newFile" : {
+                    "fileId" : 31124,
                     "status" : "ACTIVE",
-                    "created" : "2015-05-11T16:54:32.580-0400",
-                    "creator" : "bthomas",
-                    "modified" : "2015-05-11T16:54:32.580-0400",
-                    "modifier" : "bthomas",
-                    "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
-                    "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
-                    "fileMimeType" : "text/xml",
+                    "created" : "2015-05-27T18:42:31.387-0400",
+                    "creator" : "ebmillar",
+                    "modified" : "2015-05-27T18:42:31.387-0400",
+                    "modifier" : "ebmillar",
+                    "versionSeriesId" : "workspace://SpacesStore/4bac086d-fab7-4128-a027-00017ac368bc;1.0",
+                    "fileName" : "Report_of_Investigation_02042015175208434.pdf",
+                    "fileMimeType" : "application/pdf;frevvo-snapshot=true; charset=utf-8",
                     "folder" : {
-                      "id" : 35372,
-                      "created" : "2015-02-04T15:50:11.957-0500",
-                      "creator" : "sally-acm",
-                      "modified" : "2015-02-04T15:50:11.957-0500",
-                      "modifier" : "sally-acm",
+                      "id" : 20164,
+                      "created" : "2014-11-18T08:09:29.250-0500",
+                      "creator" : "ebmillar",
+                      "modified" : "2014-11-18T08:09:29.250-0500",
+                      "modifier" : "ebmillar",
                       "name" : "ROOT",
-                      "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                      "cmisFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
                       "parentFolderId" : null
                     },
                     "container" : {
-                      "id" : 33953,
-                      "created" : "2015-02-04T15:50:11.957-0500",
-                      "creator" : "sally-acm",
-                      "modified" : "2015-02-04T15:50:11.957-0500",
-                      "modifier" : "sally-acm",
+                      "id" : 15812,
+                      "created" : "2014-11-18T08:09:29.250-0500",
+                      "creator" : "ebmillar",
+                      "modified" : "2014-11-18T08:09:29.250-0500",
+                      "modifier" : "ebmillar",
                       "containerObjectType" : "CASE_FILE",
-                      "containerObjectId" : 2961,
-                      "containerObjectTitle" : "20150204_2961",
+                      "containerObjectId" : 4893,
+                      "containerObjectTitle" : "20141118_4893",
                       "folder" : {
-                        "id" : 35372,
-                        "created" : "2015-02-04T15:50:11.957-0500",
-                        "creator" : "sally-acm",
-                        "modified" : "2015-02-04T15:50:11.957-0500",
-                        "modifier" : "sally-acm",
+                        "id" : 20164,
+                        "created" : "2014-11-18T08:09:29.250-0500",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T08:09:29.250-0500",
+                        "modifier" : "ebmillar",
                         "name" : "ROOT",
-                        "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                        "cmisFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
                         "parentFolderId" : null
-                      }
+                      },
+                      "calendarFolderId" : null
                     },
-                    "fileType" : "ot",
+                    "fileType" : "roi",
                     "activeVersionTag" : "1.0",
                     "category" : "Document",
                     "versions" : [{
-                        "id" : 143998,
-                        "created" : "2015-05-11T16:54:32.605-0400",
-                        "creator" : "bthomas",
-                        "modified" : "2015-05-11T16:54:32.605-0400",
-                        "modifier" : "bthomas",
-                        "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+                        "id" : 31125,
+                        "created" : "2015-05-27T18:42:31.395-0400",
+                        "creator" : "ebmillar",
+                        "modified" : "2015-05-27T18:42:31.395-0400",
+                        "modifier" : "ebmillar",
+                        "cmisObjectId" : "workspace://SpacesStore/b169cb17-4ccc-41aa-8dbc-96a5aa8a777e;1.0",
                         "versionTag" : "1.0"
                       }
                     ],
                     "tags" : []
                   }
                 }
-
+        500:
+          description: File could not be moved
+          body:
+            text/plain:
+              example: The body will contain an error message.
+        403:
+            description: User is not authorized to move the file.
   /copyWithinContainer:
     post:
       description: Copy one or more files to an existing folder in the same container
@@ -162,7 +267,7 @@ title: ArkCase Document Management
           body:
             application/json:
               schema:
-                !include folder-schema.json
+                !include copy-folder-dto-schema.json
               example: |
                 {
                   "originalFolderId":567,
@@ -175,7 +280,7 @@ title: ArkCase Document Management
                   "name" : "another test",
                   "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
                   "parentFolderId" : 141019
-                  }
+                }
                 }
   /folder/{folderId}:
       delete:
