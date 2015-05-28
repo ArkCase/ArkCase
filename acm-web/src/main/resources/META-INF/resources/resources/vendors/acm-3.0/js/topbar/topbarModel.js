@@ -19,7 +19,7 @@ Topbar.Model = {
 
     ,QuickSearch: {
         create: function() {
-            this._quickSearchTerm = new Acm.Model.SessionData("AcmQuickSearchTerm");
+            this._quickSearchTerm = new Acm.Model.SessionData(App.Model.Storage.SESSION_DATA_QUICK_SEARCH_TERM);
 
             Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM, this.onViewChangedQuickSearchTerm);
         }

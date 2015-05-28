@@ -122,15 +122,15 @@ DocTree.View = DocTree.View || {
             //prepare to create dialog box
             var args = {
                 name: "Send Email"
-                , title: "Add New Recipients"
-                , prompt: "Enter an email address OR search for users within ArkCase."
-                , btnGoText: "Go!"
-                , btnOkText: "Send Email"
+                , title: $.t("doctree:email.title")
+                , prompt: $.t("doctree:email.prompt")
+                , btnGoText: $.t("doctree:email.btnTextGo")
+                , btnOkText: $.t("doctree:email.btnTextOk")
                 , filters: [{key: "Object Type", values: ["USER"]}]
                 , onClickBtnPrimary: function (event, ctrl) {
                     var emailAddresses = ($dlgSelector.find("#recipientsList").val().split(";"));
                     if(Acm.isArrayEmpty(emailAddresses) && emailAddresses[0] != ""){
-                        Acm.Dialog.info("Select users to send email");
+                        Acm.Dialog.info($.t("doctree:email.select-user-info"));
                         dlgSendEmail.show();
                     }
                     else{
@@ -152,7 +152,7 @@ DocTree.View = DocTree.View || {
                 var $emailFormGroup = $("<div/>")
                     .addClass("form-group acm-emailFormGroup")
                     //.css({"display": "inline-block", "width": "100%", "text-align": "left"})
-                    .text("Enter e-mail addresses separated by \";\" or select from the search above")
+                    .text($.t("doctree:email.instruct-email"))
                     .prependTo($dlgSelector.find('.modal-footer'));
 
                 var $edtEmailRecipients = $("<input/>")
@@ -196,13 +196,13 @@ DocTree.View = DocTree.View || {
                 var $edtSendLaterDate = $("<input/>")
                     .attr("type", "text")
                     .attr("id", "sendLaterDate")
-                    .attr("placeholder", "Click to enter date")
+                    .attr("placeholder", $.t("doctree:email.instruct-date"))
                     .addClass("input-s-sm");
 
                 var $edtSendLaterTime = $("<p/><input/>")
                     .attr("type", "text")
                     .attr("id", "sendLaterTime")
-                    .attr("placeholder", "Click to enter time")
+                    .attr("placeholder", $.t("doctree:email.instruct-time"))
                     .addClass("input-s-sm");
 
                 $edtSendLaterDate.appendTo($edtSendLaterDateTime);
@@ -281,7 +281,7 @@ DocTree.View = DocTree.View || {
     }
 
     ,_addFileNode: function(folderNode, name, type) {
-        var fileNode = folderNode.addChildren({"title": "Uploading " + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.Source.getHtmlAction()});
+        var fileNode = folderNode.addChildren({"title": $.t("doctree:wait-upload") + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.Source.getHtmlAction()});
         //fileNode.setStatus("loading");
         DocTree.View.markNodePending(fileNode);
         return fileNode;
@@ -475,34 +475,34 @@ DocTree.View = DocTree.View || {
             }
         });
     }
-    ,_getNameOrig: function(name) {
-        if (Acm.isEmpty(name)) {
-            return name;
-        }
-
-        var nameOrig = "";
-        var und_parts = name.split("_");
-        if (und_parts && 2 <= und_parts.length) {
-            nameOrig += name.substring(0, name.length - und_parts[und_parts.length - 1].length - 1);
-        } else {
-            return name;
-        }
-        var dot_parts = und_parts[und_parts.length - 1].split(".");
-        if (dot_parts && 2 <= dot_parts.length) {
-            nameOrig += "." + dot_parts[dot_parts.length - 1];
-        }
-        if (Acm.isEmpty(nameOrig)) {
-            nameOrig = name;
-        }
-        return nameOrig;
-    }
+//    ,_getNameOrig: function(name) {
+//        if (Acm.isEmpty(name)) {
+//            return name;
+//        }
+//
+//        var nameOrig = "";
+//        var und_parts = name.split("_");
+//        if (und_parts && 2 <= und_parts.length) {
+//            nameOrig += name.substring(0, name.length - und_parts[und_parts.length - 1].length - 1);
+//        } else {
+//            return name;
+//        }
+//        var dot_parts = und_parts[und_parts.length - 1].split(".");
+//        if (dot_parts && 2 <= dot_parts.length) {
+//            nameOrig += "." + dot_parts[dot_parts.length - 1];
+//        }
+//        if (Acm.isEmpty(nameOrig)) {
+//            nameOrig = name;
+//        }
+//        return nameOrig;
+//    }
     ,_matchFileNode: function(type, name, fileNodes) {
         var fileNode = null;
         for (var i = 0; i < fileNodes.length; i++) {
-            var nameOrig = this._getNameOrig(name);
+            //var nameOrig = this._getNameOrig(name);
             var nameNode = fileNodes[i].data.name;
-            nameNode = nameNode.replace(/ /g, "_");
-            if (nameNode == nameOrig && fileNodes[i].data.type == type) {
+            //nameNode = nameNode.replace(/ /g, "_");
+            if (nameNode == name && fileNodes[i].data.type == type) {
                 fileNode = fileNodes[i];
                 break;
             }
@@ -545,20 +545,20 @@ DocTree.View = DocTree.View || {
     }
     ,onModelUploadedFiles: function(uploadInfo, folderNode) {
         if (uploadInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when uploading files", Acm.goodValue(uploadInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.upload-file"), Acm.goodValue(uploadInfo.errorMsg));
 
         }
     }
     ,onModelReplacedFile: function(replaceInfo, fileId, fileNode) {
         if (replaceInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when replacing file", Acm.goodValue(replaceInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.replace-file"), Acm.goodValue(replaceInfo.errorMsg));
             DocTree.View.markNodeError(fileNode);
         }
     }
 
     ,onModelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, folderNode) {
         if (folderList.hasError) {
-            App.View.MessageBoard.show("Error occurred when uploading files", Acm.goodValue(uploadInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.retrieve-folder-list"), Acm.goodValue(uploadInfo.errorMsg));
             DocTree.View.markNodeError(folderNode);
 
         } else if (DocTree.Model.validateFolderList(folderList) && DocTree.View.validateNode(folderNode)) {
@@ -569,7 +569,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, node) {
         if (createdFolder.hasError) {
-            App.View.MessageBoard.show("Error occurred when creating folder", Acm.goodValue(createdFolder.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.create-folder"), Acm.goodValue(createdFolder.errorMsg));
             DocTree.View.markNodeError(node);
 
         } else {
@@ -583,19 +583,19 @@ DocTree.View = DocTree.View || {
     }
     ,onModelDeletedFolder: function(deletedInfo, folderId, cacheKey, node) {
         if (deletedInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when deleting folder", Acm.goodValue(deletedInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.delete-folder"), Acm.goodValue(deletedInfo.errorMsg));
             DocTree.View.markNodeError(node);
         }
     }
     ,onModelDeletedFile: function(deletedInfo, fileId, cacheKey, node) {
         if (deletedInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when deleting file", Acm.goodValue(deletedInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.delete-file"), Acm.goodValue(deletedInfo.errorMsg));
             DocTree.View.markNodeError(node);
         }
     }
     ,onModelRenamedFolder: function(renamedInfo, folderName, folderId, cacheKey, node) {
         if (renamedInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when renaming folder " + folderName, Acm.goodValue(renamedInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.rename-folder") + folderName, Acm.goodValue(renamedInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
@@ -603,7 +603,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelRenamedFile: function(renamedInfo, fileName, fileId, cacheKey, node) {
         if (renamedInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when renaming file " + fileName, Acm.goodValue(renamedInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.rename-file") + fileName, Acm.goodValue(renamedInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
@@ -611,7 +611,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelMovedFile: function(moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, node) {
         if (moveFileInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when moving file ", Acm.goodValue(moveFileInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.move-file"), Acm.goodValue(moveFileInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
@@ -623,7 +623,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, node) {
         if (copyFileInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when copying file", Acm.goodValue(copyFileInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.copy-file"), Acm.goodValue(copyFileInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else if (DocTree.View.validateNode(node)) {
             DocTree.View._fileDataToNodeData(copyFileInfo, node);
@@ -648,7 +648,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelMovedFolder: function(moveFolderInfo, subFolderId, folderId, frCacheKey, toCacheKey, node) {
         if (moveFolderInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when moving folder", Acm.goodValue(moveFolderInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.move-folder"), Acm.goodValue(moveFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else {
             DocTree.View.markNodeOk(node);
@@ -656,7 +656,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
         if (copyFolderInfo.hasError) {
-            App.View.MessageBoard.show("Error occurred when copying folder", Acm.goodValue(copyFolderInfo.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.copy-folder"), Acm.goodValue(copyFolderInfo.errorMsg));
             DocTree.View.markNodeError(node);
         } else if (DocTree.View.validateNode(node)) {
             DocTree.View._folderDataToNodeData(copyFolderInfo, node);
@@ -670,7 +670,7 @@ DocTree.View = DocTree.View || {
     }
     ,onModelSetActiveVersion: function(version, fileId, cacheKey, node) {
         if (version.hasError) {
-            App.View.MessageBoard.show("Error occurred when setting active version", Acm.goodValue(version.errorMsg));
+            App.View.MessageBoard.show($.t("doctree:error.set-version"), Acm.goodValue(version.errorMsg));
             DocTree.View.markNodeError(node);
         } else if (DocTree.View.validateNode(node)) {
             node.data.activeVertionTag = Acm.goodValue(version);
@@ -689,7 +689,7 @@ DocTree.View = DocTree.View || {
                 var verCurrent = Acm.goodValue(node.data.version, "0");
                 if (verSelected != verCurrent) {
                     if (verSelected < verCurrent) {
-                        Acm.Dialog.confirm("Are you sure to set back to older version?"
+                        Acm.Dialog.confirm($.t("doctree:confirm-version")
                              ,function(result) {
                                  if (result == true) {
                                      DocTree.View.markNodePending(node);
@@ -1168,12 +1168,12 @@ DocTree.View = DocTree.View || {
 
                 if (0 < countFile && 0 >= countFolder) {
                     menu = [
-                        {title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print <kbd>Ctrl+P</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
-                        ,{title: "----" }
-                        ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
-                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
-                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
+                        {title: $.t("doctree:menu.title-email"),      cmd: "email", uiIcon: "ui-icon-mail-closed" }
+                        ,{title: $.t("doctree:menu.title-print"),     cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-cut"),       cmd: "cut", uiIcon: "ui-icon-scissors" }
+                        ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
+                        ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
                     ];
                 }
 //                if (0 < countFile || 0 < countFolder) {
@@ -1186,48 +1186,44 @@ DocTree.View = DocTree.View || {
             }
             return menu;
         }
-
         ,getContextMenu: function(node) {
             var menu = [];
             if (node) {
                 if (DocTree.View.isTopNode(node)) {
                     menu = [
-                        {title: "New Folder <kbd>[Ctrl+N]</kbd>", cmd: "newFolder", uiIcon: "ui-icon-plus" }
-                        ,{title: "New Document</kbd>", children: DocTree.View.Menu.docSubMenu}
-                        ,{title: "----" }
-                        ,{title: "Paste <kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+                        {title: $.t("doctree:menu.title-new-folder"), cmd: "newFolder", uiIcon: "ui-icon-plus" }
+                        ,{title: $.t("doctree:menu.title-new-file"),  children: DocTree.View.Menu.docSubMenu}
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-paste"),     cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
                     ];
                 } else if (DocTree.View.isFolderNode(node)) {
                     menu = [
-                        //{title: "New sibling <kbd>[Ctrl+N]</kbd>", cmd: "addSibling", uiIcon: "ui-icon-plus" }
-                        //,{title: "New child <kbd>[Ctrl+Shift+N]</kbd>", cmd: "addChild", uiIcon: "ui-icon-arrowreturn-1-e" }
-                        {title: "New Folder <kbd>[Ctrl+N]</kbd>", cmd: "newFolder", uiIcon: "ui-icon-plus" }
-                        //,{title: "New Document <kbd>[Ctrl+Shift+N]</kbd>", cmd: "newDocument", uiIcon: "ui-icon-arrowreturn-1-e" }
-                        ,{title: "New Document</kbd>", children: DocTree.View.Menu.docSubMenu}
-                        ,{title: "----" }
-                        ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
-                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
-                        ,{title: "Paste <kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
-                        ,{title: "----" }
-                        ,{title: "Rename <kbd>[F2]</kbd>", cmd: "rename", uiIcon: "ui-icon-pencil" }
-                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
+                        {title: $.t("doctree:menu.title-new-folder"), cmd: "newFolder", uiIcon: "ui-icon-plus" }
+                        ,{title: $.t("doctree:menu.title-new-file"),  children: DocTree.View.Menu.docSubMenu}
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-cut"),       cmd: "cut", uiIcon: "ui-icon-scissors" }
+                        ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
+                        ,{title: $.t("doctree:menu.title-paste"),     cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-rename"),    cmd: "rename", uiIcon: "ui-icon-pencil" }
+                        ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
                     ];
                 } else if (DocTree.View.isFileNode(node)) {
                     menu = [
-                        {title: "Open", cmd: "open", uiIcon: "ui-icon-folder-open" }
-                        ,{title: "Edit", cmd: "edit", uiIcon: "ui-icon-pencil" }
-                        ,{title: "Email", cmd: "email", uiIcon: "ui-icon-mail-closed" }
-                        ,{title: "Print <kbd>Ctrl+P</kbd>", cmd: "print", uiIcon: "ui-icon-print" }
-                        ,{title: "----" }
-                        ,{title: "Cut <kbd>Ctrl+X</kbd>", cmd: "cut", uiIcon: "ui-icon-scissors" }
-                        ,{title: "Copy <kbd>Ctrl-C</kbd>", cmd: "copy", uiIcon: "ui-icon-copy" }
-                        ,{title: "Paste <kbd>Ctrl+V</kbd>", cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
-                        ,{title: "----" }
-                        ,{title: "Rename <kbd>[F2]</kbd>", cmd: "rename", uiIcon: "ui-icon-pencil" }
-                        ,{title: "Delete <kbd>[Del]</kbd>", cmd: "remove", uiIcon: "ui-icon-trash" }
-                        ,{title: "----" }
-                        ,{title: "Download", cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
-                        ,{title: "Replace", cmd: "replace", uiIcon: "" }
+                        {title: $.t("doctree:menu.title-open"),       cmd: "open", uiIcon: "ui-icon-folder-open" }
+                        ,{title: $.t("doctree:menu.title-edit"),      cmd: "edit", uiIcon: "ui-icon-pencil" }
+                        ,{title: $.t("doctree:menu.title-email"),     cmd: "email", uiIcon: "ui-icon-mail-closed" }
+                        ,{title: $.t("doctree:menu.title-print"),     cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-cut"),       cmd: "cut", uiIcon: "ui-icon-scissors" }
+                        ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
+                        ,{title: $.t("doctree:menu.title-paste"),     cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-rename"),    cmd: "rename", uiIcon: "ui-icon-pencil" }
+                        ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-download"),  cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
+                        ,{title: $.t("doctree:menu.title-replace"),   cmd: "replace", uiIcon: "" }
                     ];
                 }
             }
@@ -1384,8 +1380,8 @@ DocTree.View = DocTree.View || {
 
                 if (0 < startRow) {
                     builder.addLeaf({key: folderId + ".prev"
-                        ,title: startRow + " items above..."
-                        ,tooltip: "Review previous items"
+                        ,title: startRow + $.t("doctree:tree.prev-items")
+                        ,tooltip: $.t("doctree:tree.tooltip-prev-items")
                         ,expanded: false
                         ,folder: false
                         ,objectType: DocTree.Model.NODE_TYPE_PREV
@@ -1414,10 +1410,10 @@ DocTree.View = DocTree.View || {
                 }
 
                 if ((0 > totalChildren) || (totalChildren - maxRows > startRow)) {//unknown size or more page
-                    var title = (0 > totalChildren)? "More items..." : (totalChildren - startRow - maxRows) + " more items...";
+                    var title = (0 > totalChildren)? $.t("doctree:tree.more-items-begin") : (totalChildren - startRow - maxRows) + $.t("doctree:tree.more-items");
                     builder.addLeafLast({key: Acm.goodValue(folderId, 0) + ".next"
                         ,title: title
-                        ,tooltip: "Load more items"
+                        ,tooltip: $.t("doctree:tree.tooltip-more-items")
                         ,expanded: false
                         ,folder: false
                         ,objectType: DocTree.Model.NODE_TYPE_NEXT

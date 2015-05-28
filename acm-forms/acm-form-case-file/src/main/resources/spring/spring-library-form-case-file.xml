@@ -19,6 +19,7 @@
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
+		<property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
     
     <bean id="caseFilePSFactory" class="com.armedia.acm.form.casefile.service.CaseFilePSFactory">
@@ -35,6 +36,7 @@
     	<property name="objectAssociationDao" ref="objectAssociationDao" />
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
+		<property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
     
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">

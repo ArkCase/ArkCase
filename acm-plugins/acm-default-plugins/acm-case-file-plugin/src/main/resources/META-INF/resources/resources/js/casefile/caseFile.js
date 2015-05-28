@@ -48,6 +48,10 @@ var CaseFile = CaseFile || {
         if (ObjNav.onInitialized)              {ObjNav.onInitialized();}
         if (SubscriptionOp.onInitialized)      {SubscriptionOp.onInitialized();}
     }
+
+    ,config: function() {
+        CaseFile.Model.Config.request();
+    }
 };
 
 

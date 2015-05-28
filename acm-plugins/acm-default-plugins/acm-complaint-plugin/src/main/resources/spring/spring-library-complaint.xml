@@ -151,6 +151,7 @@
     	<property name="ecmFileDao" ref="ecmFileDao" />
     	<property name="ecmFileService" ref="ecmFileService" />
     	<property name="complaintFactory" ref="complaintFactory" />
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
     
      <bean id="complaintHistoryListener" class="com.armedia.acm.plugins.complaint.service.ComplaintHistoryListener">

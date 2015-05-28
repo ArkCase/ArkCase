@@ -267,7 +267,7 @@ AcmDocument.View = AcmDocument.View || {
             }
         }
         ,pickParticipant: function() {
-            SearchBase.showSearchDialog({name: "New Participant"
+            SearchBase.Dialog.create({name: "New Participant"
                 ,title: "Add New Participant"
                 ,prompt: "Enter to search for user.."
                 ,btnGoText: "Search Now!"
@@ -275,7 +275,7 @@ AcmDocument.View = AcmDocument.View || {
                 ,btnCancelText: "Cancel"
                 ,filters: [{key: "Object Type", values: ["USER"]}]
                 ,$dlgObjectPicker : AcmDocument.View.Participants.$dlgObjectPicker
-            });
+            }).show();
         }
 
         ,onClickBtnNewParticipant: function() {
@@ -288,7 +288,6 @@ AcmDocument.View = AcmDocument.View || {
                 };
             }
             AcmDocument.View.Participants.pickParticipant();
-            return;
         }
 
         ,onClickBtnAddParticipant : function(event, ctrl) {

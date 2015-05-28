@@ -30,6 +30,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -44,6 +45,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -78,6 +80,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
 	private AcmPluginManager acmPluginManager;
+	private FolderAndFilesUtils folderAndFilesUtils;
 	private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
     @Override
@@ -109,6 +112,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 				LOG.warn("EcmFile with id=" + xmlId + " is not found while edit mode. Empty Frevvo form will be shown.");
 			}
 		}
+		
 		return result;
 	}
     
@@ -438,8 +442,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 true);
 
             EcmFile uploaded = getEcmFileService().upload(
-                fileType,
-					attachment.getOriginalFilename(),
+				attachment.getOriginalFilename(),
+				fileType,
                 file,
                 getAuthentication(),
                 targetCmisFolderId,
@@ -761,5 +765,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 
 	public void setGson(Gson gson) {
 		this.gson = gson;
-	}	
+	}
+
+	public FolderAndFilesUtils getFolderAndFilesUtils() {
+		return folderAndFilesUtils;
+	}
+
+	public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+		this.folderAndFilesUtils = folderAndFilesUtils;
+	}
 }
