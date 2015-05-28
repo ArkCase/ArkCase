@@ -228,6 +228,22 @@ public class FrevvoFormFactory {
 		return null;
 	}
 	
+	public AcmParticipant getOwningGroupParticipant(List<AcmParticipant> participants)
+	{
+		if (participants != null)
+		{
+			for (AcmParticipant participant : participants)
+			{
+				if (FrevvoFormConstants.OWNING_GROUP.equals(participant.getParticipantType()))
+				{
+					return participant;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public List<AcmParticipant> getParticipants(List<AcmParticipant> participants, List<ParticipantItem> items, OwningGroupItem groupItem, String formName)
 	{
 		// Get Default participant if exist
@@ -235,6 +251,13 @@ public class FrevvoFormFactory {
 		if (participants != null)
 		{
 			defaultParticipant = getDefautParticipant(participants);
+		}
+		
+		// Get Owning group participant if exist
+		AcmParticipant owningGroupParticipant = null;
+		if (participants != null)
+		{
+			owningGroupParticipant = getOwningGroupParticipant(participants);
 		}
 		
 		// Create participants
@@ -248,6 +271,12 @@ public class FrevvoFormFactory {
 		if (defaultParticipant != null)
 		{
 			retval.addAll(Arrays.asList(defaultParticipant));
+		}
+		
+		// This is for the forms that don't have functionality for picking group. In that case add the existing one (if exist)
+		if (groupItem == null && owningGroupParticipant != null)
+		{
+			retval.addAll(Arrays.asList(owningGroupParticipant));
 		}
 		
 		return retval;
