@@ -50,109 +50,6 @@ title: ArkCase Document Management
             application/json:
               schema:
                 !include folder-list-schema.json
-  /id/{fileId}:
-    uriParameters:
-      fileId:
-        description: Object ID of the desired file.
-        type: integer
-        minimum: 1
-        required: true
-    delete:
-      description: Remove the requested file (both metadata and the content file itself)
-      responses:
-        200:
-          description: File was deleted.
-          body:
-            application/json: 
-              schema:
-                !include delete-file-results-schema.json
-              example: |
-                {
-                  "Message" : "File deleted successfully: ",
-                  "name" : "form_close_complaint_14112014141531007.xml",
-                  "deletedFileId" : 4478
-                }
-        400:
-          description: File could not be deleted
-          body:
-            text/plain:
-              example: The body will contain an error message.
-        403:
-            description: User is not authorized to delete the file.
-            
-    get:
-      description: Get file metadata
-      responses:
-        200: 
-          description: File found; metadata is in the response body
-          body:
-            application/json:
-              schema:
-                !include ecm-file-schema.json
-              example: |
-                {
-                  "fileId" : 143997,
-                  "status" : "ACTIVE",
-                  "created" : "2015-05-11T16:54:32.580-0400",
-                  "creator" : "bthomas",
-                  "modified" : "2015-05-11T16:54:32.580-0400",
-                  "modifier" : "bthomas",
-                  "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
-                  "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
-                  "fileMimeType" : "text/xml",
-                  "folder" : {
-                    "id" : 35372,
-                    "created" : "2015-02-04T15:50:11.957-0500",
-                    "creator" : "sally-acm",
-                    "modified" : "2015-02-04T15:50:11.957-0500",
-                    "modifier" : "sally-acm",
-                    "name" : "ROOT",
-                    "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
-                    "parentFolderId" : null
-                  },
-                  "container" : {
-                    "id" : 33953,
-                    "created" : "2015-02-04T15:50:11.957-0500",
-                    "creator" : "sally-acm",
-                    "modified" : "2015-02-04T15:50:11.957-0500",
-                    "modifier" : "sally-acm",
-                    "containerObjectType" : "CASE_FILE",
-                    "containerObjectId" : 2961,
-                    "containerObjectTitle" : "20150204_2961",
-                    "folder" : {
-                      "id" : 35372,
-                      "created" : "2015-02-04T15:50:11.957-0500",
-                      "creator" : "sally-acm",
-                      "modified" : "2015-02-04T15:50:11.957-0500",
-                      "modifier" : "sally-acm",
-                      "name" : "ROOT",
-                      "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
-                      "parentFolderId" : null
-                    }
-                  },
-                  "fileType" : "ot",
-                  "activeVersionTag" : "1.0",
-                  "category" : "Document",
-                  "versions" : [{
-                      "id" : 143998,
-                      "created" : "2015-05-11T16:54:32.605-0400",
-                      "creator" : "bthomas",
-                      "modified" : "2015-05-11T16:54:32.605-0400",
-                      "modifier" : "bthomas",
-                      "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
-                      "versionTag" : "1.0"
-                    }
-                  ],
-                  "tags" : []
-                }
-      
-        400:
-          description: File could not be deleted
-          body:
-            text/plain:
-              example: The body will contain an error message.
-        403:
-            description: User is not authorized to delete the file.
   /copyToAnotherContainer/{targetObjectType}/{targetObjectId}:
     uriParameters:
       targetObjectType:
@@ -297,8 +194,31 @@ title: ArkCase Document Management
                 }
                 }
   /folder/{folderId}:
+      uriParameters:
+        folderId:
+          description: Object ID of the folder to be deleted.
+          type: integer
+          minimum: 1
+          required: true
       delete:
-        description: deletes the requested folder.  
+        description: Deletes the requested folder. The folder must be empty (it must not have any child documents or folders). 
+        responses:
+          200:
+            description: Delete operation completed; see the response body for whether the folder was actually deleted.
+            body:
+              application/json:
+                schema:
+                  !include delete-folder-results-schema.json
+                example: |
+                  {
+                    "message" : "Folder with id: 5120 successfully deleted",  // note: it could also say, "Folder with id: 5120 not found in the DB"
+                    "deletedFolderId" : 5120
+                  }
+          400:
+            description: Something went wrong with deleting the folder; most likely the folder was not empty, or else a system error occurred. 
+            body:
+              text/plain:
+                example: The body will contain an error message.
       /{newFolderName}:
         post:
           description: Rename the requested folder
@@ -389,6 +309,110 @@ title: ArkCase Document Management
                   "parentFolderId" : 141019
                 }
       
+  /id/{fileId}:
+    uriParameters:
+      fileId:
+        description: Object ID of the desired file.
+        type: integer
+        minimum: 1
+        required: true
+    delete:
+      description: Remove the requested file (both metadata and the content file itself)
+      responses:
+        200:
+          description: File was deleted.
+          body:
+            application/json: 
+              schema:
+                !include delete-file-results-schema.json
+              example: |
+                {
+                  "Message" : "File deleted successfully: ",
+                  "name" : "form_close_complaint_14112014141531007.xml",
+                  "deletedFileId" : 4478
+                }
+        400:
+          description: File could not be deleted
+          body:
+            text/plain:
+              example: The body will contain an error message.
+        403:
+            description: User is not authorized to delete the file.
+            
+    get:
+      description: Get file metadata
+      responses:
+        200: 
+          description: File found; metadata is in the response body
+          body:
+            application/json:
+              schema:
+                !include ecm-file-schema.json
+              example: |
+                {
+                  "fileId" : 143997,
+                  "status" : "ACTIVE",
+                  "created" : "2015-05-11T16:54:32.580-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T16:54:32.580-0400",
+                  "modifier" : "bthomas",
+                  "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
+                  "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
+                  "fileMimeType" : "text/xml",
+                  "folder" : {
+                    "id" : 35372,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "name" : "ROOT",
+                    "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                    "parentFolderId" : null
+                  },
+                  "container" : {
+                    "id" : 33953,
+                    "created" : "2015-02-04T15:50:11.957-0500",
+                    "creator" : "sally-acm",
+                    "modified" : "2015-02-04T15:50:11.957-0500",
+                    "modifier" : "sally-acm",
+                    "containerObjectType" : "CASE_FILE",
+                    "containerObjectId" : 2961,
+                    "containerObjectTitle" : "20150204_2961",
+                    "folder" : {
+                      "id" : 35372,
+                      "created" : "2015-02-04T15:50:11.957-0500",
+                      "creator" : "sally-acm",
+                      "modified" : "2015-02-04T15:50:11.957-0500",
+                      "modifier" : "sally-acm",
+                      "name" : "ROOT",
+                      "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                      "parentFolderId" : null
+                    }
+                  },
+                  "fileType" : "ot",
+                  "activeVersionTag" : "1.0",
+                  "category" : "Document",
+                  "versions" : [{
+                      "id" : 143998,
+                      "created" : "2015-05-11T16:54:32.605-0400",
+                      "creator" : "bthomas",
+                      "modified" : "2015-05-11T16:54:32.605-0400",
+                      "modifier" : "bthomas",
+                      "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+                      "versionTag" : "1.0"
+                    }
+                  ],
+                  "tags" : []
+                }
+      
+        400:
+          description: File could not be deleted
+          body:
+            text/plain:
+              example: The body will contain an error message.
+        403:
+            description: User is not authorized to delete the file.
+
   /moveToAnotherContainer:
     post:
       description: Move one or more files to another container
