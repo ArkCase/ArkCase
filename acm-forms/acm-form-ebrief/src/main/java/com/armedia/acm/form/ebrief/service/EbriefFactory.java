@@ -8,25 +8,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.persistence.indirection.IndirectList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
+import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonIdentification;
 import com.armedia.acm.plugins.person.model.xml.DefendantPerson;
-import com.armedia.acm.plugins.person.model.xml.OfficerPerson;
-import com.armedia.acm.plugins.person.model.xml.PoliceWitnessPerson;
-import com.armedia.acm.plugins.person.model.xml.VictimPerson;
-import com.armedia.acm.plugins.person.model.xml.WitnessVictimPerson;
+import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
+import com.armedia.acm.plugins.person.service.PersonService;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 
 /**
  * @author riste.tutureski
  *
  */
 public class EbriefFactory extends FrevvoFormFactory{
-
+	
+	private Logger LOG = LoggerFactory.getLogger(getClass());
+	private PersonAssociationDao personAssociationDao;
+	private PersonService personService;
+	
 	public CaseFile asAcmCaseFile(EbriefForm form, CaseFile caseFile)
 	{
 		if (caseFile == null)
@@ -34,24 +46,58 @@ public class EbriefFactory extends FrevvoFormFactory{
 			caseFile = new CaseFile();
 		}
 		
-		caseFile.setTitle(EbriefConstants.EBRIEF);
-		caseFile.setCaseType(form.getType());
-		caseFile.setDetails(form.getNotes());
-		caseFile.setParticipants(asAcmParticipants(form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
+		caseFile.setId(form.getId());
+		caseFile.setCaseType(form.getInformation().getType());
 		caseFile.setPersonAssociations(getPersonAssociations(form));
+		
+		ParticipantItem item = new ParticipantItem();
+		item.setId(form.getDetails().getAssignedToId());
+		item.setType(ParticipantTypes.ASSIGNEE);
+		item.setName(form.getDetails().getAssignedTo());
+		item.setValue(form.getDetails().getAssignedToUserId());
+		
+		caseFile.setParticipants(getParticipants(caseFile.getParticipants(), Arrays.asList(item), null, caseFile.getObjectType()));
 		
 		return caseFile;
 	}
 	
 	public EbriefForm asFrevvoEbriefForm(CaseFile caseFile, EbriefForm form, FrevvoFormAbstractService formService)
 	{
-		if (caseFile != null && form != null)
+		if (form == null)
+		{
+			form = new EbriefForm();
+		}
+		
+		if (form.getInformation() == null)
+		{
+			form.setInformation(new EbriefInformation());
+		}
+		
+		if (caseFile != null)
 		{
 			form.setId(caseFile.getId());
+			form.getInformation().setType(caseFile.getCaseType());
+			form.getInformation().setNumber(caseFile.getCaseNumber());
+			form.setDefendants(getDefendants(caseFile.getPersonAssociations()));
 			String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			form.setCmisFolderId(cmisFolderId);
 			
-			// TODO: This will need for editing ....
+			List<ParticipantItem> items = asFrevvoParticipants(caseFile.getParticipants());
+			
+			if (items != null)
+			{
+				for (ParticipantItem item : items)
+				{
+					if (ParticipantTypes.ASSIGNEE.equals(item.getType()))
+					{
+						form.getDetails().setAssignedToId(item.getId());
+						form.getDetails().setAssignedToUserId(item.getValue());
+						form.getDetails().setAssignedTo(item.getName());
+						
+						break;
+					}
+				}
+			}
 		}
 		
 		return form;
@@ -60,35 +106,16 @@ public class EbriefFactory extends FrevvoFormFactory{
 	private List<PersonAssociation> getPersonAssociations(EbriefForm form)
 	{
 		List<PersonAssociation> paArray = new ArrayList<>();
-		if (form.getWitnessVictims() != null)
-		{
-			paArray = populatePersonAssociations(form.getWitnessVictims(), paArray);
-		}
 		
-		if (form.getDefendant() != null)
+		if (form.getDefendants() != null)
 		{
-			paArray = populatePersonAssociations(Arrays.asList(form.getDefendant()), paArray);
-		}
-		
-		if (form.getVictim() != null)
-		{
-			paArray = populatePersonAssociations(Arrays.asList(form.getVictim()), paArray);
-		}
-		
-		if (form.getOfficer() != null)
-		{
-			paArray = populatePersonAssociations(Arrays.asList(form.getOfficer()), paArray);
-		}
-		
-		if (form.getPoliceWinesses() != null)
-		{
-			paArray = populatePersonAssociations(form.getPoliceWinesses(), paArray);
-		}
+			paArray = populatePersonAssociations(form.getId(), form.getDefendants(), paArray);
+		}		
 		
 		return paArray;
 	}
 	
-	private List<PersonAssociation> populatePersonAssociations(List<Person> persons, List<PersonAssociation> paArray)
+	private List<PersonAssociation> populatePersonAssociations(Long id, List<Person> persons, List<PersonAssociation> paArray)
 	{
 		if (paArray == null)
 		{
@@ -99,9 +126,22 @@ public class EbriefFactory extends FrevvoFormFactory{
 		{
 			List<PersonAssociation> paArrayLocal = persons.stream()
 														  .map(person -> {
-															  PersonAssociation pa = new PersonAssociation();
+															  String personType = getPersonService().getPersonType((FrevvoPerson) person);
+															  
+															  PersonAssociation pa = getPersonAssociationDao().findByPersonIdPersonTypeParentIdParentTypeSilent(person.getId(), personType, id, FrevvoFormName.CASE_FILE.toUpperCase());
+															  
+															  if (pa == null)
+															  {
+																  pa = new PersonAssociation();
+															  }
+															  
+															  List<String> keys = getPersonService().getPersonIdentificationKeys((FrevvoPerson) person);
+															  person = getPersonService().addPersonIdentifications(keys, person);
+															  
 															  pa.setPerson(person.returnBase());
-															  pa.setPersonType(getPersonType(person));
+															  pa.setPersonType(personType);
+															  pa.setParentId(id);
+															  pa.setParentType(FrevvoFormName.CASE_FILE.toUpperCase());
 															  return pa;
 														  })
 														  .collect(Collectors.toList());
@@ -112,37 +152,95 @@ public class EbriefFactory extends FrevvoFormFactory{
 		return paArray;
 	}
 	
-	private String getPersonType(Person person)
+	private List<Person> getDefendants(List<PersonAssociation> pas)
 	{
-		if (person != null)
+		List<Person> defendants = findPersonsByType(pas, EbriefConstants.DEFENDANT);
+		
+		if (defendants != null)
 		{
-			if (person instanceof WitnessVictimPerson)
+			defendants = defendants.stream()
+							       .map(element -> {
+							    	   DefendantPerson defendant = new DefendantPerson(element);
+							    	   defendant.setType(EbriefConstants.DEFENDANT);
+							    	 
+							    	   List<PersonIdentification> personIdentifications = element.getPersonIdentification();
+							    	   defendant = (DefendantPerson) getPersonService().setPersonIdentifications(personIdentifications, defendant);
+										
+							    	   return defendant;
+							       })
+							       .collect(Collectors.toList());
+		}
+		
+		return defendants;
+	}
+	
+	// I WILL LEAVE THIS METHOD HERE FOR NOW. IF INVESTIGATION OFFICERS SHOULD BE A PERSON INSTEAD OF USER, THIS METHOD SHOULD BE USED
+	private Person findPersonByType(List<PersonAssociation> pas, String type)
+	{
+		if (pas != null && type != null)
+		{
+			// There is a bug in JPA with IndirectList and Java 8 for "stream" - https://bugs.eclipse.org/bugs/show_bug.cgi?id=433075
+			// I guess in the next JPA version this is fixed (we are using JPA version 2.5.2 which is the same version that the bug is raised)
+			// Line below is quick fix for that bug
+			pas = pas instanceof IndirectList ? new ArrayList<>(pas) : pas;
+			
+			Person p = null;
+			
+			// Stream "get()" method throws exception if the "filter(...)" and "findFirst()" will not return any values
+			// We need to continue with execution if that kind of person is not found
+			try
 			{
-				return ((WitnessVictimPerson) person).getType();
+				p = pas.stream()
+						  .filter(element -> type.equals(element.getPersonType()))
+						  .findFirst()
+						  .map(element -> element.getPerson())
+						  .get();
+			}
+			catch(Exception e)
+			{
+				LOG.debug("The person is not found. Continue with execution.");
 			}
 			
-			if (person instanceof DefendantPerson)
-			{
-				return ((DefendantPerson) person).getType();
-			}
-			
-			if (person instanceof VictimPerson)
-			{
-				return ((VictimPerson) person).getType();
-			}
-			
-			if (person instanceof OfficerPerson)
-			{
-				return ((OfficerPerson) person).getType();
-			}
-			
-			if (person instanceof PoliceWitnessPerson)
-			{
-				return ((PoliceWitnessPerson) person).getType();
-			}
+			return p;
 		}
 		
 		return null;
+	}
+	
+	private List<Person> findPersonsByType(List<PersonAssociation> pas, String type)
+	{		
+		if (pas != null && type != null)
+		{
+			// There is a bug in JPA with IndirectList and Java 8 for "stream" - https://bugs.eclipse.org/bugs/show_bug.cgi?id=433075
+			// I guess in the next JPA version this is fixed (we are using JPA version 2.5.2 which is the same version that the bug is raised)
+			// Line below is quick fix for that bug
+			pas = pas instanceof IndirectList ? new ArrayList<>(pas) : pas;
+			
+			List<Person> ps = pas.stream()
+					  .filter(element -> type.equals(element.getPersonType()))
+					  .map(element -> element.getPerson())
+					  .collect(Collectors.toList());
+					  
+			return ps;
+		}
+		
+		return null;
+	}
+
+	public PersonAssociationDao getPersonAssociationDao() {
+		return personAssociationDao;
+	}
+
+	public void setPersonAssociationDao(PersonAssociationDao personAssociationDao) {
+		this.personAssociationDao = personAssociationDao;
+	}
+
+	public PersonService getPersonService() {
+		return personService;
+	}
+
+	public void setPersonService(PersonService personService) {
+		this.personService = personService;
 	}
 	
 }
