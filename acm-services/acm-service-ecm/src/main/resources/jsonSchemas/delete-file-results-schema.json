@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Delete File Results Schema",
+  "type": "object",
+  "properties": {
+    "Message": {
+      "type": "string",
+      "description": "indicates the results of the delete operation"
+    },
+    "name": {
+      "type": "string",
+      "description": "file name of the file that was deleted"
+    },
+    "deletedFileId": {
+      "type": "integer",
+      "description": "Object ID of the file that was deleted",
+      "minimum": 1
+    }
+  },
+  "required": [ "Message", "deletedFileId" ]
+}
