@@ -8,14 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.eclipse.persistence.indirection.IndirectList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
+import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
@@ -26,11 +26,8 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonIdentification;
 import com.armedia.acm.plugins.person.model.xml.DefendantPerson;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
-import com.armedia.acm.plugins.person.model.xml.OfficerPerson;
-import com.armedia.acm.plugins.person.model.xml.PoliceWitnessPerson;
-import com.armedia.acm.plugins.person.model.xml.VictimPerson;
-import com.armedia.acm.plugins.person.model.xml.WitnessVictimPerson;
 import com.armedia.acm.plugins.person.service.PersonService;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 
 /**
  * @author riste.tutureski
@@ -50,11 +47,16 @@ public class EbriefFactory extends FrevvoFormFactory{
 		}
 		
 		caseFile.setId(form.getId());
-		caseFile.setTitle(EbriefConstants.EBRIEF);
-		caseFile.setCaseType(form.getType());
-		caseFile.setDetails(form.getNotes());
-		caseFile.setParticipants(getParticipants(caseFile.getParticipants(), form.getParticipants(), form.getOwningGroup(), caseFile.getObjectType()));
+		caseFile.setCaseType(form.getInformation().getType());
 		caseFile.setPersonAssociations(getPersonAssociations(form));
+		
+		ParticipantItem item = new ParticipantItem();
+		item.setId(form.getDetails().getAssignedToId());
+		item.setType(ParticipantTypes.ASSIGNEE);
+		item.setName(form.getDetails().getAssignedTo());
+		item.setValue(form.getDetails().getAssignedToUserId());
+		
+		caseFile.setParticipants(getParticipants(caseFile.getParticipants(), Arrays.asList(item), null, caseFile.getObjectType()));
 		
 		return caseFile;
 	}
@@ -66,20 +68,36 @@ public class EbriefFactory extends FrevvoFormFactory{
 			form = new EbriefForm();
 		}
 		
+		if (form.getInformation() == null)
+		{
+			form.setInformation(new EbriefInformation());
+		}
+		
 		if (caseFile != null)
 		{
 			form.setId(caseFile.getId());
-			form.setType(caseFile.getCaseType());
-			form.setNotes(caseFile.getDetails());
-			form.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
-			form.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
-			form.setWitnessVictims(getWitnessVictims(caseFile.getPersonAssociations()));
-			form.setDefendant(getDefendant(caseFile.getPersonAssociations()));
-			form.setVictim(getVictim(caseFile.getPersonAssociations()));
-			form.setOfficer(getOfficer(caseFile.getPersonAssociations()));
-			form.setPoliceWinesses(getPoliceWitnesses(caseFile.getPersonAssociations()));
+			form.getInformation().setType(caseFile.getCaseType());
+			form.getInformation().setNumber(caseFile.getCaseNumber());
+			form.setDefendants(getDefendants(caseFile.getPersonAssociations()));
 			String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			form.setCmisFolderId(cmisFolderId);
+			
+			List<ParticipantItem> items = asFrevvoParticipants(caseFile.getParticipants());
+			
+			if (items != null)
+			{
+				for (ParticipantItem item : items)
+				{
+					if (ParticipantTypes.ASSIGNEE.equals(item.getType()))
+					{
+						form.getDetails().setAssignedToId(item.getId());
+						form.getDetails().setAssignedToUserId(item.getValue());
+						form.getDetails().setAssignedTo(item.getName());
+						
+						break;
+					}
+				}
+			}
 		}
 		
 		return form;
@@ -88,30 +106,11 @@ public class EbriefFactory extends FrevvoFormFactory{
 	private List<PersonAssociation> getPersonAssociations(EbriefForm form)
 	{
 		List<PersonAssociation> paArray = new ArrayList<>();
-		if (form.getWitnessVictims() != null)
-		{
-			paArray = populatePersonAssociations(form.getId(), form.getWitnessVictims(), paArray);
-		}
 		
-		if (form.getDefendant() != null)
+		if (form.getDefendants() != null)
 		{
-			paArray = populatePersonAssociations(form.getId(), Arrays.asList(form.getDefendant()), paArray);
-		}
-		
-		if (form.getVictim() != null)
-		{
-			paArray = populatePersonAssociations(form.getId(), Arrays.asList(form.getVictim()), paArray);
-		}
-		
-		if (form.getOfficer() != null)
-		{
-			paArray = populatePersonAssociations(form.getId(), Arrays.asList(form.getOfficer()), paArray);
-		}
-		
-		if (form.getPoliceWinesses() != null)
-		{
-			paArray = populatePersonAssociations(form.getId(), form.getPoliceWinesses(), paArray);
-		}
+			paArray = populatePersonAssociations(form.getId(), form.getDefendants(), paArray);
+		}		
 		
 		return paArray;
 	}
@@ -153,135 +152,29 @@ public class EbriefFactory extends FrevvoFormFactory{
 		return paArray;
 	}
 	
-	private List<Person> getWitnessVictims(List<PersonAssociation> pas)
+	private List<Person> getDefendants(List<PersonAssociation> pas)
 	{
-		List<Person> witnessVictims = new ArrayList<>();
+		List<Person> defendants = findPersonsByType(pas, EbriefConstants.DEFENDANT);
 		
-		List<Person> witnesses = findPersonsByType(pas, EbriefConstants.WITNESS);
-		List<Person> victims = findPersonsByType(pas, EbriefConstants.VICTIM);
-		
-		if (witnesses != null)
+		if (defendants != null)
 		{
-			witnesses = witnesses.stream()
-			   				     .map(element -> {
-			   				    	WitnessVictimPerson wvp = new WitnessVictimPerson(element);
-			   				    	wvp.setType(EbriefConstants.WITNESS);
-			   				    	
-			   				    	List<PersonIdentification> personIdentifications = element.getPersonIdentification();
-			   				    	wvp = (WitnessVictimPerson) getPersonService().setPersonIdentifications(personIdentifications, wvp);
-			   				    	
-			   				    	return wvp;
-			   				     })
-			   				     .collect(Collectors.toList());
-			
-			witnessVictims.addAll(witnesses);
+			defendants = defendants.stream()
+							       .map(element -> {
+							    	   DefendantPerson defendant = new DefendantPerson(element);
+							    	   defendant.setType(EbriefConstants.DEFENDANT);
+							    	 
+							    	   List<PersonIdentification> personIdentifications = element.getPersonIdentification();
+							    	   defendant = (DefendantPerson) getPersonService().setPersonIdentifications(personIdentifications, defendant);
+										
+							    	   return defendant;
+							       })
+							       .collect(Collectors.toList());
 		}
 		
-		if (victims != null)
-		{
-			victims = victims.stream()
-			   				     .map(element -> {
-			   				    	WitnessVictimPerson wvp = new WitnessVictimPerson(element);
-			   				    	wvp.setType(EbriefConstants.VICTIM);
-			   				    	
-			   				    	List<PersonIdentification> personIdentifications = element.getPersonIdentification();
-			   				    	wvp = (WitnessVictimPerson) getPersonService().setPersonIdentifications(personIdentifications, wvp);
-			   				    	
-			   				    	return wvp;
-			   				      })
-			   				     .collect(Collectors.toList());
-			
-			witnessVictims.addAll(victims);
-		}
-		
-		return witnessVictims;
+		return defendants;
 	}
 	
-	private Person getDefendant(List<PersonAssociation> pas)
-	{
-		DefendantPerson defendant = null;
-		
-		if (pas != null)
-		{
-			Person p = findPersonByType(pas, EbriefConstants.DEFENDANT);
-			
-			if (p != null)
-			{
-				defendant = new DefendantPerson(p);
-				defendant.setType(EbriefConstants.DEFENDANT);
-				
-				List<PersonIdentification> personIdentifications = p.getPersonIdentification();
-				defendant = (DefendantPerson) getPersonService().setPersonIdentifications(personIdentifications, defendant);
-			}
-		}
-		
-		return defendant;
-	}
-	
-	private Person getVictim(List<PersonAssociation> pas)
-	{
-		VictimPerson victim = null;
-		
-		if (pas != null)
-		{
-			Person p = findPersonByType(pas, EbriefConstants.PRIMARY_VICTIM);
-			
-			if (p != null)
-			{
-				victim = new VictimPerson(p);
-				victim.setType(EbriefConstants.PRIMARY_VICTIM);
-				
-				List<PersonIdentification> personIdentifications = p.getPersonIdentification();
-				victim = (VictimPerson) getPersonService().setPersonIdentifications(personIdentifications, victim);
-			}
-		}
-		
-		return victim;
-	}
-	
-	private Person getOfficer(List<PersonAssociation> pas)
-	{
-		OfficerPerson officer = null;
-		
-		if (pas != null)
-		{
-			Person p = findPersonByType(pas, EbriefConstants.INVESTIGATING_OFFICER);
-			
-			if (p != null)
-			{
-				officer = new OfficerPerson(p);
-				officer.setType(EbriefConstants.INVESTIGATING_OFFICER);
-				
-				List<PersonIdentification> personIdentifications = p.getPersonIdentification();
-				officer = (OfficerPerson) getPersonService().setPersonIdentifications(personIdentifications, officer);
-			}
-		}
-		
-		return officer;
-	}
-	
-	private List<Person> getPoliceWitnesses(List<PersonAssociation> pas)
-	{
-		List<Person> policeWitnesses = findPersonsByType(pas, EbriefConstants.POLICE_WITNESS);
-		
-		if (policeWitnesses != null)
-		{
-			policeWitnesses = policeWitnesses.stream()
-										     .map(element -> {
-										    	 PoliceWitnessPerson pwp = new PoliceWitnessPerson(element);
-										    	 pwp.setType(EbriefConstants.POLICE_WITNESS);
-										    	 
-										    	 List<PersonIdentification> personIdentifications = element.getPersonIdentification();
-										    	 pwp = (PoliceWitnessPerson) getPersonService().setPersonIdentifications(personIdentifications, pwp);
-													
-										    	 return pwp;
-										     })
-										     .collect(Collectors.toList());;
-		}
-		
-		return policeWitnesses;
-	}
-	
+	// I WILL LEAVE THIS METHOD HERE FOR NOW. IF INVESTIGATION OFFICERS SHOULD BE A PERSON INSTEAD OF USER, THIS METHOD SHOULD BE USED
 	private Person findPersonByType(List<PersonAssociation> pas, String type)
 	{
 		if (pas != null && type != null)
