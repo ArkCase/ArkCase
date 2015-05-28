@@ -1,11 +1,12 @@
 {
-    "window-title": "Case Files | ACM | Ark Case Management",
+    "page-title": "Case Files | ACM | Ark Case Management",
     "title": "Case",
     "header": {
         "buttons": {
             "edit": "Edit",
             "edit-case-file": "Edit Case File",
             "change-case-status": "Change Case Status",
+            "split-case": "Split Case",
             "consolidate": "Consolidate",
             "consolidate-case": "Consolidate Case",
             "reinvestigate": "Reinvestigate",

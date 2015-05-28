@@ -60,37 +60,20 @@ title: ArkCase Document Management
           body:
             application/json:
               schema:
-                !include ecm-file-schema.json
+                !include copy-file-dto-schema.json
               example: |
                 {
-                  "fileId" : 143997,
-                  "status" : "ACTIVE",
-                  "created" : "2015-05-11T16:54:32.580-0400",
-                  "creator" : "bthomas",
-                  "modified" : "2015-05-11T16:54:32.580-0400",
-                  "modifier" : "bthomas",
-                  "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
-                  "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
-                  "fileMimeType" : "text/xml",
-                  "folder" : {
-                    "id" : 35372,
-                    "created" : "2015-02-04T15:50:11.957-0500",
-                    "creator" : "sally-acm",
-                    "modified" : "2015-02-04T15:50:11.957-0500",
-                    "modifier" : "sally-acm",
-                    "name" : "ROOT",
-                    "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
-                    "parentFolderId" : null
-                  },
-                  "container" : {
-                    "id" : 33953,
-                    "created" : "2015-02-04T15:50:11.957-0500",
-                    "creator" : "sally-acm",
-                    "modified" : "2015-02-04T15:50:11.957-0500",
-                    "modifier" : "sally-acm",
-                    "containerObjectType" : "CASE_FILE",
-                    "containerObjectId" : 2961,
-                    "containerObjectTitle" : "20150204_2961",
+                  "originalId":3435,
+                  "newFile": {
+                    "fileId" : 143997,
+                    "status" : "ACTIVE",
+                    "created" : "2015-05-11T16:54:32.580-0400",
+                    "creator" : "bthomas",
+                    "modified" : "2015-05-11T16:54:32.580-0400",
+                    "modifier" : "bthomas",
+                    "versionSeriesId" : "workspace://SpacesStore/31268e01-b428-4c1d-b829-d4b27ee3bdfc;1.0",
+                    "fileName" : "acmDocumentWorkflow.bpmn20_29042015093459926.xml",
+                    "fileMimeType" : "text/xml",
                     "folder" : {
                       "id" : 35372,
                       "created" : "2015-02-04T15:50:11.957-0500",
@@ -100,22 +83,42 @@ title: ArkCase Document Management
                       "name" : "ROOT",
                       "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
                       "parentFolderId" : null
-                    }
-                  },
-                  "fileType" : "ot",
-                  "activeVersionTag" : "1.0",
-                  "category" : "Document",
-                  "versions" : [{
-                      "id" : 143998,
-                      "created" : "2015-05-11T16:54:32.605-0400",
-                      "creator" : "bthomas",
-                      "modified" : "2015-05-11T16:54:32.605-0400",
-                      "modifier" : "bthomas",
-                      "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
-                      "versionTag" : "1.0"
-                    }
-                  ],
-                  "tags" : []
+                    },
+                    "container" : {
+                      "id" : 33953,
+                      "created" : "2015-02-04T15:50:11.957-0500",
+                      "creator" : "sally-acm",
+                      "modified" : "2015-02-04T15:50:11.957-0500",
+                      "modifier" : "sally-acm",
+                      "containerObjectType" : "CASE_FILE",
+                      "containerObjectId" : 2961,
+                      "containerObjectTitle" : "20150204_2961",
+                      "folder" : {
+                        "id" : 35372,
+                        "created" : "2015-02-04T15:50:11.957-0500",
+                        "creator" : "sally-acm",
+                        "modified" : "2015-02-04T15:50:11.957-0500",
+                        "modifier" : "sally-acm",
+                        "name" : "ROOT",
+                        "cmisFolderId" : "workspace://SpacesStore/ee3542a2-166f-4796-8802-1fdfb190c4ed",
+                        "parentFolderId" : null
+                      }
+                    },
+                    "fileType" : "ot",
+                    "activeVersionTag" : "1.0",
+                    "category" : "Document",
+                    "versions" : [{
+                        "id" : 143998,
+                        "created" : "2015-05-11T16:54:32.605-0400",
+                        "creator" : "bthomas",
+                        "modified" : "2015-05-11T16:54:32.605-0400",
+                        "modifier" : "bthomas",
+                        "cmisObjectId" : "workspace://SpacesStore/580f615a-0745-49f1-873c-b7f58c5b1a2f;1.0",
+                        "versionTag" : "1.0"
+                      }
+                    ],
+                    "tags" : []
+                  }
                 }
 
   /copyWithinContainer:
@@ -159,9 +162,11 @@ title: ArkCase Document Management
           body:
             application/json:
               schema:
-                !include folder-schema.json
+                !include copy-folder-dto-schema.json
               example: |
                 {
+                  "originalFolderId":567,
+                  "newFolder":{
                   "id" : 143996,
                   "created" : "2015-05-11T15:58:46.527-0400",
                   "creator" : "bthomas",
@@ -170,6 +175,7 @@ title: ArkCase Document Management
                   "name" : "another test",
                   "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
                   "parentFolderId" : 141019
+                  }
                 }
   /folder/{folderId}:
       delete:

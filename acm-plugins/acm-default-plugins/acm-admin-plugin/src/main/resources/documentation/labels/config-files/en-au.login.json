@@ -2,9 +2,12 @@
     "window-title": "ACM | ArkCase",
     "title": "Login",
     "instruction": "Enter your username and password.",
+    "placeholder-username": "Username",
+    "placeholder-password": "Password",
     "fail-message": "Your login attempt was not successful, try again.",
     "fail-reason": "Reason",
     "login-button": "Log In",
     "forgot-password": "Forgot password?",
-    "footer": "ArkCase <br>&copy; 2014, 2015"
+    "footer": "ArkCase",
+    "copy-right": "2014, 2015"
 }

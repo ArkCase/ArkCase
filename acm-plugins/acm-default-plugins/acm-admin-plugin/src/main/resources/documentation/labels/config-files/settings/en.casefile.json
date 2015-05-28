@@ -1,4 +1,8 @@
-{"title": {
+{"page-title": {
+    "value": "Case Files | ACM | Ark Case Management",
+    "defaultValue": "Case Files | ACM | Ark Case Management",
+    "description": ""
+}, "title": {
     "value": "Case",
     "defaultValue": "Case",
     "description": ""
@@ -17,6 +21,11 @@
         "change-case-status": {
             "value": "Change Case Status",
             "defaultValue": "Change Case Status",
+            "description": ""
+        },
+        "split-case": {
+            "value": "Split Case",
+            "defaultValue": "Split Case",
             "description": ""
         },
         "consolidate": {

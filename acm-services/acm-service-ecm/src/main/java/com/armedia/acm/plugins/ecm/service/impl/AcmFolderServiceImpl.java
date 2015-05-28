@@ -44,6 +44,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private EcmFileDao fileDao;
     private MuleClient muleClient;
     private EcmFileService fileService;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     private AcmFolder copiedFolder;
     private boolean isFirstFolder = true;
@@ -56,7 +57,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
-        properties.put(AcmFolderConstants.NEW_FOLDER_NAME, FolderAndFilesUtils.buildSafeFolderName(newFolderName));
+        properties.put(AcmFolderConstants.NEW_FOLDER_NAME, getFolderAndFilesUtils().buildSafeFolderName(newFolderName));
         String cmisFolderId = null;
         try {
 
@@ -500,5 +501,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     public void setCopiedFolder(AcmFolder copiedFolder) {
         this.copiedFolder = copiedFolder;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
