@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SetUserOrgInfoAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private final String URL="/api/latest/ecm/download/";
     private ProfileEventPublisher eventPublisher;
     private UserDao userDao;
     private UserOrgDao userOrgDao;
@@ -123,7 +122,6 @@ public class SetUserOrgInfoAPIController {
             throw new AcmCreateObjectFailedException("user organization info",e.getMessage(),e.getCause());
         }
         getEventPublisher().publishProfileEvent(userOrg,auth,isCompanyNameNull,true);
-     //   in.setPictureUrl(URL + in.getEcmFileId() + "?inline=true");
         return in;
     }
 

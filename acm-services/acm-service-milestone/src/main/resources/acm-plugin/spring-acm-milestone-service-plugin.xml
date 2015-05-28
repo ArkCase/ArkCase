@@ -13,7 +13,7 @@
         </property>
         <property name="urlPrivileges">
             <list>
-                <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="listMilestonesUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/milestonebyname"/>
                     <property name="requiredPrivilege" ref="listMilestonesGroupedByDate"/>
