@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormFactory;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonIdentification;
 import com.armedia.acm.plugins.person.model.xml.GeneralOrganization;
+import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.service.history.model.AcmHistory;
 
@@ -41,7 +43,7 @@ import com.armedia.acm.service.history.model.AcmHistory;
  * @author riste.tutureski
  *
  */
-public class CaseFilePSFactory
+public class CaseFilePSFactory extends FrevvoFormFactory
 {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	
@@ -56,6 +58,7 @@ public class CaseFilePSFactory
 	private AcmHistoryDao acmHistoryDao;
 	private EcmFileService ecmFileService;
     private CaseFilePSService formService;
+    private PersonService personService;
 
 	
 	public CaseFile asAcmCaseFile(CaseFilePSForm form, CaseFile caseFile)
@@ -142,44 +145,9 @@ public class CaseFilePSFactory
 		String employeeId = subject.getEmployeeId();
 		String ssn = subject.getSocialSecurityNumber();
 		
-		populatePersonIdentification(PERSON_IDENTIFICATION_EMPLOYEE_ID, employeeId, person);
-		populatePersonIdentification(PERSON_IDENTIFICATION_SSN, ssn, person);
+		person = getPersonService().addPersonIdentification(PERSON_IDENTIFICATION_EMPLOYEE_ID, employeeId, person);
+		person = getPersonService().addPersonIdentification(PERSON_IDENTIFICATION_SSN, ssn, person);
 
-	}
-	
-	private void populatePersonIdentification(String key, String value, Person person)
-	{
-		if ( value != null && !value.trim().isEmpty() )
-		{
-			boolean exists = false;
-			if ( person.getPersonIdentification() != null )
-			{
-				for ( PersonIdentification pi : person.getPersonIdentification() )
-				{
-					if ( key.equals(pi.getIdentificationType())  )
-					{
-						pi.setIdentificationNumber(value);
-						exists = true;
-						break;
-					}
-				}
-			}
-
-			if ( ! exists )
-			{
-				if ( person.getPersonIdentification() == null )
-				{
-					person.setPersonIdentification(new ArrayList<PersonIdentification>());
-				}
-				
-				PersonIdentification pi = new PersonIdentification();
-				pi.setIdentificationNumber(value);
-				pi.setIdentificationType(key);
-				pi.setPerson(person);
-				
-				person.getPersonIdentification().add(pi);
-			}
-		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -446,4 +414,12 @@ public class CaseFilePSFactory
     {
         this.formService = formService;
     }
+
+	public PersonService getPersonService() {
+		return personService;
+	}
+
+	public void setPersonService(PersonService personService) {
+		this.personService = personService;
+	}
 }

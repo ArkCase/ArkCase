@@ -8,6 +8,10 @@
     <bean id="acmPersonAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
     <bean id="acmPersonIdentificationDao" class="com.armedia.acm.plugins.person.dao.PersonIdentificationDao"/>
     <bean id ="acmOrganizationDao" class ="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
+    
+    <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
+    	<property name="personDao" ref="acmPersonDao" />
+    </bean>
           
     <bean id="personTypeTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
         <property name="tableName" value="acm_person_type_lu"/>
