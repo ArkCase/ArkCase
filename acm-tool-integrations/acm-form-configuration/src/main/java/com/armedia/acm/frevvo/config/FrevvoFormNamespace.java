@@ -67,7 +67,7 @@ public class FrevvoFormNamespace {
 	 * press button "Schema" button under "eBrief" form. The "EBrief.xsd" schema will be downloaded.
 	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
 	 */
-	public static final String EBRIEF_NAMESPACE = "http://www.frevvo.com/schemas/_L9-uIO-DEeS84usjR3uNRQ";
+	public static final String EBRIEF_NAMESPACE = "http://www.frevvo.com/schemas/_rb7bAALEEeWyppOohoLd5A";
 	
 	/**
 	 * This is namespace for ProjectForm object while we creating XML
