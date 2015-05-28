@@ -51,18 +51,9 @@ Acm.Service = {
             arg.errorCallback = arg.error;
         } else {
             arg.errorCallback = function(xhr, status, error) {
-                //for compatible with v1.0, until refactor to v2.0
-//                if (arg.callback) {
-//                    arg.callback({hasError:true, errorMsg:xhr.responseText});
-//                } else
                 if (arg.success) {
                     arg.success({hasError:true, errorMsg:xhr.responseText, errorCode:xhr.status});
                 }
-
-                //v2.0, after refactor v1.0 to v2.0, remove above and uncomment below
-//                if (arg.callback) {
-//                    arg.callback({hasError:true, errorMsg:xhr.responseText});
-//                }
             };
         }
         arg.error = function(xhr, status, error) {
@@ -72,6 +63,75 @@ Acm.Service = {
             arg.errorCallback(xhr, status, error);
         }
         return jQuery.ajax(arg);
+    }
+
+    ,promise : function(arg) {
+        var $dfd = jQuery.Deferred();
+
+        if (arg.success) {
+            arg.successCallback = arg.success;
+        }
+        arg.success = function(response) {
+            if (!response.hasError) {
+                App.Model.Login.setErrorCount(0);
+            }
+
+            //Acm.Service._process2($dfd, response, arg);
+            if (arg.successCallback) {
+                arg.successCallback(response);
+                $dfd.resolve(response);
+
+            } else if (arg.callback) {
+                var rc = arg.callback(response);
+                if (response.hasError) {
+                    $dfd.reject(response);
+                } else if (true === rc) {
+                    $dfd.resolve(response);
+                } else if (Acm.isNotEmpty(rc)) {
+                    $dfd.resolve(rc);
+                } else {
+                    if (arg.invalid) {
+                        rc = arg.invalid(response);
+                    } else {
+                        rc = arg.callback({hasError: true, errorMsg: "Invalid response from service " + arg.url, errorCode: 0});
+                    }
+                    if (Acm.isNotEmpty(rc)) {
+                        $dfd.reject(rc);
+                    } else {
+                        $dfd.reject(response);
+                    }
+                }
+            }
+        };
+        this.ajax(arg);
+        return $dfd.promise();
+    }
+    ,_process2: function($dfd, response, arg) {
+        if (arg.successCallback) {
+            arg.successCallback(response);
+            $dfd.resolve(response);
+
+        } else if (arg.callback) {
+            var rc = arg.callback(response);
+            if (response.hasError) {
+                $dfd.reject(response);
+            } else if (true === rc) {
+                $dfd.resolve(response);
+            } else if (Acm.isNotEmpty(rc)) {
+                $dfd.resolve(rc);
+            } else {
+                if (arg.invalid) {
+                    rc = arg.invalid(response);
+                } else {
+                    rc = arg.callback({hasError: true, errorMsg: "Invalid response from service " + arg.url, errorCode: 0});
+                }
+                if (Acm.isNotEmpty(rc)) {
+                    $dfd.reject(rc);
+                } else {
+                    $dfd.reject(response);
+                }
+            }
+        }
     }
 
     ,call : function(arg) {
@@ -86,6 +146,21 @@ Acm.Service = {
                 Acm.Service._process(response, arg);
             }
         });
+    }
+    ,_process: function(response, arg) {
+        if (arg.success) {
+            arg.success(response);
+
+        } else if (arg.callback) {
+            var happy = arg.callback(response);
+            if (!response.hasError && !happy) {
+                if (arg.invalid) {
+                    arg.invalid(response);
+                } else {
+                    arg.callback({hasError: true, errorMsg: "Invalid response from service " + arg.url, errorCode: 0});
+                }
+            }
+        }
     }
 
 
@@ -115,21 +190,6 @@ Acm.Service = {
                 Acm.Service._process(response, arg);
             }
         });
-    }
-    ,_process: function(response, arg) {
-        if (arg.success) {
-            arg.success(response);
-
-        } else if (arg.callback) {
-            var happy = arg.callback(response);
-            if (!response.hasError && !happy) {
-                if (arg.invalid) {
-                    arg.invalid(response);
-                } else {
-                    arg.callback({hasError: true, errorMsg: "Invalid response from service " + arg.url});
-                }
-            }
-        }
     }
     
     /*
