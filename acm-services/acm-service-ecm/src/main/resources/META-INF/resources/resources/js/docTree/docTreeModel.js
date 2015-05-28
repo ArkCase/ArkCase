@@ -279,13 +279,19 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data.fileId)) {
+        if (Acm.isEmpty(data.originalId)) {
             return false;
         }
-        if (Acm.isEmpty(data.folder)) {
+        if (Acm.isEmpty(data.newFile)) {
             return false;
         }
-        if (Acm.isEmpty(data.folder.id)) {
+        if (Acm.isEmpty(data.newFile.fileId)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.newFile.folder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.newFile.folder.id)) {
             return false;
         }
         return true;
@@ -303,10 +309,16 @@ DocTree.Model = DocTree.Model || {
         if (Acm.isEmpty(data)) {
             return false;
         }
-        if (Acm.isEmpty(data.id)) {
+        if (Acm.isEmpty(data.originalFolderId)) {
             return false;
         }
-        if (Acm.isEmpty(data.parentFolderId)) {
+        if (Acm.isEmpty(data.newFolder)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.newFolder.id)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.newFolder.parentFolderId)) {
             return false;
         }
         return true;

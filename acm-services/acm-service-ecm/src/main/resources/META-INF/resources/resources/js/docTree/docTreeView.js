@@ -21,8 +21,8 @@ DocTree.View = DocTree.View || {
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT           ,this.onViewChangedParent);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_TREE             ,this.onViewChangedTree);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_UPLOADED_FILES          ,this.onModelUploadedFiles);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_REPLACED_FILE           ,this.onModelReplacedFile);
+        //Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_UPLOADED_FILES          ,this.onModelUploadedFiles);
+        //Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_REPLACED_FILE           ,this.onModelReplacedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST    ,this.onModelRetrievedFolderList);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_CREATED_FOLDER          ,this.onModelCreatedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_DELETED_FOLDER          ,this.onModelDeletedFolder);
@@ -32,7 +32,7 @@ DocTree.View = DocTree.View || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_FILE              ,this.onModelMovedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FILE             ,this.onModelCopiedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_MOVED_FOLDER            ,this.onModelMovedFolder);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FOLDER           ,this.onModelCopiedFolder);
+        //Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_COPIED_FOLDER           ,this.onModelCopiedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.MODEL_SET_ACTIVE_VERSION      ,this.onModelSetActiveVersion);
 
         //----------
@@ -445,7 +445,11 @@ DocTree.View = DocTree.View || {
     }
     ,_doUploadFiles: function(fd, cacheKey, folderNode, names, fileType) {
         var promiseAddNode = DocTree.View._addingFileNodes(folderNode, names, fileType);
-        var promiseUploadFile = DocTree.Service.uploadFiles(fd, cacheKey, folderNode);
+        var promiseUploadFile = DocTree.Service.uploadFiles(fd, cacheKey)
+            .fail(function(response) {
+                App.View.MessageBoard.show($.t("doctree:error.upload-file"), Acm.goodValue(response.errorMsg));
+            });
+
         $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFiles, fileNodes){
             if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateNodes(fileNodes)) {
                 for (var i = 0; i < uploadedFiles.length; i++) {
@@ -465,15 +469,19 @@ DocTree.View = DocTree.View || {
     ,_doReplaceFile: function(fd, fileId, cacheKey, fileNode, name) {
         DocTree.View.markNodePending(fileNode);
 
-        var promiseReplaceFile = DocTree.Service.replaceFile(fd, fileId, cacheKey, fileNode);
-        $.when(promiseReplaceFile).done(function(replacedFile){
-            if (replacedFile && fileNode) {
-                fileNode.data.version = replacedFile.version;
-                fileNode.data.versionList = replacedFile.versionList;
-                fileNode.renderTitle();
-                fileNode.setStatus("ok");
-            }
-        });
+        DocTree.Service.replaceFile(fd, fileId, cacheKey)
+            .fail(function(response) {
+                App.View.MessageBoard.show($.t("doctree:error.replace-file"), Acm.goodValue(response.errorMsg));
+                DocTree.View.markNodeError(fileNode);
+            })
+            .done(function(replacedFile){
+                if (replacedFile && fileNode) {
+                    fileNode.data.version = replacedFile.version;
+                    fileNode.data.versionList = replacedFile.versionList;
+                    fileNode.renderTitle();
+                    fileNode.setStatus("ok");
+                }
+            });
     }
 //    ,_getNameOrig: function(name) {
 //        if (Acm.isEmpty(name)) {
@@ -543,18 +551,18 @@ DocTree.View = DocTree.View || {
         });
 
     }
-    ,onModelUploadedFiles: function(uploadInfo, folderNode) {
-        if (uploadInfo.hasError) {
-            App.View.MessageBoard.show($.t("doctree:error.upload-file"), Acm.goodValue(uploadInfo.errorMsg));
-
-        }
-    }
-    ,onModelReplacedFile: function(replaceInfo, fileId, fileNode) {
-        if (replaceInfo.hasError) {
-            App.View.MessageBoard.show($.t("doctree:error.replace-file"), Acm.goodValue(replaceInfo.errorMsg));
-            DocTree.View.markNodeError(fileNode);
-        }
-    }
+//    ,onModelUploadedFiles: function(uploadInfo, folderNode) {
+//        if (uploadInfo.hasError) {
+//            App.View.MessageBoard.show($.t("doctree:error.upload-file"), Acm.goodValue(uploadInfo.errorMsg));
+//
+//        }
+//    }
+//    ,onModelReplacedFile: function(replaceInfo, fileId, fileNode) {
+//        if (replaceInfo.hasError) {
+//            App.View.MessageBoard.show($.t("doctree:error.replace-file"), Acm.goodValue(replaceInfo.errorMsg));
+//            DocTree.View.markNodeError(fileNode);
+//        }
+//    }
 
     ,onModelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, folderNode) {
         if (folderList.hasError) {
@@ -654,20 +662,20 @@ DocTree.View = DocTree.View || {
             DocTree.View.markNodeOk(node);
         }
     }
-    ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
-        if (copyFolderInfo.hasError) {
-            App.View.MessageBoard.show($.t("doctree:error.copy-folder"), Acm.goodValue(copyFolderInfo.errorMsg));
-            DocTree.View.markNodeError(node);
-        } else if (DocTree.View.validateNode(node)) {
-            DocTree.View._folderDataToNodeData(copyFolderInfo, node);
-            DocTree.View.markNodeOk(node);
-
-            node.setExpanded(false);
-            node.resetLazy();
-
-            node.renderTitle();
-        }
-    }
+//    ,onModelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, node) {
+//        if (copyFolderInfo.hasError) {
+//            App.View.MessageBoard.show($.t("doctree:error.copy-folder"), Acm.goodValue(copyFolderInfo.errorMsg));
+//            DocTree.View.markNodeError(node);
+//        } else if (DocTree.View.validateNode(node)) {
+//            DocTree.View._folderDataToNodeData(copyFolderInfo, node);
+//            DocTree.View.markNodeOk(node);
+//
+//            node.setExpanded(false);
+//            node.resetLazy();
+//
+//            node.renderTitle();
+//        }
+//    }
     ,onModelSetActiveVersion: function(version, fileId, cacheKey, node) {
         if (version.hasError) {
             App.View.MessageBoard.show($.t("doctree:error.set-version"), Acm.goodValue(version.errorMsg));
@@ -1441,6 +1449,7 @@ DocTree.View = DocTree.View || {
             if (DocTree.View.isTopNode(node)) {
                 folderId = 0;
             }
+
             var pageId = Acm.goodValue(node.data.startRow);
             var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
@@ -1806,7 +1815,22 @@ DocTree.View = DocTree.View || {
                 var frCacheKey = DocTree.View.getCacheKey(srcNode.parent);
 
                 if (DocTree.View.isFolderNode(frNode)) {
-                    DocTree.Controller.viewCopiedFolder(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, newNode);
+                    //DocTree.Controller.viewCopiedFolder(frNode.data.objectId, toFolderId, frCacheKey, toCacheKey, newNode);
+
+                    DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), toFolderId, frNode.data.objectId, frCacheKey, toCacheKey, newNode)
+                        .done(function(copyFolderInfo) {
+                            DocTree.View._folderDataToNodeData(copyFolderInfo, newNode);
+                            DocTree.View.markNodeOk(newNode);
+                            newNode.setExpanded(false);
+                            newNode.resetLazy();
+                            newNode.renderTitle();
+                        })
+                        .fail(function(data) {
+                            App.View.MessageBoard.show($.t("doctree:error.copy-folder"), Acm.goodValue(data.errorMsg));
+                            DocTree.View.markNodeError(newNode);
+                        })
+                    ;
+
                 } else if (DocTree.View.isFileNode(frNode)) {
                     DocTree.Controller.viewCopiedFile(frNode.data.objectId, toFolderId, toCacheKey, newNode);
                 }
