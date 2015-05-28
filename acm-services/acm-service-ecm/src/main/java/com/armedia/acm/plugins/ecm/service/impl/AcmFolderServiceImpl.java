@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -12,7 +11,7 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.*;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -21,12 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -57,18 +55,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         String safeName = getFolderAndFilesUtils().buildSafeFolderName(newFolderName);
         String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(safeName);
-        try {
-           AcmFolder f = getFolderDao().findFolderByNameInTheGivenParentFolder(newFolderName, parentFolderId);
-            //if we hit this line we need to throw an exception because the folder with given name exists under given parentId folder!
-            if(log.isErrorEnabled()){
-                log.error("Folder with name "+newFolderName+" already exists in the system");
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,f.getId(),"Folder with name "+newFolderName+" already exists in the system",null);
-        }  catch (NoResultException e) {
-            if(log.isInfoEnabled()){
-                log.info("New folder with name: "+newFolderName+" will be added under parent folder with id: "+parentFolderId);
-            }
-        }
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
         properties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
@@ -79,7 +65,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 log.debug("Folder with name: " + newFolderName +"  exists inside the folder: "+ folder.getName());
             }
             return prepareFolder(folder,cmisFolderId, newFolderName);
-        } catch ( PersistenceException | MuleException e ) {
+        } catch ( PersistenceException | AcmFolderException | MuleException e ) {
             if ( log.isErrorEnabled() ){
                 log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
             }
@@ -94,17 +80,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if ( folder == null ){
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
         }
-        try {
-             getFolderDao().findFolderByNameInTheGivenParentFolder(newFolderName, folder.getParentFolderId());
-             if(log.isErrorEnabled()){
-                 log.error("Folder with name: "+newFolderName+"exists under parent folderId: "+folder.getParentFolderId() );
-             }
-             throw new AcmFolderException("Folder with name: "+newFolderName+"exists");
-        } catch ( NoResultException e ) {
-            if(log.isInfoEnabled()){
-                log.info("Folder name: "+folder.getName()+" will be changed with: "+newFolderName);
-            }
-        }
         AcmFolder renamedFolder;
         try {
             folder.setName(newFolderName);
@@ -114,10 +89,18 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             }
             return renamedFolder;
         }  catch ( Exception e ) {
-            if ( log.isErrorEnabled() ){
-                log.error("Folder "+folder.getName()+" was not renamed successfully" + e.getMessage(),e);
+            Throwable t =  ExceptionUtils.getRootCause(e);
+            if ( t instanceof  SQLIntegrityConstraintViolationException ) {
+                if ( log.isErrorEnabled() ){
+                    log.error("Folder " + folder.getName() + " was not renamed successfully" + e.getMessage(), e);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_RENAME_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder "+folder.getName()+" was not renamed successfully",e);
+            } else {
+                if(log.isErrorEnabled()){
+                    log.error("Folder with name " + newFolderName + " already exists " + e.getMessage());
+                }
+                throw new AcmFolderException(e);
             }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_RENAME_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder "+folder.getName()+" was not renamed successfully",e);
         }
     }
 
@@ -445,7 +428,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         return objectList;
     }
 
-    private AcmFolder prepareFolder (AcmFolder folder, String cmisFolderId, String folderName) throws AcmUserActionFailedException, PersistenceException {
+    private AcmFolder prepareFolder (AcmFolder folder, String cmisFolderId, String folderName) throws AcmUserActionFailedException, PersistenceException, AcmFolderException {
         AcmFolder newFolder = new AcmFolder();
         if( cmisFolderId!=null ) {
             newFolder.setCmisFolderId(cmisFolderId);
@@ -457,7 +440,24 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         newFolder.setName(folderName);
         newFolder.setParentFolderId(folder.getId());
-        AcmFolder result = getFolderDao().save(newFolder);
+        AcmFolder result;
+        try {
+             result = getFolderDao().save(newFolder);
+        } catch (Exception e) {
+            Throwable t =  ExceptionUtils.getRootCause(e);
+            if ( t instanceof  SQLIntegrityConstraintViolationException ) {
+                if(log.isDebugEnabled()){
+                    log.debug("Folder with name "+folderName+" already exists "+e.getMessage());
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),
+                        "Folder with name "+folderName+" already exists",e);
+            } else {
+                if(log.isErrorEnabled()){
+                    log.error("Folder with name " + folderName + " already exists " + e.getMessage());
+                }
+                throw new AcmFolderException(e);
+            }
+        }
         return result;
     }
 

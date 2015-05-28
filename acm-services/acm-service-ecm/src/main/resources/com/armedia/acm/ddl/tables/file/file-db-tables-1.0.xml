@@ -769,12 +769,13 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="files-38-add-unique-constraints" author="marst">
-        <preConditions onFail="CONTINUE">
+    <changeSet id="files-38-add-function-based-index" author="marst">
+        <preConditions onFail="MARK_RAN">
             <dbms type="oracle"/>
         </preConditions>
-        <!--(NVL(cm_parent_folder_id, cm_folder_id), upper(cm_folder_name))-->
-        <addUniqueConstraint tableName="acm_folder" columnNames="cm_folder_name, cm_parent_folder_id"/>
+        <createIndex tableName="acm_folder" indexName="idx_folder_name_parent_id" unique="true">
+            <column name="NVL(cm_parent_folder_id, cm_folder_id),upper(cm_folder_name)"></column>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
