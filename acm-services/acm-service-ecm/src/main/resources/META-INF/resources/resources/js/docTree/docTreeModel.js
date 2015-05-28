@@ -15,9 +15,9 @@ DocTree.Model = DocTree.Model || {
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FILE            ,this.onViewRenamedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FILE              ,this.onViewMovedFile);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FILE             ,this.onViewCopiedFile);
+        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FILE             ,this.onViewCopiedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FOLDER            ,this.onViewMovedFolder);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
+        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_VERSION         ,this.onViewChangedVersion);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_SENT_EMAIL              ,this.onViewSentEmail);
 
@@ -59,15 +59,15 @@ DocTree.Model = DocTree.Model || {
     ,onViewMovedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
         DocTree.Service.moveFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, frCacheKey, toCacheKey, node);
     }
-    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
-        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
-    }
+//    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
+//        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
+//    }
     ,onViewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
         DocTree.Service.moveFolder(subFolderId, folderId, frCacheKey, toCacheKey, node);
     }
-    ,onViewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
-        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
-    }
+//    ,onViewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+//        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
+//    }
     ,onViewChangedVersion: function(fileId, version, cacheKey, node) {
         DocTree.Service.setActiveVersion(fileId, version, cacheKey, node);
     }

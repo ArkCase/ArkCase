@@ -421,29 +421,24 @@ DocTree.Service = {
             }
         })
     }
-    ,copyFile: function(objType, objId, folderId, fileId, toCacheKey, callerData) {
+    ,copyFile: function(objType, objId, folderId, fileId, toCacheKey) {
         var url = this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        return Acm.Service.call({type: "POST"
+        return Acm.Service.promise({type: "POST"
             ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
-                if (response.hasError) {
-                    DocTree.Controller.modelCopiedFile(response, objType, objId, folderId, fileId, toCacheKey, callerData);
-
-                } else {
+                if (!response.hasError) {
                     if (DocTree.Model.validateCopyFileInfo(response)) {
                         var copyFileInfo = response;
-                        if (copyFileInfo.originalId == fileId && copyFileInfo.folder.id == folderId) {
+                        if (copyFileInfo.originalId == fileId && copyFileInfo.newFile.folder.id == folderId) {
                             var toFolderList = DocTree.Model.cacheFolderList.get(toCacheKey);
                             if (DocTree.Model.validateFolderList(toFolderList)) {
                                 var fileData = DocTree.Model.fileToSolrData(copyFileInfo.newFile);
                                 toFolderList.children.push(fileData);
                                 toFolderList.totalChildren++;
                                 DocTree.Model.cacheFolderList.put(toCacheKey, toFolderList);
-
-                                DocTree.Controller.modelCopiedFile(fileData, objType, objId, folderId, fileId, toCacheKey, callerData);
-                                return true;
+                                return fileData;
                             }
                         }
                     }
