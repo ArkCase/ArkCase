@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "acm_participant")
@@ -200,4 +201,24 @@ public class AcmParticipant implements Serializable, AcmEntity
                 ", privileges=" + privileges +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Objects.requireNonNull(obj, "Comparable object must not be null");
+        if (!(obj instanceof AcmParticipant))
+            return false;
+        AcmParticipant other = (AcmParticipant) obj;
+        if (this.getId() == null || other.getId() == null)
+            return false;
+        return getId().equals(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        if (getId() == null)
+            return super.hashCode();
+        else
+            return getId().hashCode();
+    }
+
 }
