@@ -8,8 +8,8 @@ DocTree.Controller = DocTree.Controller || {
         var name = Acm.goodValue(args.name, "doctree");
         this.VIEW_CHANGED_PARENT           = name + "-view-changed-parent";
         this.VIEW_CHANGED_TREE             = name + "-view-changed-tree";
-        this.MODEL_UPLOADED_FILES          = name + "-model-uploaded-files";
-        this.MODEL_REPLACED_FILE           = name + "-model-replaced-file";
+        //this.MODEL_UPLOADED_FILES          = name + "-model-uploaded-files";
+        //this.MODEL_REPLACED_FILE           = name + "-model-replaced-file";
         this.MODEL_RETRIEVED_FOLDERLIST    = name + "-model-retrieved-folder-list";
         this.VIEW_ADDED_FOLDER             = name + "-view-added-folder";
         this.MODEL_CREATED_FOLDER          = name + "-model-created-folder";
@@ -23,12 +23,12 @@ DocTree.Controller = DocTree.Controller || {
         this.MODEL_RENAMED_FILE            = name + "-model-renamed-file";
         this.VIEW_MOVED_FILE               = name + "-view-moved-file";
         this.MODEL_MOVED_FILE              = name + "-model-moved-file";
-        this.VIEW_COPIED_FILE              = name + "-view-copied-file";
-        this.MODEL_COPIED_FILE             = name + "-model-copied-file";
+        //this.VIEW_COPIED_FILE              = name + "-view-copied-file";
+        //this.MODEL_COPIED_FILE             = name + "-model-copied-file";
         this.VIEW_MOVED_FOLDER             = name + "-view-moved-folder";
         this.MODEL_MOVED_FOLDER            = name + "-model-moved-folder";
-        this.VIEW_COPIED_FOLDER            = name + "-view-copied-folder";
-        this.MODEL_COPIED_FOLDER           = name + "-model-copied-folder";
+        //this.VIEW_COPIED_FOLDER            = name + "-view-copied-folder";
+        //this.MODEL_COPIED_FOLDER           = name + "-model-copied-folder";
         this.VIEW_CHANGED_VERSION          = name + "-view-changed-version";
         this.MODEL_SET_ACTIVE_VERSION      = name + "-model-set-active-version";
         this.VIEW_SENT_EMAIL               = name + "-view-sent-email";
@@ -49,12 +49,12 @@ DocTree.Controller = DocTree.Controller || {
     ,viewChangedTree: function() {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_TREE);
     }
-    ,modelUploadedFiles: function(uploadInfo, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILES, uploadInfo, callerData);
-    }
-    ,modelReplacedFile: function(replaceInfo, fileId, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_REPLACED_FILE, replaceInfo, fileId, callerData);
-    }
+//    ,modelUploadedFiles: function(uploadInfo, callerData) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_UPLOADED_FILES, uploadInfo, callerData);
+//    }
+//    ,modelReplacedFile: function(replaceInfo, fileId, callerData) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_REPLACED_FILE, replaceInfo, fileId, callerData);
+//    }
     ,modelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST, folderList, objType, objId, folderId, pageId, callerData);
     }
@@ -94,24 +94,24 @@ DocTree.Controller = DocTree.Controller || {
     ,modelMovedFile: function(moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_FILE, moveFileInfo, objType, objId, folderId, fileId, frCacheKey, toCacheKey, callerData);
     }
-    ,viewCopiedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FILE, fileId, folderId, frCacheKey, toCacheKey, node);
-    }
-    ,modelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FILE, copyFileInfo, objType, objId, folderId, fileId, toCacheKey, callerData);
-    }
+//    ,viewCopiedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FILE, fileId, folderId, frCacheKey, toCacheKey, node);
+//    }
+//    ,modelCopiedFile: function(copyFileInfo, objType, objId, folderId, fileId, toCacheKey, callerData) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FILE, copyFileInfo, objType, objId, folderId, fileId, toCacheKey, callerData);
+//    }
     ,viewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_MOVED_FOLDER, subFolderId, folderId, frCacheKey, toCacheKey, node);
     }
     ,modelMovedFolder: function(moveFolderInfo, subFolderId, folderId, toCacheKey, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_MOVED_FOLDER, moveFolderInfo, subFolderId, folderId, toCacheKey, callerData);
     }
-    ,viewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FOLDER, subFolderId, folderId, frCacheKey, toCacheKey, node);
-    }
-    ,modelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FOLDER, copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
-    }
+//    ,viewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_COPIED_FOLDER, subFolderId, folderId, frCacheKey, toCacheKey, node);
+//    }
+//    ,modelCopiedFolder: function(copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_COPIED_FOLDER, copyFolderInfo, objType, objId, folderId, subFolderId, frCacheKey, toCacheKey, callerData);
+//    }
     ,viewChangedVersion: function(fileId, version, cacheKey, node) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_CHANGED_VERSION, fileId, version, cacheKey, node);
     }
