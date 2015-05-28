@@ -56,8 +56,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null,"Folder not found",null);
         }
         String safeName = getFolderAndFilesUtils().buildSafeFolderName(newFolderName);
+        String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(safeName);
         try {
-           AcmFolder f =  getFolderDao().findFolderByNameInTheGivenParentFolder(newFolderName, parentFolderId);
+           AcmFolder f = getFolderDao().findFolderByNameInTheGivenParentFolder(newFolderName, parentFolderId);
             //if we hit this line we need to throw an exception because the folder with given name exists under given parentId folder!
             if(log.isErrorEnabled()){
                 log.error("Folder with name "+newFolderName+" already exists in the system");
@@ -70,25 +71,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         Map<String,Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID,folder.getCmisFolderId());
-        properties.put(AcmFolderConstants.NEW_FOLDER_NAME, safeName);
+        properties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
         String cmisFolderId = null;
         try {
             cmisFolderId = createNewFolderAndReturnCmisID(folder,properties);
-
-            //if folder already exists mule will return existing object. If so we will change the folder name
-            // by adding timestamp to it and will try to create it again
-            AcmFolder existingFolder = getFolderDao().findByCmisFolderId(cmisFolderId);
-            String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(safeName);
-            properties.remove(AcmFolderConstants.NEW_FOLDER_NAME);
-            properties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
-            cmisFolderId = createNewFolderAndReturnCmisID(folder, properties);
-
             if ( log.isDebugEnabled() ) {
                 log.debug("Folder with name: " + newFolderName +"  exists inside the folder: "+ folder.getName());
             }
-            return prepareFolder(folder,cmisFolderId,uniqueFolderName);
-        } catch ( NoResultException e ) {
-            return prepareFolder(folder,cmisFolderId,newFolderName);
+            return prepareFolder(folder,cmisFolderId, newFolderName);
         } catch ( PersistenceException | MuleException e ) {
             if ( log.isErrorEnabled() ){
                 log.error("Folder not added under "+folder.getName()+" successfully" + e.getMessage(),e);
@@ -464,9 +454,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 log.error("Folder not added under "+folder.getName()+" successfully");
             }
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder was no added under "+folder.getName()+" successfully",null);
-        }
-        if(folderName.contains("_")){
-            folderName = folderName.split("_")[AcmFolderConstants.ZERO];
         }
         newFolder.setName(folderName);
         newFolder.setParentFolderId(folder.getId());

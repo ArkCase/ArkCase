@@ -688,7 +688,7 @@
                     WHERE   c.cm_object_id = ac.cm_complaint_id
                     AND     c.cm_object_type = 'COMPLAINT'
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
                     SELECT  1
                     FROM    acm_complaint ac
@@ -765,7 +765,16 @@
     <changeSet id="files-37-add-calendar-folder-id-case-file-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_container">
             <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
+            <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="files-38-add-unique-constraints" author="marst">
+        <preConditions onFail="CONTINUE">
+            <dbms type="oracle"/>
+        </preConditions>
+        <!--(NVL(cm_parent_folder_id, cm_folder_id), upper(cm_folder_name))-->
+        <addUniqueConstraint tableName="acm_folder" columnNames="cm_folder_name, cm_parent_folder_id"/>
     </changeSet>
 
 </databaseChangeLog>
