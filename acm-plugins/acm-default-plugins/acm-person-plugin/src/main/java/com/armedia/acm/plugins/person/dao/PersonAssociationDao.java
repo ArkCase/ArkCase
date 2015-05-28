@@ -3,15 +3,22 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
 {
+	private transient final Logger LOG = LoggerFactory.getLogger(getClass());
     
      @PersistenceContext
     private EntityManager entityManager;
@@ -62,6 +69,40 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
         Person found = (Person) personInAssociation.getSingleResult();
 
         return found;
+    }
+    
+    public PersonAssociation findByPersonIdPersonTypeParentIdParentTypeSilent(Long personId, String personType, Long parentId, String parentType)
+    {
+    	Query select = getEntityManager().createQuery(
+                "SELECT personAssociation " +
+                        "FROM  PersonAssociation personAssociation " +
+                        "WHERE personAssociation.person.id = :personId " + 
+                        "AND personAssociation.personType = :personType " +
+                        "AND personAssociation.parentId = :parentId " +
+                        "AND personAssociation.parentType = :parentType"
+            );
+    	
+    	select.setParameter("personId", personId);
+    	select.setParameter("personType", personType);
+    	select.setParameter("parentId", parentId);
+    	select.setParameter("parentType", parentType);
+    	
+    	PersonAssociation retval = null;
+
+    	try
+    	{
+    		retval = (PersonAssociation) select.getSingleResult();
+    	}
+    	catch(NoResultException e1)
+    	{
+    		LOG.debug("There is no any PersonAssociation result for personId=" + personId + ", personType=" + personType + ", parentId=" + parentId + ", parentType=" + parentType);
+    	}
+    	catch (Exception e2) 
+    	{
+    		LOG.debug("Cannot take PersonAssociation result for personId=" + personId + ", personType=" + personType + ", parentId=" + parentId + ", parentType=" + parentType);
+		}
+    	
+    	return retval;
     }
 
     @Transactional

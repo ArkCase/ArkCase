@@ -277,7 +277,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			String existingXml = "";
 			try 
 			{
-				// Takeing existing XML for the form
+				// Taking existing XML for the form
 				existingXml = getEcmFileService().download(id);
 				
 				// Creating Frevvo form from the existing XML
