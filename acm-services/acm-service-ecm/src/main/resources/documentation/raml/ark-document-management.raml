@@ -1,7 +1,31 @@
 #%RAML 0.8
 title: ArkCase Document Management
 
-
+/api/v1/plugin/ecm:
+  /download/byId/{ecmFileId}:
+    uriParameters:
+      ecmFileId:
+        description: Object ID of the file to be downloaded.
+        type: integer
+        minimum: 1
+        required: true
+    get:
+      description: Retrieve the active version of the requested file; for example, if "2.0" is the active version, then version 2.0 is retrieved.
+      queryParameters:
+        inline:
+          description: Whether the file should be shown in the browser (true) or downloaded (false)
+          type: boolean
+          default: false
+          required: false        
+      responses:
+        200: 
+          description: Response body is the file content stream.  The MIME type is appropriate for the actual file type, and could be any MIME type.  If 'inline' was false, the Content-Disposition header is set to "attachment; filename='<name>'" where <name> is the actual file name.
+        500:
+          description: File could not be downloaded; either such a file does not exist, or the user does not have access to it.
+          body:
+            text/plain:
+              example: | 
+                The response body will include an error message.      
 /api/v1/service/ecm:
   /container/{objectType}/{objectId}:
     description: User must be authenticated and must have 'read' access on the object identified by the object type and object id.  API doc last verified on 2015-05-11.
@@ -226,16 +250,6 @@ title: ArkCase Document Management
               example: The body will contain an error message.
         403:
             description: User is not authorized to move the file.
-  /copyWithinContainer:
-    post:
-      description: Copy one or more files to an existing folder in the same container
-  /download:
-    /{fileId}:
-      get:
-        description: Download the active version of the requested file
-    /{fileId}/{version}:
-      get:
-        description: Download the requested version of the requested file
   /folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}:
     description: Copy a folder.  API doc last verified on 2015-05-11.
     uriParameters:
