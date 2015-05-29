@@ -5,6 +5,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.SearchResults;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -26,6 +31,8 @@ import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CreateAdHocTaskAPIController
@@ -33,6 +40,11 @@ public class CreateAdHocTaskAPIController
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
     private MuleClient muleClient;
+    private ExecuteSolrQuery executeSolrQuery;
+
+
+
+    private SearchResults searchResults = new SearchResults();
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -55,9 +67,17 @@ public class CreateAdHocTaskAPIController
             //find the complaint id by name
             String objectId;
             String objectNumber;
+            String obj;
+            Long objId;
             if(in.getAttachedToObjectName() != ""){
                 objectNumber = in.getAttachedToObjectName();
                 in.setAttachedToObjectName(objectNumber);
+                obj = getObjectsFromSolr(in.getAttachedToObjectType(),authentication,0,10,"",null);
+                if(obj != null && getSearchResults().getNumFound(obj) > 0){
+                    JSONArray results = getSearchResults().getDocuments(obj);
+                    JSONObject result = results.getJSONObject(0);
+                    objId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
+                }
                 objectId  = findObjectIdByName(in.getAttachedToObjectType(),in.getAttachedToObjectName(), authentication);
             }
             else{
@@ -146,6 +166,34 @@ public class CreateAdHocTaskAPIController
         }
         return null;
     }
+
+    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId)
+    {
+        String retval = null;
+
+        log.debug("Taking objects from Solr for object type = " + objectType);
+
+        String authorQuery = "";
+        if (userId != null)
+        {
+            authorQuery = " AND author_s:" + userId;
+        }
+
+        String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
+
+        try
+        {
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+
+            log.debug("Objects was retrieved.");
+        }
+        catch (MuleException e)
+        {
+            log.error("Cannot retrieve objects from Solr.", e);
+        }
+
+        return retval;
+    }
     
     /**
      * Retrieve the solr data (json) of the given complaint or case
@@ -190,4 +238,18 @@ public class CreateAdHocTaskAPIController
 		this.muleClient = muleClient;
 	}
 
+    public ExecuteSolrQuery getExecuteSolrQuery() {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+    public SearchResults getSearchResults() {
+        return searchResults;
+    }
+
+    public void setSearchResults(SearchResults searchResults) {
+        this.searchResults = searchResults;
+    }
 }
