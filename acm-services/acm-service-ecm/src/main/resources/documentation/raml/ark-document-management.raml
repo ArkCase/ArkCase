@@ -1,7 +1,31 @@
 #%RAML 0.8
 title: ArkCase Document Management
 
-
+/api/v1/plugin/ecm:
+  /download/byId/{ecmFileId}:
+    uriParameters:
+      ecmFileId:
+        description: Object ID of the file to be downloaded.
+        type: integer
+        minimum: 1
+        required: true
+    get:
+      description: Retrieve the active version of the requested file; for example, if "2.0" is the active version, then version 2.0 is retrieved.
+      queryParameters:
+        inline:
+          description: Whether the file should be shown in the browser (true) or downloaded (false)
+          type: boolean
+          default: false
+          required: false        
+      responses:
+        200: 
+          description: Response body is the file content stream.  The MIME type is appropriate for the actual file type, and could be any MIME type.  If 'inline' was false, the Content-Disposition header is set to "attachment; filename='<name>'" where <name> is the actual file name.
+        500:
+          description: File could not be downloaded; either such a file does not exist, or the user does not have access to it.
+          body:
+            text/plain:
+              example: | 
+                The response body will include an error message.      
 /api/v1/service/ecm:
   /container/{objectType}/{objectId}:
     description: User must be authenticated and must have 'read' access on the object identified by the object type and object id.  API doc last verified on 2015-05-11.
@@ -26,6 +50,265 @@ title: ArkCase Document Management
             application/json:
               schema:
                 !include folder-list-schema.json
+  /copyToAnotherContainer/{targetObjectType}/{targetObjectId}:
+    uriParameters:
+      targetObjectType:
+        description: Object type where the file will be moved to.
+        example: CASE_FILE
+        type: string
+        required: true
+      targetObjectId:
+        description: ID for the object that will own the new file.
+        type: integer
+        minimum: 1
+        required: true
+    post:
+      description: Copy one or more files to another container.  API doc last verified on 2015-05-11.
+      body:
+        application/json:
+          schema:
+            !include move-copy-file-schema.json
+          example: |
+            {
+              "id" : 141067,
+              "folderId" : 35372
+            }
+      responses:
+        200:
+          description: file copied successfully.
+          body:
+            application/json:
+              schema:
+                !include copy-file-dto-schema.json
+              example: |
+                {
+                  "originalId" : "25435",
+                  "newFile" : {
+                    "fileId" : 31124,
+                    "status" : "ACTIVE",
+                    "created" : "2015-05-27T18:42:31.387-0400",
+                    "creator" : "ebmillar",
+                    "modified" : "2015-05-27T18:42:31.387-0400",
+                    "modifier" : "ebmillar",
+                    "versionSeriesId" : "workspace://SpacesStore/4bac086d-fab7-4128-a027-00017ac368bc;1.0",
+                    "fileName" : "Report_of_Investigation_02042015175208434.pdf",
+                    "fileMimeType" : "application/pdf;frevvo-snapshot=true; charset=utf-8",
+                    "folder" : {
+                      "id" : 20164,
+                      "created" : "2014-11-18T08:09:29.250-0500",
+                      "creator" : "ebmillar",
+                      "modified" : "2014-11-18T08:09:29.250-0500",
+                      "modifier" : "ebmillar",
+                      "name" : "ROOT",
+                      "cmisFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
+                      "parentFolderId" : null
+                    },
+                    "container" : {
+                      "id" : 15812,
+                      "created" : "2014-11-18T08:09:29.250-0500",
+                      "creator" : "ebmillar",
+                      "modified" : "2014-11-18T08:09:29.250-0500",
+                      "modifier" : "ebmillar",
+                      "containerObjectType" : "CASE_FILE",
+                      "containerObjectId" : 4893,
+                      "containerObjectTitle" : "20141118_4893",
+                      "folder" : {
+                        "id" : 20164,
+                        "created" : "2014-11-18T08:09:29.250-0500",
+                        "creator" : "ebmillar",
+                        "modified" : "2014-11-18T08:09:29.250-0500",
+                        "modifier" : "ebmillar",
+                        "name" : "ROOT",
+                        "cmisFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
+                        "parentFolderId" : null
+                      },
+                      "calendarFolderId" : null
+                    },
+                    "fileType" : "roi",
+                    "activeVersionTag" : "1.0",
+                    "category" : "Document",
+                    "versions" : [{
+                        "id" : 31125,
+                        "created" : "2015-05-27T18:42:31.395-0400",
+                        "creator" : "ebmillar",
+                        "modified" : "2015-05-27T18:42:31.395-0400",
+                        "modifier" : "ebmillar",
+                        "cmisObjectId" : "workspace://SpacesStore/b169cb17-4ccc-41aa-8dbc-96a5aa8a777e;1.0",
+                        "versionTag" : "1.0"
+                      }
+                    ],
+                    "tags" : []
+                  }
+                }
+        500:
+          description: File could not be moved
+          body:
+            text/plain:
+              example: The body will contain an error message.
+        403:
+            description: User is not authorized to move the file.
+  /folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}:
+    description: Copy a folder.  API doc last verified on 2015-05-11.
+    uriParameters:
+      folderId:
+        description: Id of the folder to be copied.  This folder must not be a top-level root folder; in other words, this folder's parentFolderId property must not be null.
+        required: true
+        type: integer
+        minimum: 1
+      dstFolderId:
+        description: Id of the target folder
+        required: true
+        type: integer
+        minimum: 1
+      targetObjectType:
+        description: Object type of the object that will hold the copied folder
+        type: string
+        required: true
+        example: CASE_FILE
+      targetObjectId:
+        description: Object ID of the object that will hold the copied folder; the dstFolderId must be a folder owned by this object.
+        type: integer
+        required: true
+        minimum: 1
+    post:
+      description: Copy a folder to another location, either in the same container or a different container.  The folder contents are recursively copied to the other location; this recursive copy operation will take time proportional to the number and size of objects to be copied.
+      responses:
+        200:
+          description: Folder copied successfully.
+          body:
+            application/json:
+              schema:
+                !include copy-folder-dto-schema.json
+              example: |
+                {
+                  "originalFolderId":567,
+                  "newFolder":{
+                  "id" : 143996,
+                  "created" : "2015-05-11T15:58:46.527-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T15:58:46.527-0400",
+                  "modifier" : "bthomas",
+                  "name" : "another test",
+                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+                  "parentFolderId" : 141019
+                }
+                }
+  /folder/{folderId}:
+      uriParameters:
+        folderId:
+          description: Object ID of the folder to be deleted.
+          type: integer
+          minimum: 1
+          required: true
+      delete:
+        description: Deletes the requested folder. The folder must be empty (it must not have any child documents or folders). 
+        responses:
+          200:
+            description: Delete operation completed; see the response body for whether the folder was actually deleted.
+            body:
+              application/json:
+                schema:
+                  !include delete-folder-results-schema.json
+                example: |
+                  {
+                    "message" : "Folder with id: 5120 successfully deleted",  // note: it could also say, "Folder with id: 5120 not found in the DB"
+                    "deletedFolderId" : 5120
+                  }
+          400:
+            description: Something went wrong with deleting the folder; most likely the folder was not empty, or else a system error occurred. 
+            body:
+              text/plain:
+                example: The body will contain an error message.
+      /{newFolderName}:
+        post:
+          description: Rename the requested folder
+        put:
+          description: Create a new folder under the requested folder 
+  /folder/{objectType}/{objectId}:
+    description: User must be authenticated and must have 'read' access on the requested object.
+    uriParameters:
+      objectType: 
+        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
+        type: string
+        required: true
+      objectId:
+        description: Container id
+        type: integer
+        required: true
+        minimum: 1
+    get:
+      description: Get list of objects in the root folder of the requested container. 
+      queryParameters:
+        s:
+          description: Sort order
+          required: false
+          default: name
+          enum: [ "author", "category", "created", "creator", "modified", "modifier", "name", "type", "version" ]
+        dir:
+          description: Sort direction (ascending or descending)
+          required: false
+          enum: ["ASC", "DESC"]
+          default: asc   
+        start:
+          description: Paging support - the starting row.
+          required: false
+          type: integer
+          default: 0
+          minimum: 0
+        n:
+          description: Paging support - the number of rows
+          required: false
+          type: integer
+          default: 1000
+          minimum: 0
+        category:
+          description: Used to request only documents, only correspondence, or both; to request both documents and correspondence, do not send a category at all
+          required: false
+          default: null
+          type: string
+          enum: [ "Correspondence", "Document" ]
+      responses:
+        403:
+          description: User is not authorized to read the requested object type
+        200:
+          description: Normal response, object list included.
+          body:
+            application/json:
+              schema:
+                !include folder-list-schema.json    
+  /folder/{parentFolderId}/{newFolderName}:
+    description: Create a new folder.  API doc last verified on 2015-05-11.
+    uriParameters:
+      parentFolderId:
+        description: Object ID of the parent folder; the new folder will be a subfolder of this folder.
+        type: integer
+        required: true
+        minimum: 1
+      newFolderName:
+        description: Name of the new folder.
+        type: string
+        required: true
+    put:
+      description: Create a new folder under the requested parent folder.
+      responses:
+        200:
+          description: Folder was created.
+          body:
+            application/json:
+              schema:
+                !include folder-schema.json
+              example: |
+                {
+                  "id" : 143996,
+                  "created" : "2015-05-11T15:58:46.527-0400",
+                  "creator" : "bthomas",
+                  "modified" : "2015-05-11T15:58:46.527-0400",
+                  "modifier" : "bthomas",
+                  "name" : "another test",
+                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
+                  "parentFolderId" : 141019
+                }
+      
   /id/{fileId}:
     uriParameters:
       fileId:
@@ -129,252 +412,7 @@ title: ArkCase Document Management
               example: The body will contain an error message.
         403:
             description: User is not authorized to delete the file.
-  /copyToAnotherContainer/{targetObjectType}/{targetObjectId}:
-    uriParameters:
-      targetObjectType:
-        description: Object type where the file will be moved to.
-        example: CASE_FILE
-        type: string
-        required: true
-      targetObjectId:
-        description: ID for the object that will own the new file.
-        type: integer
-        minimum: 1
-        required: true
-    post:
-      description: Copy one or more files to another container.  API doc last verified on 2015-05-11.
-      body:
-        application/json:
-          schema:
-            !include move-copy-file-schema.json
-          example: |
-            {
-              "id" : 141067,
-              "folderId" : 35372
-            }
-      responses:
-        200:
-          description: file copied successfully.
-          body:
-            application/json:
-              schema:
-                !include copy-file-dto-schema.json
-              example: |
-                {
-                  "originalId" : "25435",
-                  "newFile" : {
-                    "fileId" : 31124,
-                    "status" : "ACTIVE",
-                    "created" : "2015-05-27T18:42:31.387-0400",
-                    "creator" : "ebmillar",
-                    "modified" : "2015-05-27T18:42:31.387-0400",
-                    "modifier" : "ebmillar",
-                    "versionSeriesId" : "workspace://SpacesStore/4bac086d-fab7-4128-a027-00017ac368bc;1.0",
-                    "fileName" : "Report_of_Investigation_02042015175208434.pdf",
-                    "fileMimeType" : "application/pdf;frevvo-snapshot=true; charset=utf-8",
-                    "folder" : {
-                      "id" : 20164,
-                      "created" : "2014-11-18T08:09:29.250-0500",
-                      "creator" : "ebmillar",
-                      "modified" : "2014-11-18T08:09:29.250-0500",
-                      "modifier" : "ebmillar",
-                      "name" : "ROOT",
-                      "cmisFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
-                      "parentFolderId" : null
-                    },
-                    "container" : {
-                      "id" : 15812,
-                      "created" : "2014-11-18T08:09:29.250-0500",
-                      "creator" : "ebmillar",
-                      "modified" : "2014-11-18T08:09:29.250-0500",
-                      "modifier" : "ebmillar",
-                      "containerObjectType" : "CASE_FILE",
-                      "containerObjectId" : 4893,
-                      "containerObjectTitle" : "20141118_4893",
-                      "folder" : {
-                        "id" : 20164,
-                        "created" : "2014-11-18T08:09:29.250-0500",
-                        "creator" : "ebmillar",
-                        "modified" : "2014-11-18T08:09:29.250-0500",
-                        "modifier" : "ebmillar",
-                        "name" : "ROOT",
-                        "cmisFolderId" : "workspace://SpacesStore/d261b278-54ae-444a-88c3-5665f0c4e8c1",
-                        "parentFolderId" : null
-                      },
-                      "calendarFolderId" : null
-                    },
-                    "fileType" : "roi",
-                    "activeVersionTag" : "1.0",
-                    "category" : "Document",
-                    "versions" : [{
-                        "id" : 31125,
-                        "created" : "2015-05-27T18:42:31.395-0400",
-                        "creator" : "ebmillar",
-                        "modified" : "2015-05-27T18:42:31.395-0400",
-                        "modifier" : "ebmillar",
-                        "cmisObjectId" : "workspace://SpacesStore/b169cb17-4ccc-41aa-8dbc-96a5aa8a777e;1.0",
-                        "versionTag" : "1.0"
-                      }
-                    ],
-                    "tags" : []
-                  }
-                }
-        500:
-          description: File could not be moved
-          body:
-            text/plain:
-              example: The body will contain an error message.
-        403:
-            description: User is not authorized to move the file.
-  /copyWithinContainer:
-    post:
-      description: Copy one or more files to an existing folder in the same container
-  /download:
-    /{fileId}:
-      get:
-        description: Download the active version of the requested file
-    /{fileId}/{version}:
-      get:
-        description: Download the requested version of the requested file
-  /folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}:
-    description: Copy a folder.  API doc last verified on 2015-05-11.
-    uriParameters:
-      folderId:
-        description: Id of the folder to be copied.  This folder must not be a top-level root folder; in other words, this folder's parentFolderId property must not be null.
-        required: true
-        type: integer
-        minimum: 1
-      dstFolderId:
-        description: Id of the target folder
-        required: true
-        type: integer
-        minimum: 1
-      targetObjectType:
-        description: Object type of the object that will hold the copied folder
-        type: string
-        required: true
-        example: CASE_FILE
-      targetObjectId:
-        description: Object ID of the object that will hold the copied folder; the dstFolderId must be a folder owned by this object.
-        type: integer
-        required: true
-        minimum: 1
-    post:
-      description: Copy a folder to another location, either in the same container or a different container.  The folder contents are recursively copied to the other location; this recursive copy operation will take time proportional to the number and size of objects to be copied.
-      responses:
-        200:
-          description: Folder copied successfully.
-          body:
-            application/json:
-              schema:
-                !include copy-folder-dto-schema.json
-              example: |
-                {
-                  "originalFolderId":567,
-                  "newFolder":{
-                  "id" : 143996,
-                  "created" : "2015-05-11T15:58:46.527-0400",
-                  "creator" : "bthomas",
-                  "modified" : "2015-05-11T15:58:46.527-0400",
-                  "modifier" : "bthomas",
-                  "name" : "another test",
-                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
-                  "parentFolderId" : 141019
-                }
-                }
-  /folder/{folderId}:
-      delete:
-        description: deletes the requested folder.  
-      /{newFolderName}:
-        post:
-          description: Rename the requested folder
-        put:
-          description: Create a new folder under the requested folder 
-  /folder/{objectType}/{objectId}:
-    description: User must be authenticated and must have 'read' access on the requested object.
-    uriParameters:
-      objectType: 
-        description: Container type, e.g. COMPLAINT, CASE_FILE, TASK
-        type: string
-        required: true
-      objectId:
-        description: Container id
-        type: integer
-        required: true
-        minimum: 1
-    get:
-      description: Get list of objects in the root folder of the requested container. 
-      queryParameters:
-        s:
-          description: Sort order
-          required: false
-          default: name
-          enum: [ "author", "category", "created", "creator", "modified", "modifier", "name", "type", "version" ]
-        dir:
-          description: Sort direction (ascending or descending)
-          required: false
-          enum: ["ASC", "DESC"]
-          default: asc   
-        start:
-          description: Paging support - the starting row.
-          required: false
-          type: integer
-          default: 0
-          minimum: 0
-        n:
-          description: Paging support - the number of rows
-          required: false
-          type: integer
-          default: 1000
-          minimum: 0
-        category:
-          description: Used to request only documents, only correspondence, or both; to request both documents and correspondence, do not send a category at all
-          required: false
-          default: null
-          type: string
-          enum: [ "Correspondence", "Document" ]
-      responses:
-        403:
-          description: User is not authorized to read the requested object type
-        200:
-          description: Normal response, object list included.
-          body:
-            application/json:
-              schema:
-                !include folder-list-schema.json    
-  /folder/{parentFolderId}/{newFolderName}:
-    description: Create a new folder.  API doc last verified on 2015-05-11.
-    uriParameters:
-      parentFolderId:
-        description: Object ID of the parent folder; the new folder will be a subfolder of this folder.
-        type: integer
-        required: true
-        minimum: 1
-      newFolderName:
-        description: Name of the new folder.
-        type: string
-        required: true
-    put:
-      description: Create a new folder under the requested parent folder.
-      responses:
-        200:
-          description: Folder was created.
-          body:
-            application/json:
-              schema:
-                !include folder-schema.json
-              example: |
-                {
-                  "id" : 143996,
-                  "created" : "2015-05-11T15:58:46.527-0400",
-                  "creator" : "bthomas",
-                  "modified" : "2015-05-11T15:58:46.527-0400",
-                  "modifier" : "bthomas",
-                  "name" : "another test",
-                  "cmisFolderId" : "workspace://SpacesStore/0f6630d6-f9c1-43b6-87ff-eadcf9b52506",
-                  "parentFolderId" : 141019
-                }
-      
+
   /moveToAnotherContainer:
     post:
       description: Move one or more files to another container

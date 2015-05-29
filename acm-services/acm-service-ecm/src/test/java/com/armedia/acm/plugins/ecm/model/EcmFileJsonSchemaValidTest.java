@@ -70,6 +70,12 @@ public class EcmFileJsonSchemaValidTest
         validate("/jsonSchemas/delete-file-results-schema.json");
     }
 
+    @Test
+    public void deleteFolderResultsSchema() throws Exception
+    {
+        validate("/jsonSchemas/delete-folder-results-schema.json");
+    }
+
 
     private void validate(String path) throws IOException, ProcessingException
     {
