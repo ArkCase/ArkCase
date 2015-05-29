@@ -69,6 +69,7 @@
             </map>
         </property>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
 

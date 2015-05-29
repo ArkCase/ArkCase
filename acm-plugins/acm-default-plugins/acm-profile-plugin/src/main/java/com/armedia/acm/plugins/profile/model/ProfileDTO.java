@@ -25,6 +25,8 @@ public class ProfileDTO {
     private String imSystem;
     private String officePhoneNumber;
     private String mobilePhoneNumber;
+    private String firstName;
+    private String lastName;
     private String fullName;
     private String email;
 //    private String pictureUrl;
@@ -154,7 +156,23 @@ public class ProfileDTO {
         this.mobilePhoneNumber = mobilePhoneNumber;
     }
 
-    public String getFullName() {
+    public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFullName() {
         return fullName;
     }
 

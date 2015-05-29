@@ -99,6 +99,8 @@ public class GetProfileInfoAPIController {
         profileDTO.setGroups(groups);
 
         profileDTO.setEmail(userOrgInfo.getUser().getMail());
+        profileDTO.setFirstName(userOrgInfo.getUser().getFirstName());
+        profileDTO.setLastName(userOrgInfo.getUser().getLastName());
         profileDTO.setFullName(userOrgInfo.getUser().getFullName());
 
         profileDTO.setCity(userOrgInfo.getCity());
