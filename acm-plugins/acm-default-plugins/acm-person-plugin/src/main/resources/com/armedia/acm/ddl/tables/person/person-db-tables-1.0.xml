@@ -546,7 +546,7 @@
 
     </changeSet>
     
-    <changeSet id="26-add-person-association-type-defendant" author="riste.tutureski">
+    <changeSet id="26-add-person-association-type-defendant" author="riste.tutureski" failOnError="false">
         <insert tableName="acm_person_type_lu">
             <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
             <column name="cm_value" value="Defendant"/>
