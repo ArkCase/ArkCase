@@ -35,7 +35,6 @@ import java.util.List;
 @RequestMapping({"/api/v1/plugin/profile", "/api/latest/plugin/profile"})
 public class GetProfileInfoAPIController {
 
-    private final String URL="/api/latest/ecm/download/";
     private UserDao userDao;
     private UserOrgDao userOrgDao;
     private SaveUserOrgTransaction saveUserOrgTransaction;
@@ -123,11 +122,6 @@ public class GetProfileInfoAPIController {
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setUserId(userOrgInfo.getUser().getUserId());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
-//        if(userOrgInfo.getEcmFileId()!=null) {
-//            profileDTO.setPictureUrl(URL + userOrgInfo.getEcmFileId() + "?inline=true");
-//        } else {
-//            profileDTO.setPictureUrl("");
-//        }
         if( userOrgInfo.getTitle() != null ){
             profileDTO.setTitle(userOrgInfo.getTitle());
         } else {

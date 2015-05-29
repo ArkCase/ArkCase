@@ -13,17 +13,6 @@
         </property>
         <property name="urlPrivileges">
             <list>
-                <bean id="downloadUrlPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
-                <bean id="alfrescoDownloadUrlPrivilege"
-                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/plugin/ecm/download/workspace:/SpacesStore/{fileId}"/>
-                    <property name="requiredPrivilege" ref="filePrivilege"/>
-                </bean>
                 <bean id="alfrescoDownloadUrlPrivilege"
                       class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
