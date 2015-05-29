@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import org.json.JSONArray;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -14,6 +16,8 @@ public interface AcmFolderService {
 
     AcmFolder addNewFolder(Long parentFolderId, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
+    AcmFolder addNewFolder(AcmFolder parentFolder, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+    
     AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException;
 
     AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException;
@@ -26,6 +30,6 @@ public interface AcmFolderService {
 
     AcmFolder copyFolder(Long folderToBeCopiedId, Long copyDstFolderId, Long targetObjectId, String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
 
-
+    void addFolderStructure(AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
 }

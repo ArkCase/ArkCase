@@ -1,13 +1,20 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
+
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -35,6 +42,10 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
     private boolean autoCreateFolderForCaseFile;
     private boolean autoDeleteFolderAfterCaseClosed;
+    
+    private AcmFolderService acmFolderService;
+    private EcmFileService ecmFileService;
+    private String folderStructureAsString;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -82,6 +93,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
         if ( newCase )
         {
+        	createFolderStructure(retval);
             getCaseFileEventUtility().raiseEvent(retval, retval.getStatus(), new Date(), ipAddress, auth.getName(), auth);
         }
         else
@@ -102,6 +114,33 @@ public class SaveCaseServiceImpl implements SaveCaseService
         AcmContainer container = caseFile.getContainer();
         outlookContainerCalendarService.updateFolderParticipants(container.getCalendarFolderId(),
                 caseFile.getParticipants());
+    }
+    
+    private void createFolderStructure(CaseFile caseFile)
+    {
+    	if (getFolderStructureAsString() != null && !getFolderStructureAsString().isEmpty())
+    	try
+    	{
+    		log.debug("Folder Structure: " + getFolderStructureAsString());
+    		JSONArray folderStructure = new JSONArray(getFolderStructureAsString());
+    		getAcmFolderService().addFolderStructure(getFolder(caseFile), folderStructure);
+    	}
+    	catch (Exception e)
+    	{
+    		log.error("Cannot create folder structure.", e);
+    	}
+    }
+    
+    private AcmFolder getFolder(CaseFile caseFile) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+    	AcmContainer found = getEcmFileService().getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());
+    	
+    	if (found != null)
+    	{
+    		return found.getFolder();
+    	}
+    	
+    	return null;
     }
 
     public CaseFileDao getCaseFileDao()
@@ -169,4 +208,28 @@ public class SaveCaseServiceImpl implements SaveCaseService
     public void setAutoDeleteFolderAfterCaseClosed(boolean autoDeleteFolderAfterCaseClosed) {
         this.autoDeleteFolderAfterCaseClosed = autoDeleteFolderAfterCaseClosed;
     }
+
+	public AcmFolderService getAcmFolderService() {
+		return acmFolderService;
+	}
+
+	public void setAcmFolderService(AcmFolderService acmFolderService) {
+		this.acmFolderService = acmFolderService;
+	}
+
+	public EcmFileService getEcmFileService() {
+		return ecmFileService;
+	}
+
+	public void setEcmFileService(EcmFileService ecmFileService) {
+		this.ecmFileService = ecmFileService;
+	}
+
+	public String getFolderStructureAsString() {
+		return folderStructureAsString;
+	}
+
+	public void setFolderStructureAsString(String folderStructureAsString) {
+		this.folderStructureAsString = folderStructureAsString;
+	}
 }
