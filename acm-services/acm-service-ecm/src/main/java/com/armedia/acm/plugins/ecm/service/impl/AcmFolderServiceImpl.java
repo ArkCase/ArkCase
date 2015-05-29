@@ -46,6 +46,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     private ApplicationEventPublisher applicationEventPublisher;
     private AcmFolderDao folderDao;
+    private AcmContainerDao containerDao;
     private EcmFileDao fileDao;
     private MuleClient muleClient;
     private EcmFileService fileService;
@@ -466,7 +467,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
     
     @Override
-	public void addFolderStructure(AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+	public void addFolderStructure(AcmContainer container, AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
 		if (folderStructure != null)
 		{
 			for (int i = 0; i < folderStructure.length(); i++)
@@ -476,11 +477,19 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 					JSONObject folderJSONObject = folderStructure.getJSONObject(i);
 					
 					String name = folderJSONObject.getString(AcmFolderConstants.FOLDER_STRUCTURE_KEY_NAME);
+					Boolean attachments = folderJSONObject.getBoolean(AcmFolderConstants.FOLDER_STRUCTURE_KEY_ATTACHMENT);
+					
 					AcmFolder folder = addNewFolder(parentFolder, name);
+					
+					if (attachments != null && attachments)
+					{
+						container.setAttachmentFolder(folder);
+						getContainerDao().save(container);
+					}
 					
 					if (isJSONArray(folderJSONObject, AcmFolderConstants.FOLDER_STRUCTURE_KEY_CHILDREN))
 					{
-						addFolderStructure(folder, folderJSONObject.getJSONArray(AcmFolderConstants.FOLDER_STRUCTURE_KEY_CHILDREN));
+						addFolderStructure(container, folder, folderJSONObject.getJSONArray(AcmFolderConstants.FOLDER_STRUCTURE_KEY_CHILDREN));
 					}
 				}
 			}
@@ -566,7 +575,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         this.folderDao = folderDao;
     }
 
-    public MuleClient getMuleClient() {
+    public AcmContainerDao getContainerDao() {
+		return containerDao;
+	}
+
+	public void setContainerDao(AcmContainerDao containerDao) {
+		this.containerDao = containerDao;
+	}
+
+	public MuleClient getMuleClient() {
         return muleClient;
     }
 

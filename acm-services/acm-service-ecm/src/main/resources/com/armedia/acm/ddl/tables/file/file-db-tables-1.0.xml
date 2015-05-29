@@ -767,6 +767,29 @@
             <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+    
+   	<changeSet id="files-38-add-attachment-folder-id-in-container-table" author="riste.tutureski">
+        <addColumn tableName="acm_container">
+            <column name="cm_attachment_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="files-38-update-attachment-folder-id-in-container-table" author="riste.tutureski">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_folder_id"/>
+                <columnExists tableName="acm_container" columnName="cm_attachment_folder_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     c.cm_attachment_folder_id = c.cm_folder_id
+            WHERE   c.cm_attachment_folder_id IS NULL
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>
 
