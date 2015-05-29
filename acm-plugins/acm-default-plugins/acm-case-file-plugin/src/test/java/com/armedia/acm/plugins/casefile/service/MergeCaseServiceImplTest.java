@@ -2,10 +2,13 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.service.milestone.model.AcmMilestone;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -16,10 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -29,6 +28,9 @@ import static org.junit.Assert.assertNotNull;
 public class MergeCaseServiceImplTest extends EasyMockSupport {
 
     private SaveCaseService saveCaseService;
+    private AcmFolderDao acmFolderDao;
+    private EcmFileService ecmFileService;
+    private AcmFolderService acmFolderService;
 
     @Autowired
     private MergeCaseServiceImpl mergeCaseService;
@@ -44,8 +46,17 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
         ipAddress = "127.0.0.1";
         saveCaseService = createMock(SaveCaseService.class);
         caseFileDao = createMock(CaseFileDao.class);
+        acmFolderDao = createMock(AcmFolderDao.class);
+        ecmFileService = createMock(EcmFileService.class);
+        acmFolderService = createMock(AcmFolderService.class);
+
         mergeCaseService.setSaveCaseService(saveCaseService);
         mergeCaseService.setCaseFileDao(caseFileDao);
+        mergeCaseService.setEcmFileService(ecmFileService);
+        mergeCaseService.setAcmFolderDao(acmFolderDao);
+        mergeCaseService.setAcmFolderService(acmFolderService);
+
+
         sourceId = 1L;
         targetId = 2L;
     }
@@ -65,61 +76,41 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile);
         EasyMock.expect(caseFileDao.find(targetId)).andReturn(targetCaseFile);
 
+
+        AcmFolder someFolder = new AcmFolder();
+        EasyMock.expect(acmFolderService.addNewFolder(1l, String.format("%s(%s)", "Source", "55435345435_2133"))).andReturn(someFolder);
+
+        AcmCmisObjectList cmisObjlectList = new AcmCmisObjectList();
+        EasyMock.expect(ecmFileService.listFolderContents(EasyMock.anyObject(Authentication.class),
+                EasyMock.anyObject(AcmContainer.class),
+                EasyMock.eq(null),
+                EasyMock.eq("name"),
+                EasyMock.eq("ASC"),
+                EasyMock.eq(0),
+                EasyMock.eq(10000))).andReturn(cmisObjlectList);
+
+
         replayAll();
 
-        targetCaseFile = mergeCaseService.mergeCases(auth, ipAddress, sourceId, targetId);
+        MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
+        mergeCaseOptions.setSourceCaseFileId(sourceId);
+        mergeCaseOptions.setTargetCaseFileId(targetId);
 
-        assertEquals(3, targetCaseFile.getApprovers().size());
-        assertEquals(3, targetCaseFile.getParticipants().size());
-        assertEquals(5, targetCaseFile.getChildObjects().size());
-        assertEquals(3, targetCaseFile.getPersonAssociations().size());
-        assertEquals(3, targetCaseFile.getMilestones().size());
-        assertEquals("Target" + MergeCaseService.MERGE_TEXT_SEPPARATOR + "Source", targetCaseFile.getTitle());
-        assertEquals("Target Details" + MergeCaseService.MERGE_TEXT_SEPPARATOR + "Source Details", targetCaseFile.getDetails());
+        mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
+
+        assertEquals("Target Details" + String.format(MergeCaseService.MERGE_TEXT_SEPPARATOR, "Source", "55435345435_2133") + "Source Details", targetCaseFile.getDetails());
     }
 
     private void fillTargetDammyData(CaseFile caseFile) {
         caseFile.setId(targetId);
+        caseFile.setCaseNumber("123123123213_123213");
 
-        //add approvers
-        caseFile.setApprovers(Arrays.asList("appr1", "appr2"));
-        //add participants
-        List<AcmParticipant> participants = new ArrayList<>();
-        AcmParticipant p1 = new AcmParticipant();
-        p1.setId(1l);
-        participants.add(p1);
-        AcmParticipant p2 = new AcmParticipant();
-        p2.setId(3l);
-        participants.add(p2);
-        caseFile.setParticipants(participants);
-
-        //add person associations
-        List<PersonAssociation> personAssociations = new ArrayList<>();
-        PersonAssociation pa1 = new PersonAssociation();
-        pa1.setId(1l);
-        personAssociations.add(pa1);
-        PersonAssociation pa2 = new PersonAssociation();
-        pa2.setId(3l);
-        personAssociations.add(pa2);
-        caseFile.setPersonAssociations(personAssociations);
-
-        //add milestones
-        List<AcmMilestone> milistones = new ArrayList<>();
-        AcmMilestone ms1 = new AcmMilestone();
-        ms1.setId(1l);
-        milistones.add(ms1);
-        AcmMilestone ms2 = new AcmMilestone();
-        ms2.setId(3l);
-        milistones.add(ms2);
-        caseFile.setMilestones(milistones);
-
-        //add childObjects
-        ObjectAssociation co1 = new ObjectAssociation();
-        ObjectAssociation co2 = new ObjectAssociation();
-        co1.setAssociationId(1L);
-        co2.setAssociationId(3L);
-        caseFile.addChildObject(co1);
-        caseFile.addChildObject(co2);
+        AcmContainer targetContainer = new AcmContainer();
+        AcmFolder targetFolder = new AcmFolder();
+        targetFolder.setId(1l);
+        targetFolder.setName("ROOT");
+        targetContainer.setFolder(targetFolder);
+        caseFile.setContainer(targetContainer);
 
         caseFile.setTitle("Target");
         caseFile.setDetails("Target Details");
@@ -128,46 +119,14 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
 
     private void fillSourceDammyData(CaseFile caseFile) {
         caseFile.setId(sourceId);
+        caseFile.setCaseNumber("55435345435_2133");
+        AcmContainer targetContainer = new AcmContainer();
+        AcmFolder targetFolder = new AcmFolder();
+        targetFolder.setId(1l);
+        targetFolder.setName("ROOT");
+        targetContainer.setFolder(targetFolder);
+        caseFile.setContainer(targetContainer);
 
-        caseFile.setApprovers(Arrays.asList("appr1", "appr3"));
-
-        //add participants
-        List<AcmParticipant> participants = new ArrayList<>();
-        AcmParticipant p1 = new AcmParticipant();
-        p1.setId(1l);
-        participants.add(p1);
-        AcmParticipant p2 = new AcmParticipant();
-        p2.setId(2l);
-        participants.add(p2);
-        caseFile.setParticipants(participants);
-
-        //add person associations
-        List<PersonAssociation> personAssociations = new ArrayList<>();
-        PersonAssociation pa1 = new PersonAssociation();
-        pa1.setId(1l);
-        personAssociations.add(pa1);
-        PersonAssociation pa2 = new PersonAssociation();
-        pa2.setId(2l);
-        personAssociations.add(pa2);
-        caseFile.setPersonAssociations(personAssociations);
-
-        //add milestones
-        List<AcmMilestone> milistones = new ArrayList<>();
-        AcmMilestone ms1 = new AcmMilestone();
-        ms1.setId(1l);
-        milistones.add(ms1);
-        AcmMilestone ms2 = new AcmMilestone();
-        ms2.setId(2l);
-        milistones.add(ms2);
-        caseFile.setMilestones(milistones);
-
-        //add childObjects
-        ObjectAssociation co1 = new ObjectAssociation();
-        ObjectAssociation co2 = new ObjectAssociation();
-        co1.setAssociationId(1L);
-        co2.setAssociationId(2L);
-        caseFile.addChildObject(co1);
-        caseFile.addChildObject(co2);
 
         caseFile.setTitle("Source");
         caseFile.setDetails("Source Details");

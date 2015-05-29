@@ -1,12 +1,20 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.AcmCaseFileNotFound;
+import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.service.milestone.model.AcmMilestone;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -14,64 +22,56 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
 public class MergeCaseServiceImpl implements MergeCaseService {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private SaveCaseService saveCaseService;
     private CaseFileDao caseFileDao;
+    private AcmFolderDao acmFolderDao;
+    private EcmFileService ecmFileService;
+    private AcmFolderService acmFolderService;
 
     @Override
     @Transactional
-    public CaseFile mergeCases(Authentication auth, String ipAddress, Long sourceId, Long targetId) throws MuleException {
+    public CaseFile mergeCases(Authentication auth, String ipAddress, MergeCaseOptions mergeCaseOptions) throws MuleException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException {
 
-        CaseFile source = caseFileDao.find(sourceId);
+        CaseFile source = caseFileDao.find(mergeCaseOptions.getSourceCaseFileId());
         if (source == null)
-            throw new AcmCaseFileNotFound("Source Case File with id = " + sourceId + " not found");
-        CaseFile target = caseFileDao.find(targetId);
+            throw new AcmCaseFileNotFound("Source Case File with id = " + mergeCaseOptions.getSourceCaseFileId() + " not found");
+        CaseFile target = caseFileDao.find(mergeCaseOptions.getTargetCaseFileId());
         if (target == null)
-            throw new AcmCaseFileNotFound("Target Case File with id = " + targetId + " not found");
-        CaseFile[] cases = new CaseFile[]{target, source};
-        Set<String> approversSet = new HashSet<>();
-        Set<PersonAssociation> personAssociationSet = new HashSet<>();
-        Set<AcmMilestone> acmMilestoneSet = new HashSet<>();
-        Set<AcmParticipant> acmParticipantSet = new HashSet<>();
-        Set<ObjectAssociation> childObjectsSet = new HashSet<>();
-        for (int i = 0; i < cases.length; i++) {
-            CaseFile cf = cases[i];
-            //merge approvers
-            if (cf.getApprovers() != null && !cf.getApprovers().isEmpty())
-                approversSet.addAll(cf.getApprovers());
-            //merge person association
-            if (cf.getPersonAssociations() != null && !cf.getPersonAssociations().isEmpty())
-                personAssociationSet.addAll(cf.getPersonAssociations());
-            //merge milestones
-            if (cf.getMilestones() != null && !cf.getMilestones().isEmpty())
-                acmMilestoneSet.addAll(cf.getMilestones());
-            //merge participants
-            if (cf.getParticipants() != null && !cf.getParticipants().isEmpty())
-                acmParticipantSet.addAll(cf.getParticipants());
-            //merge child objects
-            if (cf.getChildObjects() != null && !cf.getChildObjects().isEmpty())
-                childObjectsSet.addAll(cf.getChildObjects());
-        }
-
-        target.setApprovers(new ArrayList<>(approversSet));
-        target.setPersonAssociations(new ArrayList<>(personAssociationSet));
-        target.setMilestones(new ArrayList<>(acmMilestoneSet));
-        target.setParticipants(new ArrayList<>(acmParticipantSet));
-        childObjectsSet.forEach(target::addChildObject);
-
-        //merge title
-        String sourceTitle = StringUtils.isEmpty(source.getTitle()) ? "" : source.getTitle();
-        target.setTitle(!StringUtils.isEmpty(target.getTitle()) ? target.getTitle() + MERGE_TEXT_SEPPARATOR + sourceTitle : sourceTitle);
+            throw new AcmCaseFileNotFound("Target Case File with id = " + mergeCaseOptions.getTargetCaseFileId() + " not found");
 
         //merge details
-        String sourceDetails = StringUtils.isEmpty(source.getDetails()) ? "" : source.getDetails();
-        target.setDetails(!StringUtils.isEmpty(target.getDetails()) ? target.getDetails() + MERGE_TEXT_SEPPARATOR + sourceDetails : sourceDetails);
+        String sourceDetails = StringUtils.isEmpty(source.getDetails()) ? "" : String.format(MERGE_TEXT_SEPPARATOR, source.getTitle(), source.getCaseNumber()) + source.getDetails();
+        target.setDetails(!StringUtils.isEmpty(target.getDetails()) ?
+                target.getDetails() + sourceDetails :
+                sourceDetails);
+
+        //merge folders and documents
+        AcmFolder targetFolder = acmFolderService.addNewFolder(target.getContainer().getFolder().getId(), String.format("%s(%s)", source.getTitle(), source.getCaseNumber()));
+
+        //move content from source ROOT folder into targetFolder
+        try {
+            AcmCmisObjectList acmCmisObjectList = ecmFileService.listFolderContents(auth,
+                    source.getContainer(), null, "name", "ASC", 0, 10000);
+            for (AcmCmisObject cmisObject : acmCmisObjectList.getChildren()) {
+                if ("folder".equals(cmisObject.getObjectType())) {
+                    //change the parent id
+                    AcmFolder folderToBeMoved = acmFolderDao.find(cmisObject.getObjectId());
+                    folderToBeMoved.setParentFolderId(targetFolder.getId());
+                    acmFolderDao.save(folderToBeMoved);
+                } else if ("file".equals(cmisObject.getObjectType())) {
+                    ecmFileService.moveFile(cmisObject.getObjectId(),
+                            target.getContainer().getContainerObjectId(),
+                            target.getContainer().getContainerObjectType(),
+                            targetFolder.getId());
+                }
+            }
+        } catch (AcmObjectNotFoundException | AcmUserActionFailedException | AcmListObjectsFailedException | AcmCreateObjectFailedException e) {
+            throw new MergeCaseFilesException("Error merging case files. Exception in moving documents and folders.", e);
+        }
+
 
         //set source that is merged
         source.setMergedTo(target);
@@ -82,11 +82,24 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         return target;
     }
 
+
     public void setSaveCaseService(SaveCaseService saveCaseService) {
         this.saveCaseService = saveCaseService;
     }
 
     public void setCaseFileDao(CaseFileDao caseFileDao) {
         this.caseFileDao = caseFileDao;
+    }
+
+    public void setAcmFolderDao(AcmFolderDao acmFolderDao) {
+        this.acmFolderDao = acmFolderDao;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService) {
+        this.ecmFileService = ecmFileService;
+    }
+
+    public void setAcmFolderService(AcmFolderService acmFolderService) {
+        this.acmFolderService = acmFolderService;
     }
 }
