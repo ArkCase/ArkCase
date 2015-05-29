@@ -4380,3 +4380,9 @@ tr.dragover {
   font-weight: bold;
   color: #fff;
 }
+
+/*doc detail tables title text */
+.acm-DocDetailTitleText{
+  font-weight: bold;
+  color: #fff;
+}
