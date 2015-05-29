@@ -50,4 +50,5 @@ public interface AcmFolderConstants {
     
     String FOLDER_STRUCTURE_KEY_NAME = "name";
     String FOLDER_STRUCTURE_KEY_CHILDREN = "children";
+    String FOLDER_STRUCTURE_KEY_ATTACHMENT = "attachment";
 }

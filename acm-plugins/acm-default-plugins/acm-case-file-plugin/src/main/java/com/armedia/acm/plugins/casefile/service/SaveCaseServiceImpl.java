@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
@@ -123,7 +122,8 @@ public class SaveCaseServiceImpl implements SaveCaseService
     	{
     		log.debug("Folder Structure: " + getFolderStructureAsString());
     		JSONArray folderStructure = new JSONArray(getFolderStructureAsString());
-    		getAcmFolderService().addFolderStructure(getFolder(caseFile), folderStructure);
+    		AcmContainer container = getContainer(caseFile);
+    		getAcmFolderService().addFolderStructure(container, container.getFolder(), folderStructure);
     	}
     	catch (Exception e)
     	{
@@ -131,16 +131,9 @@ public class SaveCaseServiceImpl implements SaveCaseService
     	}
     }
     
-    private AcmFolder getFolder(CaseFile caseFile) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    private AcmContainer getContainer(CaseFile caseFile) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-    	AcmContainer found = getEcmFileService().getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());
-    	
-    	if (found != null)
-    	{
-    		return found.getFolder();
-    	}
-    	
-    	return null;
+    	return getEcmFileService().getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());
     }
 
     public CaseFileDao getCaseFileDao()
