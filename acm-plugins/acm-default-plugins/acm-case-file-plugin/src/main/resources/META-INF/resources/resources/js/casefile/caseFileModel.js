@@ -6,6 +6,7 @@
 CaseFile.Model = CaseFile.Model || {
     create : function() {
         if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Action.create)         {CaseFile.Model.Action.create();}
         if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
         //if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
@@ -26,6 +27,7 @@ CaseFile.Model = CaseFile.Model || {
     }
     ,onInitialized: function() {
         if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
+        if (CaseFile.Model.Action.onInitialized)         {CaseFile.Model.Action.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
         //if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
         if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
@@ -198,6 +200,21 @@ CaseFile.Model = CaseFile.Model || {
                 ,{nodeType: "p/CASE_FILE/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
 
             ]
+        }
+    }
+
+    ,Action: {
+        create: function(){
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_MERGED_CASE_FILES           , this.onViewMergedCaseFiles);
+        }
+        ,onInitialized: function(){}
+        ,onViewMergedCaseFiles: function(sourceCaseFileId, targetCaseFileId){
+            if(Acm.isNotEmpty(sourceCaseFileId) && Acm.isNotEmpty(targetCaseFileId)){
+                CaseFile.Service.Action.mergeCaseFiles(sourceCaseFileId, targetCaseFileId);
+            }
+            else{
+                Acm.View.MessageBoard("Please check your selection and try again.");
+            }
         }
     }
 
