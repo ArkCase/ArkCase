@@ -96,6 +96,7 @@
 
     <bean id="acmFolderService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFolderServiceImpl">
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="containerDao" ref="acmContainerFolderDao" />
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="fileService" ref="ecmFileService"/>

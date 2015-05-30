@@ -199,6 +199,28 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         }
 
     }
+    
+    public String findFolderIdForAttachments(AcmContainer container, String objectType, Long id)
+    {
+        // hopefully the container has it, but sometimes the container isn't set on the parent object
+        if ( container != null )
+        {
+            return container.getAttachmentFolder().getCmisFolderId();
+        }
+
+        AcmContainer found = null;
+        try
+        {
+            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            return found.getAttachmentFolder().getCmisFolderId();
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            return null;
+        }
+
+    }
 
     @Override
 	public UserActionDao getUserActionDao() {
