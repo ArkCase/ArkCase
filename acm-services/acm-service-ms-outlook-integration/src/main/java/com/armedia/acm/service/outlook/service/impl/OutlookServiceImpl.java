@@ -29,10 +29,10 @@ import microsoft.exchange.webservices.data.core.service.item.Task;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
 import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
+import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.EmailAddressKey;
-import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.enumeration.PhoneNumberKey;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
@@ -42,7 +42,6 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -250,7 +249,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                 AppointmentSchema.IsMeeting,
                 AppointmentSchema.IsRecurring,
                 AppointmentSchema.Start,
-                AppointmentSchema.End
+                AppointmentSchema.End,
+                ItemSchema.ParentFolderId
         );
 
 
