@@ -16,6 +16,7 @@
             <props>
                 <prop key="casefile.case-types">Agricultural,Arson,Better Business Dispute,Domestic Dispute,Government,Local,Pollution</prop>
             	<prop key="casefile.folder.structure"></prop>
+            	<prop key="casefile.tree.root.name.expression"></prop>
             </props>
         </property>
     </bean>
