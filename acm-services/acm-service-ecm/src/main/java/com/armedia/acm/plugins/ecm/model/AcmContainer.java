@@ -57,6 +57,10 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_folder_id")
     private AcmFolder folder;
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_attachment_folder_id")
+    private AcmFolder attachmentFolder;
 
     @Column(name = "cm_outlook_folder_id", nullable = true)
     private String calendarFolderId;
@@ -156,7 +160,15 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
         this.folder = folder;
     }
 
-    public String getContainerObjectTitle()
+    public AcmFolder getAttachmentFolder() {
+		return attachmentFolder;
+	}
+
+	public void setAttachmentFolder(AcmFolder attachmentFolder) {
+		this.attachmentFolder = attachmentFolder;
+	}
+
+	public String getContainerObjectTitle()
     {
         return containerObjectTitle;
     }

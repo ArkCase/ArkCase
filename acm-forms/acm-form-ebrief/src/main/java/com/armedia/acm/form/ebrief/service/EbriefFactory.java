@@ -79,7 +79,7 @@ public class EbriefFactory extends FrevvoFormFactory{
 			form.getInformation().setType(caseFile.getCaseType());
 			form.getInformation().setNumber(caseFile.getCaseNumber());
 			form.setDefendants(getDefendants(caseFile.getPersonAssociations()));
-			String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+			String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			form.setCmisFolderId(cmisFolderId);
 			
 			List<ParticipantItem> items = asFrevvoParticipants(caseFile.getParticipants());
