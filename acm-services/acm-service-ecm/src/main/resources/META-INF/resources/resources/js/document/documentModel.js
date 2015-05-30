@@ -139,13 +139,51 @@ AcmDocument.Model = AcmDocument.Model || {
         ,onInitialized: function() {
         }
     }
-
     ,EventHistory: {
         create : function() {
+            this.cacheEventHistory = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
+            //AcmDocument.Service.EventHistory.retrieveHistoryDeferred(AcmDocument.Model.MicroData.documentId);
+        }
+        ,validateEventHistory: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.resultPage)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.resultPage)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.totalCount)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateEvent: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.eventDate)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.eventType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectType)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.userId)) {
+                return false;
+            }
+            return true;
         }
     }
+
 
     ,AssociatedTags: {
         create : function() {

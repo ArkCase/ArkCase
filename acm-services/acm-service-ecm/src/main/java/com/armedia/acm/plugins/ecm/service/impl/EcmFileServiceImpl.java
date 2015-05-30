@@ -276,6 +276,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         newFolder.setCmisFolderId(cmisFolderId);
         newFolder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
         newContainer.setFolder(newFolder);
+        newContainer.setAttachmentFolder(newFolder);
 
         newContainer = getContainerFolderDao().save(newContainer);
 
