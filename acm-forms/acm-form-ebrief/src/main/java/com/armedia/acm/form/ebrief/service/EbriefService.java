@@ -16,11 +16,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.service.CaseFileWorkflowListener;
+import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
 import com.armedia.acm.form.ebrief.model.xml.EbriefDetails;
 import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -80,6 +82,9 @@ public class EbriefService extends FrevvoFormAbstractService {
 		form = saveEBrief(form);
 		
 		updateXMLAttachment(attachments, FrevvoFormName.EBRIEF, form);
+		
+		// Change PDF file name
+		attachments = updateFileName(getCaseFile().getTitle(), FrevvoFormConstants.PDF, attachments);
 		
 		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(
