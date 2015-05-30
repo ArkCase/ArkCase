@@ -58,7 +58,12 @@ CaseFile.Model = CaseFile.Model || {
             return CaseFile.Model.DOC_TYPE_CASE_FILE;
         }
         ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable) + " (" + Acm.goodValue(objSolr.name) + ")";
+        	var defaultExpression = "Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')'";
+        	var caseFileTreeRootNameExpression = Acm.Object.MicroData.get("caseFileTreeRootNameExpression");
+            if (Acm.isEmpty(caseFileTreeRootNameExpression)) {
+                caseFileTreeRootNameExpression = defaultExpression;
+            }
+            return eval(caseFileTreeRootNameExpression);
         }
         ,nodeToolTip: function(objSolr) {
             return Acm.goodValue(objSolr.title_parseable);
