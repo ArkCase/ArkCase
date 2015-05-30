@@ -27,10 +27,12 @@ Acm.Service = {
             arg.dataType = 'json';
         }
 
-        var contextPath = this.getContextPath();
-        if (contextPath) {
-            if (0 != arg.url.indexOf(contextPath)) {
-                arg.url = contextPath + arg.url;
+        if (!arg.nonAcmUrl) {
+            var contextPath = this.getContextPath();
+            if (contextPath) {
+                if (0 != arg.url.indexOf(contextPath)) {
+                    arg.url = contextPath + arg.url;
+                }
             }
         }
 
