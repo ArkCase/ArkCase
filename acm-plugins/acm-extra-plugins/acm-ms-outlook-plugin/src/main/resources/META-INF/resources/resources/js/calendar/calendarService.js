@@ -3,7 +3,7 @@
  *
  * manages all service call to application server
  *
- * @author jwu
+ * @author md
  */
 Calendar.Service = {
     create : function(args) {

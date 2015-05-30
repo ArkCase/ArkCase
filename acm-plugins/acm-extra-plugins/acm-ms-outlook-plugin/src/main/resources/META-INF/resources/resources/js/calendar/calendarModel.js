@@ -1,7 +1,7 @@
 /**
  * OutlookCalendar.Model
  *
- * @author jwu
+ * @author md
  */
 Calendar.Model = Calendar.Model || {
     create : function(args) {
