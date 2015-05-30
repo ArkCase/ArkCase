@@ -184,16 +184,4 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         return nextDate;
     }
 
-    @Transactional
-    public int insertOutlookFolderId(Long caseId, String folderId)
-    {
-        Query updateStatusQuery = getEm().createQuery(
-                "UPDATE CaseFile " +
-                        "SET calendarFolderId = :calendarFolderId " +
-                        "WHERE caseId = :caseId");
-        updateStatusQuery.setParameter("calendarFolderId", folderId);
-        updateStatusQuery.setParameter("caseId", caseId);
-
-        return updateStatusQuery.executeUpdate();
-    }
 }
