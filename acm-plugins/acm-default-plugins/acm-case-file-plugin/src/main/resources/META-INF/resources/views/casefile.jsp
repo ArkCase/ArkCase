@@ -25,6 +25,8 @@
         <span itemprop="roiFormUrl">${roiFormUrl}</span>
         <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
+        
+        <span itemprop="caseFileTreeRootNameExpression">${caseFileTreeRootNameExpression}</span>
     </div>
 </jsp:attribute>
 
@@ -48,6 +50,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendar.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarService.js'/>"></script>
 
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
@@ -439,7 +447,7 @@
                                     </div>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
+                                    <div class="col-md-12"  id="tabOutlookCalendar">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
@@ -452,27 +460,12 @@
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
-                                                    <div class="btn-group pull-right" data-toggle="buttons">
-                                                        <label class="btn btn-sm btn-bg btn-default active" id="monthview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.month">Month</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="weekview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.week">Week</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="dayview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.day">Day</span>
-                                                        </label>
-                                                    </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
-
-                                                <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
-                                                  Calendar
-                                                </span>
+                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
+                                                      Calendar
+                                                    </span>
                                                 </header>
-                                                <div class="calendar">
+                                                <div id="calendar">
                                                 </div>
                                             </section>
                                     </div>

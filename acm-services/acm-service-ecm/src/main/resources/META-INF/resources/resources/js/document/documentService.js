@@ -14,6 +14,7 @@ AcmDocument.Service = {
         if (AcmDocument.Service.AssociatedTags.create) {AcmDocument.Service.AssociatedTags.create();}
         if (AcmDocument.Service.Participants.create) {AcmDocument.Service.Participants.create();}
         if (AcmDocument.Service.VersionHistory.create) {AcmDocument.Service.VersionHistory.create();}
+        if (AcmDocument.Service.EventHistory.create) {AcmDocument.Service.EventHistory.create();}
     }
     ,onInitialized: function() {
         if (AcmDocument.Service.Lookup.onInitialized) {AcmDocument.Service.Lookup.onInitialized();}
@@ -23,6 +24,7 @@ AcmDocument.Service = {
         if (AcmDocument.Service.AssociatedTags.onInitialized) {AcmDocument.Service.AssociatedTags.onInitialized();}
         if (AcmDocument.Service.Participants.onInitialized) {AcmDocument.Service.Participants.onInitialized();}
         if (AcmDocument.Service.VersionHistory.onInitialized) {AcmDocument.Service.VersionHistory.onInitialized();}
+        if (AcmDocument.Service.EventHistory.onInitialized) {AcmDocument.Service.EventHistory.onInitialized();}
     }
 
     ,Lookup: {
@@ -532,6 +534,35 @@ AcmDocument.Service = {
                 }
                 , url
             )
+        }
+    }
+
+    ,EventHistory: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+        ,API_EVENT_HISTORY : "/api/latest/plugin/audit"
+
+        ,retrieveHistoryDeferred : function(documentId, postData, jtParams, sortMap, callbackSuccess, callbackError) {
+            return AcmEx.Service.JTable.deferredPagingListAction(postData, jtParams, sortMap
+                ,function() {
+                    var url;
+                    url =  App.getContextPath() + AcmDocument.Service.EventHistory.API_EVENT_HISTORY;
+                    url += '/' + AcmDocument.Model.DOC_TYPE_DOCUMENT + '/'
+                    url += documentId;
+                    return url;
+                }
+                ,function(data) {
+                    var jtData = AcmEx.Object.jTableGetEmptyRecord();
+                    if (AcmDocument.Model.EventHistory.validateEventHistory(data)) {
+                        var history = data;
+                        AcmDocument.Model.EventHistory.cacheEventHistory.put(documentId + "." +jtParams.jtStartIndex, history);
+                        jtData = callbackSuccess(history);
+                    }
+                    return jtData;
+                }
+            );
         }
     }
 };

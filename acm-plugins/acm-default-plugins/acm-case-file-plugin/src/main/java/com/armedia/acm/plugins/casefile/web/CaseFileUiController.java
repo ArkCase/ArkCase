@@ -88,6 +88,7 @@ public class CaseFileUiController
         mv.addObject("editCaseFileFormUrl", getCaseFileUrl());
         mv.addObject("reinvestigateCaseFileFormUrl", getCaseFileUrl());
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
+        mv.addObject("caseFileTreeRootNameExpression", props.get("casefile.tree.root.name.expression"));
         return mv;
     }
 
