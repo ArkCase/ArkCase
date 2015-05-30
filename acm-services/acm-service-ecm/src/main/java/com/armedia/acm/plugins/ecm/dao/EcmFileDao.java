@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +48,18 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         List<EcmFile> results = query.getResultList();
 
         return results;
+    }
+
+    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo) {
+
+        String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
+                "WHERE e.container = :containerFrom";
+        Query query = getEm().createQuery(jpql);
+        query.setParameter("containerFrom", containerFrom);
+        query.setParameter("containerTo", containerTo);
+        query.setParameter("modifiedDate", new Date());
+
+        return query.executeUpdate();
     }
     
     public EcmFile findForContainerFolderAndFileType(Long containerId, Long folderId, String fileType)

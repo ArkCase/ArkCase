@@ -33,6 +33,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-drools-monitor.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ms-outlook-plugin.xml",
+        "/spring/spring-library-ecm-file.xml",
         "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
@@ -80,39 +82,5 @@ public class CaseFileDaoIT
 
         assertNotNull(saved.getId());
     }
-
-    @Test
-    @Transactional
-    public void saveCaseFileAndInsertFolderId()
-    {
-        assertNotNull(caseFileDao);
-        assertNotNull(entityManager);
-
-        CaseFile caseFile = new CaseFile();
-        caseFile.setCaseNumber("caseNumber");
-        caseFile.setCaseType("caseType");
-        caseFile.setStatus("status");
-        caseFile.setTitle("title");
-        caseFile.setRestricted(true);
-
-        AcmContainer container = new AcmContainer();
-        AcmFolder folder = new AcmFolder();
-        folder.setCmisFolderId("cmisFolderId");
-        folder.setName("folderName");
-        container.setFolder(folder);
-        caseFile.setContainer(container);
-
-        CaseFile saved = caseFileDao.save(caseFile);
-
-        entityManager.flush();
-
-        assertNotNull(saved.getId());
-
-        caseFileDao.insertOutlookFolderId(saved.getId(), "someFolderId");
-
-        CaseFile updatedCaseFile = caseFileDao.find(saved.getId());
-        assertEquals("someFolderId", updatedCaseFile.getContainer().getCalendarFolderId());
-    }
-
 
 }
