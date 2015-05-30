@@ -225,6 +225,9 @@ CaseFile.Service = {
         ,mergeCaseFiles: function(sourceCaseFileId, targetCaseFileId){
             var url = App.getContextPath() + this.API_MERGE_CASE_FILES;
             var data = {"sourceCaseFileId": sourceCaseFileId, "targetCaseFileId": targetCaseFileId};
+            /*var data = {};
+            data.sourceCaseFileId = sourceCaseFileId;
+            data.targetCaseFileId = targetCaseFileId;*/
             return Acm.Service.call({type: "POST"
                 ,url: url
                 ,data: JSON.stringify(data)
@@ -233,8 +236,8 @@ CaseFile.Service = {
                         CaseFile.Controller.modelMergedCaseFiles(response);
                     } else {
                         if (CaseFile.Model.Detail.validateCaseFile(response)) {
-                            var caseFile = response;
-                            CaseFile.Controller.modelMergedCaseFiles(caseFile);
+                            var targetCaseFile = response;
+                            CaseFile.Controller.modelMergedCaseFiles(targetCaseFile);
                             return true;
                         }
                     } //end else

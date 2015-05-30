@@ -394,8 +394,8 @@ CaseFile.Controller = CaseFile.Controller || {
         Acm.Dispatcher.fireEvent(this.VIEW_MERGED_CASE_FILES, sourceCaseFileId, targetCaseFileId);
     }
     ,MODEL_MERGED_CASE_FILES                     : "case-file-model-merged-case-files"
-    ,modelMergedCaseFiles: function(caseFile){
-        Acm.Dispatcher.fireEvent(this.MODEL_MERGED_CASE_FILES, caseFile);
+    ,modelMergedCaseFiles: function(targetCaseFile){
+        Acm.Dispatcher.fireEvent(this.MODEL_MERGED_CASE_FILES, targetCaseFile);
     }
 };
 
