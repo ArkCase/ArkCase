@@ -1,7 +1,7 @@
 /**
  * Calendar.Controller
  *
- * @author jwu
+ * @author md
  */
 Calendar.Controller = Calendar.Controller || {
     create : function(args) {

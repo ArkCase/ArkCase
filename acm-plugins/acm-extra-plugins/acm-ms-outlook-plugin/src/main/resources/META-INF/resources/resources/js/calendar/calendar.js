@@ -1,7 +1,7 @@
 /**
  * Calendar module
  *
- * @author jwu
+ * @author md
  */
 var Calendar = Calendar || {
     create: function(args) {

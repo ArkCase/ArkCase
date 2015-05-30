@@ -1,7 +1,7 @@
 /**
  * Calendar.View
  *
- * @author jwu
+ * @author md
  */
 Calendar.View = Calendar.View || {
     create : function(args) {
