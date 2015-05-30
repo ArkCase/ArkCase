@@ -14,14 +14,11 @@ Calendar.View = Calendar.View || {
     ,OutlookCalendar: {
         create: function(args) {
             this.$outlookCalendar = (args.$outlookCalendar)? args.$outlookCalendar : $("#calendar");
-            this.$weekView = (args.$weekView)? args.$weekView : $("#weekview");
-            this.$monthView = (args.$monthView)? args.$monthView : $("#monthview");
-            this.$dayView  = (args.$dayView)? args.$dayView : $("#dayview");
             this.$btnRefreshCalendar  = (args.$btnRefreshCalendar)? args.$btnRefreshCalendar : $("#refreshCalendar");
 
             this.$btnRefreshCalendar.on("click", function(e) {Calendar.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
 
-            //this.createOutlookCalendarWidget(this.$outlookCalendar);
+            this.createOutlookCalendarWidget(this.$outlookCalendar);
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Calendar.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
@@ -38,7 +35,7 @@ Calendar.View = Calendar.View || {
         ,onViewSelectedObject: function(nodeType, nodeId) {
             Calendar.View.OutlookCalendar.setParentId(nodeId);
             Calendar.View.OutlookCalendar.$outlookCalendar.html("");
-            Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar,nodeId);
+            Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
@@ -46,29 +43,32 @@ Calendar.View = Calendar.View || {
             }
             else{
                 Calendar.View.OutlookCalendar.$outlookCalendar.html("");
-                Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar, Calendar.View.OutlookCalendar.getParentId());
+                Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
             }
         }
         ,onClickbtnRefreshCalendar: function(){
             Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.getParentId());
         }
-        ,createCalendarSource:function(parentId){
+        ,createCalendarSource:function(){
             var calendarSource = [];
-            var parentObject = Calendar.Model.OutlookCalendar.cacheParentObject.get(parentId);
-            if(Acm.isNotEmpty(parentObject)){
-                var outlookCalendarItems = Calendar.Model.OutlookCalendar.cacheOutlookCalendarItems.get(parentId);
-                if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
-                    for(var i = 0; i<outlookCalendarItems.items.length; i++){
-                        if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
-                            var outlookCalendarItem = {};
-                            outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
-                            outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
-                            outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
-                            outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
-                            outlookCalendarItem.detail = Calendar.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
-                            outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
-                            outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
-                            calendarSource.push(outlookCalendarItem);
+            var parentId = Calendar.View.OutlookCalendar.getParentId();
+            if(Acm.isNotEmpty(parentId)){
+                var parentObject = Calendar.Model.OutlookCalendar.cacheParentObject.get(parentId);
+                if(Acm.isNotEmpty(parentObject)){
+                    var outlookCalendarItems = Calendar.Model.OutlookCalendar.cacheOutlookCalendarItems.get(parentId);
+                    if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                        for(var i = 0; i<outlookCalendarItems.items.length; i++){
+                            if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
+                                var outlookCalendarItem = {};
+                                outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
+                                outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
+                                outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
+                                outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
+                                outlookCalendarItem.detail = Calendar.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
+                                outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
+                                outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
+                                calendarSource.push(outlookCalendarItem);
+                            }
                         }
                     }
                 }
@@ -88,8 +88,8 @@ Calendar.View = Calendar.View || {
             }
         }
 
-        ,createOutlookCalendarWidget: function($s,parentId){
-            var calendarSource = this.createCalendarSource(parentId);
+        ,createOutlookCalendarWidget: function($s){
+            var calendarSource = this.createCalendarSource();
             var addDragEvent = function($this){
                 // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
                 // it doesn't need to have a start or end
@@ -111,9 +111,15 @@ Calendar.View = Calendar.View || {
 
             $s.fullCalendar({
                 header: {
-                    left: 'prev',
+                    left: 'prev,next today',
                     center: 'title',
-                    right: 'next'
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                buttonText: {
+                    today:    'Today',
+                    month:    'Month',
+                    week:     'Week',
+                    day:      'Day'
                 },
                 timeFormat: 'h(:mm)t {-h(:mm)t}',
                 displayEventEnd : true,
@@ -180,19 +186,6 @@ Calendar.View = Calendar.View || {
             $('#myEvents li > div').each(function() {
                 addDragEvent($(this));
             });
-
-            this.$dayView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaDay')
-            });
-
-            this.$weekView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaWeek')
-            });
-
-            this.$monthView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'month')
-            });
-
         }
     }
 };
