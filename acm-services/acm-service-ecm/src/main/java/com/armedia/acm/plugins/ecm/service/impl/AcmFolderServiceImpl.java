@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -12,7 +11,6 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.*;
-import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -21,11 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -171,6 +167,56 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 log.info("The folder: "+folderForMoving.getName()+" is a root folder, can not be moved!");
             throw  new AcmFolderException("The folder: "+folderForMoving.getName()+" is a root folder, can not be moved!");
         }
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
+        properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+        try {
+            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
+
+            if ( message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+                if (log.isErrorEnabled()) {
+                    log.error("Folder can not be moved successfully " + muleException.getMessage(), muleException);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
+                        "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
+            }
+
+            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            String newFolderId = cmisObject.getId();
+
+            folderForMoving.setCmisFolderId(newFolderId);
+            folderForMoving.setParentFolderId(dstFolder.getId());
+            movedFolder = getFolderDao().save(folderForMoving);
+        } catch ( PersistenceException | MuleException e ) {
+            if ( log.isErrorEnabled() ){
+                log.error("Folder  "+folderForMoving.getName()+"not moved successfully" + e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,folderForMoving.getId(),"Folder was not moved under "+dstFolder.getName()+" successfully",e);
+        }
+        return movedFolder;
+    }
+
+    @Override
+    public AcmFolder moveRootFolder(AcmFolder folderForMoving, AcmFolder dstFolder) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException {
+
+        AcmFolder movedFolder;
+
+        if( folderForMoving == null ) {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null, "Folder that need to be moved not found",null);
+        }
+        if( dstFolder == null ) {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null, "Destination folder not found",null);
+        }
+
+        if ( folderForMoving.getParentFolderId() != null ) {
+            if( log.isInfoEnabled())
+                log.info("The folder: "+folderForMoving.getName()+" is not root folder, can not be moved!");
+            throw  new AcmFolderException("The folder: "+folderForMoving.getName()+" is not root folder, can not be moved!");
+        }
+
+
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());

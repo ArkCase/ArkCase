@@ -8,14 +8,18 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -29,11 +33,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -63,12 +66,18 @@ import static org.junit.Assert.assertTrue;
 })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT extends EasyMock {
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private CaseFileDao caseFileDao;
     @Autowired
     private EcmFileService ecmFileService;
     @Autowired
     private AcmFolderService acmFolderService;
+
+    @Autowired
+    private EcmFileDao ecmFileDao;
 
     @Autowired
     private MergeCaseService mergeCaseService;
@@ -96,8 +105,6 @@ public class MergeCaseFileServiceIT extends EasyMock {
 
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
-
-
 
 
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
@@ -164,11 +171,42 @@ public class MergeCaseFileServiceIT extends EasyMock {
         mergeCaseOptions.setSourceCaseFileId(sourceId);
         mergeCaseOptions.setTargetCaseFileId(targetId);
 
+        List<EcmFile> sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
+        assertEquals(2, sourceFiles.size());
+
+        List<EcmFile> targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
+        assertEquals(0, targetFiles.size());
+
         mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
 
+        sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
+        assertEquals(0, sourceFiles.size());
+
+        targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
+        assertEquals(2, targetFiles.size());
+
         CaseFile sourceCase = caseFileDao.find(sourceId);
-        assertNotNull(sourceCase.getMergedTo());
-        assertEquals(targetId, sourceCase.getMergedTo().getId());
+        CaseFile targetCase = caseFileDao.find(targetId);
+
+        ObjectAssociation sourceOa = null;
+        for (ObjectAssociation oa : sourceCase.getChildObjects()) {
+            if ("MERGED_TO".equals(oa.getCategory()))
+                sourceOa = oa;
+        }
+        assertNotNull(sourceOa);
+        assertNotNull(sourceOa.getTargetId());
+        assertEquals(sourceOa.getTargetId().longValue(), targetCase.getId().longValue());
+
+        ObjectAssociation targetOa = null;
+        for (ObjectAssociation oa : targetCase.getChildObjects()) {
+            if ("MERGED_FROM".equals(oa.getCategory()))
+                targetOa = oa;
+        }
+        assertNotNull(targetOa);
+        assertNotNull(targetOa.getTargetId());
+        assertEquals(targetOa.getTargetId().longValue(), sourceCase.getId().longValue());
+
+        assertEquals(sourceCase.getContainer().getFolder().getParentFolderId(), targetCase.getContainer().getFolder().getId());
 
     }
 

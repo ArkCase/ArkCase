@@ -233,18 +233,4 @@
                               tableName="acm_case_file"/>
     </changeSet>
 
-    <changeSet id="case-file-18-add-merged-to-in-acm-case-file-table" author="nebojsha.davidovikj">
-        <addColumn tableName="acm_case_file">
-            <column name="cm_merged_to" type="NUMBER(32,0)" defaultValue="null"/>
-        </addColumn>
-        <addForeignKeyConstraint baseTableName="acm_case_file"
-                                 baseColumnNames="cm_merged_to"
-                                 constraintName="fk_cm_merged_to_id"
-                                 referencedTableName="acm_case_file"
-                                 referencedColumnNames="cm_case_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
-    </changeSet>
-
-
 </databaseChangeLog>

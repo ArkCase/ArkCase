@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.casefile.service.MergeCaseService;
+import com.armedia.acm.plugins.profile.model.UserOrgConstants;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.Objects;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/merge-casefiles", "/api/latest/plugin/merge-casefiles"})
@@ -37,6 +39,8 @@ public class MergeCaseFilesAPIController {
             Authentication auth
     ) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException, AcmUserActionFailedException {
 
+        Objects.requireNonNull(mergeCaseOptions.getSourceCaseFileId(), "Source Id should not be null");
+        Objects.requireNonNull(mergeCaseOptions.getTargetCaseFileId(), "Target Id should not be null");
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         CaseFile targetCaseFile = mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
         return targetCaseFile;

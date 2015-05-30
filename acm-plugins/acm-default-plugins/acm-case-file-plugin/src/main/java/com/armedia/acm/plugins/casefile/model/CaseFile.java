@@ -142,13 +142,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    /**
-     * Case file that this case is merged to
-     */
-    @OneToOne
-    @JoinColumn(name = "cm_merged_to")
-    private CaseFile mergedTo;
-
     @PrePersist
     protected void beforeInsert()
     {
@@ -476,14 +469,6 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
-    }
-
-    public CaseFile getMergedTo() {
-        return mergedTo;
-    }
-
-    public void setMergedTo(CaseFile mergedTo) {
-        this.mergedTo = mergedTo;
     }
 
     @Override

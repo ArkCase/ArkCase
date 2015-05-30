@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 
@@ -46,6 +47,17 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         List<EcmFile> results = query.getResultList();
 
         return results;
+    }
+
+    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo) {
+
+        String jpql = "UPDATE EcmFile e SET e.container=:containerTo " +
+                "WHERE e.container = :containerFrom";
+        Query query = getEm().createQuery(jpql);
+        query.setParameter("containerFrom", containerFrom);
+        query.setParameter("containerTo", containerTo);
+
+        return query.executeUpdate();
     }
     
     public EcmFile findForContainerFolderAndFileType(Long containerId, Long folderId, String fileType)
