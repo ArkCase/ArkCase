@@ -175,13 +175,16 @@ CaseFile.View.Ribbon = CaseFile.View.Ribbon || {
 
     ,populateCaseFile: function(c) {
         if (CaseFile.Model.Detail.validateCaseFile(c)) {
-            this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
-            this.setTextLnkCaseTitle(Acm.goodValue(c.title));
+            // DGM fixes... sorry about this bad code
+            var displayTitle = Acm.goodValue(c.title) + " #" + Acm.goodValue(c.caseNumber) + " (" + Acm.goodValue(c.status) +")";
+            this.setTextLabCaseNumber(Acm.goodValue(displayTitle));
+            //this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+            //this.setTextLnkCaseTitle(Acm.goodValue(c.title));
             this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
             this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
             this.setTextLnkPriority(Acm.goodValue(c.priority));
             this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
-            this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
+            // this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
 
             var assignee = CaseFile.Model.Detail.getAssignee(c);
             this.setTextLnkAssignee(Acm.goodValue(assignee));
