@@ -26,7 +26,17 @@ import microsoft.exchange.webservices.data.core.service.schema.FolderSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
-import microsoft.exchange.webservices.data.enumeration.*;
+import microsoft.exchange.webservices.data.enumeration.AffectedTaskOccurrence;
+import microsoft.exchange.webservices.data.enumeration.BasePropertySet;
+import microsoft.exchange.webservices.data.enumeration.DeleteMode;
+import microsoft.exchange.webservices.data.enumeration.EmailAddressKey;
+import microsoft.exchange.webservices.data.enumeration.ExchangeVersion;
+import microsoft.exchange.webservices.data.enumeration.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.enumeration.PhoneNumberKey;
+import microsoft.exchange.webservices.data.enumeration.SendCancellationsMode;
+import microsoft.exchange.webservices.data.enumeration.SortDirection;
+import microsoft.exchange.webservices.data.enumeration.StandardUser;
+import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
@@ -45,13 +55,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -345,9 +357,20 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             folder.getPermissions().add(new FolderPermission(StandardUser.Anonymous, FolderPermissionLevel.None));
             folder.getPermissions().add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.None));
             folder.getPermissions().add(new FolderPermission(owner, FolderPermissionLevel.Owner));
+
+            Set<String> addedAlready = new HashSet<>();
+            addedAlready.add(owner);
             //add extra permissions
             if (newFolder.getPermissions() != null && !newFolder.getPermissions().isEmpty()) {
-                addFolderPermissions(folder, newFolder.getPermissions());
+                List<OutlookFolderPermission> addThese = new ArrayList<>();
+                newFolder.getPermissions().stream().filter(
+                        maybeAdd -> !addedAlready.contains(maybeAdd.getEmail())).
+                        forEach(maybeAdd -> {
+                            addedAlready.add(maybeAdd.getEmail());
+                            addThese.add(maybeAdd);
+                        }
+                );
+                addFolderPermissions(folder, addThese);
             }
             if(!StringUtils.isEmpty(parentFolder.getFolderClass()))
                 folder.setFolderClass(parentFolder.getFolderClass());
