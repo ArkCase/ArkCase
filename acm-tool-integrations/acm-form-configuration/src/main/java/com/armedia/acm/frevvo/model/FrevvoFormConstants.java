@@ -51,4 +51,10 @@ public interface FrevvoFormConstants {
 	 */
 	public final static String OWNING_GROUP = "owning group";
 	
+	/**
+	 * Frevvo file types
+	 */
+	public final static String PDF = "pdf";
+	public final static String XML = "xml";
+	
 }

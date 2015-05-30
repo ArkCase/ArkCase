@@ -1,9 +1,10 @@
 package com.armedia.acm.plugins.ecm.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
+import org.apache.commons.io.Charsets;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,7 +18,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 
+
+
+
 import javax.servlet.http.HttpServletRequest;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Properties;
 
@@ -58,9 +65,22 @@ public class DocumentUiController
             type = "pdf";
         }
 
+        // The title can have some characters that should be URL encoded because the title 
+        // is used in the URL for taking the file. If contains some characters that are not allowed in the URL,
+        // the request will fail
+        String encodedTitle = title;
+        try 
+        {
+			encodedTitle = URLEncoder.encode(title, Charsets.UTF_8.displayName());
+		} 
+        catch (UnsupportedEncodingException e) 
+        {
+			log.error("Cannot encode title=" + title + ". The original format will be used.", e);
+		}
+        
         mv.addObject("type", type);
-        mv.addObject("title", title);
-        mv.addObject("context", req.getContextPath());
+        mv.addObject("title", encodedTitle);
+        mv.addObject("context",req.getContextPath());
 
         String participantTypes = getEcmFileServiceProperties().getProperty("ecm.participantTypes");
         String ticket = getAuthenticationTokenService().getTokenForAuthentication(auth);
