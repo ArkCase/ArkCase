@@ -1,12 +1,12 @@
 {
     "page-title": {
-        "value": "eBrief | ACM | Ark Case Management"
-        ,"defaultValue": "eBrief | ACM | Ark Case Management"
+        "value": "Brief | ACM | Ark Case Management"
+        ,"defaultValue": "Brief | ACM | Ark Case Management"
         ,"description": ""
     }
     ,"title": {
-        "value": "eBrief"
-        ,"defaultValue": "eBrief"
+        "value": "Brief"
+        ,"defaultValue": "Brief"
         ,"description": ""
     }
     ,"navigation": {
