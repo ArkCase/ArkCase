@@ -30,6 +30,16 @@ var CaseFile = CaseFile || {
             });
         }
 
+        if (Calendar.create) {
+            Calendar.create({name: "caseFile"
+                ,getObjectInfo: function() {
+                    return {
+                        objectType: CaseFile.Model.DOC_TYPE_CASE_FILE
+                    };
+                }
+            });
+        }
+
         if (SubscriptionOp.create)           {
             SubscriptionOp.create({
                 getSubscriptionInfo: function() {

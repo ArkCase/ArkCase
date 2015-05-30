@@ -18,7 +18,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.History.create)         {CaseFile.View.History.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
-        if (CaseFile.View.OutlookCalendar.create) {CaseFile.View.OutlookCalendar.create();}
+        //if (CaseFile.View.OutlookCalendar.create) {CaseFile.View.OutlookCalendar.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
 
@@ -40,7 +40,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.onInitialized)      {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.History.onInitialized)         {CaseFile.View.History.onInitialized();}
         if (CaseFile.View.Correspondence.onInitialized)  {CaseFile.View.Correspondence.onInitialized();}
-        if (CaseFile.View.OutlookCalendar.onInitialized) {CaseFile.View.OutlookCalendar.onInitialized();}
+        //if (CaseFile.View.OutlookCalendar.onInitialized) {CaseFile.View.OutlookCalendar.onInitialized();}
         if (CaseFile.View.Time.onInitialized)            {CaseFile.View.Time.onInitialized();}
         if (CaseFile.View.Cost.onInitialized)            {CaseFile.View.Cost.onInitialized();}
     }
