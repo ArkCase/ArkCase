@@ -32,7 +32,8 @@
         <!--</property>-->
     </bean>
 
-    <import resource="file:${user.home}/.acm/app-config.xml"/>
+    <!--<import resource="file:${user.home}/.acm/app-config.xml"/>-->
+    <import resource="file:${user.home}/.acm/app-config-ebrief.xml"/>
     
     <!-- Reload .properties files -->
     <bean id="reloadPropertiesFiles" class="org.springframework.scheduling.timer.TimerFactoryBean">

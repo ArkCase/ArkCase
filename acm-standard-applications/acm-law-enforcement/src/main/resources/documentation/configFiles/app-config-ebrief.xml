@@ -16,28 +16,28 @@
         <property name="issueCollectorFlag" value="true"/>
         <property name="topbarActions">
             <list>
-                <ref bean="createComplaintAction"/>
+                <!--<ref bean="createComplaintAction"/>-->
                 <ref bean="createCaseFileAction"/>
-                <ref bean="createTaskAction"/>
-                <ref bean="createTimesheetAction"/>
-                <ref bean="createCostsheetAction"/>
+                <!--<ref bean="createTaskAction"/>-->
+                <!--<ref bean="createTimesheetAction"/>-->
+                <!--<ref bean="createCostsheetAction"/>-->
             </list>
         </property>
         <property name="navigatorTabs">
             <list>
                 <ref bean="dashboardNavigatorAction"/>
-                <ref bean="complaintNavigatorAction"/>
+                <!--<ref bean="complaintNavigatorAction"/>-->
                 <ref bean="caseFileNavigatorAction"/>
-                <ref bean="taskNavigatorAction"/>
-                <ref bean="searchNavigatorAction"/>
+                <!--<ref bean="taskNavigatorAction"/>-->
+                <!--<ref bean="searchNavigatorAction"/>-->
                 <ref bean="reportNavigatorAction"/>
                 <ref bean="notificationNavigatorAction"/>
                 <ref bean="subscriptionNavigatorAction"/>
                 <ref bean="auditNavigatorAction"/>
                 <ref bean="adminNavigatorAction"/>
                 <ref bean="tagNavigatorAction"/>
-                <ref bean="timeTrackingNavigatorAction"/>
-                <ref bean="costTrackingNavigatorAction"/>
+                <!--<ref bean="timeTrackingNavigatorAction"/>-->
+                <!--<ref bean="costTrackingNavigatorAction"/>-->
             </list>
         </property>
         <property name="objectTypes">
@@ -140,8 +140,8 @@
     </bean>
 
     <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Case Files"/>
-        <property name="actionResourceName" value="common:navigation.label.case-files" />
+        <property name="actionName" value="Briefs"/>
+        <property name="actionResourceName" value="ebrief:navigation.label.case-files" />
         <property name="iconName" value="i i-folder"/>
         <property name="url" value="/plugin/casefile"/>
         <property name="requiredPrivilege" value="case-file-list"/>

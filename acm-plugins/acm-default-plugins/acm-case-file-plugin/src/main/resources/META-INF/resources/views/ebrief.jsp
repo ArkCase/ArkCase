@@ -5,9 +5,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title data-i18n="casefile:page-title">Case Files | ACM | Ark Case Management</title>
+    <title data-i18n="ebrief:page-title">eBrief | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search,subscription,doctree</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription,doctree,ebrief</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -41,7 +41,7 @@
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/custom.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/casefile/ebrief.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTree.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeModel.js'/>"></script>
@@ -117,7 +117,7 @@
                         <section class="vbox animated fadeInLeft">
                             <section class="scrollable">
                                 <header class="dk header">
-                                    <h3 class="m-b-xs text-black pull-left" data-i18n="casefile:title">Case</h3>
+                                    <h3 class="m-b-xs text-black pull-left" data-i18n="ebrief:title">eBrief</h3>
                                     <div class="btn-group inline select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
 
@@ -157,10 +157,10 @@
 
                                                     <div class="row">
                                                         <div class="col-xs-6  b-r">
-                                                            <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a><a href="#" id="status" ></a></h4>
-                                                        </div>
-                                                        <div class="col-xs-6  b-r text-right">
                                                             <h4><a href="#" id="caseNumber"></a></h4>
+                                                        </div>
+                                                        <div class="col-xs-6  b-r">
+                                                            <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a></h4>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -175,6 +175,7 @@
                                                             <small class="text-muted" data-18n="casefile:header.labels.priority">Priority</small> </div>
                                                     </div>
                                                     <div class="row">
+                                                        <a href="#" id="status" ></a>
                                                         <div class="col-xs-4 b-r">
                                                             <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-assignee" data-title="Enter Assignee"></a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.assigned-to">Assigned To</small>

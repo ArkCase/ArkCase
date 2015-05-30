@@ -17,16 +17,21 @@ AcmDocument.View = AcmDocument.View || {
         if (AcmDocument.View.AssociatedTags.create)                   {AcmDocument.View.AssociatedTags.create();}
     }
     ,onInitialized: function() {
-        if (AcmDocument.View.MicroData.onInitialized)               {AcmDocument.View.MicroData.onInitialized();}
-        if (AcmDocument.View.Content.onInitialized)                 {AcmDocument.View.Content.onInitialized();}
-        if (AcmDocument.View.Action.onInitialized)                  {AcmDocument.View.Action.onInitialized();}
-        if (AcmDocument.View.Detail.onInitialized)                  {AcmDocument.View.Detail.onInitialized();}
-        if (AcmDocument.View.DocViewer.onInitialized)               {AcmDocument.View.DocViewer.onInitialized();}
-        if (AcmDocument.View.Notes.onInitialized)                   {AcmDocument.View.Notes.onInitialized();}
-        if (AcmDocument.View.Participants.onInitialized)            {AcmDocument.View.Participants.onInitialized();}
-        if (AcmDocument.View.EventHistory.onInitialized)            {AcmDocument.View.EventHistory.onInitialized();}
-        if (AcmDocument.View.VersionHistory.onInitialized)          {AcmDocument.View.VersionHistory.onInitialized();}
-        if (AcmDocument.View.AssociatedTags.onInitialized)                    {AcmDocument.View.AssociatedTags.onInitialized();}
+        Acm.deferredTimer(null, 500).done(function() {
+            if (AcmDocument.View.MicroData.onInitialized)               {AcmDocument.View.MicroData.onInitialized();}
+            if (AcmDocument.View.Content.onInitialized)                 {AcmDocument.View.Content.onInitialized();}
+            if (AcmDocument.View.Action.onInitialized)                  {AcmDocument.View.Action.onInitialized();}
+            if (AcmDocument.View.Detail.onInitialized)                  {AcmDocument.View.Detail.onInitialized();}
+            if (AcmDocument.View.DocViewer.onInitialized)               {AcmDocument.View.DocViewer.onInitialized();}
+            if (AcmDocument.View.Notes.onInitialized)                   {AcmDocument.View.Notes.onInitialized();}
+            if (AcmDocument.View.Participants.onInitialized)            {AcmDocument.View.Participants.onInitialized();}
+            if (AcmDocument.View.EventHistory.onInitialized)            {AcmDocument.View.EventHistory.onInitialized();}
+            if (AcmDocument.View.VersionHistory.onInitialized)          {AcmDocument.View.VersionHistory.onInitialized();}
+            if (AcmDocument.View.AssociatedTags.onInitialized)          {AcmDocument.View.AssociatedTags.onInitialized();}
+
+            //document.location.reload(true);
+        });
+
     }
 
     ,getActiveDocumentId: function() {
