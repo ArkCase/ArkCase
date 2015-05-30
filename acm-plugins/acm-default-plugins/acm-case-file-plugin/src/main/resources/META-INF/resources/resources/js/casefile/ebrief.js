@@ -176,7 +176,7 @@ CaseFile.View.Ribbon = CaseFile.View.Ribbon || {
     ,populateCaseFile: function(c) {
         if (CaseFile.Model.Detail.validateCaseFile(c)) {
             // DGM fixes... sorry about this bad code
-            var displayTitle = Acm.goodValue(c.title) + " #" + Acm.goodValue(c.caseNumber) + " (" + Acm.goodValue(c.status) +")";
+            var displayTitle = Acm.goodValue(c.title) + " (" + Acm.goodValue(c.status) +")";
             this.setTextLabCaseNumber(Acm.goodValue(displayTitle));
             //this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
             //this.setTextLnkCaseTitle(Acm.goodValue(c.title));
