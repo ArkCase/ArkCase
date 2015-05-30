@@ -20,7 +20,7 @@ Calendar.Service = {
 
         ,retrieveOutlookOutlookCalendarItems : function(calendarFolderId, parentId) {
             var url = App.getContextPath() + this.API_CALENDAR_ITEMS;
-            url+= "?folderId=" + calendarFolderId;
+            url+= "?folderId=" + encodeURIComponent(calendarFolderId);
             return Acm.Service.call({type: "GET"
                     ,url: url
                     ,callback:function(response) {
