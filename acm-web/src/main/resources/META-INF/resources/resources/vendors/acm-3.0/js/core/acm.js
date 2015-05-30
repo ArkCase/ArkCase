@@ -230,11 +230,11 @@ var Acm = Acm || {
         setTimeout(fn, 200);
     }
 
-    ,deferredTimer: function(fn, interval) {
+    ,deferredTimer: function(data, interval) {
         var dfd = $.Deferred();
         var t = Acm.goodValue(interval, 200);
         setTimeout(function() {
-            dfd.resolve(fn);
+            dfd.resolve(data);
         }, t);
         return dfd;
     }
