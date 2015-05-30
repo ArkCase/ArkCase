@@ -50,7 +50,7 @@ Calendar.View = Calendar.View || {
             }
         }
         ,onClickbtnRefreshCalendar: function(){
-            //Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.parentId);
+            Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.getParentId());
         }
         ,createCalendarSource:function(parentId){
             var calendarSource = [];
