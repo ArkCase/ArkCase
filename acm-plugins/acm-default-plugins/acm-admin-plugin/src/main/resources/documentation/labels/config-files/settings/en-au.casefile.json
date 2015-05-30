@@ -1166,4 +1166,36 @@
         "defaultValue": "New Case File",
         "description": ""
     }
-}}
+},
+    "case-picker": {
+        "btn-cancel": {
+            "defaultValue": "Cancel",
+            "description": "",
+            "value": "Cancel"
+        },
+        "name": {
+            "defaultValue": "Case",
+            "description": "",
+            "value": "Case"
+        },
+        "btn-search": {
+            "defaultValue": "Go!",
+            "description": "",
+            "value": "Go!"
+        },
+        "title": {
+            "defaultValue": "Choose Case",
+            "description": "",
+            "value": "Choose Case"
+        },
+        "btn-ok": {
+            "defaultValue": "Merge",
+            "description": "",
+            "value": "Merge"
+        },
+        "prompt": {
+            "defaultValue": "Enter to search for a case",
+            "description": "",
+            "value": "Enter to search for a case"
+        }
+    }}

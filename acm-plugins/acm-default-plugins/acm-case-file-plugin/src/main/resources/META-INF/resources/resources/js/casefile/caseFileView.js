@@ -293,6 +293,7 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES           , this.onModelMergedCaseFiles);
         }
         ,onInitialized: function() {
         }
@@ -363,15 +364,32 @@ CaseFile.View = CaseFile.View || {
         //---------------------------------------
 
         ,onClickBtnConsolidateCase: function() {
+            SearchBase.Dialog.create({name: $.t("casefile:case-picker.name")
+                ,title: $.t("casefile:case-picker.title")
+                ,prompt: $.t("casefile:case-picker.prompt")
+                ,btnGoText: $.t("casefile:case-picker.btn-search")
+                ,btnOkText: $.t("casefile:case-picker.btn-ok")
+                ,btnCancelText: $.t("casefile:case-picker.btn-cancel")
+                ,filters: [{key: "Object Type", values: ["CASE_FILE"]}]
+                ,onClickBtnPrimary : function(event, ctrl) {
+                    SearchBase.Dialog.getSelectedRows().each(function () {
+                        var record = $(this).data('record');
+                        var targetCaseFileId = record.id;
+                        var sourceCaseFileId = CaseFile.View.getActiveCaseFileId();
+                        CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId,targetCaseFileId);
+                    });
+                }
+            }).show();
+
 //borrow it to test object picker dialog
 //            this.onPickObjectDemo();
 //            return;
 
-            CaseFile.View.Action.setValueEdtConsolidateCase("");
+            /*CaseFile.View.Action.setValueEdtConsolidateCase("");
             CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
                 var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
                 alert("Consolidate case:" + caseNumber);
-            });
+            });*/
         }
         ,onClickBtnReinvestigateCaseFile: function() {
         	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
@@ -389,6 +407,17 @@ CaseFile.View = CaseFile.View || {
             			window.location.href = App.getContextPath() + '/plugin/casefile';
                     }
                 );
+            }
+        }
+        ,onModelMergedCaseFiles: function(caseFile){
+            if(caseFile.hasError) {
+                App.View.MessageBoard("Error merging casefiles" , caseFile.errorMsg);
+            }
+            else{
+                if(CaseFile.Model.Detail.validate(caseFile)){
+                    var url = "/plugin/document/" + caseFlie.id;
+                    App.View.gotoPage(url);
+                }
             }
         }
 

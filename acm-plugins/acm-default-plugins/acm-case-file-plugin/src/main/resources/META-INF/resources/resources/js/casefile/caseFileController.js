@@ -387,5 +387,15 @@ CaseFile.Controller = CaseFile.Controller || {
     ,viewRefreshedOutlookCalendar: function(caseFileId){
         Acm.Dispatcher.fireEvent(this.VIEW_REFRESHED_OUTLOOK_CALENDAR, caseFileId);
     }
+
+    //merge casefiles
+    ,VIEW_MERGED_CASE_FILES                     : "case-file-view-merged-case-files"
+    ,viewMergedCaseFiles: function(sourceCaseFileId, targetCaseFileId){
+        Acm.Dispatcher.fireEvent(this.VIEW_MERGED_CASE_FILES, sourceCaseFileId, targetCaseFileId);
+    }
+    ,MODEL_MERGED_CASE_FILES                     : "case-file-model-merged-case-files"
+    ,modelMergedCaseFiles: function(caseFile){
+        Acm.Dispatcher.fireEvent(this.MODEL_MERGED_CASE_FILES, caseFile);
+    }
 };
 
