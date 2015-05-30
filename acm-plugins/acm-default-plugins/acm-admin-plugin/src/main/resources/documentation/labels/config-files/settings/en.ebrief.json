@@ -1,0 +1,22 @@
+{
+    "page-title": {
+        "value": "Brief | ACM | Ark Case Management"
+        ,"defaultValue": "Brief | ACM | Ark Case Management"
+        ,"description": ""
+    }
+    ,"title": {
+        "value": "Brief"
+        ,"defaultValue": "Brief"
+        ,"description": ""
+    }
+    ,"navigation": {
+        "label": {
+            "case-files": {
+                "value": "Briefs"
+                ,"defaultValue": "Briefs"
+                ,"description": ""
+            }
+        }
+    }
+
+}
