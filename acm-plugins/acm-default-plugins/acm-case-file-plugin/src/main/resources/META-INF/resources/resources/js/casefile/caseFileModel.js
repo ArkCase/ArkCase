@@ -212,13 +212,15 @@ CaseFile.Model = CaseFile.Model || {
         create: function(){
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_MERGED_CASE_FILES           , this.onViewMergedCaseFiles);
         }
-        ,onInitialized: function(){}
+        ,onInitialized: function(){
+
+        }
         ,onViewMergedCaseFiles: function(sourceCaseFileId, targetCaseFileId){
             if(Acm.isNotEmpty(sourceCaseFileId) && Acm.isNotEmpty(targetCaseFileId)){
                 CaseFile.Service.Action.mergeCaseFiles(sourceCaseFileId, targetCaseFileId);
             }
             else{
-                Acm.View.MessageBoard("Please check your selection and try again.");
+                App.View.MessageBoard.show("Please check your selection and try again.");
             }
         }
     }
