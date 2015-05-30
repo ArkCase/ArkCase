@@ -26,16 +26,28 @@ Calendar.Model = Calendar.Model || {
         ,onInitialized: function(args) {
         }
         ,onModelRetrievedObject: function(objData) {
-            Calendar.Model.OutlookCalendar.cacheParentObject.put(objData.id,objData);
-            if(Acm.isNotEmpty(objData.container) && Acm.isNotEmpty(objData.container.calendarFolderId)){
-                Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(objData.container.calendarFolderId,objData.id);
+            if(Acm.isNotEmpty(objData)){
+                Calendar.Model.OutlookCalendar.cacheParentObject.put(objData.id,objData);
+                if(Acm.isNotEmpty(objData.container) && Acm.isNotEmpty(objData.container.calendarFolderId)){
+                    Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(objData.container.calendarFolderId,objData.id);
+                }
             }
         }
         ,onViewSelectedObject: function(nodeType,objId){
-            Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(objId);
+            var parentObject = Calendar.Model.OutlookCalendar.cacheParentObject.get(objId);
+            if(Acm.isNotEmpty(parentObject)){
+                if(Acm.isNotEmpty(parentObject.container) && Acm.isNotEmpty(parentObject.container.calendarFolderId)){
+                    Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(parentObject.container.calendarFolderId,objId);
+                }
+            }
         }
         ,onViewRefreshedOutlookCalendar: function(parentId){
-            Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(parentId);
+            var parentObject = Calendar.Model.OutlookCalendar.cacheParentObject.get(parentId);
+            if(Acm.isNotEmpty(parentObject)){
+                if(Acm.isNotEmpty(parentObject.container) && Acm.isNotEmpty(parentObject.container.calendarFolderId)){
+                    Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(parentObject.container.calendarFolderId,parentId);
+                }
+            }
         }
         ,validateOutlookCalendarItems: function(data) {
             if (Acm.isEmpty(data)) {

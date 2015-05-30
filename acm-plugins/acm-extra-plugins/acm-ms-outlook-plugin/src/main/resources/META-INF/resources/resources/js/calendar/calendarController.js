@@ -16,8 +16,8 @@ Calendar.Controller = Calendar.Controller || {
     ,modelRetrievedOutlookCalendarItems: function(outlookCalendarItems){
         Acm.Dispatcher.fireEvent(Calendar.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS, outlookCalendarItems);
     }
-    ,viewRefreshedOutlookCalendar: function(caseFileId){
-        Acm.Dispatcher.fireEvent(Calendar.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR, caseFileId);
+    ,viewRefreshedOutlookCalendar: function(parentId){
+        Acm.Dispatcher.fireEvent(Calendar.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR, parentId);
     }
 };
 
