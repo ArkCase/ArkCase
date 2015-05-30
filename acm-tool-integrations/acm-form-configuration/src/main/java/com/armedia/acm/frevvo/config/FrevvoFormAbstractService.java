@@ -335,6 +335,58 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         }
 	}
 	
+	public MultiValueMap<String, MultipartFile> updateFileName(String newName, String type, MultiValueMap<String, MultipartFile> attachments) throws IOException
+	{
+		String key = findAttachmentKey(type, attachments);		
+		
+		if (key != null)
+		{
+			List<MultipartFile> files = attachments.get(key);
+			if (files != null && files.size() == 1)
+        	{
+				MultipartFile originalFile = files.get(0);
+				String fullFileName = newName + "." + type.toLowerCase();
+				AcmMultipartFile updatedFile = new AcmMultipartFile(fullFileName, fullFileName, originalFile.getContentType(), originalFile.isEmpty(), originalFile.getSize(), originalFile.getBytes(), originalFile.getInputStream(), false);
+				
+				// Remove old file
+        		attachments.remove(key);
+        		
+        		// Add updated file
+        		attachments.add(newName, updatedFile);
+        	}
+		}
+		
+		return attachments;
+	}
+	
+	private String findAttachmentKey(String type, MultiValueMap<String, MultipartFile> attachments)
+	{		
+		if (attachments != null)
+		{
+			for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+			{
+				if (FrevvoFormConstants.PDF.equalsIgnoreCase(type))
+				{
+					if (!entry.getKey().startsWith("form_") && !entry.getKey().equals("UploadFiles"))
+					{
+						// Then this file is PDF
+						return entry.getKey();
+					}
+				}
+				else if (FrevvoFormConstants.XML.equalsIgnoreCase(type))
+				{
+					if (entry.getKey().startsWith("form_"))
+					{
+						// Then this file is XML
+						return entry.getKey();
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public FrevvoUploadedFiles saveAttachments(
             MultiValueMap<String, MultipartFile> attachments,
             String targetCmisFolderId,
