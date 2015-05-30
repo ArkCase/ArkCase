@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -217,5 +218,22 @@ public class PersonAssociation implements Serializable, AcmEntity
         this.tags = tags;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Objects.requireNonNull(obj, "Comparable object must not be null");
+        if (!(obj instanceof PersonAssociation))
+            return false;
+        PersonAssociation other = (PersonAssociation) obj;
+        if (this.getId() == null || other.getId() == null)
+            return false;
+        return getId().equals(other.getId());
+    }
 
+    @Override
+    public int hashCode() {
+        if (getId() == null)
+            return super.hashCode();
+        else
+            return getId().hashCode();
+    }
 }

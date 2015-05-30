@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="document.page.title" text="Document | ACM | Ark Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">search</span>
+        <span itemprop="resourceNamespace">search,docdetail</span>
         <span itemprop="objType">FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="participantTypes">${participantTypes}</span>
@@ -61,9 +61,9 @@
                                     <div class="row m-t-sm">
                                         <div class="col-md-12 m-b-sm">
                                             <div class="input-group">
-                                                <input type="text" class="input-md form-control" id="edtPoSearch" placeholder="Enter to search for members.">
+                                                <input type="text" class="input-md form-control" id="edtPoSearch">
                                                 <span class="input-group-btn">
-                                                    <button class="btn btn-md" type="button">Go!</button>
+                                                    <button class="btn btn-md" type="button" data-i18n="docdetail:participants.picker.btnTextGo"></button>
                                                 </span>
                                             </div>
                                         </div>
@@ -93,9 +93,9 @@
                                             </section>
 
                                             <div>
-                                                <label  class="label">Participant Type</label>
+                                                <label  class="label" data-i18n="docdetail:participants.picker.participant-type"></label>
                                                 <select class="input-sm form-control inline v-middle" id="participantType">
-                                                    <option value="null">Select Participant Type</option>
+                                                    <option value="null" data-i18n="docdetail:participants.picker.select-participant-type"></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -103,137 +103,31 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Add</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="docdetail:participants.picker.btnTextCancel"></button>
+                                    <button type="button" class="btn btn-primary" data-i18n="docdetail:participants.picker.btnTextOk"></button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnReplaceFile">
-                        <span class="text">Replace File</span>
-                    </button>--%>
-
-                    <div class="modal fade" id="modalReplaceFile" tabindex="-1" role="dialog" aria-labelledby="replaceFile" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="replaceFile">Replace File</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <p>Choose a file from your computer to replace [document name]:</p>
-                                    <label for="fileName">File</label><br/>
-                                    <input type="file" id="fileName" class="input-lg" />
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Replace File</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnDeleteFile">
-                        <span class="text">Delete</span>
-                    </button>--%>
-
-                    <div class="modal fade" id="modalDeleteFile" tabindex="-1" role="dialog" aria-labelledby="deleteFile" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="deleteFile">Delete</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <p>Are you sure you want to delete [file name] from [partent folder]?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Delete</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnCopyFile">
-                        <span class="text">Copy</span>
-                    </button>--%>
-
-                    <div class="modal fade" id="modalCopyFile" tabindex="-1" role="dialog" aria-labelledby="copyFile" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="copyFile">Copy</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <p>Where would you like to copy this file? Choose the directory from the box below:</p>
-                                    <p>[place tree view here]</p>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Copy</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <%--<button class="btn btn-default  btn-sm" data-toggle="modal" id="btnMoveFile">
-                        <span class="text">Move</span>
-                    </button>--%>
-
-                    <div class="modal fade" id="modalMoveFile" tabindex="-1" role="dialog" aria-labelledby="moveFile" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="moveFile">Move</h4>
-                                </div>
-
-                                <div class="modal-body">
-                                    <p>Where would you like to move this file? Choose the directory from the box below:</p>
-                                    <p>[place tree view here]</p>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Move</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 
                     <div class="modal fade" id="modalNewTag" tabindex="-1" role="dialog" aria-labelledby="newTag" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="newTag">New Tag</h4>
+                                    <h4 class="modal-title" id="newTag" data-i18n="docdetail:tags.newtag.title"></h4>
                                 </div>
                                 <div class="modal-body">
 
 
-                                    <p>Please select from existing tags or create a new tag.</p>
-                                    <p>(* indicates required fields if creating a new tag)</p>
+                                    <p data-i18n="docdetail:tags.newtag.instructions.first-instruction"></p>
+                                    <p data-i18n="docdetail:tags.newtag.instructions.second-instruction"></p>
                                         <div class="form-group" id="newTagForm">
-                                            <label for="newTagName" class="control-label">Name*</label>
+                                            <label for="newTagName" class="control-label" data-i18n="docdetail:tags.newtag.name"></label>
                                             <input type="text" class="form-control" id="newTagName">
-                                            <label for="newTagDesc" class="control-label">Description*</label>
+                                            <label for="newTagDesc" class="control-label" data-i18n="docdetail:tags.newtag.description"></label>
                                             <input type="text" class="form-control" id="newTagDesc">
-                                            <label for="newTagText" class="control-label">Text*</label>
+                                            <label for="newTagText" class="control-label" data-i18n="docdetail:tags.newtag.name"></label>
                                             <input type="text" class="form-control" id="newTagText">
                                             </br>
                                         </div>
@@ -241,8 +135,8 @@
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Add Tag</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="docdetail:tags.newtag.button.cancel"></button>
+                                    <button type="button" class="btn btn-primary" data-i18n="docdetail:tags.newtag.button.add-tag"></button>
                                 </div>
                             </div>
                         </div>
@@ -262,12 +156,12 @@
             <section class="scrollable">
                 <div class="wrapper">
                     <section class="panel panel-default portlet-item">
-                        <header class="panel-heading">
+                        <header class="panel-heading acm-DocDetailTitleText">
                             <ul class="nav nav-pills pull-right">
                                 <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm" id = "newParticipant" data-toggle="tooltip" data-title="New Partcipant"><i class="fa fa-user"></i> New</button></div></li>
                                 <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                             </ul>
-                            Participants <span class="badge bg-info" id="labParticipants"></span> </header>
+                            Participants <span class="badge" id="labParticipants"></span> </header>
                         <ul class="list-group alt panel-body" id="tabParticipants">
 
                         </ul>
@@ -276,43 +170,41 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                                        <h4 class="modal-title" id="changeParticipantRole">Change Participant Role</h4>
+                                        <button type="button" class="close" data-dismiss="modal" data-i18n="docdetail:participants.role.button.close">&times;<span class="sr-only"></span></button>
+                                        <h4 class="modal-title" id="changeParticipantRole" data-i18n="docdetail:participants.role.labels.change-role"></h4>
                                     </div>
 
                                     <div class="modal-body">
-                                        <p>Please select a role : </p>
-                                        <label  class="label">Available Roles</label>
+                                        <p data-i18n="docdetail:participants.role.labels.please-select-role"></p>
+                                        <label  class="label" data-i18n="docdetail:participants.role.labels.available-roles"></label>
                                         <select class="input-sm form-control inline v-middle" id="participantRoles">
-                                            <option value="null">Select Participant Role</option>
+                                            <option value="null" data-i18n="docdetail:participants.role.labels.select-role"></option>
                                         </select>
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-primary">Change Role</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="docdetail:participants.role.button.cancel"></button>
+                                        <button type="button" class="btn btn-primary" data-i18n="docdetail:participants.role.button.change-role"></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </section>
 
-
                     <section class="panel panel-default portlet-item">
-                        <header class="panel-heading">
+                        <header class="panel-heading acm-DocDetailTitleText">
                             <ul class="nav nav-pills pull-right">
                                 <li><div class="btn-group padder-v2"><button class="btn btn-default btn-sm"  data-toggle="modal" id="btnNewTag"><i class="fa fa-tag"></i> New</button></div></li>
                                 <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                             </ul>
-                            Tags <span class="badge bg-info" id="labTags"></span>
+                            Tags <span class="badge" id="labTags"></span>
                         </header>
                         <table class="panel-body table table-striped b-light" id="tabTags">
                             <thead>
                             <tr>
 
-                                <th class="th-sortable" data-toggle="class">Tag <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                                <th width="10">Action</th>
+                                <th class="th-sortable" data-toggle="class" data-i18n="docdetail:tags.table.field.tag"><span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                <th width="10" data-i18n="docdetail:tags.table.field.action"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -321,13 +213,11 @@
                         </table>
                     </section>
 
-
                     <section class="panel panel-default portlet-item">
-                        <header class="panel-heading">
+                        <header class="panel-heading acm-DocDetailTitleText" data-i18n="docdetail:version-history.table.title">
                             <ul class="nav nav-pills pull-right">
                                 <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                             </ul>
-                            Version History
                         </header>
 
 
@@ -335,10 +225,10 @@
                             <thead>
                             <tr>
 
-                                <th class="th-sortable" data-toggle="class">Version <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                                <th>Date/Time</th>
-                                <th>User</th>
-                                <th width="10">Action</th>
+                                <th class="th-sortable" data-toggle="class" data-i18n="docdetail:version-history.table.field.version"><span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                                <th data-i18n="docdetail:version-history.table.field.date"></th>
+                                <th data-i18n="docdetail:version-history.table.field.user"></th>
+                                <th width="10" data-i18n="docdetail:version-history.table.field.action"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -347,26 +237,13 @@
                         </table>
                     </section>
 
-                    <section class="panel panel-default portlet-item">
-                        <header class="panel-heading">
-                            <ul class="nav nav-pills pull-right">
-                                <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
-                            </ul>
-                            Event History </header>
-                        <table class="panel-body table table-striped b-light" id ="tabEventHistory">
-                            <thead>
-                            <tr>
-
-                                <th class="th-sortable" data-toggle="class">Event <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
-                                <th>Date/Time</th>
-                                <th>User</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                        </table>
-                    </section>
+                    <div class="row" id="tabEventHistory">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divEventHistory" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
 
                     <div class="row" id="tabNotes">
                         <div class="col-md-12">
@@ -390,20 +267,20 @@
                         <div class="">
                             <div class=" clearfix">
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="owner" data-title="Owner"></a></div>
-                                    <small class="text-muted">Owner</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="owner"></a></div>
+                                    <small class="text-muted"  data-i18n="docdetail:header.labels.owner"></small></div>
                                 <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="createDate" data-title="Create Date"></a></div>
-                                    <small class="text-muted">Created Date</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="createDate"></a></div>
+                                    <small class="text-muted" data-i18n="docdetail:header.labels.create-date"></small></div>
                                 <div class="col-xs-3 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="assignee" data-title="Assignee"></a></div>
-                                    <small class="text-muted">Assigned To</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="assignee"></a></div>
+                                    <small class="text-muted" data-i18n="docdetail:header.labels.assigned-to"></small></div>
                                 <div class="col-xs-3 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="type" data-title="Type"></a></div>
-                                    <small class="text-muted">Type</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="type"></a></div>
+                                    <small class="text-muted" data-i18n="docdetail:header.labels.type"></small></div>
                                 <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status" data-title="Status"></a></div>
-                                    <small class="text-muted">Status</small></div>
+                                    <div class="h4 font-bold"><a href="#" id="status"></a></div>
+                                    <small class="text-muted" data-i18n="docdetail:header.labels.state"></small></div>
                             </div>
                         </div>
                     </div>
@@ -420,7 +297,7 @@
                                 <div id="divDocViewerHeader" stile = "width:100%">
                                     <p>Document Viewer</p>
                                 </div>
-                                <iframe src = "${context}/resources/vendors/ViewerJS/index.html?type=${type}&title=${title}#${context}/api/latest/plugin/ecm/download/byId/${fileId}?inline=true" width='100%' height='400' allowfullscreen webkitallowfullscreen></iframe>
+                                <iframe src = "${link}" width='100%' height='700' allowfullscreen webkitallowfullscreen></iframe>
                             </div>
                         </section>
                     </div>

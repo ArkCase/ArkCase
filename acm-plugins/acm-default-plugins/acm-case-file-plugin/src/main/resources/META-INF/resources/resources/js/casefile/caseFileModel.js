@@ -15,7 +15,6 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
         if (CaseFile.Model.History.create)         {CaseFile.Model.History.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
-        if (CaseFile.Model.OutlookCalendar.create)           {CaseFile.Model.OutlookCalendar.create();}
         if (CaseFile.Model.Time.create)           {CaseFile.Model.Time.create();}
         if (CaseFile.Model.Cost.create)           {CaseFile.Model.Cost.create();}
 
@@ -35,7 +34,6 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
         if (CaseFile.Model.History.onInitialized)         {CaseFile.Model.History.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
-        if (CaseFile.Model.OutlookCalendar.onInitialized)           {CaseFile.Model.OutlookCalendar.onInitialized();}
         if (CaseFile.Model.Time.onInitialized)           {CaseFile.Model.Time.onInitialized();}
         if (CaseFile.Model.Cost.onInitialized)           {CaseFile.Model.Cost.onInitialized();}
 
@@ -60,7 +58,12 @@ CaseFile.Model = CaseFile.Model || {
             return CaseFile.Model.DOC_TYPE_CASE_FILE;
         }
         ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable) + " (" + Acm.goodValue(objSolr.name) + ")";
+        	var defaultExpression = "Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')'";
+        	var caseFileTreeRootNameExpression = Acm.Object.MicroData.get("caseFileTreeRootNameExpression");
+            if (Acm.isEmpty(caseFileTreeRootNameExpression)) {
+                caseFileTreeRootNameExpression = defaultExpression;
+            }
+            return eval(caseFileTreeRootNameExpression);
         }
         ,nodeToolTip: function(objSolr) {
             return Acm.goodValue(objSolr.title_parseable);
@@ -917,7 +920,7 @@ CaseFile.Model = CaseFile.Model || {
 
 
         //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
+        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Primary Victim', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
         ,getPersonTypes : function() {
             return this._personTypes;
         }
@@ -1002,73 +1005,6 @@ CaseFile.Model = CaseFile.Model || {
             } else {
                 CaseFile.Controller.modelRetrievedGroups(groups);
             }
-        }
-    }
-
-    ,OutlookCalendar: {
-        create : function() {
-            this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
-
-        }
-        ,onInitialized: function() {
-        }
-        ,onModelRetrievedObject: function(objData) {
-            CaseFile.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(CaseFile.Model.getCaseFileId());
-        }
-        ,onViewSelectedObject: function(nodeType,objId){
-            CaseFile.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(CaseFile.Model.getCaseFileId());
-        }
-        ,onViewRefreshedOutlookCalendar: function(caseFileId){
-            CaseFile.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(caseFileId);
-        }
-        ,validateOutlookCalendarItems: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isNotArray(data.items)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.totalItems)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateOutlookCalendarItem: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.id)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.size)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.sent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.allDayEvent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.cancelled)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.meeting)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.recurring)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.startDate)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.endDate)) {
-                return false;
-            }
-            return true;
         }
     }
 

@@ -3,8 +3,6 @@
  */
 package com.armedia.acm.form.ebrief.service;
 
-import java.util.List;
-
 import javax.persistence.PersistenceException;
 
 import org.activiti.engine.RuntimeService;
@@ -12,19 +10,24 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.service.CaseFileWorkflowListener;
-import com.armedia.acm.form.config.xml.OwningGroupItem;
+import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
+import com.armedia.acm.form.ebrief.model.xml.EbriefDetails;
+import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 /**
@@ -54,9 +57,9 @@ public class EbriefService extends FrevvoFormAbstractService {
 				result = initFormData();
 			}
 			
-			if ("init-participants-groups".equals(action)) 
+			if ("init-location-data".equals(action)) 
 			{
-				result = initParticipantsAndGroupsInfo();
+				result = initLocationData();
 			}
 		}
 		
@@ -79,6 +82,9 @@ public class EbriefService extends FrevvoFormAbstractService {
 		form = saveEBrief(form);
 		
 		updateXMLAttachment(attachments, FrevvoFormName.EBRIEF, form);
+		
+		// Change PDF file name
+		attachments = updateFileName(getCaseFile().getTitle(), FrevvoFormConstants.PDF, attachments);
 		
 		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(
@@ -124,7 +130,7 @@ public class EbriefService extends FrevvoFormAbstractService {
         }
 		catch (MuleException | PersistenceException e)
         {
-            throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
+            throw new AcmCreateObjectFailedException("eBrief", e.getMessage(), e);
         }
 		
 		setCaseFile(caseFile);
@@ -136,37 +142,49 @@ public class EbriefService extends FrevvoFormAbstractService {
 	
 	private Object initFormData()
 	{
-		EbriefForm form = new EbriefForm();
+		EbriefInformation information = new EbriefInformation();
 		
-		form.setTypes(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".types"), ","));
+		information.setTypes(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".types"), ","));
 		
-		JSONObject json = createResponse(form);
+		JSONObject json = createResponse(information);
 
 		return json;
 	}
 	
-	private JSONObject initParticipantsAndGroupsInfo()
+	private Object initLocationData()
 	{
-		EbriefForm form = new EbriefForm();
+		EbriefDetails details = new EbriefDetails();
 		
-		// Init Participant types
-		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".participantTypes"), ",");
-		form.setParticipantsTypeOptions(participantTypes);
+		details.setCourtLocations(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".court.locations"), ","));
 		
-		form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.EBRIEF));
-		
-		// Init Owning Group information
-		String owningGroupType = (String) getProperties().get(FrevvoFormName.EBRIEF + ".owningGroupType");
-		OwningGroupItem owningGroupItem = new OwningGroupItem();
-		owningGroupItem.setType(owningGroupType);
-		
-		form.setOwningGroup(owningGroupItem);
-		form.setOwningGroupOptions(getOwningGroups(owningGroupType, FrevvoFormName.EBRIEF));
-		
-		JSONObject json = createResponse(form);
-		
+		JSONObject json = createResponse(details);
+
 		return json;
 	}
+	
+	public void updateXML(CaseFile caseFile, Authentication auth)
+    {
+    	if (caseFile != null)
+    	{
+    		// First find the XML that is already in the system and create Frevvo form
+    		Long containerId = caseFile.getContainer().getId();
+    		Long folderId = caseFile.getContainer().getFolder().getId();
+    		String fileType = FrevvoFormName.EBRIEF.toLowerCase() + "_xml";
+    		
+    		EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+    		EbriefForm form = (EbriefForm) getExistingForm(ecmFile.getId(), EbriefForm.class);
+    		
+    		// Update eBrief form with the new data provided in the Case File
+    		form = getEbriefFactory().asFrevvoEbriefForm(caseFile, form, this);
+    		
+    		if (form != null)
+    		{
+    			String xml = convertFromObjectToXML(form);
+    			updateXML(xml, ecmFile, auth);		
+    		}
+    	}
+    	
+    }
 
 	@Override
 	public String getFormName() 

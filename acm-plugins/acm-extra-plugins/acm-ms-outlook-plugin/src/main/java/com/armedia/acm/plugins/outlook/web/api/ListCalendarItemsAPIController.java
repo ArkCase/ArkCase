@@ -22,13 +22,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @RequestMapping({ "/api/v1/plugin/outlook", "/api/latest/plugin/outlook" })
 public class ListCalendarItemsAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private DateTimeFormatter searchDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    private DateTimeFormatter searchDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private OutlookService outlookService;
     private UserOrgService userOrgService;
 
@@ -55,14 +58,21 @@ public class ListCalendarItemsAPIController
         boolean ascendingSort = "ASC".equals(sortDirection);
 
         //Append all filters for searching in filterCollection
-        SearchFilter.SearchFilterCollection filterCollection = new SearchFilter.SearchFilterCollection();
-        if (!StringUtils.isEmpty(startSearchStartDate)) {
-            SearchFilter.IsGreaterThan isGreaterThanFilter = new SearchFilter.IsGreaterThan(AppointmentSchema.Start, searchDateFormat.parse(startSearchStartDate));
-            filterCollection.add(isGreaterThanFilter);
-        }
-        if (!StringUtils.isEmpty(endSearchStartDate)) {
-            SearchFilter.IsLessThan isLessThanFilter = new SearchFilter.IsLessThan(AppointmentSchema.Start,  searchDateFormat.parse(endSearchStartDate));
-            filterCollection.add(isLessThanFilter);
+        SearchFilter.SearchFilterCollection filterCollection = null;
+
+        if ( !StringUtils.isEmpty(startSearchStartDate) || !StringUtils.isEmpty(endSearchStartDate) )
+        {
+            filterCollection = new SearchFilter.SearchFilterCollection();
+            if (!StringUtils.isEmpty(startSearchStartDate)) {
+                Date start = getDate(startSearchStartDate);
+                SearchFilter.IsGreaterThan isGreaterThanFilter = new SearchFilter.IsGreaterThan(AppointmentSchema.Start, start);
+                filterCollection.add(isGreaterThanFilter);
+            }
+            if (!StringUtils.isEmpty(endSearchStartDate)) {
+                Date end = getDate(endSearchStartDate);
+                SearchFilter.IsLessThan isLessThanFilter = new SearchFilter.IsLessThan(AppointmentSchema.Start, end);
+                filterCollection.add(isLessThanFilter);
+            }
         }
 
         //if folderId is null than items are retrieved from own calendar folder
@@ -70,6 +80,12 @@ public class ListCalendarItemsAPIController
 
         return results;
 
+    }
+
+    private Date getDate(String dateString)
+    {
+        LocalDateTime ldt = searchDateFormat.parse(dateString, LocalDateTime::from);
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public UserOrgService getUserOrgService() {

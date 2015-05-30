@@ -3,13 +3,18 @@
  */
 package com.armedia.acm.frevvo.config;
 
+import java.util.Locale;
 import java.util.Map;
 
-import org.apache.poi.ss.formula.functions.T;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -28,6 +33,7 @@ public class FrevvoFormUrl implements FormUrl {
 	public static final String PORT = "frevvo.port";
 	public static final String URI = "frevvo.uri";
 	public static final String TIMEZONE = "frevvo.timezone";
+	public static final String LOCALE = "frevvo.locale";
 
 	private Map<String, Object> properties;
 	private AuthenticationTokenService authenticationTokenService;
@@ -98,6 +104,7 @@ public class FrevvoFormUrl implements FormUrl {
 		String service = (String) properties.get(SERVICE);
 		String redirect = (String) properties.get(REDIRECT);
 		String timezone = (String) properties.get(TIMEZONE);
+		String locale = getLocale();
 		
 		if (tenant != null) {
 			uri = uri.replace("{tenant}", tenant);			
@@ -139,6 +146,10 @@ public class FrevvoFormUrl implements FormUrl {
 			uri = uri.replace("{frevvo_timezone}", timezone);
 		}
 		
+		if (locale != null) {
+			uri = uri.replace("{frevvo_locale}", locale);
+		}
+		
 		String url = getBaseUrl() + uri; 
 		
 		LOG.info("Form Url: " + url);
@@ -158,6 +169,50 @@ public class FrevvoFormUrl implements FormUrl {
         return enableFrevvoFormEngine;
     }
 	
+	private String getLocale()
+	{
+		String retval = "";
+		
+		String defaultLocale = (String) properties.get(LOCALE);
+		String overwriteLocale = (String) properties.get(LOCALE + ".overwrite");
+		
+		if (overwriteLocale != null && "true".equalsIgnoreCase(overwriteLocale))
+		{
+			HttpServletRequest request = getCurrentRequest();
+			
+			if (request != null)
+			{
+				Locale locale = request.getLocale();
+				if (locale != null && !"".equals((locale.toString())))
+				{
+					String language = locale.getLanguage() == null ? "" : locale.getLanguage();
+					String country = locale.getCountry() == null ? "" : locale.getCountry();
+					
+					retval = language + "_" + country;		
+				}
+			}
+		}
+
+		if ("".equals(retval) && defaultLocale != null)
+		{
+			retval = defaultLocale;
+		}
+		
+		return retval;
+	}
 	
+	private HttpServletRequest getCurrentRequest()
+	{
+		HttpServletRequest request = null;
+		
+		RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
+		
+		if (attrs instanceof ServletRequestAttributes)
+		{
+			request = ((ServletRequestAttributes) attrs).getRequest();
+		}
+		
+		return request;
+	}
 
 }

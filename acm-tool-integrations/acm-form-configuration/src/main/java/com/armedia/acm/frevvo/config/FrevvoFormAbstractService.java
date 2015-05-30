@@ -199,6 +199,28 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         }
 
     }
+    
+    public String findFolderIdForAttachments(AcmContainer container, String objectType, Long id)
+    {
+        // hopefully the container has it, but sometimes the container isn't set on the parent object
+        if ( container != null )
+        {
+            return container.getAttachmentFolder().getCmisFolderId();
+        }
+
+        AcmContainer found = null;
+        try
+        {
+            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            return found.getAttachmentFolder().getCmisFolderId();
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            return null;
+        }
+
+    }
 
     @Override
 	public UserActionDao getUserActionDao() {
@@ -277,7 +299,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			String existingXml = "";
 			try 
 			{
-				// Takeing existing XML for the form
+				// Taking existing XML for the form
 				existingXml = getEcmFileService().download(id);
 				
 				// Creating Frevvo form from the existing XML
@@ -311,6 +333,58 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         		attachments.add("form_" + formName, updatedXml);
         	}
         }
+	}
+	
+	public MultiValueMap<String, MultipartFile> updateFileName(String newName, String type, MultiValueMap<String, MultipartFile> attachments) throws IOException
+	{
+		String key = findAttachmentKey(type, attachments);		
+		
+		if (key != null)
+		{
+			List<MultipartFile> files = attachments.get(key);
+			if (files != null && files.size() == 1)
+        	{
+				MultipartFile originalFile = files.get(0);
+				String fullFileName = newName + "." + type.toLowerCase();
+				AcmMultipartFile updatedFile = new AcmMultipartFile(fullFileName, fullFileName, originalFile.getContentType(), originalFile.isEmpty(), originalFile.getSize(), originalFile.getBytes(), originalFile.getInputStream(), false);
+				
+				// Remove old file
+        		attachments.remove(key);
+        		
+        		// Add updated file
+        		attachments.add(newName, updatedFile);
+        	}
+		}
+		
+		return attachments;
+	}
+	
+	private String findAttachmentKey(String type, MultiValueMap<String, MultipartFile> attachments)
+	{		
+		if (attachments != null)
+		{
+			for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+			{
+				if (FrevvoFormConstants.PDF.equalsIgnoreCase(type))
+				{
+					if (!entry.getKey().startsWith("form_") && !entry.getKey().equals("UploadFiles"))
+					{
+						// Then this file is PDF
+						return entry.getKey();
+					}
+				}
+				else if (FrevvoFormConstants.XML.equalsIgnoreCase(type))
+				{
+					if (entry.getKey().startsWith("form_"))
+					{
+						// Then this file is XML
+						return entry.getKey();
+					}
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public FrevvoUploadedFiles saveAttachments(

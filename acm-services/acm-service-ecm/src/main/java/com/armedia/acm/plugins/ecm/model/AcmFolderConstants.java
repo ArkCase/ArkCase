@@ -47,4 +47,8 @@ public interface AcmFolderConstants {
 
     String CMIS_OBJECT_TYPE_ID_FOLDER = "cmis:folder";
     String CMIS_OBJECT_TYPE_ID_FILE = "cmis:document";
+    
+    String FOLDER_STRUCTURE_KEY_NAME = "name";
+    String FOLDER_STRUCTURE_KEY_CHILDREN = "children";
+    String FOLDER_STRUCTURE_KEY_ATTACHMENT = "attachment";
 }
