@@ -459,22 +459,7 @@
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
-                                                    <div class="btn-group pull-right" data-toggle="buttons">
-                                                        <label class="btn btn-sm btn-bg btn-default active" id="monthview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.month">Month</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="weekview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.week">Week</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="dayview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.day">Day</span>
-                                                        </label>
-                                                    </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
-
                                                 <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
                                                   Calendar
                                                 </span>
