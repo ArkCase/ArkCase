@@ -52,10 +52,7 @@ public class CaseFileUiController
     }
 
     private String getViewName() {
-        String jsp = (String)getProperties().get("jsp");
-        if (null == jsp) {
-            jsp = "casefile";
-        }
+        String jsp = (String)getProperties().getProperty("jsp", "casefile");
         return jsp;
     }
 
