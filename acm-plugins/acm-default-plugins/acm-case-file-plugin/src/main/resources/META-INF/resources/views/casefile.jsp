@@ -48,6 +48,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeService.js'/>"></script>
 
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendar.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarService.js'/>"></script>
+
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
 
