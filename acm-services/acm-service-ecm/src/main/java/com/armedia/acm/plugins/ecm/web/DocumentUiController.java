@@ -4,6 +4,7 @@ import com.armedia.acm.pluginmanager.model.AcmPlugin;
 
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,8 @@ public class DocumentUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private Properties ecmFileServiceProperties;
+    private AuthenticationTokenService authenticationTokenService;
+
 
     private EcmFileService fileService;
 
@@ -56,13 +59,38 @@ public class DocumentUiController
         }
 
         mv.addObject("type", type);
-        mv.addObject("title",title);
-        mv.addObject("context",req.getContextPath());
+        mv.addObject("title", title);
+        mv.addObject("context", req.getContextPath());
 
         String participantTypes = getEcmFileServiceProperties().getProperty("ecm.participantTypes");
+        String ticket = getAuthenticationTokenService().getTokenForAuthentication(auth);
+        String viewer = getEcmFileServiceProperties().getProperty("ecm.viewer");
+        String srcLink = getEcmFileServiceProperties().getProperty("ecm.viewer."+viewer);
+        switch (viewer){
+            case "js":
+                srcLink = srcLink.replace("${context}", req.getContextPath());
+                srcLink = srcLink.replace("${type}", type);
+                srcLink = srcLink.replace("${title}", title);
+                srcLink = srcLink.replace("${fileId}", fileId.toString());
+                mv.addObject("link",srcLink);
+                break;
+            case "snowbound" :
+                srcLink = srcLink.replace("${ticket}", ticket);
+                srcLink = srcLink.replace("${fileId}", fileId.toString());
+                mv.addObject("link",srcLink);
+                break;
+            default:
+                srcLink = srcLink.replace("${context}",req.getContextPath());
+                srcLink = srcLink.replace("${type}",type);
+                srcLink = srcLink.replace("${title}",title);
+                srcLink = srcLink.replace("${fileId}",fileId.toString());
+                mv.addObject("link",srcLink);
+                break;
+        }
         if(participantTypes != null){
             mv.addObject("participantTypes", participantTypes);
         }
+
         return mv;
     }
 
@@ -80,5 +108,13 @@ public class DocumentUiController
 
     public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
+    }
+
+    public AuthenticationTokenService getAuthenticationTokenService() {
+        return authenticationTokenService;
+    }
+
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService) {
+        this.authenticationTokenService = authenticationTokenService;
     }
 }
