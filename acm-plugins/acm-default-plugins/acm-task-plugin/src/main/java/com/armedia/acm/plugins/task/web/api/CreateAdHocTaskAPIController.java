@@ -65,26 +65,24 @@ public class CreateAdHocTaskAPIController
         {
         	in.setOwner(authentication.getName());
             //find the complaint id by name
-            String objectId;
             String objectNumber;
             String obj;
-            Long objId;
+            Long objectId = 0L;
             if(in.getAttachedToObjectName() != ""){
                 objectNumber = in.getAttachedToObjectName();
                 in.setAttachedToObjectName(objectNumber);
-                obj = getObjectsFromSolr(in.getAttachedToObjectType(),authentication,0,10,"",null);
+                obj = getObjectsFromSolr(in.getAttachedToObjectType(), in.getAttachedToObjectName(), authentication,0,10,"",null);
                 if(obj != null && getSearchResults().getNumFound(obj) > 0){
                     JSONArray results = getSearchResults().getDocuments(obj);
                     JSONObject result = results.getJSONObject(0);
-                    objId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
+                    objectId = getSearchResults().extractLong(result, SearchConstants.PROPERTY_OBJECT_ID_S);
                 }
-                objectId  = findObjectIdByName(in.getAttachedToObjectType(),in.getAttachedToObjectName(), authentication);
             }
             else{
                 objectId = null;
             }
             if(objectId != null){
-                in.setAttachedToObjectId(Long.parseLong(objectId));
+                in.setAttachedToObjectId(objectId);
             }
             else{
                 in.setAttachedToObjectId(null);
@@ -94,14 +92,6 @@ public class CreateAdHocTaskAPIController
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;
-        }
-        catch (MuleException e)
-        {
-            // gen up a fake task so we can audit the failure
-            AcmTask fakeTask = new AcmTask();
-            fakeTask.setTaskId(null);  // no object id since the task could not be created
-            publishAdHocTaskCreatedEvent(authentication, httpSession, fakeTask, false);
-            throw new AcmCreateObjectFailedException("task", e.getMessage(), e);
         }
         catch (AcmTaskException e)
         {
@@ -124,50 +114,8 @@ public class CreateAdHocTaskAPIController
         getTaskEventPublisher().publishTaskEvent(event);
     }
 
-    /**
-     * Find the complaint or case object id by the complaint or case name. The object id is 
-     * used to associate the task to a complaint or case.
-     * 
-     * @param name
-     * @param authentication
-     * @return
-     * @throws MuleException
-     */
-    private String findObjectIdByName(String type, String name, Authentication authentication) throws MuleException {
-        if(name != null){
-            String query = "name:" + name;
 
-            query += " AND (object_type_s:" + type + ")";
-
-
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-            }
-
-            Map<String, Object> headers = new HashMap<>();
-            headers.put("query", query);
-            headers.put("firstRow", 0);
-            headers.put("maxRows", 10);
-            headers.put("sort", "");
-            headers.put("acmUser", authentication);
-
-            MuleMessage response = getMuleClient().send("vm://quickSearchQuery.in", "", headers);
-            log.debug("Response type: " + response.getPayload().getClass());
-
-            SolrResponse solrResponse = getSolrData(response);
-
-            if ( solrResponse == null ) {
-                throw new NullPointerException("Object id not found.");
-            }
-            else {
-                return solrResponse.getResponse().getDocs().get(0).getObject_id_s();
-            }
-        }
-        return null;
-    }
-
-    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId)
+    public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows, String sortParams, String userId)
     {
         String retval = null;
 
@@ -179,7 +127,7 @@ public class CreateAdHocTaskAPIController
             authorQuery = " AND author_s:" + userId;
         }
 
-        String query = "object_type_s:" + objectType + authorQuery + " AND -status_s:DELETE";
+        String query = "object_type_s:" + objectType + " AND name:" + objectName + authorQuery + " AND -status_s:DELETE";
 
         try
         {
@@ -194,21 +142,7 @@ public class CreateAdHocTaskAPIController
 
         return retval;
     }
-    
-    /**
-     * Retrieve the solr data (json) of the given complaint or case
-     * 
-     * @param response
-     * @return
-     */
-    private SolrResponse getSolrData(MuleMessage response) {
-        String responsePayload = (String) response.getPayload();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        SolrResponse solrResponse = gson.fromJson(responsePayload, SolrResponse.class);
-        int numFound = solrResponse.getResponse().getNumFound();
-    	
-    	return numFound > 0? solrResponse : null;
-    }
+
 
     public TaskDao getTaskDao()
     {
