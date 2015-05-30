@@ -72,6 +72,8 @@
         <property name="acmFolderDao" ref="acmFolderDao"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
