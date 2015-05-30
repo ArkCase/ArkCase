@@ -17,7 +17,7 @@ AcmDocument.View = AcmDocument.View || {
         if (AcmDocument.View.AssociatedTags.create)                   {AcmDocument.View.AssociatedTags.create();}
     }
     ,onInitialized: function() {
-        Acm.deferredTimer(null, 500).done(function() {
+        Acm.deferredTimer(null, 1000).done(function() {
             if (AcmDocument.View.MicroData.onInitialized)               {AcmDocument.View.MicroData.onInitialized();}
             if (AcmDocument.View.Content.onInitialized)                 {AcmDocument.View.Content.onInitialized();}
             if (AcmDocument.View.Action.onInitialized)                  {AcmDocument.View.Action.onInitialized();}
