@@ -19,7 +19,6 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
         if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
-        if (Complaint.Model.OutlookCalendar.create)           {Complaint.Model.OutlookCalendar.create();}
         if (Complaint.Model.Time.create)                  {Complaint.Model.Time.create();}
         if (Complaint.Model.Cost.create)                  {Complaint.Model.Cost.create();}
     }
@@ -38,7 +37,6 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
         if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
         if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
-        if (Complaint.Model.OutlookCalendar.onInitialized)           {Complaint.Model.OutlookCalendar.onInitialized();}
         if (Complaint.Model.Time.onInitialized)           {Complaint.Model.Time.onInitialized();}
         if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
@@ -1023,73 +1021,6 @@ Complaint.Model = Complaint.Model || {
         }
 
     }
-    ,OutlookCalendar: {
-        create : function() {
-            this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
-
-        }
-        ,onInitialized: function() {
-        }
-        ,onModelRetrievedObject: function(objData) {
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
-        }
-        ,onViewSelectedObject: function(nodeType,objId){
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
-        }
-        ,onViewRefreshedOutlookCalendar: function(complaintId){
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(complaintId);
-        }
-        ,validateOutlookCalendarItems: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isNotArray(data.items)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.totalItems)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateOutlookCalendarItem: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.id)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.size)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.sent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.allDayEvent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.cancelled)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.meeting)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.recurring)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.startDate)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.endDate)) {
-                return false;
-            }
-            return true;
-        }
-    }
-
 
     ,Time: {
         create : function() {
