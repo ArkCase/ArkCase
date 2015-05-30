@@ -18,6 +18,7 @@ import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by jwu on 8/28/14.
@@ -26,6 +27,7 @@ import java.util.Map;
 public class CaseFileUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+    private Properties properties;
     private AcmPlugin plugin;
 	private FormUrl formUrl;
 	private Map<String, Object> formProperties;
@@ -34,7 +36,7 @@ public class CaseFileUiController
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("casefile");
+        mv.setViewName(getViewName());
         initModelAndView(mv);
         return mv;
     }
@@ -43,10 +45,18 @@ public class CaseFileUiController
     public ModelAndView openComplaint(Authentication auth, @PathVariable(value = "caseId") Long caseId
     ) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("casefile");
+        mv.setViewName(getViewName());
         initModelAndView(mv);
         mv.addObject("objId", caseId);
         return mv;
+    }
+
+    private String getViewName() {
+        String jsp = (String)getProperties().get("jsp");
+        if (null == jsp) {
+            jsp = "casefile";
+        }
+        return jsp;
     }
 
     private void addJsonArrayProp(ModelAndView mv, Map<String, Object> props, String propName, String attrName) {
@@ -157,5 +167,13 @@ public class CaseFileUiController
 
     public void setNotificationProperties(Map<String, Object> notificationProperties) {
         this.notificationProperties = notificationProperties;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

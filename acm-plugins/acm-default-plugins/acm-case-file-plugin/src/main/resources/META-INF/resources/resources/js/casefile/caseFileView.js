@@ -8,8 +8,9 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.MicroData.create)       {CaseFile.View.MicroData.create();}
         if (CaseFile.View.Navigator.create)       {CaseFile.View.Navigator.create();}
         if (CaseFile.View.Content.create)         {CaseFile.View.Content.create();}
+        if (CaseFile.View.Ribbon.create)          {CaseFile.View.Ribbon.create();}
         if (CaseFile.View.Action.create)          {CaseFile.View.Action.create();}
-        if (CaseFile.View.Detail.create)          {CaseFile.View.Detail.create();}
+        if (CaseFile.View.DetailNote.create)      {CaseFile.View.DetailNote.create();}
         if (CaseFile.View.People.create)    	  {CaseFile.View.People.create();}
         if (CaseFile.View.Documents.create)       {CaseFile.View.Documents.create();}
         if (CaseFile.View.Participants.create)    {CaseFile.View.Participants.create();}
@@ -30,8 +31,9 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.MicroData.onInitialized)       {CaseFile.View.MicroData.onInitialized();}
         if (CaseFile.View.Navigator.onInitialized)       {CaseFile.View.Navigator.onInitialized();}
         if (CaseFile.View.Content.onInitialized)         {CaseFile.View.Content.onInitialized();}
+        if (CaseFile.View.Ribbon.onInitialized)          {CaseFile.View.Ribbon.onInitialized();}
         if (CaseFile.View.Action.onInitialized)          {CaseFile.View.Action.onInitialized();}
-        if (CaseFile.View.Detail.onInitialized)          {CaseFile.View.Detail.onInitialized();}
+        if (CaseFile.View.DetailNote.onInitialized)      {CaseFile.View.DetailNote.onInitialized();}
         if (CaseFile.View.People.onInitialized)          {CaseFile.View.People.onInitialized();}
         if (CaseFile.View.Documents.onInitialized)       {CaseFile.View.Documents.onInitialized();}
         if (CaseFile.View.Participants.onInitialized)    {CaseFile.View.Participants.onInitialized();}
@@ -459,14 +461,8 @@ CaseFile.View = CaseFile.View || {
         }
     }
 
-    ,Detail: {
+/*    ,Ribbon: {
         create: function() {
-            this.$divDetail       = $(".divDetail");
-            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
-            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
-            this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
-            this.$btnSaveDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnSaveDetail(e, this);});
-
             this.$labCaseNumber   = $("#caseNumber");
             this.$lnkCaseTitle    = $("#caseTitle");
             this.$lnkIncidentDate = $("#incident");
@@ -476,9 +472,6 @@ CaseFile.View = CaseFile.View || {
             this.$lnkSubjectType  = $("#type");
             this.$lnkDueDate      = $("#dueDate");
             this.$lnkStatus       = $("#status");
-
-            this.$chkRestrict     = $("#restrict");
-            this.$chkRestrict.on("click", function(e) {CaseFile.View.Detail.onClickRestrictCheckbox(e, this);});
 
 
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
@@ -497,8 +490,9 @@ CaseFile.View = CaseFile.View || {
                 }
             });
 
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
 
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
@@ -510,15 +504,18 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE       ,this.onModelSavedSubjectType);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_ERROR     ,this.onModelRetrievedObjectError);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
 
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            CaseFile.View.Ribbon.populateCaseFile(objData);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.View.Ribbon.populateCaseFile(objData);
+        }
 
         ,onModelFoundAssignees: function(assignees) {
             var choices = [];
@@ -529,19 +526,19 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkAssignee, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkAssignee, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedAssignee(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
-            	,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
+                ,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
             });
-            
+
             // This is happen after loading the object, for that reason we should check here as well.
             // We need both, assignees and groups for checking.
-            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // For this to be happened, assignees and groups should be loaded. If in this stage
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
-            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
+            CaseFile.View.DetailNote.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelRetrievedGroups: function(groups) {
             var choices = [];
@@ -552,19 +549,19 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkGroup, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkGroup, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
-            	,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
+                ,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
             });
-            
+
             // This is happen after loading the object, for that reason we should check here as well.
             // We need both, assignees and groups for checking.
-            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // For this to be happened, assignees and groups should be loaded. If in this stage
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
-            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
+            CaseFile.View.DetailNote.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelFoundSubjectTypes: function(subjectTypes) {
             var choices = [];
@@ -575,7 +572,7 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkSubjectType, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkSubjectType, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
@@ -591,77 +588,47 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkPriority, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkPriority, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedPriority(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
             });
         }
-
-
-        ,onModelRetrievedObject: function(objData) {
-            CaseFile.View.Detail.populateCaseFile(objData);
-        }
         ,onModelSavedCaseTitle: function(caseFileId, title) {
             if (title.hasError) {
-                CaseFile.View.Detail.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
             if (incidentDate.hasError) {
-                CaseFile.View.Detail.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (assginee.hasError) {
-                CaseFile.View.Detail.setTextLnkAssignee($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkAssignee($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedGroup: function(caseFileId, group) {
             if (group.hasError) {
-                CaseFile.View.Detail.setTextLnkGroup($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkGroup($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedSubjectType: function(caseFileId, subjectType) {
             if (subjectType.hasError) {
-                CaseFile.View.Detail.setTextLnkSubjectType($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkSubjectType($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedPriority: function(caseFileId, priority) {
             if (priority.hasError) {
-                CaseFile.View.Detail.setTextLnkPriority($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkPriority($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedDueDate: function(caseFileId, created) {
             if (created.hasError) {
-                CaseFile.View.Detail.setTextLnkDueDate($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkDueDate($.t("casefile:detail.error-value"));
             }
-        }
-        ,onModelSavedDetail: function(caseFileId, details) {
-            if (details.hasError) {
-                CaseFile.View.Detail.setHtmlDivDetail($.t("casefile:detail.error-value"));
-            }
-        }
-
-        ,onViewSelectedObject: function(objType, objId) {
-            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
-            CaseFile.View.Detail.populateCaseFile(objData);
-        }
-
-        ,DIRTY_EDITING_DETAIL: "Editing case detail"
-        ,onClickBtnEditDetail: function(event, ctrl) {
-            App.View.Dirty.declare(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
-            CaseFile.View.Detail.editDivDetail();
-        }
-        ,onClickBtnSaveDetail: function(event, ctrl) {
-            var htmlDetail = CaseFile.View.Detail.saveDivDetail();
-            CaseFile.Controller.viewChangedDetail(CaseFile.View.getActiveCaseFileId(), htmlDetail);
-            App.View.Dirty.clear(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
-        }
-        ,onClickRestrictCheckbox: function(event,ctrl){
-            var restriction = ($(ctrl).prop('checked')) ? true : false;
-            CaseFile.Controller.viewClickedRestrictCheckbox(CaseFile.View.getActiveCaseFileId(),restriction);
         }
 
         ,populateCaseFile: function(c) {
@@ -673,16 +640,12 @@ CaseFile.View = CaseFile.View || {
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
-                this.setPropertyRestricted(Acm.goodValue(c.restricted));
-                this.setHtmlDivDetail(Acm.goodValue(c.details));
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
+
                 var group = CaseFile.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
-                
-                CaseFile.View.Detail.populateRestriction(c);
             }
         }
 
@@ -713,6 +676,65 @@ CaseFile.View = CaseFile.View || {
         }
         ,setTextLnkStatus: function(txt) {
             Acm.Object.setText(this.$lnkStatus, txt);
+        }
+
+    }*/
+
+    ,DetailNote: {
+        create: function() {
+            this.$divDetail       = $(".divDetail");
+            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail.on("click", function(e) {CaseFile.View.DetailNote.onClickBtnEditDetail(e, this);});
+            this.$btnSaveDetail.on("click", function(e) {CaseFile.View.DetailNote.onClickBtnSaveDetail(e, this);});
+
+            this.$chkRestrict     = $("#restrict");
+            this.$chkRestrict.on("click", function(e) {CaseFile.View.DetailNote.onClickRestrictCheckbox(e, this);});
+
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            CaseFile.View.DetailNote.populateCaseFile(objData);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.View.DetailNote.populateCaseFile(objData);
+        }
+        ,onModelSavedDetail: function(caseFileId, details) {
+            if (details.hasError) {
+                CaseFile.View.DetailNote.setHtmlDivDetail($.t("casefile:detail.error-value"));
+            }
+        }
+
+
+        ,DIRTY_EDITING_DETAIL: "Editing case detail"
+        ,onClickBtnEditDetail: function(event, ctrl) {
+            App.View.Dirty.declare(CaseFile.View.DetailNote.DIRTY_EDITING_DETAIL);
+            CaseFile.View.DetailNote.editDivDetail();
+        }
+        ,onClickBtnSaveDetail: function(event, ctrl) {
+            var htmlDetail = CaseFile.View.DetailNote.saveDivDetail();
+            CaseFile.Controller.viewChangedDetail(CaseFile.View.getActiveCaseFileId(), htmlDetail);
+            App.View.Dirty.clear(CaseFile.View.DetailNote.DIRTY_EDITING_DETAIL);
+        }
+        ,onClickRestrictCheckbox: function(event,ctrl){
+            var restriction = ($(ctrl).prop('checked')) ? true : false;
+            CaseFile.Controller.viewClickedRestrictCheckbox(CaseFile.View.getActiveCaseFileId(),restriction);
+        }
+
+        ,populateCaseFile: function(c) {
+            if (CaseFile.Model.Detail.validateCaseFile(c)) {
+                this.setHtmlDivDetail(Acm.goodValue(c.details));
+                this.setPropertyRestricted(Acm.goodValue(c.restricted));
+                CaseFile.View.DetailNote.populateRestriction(c);
+            }
         }
         ,setPropertyRestricted: function(restriction){
             this.$chkRestrict.prop('checked', restriction);
@@ -748,7 +770,7 @@ CaseFile.View = CaseFile.View || {
 	        	var groups = CaseFile.Model.Lookup.getGroups(c.id);
 	            
 	            var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
-	            CaseFile.View.Detail.$chkRestrict.prop('disabled', restrict);
+	            CaseFile.View.DetailNote.$chkRestrict.prop('disabled', restrict);
         	}
         }
     }
