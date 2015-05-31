@@ -6,6 +6,7 @@
 Admin.View = Admin.View || {
     create: function() {
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
+        if (Admin.View.LDAPConfiguration.create)       {Admin.View.LDAPConfiguration.create();}
         if (Admin.View.LabelConfiguration.create)       {Admin.View.LabelConfiguration.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
@@ -17,7 +18,8 @@ Admin.View = Admin.View || {
     }
     ,onInitialized: function() {
         if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
-        if (Admin.View.LabelConfiguration.onInitialized)       		{Admin.View.LabelConfiguration.onInitialized();}
+        if (Admin.View.LDAPConfiguration.onInitialized)       	{Admin.View.LDAPConfiguration.onInitialized();}
+        if (Admin.View.LabelConfiguration.onInitialized)       	{Admin.View.LabelConfiguration.onInitialized();}
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
@@ -418,6 +420,170 @@ Admin.View = Admin.View || {
         }
     }
 
+    ,LDAPConfiguration: {
+        create: function() {
+            this.$divLDAPDirectories    = $("#divLDAPDirectories");
+            this.createJTableLDAPDirectories(this.$divLDAPDirectories);
+        }
+        , onInitialized: function(){
+
+        }
+        , createJTableLDAPDirectories: function($s) {
+            var context = $s;
+            $s.jtable({
+                title: 'LDAP Directories'
+                ,paging: false
+                ,sorting: true
+                ,pageSize: 10 //Set page size (default: 10)
+                ,messages: {
+                    addNewRecord: 'Add New Directory'
+                }
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        return $.Deferred(function ($dfd){
+                            var rc = {};
+                            Admin.Service.LDAPConfiguration.retrieveDirectories()
+                                .done(function(data) {
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(){
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: []
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        return $.Deferred(function ($dfd) {
+                            var record = Acm.urlToJson(postData);
+                            Admin.Service.LDAPConfiguration.createDirectory(record)
+                                .done(function(data){
+                                    var rc = {
+                                        Result: 'OK',
+                                        Record: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(response){
+                                    var rc = {
+                                        Result: 'ERROR',
+                                        Record: [],
+                                        Message: (response && response.errorMsg) ? response.errorMsg : 'Can\'t create LDAP Directory'
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        console.log($s);
+                        return $.Deferred(function ($dfd) {
+                            var record = Acm.urlToJson(postData);
+                            Admin.Service.LDAPConfiguration.updateDirectory(record['ldapConfig.id'], record)
+                                .done(function(data){
+                                    var rc = {
+                                        Result: 'OK',
+                                        Record: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(response){
+                                    var rc = {
+                                        Result: 'ERROR',
+                                        Record: [],
+                                        Message: (response && response.errorMsg) ? response.errorMsg : 'Can\'t update LDAP Directory'
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return $.Deferred(function($dfd) {
+                            var id = postData['ldapConfig.id'];
+                            Admin.Service.LDAPConfiguration.deleteDirectory(id)
+                                .done(function(data){
+                                    var rc = {
+                                        Result: 'OK'
+                                    };
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(response){
+                                    var rc = {
+                                        Result: 'ERROR',
+                                        Message: (response && response.errorMsg) ? response.errorMsg : 'Can\'t delete LDAP Directory'
+                                    };
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                }
+
+                ,fields: {
+                    'ldapConfig.id': {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: true
+                        ,edit: false
+                    }
+                    ,'ldapConfig.name': {
+                        title: 'Directory Name'
+                        ,visibility: 'fixed'
+                    }
+                    ,'ldapConfig.ldapUrl': {
+                        title: 'LDAP Url'
+                    }
+                    ,'ldapConfig.base': {
+                        title: 'Base'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.directoryName': {
+                        title: 'Directory Name'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.authUserDn': {
+                        title: 'Auth User Dn'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.authUserPassword': {
+                        title: 'Auth User Password'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.groupSearchBase': {
+                        title: 'Auth User Search Base'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.userIdAttributeName': {
+                        title: 'User Id Attribute Name'
+                        ,visibility: 'hidden'
+                    }
+                }
+                ,formCreated: function(e, data) {
+                    data.form.css('width','350px');
+                    data.form.find('input[type="text"]').css('width','350px');
+                    data.form.find('input[name="ldapConfig.id"]').addClass('validate[required, custom[onlyLetterNumber]]');
+                    data.form.find('input[name="ldapConfig.name"]').addClass('validate[required]');
+                    data.form.validationEngine();
+
+                }
+                ,formSubmitting: function(e, data) {
+                    return data.form.validationEngine('validate');
+                }
+                ,formClosed: function (event, data) {
+                    data.form.validationEngine('hide');
+                    data.form.validationEngine('detach');
+                }
+
+            });
+            $s.jtable('load');
+        }
+    }
+
     ,LabelConfiguration: {
         create: function () {
             this.$btnApplyDefaultLanguage = $("#labelConfigurationApplyDefaultLanguage");
@@ -581,7 +747,7 @@ Admin.View = Admin.View || {
 
                         // Prevent server request for filtering ans sorting
                         if (!Admin.Service.LabelConfiguration._data || postData && postData.loadData) {
-                            return $.Deferred(function($dfd){
+                            return $.Deferred(function ($dfd){
                                 var rc = {};
                                 Admin.Service.LabelConfiguration.retrieveResource(editLanguage, editNamespace)
                                     .done(function(data) {

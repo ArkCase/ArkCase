@@ -334,9 +334,92 @@ Admin.Service = {
                 ,url
             )
         }
+    }
 
+    , LDAPConfiguration: {
+        API_RETRIEVE_LDAP_DIRECTORIES: "/api/latest/plugin/admin/ldapconfiguration/directories"
+        ,API_CREATE_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories"
+        ,API_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories/{0}"
+
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+
+        }
+
+        ,retrieveDirectories: function(){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_RETRIEVE_LDAP_DIRECTORIES;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,createDirectory: function (data) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_CREATE_LDAP_DIRECTORY;
+
+            Acm.Service.asyncPost(
+                function(response){
+                    if (response.hasError) {
+                        $dfd.reject(response)
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data, null, 4)
+            )
+            return $dfd.promise();
+        }
+
+        ,deleteDirectory: function (dirId) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_LDAP_DIRECTORY.format(dirId);
+            Acm.Service.asyncDelete(
+                function(response){
+                    if (response.hasError) {
+                        $dfd.reject(response)
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+            return $dfd.promise();
+        }
+
+        ,updateDirectory: function (dirId, data) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_LDAP_DIRECTORY.format(dirId);
+            Acm.Service.asyncPut(
+                function(response){
+                    if (response.hasError) {
+                        $dfd.reject(response)
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+            return $dfd.promise();
+        }
 
     }
+
+
     ,LabelConfiguration: {
         API_SETTINGS: "/api/latest/plugin/admin/labelconfiguration/settings"
         ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"

@@ -28,6 +28,11 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
+    <!-- Form validation -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_validation}/css/${css_jquery_validation}'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_validation}/js/${js_jquery_validation}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_validation}/js/languages/${js_jquery_validation_lang}'/>"></script>
+
     <!-- Fancy Tree -->
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
@@ -279,6 +284,17 @@
                                             </section>
                                         </div>
                                     </div>
+
+                                    <div class="row" id="tabLDAPConfiguration" style="display:none;">
+                                        <div class="col-md-12">
+                                            <h3>LDAP Configuration</h3>
+
+                                            <section class="panel panel-default">
+                                                <div id="divLDAPDirectories" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
                                         <%--JTable - Label Configuration --%>
                                     <div class="row" id="tabLabelConfiguration" style="display:none;">
                                         <div class="col-md-12">
