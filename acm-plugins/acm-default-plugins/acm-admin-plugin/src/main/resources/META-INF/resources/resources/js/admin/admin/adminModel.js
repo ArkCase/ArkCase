@@ -332,6 +332,7 @@ Admin.Model = Admin.Model || {
 
             ,NODE_TYPE_PART_BRANCH_MAIN_PAGE                    :          "mp"
             ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL      :          "fac"
+            ,NODE_TYPE_PART_LEAF_LDAP_CONFIGURATION             :          "ldap"
             ,NODE_TYPE_PART_LEAF_ORGANIZATION                   :          "og"
             ,NODE_TYPE_PART_BRANCH_DASHBOARD                    :          "dsh"
             ,NODE_TYPE_PART_LEAF_DASHBOARD                      :          "dc"
@@ -360,6 +361,7 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "cm"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "og"       ,icon: "",tabIds: ["tOrganization"]}
                 ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctionalAccessControl"]}
+                ,{nodeType: "ldap"     ,icon: "",tabIds: ["tabLDAPConfiguration"]}
                 ,{nodeType: "wfc"      ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
                 ,{nodeType: "wf"       ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
             ]
@@ -396,6 +398,8 @@ Admin.Model = Admin.Model || {
                 }
                 if (key == this.NODE_TYPE_PART_LEAF_ORGANIZATION) {
                     return this.NODE_TYPE_PART_LEAF_ORGANIZATION;
+                } else if (key == this.NODE_TYPE_PART_LEAF_LDAP_CONFIGURATION) {
+                    return this.NODE_TYPE_PART_LEAF_LDAP_CONFIGURATION;
                 } else if (key == this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL) {
                     return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
                 } else if (key == this.NODE_TYPE_PART_LEAF_DASHBOARD) {
