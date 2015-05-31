@@ -17,7 +17,6 @@ AcmDocument.View = AcmDocument.View || {
         if (AcmDocument.View.AssociatedTags.create)                   {AcmDocument.View.AssociatedTags.create();}
     }
     ,onInitialized: function() {
-        Acm.deferredTimer(null, 1000).done(function() {
             if (AcmDocument.View.MicroData.onInitialized)               {AcmDocument.View.MicroData.onInitialized();}
             if (AcmDocument.View.Content.onInitialized)                 {AcmDocument.View.Content.onInitialized();}
             if (AcmDocument.View.Action.onInitialized)                  {AcmDocument.View.Action.onInitialized();}
@@ -29,7 +28,8 @@ AcmDocument.View = AcmDocument.View || {
             if (AcmDocument.View.VersionHistory.onInitialized)          {AcmDocument.View.VersionHistory.onInitialized();}
             if (AcmDocument.View.AssociatedTags.onInitialized)          {AcmDocument.View.AssociatedTags.onInitialized();}
 
-            //document.location.reload(true);
+        Acm.deferredTimer(null, 1000).done(function() {
+            document.location.reload(true);
         });
 
     }
