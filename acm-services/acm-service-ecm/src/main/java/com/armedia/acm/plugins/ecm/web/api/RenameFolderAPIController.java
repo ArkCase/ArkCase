@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -38,26 +40,38 @@ public class RenameFolderAPIController {
             @PathVariable("objectId") Long objectId,
             @PathVariable("newName") String newName,
             Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException {
+            HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
 
         String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
 
-        if( log.isInfoEnabled() ) {
+        if (log.isInfoEnabled()) {
             log.info("Renaming folder, folderId: " + objectId + " with name " + newName);
         }
         AcmFolder source = getFolderService().findById(objectId);
         try {
             AcmFolder renamedFile = getFolderService().renameFolder(objectId, newName);
-            if( log.isInfoEnabled() ) {
-                log.info("Folder with id: "+objectId+" successfully renamed to: " +newName);
+            if (log.isInfoEnabled()) {
+                log.info("Folder with id: " + objectId + " successfully renamed to: " + newName);
             }
-            getFolderEventPublisher().publishFolderRenamedEvent(renamedFile,authentication,ipAddress,true);
+            getFolderEventPublisher().publishFolderRenamedEvent(renamedFile, authentication, ipAddress, true);
             return renamedFile;
-        } catch ( AcmUserActionFailedException e ) {
-            if( log.isErrorEnabled() ){
+        } catch (AcmUserActionFailedException e) {
+            if (log.isErrorEnabled()) {
                 log.error("Exception occurred while trying to rename folder with id: " + objectId);
             }
-            getFolderEventPublisher().publishFolderRenamedEvent(source,authentication,ipAddress,false);
+            getFolderEventPublisher().publishFolderRenamedEvent(source, authentication, ipAddress, false);
+            throw e;
+        } catch (AcmFolderException e) {
+            if (log.isErrorEnabled()) {
+                log.error("Exception occurred while trying to rename folder with id: " + objectId);
+            }
+            getFolderEventPublisher().publishFolderRenamedEvent(source, authentication, ipAddress, false);
+            throw e;
+        } catch (AcmObjectNotFoundException e) {
+            if (log.isErrorEnabled()) {
+                log.error("Exception occurred while trying to rename folder with id: " + objectId);
+            }
+            getFolderEventPublisher().publishFolderRenamedEvent(source, authentication, ipAddress, false);
             throw e;
         }
     }
