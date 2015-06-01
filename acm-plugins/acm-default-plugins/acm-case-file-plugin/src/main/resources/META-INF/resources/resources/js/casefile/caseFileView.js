@@ -280,21 +280,20 @@ CaseFile.View = CaseFile.View || {
         create: function() {
             this.$olMilestoneTrack          = $(".track-progress");
             this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
-            this.$dlgConsolidateCase       = $("#consolidateCase");
-            this.$edtConsolidateCase       = $("#edtConsolidateCase");
             this.$btnEditCaseFile    	   = $("#btnEditCaseFile");
             this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus");
             this.$btnSplitCase             = $("#btnSplitCase");
-            this.$btnConsolidateCase       = $("#btnConsolidateCase");
+            this.$btnMergeCase       = $("#btnMergeCase");
             this.$btnReinvestigateCaseFile = $("#btnReinvestigate");
             this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
             this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
-            this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnMergeCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnMergeCase(e, this);});
             this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
             this.$btnSplitCase            .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES           , this.onModelMergedCaseFiles);
         }
         ,onInitialized: function() {
         }
@@ -364,16 +363,33 @@ CaseFile.View = CaseFile.View || {
         }
         //---------------------------------------
 
-        ,onClickBtnConsolidateCase: function() {
-//borrow it to test object picker dialog
-//            this.onPickObjectDemo();
-//            return;
-
-            CaseFile.View.Action.setValueEdtConsolidateCase("");
-            CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
-                var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
-                alert("Consolidate case:" + caseNumber);
-            });
+        ,onClickBtnMergeCase: function() {
+            SearchBase.Dialog.create({name: $.t("casefile:case-picker.name")
+                ,title: $.t("casefile:case-picker.title")
+                ,prompt: $.t("casefile:case-picker.prompt")
+                ,btnGoText: $.t("casefile:case-picker.btn-search")
+                ,btnOkText: $.t("casefile:case-picker.btn-ok")
+                ,btnCancelText: $.t("casefile:case-picker.btn-cancel")
+                ,filters: [{key: "Object Type", values: ["CASE_FILE"]}]
+                ,onClickBtnPrimary : function(event, ctrl) {
+                    var selectedRows = SearchBase.Dialog.getSelectedRows();
+                    if(selectedRows.length > 1){
+                        Acm.Dialog.info("casefile:case-picker.selection-error")
+                    }else{
+                        selectedRows.each(function () {
+                            var record = $(this).data('record');
+                            var targetCaseFileId = record.id;
+                            var sourceCaseFileId = CaseFile.View.getActiveCaseFileId();
+                            if(Acm.isEmpty(sourceCaseFileId) && Acm.isEmpty(targetCaseFileId)){
+                                Acm.Dialog.info("Please check your selection and try again.");
+                            }
+                            else {
+                                CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
+                            }
+                        });
+                    }
+                }
+            }).show();
         }
         ,onClickBtnReinvestigateCaseFile: function() {
         	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
@@ -391,6 +407,17 @@ CaseFile.View = CaseFile.View || {
             			window.location.href = App.getContextPath() + '/plugin/casefile';
                     }
                 );
+            }
+        }
+        ,onModelMergedCaseFiles: function(targetCaseFile){
+            if(targetCaseFile.hasError) {
+                App.View.MessageBoard.show("Merge failed" , targetCaseFile.errorMsg);
+            }
+            else{
+                if(CaseFile.Model.Detail.validate(targetCaseFile)){
+                    var url = "/plugin/casefile/" + targetCaseFile.id;
+                    App.View.gotoPage(url);
+                }
             }
         }
 
@@ -438,15 +465,6 @@ CaseFile.View = CaseFile.View || {
         }
         ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
             Acm.Dialog.modal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
-        }
-        ,showDlgConsolidateCase: function(onClickBtnPrimary) {
-            Acm.Dialog.modal(this.$dlgConsolidateCase, onClickBtnPrimary);
-        }
-        ,getValueEdtConsolidateCase: function() {
-            return Acm.Object.getValue(this.$edtConsolidateCase);
-        }
-        ,setValueEdtConsolidateCase: function(val) {
-            Acm.Object.setValue(this.$edtConsolidateCase, val);
         }
         ,showBtnChangeCaseStatus: function(show) {
             Acm.Object.show(this.$btnChangeCaseStatus, show);
