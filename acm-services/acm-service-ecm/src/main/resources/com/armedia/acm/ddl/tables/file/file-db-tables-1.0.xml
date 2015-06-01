@@ -762,7 +762,7 @@
         <addNotNullConstraint tableName="acm_container" columnName="cm_object_title"/>
     </changeSet>
 
-    <changeSet id="files-37-add-calendar-folder-id-case-file-table" author="nebojsha.davidovikj">
+    <changeSet id="files-37-add-calendar-folder-id-case-file-table-new" author="nebojsha.davidovikj" failOnError="false">
         <addColumn tableName="acm_container">
             <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
             <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
