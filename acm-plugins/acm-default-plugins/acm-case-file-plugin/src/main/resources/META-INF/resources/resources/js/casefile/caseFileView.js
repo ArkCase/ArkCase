@@ -384,7 +384,7 @@ CaseFile.View = CaseFile.View || {
                                 Acm.Dialog.info("Please check your selection and try again.");
                             }
                             else {
-                                CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
+                                //CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
                             }
                         });
                     }
