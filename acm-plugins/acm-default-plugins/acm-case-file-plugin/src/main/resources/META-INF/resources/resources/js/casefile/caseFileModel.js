@@ -219,9 +219,6 @@ CaseFile.Model = CaseFile.Model || {
             if(Acm.isNotEmpty(sourceCaseFileId) && Acm.isNotEmpty(targetCaseFileId)){
                 CaseFile.Service.Action.mergeCaseFiles(sourceCaseFileId, targetCaseFileId);
             }
-            else{
-                App.View.MessageBoard.show("Please check your selection and try again.");
-            }
         }
     }
 
