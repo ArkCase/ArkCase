@@ -688,7 +688,7 @@
                     WHERE   c.cm_object_id = ac.cm_complaint_id
                     AND     c.cm_object_type = 'COMPLAINT'
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
                     SELECT  1
                     FROM    acm_complaint ac
@@ -765,6 +765,7 @@
     <changeSet id="files-37-add-calendar-folder-id-case-file-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_container">
             <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
+            <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
     
@@ -789,6 +790,15 @@
             SET     c.cm_attachment_folder_id = c.cm_folder_id
             WHERE   c.cm_attachment_folder_id IS NULL
         </sql>
+    </changeSet>
+
+    <changeSet id="files-38-add-function-based-index" author="marst">
+        <preConditions onFail="MARK_RAN">
+            <dbms type="oracle"/>
+        </preConditions>
+        <createIndex tableName="acm_folder" indexName="idx_folder_name_parent_id" unique="true">
+            <column name="NVL(cm_parent_folder_id, cm_folder_id),upper(cm_folder_name)"></column>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
