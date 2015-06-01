@@ -9,14 +9,5 @@
         ,"defaultValue": "Brief"
         ,"description": ""
     }
-    ,"navigation": {
-        "label": {
-            "case-files": {
-                "value": "Briefs"
-                ,"defaultValue": "Briefs"
-                ,"description": ""
-            }
-        }
-    }
 
 }
