@@ -19,6 +19,7 @@ IssueCollector.Service = {
             ,url: this.API_GET_JIRA_ISSUE_COLLECTOR
             ,cache: true
             ,dataType: "script"
+            ,nonAcmUrl: true
         });
     }
 };
