@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.AcmCaseFileNotFound;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -40,6 +41,8 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         CaseFile source = caseFileDao.find(mergeCaseOptions.getSourceCaseFileId());
         if (source == null)
             throw new AcmCaseFileNotFound("Source Case File with id = " + mergeCaseOptions.getSourceCaseFileId() + " not found");
+        if (source.getContainer().getFolder().getParentFolderId() != null)
+            throw new MergeCaseFilesException("Source is already merged");
         CaseFile target = caseFileDao.find(mergeCaseOptions.getTargetCaseFileId());
         if (target == null)
             throw new AcmCaseFileNotFound("Target Case File with id = " + mergeCaseOptions.getTargetCaseFileId() + " not found");
@@ -67,7 +70,7 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         childObjectTarget.setTargetType(target.getObjectType());
         target.addChildObject(childObjectTarget);
 
-
+        source.setStatus("CLOSED");
         saveCaseService.saveCase(source, auth, ipAddress);
         saveCaseService.saveCase(target, auth, ipAddress);
 

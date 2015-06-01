@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -51,13 +52,14 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     }
 
     public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo) {
-
+        List<String> fileTypesFilter = Arrays.asList("attachment");
         String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
-                "WHERE e.container = :containerFrom";
+                "WHERE e.container = :containerFrom AND e.fileType IN :fileTypes";
         Query query = getEm().createQuery(jpql);
         query.setParameter("containerFrom", containerFrom);
         query.setParameter("containerTo", containerTo);
         query.setParameter("modifiedDate", new Date());
+        query.setParameter("fileTypes", fileTypesFilter);
 
         return query.executeUpdate();
     }
