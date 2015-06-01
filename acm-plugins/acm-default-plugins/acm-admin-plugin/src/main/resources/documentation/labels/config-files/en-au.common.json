@@ -41,6 +41,8 @@
     "date": {
         "short": "MM/DD/YYYY",
         "full": "MM/DD/YYYY h:mm:ss a",
-		"frevvo": "YYYY-MM-DD"
+		"frevvo": "YYYY-MM-DD",
+		"pentaho": "DD/MM/YYYY",
+		"datepicker": "dd/mm/yy"
     }
 }

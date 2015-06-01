@@ -140,5 +140,20 @@
         "value": "MM/DD/YYYY h:mm:ss a",
         "defaultValue": "MM/DD/YYYY h:mm:ss a",
         "description": ""
+    },
+	"frevvo": {
+        "value": "YYYY-MM-DD",
+        "defaultValue": "YYYY-MM-DD",
+        "description": ""
+    },
+	"pentaho": {
+        "value": "DD/MM/YYYY",
+        "defaultValue": "DD/MM/YYYY",
+        "description": ""
+    },
+	"datepicker": {
+        "value": "dd/mm/yy",
+        "defaultValue": "dd/mm/yy",
+        "description": ""
     }
 }}
