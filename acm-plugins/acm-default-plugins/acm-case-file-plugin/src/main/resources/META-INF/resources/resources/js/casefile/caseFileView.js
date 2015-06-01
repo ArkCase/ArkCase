@@ -380,7 +380,12 @@ CaseFile.View = CaseFile.View || {
                             var record = $(this).data('record');
                             var targetCaseFileId = record.id;
                             var sourceCaseFileId = CaseFile.View.getActiveCaseFileId();
-                            //CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId,targetCaseFileId);
+                            if(Acm.isEmpty(sourceCaseFileId) && Acm.isEmpty(targetCaseFileId)){
+                                Acm.Dialog.info("Please check your selection and try again.");
+                            }
+                            else {
+                                CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
+                            }
                         });
                     }
                 }
