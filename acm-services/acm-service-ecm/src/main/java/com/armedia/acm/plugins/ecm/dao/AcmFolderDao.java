@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -23,7 +24,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
 
     public AcmFolder findByCmisFolderId(String cmisFolderId)
     {
-        String jpql = "SELECT e FROM AcmFolder e WHERE e.cmisFolderId = :cmisFolderId";
+        String jpql = "SELECT e FROM AcmFolder e WHERE e.cmisFolderId =:cmisFolderId";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
 
@@ -32,6 +33,20 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         AcmFolder folder = query.getSingleResult();
 
         return folder;
+    }
+
+    public AcmFolder findFolderByNameInTheGivenParentFolder(String folderName, Long parentFolderId) throws  NoResultException {
+
+        String jpql = "SELECT e FROM AcmFolder e WHERE e.name=:folderName AND e.parentFolderId=:parentFolderId";
+
+        TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
+        query.setParameter("folderName",folderName);
+        query.setParameter("parentFolderId",parentFolderId);
+
+        AcmFolder folder = query.getSingleResult();
+
+        return folder;
+
     }
 
     @Transactional
