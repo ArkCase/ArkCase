@@ -577,7 +577,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
     
     @Override
-	public void addFolderStructure(AcmContainer container, AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException {
+	public void addFolderStructure(AcmContainer container, AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
 		if (folderStructure != null)
 		{
 			for (int i = 0; i < folderStructure.length(); i++)
