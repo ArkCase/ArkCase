@@ -40,15 +40,22 @@ public class ProjectFactory extends FrevvoFormFactory {
 	{
 		LOG.debug("Converting Case file to Frevvo form ...");
 		
-		if (caseFile != null && form != null)
+		try
 		{
-			form.setId(caseFile.getId());
-			form.setProjectTitle(caseFile.getTitle());
-			form.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
-			form.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
-			
-			String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-			form.setCmisFolderId(cmisFolderId);
+			if (caseFile != null && form != null)
+			{
+				form.setId(caseFile.getId());
+				form.setProjectTitle(caseFile.getTitle());
+				form.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
+				form.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
+				
+				String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+				form.setCmisFolderId(cmisFolderId);
+			}
+		}
+		catch (Exception e) 
+		{
+			LOG.error("Cannot convert Object to Frevvo form.", e);
 		}
 		
 		return form;

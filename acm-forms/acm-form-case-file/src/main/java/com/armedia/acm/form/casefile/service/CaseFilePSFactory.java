@@ -153,29 +153,37 @@ public class CaseFilePSFactory extends FrevvoFormFactory
 	@SuppressWarnings("unchecked")
 	public CaseFilePSForm asFrevvoCaseFile(CaseFile caseFile, CaseFilePSForm form)
 	{		
-		CaseFilePSForm retval = new CaseFilePSForm();
-		
-		if (caseFile != null)
+		CaseFilePSForm retval = null;
+		try
 		{
-			CaseFilePSForm oldForm = populateFrevvoOldCaseFile(caseFile, form);
+			retval = new CaseFilePSForm();
 			
-			retval.setId(caseFile.getId());
-			retval.setNumber(caseFile.getCaseNumber());
-			retval.setTitle(caseFile.getTitle());
-			retval.setType(caseFile.getCaseType());
-            String cmisFolderId = getFormService().findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-			retval.setCmisFolderId(cmisFolderId);
-			
-			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
+			if (caseFile != null)
 			{
-				Subject subject = populateFrevvoSubject(caseFile.getOriginator().getPerson(), oldForm);
-				retval.setSubject(subject);
+				CaseFilePSForm oldForm = populateFrevvoOldCaseFile(caseFile, form);
 				
-				Map<String, List<?>> historyArray = populateFrevvoHistory(caseFile.getOriginator().getPerson(), oldForm);
+				retval.setId(caseFile.getId());
+				retval.setNumber(caseFile.getCaseNumber());
+				retval.setTitle(caseFile.getTitle());
+				retval.setType(caseFile.getCaseType());
+	            String cmisFolderId = getFormService().findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+				retval.setCmisFolderId(cmisFolderId);
 				
-				retval.setAddressHistory((List<AddressHistory>) historyArray.get("addressHistory"));
-				retval.setEmploymentHistory((List<EmploymentHistory>) historyArray.get("employmentHistory"));
+				if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
+				{
+					Subject subject = populateFrevvoSubject(caseFile.getOriginator().getPerson(), oldForm);
+					retval.setSubject(subject);
+					
+					Map<String, List<?>> historyArray = populateFrevvoHistory(caseFile.getOriginator().getPerson(), oldForm);
+					
+					retval.setAddressHistory((List<AddressHistory>) historyArray.get("addressHistory"));
+					retval.setEmploymentHistory((List<EmploymentHistory>) historyArray.get("employmentHistory"));
+				}
 			}
+		}
+		catch (Exception e) 
+		{
+			LOG.error("Cannot convert Object to Frevvo form.", e);
 		}
 		
 		return retval;

@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.casefile.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -22,7 +23,7 @@ import java.util.*;
 @Entity
 @Table(name="acm_case_file")
 @XmlRootElement(name = "caseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -216,11 +217,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         childObject.setParentId(getId());
     }
 
+    @Override
     public AcmContainer getContainer()
     {
         return container;
     }
 
+    @Override
     public void setContainer(AcmContainer container)
     {
         this.container = container;
