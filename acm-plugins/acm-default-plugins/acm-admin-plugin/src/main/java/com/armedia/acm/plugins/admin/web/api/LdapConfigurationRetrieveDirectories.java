@@ -29,6 +29,9 @@ import java.util.regex.Pattern;
 public class LdapConfigurationRetrieveDirectories {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private LdapConfigurationService ldapConfigurationService;
+
+
     @RequestMapping(value = "/ldapconfiguration/directories", method = RequestMethod.GET, produces = {
           MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
@@ -38,7 +41,7 @@ public class LdapConfigurationRetrieveDirectories {
 
         try {
 
-            List<File> propertiesFiles = LdapConfigurationService.getPropertiesFiles();
+            List<File> propertiesFiles = ldapConfigurationService.getPropertiesFiles();
 
             JSONArray dirsJsonArr = new JSONArray();
             for (File propertyFile: propertiesFiles) {
@@ -63,4 +66,7 @@ public class LdapConfigurationRetrieveDirectories {
         }
     }
 
+    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService) {
+        this.ldapConfigurationService = ldapConfigurationService;
+    }
 }

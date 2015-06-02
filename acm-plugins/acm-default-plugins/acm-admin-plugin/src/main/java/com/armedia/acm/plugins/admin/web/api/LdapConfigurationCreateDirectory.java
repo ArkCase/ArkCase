@@ -30,6 +30,8 @@ import freemarker.template.Template;
 public class LdapConfigurationCreateDirectory {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private LdapConfigurationService ldapConfigurationService;
+
     @RequestMapping(value = "/ldapconfiguration/directories", method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
@@ -47,10 +49,10 @@ public class LdapConfigurationCreateDirectory {
                 throw new AcmLdapConfigurationException("ID is undefined");
             }
 
-            HashMap<String, Object> props = LdapConfigurationService.getProperties(newLdapObject);
+            HashMap<String, Object> props = ldapConfigurationService.getProperties(newLdapObject);
 
             // Create LDAP Direcotry
-            LdapConfigurationService.createLdapDirectory(id, props);
+            ldapConfigurationService.createLdapDirectory(id, props);
 
             return newLdapObject.toString();
         } catch (Exception e) {
@@ -59,5 +61,9 @@ public class LdapConfigurationCreateDirectory {
             }
             throw new AcmLdapConfigurationException("Create LDAP directory error", e);
         }
+    }
+
+    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService) {
+        this.ldapConfigurationService = ldapConfigurationService;
     }
 }

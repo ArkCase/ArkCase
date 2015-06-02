@@ -26,6 +26,8 @@ import java.util.Map;
 public class LdapConfigurationUpdateDirectory {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private LdapConfigurationService ldapConfigurationService;
+
     @RequestMapping(value = "/ldapconfiguration/directories/{directoryId}", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
@@ -43,8 +45,8 @@ public class LdapConfigurationUpdateDirectory {
                 throw new AcmLdapConfigurationException("Directory Id is undefined");
             }
 
-            Map<String, Object> props = LdapConfigurationService.getProperties(ldapObject);
-            LdapConfigurationService.updateLdapDirectory(directoryId, props);
+            Map<String, Object> props = ldapConfigurationService.getProperties(ldapObject);
+            ldapConfigurationService.updateLdapDirectory(directoryId, props);
 
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
@@ -56,4 +58,7 @@ public class LdapConfigurationUpdateDirectory {
         return "{}";
     }
 
+    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService) {
+        this.ldapConfigurationService = ldapConfigurationService;
+    }
 }
