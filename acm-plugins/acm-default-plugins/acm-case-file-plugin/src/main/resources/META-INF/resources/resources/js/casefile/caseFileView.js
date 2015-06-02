@@ -1120,7 +1120,7 @@ CaseFile.View = CaseFile.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: $.t("casefile:people.table.communication.table.field.added-by")
+                            title: $.t("casefile:people.table.contact-methods.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
