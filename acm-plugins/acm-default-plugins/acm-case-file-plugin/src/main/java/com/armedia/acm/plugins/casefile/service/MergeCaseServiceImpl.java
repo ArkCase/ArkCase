@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.AcmCaseFileNotFound;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -17,11 +16,16 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MergeCaseServiceImpl implements MergeCaseService {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -33,6 +37,7 @@ public class MergeCaseServiceImpl implements MergeCaseService {
     private AcmFolderService acmFolderService;
     private AcmContainerDao acmContainerDao;
     private EcmFileDao ecmFileDao;
+    private List<String> excludeDocumentTypesList;
 
     @Override
     @Transactional
@@ -41,7 +46,7 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         CaseFile source = caseFileDao.find(mergeCaseOptions.getSourceCaseFileId());
         if (source == null)
             throw new AcmCaseFileNotFound("Source Case File with id = " + mergeCaseOptions.getSourceCaseFileId() + " not found");
-        if (source.getContainer().getFolder().getParentFolderId() != null)
+        if (hasBeenMerged(source))
             throw new MergeCaseFilesException("Source is already merged");
         CaseFile target = caseFileDao.find(mergeCaseOptions.getTargetCaseFileId());
         if (target == null)
@@ -77,6 +82,11 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         return target;
     }
 
+    private boolean hasBeenMerged(CaseFile source) {
+        //if folder has parent, that means that has been merged
+        return source.getContainer().getFolder().getParentFolderId() != null;
+    }
+
     private void mergeFoldersAndDocuments(CaseFile source, CaseFile target) throws MergeCaseFilesException {
         try {
             //remove source ROOT folder from acm_container from db, when source will be saved new ROOT folder will be created
@@ -87,8 +97,8 @@ public class MergeCaseServiceImpl implements MergeCaseService {
             acmFolderService.moveRootFolder(sourceRootFolder, target.getContainer().getFolder());
 
             //change source case file documents with target's container id
-            long documentsUpdated = ecmFileDao.changeContainer(source.getContainer(), target.getContainer());
-            log.info("updated {} documents with new container id=", documentsUpdated, target.getContainer().getId());
+            long documentsUpdated = ecmFileDao.changeContainer(source.getContainer(), target.getContainer(), excludeDocumentTypesList);
+            log.info("moved {} documents  from container id={} to container id={}", documentsUpdated,source.getContainer().getId(), target.getContainer().getId());
 
         } catch (AcmFolderException | AcmUserActionFailedException | AcmObjectNotFoundException e) {
             throw new MergeCaseFilesException("Error merging case files. Exception in moving documents and folders.", e);
@@ -122,5 +132,11 @@ public class MergeCaseServiceImpl implements MergeCaseService {
 
     public void setEcmFileDao(EcmFileDao ecmFileDao) {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public void setExcludeDocumentTypes(String excludeDocumentTypes) {
+        this.excludeDocumentTypesList = !StringUtils.isEmpty(excludeDocumentTypes) ?
+                Arrays.asList(excludeDocumentTypes.trim().replaceAll(",[\\s]*", ",").split(",")) :
+                new ArrayList<>();
     }
 }
