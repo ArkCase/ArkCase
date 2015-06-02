@@ -16,6 +16,9 @@ Report.Object = {
     CHOOSE_REPORT : "Choose Report",
 
     create : function() {
+    	this.$datePickers = $(".datepicker-input");
+        this.$datePickers.datepicker('option', 'dateFormat', $.t("common:date.datepicker"));
+    	
         var items = $(document).items();
         this.$selReport = $("#selectReport");
         
@@ -28,10 +31,10 @@ Report.Object = {
         
         this.$datepickerSection = $("#datepickerSection");
         this.$edtStartDate = $("#startDate");
-        this.setValueStartDate(Acm.getCurrentDay());
+        this.setValueStartDate(Acm.getPentahoDateFromDateTime(new Date()));
 
         this.$edtEndDate = $("#endDate");
-        this.setValueEndDate(Acm.getCurrentDay());
+        this.setValueEndDate(Acm.getPentahoDateFromDateTime(new Date()));
         //$('#dateSelector').datepicker('disable');
 
         this.$reportSubmitSection = $("#reportSubmitSection");

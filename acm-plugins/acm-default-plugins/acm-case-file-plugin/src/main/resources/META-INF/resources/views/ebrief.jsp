@@ -231,12 +231,11 @@
                                                 <button class="btn btn-default btn-sm" id="btnChangeCaseStatus" data-i18n="[data-title]casefile:header.buttons.change-case-status"data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.change-case-status">Change Case Status</span>
                                                 </button>
-                                                    <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
                                                 <button class="btn btn-default btn-sm" id="btnReinvestigate" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
                                                     <span data-i18n="casefile:header.buttons.reinvestigate">Reinvestigate</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnConsolidateCase" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
-                                                    <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
+                                                <button class="btn btn-default btn-sm" id="btnMergeCase" data-i18n="[data-title]casefile:header.buttons.merge-case" data-title="Merge Case"><i class="fa fa-random"></i>
+                                                    <span data-i18n="casefile:header.buttons.merge">Merge</span>
                                                 </button>
                                                 <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
                                                 </button>
@@ -255,30 +254,6 @@
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:change-case-status-dialog.btn-cancel">Cancel</button>
                                                                 <button type="button" class="btn btn-primary" data-i18n="casefile:change-case-status-dialog.btn-ok">Change Case Status</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal fade" id="consolidateCase" tabindex="-1" role="dialog" aria-labelledby="labConsolidateCase" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:consolidate-case-dialog.btn-close">Close</span></button>
-                                                                <h4 class="modal-title" id="labConsolidateCase" data-i18n="casefile:consolidate-case-dialog.title">Consolidate Case</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <section class="row">
-                                                                    <div class="col-sm-12">
-                                                                        <label for="edtConsolidateCase" class="label" data-i18n="casefile:consolidate-case-dialog.enter-case-like-consolidate">
-                                                                            Enter the case you would like to consolidate with:
-                                                                        </label>
-                                                                        <input id="edtConsolidateCase" type="text" class="form-control" placeholder="Case #" >
-                                                                    </div>
-                                                                </section>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:consolidate-case-dialog.btn-cancel">Cancel</button>
-                                                                <button type="button" class="btn btn-primary" data-i18n="casefile:consolidate-case-dialog.btn-ok">Consolidate Case</button>
                                                             </div>
                                                         </div>
                                                     </div>

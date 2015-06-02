@@ -72,13 +72,13 @@
                         <div class="clearfix"></div>
                         <label class="label col-sm-3" data-i18n="report:navigation.label.date-from">From</label>
                         <div class="col-sm-9">
-                            <input class="datepicker-input form-control" type="text" id = "startDate" value= "" data-date-format="dd-mm-yyyy" >
+                            <input class="datepicker-input form-control" type="text" id = "startDate" value= "" data-i18n="[data-date-format]common:date.datepicker">
                         </div>
 
                         <label class="label col-sm-3" data-i18n="report:navigation.label.date-to">To</label>
                         <div class="col-sm-9">
 
-                            <input class="datepicker-input form-control" type="text" id = "endDate" value= "" data-date-format="dd-mm-yyyy" >
+                            <input class="datepicker-input form-control" type="text" id = "endDate" value= "" data-i18n="[data-date-format]common:date.datepicker" >
                         </div>
                     </section>
 
