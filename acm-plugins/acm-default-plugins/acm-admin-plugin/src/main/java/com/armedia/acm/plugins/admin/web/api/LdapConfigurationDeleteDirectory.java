@@ -22,20 +22,12 @@ import java.util.regex.Pattern;
 public class LdapConfigurationDeleteDirectory {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private String ldapConfigurationLocation;
-    private String ldapLoginFile;
-    private String ldapSignatureFile;
-    private String ldapSyncFile;
-    private String ldapPropertiesFile;
-
-    private String ldapPropertiesFileRegex;
-
     @RequestMapping(value = "/ldapconfiguration/directories/{directoryId}", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
 
     @ResponseBody
-    public void createDirectory(
+    public String deleteDirectory(
             @RequestBody String resource,
             @PathVariable("directoryId") String directoryId,
             HttpServletResponse response) throws IOException, AcmLdapConfigurationException {
@@ -44,77 +36,14 @@ public class LdapConfigurationDeleteDirectory {
             if (directoryId == null) {
                 throw new AcmLdapConfigurationException("Directory Id is undefined");
             }
-
-            String[] extensions = new String[] {"properties"};
-            List<File> propertiesFiles = (List<File>) FileUtils.listFiles(new File(ldapConfigurationLocation), extensions, false);
-
-            Pattern pattern = Pattern.compile(ldapPropertiesFileRegex);
-            int matchedFiles = 0;
-            for (File fileIter : propertiesFiles) {
-                String fileName = fileIter.getName();
-                Matcher matcher =  pattern.matcher(fileName);
-                if (matcher.find()) {
-                    matchedFiles++;
-                }
-            }
-
-            if (matchedFiles == 0) {
-                throw new AcmLdapConfigurationException("There are no LDAP properties files");
-            }
-
-            if (matchedFiles == 1) {
-                throw new AcmLdapConfigurationException("Can't delete last LDAP file");
-            }
-
-            FileUtils.forceDelete(
-                new File(ldapConfigurationLocation + String.format(ldapPropertiesFile, directoryId))
-            );
-
-            FileUtils.forceDelete(
-                new File(ldapConfigurationLocation + String.format(ldapLoginFile, directoryId))
-            );
-
-            FileUtils.forceDelete(
-                new File(ldapConfigurationLocation + String.format(ldapSignatureFile, directoryId))
-            );
-
-            FileUtils.forceDelete(
-                new File(ldapConfigurationLocation + String.format(ldapSyncFile, directoryId))
-            );
-            response.getOutputStream().write("{}".getBytes());
-            response.getOutputStream().flush();
+            LdapConfigurationService.deleteLdapDirectory(directoryId);
+            return "{}";
 
         } catch (Exception e) {
-            String error = "Can't delete LDAP directory";
             if (log.isErrorEnabled()) {
-                log.error(error);
+                log.error("Can't delete LDAP directory", e);
             }
             throw new AcmLdapConfigurationException("Delete LDAP directory error", e);
         }
-    }
-
-
-    public void setLdapConfigurationLocation(String ldapConfigurationLocation) {
-        this.ldapConfigurationLocation = ldapConfigurationLocation;
-    }
-
-    public void setLdapLoginFile(String ldapLoginFile) {
-        this.ldapLoginFile = ldapLoginFile;
-    }
-
-    public void setLdapSignatureFile(String ldapSignatureFile) {
-        this.ldapSignatureFile = ldapSignatureFile;
-    }
-
-    public void setLdapSyncFile(String ldapSyncFile) {
-        this.ldapSyncFile = ldapSyncFile;
-    }
-
-    public void setLdapPropertiesFile(String ldapPropertiesFile) {
-        this.ldapPropertiesFile = ldapPropertiesFile;
-    }
-
-    public void setLdapPropertiesFileRegex(String ldapPropertiesFileRegex) {
-        this.ldapPropertiesFileRegex = ldapPropertiesFileRegex;
     }
 }
