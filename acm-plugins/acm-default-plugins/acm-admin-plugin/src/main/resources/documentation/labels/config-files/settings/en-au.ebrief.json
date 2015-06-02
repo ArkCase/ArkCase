@@ -9,5 +9,119 @@
         ,"defaultValue": "Brief"
         ,"description": ""
     }
+    ,"header": {
+        "labels": {
+            "assigned-to": {
+                "value": "Assigned To"
+                ,"defaultValue": "Assigned To"
+                ,"description": ""
+            }
+            ,"organisation": {
+                "value": "Organisation"
+                ,"defaultValue": "Organisation"
+                ,"description": ""
+            }
+            ,"hearing-date": {
+                "value": "Next Count Hearing Date"
+                ,"defaultValue": "Next Count Hearing Date"
+                ,"description": ""
+            }
+            ,"court": {
+                "value": "Court"
+                ,"defaultValue": "Court"
+                ,"description": ""
+            }
+            ,"enter-assignee": {
+                "value": "Enter Assignee"
+                ,"defaultValue": "Enter Assignee"
+                ,"description": ""
+            }
+            ,"enter-organisation": {
+                "value": "Enter Organisation"
+                ,"defaultValue": "Enter Organisation"
+                ,"description": ""
+            }
+            ,"enter-hearing-date": {
+                "value": "Enter Hearing Date"
+                ,"defaultValue": "Enter Hearing Date"
+                ,"description": ""
+            }
+            ,"enter-court": {
+                "value": "Enter Court"
+                ,"defaultValue": "Enter Court"
+                ,"description": ""
+            }
+        }
+    }
+    ,"navigation": {
+        "leaf-title": {
+            "participants": {
+                "value": "Key Contacts"
+                ,"defaultValue": "Key Contacts"
+                ,"description": ""
+            }
+        }
+    }
+    ,"participants": {
+        "msg": {
+            "add-new-record": {
+                "value": "Add Contact"
+                ,"defaultValue": "Add Contact"
+                ,"description": ""
+            }
+        }
+        ,"table": {
+            "title": {
+                "value": "Key Contacts"
+                ,"defaultValue": "Key Contacts"
+                ,"description": ""
+            }
+            ,"field": {
+                "name": {
+                    "value": "Name"
+                    ,"defaultValue": "Name"
+                    ,"description": ""
+                }
+                ,"id": {
+                    "value": "ID"
+                    ,"defaultValue": "ID"
+                    ,"description": ""
+                }
+                ,"organisation": {
+                    "value": "Organisation"
+                    ,"defaultValue": "Organisation"
+                    ,"description": ""
+                }
+                ,"type": {
+                    "value": "Access"
+                    ,"defaultValue": "Access"
+                    ,"description": ""
+                }
+                ,"email": {
+                    "value": "Email"
+                    ,"defaultValue": "Email"
+                    ,"description": ""
+                }
+                ,"phone": {
+                    "value": "Contact Number"
+                    ,"defaultValue": "Contact Number"
+                    ,"description": ""
+                }
+            }
+        }
+    }
+    ,"documents": {
+        "btn-new-folder": {
+            "value": "New Folder"
+            ,"defaultValue": "New Folder"
+            ,"description": ""
+        }
+        ,"btn-lodge": {
+            "value": "Lodge"
+            ,"defaultValue": "Lodge"
+            ,"description": ""
+        }
+    }
+
 
 }
