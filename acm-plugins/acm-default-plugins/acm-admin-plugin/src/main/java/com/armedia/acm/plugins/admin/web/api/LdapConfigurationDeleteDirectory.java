@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
+import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,6 +23,8 @@ import java.util.regex.Pattern;
 public class LdapConfigurationDeleteDirectory {
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    private LdapConfigurationService ldapConfigurationService;
+
     @RequestMapping(value = "/ldapconfiguration/directories/{directoryId}", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
@@ -36,7 +39,7 @@ public class LdapConfigurationDeleteDirectory {
             if (directoryId == null) {
                 throw new AcmLdapConfigurationException("Directory Id is undefined");
             }
-            LdapConfigurationService.deleteLdapDirectory(directoryId);
+            ldapConfigurationService.deleteLdapDirectory(directoryId);
             return "{}";
 
         } catch (Exception e) {
@@ -45,5 +48,9 @@ public class LdapConfigurationDeleteDirectory {
             }
             throw new AcmLdapConfigurationException("Delete LDAP directory error", e);
         }
+    }
+
+    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService) {
+        this.ldapConfigurationService = ldapConfigurationService;
     }
 }
