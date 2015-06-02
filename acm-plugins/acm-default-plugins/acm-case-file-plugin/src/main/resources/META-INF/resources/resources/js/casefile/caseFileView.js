@@ -515,7 +515,7 @@ CaseFile.View = CaseFile.View || {
 
     ,Action: {
         create: function() {
-            this.$olMilestoneTrack          = $(".track-progress");
+            this.$olMilestoneTrack         = $(".track-progress");
             this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
             this.$dlgConsolidateCase       = $("#consolidateCase");
             this.$edtConsolidateCase       = $("#edtConsolidateCase");
@@ -530,7 +530,7 @@ CaseFile.View = CaseFile.View || {
             this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
             this.$btnSplitCase            .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
 
-            this.$chkRestrict     = $("#restrict");
+            this.$chkRestrict = $("#restrict");
             this.$chkRestrict.on("click", function(e) {CaseFile.View.Action.onClickRestrictCheckbox(e, this);});
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);

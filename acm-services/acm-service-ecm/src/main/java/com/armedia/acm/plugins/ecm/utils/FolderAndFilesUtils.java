@@ -62,4 +62,10 @@ public class FolderAndFilesUtils {
 
         return input;
     }
+
+    public String createUniqueFolderName(String name){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmssSSS");
+        String dateString = dateFormat.format(new Date());
+        return name +"_"+ dateString;
+    }
 }
