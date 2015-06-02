@@ -84,47 +84,54 @@ public class CaseFileFactory extends FrevvoFormFactory
 	
 	public CaseFileForm asFrevvoCaseFile(CaseFile caseFile, CaseFileForm form, FrevvoFormAbstractService formService)
 	{		
-		if (form == null)
+		try
 		{
-			form = new CaseFileForm();
-		}
-		
-		if (caseFile != null)
-		{
-			form.setId(caseFile.getId());
-			form.setCaseTitle(caseFile.getTitle());
-			form.setCaseType(caseFile.getCaseType());
-			form.setCaseNumber(caseFile.getCaseNumber());
-			form.setCaseDescription(caseFile.getDetails());
-            String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-            form.setCmisFolderId(cmisFolderId);
-            form.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
-            form.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
-			
-			if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
+			if (form == null)
 			{
-				InitiatorPerson initiator = new InitiatorPerson(caseFile.getOriginator().getPerson());
-				initiator.setType(caseFile.getOriginator().getPersonType());
-				
-				form.setInitiator(initiator);
+				form = new CaseFileForm();
 			}
 			
-			if (caseFile.getPersonAssociations() != null)
+			if (caseFile != null)
 			{
-				List<Person> people = new ArrayList<>();
-				for (PersonAssociation pa : caseFile.getPersonAssociations())
+				form.setId(caseFile.getId());
+				form.setCaseTitle(caseFile.getTitle());
+				form.setCaseType(caseFile.getCaseType());
+				form.setCaseNumber(caseFile.getCaseNumber());
+				form.setCaseDescription(caseFile.getDetails());
+	            String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+	            form.setCmisFolderId(cmisFolderId);
+	            form.setParticipants(asFrevvoParticipants(caseFile.getParticipants()));
+	            form.setOwningGroup(asFrevvoGroupParticipant(caseFile.getParticipants()));
+				
+				if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
 				{
-					if (pa.getPerson() != null)
-					{
-						PeoplePerson peoplePerson = new PeoplePerson(pa.getPerson());
-						peoplePerson.setType(pa.getPersonType());
-						
-						people.add(peoplePerson);
-					}
+					InitiatorPerson initiator = new InitiatorPerson(caseFile.getOriginator().getPerson());
+					initiator.setType(caseFile.getOriginator().getPersonType());
+					
+					form.setInitiator(initiator);
 				}
 				
-				form.setPeople(people);
+				if (caseFile.getPersonAssociations() != null)
+				{
+					List<Person> people = new ArrayList<>();
+					for (PersonAssociation pa : caseFile.getPersonAssociations())
+					{
+						if (pa.getPerson() != null)
+						{
+							PeoplePerson peoplePerson = new PeoplePerson(pa.getPerson());
+							peoplePerson.setType(pa.getPersonType());
+							
+							people.add(peoplePerson);
+						}
+					}
+					
+					form.setPeople(people);
+				}
 			}
+		}
+		catch (Exception e) 
+		{
+			LOG.error("Cannot convert Object to Frevvo form.", e);
 		}
 		
 		return form;
