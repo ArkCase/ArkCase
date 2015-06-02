@@ -3,7 +3,8 @@
         "button": {
             "task": "Task",
             "complaint": "Complaint",
-            "case-file": "Case File",
+            "__xxx__case-file": "Case File",
+            "case-file": "Brief",
             "timesheet": "Timesheet",
             "costsheet": "Costsheet"
         },
@@ -23,7 +24,8 @@
             "tasks": "Tasks",
             "complaints": "Complaints",
             "search": "Search",
-            "case-files": "Case Files",
+            "__xxx__case-files": "Case Files",
+            "case-files": "Briefs",
             "dashboard": "Dashboard",
             "administration": "Administration",
             "audit": "Audit",
@@ -39,6 +41,8 @@
     "date": {
         "short": "MM/DD/YYYY",
         "full": "MM/DD/YYYY h:mm:ss a",
-		"frevvo": "YYYY-MM-DD"
+		"frevvo": "YYYY-MM-DD",
+		"pentaho": "MM/DD/YYYY",
+		"datepicker": "mm/dd/yy"
     }
 }

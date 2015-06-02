@@ -40,7 +40,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-person.xml"})
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-ecm-file.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class ComplaintMuleIT
 {

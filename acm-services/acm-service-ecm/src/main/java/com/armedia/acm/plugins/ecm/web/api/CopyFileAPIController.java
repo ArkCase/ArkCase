@@ -74,7 +74,6 @@ public class CopyFileAPIController {
             getFileEventPublisher().publishFileCopiedEvent(source,authentication,ipAddress,false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, in.getId(), "File not found.", e);
         }
-
     }
 
     public FileEventPublisher getFileEventPublisher() {

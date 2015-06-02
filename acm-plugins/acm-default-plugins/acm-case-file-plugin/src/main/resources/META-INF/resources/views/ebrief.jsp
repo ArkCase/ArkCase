@@ -123,7 +123,7 @@
                         <section class="vbox animated fadeInLeft">
                             <section class="scrollable">
                                 <header class="dk header">
-                                    <h3 class="m-b-xs text-black pull-left" data-i18n="ebrief:title">eBrief</h3>
+                                    <h3 class="m-b-xs text-black pull-left" data-i18n="ebrief:title">Brief</h3>
                                     <div class="btn-group inline select pull-right">
                                         <button class="btn btn-default btn-sm  dropdown-toggle" data-toggle="dropdown"> <span class="dropdown-label" style="width: 65px;"><i class="fa fa-sort"></i></span> <span class="caret"></span> </button>
 

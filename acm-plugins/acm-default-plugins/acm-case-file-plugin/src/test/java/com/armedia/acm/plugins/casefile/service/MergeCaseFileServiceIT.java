@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
@@ -98,7 +99,7 @@ public class MergeCaseFileServiceIT extends EasyMock {
 
     @Test
     @Transactional
-    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException {
+    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
