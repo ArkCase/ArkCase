@@ -50,7 +50,7 @@ public class CreateComplaintAPIController
             Complaint saved = getComplaintTransaction().saveComplaint(in, auth);
   
             // Update Frevvo XML file
-            getComplaintService().updateXML(saved, auth);
+            getComplaintService().updateXML(saved, auth, ComplaintForm.class);
 
             getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
 

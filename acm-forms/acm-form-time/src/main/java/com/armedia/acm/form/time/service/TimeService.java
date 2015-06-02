@@ -304,4 +304,10 @@ public class TimeService extends FrevvoFormChargeAbstractService {
 	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
 		this.acmPluginManager = acmPluginManager;
 	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
+	}
 }

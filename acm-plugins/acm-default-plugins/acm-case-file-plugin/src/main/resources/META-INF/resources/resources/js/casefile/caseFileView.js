@@ -547,7 +547,7 @@ CaseFile.View = CaseFile.View || {
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
             	var containerId = c.container.id;
-            	var folderId = c.container.folder.id;
+                var folderId = c.container.attachmentFolder.id;
 
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
@@ -625,7 +625,7 @@ CaseFile.View = CaseFile.View || {
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
             	var containerId = c.container.id;
-            	var folderId = c.container.folder.id;
+                var folderId = c.container.attachmentFolder.id;
             	
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");

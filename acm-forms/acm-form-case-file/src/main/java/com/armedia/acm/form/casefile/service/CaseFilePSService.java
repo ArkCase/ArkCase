@@ -10,7 +10,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -18,7 +17,6 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -181,7 +179,7 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		
 		// Add id's and other information to the Frevvo form
 		form.setId(caseFile.getId());
-        String cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+        String cmisFolderId = findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
         form.setCmisFolderId(cmisFolderId);
 		form.setNumber(caseFile.getCaseNumber());
 		
@@ -351,27 +349,11 @@ public class CaseFilePSService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
-	public void updateXML(CaseFile caseFile, Authentication auth)
-    {
-    	if (caseFile != null)
-    	{    		
-    		// First find the XML that is already in the system and create Frevvo form
-    		Long containerId = caseFile.getContainer().getId();
-    		Long folderId = caseFile.getContainer().getFolder().getId();
-    		String fileType = FrevvoFormName.CASE_FILE_PS.toLowerCase() + "_xml";
-    		
-    		EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
-    		CaseFilePSForm form = (CaseFilePSForm) getExistingForm(ecmFile.getId(), CaseFilePSForm.class);
-    		
-    		form = getCaseFilePSFactory().asFrevvoCaseFile(caseFile, null);
-    		
-    		if (form != null)
-    		{
-    			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, ecmFile, auth);		
-    		}
-    	}
-    }
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form)
+	{
+		return getCaseFilePSFactory().asFrevvoCaseFile((CaseFile) obj, null);
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
