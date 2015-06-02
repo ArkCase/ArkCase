@@ -7,4 +7,8 @@ public class MergeCaseFilesException extends Exception {
     public MergeCaseFilesException(String messge, Throwable e) {
         super(messge, e);
     }
+
+    public MergeCaseFilesException(String s) {
+        super(s);
+    }
 }

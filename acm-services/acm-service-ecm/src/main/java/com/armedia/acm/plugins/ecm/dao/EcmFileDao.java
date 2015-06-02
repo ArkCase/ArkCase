@@ -15,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,14 +52,17 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return results;
     }
 
-    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo) {
-
+    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo, List<String> excludeDocumentTypes) {
+        if (excludeDocumentTypes == null)
+            excludeDocumentTypes = new LinkedList<>();
         String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
-                "WHERE e.container = :containerFrom";
+                "WHERE e.container = :containerFrom" + (excludeDocumentTypes.isEmpty() ? "" : " AND e.fileType NOT IN :fileTypes");
         Query query = getEm().createQuery(jpql);
         query.setParameter("containerFrom", containerFrom);
         query.setParameter("containerTo", containerTo);
         query.setParameter("modifiedDate", new Date());
+        if (!excludeDocumentTypes.isEmpty())
+            query.setParameter("fileTypes", excludeDocumentTypes);
 
         return query.executeUpdate();
     }
