@@ -28,9 +28,10 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -45,7 +46,6 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.model.SearchConstants;
@@ -126,6 +126,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		return json;
     }
+    
+    public abstract Object convertToFrevvoForm(Object obj, Object form);
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -271,6 +273,28 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		return xml;
 	}
+	
+	public void updateXML(AcmContainerEntity entity, Authentication auth, Class<?> c)
+    {
+    	if (entity != null)
+    	{    		
+    		EcmFile ecmFile = getEcmFile(entity, getFormName().toLowerCase());
+    		
+    		Object form = null;
+    		if (ecmFile != null)
+			{
+				form = getExistingForm(ecmFile.getId(), c);
+			}
+    		
+    		form = convertToFrevvoForm(entity, form);
+    		
+    		if (form != null)
+    		{
+    			String xml = convertFromObjectToXML(form);
+    			updateXML(xml, ecmFile, auth);		
+    		}
+    	}
+    }
 	
 	protected void updateXML(String xml, EcmFile ecmFile, Authentication auth)
 	{
@@ -533,6 +557,22 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         }
     }
     
+    public EcmFile getEcmFile(AcmContainerEntity entity, String formName)
+	{
+		EcmFile ecmFile = null;
+		if (entity != null)
+		{
+			// First find the XML that is already in the system and create Frevvo form
+			Long containerId = entity.getContainer().getId();
+			Long folderId = entity.getContainer().getAttachmentFolder().getId();
+			String fileType = formName + "_xml";
+			
+			ecmFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(containerId, folderId, fileType);
+		}
+		
+		return ecmFile;
+	}
+    
     private EcmFile getEcmFile(String containerIdString, String folderIdString, String fileType)
     {
     	EcmFile ecmFile = null;
@@ -541,7 +581,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     		Long containerId = Long.parseLong(containerIdString);
     		Long folderId = Long.parseLong(folderIdString);
     		
-    		ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
+    		ecmFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(containerId, folderId, fileType);
 		}
 		catch(Exception e)
 		{

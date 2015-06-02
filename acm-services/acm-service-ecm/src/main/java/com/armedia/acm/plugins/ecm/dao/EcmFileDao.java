@@ -74,7 +74,23 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
                 "WHERE e.container.id = :containerId " +
                 "AND e.container.folder.id = :folderId " + 
                 "AND e.fileType = :fileType";
-        
+
+        return executeJpqlForContainerIdFolderIdAndFileType(jpql, containerId, folderId, fileType);
+    }
+    
+    public EcmFile findForContainerAttachmentFolderAndFileType(Long containerId, Long folderId, String fileType)
+    {
+        String jpql = "SELECT e " +
+                "FROM EcmFile e " +
+                "WHERE e.container.id = :containerId " +
+                "AND e.container.attachmentFolder.id = :folderId " + 
+                "AND e.fileType = :fileType";
+
+        return executeJpqlForContainerIdFolderIdAndFileType(jpql, containerId, folderId, fileType);
+    }
+    
+    private EcmFile executeJpqlForContainerIdFolderIdAndFileType(String jpql, Long containerId, Long folderId, String fileType)
+    {
         Query query = getEm().createQuery(jpql);
         
         query.setParameter("containerId", containerId);

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import com.armedia.acm.form.project.model.ProjectForm;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
@@ -38,7 +39,7 @@ public class ProjectUpdatedListener implements ApplicationListener<CaseEvent> {
 					
 					if (FrevvoFormName.PROJECT.equals(activeFormName))
 					{
-						getProjectService().updateXML(event.getCaseFile(), event.getEventUser());
+						getProjectService().updateXML(event.getCaseFile(), event.getEventUser(), ProjectForm.class);
 					}
 				}
 			}

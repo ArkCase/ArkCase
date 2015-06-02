@@ -139,7 +139,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 		}
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
-        String cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
+        String cmisFolderId = findFolderIdForAttachments(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
                 cmisFolderId,
@@ -278,5 +278,11 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
 	public void setFunctionalAccessService(
 			FunctionalAccessService functionalAccessService) {
 		this.functionalAccessService = functionalAccessService;
+	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
 	}
 }
