@@ -111,85 +111,92 @@ public class ComplaintFactory extends FrevvoFormFactory
     
     public ComplaintForm asFrevvoComplaint(Complaint complaint, ComplaintForm complaintForm)
     {
-    	if (complaintForm == null)
+    	try
     	{
-    		complaintForm = new ComplaintForm();
+	    	if (complaintForm == null)
+	    	{
+	    		complaintForm = new ComplaintForm();
+	    	}
+	    	
+	    	complaintForm.setComplaintId(complaint.getComplaintId());
+	    	complaintForm.setComplaintNumber(complaint.getComplaintNumber());
+	    	complaintForm.setComplaintTitle(complaint.getComplaintTitle());
+	    	complaintForm.setCategory(complaint.getComplaintType());
+	    	complaintForm.setComplaintDescription(complaint.getDetails());
+	    	complaintForm.setPriority(complaint.getPriority());
+	    	complaintForm.setDate(complaint.getCreated());
+	    	complaintForm.setComplaintTag(complaint.getTag());
+	    	complaintForm.setFrequency(complaint.getFrequency());
+	    	
+	    	if (complaint.getLocation()!= null)
+	    	{
+	    		complaintForm.setLocation(new GeneralPostalAddress(complaint.getLocation()));
+	    	}
+	    	
+	    	if (complaint.getOriginator() != null && complaint.getOriginator().getPerson() != null)
+	    	{
+	    		Contact contact = new InitiatorContact();
+	    		contact = populateFrevvoContact(contact, complaint.getOriginator(), complaint.getOriginator().getPerson());
+	    		
+	    		complaintForm.setInitiator(contact);
+	    	}
+	    	
+	    	if (complaint.getPersonAssociations() != null && complaint.getPersonAssociations().size() > 0)
+	    	{
+	    		Contact initiator = complaintForm.getInitiator();
+	    		List<Contact> contacts = new ArrayList<Contact>();
+	    		for (PersonAssociation personAssociation : complaint.getPersonAssociations())
+	    		{
+	    			if (personAssociation.getPerson() != null)
+	    			{
+	    				Contact contact = new PeopleContact();
+	    				contact = populateFrevvoContact(contact, personAssociation, personAssociation.getPerson());
+	    				
+	    				boolean addContact = true;
+	    				if (initiator != null && initiator.getId() != null && contact != null && contact.getId() != null && initiator.getId().equals(contact.getId()))
+	    				{
+	    					addContact = false;
+	    				}
+	    				
+	    				if (addContact)
+	    				{
+	    					contacts.add(contact);
+	    				}
+	    			}
+	    		}
+	    		
+	    		complaintForm.setPeople(contacts);
+	    	}
+	
+	        try
+	        {
+	            // see if the complaint has its container... sometimes it doesn't
+	            if ( complaint.getContainer() != null )
+	            {
+	                complaintForm.setCmisFolderId(complaint.getContainer().getFolder().getCmisFolderId());
+	            }
+	            else
+	            {
+	                AcmContainer container = getFileService().getOrCreateContainer(complaint.getObjectType(), complaint.getId());
+	                complaintForm.setCmisFolderId(container.getFolder().getCmisFolderId());
+	            }
+	        }
+	        catch ( AcmCreateObjectFailedException | AcmUserActionFailedException e)
+	        {
+	            log.error("Unknown CMIS folder for this complaint! " + e.getMessage(), e);
+	        }
+	
+	
+	    	
+	    	// Populate participants
+	        complaintForm.setParticipants(asFrevvoParticipants(complaint.getParticipants()));
+	        // Populate owning group
+	        complaintForm.setOwningGroup(asFrevvoGroupParticipant(complaint.getParticipants()));
     	}
-    	
-    	complaintForm.setComplaintId(complaint.getComplaintId());
-    	complaintForm.setComplaintNumber(complaint.getComplaintNumber());
-    	complaintForm.setComplaintTitle(complaint.getComplaintTitle());
-    	complaintForm.setCategory(complaint.getComplaintType());
-    	complaintForm.setComplaintDescription(complaint.getDetails());
-    	complaintForm.setPriority(complaint.getPriority());
-    	complaintForm.setDate(complaint.getCreated());
-    	complaintForm.setComplaintTag(complaint.getTag());
-    	complaintForm.setFrequency(complaint.getFrequency());
-    	
-    	if (complaint.getLocation()!= null)
-    	{
-    		complaintForm.setLocation(new GeneralPostalAddress(complaint.getLocation()));
-    	}
-    	
-    	if (complaint.getOriginator() != null && complaint.getOriginator().getPerson() != null)
-    	{
-    		Contact contact = new InitiatorContact();
-    		contact = populateFrevvoContact(contact, complaint.getOriginator(), complaint.getOriginator().getPerson());
-    		
-    		complaintForm.setInitiator(contact);
-    	}
-    	
-    	if (complaint.getPersonAssociations() != null && complaint.getPersonAssociations().size() > 0)
-    	{
-    		Contact initiator = complaintForm.getInitiator();
-    		List<Contact> contacts = new ArrayList<Contact>();
-    		for (PersonAssociation personAssociation : complaint.getPersonAssociations())
-    		{
-    			if (personAssociation.getPerson() != null)
-    			{
-    				Contact contact = new PeopleContact();
-    				contact = populateFrevvoContact(contact, personAssociation, personAssociation.getPerson());
-    				
-    				boolean addContact = true;
-    				if (initiator != null && initiator.getId() != null && contact != null && contact.getId() != null && initiator.getId().equals(contact.getId()))
-    				{
-    					addContact = false;
-    				}
-    				
-    				if (addContact)
-    				{
-    					contacts.add(contact);
-    				}
-    			}
-    		}
-    		
-    		complaintForm.setPeople(contacts);
-    	}
-
-        try
-        {
-            // see if the complaint has its container... sometimes it doesn't
-            if ( complaint.getContainer() != null )
-            {
-                complaintForm.setCmisFolderId(complaint.getContainer().getFolder().getCmisFolderId());
-            }
-            else
-            {
-                AcmContainer container = getFileService().getOrCreateContainer(complaint.getObjectType(), complaint.getId());
-                complaintForm.setCmisFolderId(container.getFolder().getCmisFolderId());
-            }
-        }
-        catch ( AcmCreateObjectFailedException | AcmUserActionFailedException e)
-        {
-            log.error("Unknown CMIS folder for this complaint! " + e.getMessage(), e);
-        }
-
-
-    	
-    	// Populate participants
-        complaintForm.setParticipants(asFrevvoParticipants(complaint.getParticipants()));
-        // Populate owning group
-        complaintForm.setOwningGroup(asFrevvoGroupParticipant(complaint.getParticipants()));
+    	catch (Exception e) 
+		{
+			log.error("Cannot convert Object to Frevvo form.", e);
+		}
 
     	return complaintForm;
     }

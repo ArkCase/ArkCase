@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
+import com.armedia.acm.form.ebrief.model.xml.EbriefDetails;
 import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
@@ -63,41 +64,53 @@ public class EbriefFactory extends FrevvoFormFactory{
 	
 	public EbriefForm asFrevvoEbriefForm(CaseFile caseFile, EbriefForm form, FrevvoFormAbstractService formService)
 	{
-		if (form == null)
+		try
 		{
-			form = new EbriefForm();
-		}
-		
-		if (form.getInformation() == null)
-		{
-			form.setInformation(new EbriefInformation());
-		}
-		
-		if (caseFile != null)
-		{
-			form.setId(caseFile.getId());
-			form.getInformation().setType(caseFile.getCaseType());
-			form.getInformation().setNumber(caseFile.getCaseNumber());
-			form.setDefendants(getDefendants(caseFile.getPersonAssociations()));
-			String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-			form.setCmisFolderId(cmisFolderId);
-			
-			List<ParticipantItem> items = asFrevvoParticipants(caseFile.getParticipants());
-			
-			if (items != null)
+			if (form == null)
 			{
-				for (ParticipantItem item : items)
+				form = new EbriefForm();
+			}
+			
+			if (form.getInformation() == null)
+			{
+				form.setInformation(new EbriefInformation());
+			}
+			
+			if (caseFile != null)
+			{
+				form.setId(caseFile.getId());
+				form.getInformation().setType(caseFile.getCaseType());
+				form.getInformation().setNumber(caseFile.getCaseNumber());
+				form.setDefendants(getDefendants(caseFile.getPersonAssociations()));
+				String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+				form.setCmisFolderId(cmisFolderId);
+				
+				List<ParticipantItem> items = asFrevvoParticipants(caseFile.getParticipants());
+				
+				if (items != null)
 				{
-					if (ParticipantTypes.ASSIGNEE.equals(item.getType()))
+					for (ParticipantItem item : items)
 					{
-						form.getDetails().setAssignedToId(item.getId());
-						form.getDetails().setAssignedToUserId(item.getValue());
-						form.getDetails().setAssignedTo(item.getName());
-						
-						break;
+						if (ParticipantTypes.ASSIGNEE.equals(item.getType()))
+						{
+							if (form.getDetails() == null)
+							{
+								form.setDetails(new EbriefDetails());
+							}
+							
+							form.getDetails().setAssignedToId(item.getId());
+							form.getDetails().setAssignedToUserId(item.getValue());
+							form.getDetails().setAssignedTo(item.getName());
+							
+							break;
+						}
 					}
 				}
 			}
+		}
+		catch (Exception e) 
+		{
+			LOG.error("Cannot convert Object to Frevvo form.", e);
 		}
 		
 		return form;
