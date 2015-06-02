@@ -43,7 +43,6 @@
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/casefile/caseFileService.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/resources/js/casefile/custom.js'/>"></script>
 
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTree.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeModel.js'/>"></script>
