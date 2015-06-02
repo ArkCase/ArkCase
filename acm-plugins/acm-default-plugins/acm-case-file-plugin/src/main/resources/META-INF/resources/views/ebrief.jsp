@@ -163,36 +163,34 @@
 
                                                     <div class="row">
                                                         <div class="col-xs-6  b-r">
-                                                            <h4><a href="#" id="caseNumber"></a></h4>
+                                                            <h4>(<a href="#" id="caseNumber"></a>)&nbsp;&nbsp; <a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a></h4>
                                                         </div>
-                                                        <div class="col-xs-6  b-r">
+
+                                                        <%--<div class="col-xs-6  b-r">--%>
+                                                            <%--<h4><a href="#" id="caseNumber"></a></h4>--%>
+                                                        <%--</div>--%>
+                                                        <%--<div class="col-xs-6  b-r">--%>
                                                             <!-- <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a></h4> -->
-                                                        </div>
+                                                        <%--</div>--%>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-subject-type" data-title="Enter Subject Type"></a></div>
-                                                            <small class="text-muted" data-18n="casefile:header.labels.case-type">Case Type</small> </div>
-                                                        <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-incident-date" data-title="Enter Incident Date"></a></div>
-                                                            <small class="text-muted" data-18n="casefile:header.labels.create-date">Create Date</small></div>
-                                                        <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-priority;priority-high" data-title="Enter Priority">High</a></div>
-                                                            <small class="text-muted" data-18n="casefile:header.labels.priority">Priority</small> </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <!-- <a href="#" id="status" ></a> -->
-                                                        <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-assignee" data-title="Enter Assignee"></a></div>
-                                                            <small class="text-muted" data-18n="casefile:header.labels.assigned-to">Assigned To</small>
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]ebrief:header.labels.enter-assignee" data-title="Enter Assignee"></a></div>
+                                                            <small class="text-muted" data-18n="ebrief:header.labels.assigned-to">Assigned To</small>
                                                         </div>
                                                         <div class="col-xs-4  b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-owning-group" data-title="Enter Owning Group"></a></div>
-                                                            <small class="text-muted" data-18n="casefile:header.labels.owning-group">Owning Group</small>
+                                                            <div class="h4 font-bold"><a href="#" id="organisation" data-type="select" data-pk="1" data-i18n="[data-title]ebrief:header.labels.enter-organisation" data-title="Enter Organisation"></a></div>
+                                                            <small class="text-muted" data-18n="ebrief:header.labels.organisation">Organisation</small>
                                                         </div>
+                                                    </div>
+                                                    <div class="row">
                                                         <div class="col-xs-4 b-r ">
-                                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-due-date" data-title="Enter Due Date"></a></div>
-                                                            <small class="text-muted" data-18n="casefile:header.labels.due-date">Due Date</small>
+                                                            <div class="h4 font-bold"><a href="#" id="hearingDate" data-type="date" data-pk="1" data-i18n="[data-title]ebrief:header.labels.enter-hearing-date" data-title="Enter Hearing Date"></a></div>
+                                                            <small class="text-muted" data-18n="ebrief:header.labels.hearing-date">Next Count Hearing Date</small>
+                                                        </div>
+                                                        <div class="col-xs-4 b-r">
+                                                            <div class="h4 font-bold"><a href="#" id="court" data-type="select" data-pk="1" data-i18n="[data-title]ebrief:header.labels.enter-court" data-title="Enter Court"></a></div>
+                                                            <small class="text-muted" data-18n="ebrief:header.labels.court">Court</small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -266,54 +264,21 @@
                                         <h4 class="m-n">&nbsp;</h4>
                                         <hr/>
 
-                                            <%--<ol class="track-progress" data-steps="5">--%>
-                                            <%--<li class="done">--%>
-                                            <%--<span>Initiated</span>--%>
-                                            <%--<i></i>--%>
-                                            <%--</li>--%>
-                                            <%--<li class="done">--%>
-                                            <%--<span>Waiver</span>--%>
-                                            <%--<i></i>--%>
-                                            <%--</li>--%>
-                                            <%--<li>--%>
-                                            <%--<span>Adjudication</span>--%>
-                                            <%--<i></i>--%>
-                                            <%--</li>--%>
-                                            <%--<li>--%>
-                                            <%--<span>Issued</span>--%>
-                                            <%--<i></i>--%>
-                                            <%--</li>--%>
-                                            <%--<li>--%>
-                                            <%--<span>Closed</span>--%>
-                                            <%--<i></i>--%>
-                                            <%--</li>--%>
-                                            <%--</ol>--%>
-                                            <%--<br/>--%>
                                         <ol class="track-progress" id="anotherTracker">
                                         </ol>
                                     </div>
 
                                     <br/>
 
-                                    <div class="col-md-12" id="tabDetail" style="display:none;">
+                                    <div class="col-md-12" id="tabTasks" style="display:none;">
                                         <section class="panel b-a ">
-                                            <div class="panel-heading b-b bg-info">
-                                                <ul class="nav nav-pills pull-right">
-                                                    <li>
-                                                        <div class="btn-group padder-v2">
-                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
-                                                            <ul class="dropdown-menu pull-right">
-                                                                <li><a href="#" data-i18n="casefile:detail.other-menu-items">Other menu items</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-                                                    <li>&nbsp;</li>
-                                                </ul>
-                                                </span> <a href="#" class="font-bold" data-i18n="casefile:detail.details">Details</a></div>
-                                            <div class="panel-body">
-                                                <div class="divDetail"></div>
-                                            </div>
+                                            <div id="divTasks" style="width:100%"></div>
+                                        </section>
+                                    </div>
+
+                                    <div class="col-md-12" id="tabParticipants" style="display:none;">
+                                        <section class="panel b-a ">
+                                            <div id="divParticipants" style="width:100%"></div>
                                         </section>
                                     </div>
 
@@ -324,18 +289,21 @@
                                     </div>
 
                                     <div class="col-md-12" id="tabDocs" style="display:none;">
-                                            <%--<section class="panel b-a ">--%>
-                                            <%--<div id="divDocs" style="width:100%"></div>--%>
-                                            <%--<form id="formAddDocument" style="display:none;">--%>
-                                            <%--&lt;%&ndash;<input type="file" id="file" name="file">&ndash;%&gt;--%>
-                                            <%--<input id="addDocument" type="file" name="files[]" multiple/>--%>
-                                            <%--&lt;%&ndash;<input type="submit">&ndash;%&gt;--%>
-                                            <%--</form>--%>
-                                            <%--</section>--%>
-
-
                                         <section class="panel b-a">
                                             <div class="panel-heading b-b bg-info">
+                                                <ul class="nav nav-pills pull-right">
+                                                    <li style="margin-right:5px"></li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" id="btnNewFolder" data-i18n="ebrief:documents.btn-new-folder"><i class="fa fa-folder"></i>New Folder</button>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" id="btnLodge" data-i18n="ebrief:documents.btn-lodge"><i class="fa fa-share"></i>Lodge</button>
+                                                        </div>
+                                                    </li>
+                                                </ul>
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             </div>
 
@@ -371,78 +339,87 @@
                                         </section>
                                     </div>
 
-
-                                    <div class="col-md-12" id="tabParticipants" style="display:none;">
-                                        <section class="panel b-a ">
-                                            <div id="divParticipants" style="width:100%"></div>
-                                        </section>
-                                    </div>
-
-                                    <div class="col-md-12" id="tabNotes" style="display:none;">
-                                        <section class="panel b-a ">
-                                            <div id="divNotes" style="width:100%"></div>
-                                        </section>
-                                    </div>
-
-                                    <div class="col-md-12" id="tabTasks" style="display:none;">
-                                        <section class="panel b-a ">
-                                            <div id="divTasks" style="width:100%"></div>
-                                        </section>
-                                    </div>
-
-                                    <div class="col-md-12" id="tabRefs" style="display:none;">
-                                        <section class="panel b-a ">
-                                            <div id="divRefs" style="width:100%"></div>
-                                        </section>
-                                    </div>
-
                                     <div class="col-md-12" id="tabHistory" style="display:none;">
                                         <section class="panel b-a ">
                                             <div id="divHistory" style="width:100%"></div>
                                         </section>
                                     </div>
 
-                                    <div class="col-md-12" id="tabCorrespondence" style="display:none;">
-                                        <section class="panel b-a ">
-                                            <div id="divCorrespondence" style="width:100%"></div>
-                                        </section>
-                                    </div>
+                                    <%--<div class="col-md-12" id="tabDetail" style="display:none;">--%>
+                                        <%--<section class="panel b-a ">--%>
+                                            <%--<div class="panel-heading b-b bg-info">--%>
+                                                <%--<ul class="nav nav-pills pull-right">--%>
+                                                    <%--<li>--%>
+                                                        <%--<div class="btn-group padder-v2">--%>
+                                                            <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>--%>
+                                                            <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>--%>
+                                                            <%--<ul class="dropdown-menu pull-right">--%>
+                                                                <%--<li><a href="#" data-i18n="casefile:detail.other-menu-items">Other menu items</a></li>--%>
+                                                            <%--</ul>--%>
+                                                        <%--</div>--%>
+                                                    <%--</li>--%>
+                                                    <%--<li>&nbsp;</li>--%>
+                                                <%--</ul>--%>
+                                                <%--</span> <a href="#" class="font-bold" data-i18n="casefile:detail.details">Details</a></div>--%>
+                                            <%--<div class="panel-body">--%>
+                                                <%--<div class="divDetail"></div>--%>
+                                            <%--</div>--%>
+                                        <%--</section>--%>
+                                    <%--</div>--%>
 
-                                    <div class="col-md-12" id="tabTime" style="display:none;">
-                                        <section class="panel b-a">
-                                            <div id="divTime" style="width:100%"></div>
-                                        </section>
-                                    </div>
+                                    <%--<div class="col-md-12" id="tabNotes" style="display:none;">--%>
+                                        <%--<section class="panel b-a ">--%>
+                                            <%--<div id="divNotes" style="width:100%"></div>--%>
+                                        <%--</section>--%>
+                                    <%--</div>--%>
 
-                                    <div class="col-md-12" id="tabCost" style="display:none;">
-                                        <section class="panel b-a">
-                                            <div id="divCost" style="width:100%"></div>
-                                        </section>
-                                    </div>
+                                    <%--<div class="col-md-12" id="tabRefs" style="display:none;">--%>
+                                        <%--<section class="panel b-a ">--%>
+                                            <%--<div id="divRefs" style="width:100%"></div>--%>
+                                        <%--</section>--%>
+                                    <%--</div>--%>
+
+                                    <%--<div class="col-md-12" id="tabCorrespondence" style="display:none;">--%>
+                                        <%--<section class="panel b-a ">--%>
+                                            <%--<div id="divCorrespondence" style="width:100%"></div>--%>
+                                        <%--</section>--%>
+                                    <%--</div>--%>
+
+                                    <%--<div class="col-md-12" id="tabTime" style="display:none;">--%>
+                                        <%--<section class="panel b-a">--%>
+                                            <%--<div id="divTime" style="width:100%"></div>--%>
+                                        <%--</section>--%>
+                                    <%--</div>--%>
+
+                                    <%--<div class="col-md-12" id="tabCost" style="display:none;">--%>
+                                        <%--<section class="panel b-a">--%>
+                                            <%--<div id="divCost" style="width:100%"></div>--%>
+                                        <%--</section>--%>
+                                    <%--</div>--%>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar">
-                                                <%--<div class="pull-right inline">
-                                                    <div class="dropdown">
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#downloadICS" style="display:none;"><i class="fa fa-calendar"></i> Download ICS</button>
-                                                        </div>
-                                                    </div>
-                                                </div>--%>
-                                                <%--<h4 class="m-n" style="display:none;">Complaint Calendar</h4>--%>
-                                                <%--<hr/>--%>
+                                    <%--<div class="col-md-12"  id="tabOutlookCalendar">--%>
+                                                <%--&lt;%&ndash;<div class="pull-right inline">--%>
+                                                    <%--<div class="dropdown">--%>
+                                                        <%--<div class="btn-group">--%>
+                                                            <%--<button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#downloadICS" style="display:none;"><i class="fa fa-calendar"></i> Download ICS</button>--%>
+                                                        <%--</div>--%>
+                                                    <%--</div>--%>
+                                                <%--</div>&ndash;%&gt;--%>
+                                                <%--&lt;%&ndash;<h4 class="m-n" style="display:none;">Complaint Calendar</h4>&ndash;%&gt;--%>
+                                                <%--&lt;%&ndash;<hr/>&ndash;%&gt;--%>
 
-                                            <section class="panel no-border bg-light">
-                                                <header class="panel-heading bg-info clearfix">
-                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
-                                                <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
-                                                  Calendar
-                                                </span>
-                                                </header>
-                                                <div id="calendar">
-                                                </div>
-                                            </section>
-                                    </div>
+                                            <%--<section class="panel no-border bg-light">--%>
+                                                <%--<header class="panel-heading bg-info clearfix">--%>
+                                                    <%--<button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>--%>
+                                                <%--<span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">--%>
+                                                  <%--Calendar--%>
+                                                <%--</span>--%>
+                                                <%--</header>--%>
+                                                <%--<div id="calendar">--%>
+                                                <%--</div>--%>
+                                            <%--</section>--%>
+                                    <%--</div>--%>
 
                                 </div>
                             </section>
