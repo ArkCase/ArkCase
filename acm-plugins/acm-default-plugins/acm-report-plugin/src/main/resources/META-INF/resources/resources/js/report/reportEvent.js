@@ -46,14 +46,15 @@ Report.Event = {
         	var status = Report.Rule.validateCaseStatus(Report.Object.getSelectedValueSelStatus())
             var startDate = Acm.Object.getValue(Report.Object.$edtStartDate);
             var endDate = Acm.Object.getValue(Report.Object.$edtEndDate);
+            var dateFormat = $.t("common:date.pentaho");
             
             startDate = startDate.replace(/\//g, "-");
             endDate = endDate.replace(/\//g, "-");
 
             if (pageUrl.indexOf("?") <= -1) {
-                pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status; 
+                pageUrl = pageUrl +"?startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status + "&dateFormat=" + encodeURIComponent(dateFormat); 
             } else {
-                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status;
+                pageUrl = pageUrl +"&startDate=" + startDate + "&endDate=" + endDate + "&caseStatus=" + status + "&dateFormat=" + encodeURIComponent(dateFormat);
             }
             
             // Incident Category, Priority, Owner not added since DB clarification is needed.

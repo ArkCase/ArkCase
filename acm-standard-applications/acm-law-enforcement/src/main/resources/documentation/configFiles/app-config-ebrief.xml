@@ -88,7 +88,7 @@
     </bean>
 
     <bean id="createCaseFileAction" class="com.armedia.acm.core.AcmUserAction">
-        <property name="actionName" value="Case File"/>
+        <property name="actionName" value="Brief"/>
         <property name="actionResourceName" value="common:top-bar.button.case-file" />
         <property name="iconName" value="i i-file2"/>
         <property name="url" value="/plugin/casefile/wizard"/>
@@ -141,7 +141,7 @@
 
     <bean id="caseFileNavigatorAction" class="com.armedia.acm.core.AcmUserAction">
         <property name="actionName" value="Briefs"/>
-        <property name="actionResourceName" value="ebrief:navigation.label.case-files" />
+        <property name="actionResourceName" value="common:navigation.label.case-files" />
         <property name="iconName" value="i i-folder"/>
         <property name="url" value="/plugin/casefile"/>
         <property name="requiredPrivilege" value="case-file-list"/>

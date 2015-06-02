@@ -272,6 +272,13 @@ var Acm = Acm || {
         }
         return d;
     }
+    ,getPentahoDateFromDateTime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            d = moment(dt).format($.t("common:date.pentaho"))
+        }
+        return d;
+    }
     ,getCurrentDay: function() {
         var d = new Date();
         return this.dateToString(d);
