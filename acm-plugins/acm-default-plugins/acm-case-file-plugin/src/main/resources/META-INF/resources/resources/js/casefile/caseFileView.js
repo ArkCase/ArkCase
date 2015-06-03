@@ -537,6 +537,8 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES           , this.onModelMergedCaseFiles);
+
         }
         ,onInitialized: function() {
         }
@@ -604,7 +606,7 @@ CaseFile.View = CaseFile.View || {
                                 Acm.Dialog.info("Please check your selection and try again.");
                             }
                             else {
-                                //CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
+                                CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
                             }
                         });
                     }
@@ -640,6 +642,17 @@ CaseFile.View = CaseFile.View || {
 
         ,onModelRetrievedObject: function(objData) {
                 CaseFile.View.Action.populate(objData);
+        }
+        ,onModelMergedCaseFiles: function(targetCaseFile){
+            if(targetCaseFile.hasError) {
+                App.View.MessageBoard.show("Merge failed" , targetCaseFile.errorMsg);
+            }
+            else{
+                if(CaseFile.Model.Detail.validateCaseFile(targetCaseFile)){
+                    var url = "/plugin/casefile/" + Acm.goodValue(targetCaseFile.id);
+                    App.View.gotoPage(url);
+                }
+            }
         }
         ,onViewSelectedObject: function(objType, objId) {
             var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
