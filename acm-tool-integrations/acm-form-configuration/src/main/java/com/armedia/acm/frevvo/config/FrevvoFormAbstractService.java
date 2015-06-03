@@ -298,7 +298,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	
 	protected void updateXML(String xml, EcmFile ecmFile, Authentication auth)
 	{
-		if (ecmFile != null)
+		if (xml != null && ecmFile != null)
 		{
 			AcmMultipartFile file = new AcmMultipartFile();
 			file.setInputStream(new ByteArrayInputStream(xml.getBytes()));
