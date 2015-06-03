@@ -648,6 +648,7 @@ Task.View = Task.View || {
             else{
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             }
         }
 
@@ -658,6 +659,7 @@ Task.View = Task.View || {
             else{
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             }
         }
 
