@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title data-i18n="casefile:window-title">Case Files | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search</span>
+        <span itemprop="resourceNamespace">casefile,search,casefilesplit</span>
         <span itemprop="parentCasefileId">${parentCasefileId}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
         <span itemprop="arkcaseUrl">${arkcaseUrl}</span>
@@ -82,7 +82,7 @@
                                             <button class="btn btn-default btn-sm" onClick="window.close();"><i class="fa fa-times"></i></button>
                                         </div>
                                     </div>
-                                    <h4 class="m-n"> Split Case</h4>
+                                    <h4 class="m-n" data-i18n="casefilesplit:header.labels.split-case"> Split Case</h4>
                                 </div>
                             </div>
                         </header>
@@ -103,27 +103,27 @@
                                             <div class="row">
                                                 <div class="col-xs-4 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-subject-type" data-title="Enter Subject Type"></a></div>
-                                                    <small class="text-muted" data-18n="casefile:header.labels.case-type">Case Type</small> </div>
+                                                    <small class="text-muted" data-i18n="casefile:header.labels.case-type">Case Type</small> </div>
                                                 <div class="col-xs-4 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-incident-date" data-title="Enter Incident Date"></a></div>
-                                                    <small class="text-muted" data-18n="casefile:header.labels.create-date">Create Date</small></div>
+                                                    <small class="text-muted" data-i18n="casefile:header.labels.create-date">Create Date</small></div>
                                                 <div class="col-xs-4 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-priority;priority-high" data-title="Enter Priority"></a></div>
-                                                    <small class="text-muted" data-18n="casefile:header.labels.priority">Priority</small>
+                                                    <small class="text-muted" data-i18n="casefile:header.labels.priority">Priority</small>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-4 b-r">
                                                     <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-assignee" data-title="Enter Assignee"></a></div>
-                                                    <small class="text-muted" data-18n="casefile:header.labels.assigned-to">Assigned To</small>
+                                                    <small class="text-muted" data-i18n="casefile:header.labels.assigned-to">Assigned To</small>
                                                 </div>
                                                 <div class="col-xs-4  b-r">
                                                     <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-owning-group" data-title="Enter Owning Group"></a></div>
-                                                    <small class="text-muted" data-18n="casefile:header.labels.owning-group">Owning Group</small>
+                                                    <small class="text-muted" data-i18n="casefile:header.labels.owning-group">Owning Group</small>
                                                 </div>
                                                 <div class="col-xs-4 b-r ">
                                                     <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-due-date" data-title="Enter Due Date"></a></div>
-                                                    <small class="text-muted" data-18n="casefile:header.labels.due-date">Due Date</small>
+                                                    <small class="text-muted" data-i18n="casefile:header.labels.due-date">Due Date</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -141,12 +141,12 @@
 
 
                                                                     <ul class="nav nav-tabs font-bold">
-                                                                        <li class=""><a href="#tabDetail" data-toggle="tab">Details</a></li>
-                                                                        <li class=""><a href="#tabPeople" data-toggle="tab">People</a></li>
-                                                                        <li class=""><a href="#tabDocs" data-toggle="tab">Documents</a></li>
-                                                                        <li class=""><a href="#tabParticipants" data-toggle="tab">Participants</a></li>
-                                                                        <li class=""><a href="#tabNotes" data-toggle="tab">Notes</a></li>
-                                                                        <li class=" pull-right"><a href="#summary" data-toggle="tab">Summary</a></li>
+                                                                        <li class=""><a href="#tabDetail" data-toggle="tab" data-i18n="casefilesplit:bootstrap-wizard.tabs.details">Details</a></li>
+                                                                        <li class=""><a href="#tabPeople" data-toggle="tab" data-i18n="casefilesplit:bootstrap-wizard.tabs.people">People</a></li>
+                                                                        <li class=""><a href="#tabDocs" data-toggle="tab" data-i18n="casefilesplit:bootstrap-wizard.tabs.documents">Documents</a></li>
+                                                                        <li class=""><a href="#tabParticipants" data-toggle="tab" data-i18n="casefilesplit:bootstrap-wizard.tabs.participants">Participants</a></li>
+                                                                        <li class=""><a href="#tabNotes" data-toggle="tab" data-i18n="casefilesplit:bootstrap-wizard.tabs.notes">Notes</a></li>
+                                                                        <li class=" pull-right"><a href="#summary" data-toggle="tab" data-i18n="casefilesplit:bootstrap-wizard.tabs.summary">Summary</a></li>
                                                                     </ul>
 
 
@@ -240,16 +240,16 @@
                                                                             <hr />
 
                                                                             <div class="text-center">
-                                                                                <button class="btn btn-info btn-lg" onClick="window.close();"><i class="fa fa-save"></i> Split Case</button>
+                                                                                <button class="btn btn-info btn-lg" id="btnSplitCase" data-i18n="casefilesplit:footer.buttons.split-case"><i class="fa fa-save"></i> Split Case</button>
                                                                             </div>
 
                                                                         </div>
 
                                                                         <ul class="pager wizard m-b-sm">
-                                                                            <li class="previous first" style="display:none;"><a href="#">Details</a></li>
-                                                                            <li class="previous"><a href="#">Previous</a></li>
-                                                                            <li class="next last disabled" style="display:none"><a href="#">Summary</a></li>
-                                                                            <li class="next"><a href="#">Next</a></li>
+                                                                            <li class="previous first" style="display:none;"><a href="#" data-i18n="casefilesplit:bootstrap-wizard.tabs.details">Details</a></li>
+                                                                            <li class="previous"><a href="#" data-i18n="casefilesplit:bootstrap-wizard.direction.previous">Previous</a></li>
+                                                                            <li class="next last disabled" style="display:none"><a href="#" data-i18n="casefilesplit:bootstrap-wizard.tabs.summary">Summary</a></li>
+                                                                            <li class="next"><a href="#" data-i18n="casefilesplit:bootstrap-wizard.direction.next">Next</a></li>
                                                                         </ul>
 
                                                                     </div>
