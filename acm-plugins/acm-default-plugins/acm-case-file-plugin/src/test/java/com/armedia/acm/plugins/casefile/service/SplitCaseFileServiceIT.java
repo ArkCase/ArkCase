@@ -18,6 +18,7 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.easymock.EasyMock;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
@@ -103,6 +104,7 @@ public class SplitCaseFileServiceIT extends EasyMock {
 
     @Test
     @Transactional
+    @Ignore
     public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
