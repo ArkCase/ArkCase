@@ -91,6 +91,12 @@
                     <property name="url" value="/api/{version}/plugin/casefile/wizard"/>
                     <property name="requiredPrivilege" ref="caseFileCreatePrivilege"/>
                 </bean>
+
+                <bean id="splitCaseFileUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/copyCaseFile"/>
+                    <property name="requiredPrivilege" ref="splitCaseFilePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
