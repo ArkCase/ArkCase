@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -144,5 +145,10 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject
     public void setParentFolderId(Long parentFolderId)
     {
         this.parentFolderId = parentFolderId;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }
