@@ -13,10 +13,6 @@ CaseFileSplit.Controller = CaseFileSplit.Controller || {
     ,modelRetrievedParentCaseFile: function(parentCaseFile){
         Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_PARENT_CASE_FILE, parentCaseFile);
     }
-    ,MODEL_SAVED_SPLITTED_CASE_FILE        : "casefile-split-model-saved-splitted-case-file"
-    ,modelSavedSplittedCaseFile: function(splittedCaseFile){
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_SPLITTED_CASE_FILE, splittedCaseFile);
-    }
     ,VIEW_CHANGED_DETAIL                   : "casefile-split-view-changed-detail"
     ,viewChangedDetail: function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, caseFileId, details);
@@ -69,6 +65,15 @@ CaseFileSplit.Controller = CaseFileSplit.Controller || {
     ,VIEW_CHANGED_CASE_FILE               : "casefile-split-view-changed-case-file"
     ,viewChangedCaseFile: function(caseFileId) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_FILE, caseFileId);
+    }
+
+    ,VIEW_RETRIEVED_SUMMARY               : "casefile-split-view-retrieved-summary"
+    ,viewRetrievedSummary: function(summary){
+        Acm.Dispatcher.fireEvent(this.VIEW_RETRIEVED_SUMMARY, summary);
+    }
+    ,MODEL_SPLIT_CASE_FILE                  : "casefile-split-model-split-casefile"
+    ,modelSplitCaseFile: function(splitCaseFile){
+        Acm.Dispatcher.fireEvent(this.MODEL_SPLIT_CASE_FILE, splitCaseFile);
     }
 };
 
