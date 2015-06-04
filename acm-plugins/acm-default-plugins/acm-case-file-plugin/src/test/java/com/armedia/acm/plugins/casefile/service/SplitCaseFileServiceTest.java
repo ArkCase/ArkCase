@@ -119,18 +119,19 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
             public CaseFile answer() throws Throwable {
                 CaseFile copiedCaseFile = caseFileCapture.getValue();
                 copiedCaseFile.setId(2l);
-                if (copiedCaseFile.getContainer() == null) {
-                    AcmContainer copiedContainer = new AcmContainer();
-                    copiedFolder = new AcmFolder();
-                    copiedFolder.setId(200l);
-                    copiedFolder.setName("ROOT");
-                    copiedContainer.setFolder(copiedFolder);
-                    copiedCaseFile.setContainer(copiedContainer);
-                    addToFolderMap(copiedFolder);
-                }
+
+                AcmContainer copiedContainer = new AcmContainer();
+                copiedFolder = new AcmFolder();
+                copiedFolder.setId(200l);
+                copiedFolder.setName("ROOT");
+                copiedContainer.setFolder(copiedFolder);
+                copiedCaseFile.setContainer(copiedContainer);
+                addToFolderMap(copiedFolder);
+
                 return copiedCaseFile;
             }
         });
+
         EasyMock.expect(saveCaseService.saveCase(eq(sourceCaseFile), eq(auth), eq(ipAddress))).andReturn(sourceCaseFile);
 
 

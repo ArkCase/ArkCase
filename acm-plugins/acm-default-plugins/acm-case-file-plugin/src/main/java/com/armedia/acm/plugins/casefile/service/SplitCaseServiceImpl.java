@@ -40,47 +40,35 @@ public class SplitCaseServiceImpl implements SplitCaseService {
     public CaseFile splitCase(Authentication auth,
                               String ipAddress,
                               SplitCaseOptions splitCaseOptions) throws MuleException, SplitCaseFileException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmFolderException, AcmObjectNotFoundException {
-        CaseFile toBeSplitCaseFile = caseFileDao.find(splitCaseOptions.getCaseFileId());
-        if (toBeSplitCaseFile == null)
+        CaseFile original = caseFileDao.find(splitCaseOptions.getCaseFileId());
+        if (original == null)
             throw new SplitCaseFileException("Case file with id = (" + splitCaseOptions.getCaseFileId() + ") not found");
 
 
-        //clean all created,creator,modified, modifier in sub objects as well
-        try {
-            cleanRecursivelyAcmEntity(toBeSplitCaseFile);
-        } catch (IllegalAccessException e) {
-            log.error("Clean AcmEntity failed", e);
-            throw new SplitCaseFileException("clean AcmEntity failed", e);
-        }
-
-        toBeSplitCaseFile.setId(null);
-        toBeSplitCaseFile.setCaseNumber(null);
-
-        //clean container
-        toBeSplitCaseFile.setContainer(null);
-
-        toBeSplitCaseFile.setParticipants(null);
-
-        CaseFile originalCaseFile = caseFileDao.find(splitCaseOptions.getCaseFileId());
+        CaseFile copyCaseFile = new CaseFile();
+        copyCaseFile.setCaseType(original.getCaseType());
+        copyCaseFile.setCourtroomName(original.getCourtroomName());
+        copyCaseFile.setTitle(original.getTitle());
+        copyCaseFile.setDetails(original.getDetails());
+        copyCaseFile.setStatus(original.getStatus());
 
 
         ObjectAssociation childObjectCopy = new ObjectAssociation();
         childObjectCopy.setAssociationType("REFERENCE");
         childObjectCopy.setCategory("COPY_FROM");
-        childObjectCopy.setTargetId(originalCaseFile.getId());
-        childObjectCopy.setTargetType(originalCaseFile.getObjectType());
-        toBeSplitCaseFile.addChildObject(childObjectCopy);
+        childObjectCopy.setTargetId(original.getId());
+        childObjectCopy.setTargetType(original.getObjectType());
+        copyCaseFile.addChildObject(childObjectCopy);
 
-        CaseFile copyCaseFile = saveCaseService.saveCase(toBeSplitCaseFile, auth, ipAddress);
-        //copyCaseFile = caseFileDao.save(copyCaseFile);
+        copyCaseFile = saveCaseService.saveCase(copyCaseFile, auth, ipAddress);
 
         ObjectAssociation childObjectOriginal = new ObjectAssociation();
         childObjectOriginal.setAssociationType("REFERENCE");
         childObjectOriginal.setCategory("COPY_TO");
         childObjectOriginal.setTargetId(copyCaseFile.getId());
         childObjectOriginal.setTargetType(copyCaseFile.getObjectType());
-        originalCaseFile.addChildObject(childObjectOriginal);
-        saveCaseService.saveCase(originalCaseFile, auth, ipAddress);
+        original.addChildObject(childObjectOriginal);
+        saveCaseService.saveCase(original, auth, ipAddress);
 
         splitDocumentsAndFolders(copyCaseFile, splitCaseOptions);
         return copyCaseFile;
