@@ -233,4 +233,12 @@
                               tableName="acm_case_file"/>
     </changeSet>
 
+    <changeSet id="case-file-18-add-courtroom-columns-AFDP-1055" author="dmiller">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_courtroom_name" type="VARCHAR(100)"/>
+            <column name="cm_next_court_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="cm_responsible_organization" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
