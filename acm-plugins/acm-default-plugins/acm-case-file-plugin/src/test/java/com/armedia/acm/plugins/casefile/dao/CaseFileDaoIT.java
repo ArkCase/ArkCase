@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -75,6 +77,10 @@ public class CaseFileDaoIT
         folder.setName("folderName");
         container.setFolder(folder);
         caseFile.setContainer(container);
+
+        caseFile.setNextCourtDate(new Date());
+        caseFile.setCourtroomName("courtroomName");
+        caseFile.setResponsibleOrganization("responsibleOrganization");
 
         CaseFile saved = caseFileDao.save(caseFile);
 

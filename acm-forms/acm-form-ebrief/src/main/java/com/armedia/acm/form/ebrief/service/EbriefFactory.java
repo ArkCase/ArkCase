@@ -50,6 +50,9 @@ public class EbriefFactory extends FrevvoFormFactory{
 		caseFile.setId(form.getId());
 		caseFile.setCaseType(form.getInformation().getType());
 		caseFile.setPersonAssociations(getPersonAssociations(form));
+
+		caseFile.setCourtroomName(form.getDetails().getCourtLocation());
+        caseFile.setNextCourtDate(form.getDetails().getNextCourtHearingDate());
 		
 		ParticipantItem item = new ParticipantItem();
 		item.setId(form.getDetails().getAssignedToId());
@@ -75,6 +78,11 @@ public class EbriefFactory extends FrevvoFormFactory{
 			{
 				form.setInformation(new EbriefInformation());
 			}
+
+            if (form.getDetails() == null)
+            {
+                form.setDetails(new EbriefDetails());
+            }
 			
 			if (caseFile != null)
 			{
@@ -84,6 +92,9 @@ public class EbriefFactory extends FrevvoFormFactory{
 				form.setDefendants(getDefendants(caseFile.getPersonAssociations()));
 				String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 				form.setCmisFolderId(cmisFolderId);
+
+                form.getDetails().setCourtLocation(caseFile.getCourtroomName());
+                form.getDetails().setNextCourtHearingDate(caseFile.getNextCourtDate());
 				
 				List<ParticipantItem> items = asFrevvoParticipants(caseFile.getParticipants());
 				
@@ -93,11 +104,6 @@ public class EbriefFactory extends FrevvoFormFactory{
 					{
 						if (ParticipantTypes.ASSIGNEE.equals(item.getType()))
 						{
-							if (form.getDetails() == null)
-							{
-								form.setDetails(new EbriefDetails());
-							}
-							
 							form.getDetails().setAssignedToId(item.getId());
 							form.getDetails().setAssignedToUserId(item.getValue());
 							form.getDetails().setAssignedTo(item.getName());
