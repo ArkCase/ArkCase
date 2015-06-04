@@ -7,14 +7,15 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
+import com.armedia.acm.plugins.casefile.exceptions.SplitCaseFileException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
+import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,25 +67,27 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-property-file-manager.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
-public class MergeCaseFileServiceIT extends EasyMock {
+public class SplitCaseFileServiceTest extends EasyMock {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CaseFileDao caseFileDao;
-    @Autowired
-    private EcmFileService ecmFileService;
-    @Autowired
-    private AcmFolderService acmFolderService;
 
     @Autowired
-    private EcmFileDao ecmFileDao;
-
-    @Autowired
-    private MergeCaseService mergeCaseService;
+    private SplitCaseService splitCaseService;
 
     @Autowired
     private SaveCaseService saveCaseService;
+
+    @Autowired
+    AcmFolderService acmFolderService;
+
+    @Autowired
+    EcmFileService ecmFileService;
+
+    @Autowired
+    EcmFileDao ecmFileDao;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -92,14 +95,13 @@ public class MergeCaseFileServiceIT extends EasyMock {
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
-    private Long sourceId;
-    private Long targetId;
+    private Long savedCaseFileId;
     private Authentication auth;
     private String ipAddress;
 
     @Test
     @Transactional
-    public void mergeCaseFilesTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
+    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
@@ -112,35 +114,25 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertTrue(dammyDocument.exists());
 
         assertNotNull(caseFileDao);
+        assertNotNull(splitCaseService);
         assertNotNull(ecmFileService);
         assertNotNull(acmFolderService);
-        assertNotNull(mergeCaseService);
 
         expect(auth.getName()).andReturn("ann-acm").anyTimes();
         expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
         replay(auth);
+
         //create source case file
-        CaseFile sourceCaseFile = new CaseFile();
-        sourceCaseFile.setCaseType("caseType");
-        sourceCaseFile.setTitle("title");
+        CaseFile caseFile = new CaseFile();
+        caseFile.setCaseType("caseType");
+        caseFile.setTitle("title");
 
-        CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
-        sourceId = sourceSaved.getId();
-
-        //create target case file
-        CaseFile targetCaseFile = new CaseFile();
-        targetCaseFile.setCaseType("caseType");
-        targetCaseFile.setTitle("title");
-
-
-        CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
-
-        targetId = targetSaved.getId();
+        CaseFile caseFileSaved = saveCaseService.saveCase(caseFile, auth, ipAddress);
+        savedCaseFileId = caseFileSaved.getId();
 
 
         //verify that case files are saved
-        assertNotNull(sourceId);
-        assertNotNull(targetId);
+        assertNotNull(savedCaseFileId);
 
 
         //upload in root folder
@@ -151,12 +143,12 @@ public class MergeCaseFileServiceIT extends EasyMock {
                 "text/plain",
                 "dammyDocument1.txt",
                 auth,
-                sourceSaved.getContainer().getFolder().getCmisFolderId(),
-                sourceSaved.getContainer().getContainerObjectType(),
-                sourceSaved.getContainer().getContainerObjectId());
+                caseFileSaved.getContainer().getFolder().getCmisFolderId(),
+                caseFileSaved.getContainer().getContainerObjectType(),
+                caseFileSaved.getContainer().getContainerObjectId());
 
         //create folder and add document to this folder
-        AcmFolder folderInSourceCase = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder().getId(), "some_folder");
+        AcmFolder folderInCaseFile = acmFolderService.addNewFolder(caseFileSaved.getContainer().getFolder().getId(), "some_folder");
 
         ecmFileService.upload("dammyDocument.txt",
                 "attachment",
@@ -165,49 +157,30 @@ public class MergeCaseFileServiceIT extends EasyMock {
                 "text/plain",
                 "dammyDocument.txt",
                 auth,
-                folderInSourceCase.getCmisFolderId(),
-                sourceSaved.getContainer().getContainerObjectType(),
-                sourceSaved.getContainer().getContainerObjectId());
-        MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
-        mergeCaseOptions.setSourceCaseFileId(sourceId);
-        mergeCaseOptions.setTargetCaseFileId(targetId);
+                folderInCaseFile.getCmisFolderId(),
+                caseFileSaved.getContainer().getContainerObjectType(),
+                caseFileSaved.getContainer().getContainerObjectId());
 
-        List<EcmFile> sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        assertEquals(2, sourceFiles.size());
+        SplitCaseOptions splitCaseOptions = new SplitCaseOptions();
+        splitCaseOptions.setCaseFileId(savedCaseFileId);
 
-        List<EcmFile> targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(0, targetFiles.size());
 
-        mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
+        List<EcmFile> caseFileDocuments = ecmFileDao.findForContainer(caseFileSaved.getContainer().getId());
+        assertEquals(2, caseFileDocuments.size());
 
-        sourceFiles = ecmFileDao.findForContainer(sourceSaved.getContainer().getId());
-        assertEquals(0, sourceFiles.size());
 
-        targetFiles = ecmFileDao.findForContainer(targetSaved.getContainer().getId());
-        assertEquals(2, targetFiles.size());
+        CaseFile splitted = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
 
-        CaseFile sourceCase = caseFileDao.find(sourceId);
-        CaseFile targetCase = caseFileDao.find(targetId);
+        caseFileSaved = caseFileDao.find(savedCaseFileId);
 
-        ObjectAssociation sourceOa = null;
-        for (ObjectAssociation oa : sourceCase.getChildObjects()) {
-            if ("MERGED_TO".equals(oa.getCategory()))
-                sourceOa = oa;
-        }
-        assertNotNull(sourceOa);
-        assertNotNull(sourceOa.getTargetId());
-        assertEquals(sourceOa.getTargetId().longValue(), targetCase.getId().longValue());
+        List<EcmFile> splittedCaseFileDocuments = ecmFileDao.findForContainer(splitted.getContainer().getId());
+        assertEquals(0, splittedCaseFileDocuments.size());
 
-        ObjectAssociation targetOa = null;
-        for (ObjectAssociation oa : targetCase.getChildObjects()) {
-            if ("MERGED_FROM".equals(oa.getCategory()))
-                targetOa = oa;
-        }
-        assertNotNull(targetOa);
-        assertNotNull(targetOa.getTargetId());
-        assertEquals(targetOa.getTargetId().longValue(), sourceCase.getId().longValue());
-
-        assertEquals(sourceCase.getContainer().getFolder().getParentFolderId(), targetCase.getContainer().getFolder().getId());
+        assertNotEquals(splitted.getId().longValue(), caseFileSaved.getId().longValue());
+        assertNotEquals(splitted.getContainer().getId().longValue(), caseFileSaved.getContainer().getId().longValue());
+        assertNotEquals(splitted.getContainer().getFolder().getId().longValue(), caseFileSaved.getContainer().getFolder().getId().longValue());
+        assertTrue(splitted.getCreated().after(caseFileSaved.getCreated()));
+        assertTrue(splitted.getModified().after(caseFileSaved.getModified()));
 
     }
 

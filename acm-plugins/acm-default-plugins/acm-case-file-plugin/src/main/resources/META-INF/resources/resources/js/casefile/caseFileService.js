@@ -8,6 +8,7 @@
 CaseFile.Service = {
     create : function() {
         if (CaseFile.Service.Lookup.create) {CaseFile.Service.Lookup.create();}
+        if (CaseFile.Service.Action.create) {CaseFile.Service.Action.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
         if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
         //if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
@@ -20,6 +21,7 @@ CaseFile.Service = {
     }
     ,onInitialized: function() {
         if (CaseFile.Service.Lookup.onInitialized) {CaseFile.Service.Lookup.onInitialized();}
+        if (CaseFile.Service.Action.onInitialized) {CaseFile.Service.Action.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
         if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
         //if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
@@ -213,6 +215,37 @@ CaseFile.Service = {
         }
     }
 
+    ,Action: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+        ,API_MERGE_CASE_FILES : "/api/v1/plugin/merge-casefiles"
+
+        ,mergeCaseFiles: function(sourceCaseFileId, targetCaseFileId){
+            var url = App.getContextPath() + this.API_MERGE_CASE_FILES;
+            var data = {"sourceCaseFileId": sourceCaseFileId, "targetCaseFileId": targetCaseFileId};
+            /*var data = {};
+            data.sourceCaseFileId = sourceCaseFileId;
+            data.targetCaseFileId = targetCaseFileId;*/
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data: JSON.stringify(data)
+                ,callback: function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelMergedCaseFiles(response);
+                    } else {
+                        if (CaseFile.Model.Detail.validateCaseFile(response)) {
+                            var targetCaseFile = response;
+                            CaseFile.Controller.modelMergedCaseFiles(targetCaseFile);
+                            return true;
+                        }
+                    } //end else
+                }
+            });
+        }
+
+    }
     ,Detail: {
         create: function() {
         }

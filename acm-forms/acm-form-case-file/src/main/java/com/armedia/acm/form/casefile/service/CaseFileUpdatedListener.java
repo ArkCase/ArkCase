@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import com.armedia.acm.form.casefile.model.CaseFileForm;
+import com.armedia.acm.form.casefile.model.CaseFilePSForm;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
@@ -40,11 +42,11 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent> {
 					
 					if (FrevvoFormName.CASE_FILE.equals(activeFormName))
 					{
-						getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser());
+						getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(), CaseFileForm.class);
 					}
 					else if (FrevvoFormName.CASE_FILE_PS.equals(activeFormName))
 					{
-						getCaseFilePSService().updateXML(event.getCaseFile(), event.getEventUser());
+						getCaseFilePSService().updateXML(event.getCaseFile(), event.getEventUser(), CaseFilePSForm.class);
 					}
 				}
 			}

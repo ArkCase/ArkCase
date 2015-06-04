@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
@@ -37,8 +38,7 @@ public class AddNewFolderAPIController {
             @PathVariable("parentFolderId") Long parentFolderId,
             @PathVariable("newFolderName")  String newFolderName,
             Authentication authentication,
-            HttpSession session)  throws AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
+            HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
         /**
          * This API is documented in ark-document-management.raml.  If you update the API, also update the RAML.
          */
@@ -61,6 +61,12 @@ public class AddNewFolderAPIController {
                 log.error("Exception occurred while trying to create new folder "+ newFolderName,e);
             }
             getFolderEventPublisher().publishFolderCreatedEvent(null,authentication,ipAddress,false);
+            throw e;
+        } catch (AcmObjectNotFoundException e) {
+            if( log.isErrorEnabled() ){
+                log.error("Exception occurred while trying to create new folder "+ newFolderName,e);
+            }
+            getFolderEventPublisher().publishFolderCreatedEvent(null, authentication, ipAddress, false);
             throw e;
         }
     }

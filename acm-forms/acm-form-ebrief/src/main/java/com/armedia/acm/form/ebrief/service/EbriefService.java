@@ -10,13 +10,11 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.service.CaseFileWorkflowListener;
-import com.armedia.acm.form.ebrief.model.EbriefConstants;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
 import com.armedia.acm.form.ebrief.model.xml.EbriefDetails;
 import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
@@ -27,7 +25,6 @@ import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 /**
@@ -162,29 +159,11 @@ public class EbriefService extends FrevvoFormAbstractService {
 		return json;
 	}
 	
-	public void updateXML(CaseFile caseFile, Authentication auth)
-    {
-    	if (caseFile != null)
-    	{
-    		// First find the XML that is already in the system and create Frevvo form
-    		Long containerId = caseFile.getContainer().getId();
-    		Long folderId = caseFile.getContainer().getFolder().getId();
-    		String fileType = FrevvoFormName.EBRIEF.toLowerCase() + "_xml";
-    		
-    		EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
-    		EbriefForm form = (EbriefForm) getExistingForm(ecmFile.getId(), EbriefForm.class);
-    		
-    		// Update eBrief form with the new data provided in the Case File
-    		form = getEbriefFactory().asFrevvoEbriefForm(caseFile, form, this);
-    		
-    		if (form != null)
-    		{
-    			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, ecmFile, auth);		
-    		}
-    	}
-    	
-    }
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form)
+	{
+		return getEbriefFactory().asFrevvoEbriefForm((CaseFile) obj, (EbriefForm) form, this);
+	}
 
 	@Override
 	public String getFormName() 

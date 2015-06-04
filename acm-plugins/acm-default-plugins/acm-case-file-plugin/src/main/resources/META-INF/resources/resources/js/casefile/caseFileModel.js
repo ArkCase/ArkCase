@@ -6,6 +6,7 @@
 CaseFile.Model = CaseFile.Model || {
     create : function() {
         if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
+        if (CaseFile.Model.Action.create)         {CaseFile.Model.Action.create();}
         if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
         //if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
@@ -26,6 +27,7 @@ CaseFile.Model = CaseFile.Model || {
     }
     ,onInitialized: function() {
         if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
+        if (CaseFile.Model.Action.onInitialized)         {CaseFile.Model.Action.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
         //if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
         if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
@@ -58,12 +60,14 @@ CaseFile.Model = CaseFile.Model || {
             return CaseFile.Model.DOC_TYPE_CASE_FILE;
         }
         ,nodeTitle: function(objSolr) {
-        	var defaultExpression = "Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')'";
-        	var caseFileTreeRootNameExpression = Acm.Object.MicroData.get("caseFileTreeRootNameExpression");
-            if (Acm.isEmpty(caseFileTreeRootNameExpression)) {
-                caseFileTreeRootNameExpression = defaultExpression;
-            }
-            return eval(caseFileTreeRootNameExpression);
+            return Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')';
+
+//        	var defaultExpression = "Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')'";
+//        	var caseFileTreeRootNameExpression = Acm.Object.MicroData.get("caseFileTreeRootNameExpression");
+//            if (Acm.isEmpty(caseFileTreeRootNameExpression)) {
+//                caseFileTreeRootNameExpression = defaultExpression;
+//            }
+//            return eval(caseFileTreeRootNameExpression);
         }
         ,nodeToolTip: function(objSolr) {
             return Acm.goodValue(objSolr.title_parseable);
@@ -159,50 +163,76 @@ CaseFile.Model = CaseFile.Model || {
             ,onInitialized: function() {
             }
 
-            ,NODE_TYPE_PART_DETAILS      : "d"
-            ,NODE_TYPE_PART_PEOPLE       : "p"
-            ,NODE_TYPE_PART_DOCUMENTS    : "o"
-            ,NODE_TYPE_PART_PARTICIPANTS : "a"
-            ,NODE_TYPE_PART_NOTES        : "n"
-            ,NODE_TYPE_PART_TASKS        : "t"
-            ,NODE_TYPE_PART_REFERENCES   : "r"
-            ,NODE_TYPE_PART_HISTORY      : "h"
-            ,NODE_TYPE_PART_TEMPLATES    : "tm"
+            ,NODE_TYPE_PART_DETAILS      : "det"
+            ,NODE_TYPE_PART_PEOPLE       : "ppl"
+            ,NODE_TYPE_PART_DOCUMENTS    : "doc"
+            ,NODE_TYPE_PART_PARTICIPANTS : "par"
+            ,NODE_TYPE_PART_NOTES        : "note"
+            ,NODE_TYPE_PART_TASKS        : "task"
+            ,NODE_TYPE_PART_REFERENCES   : "ref"
+            ,NODE_TYPE_PART_HISTORY      : "his"
+            ,NODE_TYPE_PART_TEMPLATES    : "tpl"
             ,NODE_TYPE_PART_TIME         : "time"
             ,NODE_TYPE_PART_COST         : "cost"
             ,NODE_TYPE_PART_CALENDAR     : "calendar"
 
             ,nodeTypeMap: [
-                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/CASE_FILE"        ,icon: "i i-folder"
-                    ,tabIds: ["tabTitle"
-                        ,"tabDetail","tabPeople"
-                        ,"tabDocs","tabParticipants"
-                        ,"tabNotes","tabTasks"
-                        ,"tabRefs","tabHistory"
-                        ,"tabCorrespondence"
-                        ,"tabTime"
-                        ,"tabCost"
-                        ,"tabOutlookCalendar"
-                    ]
-                }
-                ,{nodeType: "p/CASE_FILE/d"      ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/CASE_FILE/p"      ,icon: "",tabIds: ["tabPeople"]}
-                ,{nodeType: "p/CASE_FILE/o"      ,icon: "",tabIds: ["tabDocs"]}
-                //,{nodeType: "p/CASE_FILE/o/c"     ,icon: "",tabIds: ["tabDoc"]}
-                ,{nodeType: "p/CASE_FILE/a"      ,icon: "",tabIds: ["tabParticipants"]}
-                ,{nodeType: "p/CASE_FILE/n"      ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/CASE_FILE/t"      ,icon: "",tabIds: ["tabTasks"]}
-                ,{nodeType: "p/CASE_FILE/r"      ,icon: "",tabIds: ["tabRefs"]}
-                ,{nodeType: "p/CASE_FILE/h"      ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/CASE_FILE/tm"     ,icon: "",tabIds: ["tabCorrespondence"]}
-                ,{nodeType: "p/CASE_FILE/time"   ,icon: "",tabIds: ["tabTime"]}
-                ,{nodeType: "p/CASE_FILE/cost"   ,icon: "",tabIds: ["tabCost"]}
-                ,{nodeType: "p/CASE_FILE/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
+                {nodeType: "prevPage"      ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+                ,{nodeType: "nextPage"     ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+                ,{nodeType: "p"            ,icon: ""                 ,tabIds: ["tabBlank"]}
+                ,{nodeType: "p/CASE_FILE"  ,icon: "i i-folder"       ,tabIds: ["tabTitle"
+                    ,"tabDetail"
+                    ,"tabPeople"
+                    ,"tabDocs"
+                    ,"tabParticipants"
+                    ,"tabNotes"
+                    ,"tabTasks"
+                    ,"tabRefs"
+                    ,"tabHistory"
+                    ,"tabCorrespondence"
+                    ,"tabOutlookCalendar"
+                    ,"tabTime"
+                    ,"tabCost"
+                ]}
+                ,{nodeType: "p/CASE_FILE/det"       ,icon: "", res: "casefile:navigation.leaf-title.details"        ,tabIds: ["tabDetail"]}
+                ,{nodeType: "p/CASE_FILE/ppl"       ,icon: "", res: "casefile:navigation.leaf-title.people"         ,tabIds: ["tabPeople"]}
+                ,{nodeType: "p/CASE_FILE/doc"       ,icon: "", res: "casefile:navigation.leaf-title.documents"      ,tabIds: ["tabDocs"]}
+                //,{nodeType: "p/CASE_FILE/doc/c"     ,icon: "",tabIds: ["tabDoc"]}
+                ,{nodeType: "p/CASE_FILE/par"       ,icon: "", res: "casefile:navigation.leaf-title.participants"   ,tabIds: ["tabParticipants"]}
+                ,{nodeType: "p/CASE_FILE/note"      ,icon: "", res: "casefile:navigation.leaf-title.notes"          ,tabIds: ["tabNotes"]}
+                ,{nodeType: "p/CASE_FILE/task"      ,icon: "", res: "casefile:navigation.leaf-title.tasks"          ,tabIds: ["tabTasks"]}
+                ,{nodeType: "p/CASE_FILE/ref"       ,icon: "", res: "casefile:navigation.leaf-title.references"     ,tabIds: ["tabRefs"]}
+                ,{nodeType: "p/CASE_FILE/his"       ,icon: "", res: "casefile:navigation.leaf-title.history"        ,tabIds: ["tabHistory"]}
+                ,{nodeType: "p/CASE_FILE/tpl"       ,icon: "", res: "casefile:navigation.leaf-title.correspondence" ,tabIds: ["tabCorrespondence"]}
+                ,{nodeType: "p/CASE_FILE/calendar"  ,icon: "", res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabOutlookCalendar"]}
+                ,{nodeType: "p/CASE_FILE/time"      ,icon: "", res: "casefile:navigation.leaf-title.time"           ,tabIds: ["tabTime"]}
+                ,{nodeType: "p/CASE_FILE/cost"      ,icon: "", res: "casefile:navigation.leaf-title.cost"           ,tabIds: ["tabCost"]}
 
             ]
+//            ,findNodeTypeInfo: function(nodeType) {
+//                var info = null;
+//                for (var i = 0; i < this.nodeTypeMap.length; i++) {
+//                    if (this.nodeTypeMap[i].nodeType == nodeType) {
+//                        info = this.nodeTypeMap[i];
+//                        break;
+//                    }
+//                }
+//                return info;
+//            }
+        }
+    }
+
+    ,Action: {
+        create: function(){
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_MERGED_CASE_FILES           , this.onViewMergedCaseFiles);
+        }
+        ,onInitialized: function(){
+
+        }
+        ,onViewMergedCaseFiles: function(sourceCaseFileId, targetCaseFileId){
+            if(Acm.isNotEmpty(sourceCaseFileId) && Acm.isNotEmpty(targetCaseFileId)){
+                CaseFile.Service.Action.mergeCaseFiles(sourceCaseFileId, targetCaseFileId);
+            }
         }
     }
 

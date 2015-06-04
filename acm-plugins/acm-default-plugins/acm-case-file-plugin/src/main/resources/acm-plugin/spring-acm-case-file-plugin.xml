@@ -36,6 +36,11 @@
                     <property name="url" value="/plugin/casefile/{caseId}"/>
                     <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
                 </bean>
+                <bean id="getCaseMergeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/v1/plugin/merge-casefiles"/>
+                    <property name="requiredPrivilege" ref="caseFileListPrivilege"/>
+                </bean>
                 <bean id="getCasefileSplitUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/plugin/casefile/split/{parentCasefileId}"/>

@@ -11,6 +11,7 @@
         <span itemprop="objType">FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="participantTypes">${participantTypes}</span>
+        <span itemprop="viewerSrc">${link}</span>
     </div>
 </jsp:attribute>
 
@@ -122,16 +123,16 @@
 
                                     <p data-i18n="docdetail:tags.newtag.instructions.first-instruction"></p>
                                     <p data-i18n="docdetail:tags.newtag.instructions.second-instruction"></p>
-                                        <div class="form-group" id="newTagForm">
-                                            <label for="newTagName" class="control-label" data-i18n="docdetail:tags.newtag.name"></label>
-                                            <input type="text" class="form-control" id="newTagName">
-                                            <label for="newTagDesc" class="control-label" data-i18n="docdetail:tags.newtag.description"></label>
-                                            <input type="text" class="form-control" id="newTagDesc">
-                                            <label for="newTagText" class="control-label" data-i18n="docdetail:tags.newtag.name"></label>
-                                            <input type="text" class="form-control" id="newTagText">
-                                            </br>
-                                        </div>
-                                    <%--[Insert tree view with checkboxes]--%>
+                                    <div class="form-group" id="newTagForm">
+                                        <label for="newTagName" class="control-label" data-i18n="docdetail:tags.newtag.name"></label>
+                                        <input type="text" class="form-control" id="newTagName">
+                                        <label for="newTagDesc" class="control-label" data-i18n="docdetail:tags.newtag.description"></label>
+                                        <input type="text" class="form-control" id="newTagDesc">
+                                        <label for="newTagText" class="control-label" data-i18n="docdetail:tags.newtag.name"></label>
+                                        <input type="text" class="form-control" id="newTagText">
+                                        </br>
+                                    </div>
+                                        <%--[Insert tree view with checkboxes]--%>
 
                                 </div>
                                 <div class="modal-footer">
@@ -259,58 +260,58 @@
         </section>
     </aside>
     <aside>
-    <section class="vbox">
-        <section class="scrollable">
-            <div class="wrapper bg-empty  clearfix">
-                <div class="row" id="parentDetails">
-                    <div class="col-xs-12">
-                        <div class="">
-                            <div class=" clearfix">
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="owner"></a></div>
-                                    <small class="text-muted"  data-i18n="docdetail:header.labels.owner"></small></div>
-                                <div class="col-xs-2 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="createDate"></a></div>
-                                    <small class="text-muted" data-i18n="docdetail:header.labels.create-date"></small></div>
-                                <div class="col-xs-3 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="assignee"></a></div>
-                                    <small class="text-muted" data-i18n="docdetail:header.labels.assigned-to"></small></div>
-                                <div class="col-xs-3 b-r">
-                                    <div class="h4 font-bold"><a href="#" id="type"></a></div>
-                                    <small class="text-muted" data-i18n="docdetail:header.labels.type"></small></div>
-                                <div class="col-xs-2">
-                                    <div class="h4 font-bold"><a href="#" id="status"></a></div>
-                                    <small class="text-muted" data-i18n="docdetail:header.labels.state"></small></div>
+        <section class="vbox">
+            <section class="scrollable">
+                <div class="wrapper bg-empty  clearfix">
+                    <div class="row" id="parentDetails">
+                        <div class="col-xs-12">
+                            <div class="">
+                                <div class=" clearfix">
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="owner"></a></div>
+                                        <small class="text-muted"  data-i18n="docdetail:header.labels.owner"></small></div>
+                                    <div class="col-xs-2 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="createDate"></a></div>
+                                        <small class="text-muted" data-i18n="docdetail:header.labels.create-date"></small></div>
+                                    <div class="col-xs-3 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="assignee"></a></div>
+                                        <small class="text-muted" data-i18n="docdetail:header.labels.assigned-to"></small></div>
+                                    <div class="col-xs-3 b-r">
+                                        <div class="h4 font-bold"><a href="#" id="type"></a></div>
+                                        <small class="text-muted" data-i18n="docdetail:header.labels.type"></small></div>
+                                    <div class="col-xs-2">
+                                        <div class="h4 font-bold"><a href="#" id="status"></a></div>
+                                        <small class="text-muted" data-i18n="docdetail:header.labels.state"></small></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="wrapper ">
+                <div class="wrapper ">
 
-                <div class="row" id="tabDocViewer">
-                    <div class="col-md-12">
-                        <section class="panel b-a">
+                    <div class="row" id="tabDocViewer">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
 
-                            <div id="divDocViewer" style="width:100%">
-                                <div id="divDocViewerHeader" stile = "width:100%">
-                                    <p>Document Viewer</p>
+                                <div id="divDocViewer" style="width:100%">
+                                    <div id="divDocViewerHeader" stile = "width:100%">
+                                        <p>Document Viewer</p>
+                                    </div>
+                                        <iframe src = "about:blank" width='100%' height='700' allowfullscreen webkitallowfullscreen></iframe>
                                 </div>
-                                <iframe src = "${link}" width='100%' height='700' allowfullscreen webkitallowfullscreen></iframe>
-                            </div>
-                        </section>
+                            </section>
+                        </div>
                     </div>
+
+
+
+
                 </div>
-
-
-
-
-            </div>
-            </div>
+                </div>
+            </section>
         </section>
-    </section>
-</aside>
+    </aside>
 </section>
 </jsp:body>
 </t:noNav>

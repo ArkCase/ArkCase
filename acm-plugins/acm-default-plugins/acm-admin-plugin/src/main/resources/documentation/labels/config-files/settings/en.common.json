@@ -11,8 +11,10 @@
             "description": ""
         },
         "case-file": {
-            "value": "Case File",
-            "defaultValue": "Case File",
+            "__xxx__value": "Case File",
+            "__xxx__defaultValue": "Case File",
+            "value": "Brief",
+            "defaultValue": "Brief",
             "description": ""
         },
         "timesheet": {
@@ -76,8 +78,10 @@
             "description": ""
         },
         "case-files": {
-            "value": "Case Files",
-            "defaultValue": "Case Files",
+            "__xxx__value": "Case Files",
+            "__xxx__defaultValue": "Case Files",
+            "value": "Briefs",
+            "defaultValue": "Briefs",
             "description": ""
         },
         "dashboard": {
@@ -135,6 +139,21 @@
     "full": {
         "value": "MM/DD/YYYY h:mm:ss a",
         "defaultValue": "MM/DD/YYYY h:mm:ss a",
+        "description": ""
+    },
+	"frevvo": {
+        "value": "YYYY-MM-DD",
+        "defaultValue": "YYYY-MM-DD",
+        "description": ""
+    },
+	"pentaho": {
+        "value": "MM/DD/YYYY",
+        "defaultValue": "MM/DD/YYYY",
+        "description": ""
+    },
+	"datepicker": {
+        "value": "mm/dd/yy",
+        "defaultValue": "mm/dd/yy",
         "description": ""
     }
 }}
