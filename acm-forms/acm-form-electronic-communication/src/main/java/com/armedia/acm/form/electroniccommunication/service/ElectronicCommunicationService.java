@@ -73,7 +73,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 				return false;
 			}
 			
-			cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
+			cmisFolderId = findFolderIdForAttachments(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 
@@ -87,7 +87,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 				LOG.warn("Cannot find case by given caseId=" + form.getDetails().getCaseId());
 				return false;
 			}
-			cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+			cmisFolderId = findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			
@@ -132,6 +132,12 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 
 	public void setCaseFileDao(CaseFileDao caseFileDao) {
 		this.caseFileDao = caseFileDao;
+	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
 	}
 	
 	

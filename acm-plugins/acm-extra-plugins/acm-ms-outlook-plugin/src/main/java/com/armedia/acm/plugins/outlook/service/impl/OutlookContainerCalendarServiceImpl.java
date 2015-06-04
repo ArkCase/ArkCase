@@ -90,6 +90,10 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                 if (participantsTypesForOutlookFolder.contains(ap.getParticipantType())) {
                     //add participant to access calendar folder
                     AcmUser user = userDao.findByUserId(ap.getParticipantLdapId());
+                    if ( user == null )
+                    {
+                        continue;
+                    }
                     OutlookFolderPermission outlookFolderPermission = new OutlookFolderPermission();
                     outlookFolderPermission.setEmail(user.getMail());
                     switch (ap.getParticipantType()) {

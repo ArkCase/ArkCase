@@ -31,7 +31,7 @@ public class MergeCaseFilesAPIController {
     private MergeCaseService mergeCaseService;
 
 
-    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
     @ResponseBody
     public CaseFile mergeCaseFiles(
            @RequestBody MergeCaseOptions mergeCaseOptions,

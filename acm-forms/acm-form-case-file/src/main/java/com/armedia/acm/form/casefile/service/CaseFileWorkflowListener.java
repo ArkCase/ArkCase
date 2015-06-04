@@ -54,7 +54,7 @@ public class CaseFileWorkflowListener
         pvars.put("CASE_FILE", caseFile.getId());
         pvars.put("REQUEST_TYPE", "BACKGROUND_INVESTIGATION");
         pvars.put("REQUEST_ID", caseFile.getId());
-        String cmisFolderId = formService.findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+        String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
         pvars.put("OBJECT_FOLDER_ID", cmisFolderId);
         pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
         pvars.put("taskPriority", configuration.getTaskPriority());

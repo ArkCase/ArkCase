@@ -275,4 +275,10 @@ public class CostService extends FrevvoFormChargeAbstractService {
 	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
 		AcmContainerDao = acmContainerDao;
 	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
+	}
 }
