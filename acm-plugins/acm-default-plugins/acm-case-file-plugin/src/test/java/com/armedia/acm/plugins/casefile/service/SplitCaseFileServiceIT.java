@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
@@ -10,10 +11,12 @@ import com.armedia.acm.plugins.casefile.exceptions.SplitCaseFileException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,11 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -96,10 +99,11 @@ public class SplitCaseFileServiceIT extends EasyMock {
     private Long savedCaseFileId;
     private Authentication auth;
     private String ipAddress;
+    private Long sourceId;
 
     @Test
     @Transactional
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException {
+    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
@@ -109,28 +113,31 @@ public class SplitCaseFileServiceIT extends EasyMock {
 
 
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
+        Resource dammyDocument1 = new ClassPathResource("/documents/textDammydocument1.txt");
+        Resource dammyDocument2 = new ClassPathResource("/documents/textDammydocument2.txt");
         assertTrue(dammyDocument.exists());
+        assertTrue(dammyDocument1.exists());
+        assertTrue(dammyDocument2.exists());
 
         assertNotNull(caseFileDao);
-        assertNotNull(splitCaseService);
         assertNotNull(ecmFileService);
         assertNotNull(acmFolderService);
+        assertNotNull(splitCaseService);
 
         expect(auth.getName()).andReturn("ann-acm").anyTimes();
         expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
         replay(auth);
-
         //create source case file
-        CaseFile caseFile = new CaseFile();
-        caseFile.setCaseType("caseType");
-        caseFile.setTitle("title");
+        CaseFile sourceCaseFile = new CaseFile();
+        sourceCaseFile.setCaseType("caseType");
+        sourceCaseFile.setTitle("title");
 
-        CaseFile caseFileSaved = saveCaseService.saveCase(caseFile, auth, ipAddress);
-        savedCaseFileId = caseFileSaved.getId();
+        CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
+        sourceId = sourceSaved.getId();
 
 
         //verify that case files are saved
-        assertNotNull(savedCaseFileId);
+        assertNotNull(sourceId);
 
 
         //upload in root folder
@@ -141,44 +148,87 @@ public class SplitCaseFileServiceIT extends EasyMock {
                 "text/plain",
                 "dammyDocument1.txt",
                 auth,
-                caseFileSaved.getContainer().getFolder().getCmisFolderId(),
-                caseFileSaved.getContainer().getContainerObjectType(),
-                caseFileSaved.getContainer().getContainerObjectId());
+                sourceSaved.getContainer().getFolder().getCmisFolderId(),
+                sourceSaved.getContainer().getContainerObjectType(),
+                sourceSaved.getContainer().getContainerObjectId());
+
+        //create folder and add folder to this folder
+        AcmFolder folderInSourceCase = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder(), "Folder");
 
         //create folder and add document to this folder
-        AcmFolder folderInCaseFile = acmFolderService.addNewFolder(caseFileSaved.getContainer().getFolder().getId(), "some_folder");
+        AcmFolder folderInSourceCase1 = acmFolderService.addNewFolder(folderInSourceCase, "Folder1");
 
-        ecmFileService.upload("dammyDocument.txt",
+        EcmFile file = ecmFileService.upload("dammyDocument.txt",
                 "attachment",
                 "Document",
                 dammyDocument.getInputStream(),
                 "text/plain",
                 "dammyDocument.txt",
                 auth,
-                folderInCaseFile.getCmisFolderId(),
-                caseFileSaved.getContainer().getContainerObjectType(),
-                caseFileSaved.getContainer().getContainerObjectId());
+                folderInSourceCase1.getCmisFolderId(),
+                sourceSaved.getContainer().getContainerObjectType(),
+                sourceSaved.getContainer().getContainerObjectId());
 
+        EcmFile file1 = ecmFileService.upload("dammyDocument1.txt",
+                "attachment",
+                "Document",
+                dammyDocument1.getInputStream(),
+                "text/plain",
+                "dammyDocument1.txt",
+                auth,
+                folderInSourceCase1.getCmisFolderId(),
+                sourceSaved.getContainer().getContainerObjectType(),
+                sourceSaved.getContainer().getContainerObjectId());
+
+
+        //create folder and add document to this folder
+        AcmFolder folderInSourceCase2 = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder(), "Folder2");
+
+        EcmFile file2 = ecmFileService.upload("dammyDocument2.txt",
+                "attachment",
+                "Document",
+                dammyDocument2.getInputStream(),
+                "text/plain",
+                "dammyDocument1.txt",
+                auth,
+                folderInSourceCase2.getCmisFolderId(),
+                sourceSaved.getContainer().getContainerObjectType(),
+                sourceSaved.getContainer().getContainerObjectId());
+
+
+        //set split options
         SplitCaseOptions splitCaseOptions = new SplitCaseOptions();
-        splitCaseOptions.setCaseFileId(savedCaseFileId);
+        splitCaseOptions.setCaseFileId(sourceId);
+        List<SplitCaseOptions.AttachmentDTO> attachments = new ArrayList<>();
+        attachments.add(new SplitCaseOptions.AttachmentDTO(file1.getId(), "document"));
+        attachments.add(new SplitCaseOptions.AttachmentDTO(folderInSourceCase2.getId(), "folder"));
+        splitCaseOptions.setAttachments(attachments);
+        splitCaseOptions.setPreserveFolderStructure(true);
+        
+        CaseFile copyCaseFile = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
 
+        CaseFile originalCase = caseFileDao.find(sourceId);
 
-        List<EcmFile> caseFileDocuments = ecmFileDao.findForContainer(caseFileSaved.getContainer().getId());
-        assertEquals(2, caseFileDocuments.size());
+        ObjectAssociation sourceOa = null;
+        for (ObjectAssociation oa : originalCase.getChildObjects()) {
+            if ("COPY_TO".equals(oa.getCategory()))
+                sourceOa = oa;
+        }
+        assertNotNull(sourceOa);
+        assertNotNull(sourceOa.getTargetId());
+        assertEquals(sourceOa.getTargetId().longValue(), copyCaseFile.getId().longValue());
 
+        ObjectAssociation copyOa = null;
+        for (ObjectAssociation oa : copyCaseFile.getChildObjects()) {
+            if ("COPY_FROM".equals(oa.getCategory()))
+                copyOa = oa;
+        }
+        assertNotNull(copyOa);
+        assertNotNull(copyOa.getTargetId());
+        assertEquals(copyOa.getTargetId().longValue(), originalCase.getId().longValue());
 
-        CaseFile splitted = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
+        assertEquals(originalCase.getContainer().getFolder().getParentFolderId(), copyCaseFile.getContainer().getFolder().getId());
 
-        caseFileSaved = caseFileDao.find(savedCaseFileId);
-
-        List<EcmFile> splittedCaseFileDocuments = ecmFileDao.findForContainer(splitted.getContainer().getId());
-        assertEquals(0, splittedCaseFileDocuments.size());
-
-        assertNotEquals(splitted.getId().longValue(), caseFileSaved.getId().longValue());
-        assertNotEquals(splitted.getContainer().getId().longValue(), caseFileSaved.getContainer().getId().longValue());
-        assertNotEquals(splitted.getContainer().getFolder().getId().longValue(), caseFileSaved.getContainer().getFolder().getId().longValue());
-        assertTrue(splitted.getCreated().after(caseFileSaved.getCreated()));
-        assertTrue(splitted.getModified().after(caseFileSaved.getModified()));
 
     }
 

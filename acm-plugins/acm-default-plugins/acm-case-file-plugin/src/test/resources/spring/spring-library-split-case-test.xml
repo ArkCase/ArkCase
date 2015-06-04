@@ -4,6 +4,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="mergeCaseService" class="com.armedia.acm.plugins.casefile.service.MergeCaseServiceImpl"/>
+    <bean id="splitCaseService" class="com.armedia.acm.plugins.casefile.service.SplitCaseServiceImpl"/>
 
 </beans>
