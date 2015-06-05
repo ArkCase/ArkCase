@@ -1,0 +1,19 @@
+{
+    "footer": {"buttons": {"split-case": "Split Brief"}},
+    "header": {"labels": {"split-case": "Split Brief"}},
+    "window-title": "Brief | ACM | Ark Case Management",
+    "bootstrap-wizard": {
+        "tabs": {
+            "summary": "Summary",
+            "notes": "Notes",
+            "documents": "Documents",
+            "details": "Details",
+            "people": "People",
+            "participants": "Participants"
+        },
+        "direction": {
+            "next": "Next",
+            "previous": "Previous"
+        }
+    }
+}
