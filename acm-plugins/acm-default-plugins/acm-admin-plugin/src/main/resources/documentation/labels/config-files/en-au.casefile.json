@@ -40,6 +40,13 @@
             "title": "References"
         }
     },
+    "consolidate-case-dialog": {
+        "btn-cancel": "Cancel",
+        "title": "Consolidate Case",
+        "enter-case-like-consolidate": "Enter the case you would like to consolidate with:",
+        "btn-ok": "Consolidate Case",
+        "btn-close": "Close"
+    },
     "email-documents-dialog": {
         "btn-cancel": "Cancel",
         "label": {"email-address": "Email Address"},
