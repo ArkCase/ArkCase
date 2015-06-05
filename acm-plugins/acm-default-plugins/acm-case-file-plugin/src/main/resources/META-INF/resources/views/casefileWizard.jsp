@@ -6,7 +6,11 @@
 
 <t:layout>
 	<jsp:attribute name="endOfHead">
-	    <title><spring:message code="caseFileNew.page.title" text="Case File | ACM | Armedia Case Management" /></title>
+
+        <title data-i18n="casefile:page-title">Case Files | ACM | Ark Case Management</title>
+        <div id="detailData" itemscope="true" style="display: none">
+          <span itemprop="resourceNamespace">casefile</span>
+        </div>
 	</jsp:attribute>
 
 	<jsp:body>
