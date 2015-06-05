@@ -86,6 +86,11 @@
                     <property name="url" value="/api/{version}/service/ecm/folder/{objectType}/{objectId}/{folderId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
+                <bean id="createFolderByPath" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/ecm/createFolderByPath"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
