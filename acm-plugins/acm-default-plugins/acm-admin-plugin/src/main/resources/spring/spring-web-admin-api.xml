@@ -13,6 +13,7 @@
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
+    <!-- Label configuration API -->
     <bean id="labelConfigurationRetrieveResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveResource">
         <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
     </bean>
@@ -47,6 +48,7 @@
         <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
     </bean>
 
+    <!-- LDAP configuration API -->
     <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
         <property name="ldapConfigurationTemplatesLocation" value="#{ systemProperties ['user.home'] }/.acm/spring/ldap-config-templates/" />
         <property name="ldapTemplateLoginFile" value="spring-config-ldap-authenticate.xml.ftl"/>
@@ -76,6 +78,36 @@
 
     <bean id="ldapConfigurationUpdateDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationUpdateDirectory">
         <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
+    </bean>
+
+    <!-- Roles Priveleges API-->
+    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesService">
+        <property name="applicationRolesFile" value="#{ systemProperties ['user.home'] }/.acm/applicationRoles.properties" />
+        <property name="applicationPrivilegesFile" value="#{ systemProperties ['user.home'] }/.acm/applicationPrivileges.properties" />
+        <property name="applicationRolesPrivilegesPropertiesFile" value="#{ systemProperties ['user.home'] }/.acm/applicationRolesPrivileges.properties" />
+        <property name="applicationRolesPrivilegesTemplatesLocation" value="#{ systemProperties ['user.home'] }/.acm/spring/roles-privileges-templates/" />
+        <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl" />
+        <property name="applicationRolesPrivilegesFile" value="#{ systemProperties ['user.home'] }/.acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml" />
+    </bean>
+
+    <bean id="rolesPrivilegesCreateRole" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesCreateRole">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrieveRoles" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRoles">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrievePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrievePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrieveRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesUpdateRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRolePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>

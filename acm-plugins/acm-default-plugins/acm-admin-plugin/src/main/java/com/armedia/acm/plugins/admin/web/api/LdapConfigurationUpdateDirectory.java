@@ -1,8 +1,6 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -50,7 +44,7 @@ public class LdapConfigurationUpdateDirectory {
 
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
-                log.error(String.format("Can't update LDAP directory"), e);
+                log.error("Can't update LDAP directory", e);
             }
             throw new AcmLdapConfigurationException("Update LDAP directory error", e);
         }
