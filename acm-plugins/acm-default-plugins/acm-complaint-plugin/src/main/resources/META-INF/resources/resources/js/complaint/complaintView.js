@@ -1692,7 +1692,7 @@ Complaint.View = Complaint.View || {
                     url = url.replace("_data=(", "_data=(type:'complaint'"
                         + ", complaintId:'" + complaint.complaintId
                         + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber)
-                        + "',complaintTitle:'" + complaintTitle
+                        + "',complaintTitle:'" + encodeURIComponent(complaintTitle)
                         + "',complaintPriority:'" + Acm.goodValue(complaint.priority)
                         + "',folderId:'" + folderId
                         + "',");
