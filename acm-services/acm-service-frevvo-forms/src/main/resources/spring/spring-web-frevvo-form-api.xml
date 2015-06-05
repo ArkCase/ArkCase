@@ -53,6 +53,8 @@
         <property name="complaintFactory" ref="complaintFactory"/>
         <property name="ebriefFactory" ref="ebriefFactory"/>
         <property name="projectFactory" ref="projectFactory"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
 	</bean>
 
 </beans>

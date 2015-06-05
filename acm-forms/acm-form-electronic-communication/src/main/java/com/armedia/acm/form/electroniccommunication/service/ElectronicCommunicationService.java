@@ -47,6 +47,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception {
 
+		Long folderId = getFolderAndFilesUtils().convertToLong((String) getRequest().getParameter("folderId"));
 		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
@@ -73,7 +74,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 				return false;
 			}
 			
-			cmisFolderId = findFolderIdForAttachments(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
+			cmisFolderId = findCmisFolderId(folderId, complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 
@@ -87,7 +88,7 @@ public class ElectronicCommunicationService extends FrevvoFormAbstractService{
 				LOG.warn("Cannot find case by given caseId=" + form.getDetails().getCaseId());
 				return false;
 			}
-			cmisFolderId = findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+			cmisFolderId = findCmisFolderId(folderId, caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			
