@@ -1,0 +1,18 @@
+{
+    "footer": {"buttons": {"split-case": "Split Case"}},
+    "header": {"labels": {"split-case": "Split Case"}},
+    "bootstrap-wizard": {
+        "tabs": {
+            "summary": "Summary",
+            "notes": "Notes",
+            "documents": "Documents",
+            "details": "Details",
+            "people": "People",
+            "participants": "Participants"
+        },
+        "direction": {
+            "next": "Next",
+            "previous": "Previous"
+        }
+    }
+}

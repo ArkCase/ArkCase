@@ -12,6 +12,8 @@ CaseFileSplit.Service = {
 
         if (CaseFileSplit.Service.People.create) {CaseFileSplit.Service.People.create();}
         if (CaseFileSplit.Service.Notes.create) {CaseFileSplit.Service.Notes.create();}
+        if (CaseFileSplit.Service.Summary.create) {CaseFileSplit.Service.Summary.create();}
+
     }
     ,onInitialized: function() {
         if (CaseFileSplit.Service.Detail.onInitialized) {CaseFileSplit.Service.Detail.onInitialized();}
@@ -19,6 +21,8 @@ CaseFileSplit.Service = {
 
         if (CaseFileSplit.Service.People.onInitialized) {CaseFileSplit.Service.People.onInitialized();}
         if (CaseFileSplit.Service.Notes.onInitialized) {CaseFileSplit.Service.Notes.onInitialized();}
+        if (CaseFileSplit.Service.Summary.onInitialized) {CaseFileSplit.Service.Summary.onInitialized();}
+
     }
 
     ,Detail: {
@@ -46,40 +50,6 @@ CaseFileSplit.Service = {
                     }
                 ,url
             )
-        }
-
-        ,saveObject : function(splittedCaseFileId, splittedCaseFile) {
-            var url = App.getContextPath() + CaseFileSplit.Model.interface.apiSaveObject(objType, objId);
-            Acm.Service.asyncPost(
-                function(response) {
-                    if (response.hasError) {
-                        CaseFileSplit.Controller.modelSavedSplittedCaseFile(response);
-                    } else {
-                        if (CaseFileSplit.Model.Detail.validateCaseFile(response)) {
-                            CaseFileSplit.Model.Detail.cacheSplittedCaseFile.put(splittedCaseFileId,response);
-                        }
-                        else{
-                                CaseFileSplit.Controller.modelSavedSplittedCaseFile(response);
-                            }
-                        }
-                    }
-                ,url
-                ,JSON.stringify(splittedCaseFile)
-            )
-        }
-        ,_saveCaseFile: function(caseFileId, caseFile, handler) {
-            CaseFileSplit.Service.Detail.saveObject(CaseFileSplit.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile, handler);
-        }
-        ,saveDetail: function(caseFileId, details) {
-            var caseFile = CaseFileSplit.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFileSplit.Model.Detail.validateCaseFile(caseFile)) {
-                caseFile.details = details;
-                this._saveCaseFile(caseFileId, caseFile
-                    ,function(data) {
-                        CaseFileSplit.Controller.modelSavedDetail(caseFileId, Acm.Service.responseWrapper(data, data.details));
-                    }
-                );
-            }
         }
     }
     ,Lookup: {
@@ -172,66 +142,6 @@ CaseFileSplit.Service = {
         }
         ,onInitialized: function() {
         }
-        ,API_DELETE_PERSON_ASSOCIATION_    : "/api/latest/plugin/personAssociation/delete/"
-
-
-        ,_saveCaseFile: function(caseFileId, caseFile, handler) {
-            CaseFileSplit.Service.Detail.saveObject(CaseFileSplit.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile, handler);
-        }
-        ,deleteParticipant: function(caseFileId, participantId) {
-            var caseFile = CaseFileSplit.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFileSplit.Model.Detail.validateCaseFile(caseFile)) {
-                var toDelete = -1;
-                for (var i = 0; i < caseFile.participants.length; i++) {
-                    if (Acm.compare(caseFile.participants[i].id, participantId)) {
-                        toDelete = i;
-                        break;
-                    }
-                }
-
-                if (0 <= toDelete) {
-                    caseFile.participants.splice(toDelete, 1);
-                    this._saveCaseFile(caseFileId, caseFile
-                        ,function(data) {
-                            if (CaseFileSplit.Model.Detail.validateCaseFile(data)) {
-                                CaseFileSplit.Controller.modelDeletedParticipant(caseFileId, Acm.Service.responseWrapper(data, participantId));
-                            }
-                        }
-                    );
-                }
-            }
-        }
-
-        ,deletePersonAssociation : function(caseFileId, personAssociationId) {
-            var url = App.getContextPath() + this.API_DELETE_PERSON_ASSOCIATION_ + personAssociationId;
-            Acm.Service.asyncDelete(
-                function(response) {
-                    if (response.hasError) {
-                        CaseFileSplit.Controller.modelDeletedPersonAssociation(response);
-
-                    } else {
-                        if (CaseFileSplit.Model.People.validateDeletedPersonAssociation(response)) {
-                            if (response.deletedPersonAssociationId == personAssociationId) {
-                                var caseFile = CaseFileSplit.Model.Detail.getCacheCaseFile(caseFileId);
-                                if (CaseFileSplit.Model.Detail.validateCaseFile(caseFile)) {
-                                    for (var i = 0; i < caseFile.personAssociations.length; i++) {
-                                        var pa = caseFile.personAssociations[i];
-                                        if (CaseFileSplit.Model.People.validatePersonAssociation(pa)) {
-                                            if (pa.id == response.deletedPersonAssociationId) {
-                                                caseFile.personAssociations.splice(i, 1);
-                                                CaseFileSplit.Controller.modelDeletedPersonAssociation(Acm.Service.responseWrapper(response, personAssociationId));
-                                                break;
-                                            }
-                                        }
-                                    } //end for
-                                }
-                            }
-                        }
-                    } //end else
-                }
-                ,url
-            )
-        }
     }
 
     ,Notes: {
@@ -262,36 +172,32 @@ CaseFileSplit.Service = {
                 }
             );
         }
+    }
+    ,Summary: {
+        create: function () {
+        }
+        , onInitialized: function () {
+        }
+        ,API_SPLIT_CASE_FILE : "/api/v1/plugin/copyCaseFile"
 
-
-        ,deleteNote : function(noteId) {
-            var url = App.getContextPath() + this.API_DELETE_NOTE_ + noteId;
-
-            Acm.Service.asyncDelete(
-                function(response) {
+        ,splitCaseFile: function(summary){
+            var url = this.API_SPLIT_CASE_FILE;
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data: JSON.stringify(summary)
+                ,callback: function(response) {
                     if (response.hasError) {
-                        CaseFileSplit.Controller.modelDeletedNote(response);
-
+                        CaseFileSplit.Controller.modelSplitCaseFile(response);
                     } else {
-                        if (CaseFileSplit.Model.Notes.validateDeletedNote(response)) {
-                            var caseFileId = CaseFileSplit.Model.getCaseFileId();
-                            if (response.deletedNoteId == noteId) {
-                                var noteList = CaseFileSplit.Model.Notes.cacheNoteList.get(caseFileId);
-                                for (var i = 0; i < noteList.length; i++) {
-                                    if (noteId == noteList[i].id) {
-                                        noteList.splice(i, 1);
-                                        CaseFileSplit.Controller.modelDeletedNote(Acm.Service.responseWrapper(response, noteId));
-                                        return;
-                                    }
-                                } //end for
-                            }
+                        if (CaseFileSplit.Model.Detail.validateCaseFile(response)) {
+                            var splitCaseFile = response;
+                            CaseFileSplit.Controller.modelSplitCaseFile(splitCaseFile);
+                            return true;
                         }
                     } //end else
                 }
-                ,url
-            )
+            });
         }
     }
-
 };
 
