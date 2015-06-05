@@ -97,6 +97,7 @@ public class DocumentUiController
             case "snowbound" :
                 srcLink = srcLink.replace("${ticket}", ticket);
                 srcLink = srcLink.replace("${fileId}", fileId.toString());
+                srcLink = srcLink.replace("${userid}", auth.getName());
                 mv.addObject("link",srcLink);
                 break;
             default:
