@@ -24,8 +24,10 @@ import com.armedia.acm.plugins.complaint.service.ComplaintFactory;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
@@ -132,6 +134,9 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	private EbriefFactory ebriefFactory;
 	
 	private ProjectFactory projectFactory;
+	
+	private FolderAndFilesUtils folderAndFilesUtils;
+	private AcmFolderService acmFolderService;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -591,4 +596,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setProjectFactory(ProjectFactory projectFactory) {
 		this.projectFactory = projectFactory;
 	}
+	
+	public FolderAndFilesUtils getFolderAndFilesUtils() {
+		return folderAndFilesUtils;
+	}
+
+	public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+		this.folderAndFilesUtils = folderAndFilesUtils;
+	}
+
+	public AcmFolderService getAcmFolderService() {
+		return acmFolderService;
+	}
+
+	public void setAcmFolderService(AcmFolderService acmFolderService) {
+		this.acmFolderService = acmFolderService;
+	}
+	
 }

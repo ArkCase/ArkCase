@@ -76,6 +76,8 @@ public class FrevvoFormServiceFactory {
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
+            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
+            service.setAcmFolderService(frevvoFormController.getAcmFolderService());
             
             return service;
 		}
@@ -209,6 +211,8 @@ public class FrevvoFormServiceFactory {
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
             service.setComplaintDao(frevvoFormController.getComplaintDao());
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
+            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
+            service.setAcmFolderService(frevvoFormController.getAcmFolderService());
             
             return service;
 		}

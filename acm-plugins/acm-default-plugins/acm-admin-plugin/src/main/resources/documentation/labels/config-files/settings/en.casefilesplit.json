@@ -1,0 +1,63 @@
+{
+    "footer": {"buttons": {"split-case": {
+        "defaultValue": "Split Case",
+        "description": "",
+        "value": "Split Case"
+    }}},
+    "header": {"labels": {"split-case": {
+        "defaultValue": "Split Case",
+        "description": "",
+        "value": "Split Case"
+    }}},
+    "bootstrap-wizard": {
+        "tabs": {
+            "summary": {
+                "defaultValue": "Summary",
+                "description": "",
+                "value": "Summary"
+            },
+            "notes": {
+                "defaultValue": "Notes",
+                "description": "",
+                "value": "Notes"
+            },
+            "documents": {
+                "defaultValue": "Documents",
+                "description": "",
+                "value": "Documents"
+            },
+            "details": {
+                "defaultValue": "Details",
+                "description": "",
+                "value": "Details"
+            },
+            "people": {
+                "defaultValue": "People",
+                "description": "",
+                "value": "People"
+            },
+            "participants": {
+                "defaultValue": "Participants",
+                "description": "",
+                "value": "Participants"
+            }
+        },
+        "direction": {
+            "next": {
+                "defaultValue": "Next",
+                "description": "",
+                "value": "Next"
+            },
+            "previous": {
+                "defaultValue": "Previous",
+                "description": "",
+                "value": "Previous"
+            }
+        }
+    },
+	"window-title": {
+		"defaultValue": "Case Files | ACM | Ark Case Management",
+		"description": "",
+		"value": "Case Files | ACM | Ark Case Management"
+	}
+}

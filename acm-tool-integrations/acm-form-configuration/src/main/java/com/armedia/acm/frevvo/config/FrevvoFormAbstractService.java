@@ -29,6 +29,7 @@ import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
@@ -44,6 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -81,6 +83,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private SearchResults searchResults;
 	private AcmPluginManager acmPluginManager;
 	private FolderAndFilesUtils folderAndFilesUtils;
+	private AcmFolderService acmFolderService;
 	private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
     @Override
@@ -200,6 +203,30 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
             return null;
         }
 
+    }
+    
+    public String findCmisFolderId(Long folderId, AcmContainer container, String objectType, Long objectId)
+    {
+    	String cmisFolderId = null;
+    	if (folderId != null)
+    	{
+    		try
+    		{
+    			AcmFolder folder = getAcmFolderService().findById(folderId);
+    			cmisFolderId = folder.getCmisFolderId();
+    		}
+    		catch(Exception e)
+    		{
+    			LOG.warn("Cannot find folder for provided folderId=" + folderId + ". Will try to find the attachment folder or to create one.");
+    		}
+    	}
+    	
+    	if (cmisFolderId == null)
+    	{
+    		return findFolderIdForAttachments(container, objectType, objectId);
+    	}
+    	
+    	return cmisFolderId;
     }
     
     public String findFolderIdForAttachments(AcmContainer container, String objectType, Long id)
@@ -888,4 +915,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 	public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
 		this.folderAndFilesUtils = folderAndFilesUtils;
 	}
+
+	public AcmFolderService getAcmFolderService() {
+		return acmFolderService;
+	}
+
+	public void setAcmFolderService(AcmFolderService acmFolderService) {
+		this.acmFolderService = acmFolderService;
+	}
+	
 }
