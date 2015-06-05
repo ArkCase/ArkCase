@@ -117,8 +117,13 @@
             ,"description": ""
         }
         ,"btn-lodge": {
-            "value": "Lodge"
-            ,"defaultValue": "Lodge"
+            "value": "Lodge Document(s)"
+            ,"defaultValue": "Lodge Document(s)"
+            ,"description": ""
+        }
+        ,"btn-reject": {
+            "value": "Reject Document(s)"
+            ,"defaultValue": "Reject Document(s)"
             ,"description": ""
         }
     }

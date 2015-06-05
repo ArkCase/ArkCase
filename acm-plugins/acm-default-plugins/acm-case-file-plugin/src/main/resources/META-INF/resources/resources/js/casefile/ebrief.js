@@ -51,12 +51,31 @@ CaseFile.prepare = function() {
                 }
             });
 
+
+            var choices = [];
+            var myCfg = App.Model.Config.getMyConfig();
+            var courtLocations = Acm.goodValue(myCfg.courtLocations, {});
+            $.each(courtLocations, function(idx, val) {
+                var opt = {};
+                opt.value = val;
+                opt.text = val;
+                choices.push(opt);
+            });
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkCourt, {
+                source: choices
+                ,success: function(response, newValue) {
+                    Acm.log("set count location:" + newValue);
+                    //CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
+                }
+            });
+
+
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	           ,this.onModelSavedGroup);
@@ -124,22 +143,22 @@ CaseFile.prepare = function() {
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
             CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
-        ,onModelFoundSubjectTypes: function(subjectTypes) {
-            var choices = [];
-            $.each(subjectTypes, function(idx, val) {
-                var opt = {};
-                opt.value = val;
-                opt.text = val;
-                choices.push(opt);
-            });
-
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkCourt, {
-                source: choices
-                ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
-                }
-            });
-        }
+//        ,onModelFoundSubjectTypes: function(subjectTypes) {
+//            var choices = [];
+//            $.each(subjectTypes, function(idx, val) {
+//                var opt = {};
+//                opt.value = val;
+//                opt.text = val;
+//                choices.push(opt);
+//            });
+//
+//            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkCourt, {
+//                source: choices
+//                ,success: function(response, newValue) {
+//                    CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
+//                }
+//            });
+//        }
 
         ,onModelSavedCaseTitle: function(caseFileId, title) {
             if (title.hasError) {
@@ -246,6 +265,51 @@ CaseFile.prepare = function() {
 
     };
 
+    CaseFile.Service.Participants = {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+        ,API_RETRIEVE_PROFILE_INFO         : "/api/latest/plugin/profile/get/"
+        ,validateProfile: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.userId) || Acm.isEmpty(data.email)) {
+                return false;
+            }
+            if (!Acm.isArray(data.groups)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrieveProfileInfo : function(participant, user) {
+            var url = this.API_RETRIEVE_PROFILE_INFO + user;
+            return Acm.Service.promise({type: "GET"
+                ,url: url
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Service.Participants.validateProfile(response)) {
+                            var profileInfo = response;
+                            CaseFile.View.Participants.updateParticipant(participant,profileInfo);
+                            return profileInfo;
+                        }
+                    } //end else
+                }
+            })
+        }
+//        ,resolveProfileInfo: function(requests) {
+//            var resolver = $.Deferred();
+//            $.when.apply(this, requests).then(function(data) {
+//                    resolver.resolve();
+//                }, function(e) {
+//                    resolver.reject();
+//                }
+//            );
+//            return resolver;
+//        }
+    }
+
     CaseFile.View.Participants = {
         create: function() {
             this.$divParticipants    = $("#divParticipants");
@@ -258,10 +322,28 @@ CaseFile.prepare = function() {
         }
         ,onInitialized: function() {
         }
-
         ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+            var caseFile = CaseFile.View.getActiveCaseFile();
+            var participants = caseFile.participants;
+            var requests = [];
+            for(var i= 0; i< participants.length; i++){
+                var participant = participants[i];
+                if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
+                    var user = participant.participantLdapId;
+                    var req = CaseFile.Service.Participants.retrieveProfileInfo(participant,user);
+                    requests.push(req);
+                }
+            }
+            //CaseFile.Service.Participants.resolveProfileInfo(requests)
+            Acm.Promise.resolvePromises(requests)
+                .done(function() {
+                    AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                })
+                .fail(function() {
+                    App.View.MessageBoard.show("Error retrieving participants");
+                });
         }
+
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (!assginee.hasError) {
                 AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
@@ -276,7 +358,13 @@ CaseFile.prepare = function() {
         ,onViewSelectedObject: function(objType, objId) {
             AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
         }
-
+        ,updateParticipant: function(participant,profileInfo) {
+            if(Acm.isNotEmpty(profileInfo)){
+                participant.organisation = Acm.goodValue(profileInfo.companyName);
+                participant.email = Acm.goodValue(profileInfo.email);
+                participant.phone = Acm.goodValue(profileInfo.phone);
+            }
+        }
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: $.t("ebrief:participants.table.title")
@@ -294,19 +382,21 @@ CaseFile.prepare = function() {
                         if (CaseFile.Model.Detail.validateCaseFile(c)) {
                             for (var i = 0; i < c.participants.length; i++) {
                                 var participant = c.participants[i];
-                                var record = {};
-                                record.id = Acm.goodValue(participant.id, 0);
-                                // Here I am not taking user full name. It will be automatically shown because now
-                                // I am sending key-value object with key=username and value=fullname
-                                record.title = Acm.goodValue(participant.participantLdapId);
-                                //record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
-                                record.type = Acm.goodValue(participant.participantType);
+                                if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group") {
+                                    var record = {};
+                                    record.id = Acm.goodValue(participant.id, 0);
+                                    // Here I am not taking user full name. It will be automatically shown because now
+                                    // I am sending key-value object with key=username and value=fullname
+                                    record.title = Acm.goodValue(participant.participantLdapId);
+                                    //record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
+                                    record.type = Acm.goodValue(participant.participantType);
 
-                                record.organisation = "";
-                                record.email = "";
-                                record.phone = "";
+                                    record.organisation = Acm.goodValue(participant.organisation);
+                                    record.email = Acm.goodValue(participant.email);
+                                    record.phone = Acm.goodValue(participant.phone);
 
-                                rc.Records.push(record);
+                                    rc.Records.push(record);
+                                }
                             }
                             rc.TotalRecordCount = rc.Records.length;
                         }
@@ -437,28 +527,102 @@ CaseFile.prepare = function() {
         }
     };
 
-    CaseFile.View.Documents.inst = 1;
-    CaseFile.View.DocumentsOrig = $.extend({}, CaseFile.View.Documents);
-    CaseFile.View.Documents.inst = 2;
-    CaseFile.View.DocumentsOrig.inst = 3;
-    CaseFile.View.Documents.createOrig = CaseFile.View.DocumentsOrig.create;
-    CaseFile.View.Documents.create = function() {
-        //CaseFile.View.DocumentsOrig.create();
-        CaseFile.View.Documents.createOrig();
 
-        this.$btnNewFolder = $("#btnNewFolder");
-        this.$btnLodge = $("#btnLodge");
-        this.$btnNewFolder.on("click", function(e) {CaseFile.View.Documents.onClickBtnNewFolder(e, this);});
-        this.$btnLodge.on("click", function(e) {CaseFile.View.Documents.onClickBtnLodge(e, this);});
+    CaseFile.View.Documents.createOrig = Acm.copyObjectFunction(CaseFile.View.Documents, "create", "createOrig");
+    $.extend(CaseFile.View.Documents, {
+        create: function() {
+            CaseFile.View.Documents.createOrig();
 
-        var y = 1;
-    }
-    CaseFile.View.Documents.onClickBtnNewFolder = function(event, ctrl) {
-        Acm.log("new folder");
-    }
-    CaseFile.View.Documents.onClickBtnLodge = function(event, ctrl) {
-        Acm.log("lodge doc");
-    }
+            this.$btnNewFolder  = $("#btnNewFolder") .on("click", function(e) {CaseFile.View.Documents.onClickBtnNewFolder(e, this);});
+            this.$btnLodgeDocs  = $("#btnLodgeDocs") .on("click", function(e) {CaseFile.View.Documents.onClickBtnLodgeDocs(e, this);});
+            this.$btnRejectDocs = $("#btnRejectDocs").on("click", function(e) {CaseFile.View.Documents.onClickBtnRejectDocs(e, this);});
+
+            this.$dlgLodgeDocs = $("#dlgLodgeDocs");
+            this.$edtBmailAddr = $("#edtBmailAddr");
+            this.$ulLodgeDocs  = $("#ulLodgeDocs");
+
+            this.dlgRejectDocs    = $("#dlgRejectDocs");
+            this.$edtBmailReject  = $("#edtBmailReject");
+            this.$edtRejectReason = $("#edtRejectReason");
+            this.$ulRejectDocs    = $("#ulRejectDocs");
+
+        }
+        ,onClickBtnNewFolder: function(event, ctrl) {
+            //DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
+
+            var node = DocTree.View.tree.getActiveNode();
+            var names = DocTree.View.getNodePathNames(node);
+            var n = DocTree.View.findNodeByPathNames(names);
+            var last = names.pop();
+            var n2 = DocTree.View.findNodeByPathNames(names);
+            var z = 1;
+            //var topNode = DocTree.View.getTopNode();
+            //DocTree.View.Op.createFolder(topNode, "hahahaha");
+        }
+        ,onClickBtnLodgeDocs: function(event, ctrl) {
+            var parent = DocTree.View.tree.getRootNode();
+            var node = DocTree.View.tree.getActiveNode();
+            var names = DocTree.View.getNodePathNames(node);
+            names.push("abc");
+            DocTree.View.Op.createFolders(parent, names)
+                .done(function(data){
+                    var z = 1;
+                })
+                .fail(function(data){
+                    var z = 2;
+                })
+            ;
+            var z = 3;
+            return;
+            //get list of sel nodes
+            //for each loop
+            //   get path names
+            //   create target folders
+            //   find target folder
+            //   node
+
+
+            Acm.log("lodge doc??");
+            Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
+                var lodgeFolderId = CaseFile.View.Documents.getLodgeFolderId();
+
+                var selNodes = DocTree.View.tree.getSelectedNodes();
+                var node = DocTree.View.tree.getActiveNode();
+                var nodes = (Acm.isArrayEmpty(selNodes))? [node] : selNodes;
+
+                DocTree.View.tree.batMove(frNodes, toNode, "child");
+                Acm.log("lodge doc: Yes" + lodgeFolderId);
+            });
+        }
+        ,onClickBtnRejectDocs: function(event, ctrl) {
+            Acm.Dialog.modal(CaseFile.View.Documents.dlgRejectDocs, function() {
+                Acm.log("reject doc: Yes");
+            });
+        }
+        ,onViewSelectedTreeNode: function(key) {
+            DocTree.View.expandTopNode();
+        }
+
+        ,_lodgeFolderId: 0
+        ,getLodgeFolderId: function() {
+            if (0 >= this._lodgeFolderId) {
+                var topNode = DocTree.View.getTopNode();
+                if (topNode) {
+                    for (var i = 0; i < topNode.children.length; i++) {
+                        var child = topNode.children[i];
+                        if ("Court Brief" == Acm.goodValue(child.data.name)) {
+                            this._lodgeFolderId = Acm.goodValue(child.data.objectId, 0);
+                            break;
+                        }
+                    }
+                }
+            }
+            return this._lodgeFolderId;
+        }
+
+
+    });
+
 
     CaseFile.View.DetailNote = {};
     CaseFile.View.Notes = {};
@@ -466,6 +630,33 @@ CaseFile.prepare = function() {
     CaseFile.View.Correspondence = {};
     CaseFile.View.Time = {};
     CaseFile.View.Cost = {};
+    Calendar = {};
+
+    CaseFile.Model.Config.requestOrig = Acm.copyObjectFunction(CaseFile.Model.Config, "request", "requestOrig");
+    CaseFile.Model.Config.request = function() {
+        CaseFile.Model.Config.requestOrig();
+
+        App.Model.Config.requestConfig(Application.CONFIG_NAME_ACM_FORMS).done(function(data) {
+            var cfg = App.Model.Config.getConfig(Application.CONFIG_NAME_ACM_FORMS);
+            if (Acm.isNotEmpty(cfg)) {
+                var myCfg = App.Model.Config.getMyConfig();
+                myCfg.courtLocations  = {};
+                Acm.goodValue(cfg["ebrief.court.locations"], "").split(",").forEach(function(x){
+                    var arr = x.split("=");
+                    arr[1] && (myCfg.courtLocations[arr[0]] = arr[1]);
+                });
+            }
+        });
+        App.Model.Config.requestConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE).done(function(data) {
+            var cfg = App.Model.Config.getConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE);
+            if (Acm.isNotEmpty(cfg)) {
+                var myCfg = App.Model.Config.getMyConfig();
+//                myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
+//                myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
+//                myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
+            }
+        });
+    };
 
 };
 

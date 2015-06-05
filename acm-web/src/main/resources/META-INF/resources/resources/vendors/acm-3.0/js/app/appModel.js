@@ -381,14 +381,15 @@ App.Model = {
             return req;
         }
         ,resolveConfig: function() {
-            var resolver = $.Deferred();
-            $.when.apply(this, this._requests).then(function(data) {
-                    resolver.resolve();
-                }, function(e) {
-                    resolver.reject();
-                }
-            );
-            return resolver;
+            return Acm.Promise.resolvePromises(this._requests);
+//            var resolver = $.Deferred();
+//            $.when.apply(this, this._requests).then(function(data) {
+//                    resolver.resolve();
+//                }, function(e) {
+//                    resolver.reject();
+//                }
+//            );
+//            return resolver;
         }
         ,getConfig: function(k) {
             var v = "";

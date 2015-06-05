@@ -137,14 +137,10 @@ CaseFile.Model = CaseFile.Model || {
                 var cfg = App.Model.Config.getConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE);
                 if (Acm.isNotEmpty(cfg)) {
                     var myCfg = App.Model.Config.getMyConfig();
-                    var settings = cfg;
-                    if (Acm.isNotEmpty(settings)) {
-                        myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
-                        myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
-                        myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
-                    }
+                    myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
+                    myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
+                    myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
                 }
-                var z = 1;
             });
         }
     }

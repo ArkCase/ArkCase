@@ -300,10 +300,17 @@
                                                     </li>
                                                     <li>
                                                         <div class="btn-group padder-v2">
-                                                            <button class="btn btn-default btn-sm" id="btnLodge" data-i18n="ebrief:documents.btn-lodge"><i class="fa fa-share"></i>Lodge</button>
+                                                            <%--<button class="btn btn-default btn-sm" id="btnLodgeDocs" data-i18n="ebrief:documents.btn-lodge" data-toggle="modal" data-target="#dlgLodgeDocs"><i class="fa fa-share"></i>Lodge Document(s)</button>--%>
+                                                            <button class="btn btn-default btn-sm" id="btnLodgeDocs" data-i18n="ebrief:documents.btn-lodge"><i class="fa fa-share"></i>Lodge Document(s)</button>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" id="btnRejectDocs" data-i18n="ebrief:documents.btn-reject"><i class="fa fa-share"></i>Reject Document(s)</button>
                                                         </div>
                                                     </li>
                                                 </ul>
+
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             </div>
 
@@ -430,5 +437,86 @@
                 </section>
             </section>
         </section>
+
+
+
+        <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="labNewFolderTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="labNewFolderTitle" data-i18n="ebrief:documents.dialog.title-create-folder">Create Folder</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Enter a name for the folder you would like to create:</p>
+                        <label for="folderName2">Folder Name</label>
+                        <br/>
+                        <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Create Folder<</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="dlgLodgeDocs" tabindex="-1" role="dialog" aria-labelledby="labLodgeDlgTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="labLodgeDlgTitle">Lodge Documents</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Lodge document(s) and notify by email?</p>
+                        <label for="edtBmailAddr">Email Address</label>
+                        <br/>
+                        <input type="text" id="edtBmailAddr" class="input-lg" placeholder="Email Address" />
+
+                        <ul id="ulLodgeDocs">
+                            <li>doc1</li>
+                            <li>doc2</li>
+                            <li>doc3</li>
+                        </ul>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Lodge</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="dlgRejectDocs" tabindex="-1" role="dialog" aria-labelledby="labRejectDlgTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="labRejectDlgTitle">Reject Documents</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label for="edtRejectReason">Reason</label>
+                        <br/>
+                        <input type="text" id="edtRejectReason" class="input-lg" placeholder="Reject Reason" />
+                        <br/>
+                        <label for="edtBmailReject">Email Address</label>
+                        <br/>
+                        <input type="text" id="edtBmailReject" class="input-lg" placeholder="Email Address" />
+
+                        <ul id="ulRejectDocs">
+                            <li>doc1</li>
+                            <li>doc2</li>
+                            <li>doc3</li>
+                        </ul>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </jsp:body>
 </t:layout>
