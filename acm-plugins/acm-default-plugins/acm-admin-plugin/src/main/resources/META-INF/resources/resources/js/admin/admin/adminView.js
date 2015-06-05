@@ -1147,8 +1147,6 @@ Admin.View = Admin.View || {
         ,clearPrivilegesLists: function(){
             this.$selectPrivileges.remove('option');
             this.$selectAvailablePrivileges.remove('option');
-//            Acm.Object.createOptions(this.$selectPrivileges, []);
-//            Acm.Object.createOptions(this.$selectAvailablePrivileges, []);
         }
 
         ,saveRolePrivileges: function() {
@@ -1205,67 +1203,6 @@ Admin.View = Admin.View || {
                 .fail(function(errorMsg){
                     Acm.Dialog.error(errorMsg);
                 });
-        }
-
-
-        ,onModelRetrievedRolesPrivilegesApplicationRoles: function(roles) {
-
-        }
-
-        ,onModelRetrievedRolesPrivilegesApplicationPrivileges: function(privileges) {
-
-        }
-
-        ,onModelRetrievedRolesPrivilegesApplicationRolePrivileges: function(rolePrivileges) {
-
-        }
-
-        ,onModelCreatedRolesPrivilegesApplicationRole: function(role){
-
-        }
-
-        ,onModelSavedRolesPrivilegesApplicationRolePrivileges: function (rolePrivileges){
-
-        }
-
-        ,refresh: function() {
-//            var authGroups = [];
-//            var notAuthGroups = [];
-//
-//            // Get selected role
-//            var selected = Admin.View.RolesPrivileges.$selectRoles.val();
-//
-//            if (selected && selected != '') {
-                // Get all groups
-//                var groups = Admin.Model.FunctionalAccessControl.cacheGroups.get(0);
-//
-//                // Get authorized groups for given role
-//                if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
-//                    Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected]) {
-//                    authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected];
-//                }
-//
-//                // Get not authorized groups
-//                if (groups) {
-//                    for (var i = 0; i < groups.length; i++) {
-//                        var found = false;
-//                        for (var j = 0; j < authGroups.length; j++) {
-//                            if (groups[i].name === authGroups[j]) {
-//                                found = true;
-//                                break;
-//                            }
-//                        }
-//
-//                        if (!found) {
-//                            notAuthGroups.push(groups[i].name);
-//                        }
-//                    }
-//                }
-//            }
-//
-//            // Show authorized and not authorized groups on the screen
-//            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
-//            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
         }
     }
 
