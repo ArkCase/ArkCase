@@ -1904,7 +1904,7 @@ CaseFile.View = CaseFile.View || {
 
                     url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                         + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + caseTitle
+                        + "',caseTitle:'" + encodeURIComponent(caseTitle)
                         + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                         + "',folderId:'" + folderId
                         + "',"
