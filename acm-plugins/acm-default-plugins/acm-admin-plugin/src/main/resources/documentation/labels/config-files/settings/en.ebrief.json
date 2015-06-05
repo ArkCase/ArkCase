@@ -126,7 +126,97 @@
             ,"defaultValue": "Reject Document(s)"
             ,"description": ""
         }
+        ,"dialog": {
+            "lodge-title": {
+                "value": "Lodge Documents"
+                ,"defaultValue": "Lodge Documents"
+                ,"description": ""
+            }
+            ,"lodge-email-label": {
+                "value": "Lodge document(s) and notify to"
+                ,"defaultValue": "Lodge document(s) and notify to"
+                ,"description": ""
+            }
+            ,"lodge-email-placeholder": {
+                "value": "Email Address"
+                ,"defaultValue": "Email Address"
+                ,"description": ""
+            }
+            ,"lodge-btn-cancel": {
+                "value": "Cancel"
+                ,"defaultValue": "Cancel"
+                ,"description": ""
+            }
+            ,"lodge-btn-ok": {
+                "value": "Lodge"
+                ,"defaultValue": "Lodge"
+                ,"description": ""
+            }
+            ,"lodge-table-title": {
+                "value": "Selected Items"
+                ,"defaultValue": "Selected Items"
+                ,"description": ""
+            }
+            ,"lodge-name-column": {
+                "value": "Name"
+                ,"defaultValue": "Name"
+                ,"description": ""
+            }
+
+            ,"reject-title": {
+                "value": "Reject Documents"
+                ,"defaultValue": "Reject Documents"
+                ,"description": ""
+            }
+            ,"reject-email-label": {
+                "value": "Reject document(s) and notify to"
+                ,"defaultValue": "Reject document(s) and notify to"
+                ,"description": ""
+            }
+            ,"reject-email-placeholder": {
+                "value": "Email Address"
+                ,"defaultValue": "Email Address"
+                ,"description": ""
+            }
+            ,"reject-reason-label": {
+                "value": "Reason"
+                ,"defaultValue": "Reason"
+                ,"description": ""
+            }
+            ,"reject-reason-placeholder": {
+                "value": "Reject Reason"
+                ,"defaultValue": "Reject Reason"
+                ,"description": ""
+            }
+            ,"reject-btn-cancel": {
+                "value": "Cancel"
+                ,"defaultValue": "Cancel"
+                ,"description": ""
+            }
+            ,"reject-btn-ok": {
+                "value": "Reject"
+                ,"defaultValue": "Reject"
+                ,"description": ""
+            }
+            ,"reject-table-title": {
+                "value": "Selected Items"
+                ,"defaultValue": "Selected Items"
+                ,"description": ""
+            }
+            ,"reject-name-column": {
+                "value": "Name"
+                ,"defaultValue": "Name"
+                ,"description": ""
+            }
+        }
     }
 
+    ,"email-documents-dialog": {
+        "label": {"email-address": "Email Address"},
+        "title": "Send Email",
+        "body": "Where would you like to email this file?",
+        "btn-ok": "Send Email",
+        "btn-close": "Close"
+    }
 
 }
