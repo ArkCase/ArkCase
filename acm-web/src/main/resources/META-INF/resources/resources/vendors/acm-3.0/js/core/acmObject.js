@@ -257,6 +257,12 @@ Acm.Object = {
             for (var i = 0; i < optionsArray.length; i++) {
                 options += '<option value="' + optionsArray[i] + '">' + optionsArray[i] + '</option>';
             }
+        } else if ($.isPlainObject(optionsArray)) {
+            var optionsStrArray = [];
+            for (var id in optionsArray) {
+                optionsStrArray.push('<option value="' + id + '">' + optionsArray[id] + '</option>');
+            }
+            options = optionsStrArray.join('');
         }
         $element.html(options);
     }
