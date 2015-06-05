@@ -79,6 +79,14 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="excludeDocumentTypes" value="${casefile.merge.exclude_document_types}"/>
+    </bean>
+
+    <bean id="splitCaseService" class="com.armedia.acm.plugins.casefile.service.SplitCaseServiceImpl">
+        <property name="saveCaseService" ref="saveCaseService"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
     </bean>
 
     <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">

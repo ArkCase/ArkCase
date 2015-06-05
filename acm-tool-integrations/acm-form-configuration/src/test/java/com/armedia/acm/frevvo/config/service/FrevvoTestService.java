@@ -1,6 +1,7 @@
 package com.armedia.acm.frevvo.config.service;
 
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,4 +33,10 @@ public class FrevvoTestService extends FrevvoFormAbstractService
     {
         return "test";
     }
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
+	}
 }

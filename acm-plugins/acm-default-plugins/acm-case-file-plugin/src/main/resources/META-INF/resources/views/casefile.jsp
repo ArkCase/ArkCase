@@ -236,10 +236,10 @@
                                                 <button class="btn btn-default btn-sm" id="btnReinvestigate" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
                                                     <span data-i18n="casefile:header.buttons.reinvestigate">Reinvestigate</span>
                                                 </button>
+                                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
+                                                </button>
                                                 <button class="btn btn-default btn-sm" id="btnMergeCase" data-i18n="[data-title]casefile:header.buttons.merge-case" data-title="Merge Case"><i class="fa fa-random"></i>
                                                     <span data-i18n="casefile:header.buttons.merge">Merge</span>
-                                                </button>
-                                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
                                                 </button>
                                                 <button class="btn btn-default btn-sm" id="btnSplitCase" data-i18n="[data-title]casefile:header.buttons.split-case"data-title="Split Case"><i class="fa fa-code-fork"></i>
                                                     <span data-i18n="casefile:header.buttons.split-case">Split Case</span>
