@@ -8,20 +8,20 @@ CaseFileSplit.View = CaseFileSplit.View || {
         if (CaseFileSplit.View.MicroData.create)       {CaseFileSplit.View.MicroData.create();}
         if (CaseFileSplit.View.BootstrapWizard.create)       {CaseFileSplit.View.BootstrapWizard.create();}
         if (CaseFileSplit.View.Detail.create)          {CaseFileSplit.View.Detail.create();}
-        if (CaseFileSplit.View.People.create)    	  {CaseFileSplit.View.People.create();}
+        //if (CaseFileSplit.View.People.create)    	  {CaseFileSplit.View.People.create();}
         if (CaseFileSplit.View.Documents.create)       {CaseFileSplit.View.Documents.create();}
-        if (CaseFileSplit.View.Participants.create)    {CaseFileSplit.View.Participants.create();}
-        if (CaseFileSplit.View.Notes.create)           {CaseFileSplit.View.Notes.create();}
+        //if (CaseFileSplit.View.Participants.create)    {CaseFileSplit.View.Participants.create();}
+        //if (CaseFileSplit.View.Notes.create)           {CaseFileSplit.View.Notes.create();}
         if (CaseFileSplit.View.Summary.create)           {CaseFileSplit.View.Summary.create();}
     }
     ,onInitialized: function() {
         if (CaseFileSplit.View.MicroData.onInitialized)       {CaseFileSplit.View.MicroData.onInitialized();}
         if (CaseFileSplit.View.BootstrapWizard.onInitialized)          {CaseFileSplit.View.BootstrapWizard.onInitialized();}
         if (CaseFileSplit.View.Detail.onInitialized)          {CaseFileSplit.View.Detail.onInitialized();}
-        if (CaseFileSplit.View.People.onInitialized)          {CaseFileSplit.View.People.onInitialized();}
+        //if (CaseFileSplit.View.People.onInitialized)          {CaseFileSplit.View.People.onInitialized();}
         if (CaseFileSplit.View.Documents.onInitialized)       {CaseFileSplit.View.Documents.onInitialized();}
-        if (CaseFileSplit.View.Participants.onInitialized)    {CaseFileSplit.View.Participants.onInitialized();}
-        if (CaseFileSplit.View.Notes.onInitialized)           {CaseFileSplit.View.Notes.onInitialized();}
+        //if (CaseFileSplit.View.Participants.onInitialized)    {CaseFileSplit.View.Participants.onInitialized();}
+        //if (CaseFileSplit.View.Notes.onInitialized)           {CaseFileSplit.View.Notes.onInitialized();}
         if (CaseFileSplit.View.Summary.onInitialized)         {CaseFileSplit.View.Summary.onInitialized();}
     }
 
@@ -194,7 +194,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
             this.$divPeople = $("#divPeople");
             this.createJTable(this.$divPeople);
             Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_RETRIEVED_PARENT_CASE_FILE             ,this.onModelRetrievedParentCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_DELETED_PERSON_ASSOCIATION             ,this.onModelDeletedPersonAssociation);
         }
         ,onInitialized: function() {
         }
@@ -206,15 +205,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
                 AcmEx.Object.JTable.load(CaseFileSplit.View.People.$divPeople);
             }
         }
-        ,onModelDeletedPersonAssociation: function(personAssociationId) {
-            if (personAssociationId.hasError) {
-                Acm.View.MessageBoard("Error deleting person record",personAssociationId.errorMsg);
-            }
-            else{
-                AcmEx.Object.JTable.load(CaseFileSplit.View.People.$divPeople);
-            }
-        }
-
         ,createJTable: function($s) {
             AcmEx.Object.JTable.useBasic($s
                 ,{
@@ -326,7 +316,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
             this.createJTableParticipants(this.$divParticipants);
 
             Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_RETRIEVED_PARENT_CASE_FILE             ,this.onModelRetrievedParentCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
         }
         ,onInitialized: function() {
         }
@@ -421,7 +410,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
             this.createJTableNotes(this.$divNotes);
 
             Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_RETRIEVED_PARENT_CASE_FILE             ,this.onModelRetrievedParentCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_DELETED_NOTE      ,this.onModelDeletedNote);
         }
         ,onInitialized: function() {
         }
@@ -430,13 +418,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
                 Acm.View.MessageBoard(parentCaseFile.errorMsg);
             }
             else{
-                AcmEx.Object.JTable.load(CaseFileSplit.View.Notes.$divNotes);
-            }
-        }
-        ,onModelDeletedNote: function(noteId) {
-            if (noteId.hasError) {
-                Acm.View.MessageBoard(noteId.errorMsg);
-            } else {
                 AcmEx.Object.JTable.load(CaseFileSplit.View.Notes.$divNotes);
             }
         }
@@ -527,20 +508,6 @@ CaseFileSplit.View = CaseFileSplit.View || {
                             ,create: false
                         }
                     } //end field
-                    ,formCreated: function (event, data) {
-                        var $noteForm = $(".jtable-create-form");
-                        //other constraints can be added
-                        //as needed as shown below
-                        var opt = {
-                            resizable: false
-                            //,autoOpen: false,
-                            //height:200,
-                            //width:200,
-                            //modal: true,
-                            //etc..
-                        };
-                        $noteForm.parent().dialog(opt);
-                    }
                 } //end arg
                 ,sortMap
             );
@@ -558,7 +525,7 @@ CaseFileSplit.View = CaseFileSplit.View || {
         ,onClickBtnSplitCase: function(event,ctrl) {
             var summary = this.getSummary();
             if(CaseFileSplit.Model.Summary.validateSummary(summary)){
-                CaseFileSplit.Controller.viewRetrievedSummary();
+                CaseFileSplit.Controller.viewRetrievedSummary(summary);
             }
         }
         ,onModelSplitCaseFile: function(splitCaseFile){
@@ -566,7 +533,7 @@ CaseFileSplit.View = CaseFileSplit.View || {
                 App.View.MessageBoard.show("Split failed" , splitCaseFile.errorMsg);
             }
             else{
-                if(CaseFile.Model.Detail.validateCaseFile(splitCaseFile)){
+                if(CaseFileSplit.Model.Detail.validateCaseFile(splitCaseFile)){
                     var url = "/plugin/casefile/" + Acm.goodValue(splitCaseFile.id);
                     App.View.gotoPage(url);
                 }
@@ -602,8 +569,9 @@ CaseFileSplit.View = CaseFileSplit.View || {
             var summary = {};
             var ribbonInfo = this.getRibbonInformation();
             var attachments = this.getAttachments();
-            summary.caseFileid =  Acm.goodValue(ribbonInfo.originalCaseId);
+            summary.caseFileId =  Acm.goodValue(ribbonInfo.originalCaseId);
             summary.attachments = attachments;
+            summary.preserveFolderStructure = true;
             return summary;
         }
     }
