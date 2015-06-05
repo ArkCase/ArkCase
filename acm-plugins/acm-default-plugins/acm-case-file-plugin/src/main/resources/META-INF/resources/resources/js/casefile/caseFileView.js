@@ -537,6 +537,8 @@ CaseFile.View = CaseFile.View || {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES           , this.onModelMergedCaseFiles);
+
         }
         ,onInitialized: function() {
         }
@@ -547,7 +549,7 @@ CaseFile.View = CaseFile.View || {
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
             	var containerId = c.container.id;
-            	var folderId = c.container.folder.id;
+                var folderId = c.container.attachmentFolder.id;
 
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
             	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
@@ -604,7 +606,7 @@ CaseFile.View = CaseFile.View || {
                                 Acm.Dialog.info("Please check your selection and try again.");
                             }
                             else {
-                                //CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
+                                CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
                             }
                         });
                     }
@@ -625,7 +627,7 @@ CaseFile.View = CaseFile.View || {
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
             	var containerId = c.container.id;
-            	var folderId = c.container.folder.id;
+                var folderId = c.container.attachmentFolder.id;
             	
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
             	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
@@ -640,6 +642,17 @@ CaseFile.View = CaseFile.View || {
 
         ,onModelRetrievedObject: function(objData) {
                 CaseFile.View.Action.populate(objData);
+        }
+        ,onModelMergedCaseFiles: function(targetCaseFile){
+            if(targetCaseFile.hasError) {
+                App.View.MessageBoard.show("Merge failed" , targetCaseFile.errorMsg);
+            }
+            else{
+                if(CaseFile.Model.Detail.validateCaseFile(targetCaseFile)){
+                    var url = "/plugin/casefile/" + Acm.goodValue(targetCaseFile.id);
+                    App.View.gotoPage(url);
+                }
+            }
         }
         ,onViewSelectedObject: function(objType, objId) {
             var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
@@ -1120,7 +1133,7 @@ CaseFile.View = CaseFile.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: $.t("casefile:people.table.communication.table.field.added-by")
+                            title: $.t("casefile:people.table.contact-methods.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1891,7 +1904,7 @@ CaseFile.View = CaseFile.View || {
 
                     url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                         + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + caseTitle
+                        + "',caseTitle:'" + encodeURIComponent(caseTitle)
                         + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                         + "',folderId:'" + folderId
                         + "',"

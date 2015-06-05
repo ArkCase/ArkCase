@@ -225,9 +225,6 @@ CaseFile.Service = {
         ,mergeCaseFiles: function(sourceCaseFileId, targetCaseFileId){
             var url = App.getContextPath() + this.API_MERGE_CASE_FILES;
             var data = {"sourceCaseFileId": sourceCaseFileId, "targetCaseFileId": targetCaseFileId};
-            /*var data = {};
-            data.sourceCaseFileId = sourceCaseFileId;
-            data.targetCaseFileId = targetCaseFileId;*/
             return Acm.Service.call({type: "POST"
                 ,url: url
                 ,data: JSON.stringify(data)

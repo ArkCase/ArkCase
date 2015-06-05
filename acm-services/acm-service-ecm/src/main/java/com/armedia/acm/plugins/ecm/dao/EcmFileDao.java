@@ -2,20 +2,17 @@ package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -50,26 +47,34 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return results;
     }
 
-    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo) {
-
+    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo, List<String> excludeDocumentTypes) {
+        if (excludeDocumentTypes == null)
+            excludeDocumentTypes = new LinkedList<>();
         String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
-                "WHERE e.container = :containerFrom";
+                "WHERE e.container = :containerFrom" + (excludeDocumentTypes.isEmpty() ? "" : " AND e.fileType NOT IN :fileTypes");
         Query query = getEm().createQuery(jpql);
         query.setParameter("containerFrom", containerFrom);
         query.setParameter("containerTo", containerTo);
         query.setParameter("modifiedDate", new Date());
+        if (!excludeDocumentTypes.isEmpty())
+            query.setParameter("fileTypes", excludeDocumentTypes);
 
         return query.executeUpdate();
     }
-    
-    public EcmFile findForContainerFolderAndFileType(Long containerId, Long folderId, String fileType)
+
+    public EcmFile findForContainerAttachmentFolderAndFileType(Long containerId, Long folderId, String fileType)
     {
         String jpql = "SELECT e " +
                 "FROM EcmFile e " +
                 "WHERE e.container.id = :containerId " +
-                "AND e.container.folder.id = :folderId " + 
+                "AND e.container.attachmentFolder.id = :folderId " + 
                 "AND e.fileType = :fileType";
-        
+
+        return executeJpqlForContainerIdFolderIdAndFileType(jpql, containerId, folderId, fileType);
+    }
+    
+    private EcmFile executeJpqlForContainerIdFolderIdAndFileType(String jpql, Long containerId, Long folderId, String fileType)
+    {
         Query query = getEm().createQuery(jpql);
         
         query.setParameter("containerId", containerId);

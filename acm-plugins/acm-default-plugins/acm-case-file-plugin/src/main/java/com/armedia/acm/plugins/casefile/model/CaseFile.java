@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.casefile.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -10,19 +11,40 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="acm_case_file")
 @XmlRootElement(name = "caseFile")
-public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
+public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -142,6 +164,16 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
+    @Column(name = "cm_courtroom_name")
+    private String courtroomName;
+
+    @Column(name = "cm_responsible_organization")
+    private String responsibleOrganization;
+
+    @Column(name = "cm_next_court_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date nextCourtDate;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -216,11 +248,13 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         childObject.setParentId(getId());
     }
 
+    @Override
     public AcmContainer getContainer()
     {
         return container;
     }
 
+    @Override
     public void setContainer(AcmContainer container)
     {
         this.container = container;
@@ -471,6 +505,36 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
         this.restricted = restricted;
     }
 
+    public String getCourtroomName()
+    {
+        return courtroomName;
+    }
+
+    public void setCourtroomName(String courtroomName)
+    {
+        this.courtroomName = courtroomName;
+    }
+
+    public String getResponsibleOrganization()
+    {
+        return responsibleOrganization;
+    }
+
+    public void setResponsibleOrganization(String responsibleOrganization)
+    {
+        this.responsibleOrganization = responsibleOrganization;
+    }
+
+    public Date getNextCourtDate()
+    {
+        return nextCourtDate;
+    }
+
+    public void setNextCourtDate(Date nextCourtDate)
+    {
+        this.nextCourtDate = nextCourtDate;
+    }
+
     @Override
     @JsonIgnore
     public String getObjectType()
@@ -496,6 +560,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", closed=" + closed +
                 ", disposition='" + disposition + '\'' +
                 ", priority='" + priority + '\'' +
+                ", objectType='" + objectType + '\'' +
                 ", participants=" + participants +
                 ", dueDate=" + dueDate +
                 ", changeCaseStatus=" + changeCaseStatus +
@@ -507,6 +572,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity
                 ", restricted=" + restricted +
                 ", childObjects=" + childObjects +
                 ", container=" + container +
+                ", courtroomName='" + courtroomName + '\'' +
+                ", responsibleOrganization='" + responsibleOrganization + '\'' +
+                ", nextCourtDate=" + nextCourtDate +
                 '}';
     }
 }

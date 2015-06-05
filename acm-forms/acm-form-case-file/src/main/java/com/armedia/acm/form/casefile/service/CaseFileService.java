@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
 
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
 import org.activiti.engine.RuntimeService;
@@ -18,7 +16,6 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -178,27 +175,11 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
-	public void updateXML(CaseFile caseFile, Authentication auth)
-    {
-    	if (caseFile != null)
-    	{    		
-    		// First find the XML that is already in the system and create Frevvo form
-    		Long containerId = caseFile.getContainer().getId();
-    		Long folderId = caseFile.getContainer().getFolder().getId();
-    		String fileType = FrevvoFormName.CASE_FILE.toLowerCase() + "_xml";
-    		
-    		EcmFile ecmFile = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, fileType);
-    		CaseFileForm form = (CaseFileForm) getExistingForm(ecmFile.getId(), CaseFileForm.class);
-
-    		form = getCaseFileFactory().asFrevvoCaseFile(caseFile, form, this);
-    		
-    		if (form != null)
-    		{
-    			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, ecmFile, auth);		
-    		}
-    	}
-    }
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form)
+	{
+		return getCaseFileFactory().asFrevvoCaseFile((CaseFile) obj, (CaseFileForm) form, this);
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
