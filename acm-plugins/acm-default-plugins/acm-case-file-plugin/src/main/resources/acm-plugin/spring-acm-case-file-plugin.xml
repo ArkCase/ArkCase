@@ -12,6 +12,7 @@
                 <ref bean="saveCasePrivilege"/>
                 <ref bean="acmCaseApprovePrivilege"/>
                 <ref bean="caseFileCreatePrivilege"/>
+                <ref bean="splitCaseFilePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
