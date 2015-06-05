@@ -6,9 +6,11 @@
 Admin.View = Admin.View || {
     create: function() {
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
+        if (Admin.View.LDAPConfiguration.create)       {Admin.View.LDAPConfiguration.create();}
         if (Admin.View.LabelConfiguration.create)       {Admin.View.LabelConfiguration.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
+        if (Admin.View.RolesPrivileges.create)          {Admin.View.RolesPrivileges.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
 
@@ -17,9 +19,11 @@ Admin.View = Admin.View || {
     }
     ,onInitialized: function() {
         if (Admin.View.Correspondence.onInitialized)       		{Admin.View.Correspondence.onInitialized();}
-        if (Admin.View.LabelConfiguration.onInitialized)       		{Admin.View.LabelConfiguration.onInitialized();}
+        if (Admin.View.LDAPConfiguration.onInitialized)       	{Admin.View.LDAPConfiguration.onInitialized();}
+        if (Admin.View.LabelConfiguration.onInitialized)       	{Admin.View.LabelConfiguration.onInitialized();}
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
+        if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
         if (Admin.View.WorkflowConfiguration.onInitialized)    {Admin.View.WorkflowConfiguration.onInitialized();}
 
@@ -418,6 +422,170 @@ Admin.View = Admin.View || {
         }
     }
 
+    ,LDAPConfiguration: {
+        create: function() {
+            this.$divLDAPDirectories    = $("#divLDAPDirectories");
+            this.createJTableLDAPDirectories(this.$divLDAPDirectories);
+        }
+        , onInitialized: function(){
+
+        }
+        , createJTableLDAPDirectories: function($s) {
+            var context = $s;
+            $s.jtable({
+                title: 'LDAP Directories'
+                ,paging: false
+                ,sorting: true
+                ,pageSize: 10 //Set page size (default: 10)
+                ,messages: {
+                    addNewRecord: 'Add New Directory'
+                }
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        return $.Deferred(function ($dfd){
+                            var rc = {};
+                            Admin.Service.LDAPConfiguration.retrieveDirectories()
+                                .done(function(data) {
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(){
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: []
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                    ,createAction: function(postData, jtParams) {
+                        return $.Deferred(function ($dfd) {
+                            var record = Acm.urlToJson(postData);
+                            Admin.Service.LDAPConfiguration.createDirectory(record)
+                                .done(function(data){
+                                    var rc = {
+                                        Result: 'OK',
+                                        Record: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(response){
+                                    var rc = {
+                                        Result: 'ERROR',
+                                        Record: [],
+                                        Message: (response && response.errorMsg) ? response.errorMsg : 'Can\'t create LDAP Directory'
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                    ,updateAction: function(postData, jtParams) {
+                        console.log($s);
+                        return $.Deferred(function ($dfd) {
+                            var record = Acm.urlToJson(postData);
+                            Admin.Service.LDAPConfiguration.updateDirectory(record['ldapConfig.id'], record)
+                                .done(function(data){
+                                    var rc = {
+                                        Result: 'OK',
+                                        Record: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(response){
+                                    var rc = {
+                                        Result: 'ERROR',
+                                        Record: [],
+                                        Message: (response && response.errorMsg) ? response.errorMsg : 'Can\'t update LDAP Directory'
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                    ,deleteAction: function(postData, jtParams) {
+                        return $.Deferred(function($dfd) {
+                            var id = postData['ldapConfig.id'];
+                            Admin.Service.LDAPConfiguration.deleteDirectory(id)
+                                .done(function(data){
+                                    var rc = {
+                                        Result: 'OK'
+                                    };
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(response){
+                                    var rc = {
+                                        Result: 'ERROR',
+                                        Message: (response && response.errorMsg) ? response.errorMsg : 'Can\'t delete LDAP Directory'
+                                    };
+                                    $dfd.resolve(rc);
+                                });
+                        });
+                    }
+                }
+
+                ,fields: {
+                    'ldapConfig.id': {
+                        title: 'ID'
+                        ,key: true
+                        ,list: false
+                        ,create: true
+                        ,edit: false
+                    }
+                    ,'ldapConfig.name': {
+                        title: 'Directory Name'
+                        ,visibility: 'fixed'
+                    }
+                    ,'ldapConfig.ldapUrl': {
+                        title: 'LDAP Url'
+                    }
+                    ,'ldapConfig.base': {
+                        title: 'Base'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.directoryName': {
+                        title: 'Directory Name'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.authUserDn': {
+                        title: 'Auth User Dn'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.authUserPassword': {
+                        title: 'Auth User Password'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.groupSearchBase': {
+                        title: 'Auth User Search Base'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.userIdAttributeName': {
+                        title: 'User Id Attribute Name'
+                        ,visibility: 'hidden'
+                    }
+                }
+                ,formCreated: function(e, data) {
+                    data.form.css('width','350px');
+                    data.form.find('input[type="text"]').css('width','350px');
+                    data.form.find('input[name="ldapConfig.id"]').addClass('validate[required, custom[onlyLetterNumber]]');
+                    data.form.find('input[name="ldapConfig.name"]').addClass('validate[required]');
+                    data.form.validationEngine();
+
+                }
+                ,formSubmitting: function(e, data) {
+                    return data.form.validationEngine('validate');
+                }
+                ,formClosed: function (event, data) {
+                    data.form.validationEngine('hide');
+                    data.form.validationEngine('detach');
+                }
+
+            });
+            $s.jtable('load');
+        }
+    }
+
     ,LabelConfiguration: {
         create: function () {
             this.$btnApplyDefaultLanguage = $("#labelConfigurationApplyDefaultLanguage");
@@ -581,7 +749,7 @@ Admin.View = Admin.View || {
 
                         // Prevent server request for filtering ans sorting
                         if (!Admin.Service.LabelConfiguration._data || postData && postData.loadData) {
-                            return $.Deferred(function($dfd){
+                            return $.Deferred(function ($dfd){
                                 var rc = {};
                                 Admin.Service.LabelConfiguration.retrieveResource(editLanguage, editNamespace)
                                     .done(function(data) {
@@ -878,6 +1046,226 @@ Admin.View = Admin.View || {
                 }
             });
             $s.jtable('load');
+        }
+    }
+
+    ,RolesPrivileges: {
+        create: function() {
+            // Initialize select HTML elements for roles, not authorized and authorized groups
+            this.$selectRoles = $("#selectApplicationRoles");
+            this.$selectAvailablePrivileges = $("#selectAvailablePrivileges");
+            this.$selectPrivileges = $("#selectPrivileges");
+            this.$createNewRoleBtn = $("#createNewRoleBtn");
+            this.$newRoleName = $("#newRoleName");
+
+            // Initialize buttons
+            this.$btnRolePrivilegesGo = $("#btnRolePrivilegesGo");
+            this.$btnRolePrivilegesMoveRight = $("#btnRolePrivilegesMoveRight");
+            this.$btnRolePrivilegesMoveLeft = $("#btnRolePrivilegesMoveLeft");
+
+            // Add listeners for buttons and roles select element
+            this.$btnRolePrivilegesGo.click($.proxy(Admin.View.RolesPrivileges.onClickBtnGo, this));
+            this.$btnRolePrivilegesMoveRight.click($.proxy(Admin.View.RolesPrivileges.onClickBtnMoveRight, this));
+            this.$btnRolePrivilegesMoveLeft.click($.proxy(Admin.View.RolesPrivileges.onClickBtnMoveLeft, this));
+            this.$createNewRoleBtn.click($.proxy(Admin.View.RolesPrivileges.onCreateNewRole, this));
+            this.$selectRoles.change($.proxy(Admin.View.RolesPrivileges.onChangeSelectRoles, this));
+
+        }
+        ,onInitialized: function () {
+            // Load roles
+            Admin.View.RolesPrivileges.loadRoles();
+            Admin.View.RolesPrivileges.loadPrivileges();
+        }
+        ,onClickBtnGo: function(event){
+            Admin.View.RolesPrivileges.updatePrivilegesLists();
+
+        }
+        ,onClickBtnMoveRight: function(event) {
+            // Move Privileges from all privileges to role privileges
+            var selectedPrivelegesIds = this.$selectAvailablePrivileges.val();
+            $('option', this.$selectAvailablePrivileges).each(function(){
+                if (_.contains(selectedPrivelegesIds, $(this).val())) {
+                    $(this).remove();
+                }
+            });
+
+            // Add options to the Selected  Privileges
+            var selectedOptions = _.pick(this.privileges, selectedPrivelegesIds);
+
+            for (var privilegeId in  selectedOptions) {
+                if (privilegeId) {
+                    this.$selectPrivileges.append('<option value="{0}">{1}</option>'.format(privilegeId, selectedOptions[privilegeId]));
+                }
+            }
+
+            Admin.View.RolesPrivileges.saveRolePrivileges();
+        }
+        ,onClickBtnMoveLeft: function(event) {
+            // Move Privileges from selected privileges to available role privileges list
+            var selectedPrivelegesIds = this.$selectPrivileges.val();
+            $('option', this.$selectPrivileges).each(function(){
+                if (_.contains(selectedPrivelegesIds, $(this).val())) {
+                    $(this).remove();
+                }
+            });
+
+            // Add options to the Available Privileges
+            var selectedOptions = _.pick(this.privileges, selectedPrivelegesIds);
+
+            for (var privilegeId in  selectedOptions) {
+                if (privilegeId) {
+                    this.$selectAvailablePrivileges.append('<option value="{0}">{1}</option>'.format(privilegeId, selectedOptions[privilegeId]));
+                }
+            }
+
+            Admin.View.RolesPrivileges.saveRolePrivileges();
+        },
+
+        onChangeSelectRoles: function(event) {
+            Admin.View.RolesPrivileges.clearPrivilegesLists();
+
+        }
+
+        ,onModelError: function(errorMsg) {
+            Acm.Dialog.error(errorMsg);
+        }
+
+        ,onCreateNewRole: function() {
+            var context = this;
+            var newRoleName = this.$newRoleName.val();
+            Admin.Service.RolesPrivileges.createApplicationRole(newRoleName)
+                .done(function(){
+                    $('#newRoleDialog').modal('hide');
+                    context.loadRoles();
+                    context.clearPrivilegesLists();
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+
+        ,clearPrivilegesLists: function(){
+            this.$selectPrivileges.remove('option');
+            this.$selectAvailablePrivileges.remove('option');
+//            Acm.Object.createOptions(this.$selectPrivileges, []);
+//            Acm.Object.createOptions(this.$selectAvailablePrivileges, []);
+        }
+
+        ,saveRolePrivileges: function() {
+            var selectedRole = this.$selectRoles.val();
+            var privileges = [];
+            this.$selectPrivileges.find('option').each(function(idx, item) {
+                if ($(item).val()) {
+                    privileges.push($(item).val());
+                }
+            });
+            Admin.Service.RolesPrivileges.saveApplicationRolePrivileges(selectedRole, privileges);
+        }
+
+        ,updatePrivilegesLists: function(){
+            var context = this;
+            var selectedRole = this.$selectRoles.val();
+            if (selectedRole) {
+                // Get Role's privileges
+                Admin.Service.RolesPrivileges.retrieveApplicationRolePrivileges(selectedRole)
+                    .done(function(rolePrivileges){
+                        // Fill Role Privileges list by retrivied data
+                        Acm.Object.createOptions(context.$selectPrivileges, rolePrivileges);
+
+                        // Create available privileges list
+                        var availablePrivileges = _.omit(context.privileges ,_.keys(rolePrivileges));
+                        Acm.Object.createOptions(context.$selectAvailablePrivileges, availablePrivileges);
+
+                    })
+                    .fail(function(errorMsg){
+                        Acm.Dialog.error(errorMsg);
+                    });
+            }
+
+        }
+
+        ,loadRoles: function (){
+            var context = this;
+            Admin.Service.RolesPrivileges.retrieveApplicationRoles()
+                .done(function(roles){
+                    Acm.Object.createOptions(context.$selectRoles, roles);
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+
+        },
+
+        loadPrivileges: function(){
+            var context = this;
+            Admin.Service.RolesPrivileges.retrieveApplicationPrivileges()
+                .done(function(privileges){
+                    context.privileges = privileges;
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+
+
+        ,onModelRetrievedRolesPrivilegesApplicationRoles: function(roles) {
+
+        }
+
+        ,onModelRetrievedRolesPrivilegesApplicationPrivileges: function(privileges) {
+
+        }
+
+        ,onModelRetrievedRolesPrivilegesApplicationRolePrivileges: function(rolePrivileges) {
+
+        }
+
+        ,onModelCreatedRolesPrivilegesApplicationRole: function(role){
+
+        }
+
+        ,onModelSavedRolesPrivilegesApplicationRolePrivileges: function (rolePrivileges){
+
+        }
+
+        ,refresh: function() {
+//            var authGroups = [];
+//            var notAuthGroups = [];
+//
+//            // Get selected role
+//            var selected = Admin.View.RolesPrivileges.$selectRoles.val();
+//
+//            if (selected && selected != '') {
+                // Get all groups
+//                var groups = Admin.Model.FunctionalAccessControl.cacheGroups.get(0);
+//
+//                // Get authorized groups for given role
+//                if (Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0) &&
+//                    Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected]) {
+//                    authGroups = Admin.Model.FunctionalAccessControl.cacheApplicationRolesToGroups.get(0)[selected];
+//                }
+//
+//                // Get not authorized groups
+//                if (groups) {
+//                    for (var i = 0; i < groups.length; i++) {
+//                        var found = false;
+//                        for (var j = 0; j < authGroups.length; j++) {
+//                            if (groups[i].name === authGroups[j]) {
+//                                found = true;
+//                                break;
+//                            }
+//                        }
+//
+//                        if (!found) {
+//                            notAuthGroups.push(groups[i].name);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // Show authorized and not authorized groups on the screen
+//            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectAuthorized, authGroups);
+//            Acm.Object.createOptions(Admin.View.FunctionalAccessControl.$selectNotAuthorized, notAuthGroups);
         }
     }
 
@@ -1382,9 +1770,13 @@ Admin.View = Admin.View || {
                     ,title: "LDAP Configuration"
                     ,tooltip: "LDAP Configuration"
                 })
-                .addLeafLast({key: "og"                                                         //level 1.3: /Security/Organization Hierarchy
+                .addLeaf({key: "og"                                                         //level 1.3: /Security/Organization Hierarchy
                     ,title: "Organizational Hierarchy"
                     ,tooltip: "Organizational Hierarchy"
+                })
+                .addLeafLast({key: "rp"                                                         //level 1.3: /Security/Organization Hierarchy
+                    ,title: "Create Role/Select Privileges"
+                    ,tooltip: "Create Role/Select Privileges"
                 })
 
             builder.addBranch({key: "dsh"                                                       //level 2: /Dashboard
