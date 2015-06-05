@@ -242,7 +242,7 @@ DocTree.Service = {
         });
     }
 
-    ,createFolder: function(parentId, folderName, cacheKey, callerData) {
+    ,createFolder0: function(parentId, folderName, cacheKey, callerData) {
         var url = this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
         return Acm.Service.call({type: "PUT"
             ,url: url
@@ -263,6 +263,30 @@ DocTree.Service = {
                                 DocTree.Model.cacheFolderList.put(cacheKey, folderList);
                                 DocTree.Controller.modelCreatedFolder(createdFolder, parentId, folderName, cacheKey, callerData);
                                 return true;
+                            }
+                        }
+                    }
+                } //end else
+            }
+        });
+    }
+
+    ,createFolder: function(parentId, folderName, cacheKey) {
+        var url = this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
+        return Acm.Service.promise({type: "PUT"
+            ,url: url
+            ,callback: function(response) {
+                if (!response.hasError) {
+                    if (DocTree.Model.validateCreateInfo(response)) {
+                        if (response.parentFolderId == parentId) {
+                            var createInfo = response;
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                var createdFolder = DocTree.Model.folderToSolrData(createInfo);
+                                folderList.children.push(createdFolder);
+                                folderList.totalChildren++;
+                                DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                                return createdFolder;
                             }
                         }
                     }
