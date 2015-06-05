@@ -10,6 +10,7 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
         if (CaseFileSplit.Model.Detail.create)         {CaseFileSplit.Model.Detail.create();}
         if (CaseFileSplit.Model.People.create)         {CaseFileSplit.Model.People.create();}
         if (CaseFileSplit.Model.Notes.create)          {CaseFileSplit.Model.Notes.create();}
+        if (CaseFileSplit.Model.Summary.create)        {CaseFileSplit.Model.Summary.create();}
 
         if (CaseFileSplit.Service.create)              {CaseFileSplit.Service.create();}
     }
@@ -19,6 +20,7 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
         if (CaseFileSplit.Model.People.onInitialized)         {CaseFileSplit.Model.People.onInitialized();}
         if (CaseFileSplit.Model.Detail.onInitialized)         {CaseFileSplit.Model.Detail.onInitialized();}
         if (CaseFileSplit.Model.Notes.onInitialized)          {CaseFileSplit.Model.Notes.onInitialized();}
+        if (CaseFileSplit.Model.Summary.onInitialized)          {CaseFileSplit.Model.Summary.onInitialized();}
 
         if (CaseFileSplit.Service.onInitialized)              {CaseFileSplit.Service.onInitialized();}
     }
@@ -116,17 +118,8 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
 
     ,People: {
         create : function() {
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.VIEW_DELETED_PARTICIPANT         , this.onViewDeletedParticipant);
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.VIEW_DELETED_PERSON_ASSOCIATION  , this.onViewDeletedPersonAssociation);
         }
         ,onInitialized: function() {
-        }
-
-        ,onViewDeletedParticipant: function(caseFileId, participantId) {
-            CaseFileSplit.Service.People.deleteParticipant(caseFileId, participantId);
-        }
-        ,onViewDeletedPersonAssociation: function(caseFileId, personAssociationId) {
-            CaseFileSplit.Service.People.deletePersonAssociation(caseFileId, personAssociationId);
         }
         ,validateDeletedPersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
@@ -169,13 +162,8 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
     ,Notes: {
         create : function() {
             this.cacheNoteList = new Acm.Model.CacheFifo(4);
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.VIEW_DELETED_NOTE   , this.onViewDeletedNote);
         }
         ,onInitialized: function() {
-        }
-
-        ,onViewDeletedNote: function(noteId) {
-            CaseFileSplit.Service.Notes.deleteNote(noteId);
         }
         ,validateDeletedNote: function(data) {
             if (Acm.isEmpty(data)) {
@@ -331,6 +319,33 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
             }
 
             return currentAssigneeGetParameter;
+        }
+    }
+
+    ,Summary: {
+        create: function() {
+            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.VIEW_RETRIEVED_SUMMARY             ,this.onViewRetrievedSummary);
+        }
+        ,onInitialized: function() {
+
+        }
+        ,onViewRetrievedSummary: function(summary){
+            CaseFileSplit.Service.Summary.splitCaseFile(summary);
+        }
+        ,validateSummary: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.caseFileId)) {
+                return false;
+            }
+            if (!Acm.isArray(data.attachments)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.preserveFolderStructure)) {
+                return false;
+            }
+            return true;
         }
     }
 
