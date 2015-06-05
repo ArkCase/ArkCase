@@ -178,7 +178,7 @@ CaseFileSplit.Service = {
         }
         , onInitialized: function () {
         }
-        ,API_SPLIT_CASE_FILE : "/api/latest/plugin/copyCaseFile"
+        ,API_SPLIT_CASE_FILE : "/api/v1/plugin/copyCaseFile"
 
         ,splitCaseFile: function(summary){
             var url = this.API_SPLIT_CASE_FILE;
@@ -189,7 +189,7 @@ CaseFileSplit.Service = {
                     if (response.hasError) {
                         CaseFileSplit.Controller.modelSplitCaseFile(response);
                     } else {
-                        if (CaseFile.Model.Detail.validateCaseFile(response)) {
+                        if (CaseFileSplit.Model.Detail.validateCaseFile(response)) {
                             var splitCaseFile = response;
                             CaseFileSplit.Controller.modelSplitCaseFile(splitCaseFile);
                             return true;

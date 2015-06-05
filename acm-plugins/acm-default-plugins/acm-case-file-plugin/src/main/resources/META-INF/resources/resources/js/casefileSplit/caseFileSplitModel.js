@@ -342,6 +342,9 @@ CaseFileSplit.Model = CaseFileSplit.Model || {
             if (!Acm.isArray(data.attachments)) {
                 return false;
             }
+            if (Acm.isEmpty(data.preserveFolderStructure)) {
+                return false;
+            }
             return true;
         }
     }
