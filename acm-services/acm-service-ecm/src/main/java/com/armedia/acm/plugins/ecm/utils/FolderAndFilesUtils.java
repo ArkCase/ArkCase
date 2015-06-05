@@ -9,11 +9,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by marjan.stefanoski on 09.04.2015.
  */
 public class FolderAndFilesUtils {
 
+	private Logger LOG = LoggerFactory.getLogger(getClass());
+	
     /**
      * Replace all not allowed characters in folder name with underscore
      *
@@ -67,5 +72,19 @@ public class FolderAndFilesUtils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmssSSS");
         String dateString = dateFormat.format(new Date());
         return name +"_"+ dateString;
+    }
+    
+    public Long convertToLong(String folderId)
+    {
+    	try
+    	{
+    		return Long.parseLong(folderId);
+    	}
+    	catch (Exception e)
+    	{
+    		LOG.error("Cannot convert String representation of folderId=" + folderId + " to Long", e);
+    	}
+    	
+    	return null;
     }
 }
