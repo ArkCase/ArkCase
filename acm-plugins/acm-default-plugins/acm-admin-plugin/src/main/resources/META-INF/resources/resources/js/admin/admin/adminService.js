@@ -442,8 +442,7 @@ Admin.Service = {
                 function(response) {
                     if (response.hasError) {
                         var errorMsg = "Failed to retrieve resource settings:" + response.errorMsg;
-                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
-                        $dfd.reject()
+                        $dfd.reject();
                     } else {
                         $dfd.resolve(response);
                     }
@@ -634,6 +633,129 @@ Admin.Service = {
                     }
                 }
             });
+        }
+    }
+
+    ,RolesPrivileges: {
+        create: function() {
+
+        }
+
+        ,onInitialized: function() {
+
+        }
+
+        ,API_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles"
+        ,API_RETRIEVE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/privileges"
+        ,API_ROLE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges"
+
+        ,retrieveApplicationRoles: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLES;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve application roles: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                        //Admin.Controller.modelErrorRetrievedRolesPrivilegesApplicationRoles(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationRoles(response)) {
+                            $dfd.resolve(response);
+                            //var roles = response;
+                            //Admin.Controller.modelRetrievedRolesPrivilegesApplicationRoles(roles);
+                        }
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+
+        ,createApplicationRole: function(roleName) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLES;
+            var data = {
+                roleName: roleName
+            }
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to create role: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+
+            return $dfd.promise();
+
+        }
+
+        ,retrieveApplicationPrivileges: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_RETRIEVE_PRIVILEGES;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve application privileges: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationPrivileges(response)) {
+                            $dfd.resolve(response);
+                        }
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+
+        ,retrieveApplicationRolePrivileges: function(roleName) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLE_PRIVILEGES.format(roleName);
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve role privileges: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationRolePrivileges(response)) {
+                            $dfd.resolve(response);
+                        }
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+        ,saveApplicationRolePrivileges: function(roleName, privileges) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLE_PRIVILEGES.format(roleName);
+            var data = {
+              privileges: privileges
+            };
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to save role privileges: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationRolePrivileges(response)) {
+                            $dfd.resolve(response);
+                        }
+                    }
+                }
+                ,url
+                , JSON.stringify(data)
+            )
+
+            return $dfd.promise();
         }
     }
 

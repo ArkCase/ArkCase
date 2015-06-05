@@ -206,6 +206,33 @@ Admin.Model = Admin.Model || {
             return true;
         }
     }
+    ,RolesPrivileges: {
+         create: function() {
+         }
+         ,onInitialized: function() {
+         }
+
+         ,validateApplicationRoles: function(roles) {
+             if (Acm.isEmpty(roles) || !Acm.isArray(roles)) {
+                 return false;
+             }
+             return true;
+         }
+
+         ,validateApplicationPrivileges: function(privileges) {
+             if (Acm.isEmpty(privileges) || !$.isPlainObject(privileges)) {
+                 return false;
+             }
+             return true;
+         }
+
+         ,validateApplicationRolePrivileges: function(rolePrivileges) {
+             if (Acm.isEmpty(rolePrivileges) || !$.isPlainObject(rolePrivileges)) {
+                 return false;
+             }
+             return true;
+         }
+     }
 
     ,FunctionalAccessControl:{
         create : function() {
@@ -332,6 +359,7 @@ Admin.Model = Admin.Model || {
 
             ,NODE_TYPE_PART_BRANCH_MAIN_PAGE                    :          "mp"
             ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL      :          "fac"
+            ,NODE_TYPE_PART_LEAF_ROLE_PRIVILEGES                :          "rp"
             ,NODE_TYPE_PART_LEAF_LDAP_CONFIGURATION             :          "ldap"
             ,NODE_TYPE_PART_LEAF_ORGANIZATION                   :          "og"
             ,NODE_TYPE_PART_BRANCH_DASHBOARD                    :          "dsh"
@@ -361,6 +389,7 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "cm"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "og"       ,icon: "",tabIds: ["tOrganization"]}
                 ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctionalAccessControl"]}
+                ,{nodeType: "rp"       ,icon: "",tabIds: ["tabRolePrivileges"]}
                 ,{nodeType: "ldap"     ,icon: "",tabIds: ["tabLDAPConfiguration"]}
                 ,{nodeType: "wfc"      ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
                 ,{nodeType: "wf"       ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
@@ -402,6 +431,8 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_LEAF_LDAP_CONFIGURATION;
                 } else if (key == this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL) {
                     return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
+                } else if (key == this.NODE_TYPE_PART_LEAF_ROLE_PRIVILEGES) {
+                    return this.NODE_TYPE_PART_LEAF_ROLE_PRIVILEGES;
                 } else if (key == this.NODE_TYPE_PART_LEAF_DASHBOARD) {
                     return this.NODE_TYPE_PART_LEAF_DASHBOARD;
                 } else if (key == this.NODE_TYPE_PART_BRANCH_DASHBOARD) {
