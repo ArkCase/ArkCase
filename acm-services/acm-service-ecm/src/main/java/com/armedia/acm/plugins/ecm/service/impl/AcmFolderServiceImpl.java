@@ -32,10 +32,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
@@ -53,6 +50,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private MuleClient muleClient;
     private EcmFileService fileService;
     private FolderAndFilesUtils folderAndFilesUtils;
+    private Properties ecmFileServiceProperties;
 
     private AcmFolder copiedFolder;
     private boolean isFirstFolder = true;
@@ -110,23 +108,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder addNewFolderByPath(String targetObjectType, Long targetObjectId, String newPath) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
+    public AcmFolder addNewFolderByPath( String targetObjectType, Long targetObjectId, String newPath ) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
 
         AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(targetObjectType,targetObjectId);
         if ( container == null ) {
             throw new AcmObjectNotFoundException(targetObjectType,targetObjectId,"Container object not found",null);
         }
 
-        String typeFolderName;
-        if ("COMPLAINT".equals(targetObjectType)) {
-            typeFolderName = "Complaints";
-        } else if ("CASE_FILE".equals(targetObjectType)) {
-            typeFolderName = "Case Files";
-        } else {
-            typeFolderName = "Tasks";
-        }
+        String typeFolderName = getEcmFileServiceProperties().getProperty(AcmFolderConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH)+getEcmFileServiceProperties().getProperty(AcmFolderConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE+targetObjectType);
 
-        String ecmFolerPath = "/Sites/acm/documentLibrary/"+typeFolderName+"/"+container.getContainerObjectTitle()+newPath;
+
+        String ecmFolerPath = typeFolderName+"/"+container.getContainerObjectTitle()+newPath;
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("ecmFolderPath",ecmFolerPath);
@@ -823,5 +815,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
         this.folderAndFilesUtils = folderAndFilesUtils;
+    }
+
+    public Properties getEcmFileServiceProperties() {
+        return ecmFileServiceProperties;
+    }
+
+    public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
+        this.ecmFileServiceProperties = ecmFileServiceProperties;
     }
 }
