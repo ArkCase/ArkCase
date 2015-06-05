@@ -59,4 +59,7 @@ public interface AcmFolderConstants {
     String FOLDER_STRUCTURE_KEY_NAME = "name";
     String FOLDER_STRUCTURE_KEY_CHILDREN = "children";
     String FOLDER_STRUCTURE_KEY_ATTACHMENT = "attachment";
+
+    String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
+    String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
 }
