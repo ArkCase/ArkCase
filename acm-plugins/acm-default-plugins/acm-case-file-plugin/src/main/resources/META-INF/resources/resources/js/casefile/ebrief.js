@@ -56,10 +56,7 @@ CaseFile.prepare = function() {
             var myCfg = App.Model.Config.getMyConfig();
             var courtLocations = Acm.goodValue(myCfg.courtLocations, {});
             $.each(courtLocations, function(idx, val) {
-                var opt = {};
-                opt.value = val;
-                opt.text = val;
-                choices.push(opt);
+                choices.push({value: val, text: val});
             });
             AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkCourt, {
                 source: choices
@@ -69,12 +66,25 @@ CaseFile.prepare = function() {
                 }
             });
 
+            choices = [];
+            var courtLocations = Acm.goodValue(myCfg.organisations, {});
+            $.each(courtLocations, function(idx, val) {
+                choices.push({value: val, text: val});
+            });
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkOrganisation, {
+                source: choices
+                ,success: function(response, newValue) {
+                    Acm.log("set eBrief organisation:" + newValue);
+                    //CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
+                }
+            });
+
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
             //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
@@ -120,29 +130,29 @@ CaseFile.prepare = function() {
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
             CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
-        ,onModelRetrievedGroups: function(groups) {
-            var choices = [];
-            $.each(groups, function(idx, val) {
-                var opt = {};
-                opt.value = val.object_id_s;
-                opt.text = val.name;
-                choices.push(opt);
-            });
-
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkOrganisation, {
-                source: choices
-                ,success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
-                }
-                ,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
-            });
-
-            // This is happen after loading the object, for that reason we should check here as well.
-            // We need both, assignees and groups for checking.
-            // For this to be happened, assignees and groups should be loaded. If in this stage
-            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
-            CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
-        }
+//        ,onModelRetrievedGroups: function(groups) {
+//            var choices = [];
+//            $.each(groups, function(idx, val) {
+//                var opt = {};
+//                opt.value = val.object_id_s;
+//                opt.text = val.name;
+//                choices.push(opt);
+//            });
+//
+//            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkOrganisation, {
+//                source: choices
+//                ,success: function(response, newValue) {
+//                    CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
+//                }
+//                ,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
+//            });
+//
+//            // This is happen after loading the object, for that reason we should check here as well.
+//            // We need both, assignees and groups for checking.
+//            // For this to be happened, assignees and groups should be loaded. If in this stage
+//            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
+//            CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
+//        }
 //        ,onModelFoundSubjectTypes: function(subjectTypes) {
 //            var choices = [];
 //            $.each(subjectTypes, function(idx, val) {
@@ -194,14 +204,12 @@ CaseFile.prepare = function() {
                 //this.setTextLabCaseNumber(Acm.goodValue(displayTitle));
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-                this.setTextLnkCourt(Acm.goodValue(c.caseType));
-                this.setTextLnkHearingDate(Acm.getDateFromDatetime(c.dueDate));
+                this.setTextLnkCourt(Acm.goodValue(c.courtroomName));
+                this.setTextLnkHearingDate(Acm.getDateFromDatetime(c.nextCourtDate));
+                this.setTextLnkOrganisation(Acm.goodValue(c.responsibleOrganization));
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-
-                var group = CaseFile.Model.Detail.getGroup(c);
-                this.setTextLnkOrganisation(Acm.goodValue(group));
             }
         }
         ,setTextLabCaseNumber: function(txt) {
@@ -265,8 +273,9 @@ CaseFile.prepare = function() {
 
     };
 
-    CaseFile.Service.Participants = {
+    CaseFile.Model.Participants = {
         create: function() {
+            this.cacheParticipantProfile = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
         }
@@ -283,15 +292,19 @@ CaseFile.prepare = function() {
             }
             return true;
         }
-        ,retrieveProfileInfo : function(participant, user) {
+        ,retrieveProfileInfo : function(user) {
             var url = this.API_RETRIEVE_PROFILE_INFO + user;
             return Acm.Service.promise({type: "GET"
                 ,url: url
                 ,callback: function(response) {
                     if (!response.hasError) {
-                        if (CaseFile.Service.Participants.validateProfile(response)) {
+                        if (CaseFile.Model.Participants.validateProfile(response)) {
                             var profileInfo = response;
-                            CaseFile.View.Participants.updateParticipant(participant,profileInfo);
+                            var profile = {};
+                            profile.organisation = Acm.goodValue(profileInfo.companyName);
+                            profile.email = Acm.goodValue(profileInfo.email);
+                            profile.phone = Acm.goodValue(profileInfo.phone);
+                            CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
                             return profileInfo;
                         }
                     } //end else
@@ -330,11 +343,11 @@ CaseFile.prepare = function() {
                 var participant = participants[i];
                 if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
                     var user = participant.participantLdapId;
-                    var req = CaseFile.Service.Participants.retrieveProfileInfo(participant,user);
+                    var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
                     requests.push(req);
                 }
             }
-            //CaseFile.Service.Participants.resolveProfileInfo(requests)
+            //CaseFile.Model.Participants.resolveProfileInfo(requests)
             Acm.Promise.resolvePromises(requests)
                 .done(function() {
                     AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
@@ -358,13 +371,13 @@ CaseFile.prepare = function() {
         ,onViewSelectedObject: function(objType, objId) {
             AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
         }
-        ,updateParticipant: function(participant,profileInfo) {
-            if(Acm.isNotEmpty(profileInfo)){
-                participant.organisation = Acm.goodValue(profileInfo.companyName);
-                participant.email = Acm.goodValue(profileInfo.email);
-                participant.phone = Acm.goodValue(profileInfo.phone);
-            }
-        }
+//        ,updateParticipant: function(participant,profileInfo) {
+//            if(Acm.isNotEmpty(profileInfo)){
+//                participant.organisation = Acm.goodValue(profileInfo.companyName);
+//                participant.email = Acm.goodValue(profileInfo.email);
+//                participant.phone = Acm.goodValue(profileInfo.phone);
+//            }
+//        }
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: $.t("ebrief:participants.table.title")
@@ -385,15 +398,13 @@ CaseFile.prepare = function() {
                                 if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group") {
                                     var record = {};
                                     record.id = Acm.goodValue(participant.id, 0);
-                                    // Here I am not taking user full name. It will be automatically shown because now
-                                    // I am sending key-value object with key=username and value=fullname
                                     record.title = Acm.goodValue(participant.participantLdapId);
-                                    //record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
                                     record.type = Acm.goodValue(participant.participantType);
 
-                                    record.organisation = Acm.goodValue(participant.organisation);
-                                    record.email = Acm.goodValue(participant.email);
-                                    record.phone = Acm.goodValue(participant.phone);
+                                    var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant.participantLdapId));
+                                    record.organisation = Acm.goodValue(profile.organisation);
+                                    record.email = Acm.goodValue(profile.email);
+                                    record.phone = Acm.goodValue(profile.phone);
 
                                     rc.Records.push(record);
                                 }
@@ -405,7 +416,6 @@ CaseFile.prepare = function() {
                     ,createAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        //var caseFileId = CaseFile.View.getActiveCaseFileId();
                         var caseFile = CaseFile.View.getActiveCaseFile();
                         if (caseFile) {
                             rc.Record.title = record.title;
@@ -416,7 +426,6 @@ CaseFile.prepare = function() {
                     ,updateAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        //var caseFileId = CaseFile.View.getActiveCaseFileId();
                         var caseFile = CaseFile.View.getActiveCaseFile();
                         if (caseFile) {
                             rc.Record.title = record.title;
@@ -539,12 +548,14 @@ CaseFile.prepare = function() {
 
             this.$dlgLodgeDocs = $("#dlgLodgeDocs");
             this.$edtBmailAddr = $("#edtBmailAddr");
-            this.$ulLodgeDocs  = $("#ulLodgeDocs");
+            this.$divLodgeDocs  = $("#divLodgeDocs");
+            this.createJTableLodgeDocs(this.$divLodgeDocs);
 
             this.dlgRejectDocs    = $("#dlgRejectDocs");
             this.$edtBmailReject  = $("#edtBmailReject");
             this.$edtRejectReason = $("#edtRejectReason");
-            this.$ulRejectDocs    = $("#ulRejectDocs");
+            this.$divRejectDocs    = $("#ulRejectDocs");
+            this.createJTableRejectDocs(this.$divRejectDocs);
 
         }
         ,onClickBtnNewFolder: function(event, ctrl) {
@@ -560,37 +571,39 @@ CaseFile.prepare = function() {
             //DocTree.View.Op.createFolder(topNode, "hahahaha");
         }
         ,onClickBtnLodgeDocs: function(event, ctrl) {
-            var parent = DocTree.View.tree.getRootNode();
+//            var parent = DocTree.View.tree.getRootNode();
+//            var node = DocTree.View.tree.getActiveNode();
+//            var names = DocTree.View.getNodePathNames(node);
+//            names.push("abc");
+//            DocTree.View.Op.createFolders(parent, names)
+//                .done(function(data){
+//                    var z = 1;
+//                })
+//                .fail(function(data){
+//                    var z = 2;
+//                })
+//            ;
+//            var z = 3;
+//            return;
+//            //get list of sel nodes
+//            //for each loop
+//            //   get path names
+//            //   create target folders
+//            //   find target folder
+//            //   node
+
+
+            var selNodes = DocTree.View.tree.getSelectedNodes();
             var node = DocTree.View.tree.getActiveNode();
-            var names = DocTree.View.getNodePathNames(node);
-            names.push("abc");
-            DocTree.View.Op.createFolders(parent, names)
-                .done(function(data){
-                    var z = 1;
-                })
-                .fail(function(data){
-                    var z = 2;
-                })
-            ;
-            var z = 3;
-            return;
-            //get list of sel nodes
-            //for each loop
-            //   get path names
-            //   create target folders
-            //   find target folder
-            //   node
+            var nodes = (Acm.isArrayEmpty(selNodes))? [node] : selNodes;
+            CaseFile.View.Documents.setSelectedLodgeNodes(nodes);
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
 
-
-            Acm.log("lodge doc??");
             Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
                 var lodgeFolderId = CaseFile.View.Documents.getLodgeFolderId();
 
-                var selNodes = DocTree.View.tree.getSelectedNodes();
-                var node = DocTree.View.tree.getActiveNode();
-                var nodes = (Acm.isArrayEmpty(selNodes))? [node] : selNodes;
 
-                DocTree.View.tree.batMove(frNodes, toNode, "child");
+                //DocTree.View.tree.batMove(frNodes, toNode, "child");
                 Acm.log("lodge doc: Yes" + lodgeFolderId);
             });
         }
@@ -601,6 +614,14 @@ CaseFile.prepare = function() {
         }
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
+        }
+
+        ,_selectedLodgeNodes: []
+        ,getSelectedLodgeNodes: function() {
+            return this._selectedLodgeNodes;
+        }
+        ,setSelectedLodgeNodes: function(selectedLodgeNodes) {
+            this._selectedLodgeNodes = selectedLodgeNodes;
         }
 
         ,_lodgeFolderId: 0
@@ -620,6 +641,89 @@ CaseFile.prepare = function() {
             return this._lodgeFolderId;
         }
 
+        ,createJTableLodgeDocs: function($s) {
+            AcmEx.Object.JTable.useBasic($s, {
+                title: $.t("ebrief:dialog.lodge-table-title")
+                ,paging: true
+                ,sorting: true
+                ,pageSize: 16
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var nodes = CaseFile.View.Documents.getSelectedLodgeNodes();
+                        if (DocTree.View.validateNodes(nodes)) {
+                            for (var i = 0; i < nodes.length; i++) {
+                                var record = {};
+                                record.id = Acm.goodValue(nodes[i].data.objectId, 0);
+                                var pathNames = DocTree.View.getNodePathNames(nodes[i]);
+                                pathNames.shift(); //remove top node
+                                var path = "/" + pathNames.join("/");
+                                record.name = path; //Acm.goodValue(nodes[i].data.name);
+                                rc.Records.push(record);
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
+                        return rc;
+                    }
+                }
+                ,fields: {
+                    id: {
+                        title: "ID"  //not shown, no need with label resource
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                    }
+                    ,name: {
+                        title: $.t("ebrief:documents.dialog.lodge-name-column")
+                        ,edit: false
+                        ,create: false
+                    }
+                }
+            });
+        }
+
+        ,createJTableRejectDocs: function($s) {
+            AcmEx.Object.JTable.useBasic($s, {
+                title: $.t("ebrief:dialog.reject-table-title")
+                ,paging: true
+                ,sorting: true
+                ,pageSize: 16
+                ,actions: {
+                    listAction: function(postData, jtParams) {
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var nodes = CaseFile.View.Documents.getSelectedLodgeNodes();
+                        if (DocTree.View.validateNodes(nodes)) {
+                            for (var i = 0; i < nodes.length; i++) {
+                                var record = {};
+                                record.id = Acm.goodValue(nodes[i].data.objectId, 0);
+                                var pathNames = DocTree.View.getNodePathNames(nodes[i]);
+                                pathNames.shift(); //remove top node
+                                var path = "/" + pathNames.join("/");
+                                record.name = path; //Acm.goodValue(nodes[i].data.name);
+                                rc.Records.push(record);
+                            }
+                            rc.TotalRecordCount = rc.Records.length;
+                        }
+                        return rc;
+                    }
+                }
+                ,fields: {
+                    id: {
+                        title: "ID"  //not shown, no need with label resource
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                    }
+                    ,name: {
+                        title: $.t("ebrief:documents.dialog.reject-name-column")
+                        ,edit: false
+                        ,create: false
+                    }
+                }
+            });
+        }
 
     });
 
@@ -645,6 +749,14 @@ CaseFile.prepare = function() {
                     var arr = x.split("=");
                     arr[1] && (myCfg.courtLocations[arr[0]] = arr[1]);
                 });
+                myCfg.organisations  = {};
+                Acm.goodValue(cfg["ebrief.organizations"], "").split(",").forEach(function(x){
+                    var arr = x.split("=");
+                    arr[1] && (myCfg.organisations[arr[0]] = arr[1]);
+                });
+
+
+
             }
         });
         App.Model.Config.requestConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE).done(function(data) {
@@ -653,7 +765,8 @@ CaseFile.prepare = function() {
                 var myCfg = App.Model.Config.getMyConfig();
 //                myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
 //                myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
-//                myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
+                myCfg.folderStructure   = Acm.parseJson(cfg["casefile.folder.structure"], "[]");
+                var z = 1;
             }
         });
     };

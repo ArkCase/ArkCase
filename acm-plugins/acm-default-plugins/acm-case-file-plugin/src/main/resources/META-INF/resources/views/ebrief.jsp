@@ -465,24 +465,20 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="labLodgeDlgTitle">Lodge Documents</h4>
+                        <h4 class="modal-title" id="labLodgeDlgTitle" data-i18n="ebrief:dialog.lodge-title">Lodge Documents</h4>
                     </div>
                     <div class="modal-body">
-                        <p>Lodge document(s) and notify by email?</p>
-                        <label for="edtBmailAddr">Email Address</label>
+                        <label for="edtBmailAddr" data-i18n="ebrief:dialog.lodge-email-label">Lodge document(s) and notify to</label>
                         <br/>
-                        <input type="text" id="edtBmailAddr" class="input-lg" placeholder="Email Address" />
-
-                        <ul id="ulLodgeDocs">
-                            <li>doc1</li>
-                            <li>doc2</li>
-                            <li>doc3</li>
-                        </ul>
+                        <input type="text" id="edtBmailAddr" class="form-control" data-i18n="[placeholder]ebrief:dialog.lodge-email-placeholder" placeholder="Email Address" />
+                        <br/>
+                        <div id="divLodgeDocs">
+                        </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Lodge</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="ebrief:dialog.lodge-btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-i18n="ebrief:dialog.lodge-btn-ok">Lodge</button>
                     </div>
                 </div>
             </div>
@@ -492,27 +488,24 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="labRejectDlgTitle">Reject Documents</h4>
+                        <h4 class="modal-title" id="labRejectDlgTitle" data-i18n="ebrief:dialog.reject-title">Reject Documents</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="edtRejectReason">Reason</label>
+                        <label for="edtBmailReject" data-i18n="ebrief:dialog.reject-email-label">Reject document(s) and notify to</label>
                         <br/>
-                        <input type="text" id="edtRejectReason" class="input-lg" placeholder="Reject Reason" />
+                        <input type="text" id="edtBmailReject" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-email-placeholder" placeholder="Email Address" />
                         <br/>
-                        <label for="edtBmailReject">Email Address</label>
+                        <label for="edtRejectReason" data-i18n="ebrief:dialog.lodge-reason-label">Reason</label>
                         <br/>
-                        <input type="text" id="edtBmailReject" class="input-lg" placeholder="Email Address" />
-
-                        <ul id="ulRejectDocs">
-                            <li>doc1</li>
-                            <li>doc2</li>
-                            <li>doc3</li>
-                        </ul>
+                        <input type="text" id="edtRejectReason" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-reason-placeholder" placeholder="Reject Reason" />
+                        <br/>
+                        <div id="divRejectDocs">
+                        </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Reject</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="ebrief:dialog.reject-btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-i18n="ebrief:dialog.reject-btn-ok">Reject</button>
                     </div>
                 </div>
             </div>
