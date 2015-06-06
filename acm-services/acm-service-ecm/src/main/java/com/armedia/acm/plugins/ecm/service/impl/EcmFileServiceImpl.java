@@ -591,14 +591,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType , Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+    public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+        AcmFolder folder = getFolderDao().find(dstFolderId);
+        if (folder == null)
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolderId, "Folder  not found", null);
+
+        return moveFile(fileId, targetObjectId, targetObjectType, folder);
+    }
+
+    @Override
+    public EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
 
         EcmFile file = getEcmFileDao().find(fileId);
-        AcmFolder folder = getFolderDao().find(dstFolderId);
         if( file == null  )
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File  not found",null);
-        if( folder == null)
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,dstFolderId,"Folder  not found",null);
         Map<String,Object> props = new HashMap<>();
         props.put(EcmFileConstants.CMIS_OBJECT_ID, file.getVersionSeriesId());
         props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
