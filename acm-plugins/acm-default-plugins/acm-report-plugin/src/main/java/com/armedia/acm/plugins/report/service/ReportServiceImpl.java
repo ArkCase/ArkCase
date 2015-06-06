@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService{
 		String serverFormPassword = getReportPluginProperties().get(PENTAHO_SERVER_PASSWORD);
 
 
-		String reportListUrl = getReportUrl().getReportsUrl().replace("http://", "").replace("https://", "");
+		String reportListUrl = getReportUrl().getReportsUrl(); // .replace("http://", "").replace("https://", "");
 		reportListUrl += "?userid=" + serverFormUser + "&password=" + serverFormPassword;
 
 		MuleMessage received = getMuleClient().send(

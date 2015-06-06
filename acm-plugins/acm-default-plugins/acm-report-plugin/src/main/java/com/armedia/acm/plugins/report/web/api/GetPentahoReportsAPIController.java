@@ -79,7 +79,7 @@ public class GetPentahoReportsAPIController {
 			}
 		}
 		
-		LOG.info("Retrived " + retval.size() + " Pentaho reports.");
+		LOG.info("Retrieved " + retval.size() + " Pentaho reports.");
 		
 		return retval;
 	}

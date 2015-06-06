@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
     
     <http:endpoint
             name="pentaho-reports"
-    		address="http://#[payload]"
+    		address="#[payload]"
             doc:name="http-pentaho-reports"/>
 
     <flow name="getPentahoReports" doc:name="Get Reports from Pentaho server">
