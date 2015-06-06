@@ -14,10 +14,11 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
         if (CaseFile.Model.Tasks.create)          {CaseFile.Model.Tasks.create();}
         if (CaseFile.Model.References.create)     {CaseFile.Model.References.create();}
-        if (CaseFile.Model.History.create)         {CaseFile.Model.History.create();}
+        if (CaseFile.Model.History.create)        {CaseFile.Model.History.create();}
         if (CaseFile.Model.Correspondence.create) {CaseFile.Model.Correspondence.create();}
         if (CaseFile.Model.Time.create)           {CaseFile.Model.Time.create();}
         if (CaseFile.Model.Cost.create)           {CaseFile.Model.Cost.create();}
+        if (CaseFile.Model.Participants.create)   {CaseFile.Model.Participants.create();}
 
         if (CaseFile.Service.create)              {CaseFile.Service.create();}
 
@@ -34,10 +35,11 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
         if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
         if (CaseFile.Model.References.onInitialized)     {CaseFile.Model.References.onInitialized();}
-        if (CaseFile.Model.History.onInitialized)         {CaseFile.Model.History.onInitialized();}
+        if (CaseFile.Model.History.onInitialized)        {CaseFile.Model.History.onInitialized();}
         if (CaseFile.Model.Correspondence.onInitialized) {CaseFile.Model.Correspondence.onInitialized();}
         if (CaseFile.Model.Time.onInitialized)           {CaseFile.Model.Time.onInitialized();}
         if (CaseFile.Model.Cost.onInitialized)           {CaseFile.Model.Cost.onInitialized();}
+        if (CaseFile.Model.Participants.onInitialized)   {CaseFile.Model.Participants.onInitialized();}
 
         if (CaseFile.Service.onInitialized)              {CaseFile.Service.onInitialized();}
     }
@@ -137,14 +139,10 @@ CaseFile.Model = CaseFile.Model || {
                 var cfg = App.Model.Config.getConfig(CaseFile.Model.Config.CONFIG_NAME_CASE_FILE);
                 if (Acm.isNotEmpty(cfg)) {
                     var myCfg = App.Model.Config.getMyConfig();
-                    var settings = cfg;
-                    if (Acm.isNotEmpty(settings)) {
-                        myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
-                        myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
-                        myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
-                    }
+                    myCfg.caseTypes  = Acm.goodValue(cfg["casefile.case-types"], "").split(",");
+                    myCfg.treeFilter = Acm.parseJson(cfg["search.tree.filter"], "[]");
+                    myCfg.treeSort   = Acm.parseJson(cfg["search.tree.sort"], "[]");
                 }
-                var z = 1;
             });
         }
     }
@@ -566,7 +564,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Notes: {
         create : function() {
-            this.cacheNoteList = new Acm.Model.CacheFifo(4);
+            this.cacheNoteList = new Acm.Model.CacheFifo();
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_NOTE     , this.onViewAddedNote);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_NOTE   , this.onViewUpdatedNote);
@@ -611,7 +609,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Tasks: {
         create : function() {
-            this.cacheTaskSolr = new Acm.Model.CacheFifo(4);
+            this.cacheTaskSolr = new Acm.Model.CacheFifo();
             this.cacheTasks = new Acm.Model.CacheFifo(4);
         }
         ,onInitialized: function() {
@@ -806,7 +804,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,References: {
         create : function() {
-            this.cacheReferenceList = new Acm.Model.CacheFifo(4);
+            this.cacheReferenceList = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
         }
@@ -1123,6 +1121,13 @@ CaseFile.Model = CaseFile.Model || {
                 return false;
             }
             return true;
+        }
+    }
+
+    ,Participants: {
+        create : function() {
+        }
+        ,onInitialized: function() {
         }
     }
 
