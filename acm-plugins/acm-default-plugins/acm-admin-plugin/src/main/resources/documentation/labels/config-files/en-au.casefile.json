@@ -1,7 +1,7 @@
 {
     "msg": {
-        "no-case-selected": "(No case is selected)",
-        "error-retrieving-casefile-data": "Error occurred for retrieving casefile data"
+        "no-case-selected": "(No brief is selected)",
+        "error-retrieving-casefile-data": "Error occurred while retrieving brief data"
     },
     "notes": {
         "msg": {"add-new-record": "Add Note"},
@@ -42,9 +42,9 @@
     },
     "consolidate-case-dialog": {
         "btn-cancel": "Cancel",
-        "title": "Consolidate Case",
-        "enter-case-like-consolidate": "Enter the case you would like to consolidate with:",
-        "btn-ok": "Consolidate Case",
+        "title": "Consolidate Brief",
+        "enter-case-like-consolidate": "Enter the brief you would like to consolidate with:",
+        "btn-ok": "Consolidate Brief",
         "btn-close": "Close"
     },
     "email-documents-dialog": {
@@ -78,7 +78,7 @@
             "title": "Documents"
         }
     },
-    "page-title": "Case Files | ACM | Ark Case Management",
+    "page-title": "Briefs | ACM | Ark Case Management",
     "correspondence": {
         "msg": {"add-new-record": "Add Correspondence"},
         "form-document": {
@@ -120,21 +120,21 @@
             "day": "Day"
         }
     },
-    "title": "Case",
+    "title": "Brief",
     "case-picker": {
-        "selection-error": "Please select a single case",
+        "selection-error": "Please select a single brief",
         "btn-cancel": "Cancel",
-        "name": "Case",
+        "name": "Brief",
         "btn-search": "Go!",
-        "title": "Choose Target Case",
+        "title": "Choose Target Brief",
         "btn-ok": "Merge",
-        "prompt": "Enter to search for a case"
+        "prompt": "Enter to search for a brief"
     },
     "change-case-status-dialog": {
         "btn-cancel": "Cancel",
-        "title": "Change Case Status",
-        "body": "Are you sure you want to change the status for this case?",
-        "btn-ok": "Change Case Status",
+        "title": "Change Brief Status",
+        "body": "Are you sure you want to change the status for this brief?",
+        "btn-ok": "Change Brief Status",
         "btn-close": "Close"
     },
     "people": {
@@ -250,21 +250,21 @@
     },
     "header": {
         "buttons": {
-            "reinvestigate-case-file": "Reinvestigate Case File",
-            "change-case-status": "Change Case Status",
+            "reinvestigate-case-file": "Reinvestigate Brief",
+            "change-case-status": "Change Brief Status",
             "edit": "Edit",
-            "split-case": "Split Case",
+            "split-case": "Split Brief",
             "subscribe": "Subscribe",
             "merge": "Merge",
-            "edit-case-file": "Edit Case File",
-            "consolidate-case": "Merge Case",
+            "edit-case-file": "Edit Brief File",
+            "consolidate-case": "Merge Brief",
             "restrict": "Restrict ?",
             "reinvestigate": "Reinvestigate"
         },
         "labels": {
             "enter-owning-group": "Enter Owning Group",
             "enter-incident-date": "Enter Incident Date",
-            "case-type": "Case Type",
+            "case-type": "Brief Type",
             "assigned-to": "Assigned To",
             "owning-group": "Owning Group",
             "priority-high": "High",
@@ -272,14 +272,14 @@
             "enter-due-date": "Enter Due Date",
             "enter-priority": "Enter Priority",
             "enter-assignee": "Enter Assignee",
-            "enter-case-title": "Enter Case Title",
+            "enter-case-title": "Enter Brief Title",
             "create-date": "Create Date",
             "due-date": "Due Date",
             "enter-subject-type": "Enter Subject Type",
             "state": "State"
         }
     },
-    "wizard": {"title": "New Case File"},
+    "wizard": {"title": "New Brief"},
     "detail": {
         "other-menu-items": "Other menu items",
         "buttons": {

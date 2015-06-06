@@ -15,7 +15,7 @@
                 "description": "Displays a user tasks",
                 "no-tasks-assigned": "No active tasks assigned",
                 "enter-row-numbers": "Enter Default Row Numbers",
-                "case-id": "Case ID",
+                "case-id": "Brief ID",
                 "title": "Title",
                 "priority": "Priority",
                 "task-id": "Task ID",
@@ -60,14 +60,14 @@
         "casessum": {
             "label": {
                 "all": "All",
-                "no-outstanding-cases": "Currently, there are no outstanding cases",
+                "no-outstanding-cases": "Currently, there are no outstanding briefs",
                 "last-year": "Last Year",
-                "description": "Displays Cases by Status Summary as a pie chart",
+                "description": "Displays Briefs by Status Summary as a pie chart",
                 "last-week": "Last Week",
                 "select-time-period": "Select Time Period",
                 "last-month": "Last Month"
             },
-            "title": "Cases by Status"
+            "title": "Briefs by Status"
         },
         "my-complaints": {
             "label": {"description": "Displays complaints created by user"},
@@ -89,13 +89,13 @@
         "my-cases": {
             "label": {
                 "number": "Number",
-                "description": "Displays a user cases",
+                "description": "Displays a user's briefs",
                 "no-tasks-assigned": "No active tasks assigned",
                 "title": "Title",
                 "priority": "Priority",
                 "status": "Status"
             },
-            "title": "My Cases"
+            "title": "My Briefs"
         }
     },
     "label": {
