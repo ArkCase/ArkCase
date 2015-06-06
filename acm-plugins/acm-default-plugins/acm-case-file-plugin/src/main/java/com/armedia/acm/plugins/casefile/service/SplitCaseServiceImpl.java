@@ -19,6 +19,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
     private AcmFolderService acmFolderService;
 
     @Override
+    @Transactional
     public CaseFile splitCase(Authentication auth,
                               String ipAddress,
                               SplitCaseOptions splitCaseOptions) throws MuleException, SplitCaseFileException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmFolderException, AcmObjectNotFoundException {
@@ -116,7 +118,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                                 containerOfCopy.getContainerObjectType(),
                                 foundByName.getId());
                     } else if (obj instanceof AcmFolder) {
-                        acmFolderService.moveFolder((AcmFolder) obj,foundByName);
+                        acmFolderService.moveFolder((AcmFolder) obj, foundByName);
                     } else {
                         log.error("Error: this should not execute.");
                     }
@@ -159,13 +161,21 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                     rootFolderOfCopy.getId());
         } else {
             //create folder structure in saved case file same as in source for the document
-            AcmFolder newParentFolder = createFolderStructure(documentFolder, rootFolderOfCopy, folderMap);
-            log.debug("created new folder {}", newParentFolder);
-            log.debug("moving file with id = {} to that folder", documentId);
-            ecmFileService.moveFile(documentId,
-                    containerOfCopy.getContainerObjectId(),
-                    containerOfCopy.getContainerObjectType(),
-                    newParentFolder.getId());
+            String folderPath = acmFolderService.getFolderPath(fileForMoving.getFolder());
+            log.debug("folder path = '{}' for folder(id={}, name={})", folderPath, fileForMoving.getFolder().getId(), fileForMoving.getFolder().getName());
+            try {
+                AcmFolder createdFolder = acmFolderService.addNewFolderByPath(
+                        containerOfCopy.getContainerObjectType(),
+                        containerOfCopy.getContainerObjectId(),
+                        folderPath);
+                ecmFileService.moveFile(documentId,
+                        containerOfCopy.getContainerObjectId(),
+                        containerOfCopy.getContainerObjectType(),
+                        createdFolder);
+                folderMap.put(fileForMoving.getFolder().getId(), createdFolder);
+            } catch (Exception e) {
+                log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be moved.", e);
+            }
         }
     }
 
@@ -175,7 +185,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         if (folder.getParentFolderId() != null) {
             AcmFolder createdParent = createFolderStructure(acmFolderService.findById(folder.getParentFolderId()), rootFolder, folderMap);
             AcmFolder foundByName = acmFolderService.findByNameAndParent(folder.getName(), createdParent);
-            AcmFolder newFolder = foundByName != null ? foundByName : acmFolderService.addNewFolder(createdParent, folder.getName());
+            AcmFolder newFolder = foundByName != null ? foundByName : acmFolderService.addNewFolder(createdParent.getId(), folder.getName());
             folderMap.put(folder.getId(), newFolder);
             return newFolder;
         } else {
@@ -183,6 +193,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
             return rootFolder;
         }
     }
+
 
     public void setSaveCaseService(SaveCaseService saveCaseService) {
         this.saveCaseService = saveCaseService;
