@@ -148,7 +148,7 @@
       "title" :"Documents Under Review",
       "toolbar": {
         "edit-close-request": "Edit Close Complaint Request",
-        "change-case-status": "Change Case Status"
+        "change-case-status": "Change Brief Status"
       },
       "field":{
         "id": "ID",
@@ -204,7 +204,7 @@
     "button": {
       "close-complaint": "Close Complaint",
       "edit-close-complaint":"Edit Close Complaint",
-      "change-case-status":"Change Case Status"
+      "change-case-status":"Change Brief Status"
     }
   },
 
@@ -401,8 +401,8 @@
     "label": {
       "assign-to": "Assign To",
       "choose-assignee": "Please choose assignee by clicking the button above",
-      "associate-complaint-case": "Associate with Complaint or Case",
-      "complaint-or-case": "Complaint or Case #",
+      "associate-complaint-case": "Associate with Brief",
+      "complaint-or-case": "Brief #",
       "subject": "Subject",
       "start-date": "Start Date",
       "status": "Status",
