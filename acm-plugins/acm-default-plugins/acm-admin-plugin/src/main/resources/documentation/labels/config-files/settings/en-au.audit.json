@@ -37,8 +37,8 @@
             "description": ""
         },
         "case-files": {
-            "value": "Case Files",
-            "defaultValue": "Case Files",
+            "value": "Briefs",
+            "defaultValue": "Briefs",
             "description": ""
         },
         "complaints": {
@@ -59,8 +59,8 @@
     }
 }, "object-id": {
     "label": {
-        "value": "Case#, Complaint#...",
-        "defaultValue": "Case#, Complaint#...",
+        "value": "Brief # ...",
+        "defaultValue": "Brief #...",
         "description": ""
     },
     "desc": {

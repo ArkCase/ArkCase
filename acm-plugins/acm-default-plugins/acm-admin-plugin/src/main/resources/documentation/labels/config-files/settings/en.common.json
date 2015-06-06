@@ -11,10 +11,8 @@
             "description": ""
         },
         "case-file": {
-            "__xxx__value": "Case File",
-            "__xxx__defaultValue": "Case File",
-            "value": "Brief",
-            "defaultValue": "Brief",
+            "value": "Case File",
+            "defaultValue": "Case File",
             "description": ""
         },
         "timesheet": {
@@ -78,10 +76,8 @@
             "description": ""
         },
         "case-files": {
-            "__xxx__value": "Case Files",
-            "__xxx__defaultValue": "Case Files",
-            "value": "Briefs",
-            "defaultValue": "Briefs",
+            "value": "Case Files",
+            "defaultValue": "Case Files",
             "description": ""
         },
         "dashboard": {

@@ -71,14 +71,14 @@
     },
     "casessum": {
         "title": {
-            "value": "Cases by Status",
-            "defaultValue": "Cases by Status",
+            "value": "Briefs by Status",
+            "defaultValue": "Briefs by Status",
             "description": ""
         },
         "label": {
             "description": {
-                "value": "Displays Cases by Status Summary as a pie chart",
-                "defaultValue": "Displays Cases by Status Summary as a pie chart",
+                "value": "Displays Briefs by Status Summary as a pie chart",
+                "defaultValue": "Displays Briefs by Status Summary as a pie chart",
                 "description": ""
             },
             "select-time-period": {
@@ -107,8 +107,8 @@
                 "description": ""
             },
             "no-outstanding-cases": {
-                "value": "Currently, there are no outstanding cases",
-                "defaultValue": "Currently, there are no outstanding cases",
+                "value": "Currently, there are no outstanding briefs",
+                "defaultValue": "Currently, there are no outstanding briefs",
                 "description": ""
             }
         }
@@ -259,22 +259,22 @@
                 "description": ""
             },
             "case-id": {
-                "value": "Case ID",
-                "defaultValue": "Case ID",
+                "value": "Brief ID",
+                "defaultValue": "Brief ID",
                 "description": ""
             }
         }
     },
     "my-cases": {
         "title": {
-            "value": "My Cases",
-            "defaultValue": "My Cases",
+            "value": "My Briefs",
+            "defaultValue": "My Briefs",
             "description": ""
         },
         "label": {
             "description": {
-                "value": "Displays a user cases",
-                "defaultValue": "Displays a user cases",
+                "value": "Displays a user's briefs",
+                "defaultValue": "Displays a user's briefs",
                 "description": ""
             },
             "no-tasks-assigned": {
