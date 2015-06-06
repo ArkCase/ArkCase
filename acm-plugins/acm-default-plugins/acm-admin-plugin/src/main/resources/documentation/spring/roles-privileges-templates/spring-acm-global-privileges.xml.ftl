@@ -653,4 +653,18 @@
         </list>
     </property>
 </bean>
+
+    <!--Split Case Plugin-->
+    <bean id="splitCaseFilePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="split-case-privilege"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+                <#if splitCaseFilePrivilege??>
+                    <#list splitCaseFilePrivilege as role>
+                        <value>${role}</value>
+                    </#list>
+                </#if>
+            </list>
+        </property>
+    </bean>
 </beans>
