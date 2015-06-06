@@ -398,28 +398,20 @@
                                     <%--</div>--%>
 
 
-                                    <%--<div class="col-md-12"  id="tabOutlookCalendar">--%>
-                                                <%--&lt;%&ndash;<div class="pull-right inline">--%>
-                                                    <%--<div class="dropdown">--%>
-                                                        <%--<div class="btn-group">--%>
-                                                            <%--<button class="btn btn-default btn-sm" data-title="Download ICS"  data-toggle="modal" data-target="#downloadICS" style="display:none;"><i class="fa fa-calendar"></i> Download ICS</button>--%>
-                                                        <%--</div>--%>
-                                                    <%--</div>--%>
-                                                <%--</div>&ndash;%&gt;--%>
-                                                <%--&lt;%&ndash;<h4 class="m-n" style="display:none;">Complaint Calendar</h4>&ndash;%&gt;--%>
-                                                <%--&lt;%&ndash;<hr/>&ndash;%&gt;--%>
+                                    <div class="col-md-12"  id="tabOutlookCalendar">
 
-                                            <%--<section class="panel no-border bg-light">--%>
-                                                <%--<header class="panel-heading bg-info clearfix">--%>
-                                                    <%--<button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>--%>
-                                                <%--<span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">--%>
-                                                  <%--Calendar--%>
-                                                <%--</span>--%>
-                                                <%--</header>--%>
-                                                <%--<div id="calendar">--%>
-                                                <%--</div>--%>
-                                            <%--</section>--%>
-                                    <%--</div>--%>
+                                            <section class="panel no-border bg-light">
+                                                <header class="panel-heading bg-info clearfix">
+                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
+                                                <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
+                                                  Calendar
+                                                </span>
+                                                </header>
+                                                <div id="calendar">
+                                                </div>
+                                            </section>
+                                    </div>
+
 
                                 </div>
                             </section>
