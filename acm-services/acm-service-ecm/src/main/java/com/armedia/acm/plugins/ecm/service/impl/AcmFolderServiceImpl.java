@@ -16,10 +16,14 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import org.apache.chemistry.opencmis.client.api.ObjectType;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
@@ -29,11 +33,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
-import java.util.*;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by marjan.stefanoski on 03.04.2015.
@@ -108,101 +116,144 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder addNewFolderByPath( String targetObjectType, Long targetObjectId, String newPath ) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
+    public AcmFolder addNewFolderByPath(String targetObjectType, Long targetObjectId, String newPath) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+    {
 
-        AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(targetObjectType,targetObjectId);
-        if ( container == null ) {
-            throw new AcmObjectNotFoundException(targetObjectType,targetObjectId,"Container object not found",null);
+        AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(targetObjectType, targetObjectId);
+        if (container == null)
+        {
+            throw new AcmObjectNotFoundException(targetObjectType, targetObjectId, "Container object not found", null);
         }
 
-        String typeFolderName = getEcmFileServiceProperties().getProperty(AcmFolderConstants.PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH)+getEcmFileServiceProperties().getProperty(AcmFolderConstants.PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE+targetObjectType);
-
-
-        String ecmFolerPath = typeFolderName+"/"+container.getContainerObjectTitle()+newPath;
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("ecmFolderPath",ecmFolerPath);
-        AcmFolder result = null;
-        boolean isLastFolder = true;
-        try {
-            MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_CREATE_FOLDER_BY_PATH, null, properties);
-            if ( message.getInboundPropertyNames().contains(AcmFolderConstants.CREATE_FOLDER_BY_PATH_EXCEPTION_INBOUND_PROPERTY)) {
-                MuleException muleException = message.getInboundProperty(AcmFolderConstants.CREATE_FOLDER_BY_PATH_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled()) {
-                    log.error("Folder can not be created " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH, AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
-                        "Folder can not be created successfully", muleException);
-            }
-
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String existingFolderCmisId = container.getFolder().getCmisFolderId();
-            String folderCmisId = cmisObject.getId();
-
-            CmisObject parent = returnParentFolder(cmisObject.getId());
-            CmisObject previousParent = null;
-            boolean isLastFolderForSaving = true;
-            while (!existingFolderCmisId.equals(folderCmisId)) {
-                while (!existingFolderCmisId.equals(parent.getId())) {
-                    previousParent = parent;
-                    parent = returnParentFolder(previousParent.getId());
-                    isLastFolderForSaving = false;
-                }
-                if ( isLastFolderForSaving ) {
-                    AcmFolder f = new AcmFolder();
-                    f.setCmisFolderId(folderCmisId);
-                    f.setName(cmisObject.getName());
-                    AcmFolder parentF = getFolderDao().findByCmisFolderId(parent.getId());
-                    f.setParentFolderId(parentF.getId());
-                    try {
-                         AcmFolder fol = getFolderDao().findFolderByNameInTheGivenParentFolder(cmisObject.getName(), parentF.getId());
-                        result = fol;
-                    } catch (NoResultException e) {
-                        result = getFolderDao().save(f);
-                    }
-                    break;
-                } else {
-                    AcmFolder folder = new AcmFolder();
-                    folder.setCmisFolderId(previousParent.getId());
-                    folder.setName(previousParent.getName());
-                    AcmFolder parentFolder = getFolderDao().findByCmisFolderId(parent.getId());
-                    folder.setParentFolderId(parentFolder.getId());
-                    try{
-                        existingFolderCmisId = previousParent.getId();
-                        parent = returnParentFolder(cmisObject.getId());
-                        isLastFolderForSaving = true;
-                        getFolderDao().findFolderByNameInTheGivenParentFolder(previousParent.getName(), parentFolder.getId());
-                    } catch (NoResultException e){
-                        getFolderDao().save(folder);
-                        existingFolderCmisId = previousParent.getId();
-                        parent = returnParentFolder(cmisObject.getId());
-                        isLastFolderForSaving = true;
-                    }
-                }
-            }
-
-        } catch ( PersistenceException | MuleException e ) {
-            if (log.isErrorEnabled()) {
-                log.error("Folder  with path" + newPath + "can not be created successfully" + e.getMessage(), e);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH, AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder  with path" + newPath + "can not be created successfully", e);
-        } catch (Exception e) {
-            Throwable t = ExceptionUtils.getRootCause(e);
-            if (t instanceof SQLIntegrityConstraintViolationException) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Folder already exists " + e.getMessage());
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH, AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
-                        "Folder  already exists", e);
-            } else {
-                if (log.isErrorEnabled()) {
-                    log.error("Folder  already exists " + e.getMessage());
-                }
-                throw new AcmFolderException(e);
-            }
+        String containerFolderPath = null;
+        try
+        {
+            containerFolderPath = findContainerFolderPath(container);
         }
-        return result;
+        catch (MuleException me)
+        {
+            log.error("Could not find container folder: " + me.getMessage(), me);
+            throw new AcmCreateObjectFailedException(AcmFolderConstants.OBJECT_FOLDER_TYPE, "Could not find container folder", me);
+        }
+
+        log.info("Container folder path: " + containerFolderPath);
+
+        String targetPath = containerFolderPath + newPath;
+
+        log.info("Target folder path: " + targetPath);
+
+        CmisObject cmisObject = null;
+        try
+        {
+            cmisObject = createFolderByPath(targetPath);
+        }
+        catch (MuleException me)
+        {
+            log.error("Could not create target folder: " + me.getMessage(), me);
+            throw new AcmCreateObjectFailedException(AcmFolderConstants.OBJECT_FOLDER_TYPE, "Could not crate target folder", me);
+        }
+
+        String folderCmisId = cmisObject.getId();
+
+        CmisObject rightMostFolder = cmisObject;
+
+        List<AcmFolder> forSaving = findFoldersToBeSaved(cmisObject);
+        saveFolders(forSaving);
+
+
+        // and now in theory we should be able to return the end-most folder
+        AcmFolder retval = getFolderDao().findByCmisFolderId(rightMostFolder.getId());
+        return retval;
+
+
     }
+
+    private void saveFolders(List<AcmFolder> forSaving) throws AcmUserActionFailedException
+    {
+        // we need to create the folders in reverse order of the save list
+        Collections.reverse(forSaving);
+        for ( AcmFolder saveMe : forSaving )
+        {
+            // in theory each of these folders should have a parent
+            CmisObject coSaveMeParent = returnParentFolder(saveMe.getCmisFolderId());
+            AcmFolder saveMeParent = getFolderDao().findByCmisFolderId(coSaveMeParent.getId());
+
+            log.debug("saving folder " + saveMe.getName() + " with parent id " + saveMeParent.getId());
+
+            saveMe.setParentFolderId(saveMeParent.getId());
+            getFolderDao().save(saveMe);
+        }
+    }
+
+    private List<AcmFolder> findFoldersToBeSaved(CmisObject folder) throws AcmUserActionFailedException
+    {
+        List<AcmFolder> forSaving = new ArrayList<>();
+        boolean folderNotFoundInDatabase = true;
+        while ( folderNotFoundInDatabase )
+        {
+            // keep looking for folders in the database from the right-most inwards, until we find one.
+            // after we find one, we have to create any needed folders.
+            try
+            {
+                getFolderDao().findByCmisFolderId(folder.getId());
+                folderNotFoundInDatabase = false;
+            } catch (NoResultException nre)
+            {
+                // we don't have this folder so we need to save it.
+                AcmFolder toSave = new AcmFolder();
+                toSave.setCmisFolderId(folder.getId());
+                toSave.setName(folder.getName());
+                forSaving.add(toSave);
+
+                log.debug("The folder " + toSave.getName() + " has to be saved.");
+                folder = returnParentFolder(folder.getId());
+            }
+        }
+        return forSaving;
+    }
+
+    private CmisObject createFolderByPath(String containerFolderPath) throws MuleException, AcmUserActionFailedException
+    {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("ecmFolderPath", containerFolderPath);
+
+
+        MuleMessage message = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_CREATE_FOLDER_BY_PATH, null, properties);
+        if ( message.getInboundPropertyNames().contains(AcmFolderConstants.CREATE_FOLDER_BY_PATH_EXCEPTION_INBOUND_PROPERTY)) {
+            MuleException muleException = message.getInboundProperty(AcmFolderConstants.CREATE_FOLDER_BY_PATH_EXCEPTION_INBOUND_PROPERTY);
+            if (log.isErrorEnabled()) {
+                log.error("Folder can not be created " + muleException.getMessage(), muleException);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH, AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
+                    "Folder can not be created successfully", muleException);
+        }
+
+        return message.getPayload(CmisObject.class);
+    }
+
+    private String findContainerFolderPath(AcmContainer container) throws MuleException, AcmUserActionFailedException
+    {
+        String containerFolderId = container.getFolder().getCmisFolderId();
+        Map<String, Object> findContainerProperties = new HashMap<>();
+        findContainerProperties.put("parentFolderId", containerFolderId);
+        MuleMessage findContainerMessage = getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null, findContainerProperties);
+        if ( findContainerMessage.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
+            MuleException muleException = findContainerMessage.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+            if (log.isErrorEnabled())
+            {
+                log.error("Container folder can not be found " + muleException.getMessage(), muleException);
+            }
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH, AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
+                    "Container folder not found", muleException);
+        }
+
+        CmisObject containerFolderObject = findContainerMessage.getPayload(CmisObject.class);
+        Folder containerFolder = (Folder) containerFolderObject;
+
+        return containerFolder.getPath();
+    }
+
+
 
     private CmisObject returnParentFolder(String cmisId) throws AcmUserActionFailedException{
         Map<String, Object> properties = new HashMap<>();
