@@ -7,7 +7,7 @@
         "title": "Choose New Assignee",
         "prompt": "Enter to search for assignee"
     }},
-    "label": {"input-search": "Type in your search query to find complaints, cases, tasks, and documents."},
+    "label": {"input-search": "Type in your search query to find briefs, tasks, and documents."},
     "table": {
         "field": {
             "owner": "Assignee",

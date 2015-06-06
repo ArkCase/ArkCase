@@ -1,14 +1,14 @@
 {
     "msg": {
         "no-case-selected": {
-            "defaultValue": "(No case is selected)",
+            "defaultValue": "(No brief is selected)",
             "description": "",
-            "value": "(No case is selected)"
+            "value": "(No brief is selected)"
         },
         "error-retrieving-casefile-data": {
-            "defaultValue": "Error occurred for retrieving casefile data",
+            "defaultValue": "Error occurred while retrieving brief data",
             "description": "",
-            "value": "Error occurred for retrieving casefile data"
+            "value": "Error occurred while retrieving brief data"
         }
     },
     "notes": {
@@ -248,9 +248,9 @@
         }
     },
     "page-title": {
-        "defaultValue": "Case Files | ACM | Ark Case Management",
+        "defaultValue": "Briefs | ACM | Ark Case Management",
         "description": "",
-        "value": "Case Files | ACM | Ark Case Management"
+        "value": "Briefs | ACM | Ark Case Management"
     },
     "correspondence": {
         "msg": {"add-new-record": {
@@ -394,15 +394,15 @@
         }
     },
     "title": {
-        "defaultValue": "Case",
+        "defaultValue": "Brief",
         "description": "",
-        "value": "Case"
+        "value": "Brief"
     },
     "case-picker": {
         "selection-error": {
-            "defaultValue": "Please select a single case",
+            "defaultValue": "Please select a single brief",
             "description": "",
-            "value": "Please select a single case"
+            "value": "Please select a single brief"
         },
         "btn-cancel": {
             "defaultValue": "Cancel",
@@ -410,9 +410,9 @@
             "value": "Cancel"
         },
         "name": {
-            "defaultValue": "Case",
+            "defaultValue": "Brief",
             "description": "",
-            "value": "Case"
+            "value": "Brief"
         },
         "btn-search": {
             "defaultValue": "Go!",
@@ -420,9 +420,9 @@
             "value": "Go!"
         },
         "title": {
-            "defaultValue": "Choose Target Case",
+            "defaultValue": "Choose Target Brief",
             "description": "",
-            "value": "Choose Target Case"
+            "value": "Choose Target Brief"
         },
         "btn-ok": {
             "defaultValue": "Merge",
@@ -430,9 +430,9 @@
             "value": "Merge"
         },
         "prompt": {
-            "defaultValue": "Enter to search for a case",
+            "defaultValue": "Enter to search for a brief",
             "description": "",
-            "value": "Enter to search for a case"
+            "value": "Enter to search for a brief"
         }
     },
     "change-case-status-dialog": {
@@ -442,19 +442,19 @@
             "value": "Cancel"
         },
         "title": {
-            "defaultValue": "Change Case Status",
+            "defaultValue": "Change Brief Status",
             "description": "",
-            "value": "Change Case Status"
+            "value": "Change Brief Status"
         },
         "body": {
-            "defaultValue": "Are you sure you want to change the status for this case?",
+            "defaultValue": "Are you sure you want to change the status for this brief?",
             "description": "",
-            "value": "Are you sure you want to change the status for this case?"
+            "value": "Are you sure you want to change the status for this brief?"
         },
         "btn-ok": {
-            "defaultValue": "Change Case Status",
+            "defaultValue": "Change Brief Status",
             "description": "",
-            "value": "Change Case Status"
+            "value": "Change Brief Status"
         },
         "btn-close": {
             "defaultValue": "Close",
@@ -844,14 +844,14 @@
     "header": {
         "buttons": {
             "reinvestigate-case-file": {
-                "defaultValue": "Reinvestigate Case File",
+                "defaultValue": "Reinvestigate Brief",
                 "description": "",
-                "value": "Reinvestigate Case File"
+                "value": "Reinvestigate Brief"
             },
             "change-case-status": {
-                "defaultValue": "Change Case Status",
+                "defaultValue": "Change Brief",
                 "description": "",
-                "value": "Change Case Status"
+                "value": "Change Brief"
             },
             "edit": {
                 "defaultValue": "Edit",
@@ -859,9 +859,9 @@
                 "value": "Edit"
             },
             "split-case": {
-                "defaultValue": "Split Case",
+                "defaultValue": "Split Brief",
                 "description": "",
-                "value": "Split Case"
+                "value": "Split Brief"
             },
             "subscribe": {
                 "defaultValue": "Subscribe",
@@ -874,14 +874,14 @@
                 "value": "Merge"
             },
             "edit-case-file": {
-                "defaultValue": "Edit Case File",
+                "defaultValue": "Edit Brief",
                 "description": "",
-                "value": "Edit Case File"
+                "value": "Edit Brief"
             },
             "consolidate-case": {
-                "defaultValue": "Merge Case",
+                "defaultValue": "Merge Brief",
                 "description": "",
-                "value": "Merge Case"
+                "value": "Merge Brief"
             },
             "restrict": {
                 "defaultValue": "Restrict ?",
@@ -906,9 +906,9 @@
                 "value": "Enter Incident Date"
             },
             "case-type": {
-                "defaultValue": "Case Type",
+                "defaultValue": "Brief Type",
                 "description": "",
-                "value": "Case Type"
+                "value": "Brief Type"
             },
             "assigned-to": {
                 "defaultValue": "Assigned To",
@@ -946,9 +946,9 @@
                 "value": "Enter Assignee"
             },
             "enter-case-title": {
-                "defaultValue": "Enter Case Title",
+                "defaultValue": "Enter Brief Title",
                 "description": "",
-                "value": "Enter Case Title"
+                "value": "Enter Brief Title"
             },
             "create-date": {
                 "defaultValue": "Create Date",
@@ -973,9 +973,9 @@
         }
     },
     "wizard": {"title": {
-        "defaultValue": "New Case File",
+        "defaultValue": "New Brief",
         "description": "",
-        "value": "New Case File"
+        "value": "New Brief"
     }},
     "detail": {
         "other-menu-items": {
