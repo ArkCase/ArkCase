@@ -1,9 +1,9 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.exceptions.SplitCaseFileException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,45 +77,14 @@ public class SplitCaseServiceImpl implements SplitCaseService {
     private void splitDocumentsAndFolders(CaseFile saved, SplitCaseOptions options) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException {
         Map<Long, AcmFolder> folderMap = new HashMap<>();
         for (SplitCaseOptions.AttachmentDTO attachmentDTO : options.getAttachments()) {
-            AcmContainer savedContainer = saved.getContainer();
-            AcmFolder savedContainerFolder = savedContainer.getFolder();
+            AcmContainer containerOfCopy = saved.getContainer();
+            AcmFolder containerFolderOfCopy = containerOfCopy.getFolder();
             switch (attachmentDTO.getType()) {
                 case "folder":
-                    AcmFolder folderForMoving = acmFolderService.findById(attachmentDTO.getId());
-                    AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, savedContainerFolder);
-                    folderMap.put(folderForMoving.getId(), movedFolder);
+                    moveFolder(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
                     break;
                 case "document":
-                    EcmFile fileForMoving = ecmFileService.findById(attachmentDTO.getId());
-
-                    if (folderMap.containsKey(fileForMoving.getFolder().getId())) {
-                        //we have already created that folder
-                        AcmFolder foundFolder = folderMap.get(fileForMoving.getFolder().getId());
-                        ecmFileService.moveFile(attachmentDTO.getId(),
-                                savedContainer.getContainerObjectId(),
-                                savedContainer.getContainerObjectType(),
-                                foundFolder.getId());
-                    }
-
-                    AcmFolder documentFolder = fileForMoving.getFolder();
-                    if (documentFolder.getParentFolderId() == null || !options.isPreserveFolderStructure()) {
-                        //recreate folder structure as on source
-                        //document is under root folder, no need to create additional folders
-                        ecmFileService.moveFile(attachmentDTO.getId(),
-                                savedContainer.getContainerObjectId(),
-                                savedContainer.getContainerObjectType(),
-                                savedContainerFolder.getId());
-                    } else {
-                        //create folder structure in saved case file same as in source for the document
-                        AcmFolder newParentFolder = createFolderStructure(documentFolder, savedContainerFolder, folderMap);
-                        log.debug("created new folder {}", newParentFolder);
-                        log.debug("moving file with id = {} to that folder", attachmentDTO.getId());
-                        ecmFileService.moveFile(attachmentDTO.getId(),
-                                savedContainer.getContainerObjectId(),
-                                savedContainer.getContainerObjectType(),
-                                newParentFolder.getId());
-                    }
-
+                    moveDocument(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
                     break;
                 default:
                     log.warn("Invalid type({}) for for splitting attachments", attachmentDTO.getType());
@@ -124,30 +93,94 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         }
     }
 
+    private void moveFolder(SplitCaseOptions options,
+                            Map<Long, AcmFolder> folderMap,
+                            Long folderId,
+                            AcmContainer containerOfCopy,
+                            AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmFolderException {
+        AcmFolder folderForMoving = acmFolderService.findById(folderId);
+        if (options.isPreserveFolderStructure()) {
+            //if folder path exists on the copy of case file, than move all sub folders and document, else just move the folder
+
+            //create parent folder structure
+            AcmFolder parentFolderOfForMoving = acmFolderService.findById(folderForMoving.getParentFolderId());
+            AcmFolder parentFolderOfCopy = createFolderStructure(parentFolderOfForMoving, rootFolderOfCopy, folderMap);
+
+            AcmFolder foundByName = acmFolderService.findByNameAndParent(folderForMoving.getName(), parentFolderOfCopy);
+            if (foundByName != null) {
+                List<AcmObject> objects = acmFolderService.getFolderChildren(parentFolderOfForMoving.getId());
+                for (AcmObject obj : objects) {
+                    if (obj instanceof EcmFile) {
+                        ecmFileService.moveFile(obj.getId(),
+                                containerOfCopy.getContainerObjectId(),
+                                containerOfCopy.getContainerObjectType(),
+                                foundByName.getId());
+                    } else if (obj instanceof AcmFolder) {
+                        acmFolderService.moveFolder((AcmFolder) obj,foundByName);
+                    } else {
+                        log.error("Error: this should not execute.");
+                    }
+                }
+
+                folderMap.put(folderForMoving.getId(), foundByName);
+            } else {
+                AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, parentFolderOfCopy);
+                folderMap.put(folderForMoving.getId(), movedFolder);
+            }
+        } else {
+            AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, rootFolderOfCopy);
+            folderMap.put(folderForMoving.getId(), movedFolder);
+        }
+    }
+
+    private void moveDocument(SplitCaseOptions options,
+                              Map<Long, AcmFolder> folderMap,
+                              Long documentId,
+                              AcmContainer containerOfCopy,
+                              AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+        EcmFile fileForMoving = ecmFileService.findById(documentId);
+
+        if (folderMap.containsKey(fileForMoving.getFolder().getId())) {
+            //we have already created that folder
+            AcmFolder foundFolder = folderMap.get(fileForMoving.getFolder().getId());
+            ecmFileService.moveFile(documentId,
+                    containerOfCopy.getContainerObjectId(),
+                    containerOfCopy.getContainerObjectType(),
+                    foundFolder.getId());
+        }
+
+        AcmFolder documentFolder = fileForMoving.getFolder();
+        if (documentFolder.getParentFolderId() == null || !options.isPreserveFolderStructure()) {
+            //recreate folder structure as on source
+            //document is under root folder, no need to create additional folders
+            ecmFileService.moveFile(documentId,
+                    containerOfCopy.getContainerObjectId(),
+                    containerOfCopy.getContainerObjectType(),
+                    rootFolderOfCopy.getId());
+        } else {
+            //create folder structure in saved case file same as in source for the document
+            AcmFolder newParentFolder = createFolderStructure(documentFolder, rootFolderOfCopy, folderMap);
+            log.debug("created new folder {}", newParentFolder);
+            log.debug("moving file with id = {} to that folder", documentId);
+            ecmFileService.moveFile(documentId,
+                    containerOfCopy.getContainerObjectId(),
+                    containerOfCopy.getContainerObjectType(),
+                    newParentFolder.getId());
+        }
+    }
+
     private AcmFolder createFolderStructure(AcmFolder folder, AcmFolder rootFolder, Map<Long, AcmFolder> folderMap) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException {
         if (folderMap.containsKey(folder.getId()))
             return folderMap.get(folder.getId());
         if (folder.getParentFolderId() != null) {
             AcmFolder createdParent = createFolderStructure(acmFolderService.findById(folder.getParentFolderId()), rootFolder, folderMap);
-            AcmFolder newFolder = acmFolderService.addNewFolder(createdParent, folder.getName());
+            AcmFolder foundByName = acmFolderService.findByNameAndParent(folder.getName(), createdParent);
+            AcmFolder newFolder = foundByName != null ? foundByName : acmFolderService.addNewFolder(createdParent, folder.getName());
             folderMap.put(folder.getId(), newFolder);
             return newFolder;
         } else {
             folderMap.put(folder.getId(), rootFolder);
             return rootFolder;
-        }
-    }
-
-
-    private void cleanRecursivelyAcmEntity(AcmEntity entity) throws IllegalAccessException {
-        entity.setCreated(null);
-        entity.setCreator(null);
-        entity.setModified(null);
-        entity.setModifier(null);
-        for (Field filed : entity.getClass().getFields()) {
-            if (filed.getType().isAssignableFrom(AcmEntity.class)) {
-                cleanRecursivelyAcmEntity((AcmEntity) filed.get(entity));
-            }
         }
     }
 
