@@ -1,14 +1,11 @@
-{
-    "table": {
-        "field": {
-            "id": "ID",
-            "name": "Name",
-            "type": "Type",
-            "description": "Description",
-            "parent-id": "Parent ID",
-            "parent-name": "Object Number",
-            "parent-type": "Object Type",
-            "modified": "Modified"
-        }
-    }
-}
+{"table": {"field": {
+    "parent-name": "Object Number",
+    "name": "Name",
+    "description": "Description",
+    "modified": "Modified",
+    "id": "ID",
+    "parent-id": "Parent ID",
+    "type": "Type",
+    "key": "Description",
+    "parent-type": "Object Type"
+}}}

@@ -1,112 +1,110 @@
 {
-    "label": {
-        "edit-dashboard": "Edit Dashboard",
-        "title": "Title",
-        "structure": "Structure",
-        "close": "Close",
-        "add-new-widget": "Add New Widget",
-        "enter-title": "Enter Title",
-        "powered-by-arkcase": "Powered by ArkCase"
-    },
     "plugins": {
-        "weather": {
-            "title": "Weather",
+        "news": {
             "label": {
-                "description": "Display the current temperature of a city",
-                "location": "Location",
-                "enter-location": "Enter Location",
-                "insert-location-in-configuration": "Please insert a location in the widget configuration",
-                "current": "Current:"
-            }
-        },
-        "casessum": {
-            "title": "Cases by Status",
-            "label": {
-                "description": "Displays Cases by Status Summary as a pie chart",
-                "select-time-period": "Select Time Period",
-                "all": "All",
-                "last-week": "Last Week",
-                "last-month": "Last Month",
-                "last-year": "Last Year",
-                "no-outstanding-cases": "Currently, there are no outstanding cases"
-            }
-        },
-        "team-task-workload": {
-            "title": "Team Task Workload",
-            "label": {
-                "description": "Displays tasks per user as pie chart",
-                "no-outstanding-tasks": "Currently, there are no outstanding tasks for any user",
-                "all": "All",
-                "past-due": "Past Due",
-                "due-tomorrow": "Due Tomorrow",
-                "due-7-days": "Due in 7 Days",
-                "due-30-days": "Due in 30 Days",
-                "select-due-date": "Select Due Date Period"
-            }
-        },
-        "new-complaints": {
-            "title": "New Complaints",
-            "label": {
-                "description": "Displays new complaints in the last 30 days as chart",
-                "no-new-complaints": "Currently, there are no new complaints for any user",
-                "no-new-complaints-to-you": "No complaints are assigned to you.",
-                "chart-date": "Date",
-                "chart-complaints": "Complaints",
-                "complaint-number": "Complaint Number",
-                "title": "Title",
-                "priority": "Priority"
-            }
+                "enter-feed-url": "Enter Feed url",
+                "description": "Displays a RSS/Atom feed",
+                "feed-url": "Feed Url",
+                "insert-url": "Please insert a feed url in the widget configuration"
+            },
+            "title": "News"
         },
         "my-tasks": {
-            "title": "My Tasks",
             "label": {
-                "description": "Displays a user tasks",
-                "enter-row-numbers": "Enter Default Row Numbers",
-                "no-tasks-assigned": "No active tasks assigned",
-                "task-id": "Task ID",
-                "title": "Title",
-                "priority": "Priority",
                 "due": "Due",
-                "status": "Status",
-                "case-id": "Case ID"
-            }
-        },
-        "my-cases": {
-            "title": "My Cases",
-            "label": {
-                "description": "Displays a user cases",
+                "description": "Displays a user tasks",
                 "no-tasks-assigned": "No active tasks assigned",
-                "number": "Number",
+                "enter-row-numbers": "Enter Default Row Numbers",
+                "case-id": "Case ID",
                 "title": "Title",
                 "priority": "Priority",
+                "task-id": "Task ID",
                 "status": "Status"
-            }
-        },
-        "my-complaints": {
-            "title": "My Complaints",
-            "label": {
-                "description": "Displays complaints created by user"
-            }
+            },
+            "title": "My Tasks"
         },
         "links-list": {
-            "title": "Links",
             "label": {
+                "add": "Add",
                 "description": "Displays a list of links",
                 "links": "Links",
                 "title": "Title",
                 "url": "URL",
-                "add": "Add",
                 "remove": "Remove"
-            }
+            },
+            "title": "Links"
         },
-        "news": {
-            "title": "News",
+        "new-complaints": {
             "label": {
-                "description": "Displays a RSS/Atom feed",
-                "feed-url": "Feed Url",
-                "enter-feed-url": "Enter Feed url",
-                "insert-url": "Please insert a feed url in the widget configuration"
-            }
+                "no-new-complaints": "Currently, there are no new complaints for any user",
+                "chart-complaints": "Complaints",
+                "description": "Displays new complaints in the last 30 days as chart",
+                "chart-date": "Date",
+                "complaint-number": "Complaint Number",
+                "title": "Title",
+                "priority": "Priority",
+                "no-new-complaints-to-you": "No complaints are assigned to you."
+            },
+            "title": "New Complaints"
+        },
+        "weather": {
+            "label": {
+                "current": "Current:",
+                "enter-location": "Enter Location",
+                "description": "Display the current temperature of a city",
+                "location": "Location",
+                "insert-location-in-configuration": "Please insert a location in the widget configuration"
+            },
+            "title": "Weather"
+        },
+        "casessum": {
+            "label": {
+                "all": "All",
+                "no-outstanding-cases": "Currently, there are no outstanding cases",
+                "last-year": "Last Year",
+                "description": "Displays Cases by Status Summary as a pie chart",
+                "last-week": "Last Week",
+                "select-time-period": "Select Time Period",
+                "last-month": "Last Month"
+            },
+            "title": "Cases by Status"
+        },
+        "my-complaints": {
+            "label": {"description": "Displays complaints created by user"},
+            "title": "My Complaints"
+        },
+        "team-task-workload": {
+            "label": {
+                "all": "All",
+                "due-30-days": "Due in 30 Days",
+                "due-tomorrow": "Due Tomorrow",
+                "select-due-date": "Select Due Date Period",
+                "description": "Displays tasks per user as pie chart",
+                "no-outstanding-tasks": "Currently, there are no outstanding tasks for any user",
+                "past-due": "Past Due",
+                "due-7-days": "Due in 7 Days"
+            },
+            "title": "Team Task Workload"
+        },
+        "my-cases": {
+            "label": {
+                "number": "Number",
+                "description": "Displays a user cases",
+                "no-tasks-assigned": "No active tasks assigned",
+                "title": "Title",
+                "priority": "Priority",
+                "status": "Status"
+            },
+            "title": "My Cases"
         }
+    },
+    "label": {
+        "edit-dashboard": "Edit Dashboard",
+        "add-new-widget": "Add New Widget",
+        "enter-title": "Enter Title",
+        "powered-by-arkcase": "Powered by ArkCase",
+        "title": "Title",
+        "close": "Close",
+        "structure": "Structure"
     }
 }

@@ -28,6 +28,11 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
+    <!-- Form validation -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_validation}/css/${css_jquery_validation}'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_validation}/js/${js_jquery_validation}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_validation}/js/languages/${js_jquery_validation_lang}'/>"></script>
+
     <!-- Fancy Tree -->
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/${js_fancytree}'/>"></script>
@@ -166,6 +171,70 @@
                                     </section>
                                 </div>
 
+
+                                <%--Create Role/Select Privileges--%>
+                                <div class="row" id="tabRolePrivileges" style="display:none;">
+                                    <section class="row m-b-md">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button class="btn btn-default" data-toggle="modal"
+                                                        data-target="#newRoleDialog">
+                                                    <i class="fa fa-gears text"></i>
+                                                    <span class="text">Create Role</span>
+                                                </button>
+                                                <div class="modal fade" id="newRoleDialog" tabindex="-1" role="dialog"
+                                                     aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close"
+                                                                        data-dismiss="modal">&times;<span
+                                                                        class="sr-only">Close</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Create Role</h4>
+                                                            </div>
+                                                            <div class="modal-body"> Enter the role name in the boxe below.<br/><br/>
+                                                                <label for="newRoleName" class="label">Name</label>
+                                                                <input id="newRoleName" type="text" class="form-control" placeholder="Name">
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button id="createNewRoleBtn" type="button" class="btn btn-primary">Create Role</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3 class="m-b-xs text-black">Create Role/Select Privileges </h3>
+                                        </div>
+                                    </section>
+
+                                    <section class="panel panel-default">
+                                        <div class="wrapper">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="col-xs-3 b-r"><label>Choose Application Role</label>
+                                                        <select id="selectApplicationRoles" size="10" class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnRolePrivilegesGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                    <div class="col-xs-3 b-r"><label>Available Privileges</label>
+                                                        <select id="selectAvailablePrivileges" size="10" multiple class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+                                                        <button id="btnRolePrivilegesMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                        <button id="btnRolePrivilegesMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                    </div>
+                                                    <div class="col-xs-4 b-r"><label>Selected Privileges</label>
+                                                        <select id="selectPrivileges" size="10" multiple  class="form-control">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
                                 <%--Organization hierarchy--%>
                                 <div class="row" id="tOrganization" style="display:none;">
                                     <div class="pull-left m-t-md">
@@ -279,6 +348,17 @@
                                             </section>
                                         </div>
                                     </div>
+
+                                    <div class="row" id="tabLDAPConfiguration" style="display:none;">
+                                        <div class="col-md-12">
+                                            <h3>LDAP Configuration</h3>
+
+                                            <section class="panel panel-default">
+                                                <div id="divLDAPDirectories" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
                                         <%--JTable - Label Configuration --%>
                                     <div class="row" id="tabLabelConfiguration" style="display:none;">
                                         <div class="col-md-12">
