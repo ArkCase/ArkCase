@@ -244,11 +244,11 @@ DocTree.View = DocTree.View || {
                 }
             });
         }
-        ,makeEmailData: function(emailAddresses, nodes){
+        ,makeEmailData: function(emailAddresses, nodes, title){
             var emailNotifications = [];
             var emailData = {};
             emailData.emailAddresses = emailAddresses;
-            emailData.title = "ArkCase Documents"
+            emailData.title = Acm.goodValue(title, "ArkCase Documents");
             emailData.note = DocTree.View.Email._makeEmailNote(nodes);
             emailNotifications.push(emailData);
             return emailNotifications;
@@ -1764,13 +1764,65 @@ DocTree.View = DocTree.View || {
             }
             return $dfd;
         }
-        ,createFolderByPath: function(folderPath, node) {
+        ,createFolderByPath: function(folderNames, docIds, frFolderNode) {
             var $dfd = $.Deferred();
             //$dfd.resolve({folderId: 2314, node: node});
 
-            DocTree.Service.createFolderByPath(folderPath)
+            //make a copy
+            var findNames = [];
+            for (var i = 0; i < folderNames.length; i ++) {
+                findNames.push(folderNames[i]);
+            }
+
+            DocTree.Service.createFolderByPath(folderNames, docIds)
                 .done(function(createdFolder) {
-                    $dfd.resolve({node: node, folderId: createdFolder.objectId});
+
+                    //
+                    // remove files from original folder cache
+                    //
+                    var frCacheKey = DocTree.View.getCacheKey(frFolderNode);
+                    var frFolderList = DocTree.Model.cacheFolderList.get(frCacheKey);
+                    for (var i = 0; i < docIds.length; i++) {
+                        var idx = DocTree.Model.findFolderItemIdx(docIds[i], frFolderList);
+                        if (0 <= idx) {
+                            frFolderList.children.splice(idx, 1);
+                            frFolderList.totalChildren--;
+                        }
+                    }
+                    DocTree.Model.cacheFolderList.put(frCacheKey, frFolderList);
+
+                    //
+                    // fix target folders
+                    //
+                    var node = DocTree.View.findNodeByPathNames(findNames);
+                    if (DocTree.View.validateNode(node)) {
+                        var cacheKey = DocTree.View.getCacheKey(node);
+                        DocTree.Model.cacheFolderList.remove(cacheKey);
+                        node.setExpanded(false);
+                        node.resetLazy();
+                    }
+
+                    while (2 < findNames.length) {
+                        node = DocTree.View.findNodeByPathNames(findNames);
+                        if (DocTree.View.validateNode(node)) {
+                            var parent = node.parent;
+                            var cacheKey = DocTree.View.getCacheKey(parent);
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            var idx = DocTree.Model.findFolderItemIdx(node.data.objectId, folderList);
+                            if (0 > idx) {
+                                //not found, this must be newly created folder, no folder info available for now, so we can only close parent
+                                DocTree.Model.cacheFolderList.remove(cacheKey);
+                                parent.setExpanded(false);
+                                parent.resetLazy();
+                                var z = 1;
+                            }
+                        }
+                        findNames.pop();
+                    }
+
+
+                    $dfd.resolve(createdFolder.objectId);
+                    //$dfd.resolve({node: node, folderId: createdFolder.objectId});
                     var z = 2;
                 })
                 .fail(function(response) {

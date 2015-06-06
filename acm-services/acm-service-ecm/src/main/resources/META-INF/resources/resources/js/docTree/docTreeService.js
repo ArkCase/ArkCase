@@ -268,10 +268,15 @@ DocTree.Service = {
         });
     }
 
-    ,createFolderByPath: function(folderPath) {
+    ,createFolderByPath: function(folderNames, docIds) {
         var objType = DocTree.Model.getObjType();
         var objId = DocTree.Model.getObjId();
+        folderNames.shift(); //remove top node
+        var folderPath = "/" + folderNames.join("/");
         var url = this.API_CREATE_FOLDER_BY_PATH + "?targetObjectType=" + objType + "&targetObjectId=" + objId + "&newPath=" + folderPath;
+        if (!Acm.isArrayEmpty(docIds)) {
+            url += "&docIds=" + docIds.join();
+        }
         return Acm.Service.promise({type: "PUT"
             ,url: url
             ,callback: function(response) {
