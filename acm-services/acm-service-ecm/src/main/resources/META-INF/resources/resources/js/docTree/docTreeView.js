@@ -1764,7 +1764,25 @@ DocTree.View = DocTree.View || {
             }
             return $dfd;
         }
-        ,createFolders: function(parent, names) {
+        ,createFolderByPath: function(folderPath, node) {
+            var $dfd = $.Deferred();
+            $dfd.resolve({folderId: 2314, node: node});
+
+//            DocTree.Service.createFolderByPath(folderPath)
+//                .done(function(createdFolder) {
+//                    $dfd.resolve();
+//                    var z = 2;
+//                })
+//                .fail(function(response) {
+//                    $dfd.reject(response);
+//                    var z = 1;
+//                })
+//            ;
+            return $dfd;
+        }
+
+
+        ,createFolders_attempt_from_UI_side: function(parent, names) {
             var $dfdAll = $.Deferred();
             //var node = DocTree.View.tree.getRootNode();
             this._createFirstFolder({promise: $dfdAll, parent: parent, names: names});
@@ -2078,6 +2096,38 @@ DocTree.View = DocTree.View || {
             }
         }
         return topNode;
+    }
+
+    ,expandNodesByNames: function(names) {
+        var $dfdAll = $.Deferred();
+
+        DocTree.View._expandFirstNodeByName(DocTree.View.getTopNode(), names, $dfdAll);
+        return $dfdAll.promise();
+    }
+    ,_expandFirstNodeByName: function(node, names, $dfdAll) {
+        var $dfd = $.Deferred();
+
+        if (Acm.isEmpty(node) || Acm.isArrayEmpty(names)) {
+            $dfdAll.resolve();
+
+
+        } else {
+            if (node.title == names[0]) {
+                DocTree.View.expandNode(node).done(function(){
+                    names.shift();
+                    if (Acm.isArrayEmpty(names)) {
+                        node = null;
+                    } else {
+                        node = DocTree.View.findChildNodeByName(node, names[0]);
+                    }
+                    DocTree.View._expandFirstNodeByName(node, names, $dfdAll);
+                });
+            } else {
+                $dfdAll.reject();
+            }
+        }
+
+        return $dfd.promise;
     }
 
     ,expandNode: function(node) {
