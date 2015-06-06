@@ -11,8 +11,8 @@ DocTree.Controller = DocTree.Controller || {
         //this.MODEL_UPLOADED_FILES          = name + "-model-uploaded-files";
         //this.MODEL_REPLACED_FILE           = name + "-model-replaced-file";
         this.MODEL_RETRIEVED_FOLDERLIST    = name + "-model-retrieved-folder-list";
-        this.VIEW_ADDED_FOLDER             = name + "-view-added-folder";
-        this.MODEL_CREATED_FOLDER          = name + "-model-created-folder";
+        //this.VIEW_ADDED_FOLDER             = name + "-view-added-folder";
+        //this.MODEL_CREATED_FOLDER          = name + "-model-created-folder";
         this.VIEW_REMOVED_FOLDER           = name + "-view-removed-folder";
         this.MODEL_DELETED_FOLDER          = name + "-model-deleted-folder";
         this.VIEW_REMOVED_FILE             = name + "-view-removed-file";
@@ -58,12 +58,12 @@ DocTree.Controller = DocTree.Controller || {
     ,modelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, callerData) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_RETRIEVED_FOLDERLIST, folderList, objType, objId, folderId, pageId, callerData);
     }
-    ,viewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_ADDED_FOLDER, parentId, folderName, cacheKey, folderNode);
-    }
-    ,modelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, callerData) {
-        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_CREATED_FOLDER, createdFolder, parentId, folderName, cacheKey, callerData);
-    }
+//    ,viewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_ADDED_FOLDER, parentId, folderName, cacheKey, folderNode);
+//    }
+//    ,modelCreatedFolder: function(createdFolder, parentId, folderName, cacheKey, callerData) {
+//        Acm.Dispatcher.fireEvent(DocTree.Controller.MODEL_CREATED_FOLDER, createdFolder, parentId, folderName, cacheKey, callerData);
+//    }
     ,viewRemovedFolder: function(folderId, cacheKey, folderNode) {
         Acm.Dispatcher.fireEvent(DocTree.Controller.VIEW_REMOVED_FOLDER, folderId, cacheKey, folderNode);
     }
