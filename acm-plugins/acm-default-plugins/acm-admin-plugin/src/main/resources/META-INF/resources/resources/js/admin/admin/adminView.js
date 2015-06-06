@@ -534,7 +534,7 @@ Admin.View = Admin.View || {
                         ,edit: false
                     }
                     ,'ldapConfig.name': {
-                        title: 'Directory Name'
+                        title: 'Name'
                         ,visibility: 'fixed'
                     }
                     ,'ldapConfig.ldapUrl': {

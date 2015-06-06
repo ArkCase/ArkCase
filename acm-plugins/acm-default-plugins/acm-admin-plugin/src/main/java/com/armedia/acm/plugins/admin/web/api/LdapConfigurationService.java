@@ -234,7 +234,7 @@ public class LdapConfigurationService {
      * @throws AcmLdapConfigurationException
      */
     private void createSyncFile(String dirId, Map<String, Object> props) throws IOException, AcmLdapConfigurationException {
-        String syncFileName = getSignatureFileName(dirId);
+        String syncFileName = getSyncFileName(dirId);
         if (syncFileExist(dirId)) {
             throw new AcmLdapConfigurationException(String.format("Sync file '%s' is present in the system.", syncFileName));
         }
