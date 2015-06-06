@@ -10,6 +10,15 @@
         <beans:property name="location" value="file:${propertiesFileName}"/>
     </beans:bean>
 
+    <beans:bean id="${id}_RoleToGroupProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+             to be able to read the file; otherwise it will try to read from the
+             classpath -->
+        <beans:property name="location" value='${r"file:${user.home}/.acm/applicationRoleToUserGroup.properties"}'/>
+        <beans:property name="ignoreResourceNotFound" value="true"/>
+    </beans:bean>
+
     <beans:bean id="${id}_userSearch"
                 class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
         <beans:constructor-arg index="0" value="CN=Users" />
