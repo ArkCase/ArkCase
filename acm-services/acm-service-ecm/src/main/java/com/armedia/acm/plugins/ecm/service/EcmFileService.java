@@ -104,6 +104,8 @@ public interface EcmFileService
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
+    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;

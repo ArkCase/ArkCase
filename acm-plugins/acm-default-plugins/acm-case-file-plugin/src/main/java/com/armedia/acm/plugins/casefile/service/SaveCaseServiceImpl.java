@@ -10,6 +10,8 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
+import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedException;
+import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 
 import org.apache.commons.lang.StringUtils;
@@ -41,7 +43,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
 
     private boolean autoCreateFolderForCaseFile;
     private boolean autoDeleteFolderAfterCaseClosed;
-    
+
     private AcmFolderService acmFolderService;
     private EcmFileService ecmFileService;
     private String folderStructureAsString;
@@ -105,16 +107,26 @@ public class SaveCaseServiceImpl implements SaveCaseService
     }
 
     public void createOutlookFolder(CaseFile caseFile) {
-        outlookContainerCalendarService.createFolder(caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
-                caseFile.getContainer(), caseFile.getParticipants());
+        try {
+            outlookContainerCalendarService.createFolder(caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
+                    caseFile.getContainer(), caseFile.getParticipants());
+        } catch (AcmOutlookItemNotFoundException e) {
+            log.error("Error creating calendar folder for " + caseFile.getCaseNumber(), e);
+        } catch (AcmOutlookCreateItemFailedException e) {
+            log.error("Error creating calendar folder for " + caseFile.getCaseNumber(), e);
+        }
     }
 
     private void updateOutlookFolderPerticipants(CaseFile caseFile) {
-        AcmContainer container = caseFile.getContainer();
-        outlookContainerCalendarService.updateFolderParticipants(container.getCalendarFolderId(),
-                caseFile.getParticipants());
+        try {
+            AcmContainer container = caseFile.getContainer();
+            outlookContainerCalendarService.updateFolderParticipants(container.getCalendarFolderId(),
+                    caseFile.getParticipants());
+        } catch (AcmOutlookItemNotFoundException e) {
+            log.error("Error updating participants for " + caseFile.getCaseNumber(), e);
+        }
     }
-    
+
     private void createFolderStructure(CaseFile caseFile)
     {
     	if (getFolderStructureAsString() != null && !getFolderStructureAsString().isEmpty())
@@ -130,7 +142,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     		log.error("Cannot create folder structure.", e);
     	}
     }
-    
+
     private AcmContainer getContainer(CaseFile caseFile) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
     	return getEcmFileService().getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());

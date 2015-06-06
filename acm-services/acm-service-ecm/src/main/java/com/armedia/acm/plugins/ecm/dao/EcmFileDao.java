@@ -115,4 +115,15 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         getEm().remove(file);
     }
 
+    public List<EcmFile> findByFolderId(Long folderId) {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.folder.id=:folderId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("folderId", folderId);
+
+        return query.getResultList();
+
+
+    }
 }
