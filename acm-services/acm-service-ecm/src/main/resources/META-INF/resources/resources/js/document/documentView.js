@@ -178,7 +178,11 @@ AcmDocument.View = AcmDocument.View || {
              Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);*/
         }
         ,onInitialized: function() {
-            AcmDocument.View.DocViewer.$iframeViewer.attr("src", AcmDocument.View.MicroData.viewerSrc);
+            Acm.deferredTimer(null, 500).done(function() {
+                AcmDocument.View.DocViewer.$iframeViewer.attr("src", AcmDocument.View.MicroData.viewerSrc);
+                //document.location.reload(true);
+            });
+
         }
         /*,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(AcmDocument.View.DocViewer.$divDocViewer);

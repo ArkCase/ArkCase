@@ -9,7 +9,7 @@ DocTree.Model = DocTree.Model || {
         this.cacheFolderList = new Acm.Model.CacheFifo();
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
+        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FOLDER          ,this.onViewRemovedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
@@ -41,9 +41,9 @@ DocTree.Model = DocTree.Model || {
         //
         var z = 1;
     }
-    ,onViewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
-        DocTree.Service.createFolder(parentId, folderName, cacheKey, folderNode);
-    }
+//    ,onViewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
+//        DocTree.Service.createFolder(parentId, folderName, cacheKey, folderNode);
+//    }
     ,onViewRemovedFolder: function(folderId, cacheKey, folderNode) {
         DocTree.Service.deleteFolder(folderId, cacheKey, folderNode);
     }
