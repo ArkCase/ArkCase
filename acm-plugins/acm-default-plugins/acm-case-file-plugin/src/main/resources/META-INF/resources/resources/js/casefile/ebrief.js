@@ -558,15 +558,16 @@ CaseFile.prepare = function() {
             this.createJTableRejectDocs(this.$divRejectDocs);
 
         }
-        ,onClickBtnNewFolder: function(event, ctrl) {
-            //DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
 
-            var node = DocTree.View.tree.getActiveNode();
-            var names = DocTree.View.getNodePathNames(node);
-            var n = DocTree.View.findNodeByPathNames(names);
-            var last = names.pop();
-            var n2 = DocTree.View.findNodeByPathNames(names);
-            var z = 1;
+        ,onClickBtnNewFolder: function(event, ctrl) {
+            DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
+
+//            var node = DocTree.View.tree.getActiveNode();
+//            var names = DocTree.View.getNodePathNames(node);
+//            var n = DocTree.View.findNodeByPathNames(names);
+//            var last = names.pop();
+//            var n2 = DocTree.View.findNodeByPathNames(names);
+//            var z = 1;
             //var topNode = DocTree.View.getTopNode();
             //DocTree.View.Op.createFolder(topNode, "hahahaha");
         }
@@ -593,33 +594,42 @@ CaseFile.prepare = function() {
 //            //   node
 
 
-            var node = DocTree.View.tree.getActiveNode();
-            var pathNames = DocTree.View.getNodePathNames(node);
-            if (DocTree.View.isFileNode(node)) {
-                pathNames.pop(); //remove file node
-            }
-            pathNames.shift(); //remove top node
-            pathNames.shift(); //remove 1st level node (either "Prosecution Brief" or "Court Brief")
-            pathNames.unshift("Court Brief");
-            var path = "/" + pathNames.join("/");
-
-            DocTree.Service.createFolderByPath(path, null)
-                .done(function(data) {
-                    var z = 2;
-                })
-                .fail(function(data) {
-                    var z = 1;
-                })
-            ;
-
-
+            CaseFile.View.Documents.setValueEdtBmailAddr("");
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
-            Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
-
+            //Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
+                var email = CaseFile.View.Documents.getValueEdtBmailAddr();
                 var nodes = DocTree.View.getSelectedOrActiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     for (var i = 0; i < nodes.length; i++) {
-//
+                        var node = nodes[i];
+                        var pathNames = DocTree.View.getNodePathNames(node);
+                        pathNames.pop(); //remove last leaf node
+                        pathNames.shift(); //remove top node
+                        pathNames.shift(); //remove 1st level node (either "Prosecution Brief" or "Court Brief")
+                        pathNames.unshift(CaseFile.View.Documents.FOLDER_COURT_BRIEF);
+                        var path = "/" + pathNames.join("/");
+
+                        DocTree.View.Op.createFolderByPath(path, node)
+                            .done(function(data) {
+                                var folderId = data.folderId;
+                                var node = data.node;
+                                var pathNames = DocTree.View.getNodePathNames(node);
+                                pathNames.pop();
+                                pathNames[1] = CaseFile.View.Documents.FOLDER_COURT_BRIEF;
+                                DocTree.View.expandNodesByNames(pathNames)
+                                    .done(function(){
+                                        var z = 1;
+                                    })
+                                    .fail(function(){
+                                        var z = 1;
+                                    })
+                                ;
+                                var z = 2;
+                            })
+                            .fail(function(data) {
+                                var z = 1;
+                            })
+                        ;
                     }
                 }
 
@@ -628,7 +638,7 @@ CaseFile.prepare = function() {
 
                 //DocTree.View.tree.batMove(frNodes, toNode, "child");
                 Acm.log("lodge doc: Yes" + lodgeFolderId);
-            });
+//            });
         }
         ,onClickBtnRejectDocs: function(event, ctrl) {
             Acm.Dialog.modal(CaseFile.View.Documents.dlgRejectDocs, function() {
@@ -638,6 +648,8 @@ CaseFile.prepare = function() {
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
         }
+        ,FOLDER_COURT_BRIEF: "Court Brief"
+        ,FOLDER_PROSECUTION_BRIEF: "Prosecution Brief"
 
         ,_lodgeFolderId: 0
         ,getLodgeFolderId: function() {
@@ -646,7 +658,7 @@ CaseFile.prepare = function() {
                 if (topNode) {
                     for (var i = 0; i < topNode.children.length; i++) {
                         var child = topNode.children[i];
-                        if ("Court Brief" == Acm.goodValue(child.data.name)) {
+                        if (CaseFile.View.Documents.FOLDER_COURT_BRIEF == Acm.goodValue(child.data.name)) {
                             this._lodgeFolderId = Acm.goodValue(child.data.objectId, 0);
                             break;
                         }
@@ -740,6 +752,24 @@ CaseFile.prepare = function() {
             });
         }
 
+        ,getValueEdtBmailAddr: function() {
+            return Acm.Object.getValue(this.$edtBmailAddr);
+        }
+        ,setValueEdtBmailAddr: function(txt) {
+            Acm.Object.setValue(this.$edtBmailAddr, txt);
+        }
+        ,getValueEdtBmailReject: function() {
+            return Acm.Object.getValue(this.$edtBmailReject);
+        }
+        ,setValueEdtBmailReject: function(txt) {
+            Acm.Object.setValue(this.$edtBmailReject, txt);
+        }
+        ,getValueEdtRejectReason: function() {
+            return Acm.Object.getValue(this.$edtRejectReason);
+        }
+        ,setValueEdtRejectReason: function(txt) {
+            Acm.Object.setValue(this.$edtRejectReason, txt);
+        }
     });
 
 
