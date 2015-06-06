@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -86,7 +87,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String cmisFolderId = null;
         try {
 
-            cmisFolderId = createNewFolderAndReturnCmisID(parentFolder,properties);
+            cmisFolderId = createNewFolderAndReturnCmisID(parentFolder, properties);
             if ( log.isDebugEnabled() ) {
                 log.debug("Folder with name: " + newFolderName +"  exists inside the folder: "+ parentFolder.getName());
             }
@@ -275,6 +276,21 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             }
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_LIST_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(), "Folder " + folder.getName() + "can not be listed successfully", e);
         }
+        return objectList;
+    }
+
+    @Override
+    public List<AcmObject> getFolderChildren(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
+        List<AcmObject> objectList = new ArrayList<>();
+
+        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folderId);
+        if (subfolders != null && !subfolders.isEmpty())
+            objectList.addAll(subfolders);
+
+        List<EcmFile> files = getFileDao().findByFolderId(folderId);
+        if (files != null && !files.isEmpty())
+            objectList.addAll(files);
+
         return objectList;
     }
 
@@ -680,7 +696,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public AcmFolder findById(Long folderId) {
         return getFolderDao().find(folderId);
     }
-    
+
+    @Override
+    public AcmFolder findByNameAndParent(String name, AcmFolder parent) {
+        return getFolderDao().findFolderByNameInTheGivenParentFolder(name,parent.getId());
+    }
+
     @Override
 	public void addFolderStructure(AcmContainer container, AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
 		if (folderStructure != null)
@@ -763,6 +784,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     	}
     	
     	return false;
+    }
+
+    @Override
+    public String getFolderPath(AcmFolder folder) throws AcmObjectNotFoundException {
+        if (folder.getParentFolderId() != null) {
+            AcmFolder parent = findById(folder.getParentFolderId());
+            if (parent == null)
+                throw new AcmObjectNotFoundException(folder.getObjectType(), folder.getParentFolderId(), "Folder not found in database");
+            return getFolderPath(parent) + "/" + folder.getName();
+        } else
+            return "";
     }
 
     public EcmFileDao getFileDao() {
