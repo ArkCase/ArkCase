@@ -40,8 +40,8 @@ public class SplitCaseFilesAPIController {
 
         Objects.requireNonNull(splitCaseOptions.getCaseFileId(), "Case file for splitting should not be null");
         String ipAddress = (String) session.getAttribute("acm_ip_address");
-        CaseFile splitedCaseFile = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
-        return splitedCaseFile;
+        CaseFile copyCaseFile = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
+        return copyCaseFile;
     }
 
 
