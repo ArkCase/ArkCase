@@ -1,0 +1,25 @@
+{
+    "button": {"go": "Go!"},
+    "dialog": {"taskwizard": {
+        "btnCancelText": "Cancel",
+        "btnGoText": "Search now",
+        "btnOkText": "Select",
+        "title": "Choose New Assignee",
+        "prompt": "Enter to search for assignee"
+    }},
+    "label": {"input-search": "Type in your search query to find complaints, cases, tasks, and documents."},
+    "table": {
+        "field": {
+            "owner": "Assignee",
+            "parent-name": "Parent",
+            "name": "Name",
+            "modified": "Modified",
+            "id": "ID",
+            "parent-id": "Parent ID",
+            "type": "Type",
+            "title": "Title",
+            "parent-type": "Parent Type"
+        },
+        "title": "Search Results"
+    }
+}
