@@ -26,7 +26,7 @@
         <!-- do not change ldapDao or ldapSyncDatabaseHelper properties. -->
         <property name="ldapDao" ref="springLdapDao"/>
         <property name="ldapSyncDatabaseHelper" ref="userDatabaseHelper"/>
-              
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="${id}_sync" class="com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig">
@@ -51,5 +51,6 @@
         <!-- userIdAttributeName: use "samAccountName" if your LDAP server is Active Directory.  Most other LDAP
              servers use "uid". -->
         <property name="userIdAttributeName" value='${r"${ldapConfig.userIdAttributeName}"}'/>
+        <property name="roleToGroupMap" ref="${id}_RoleToGroupProperties"/>
     </bean>
 </beans>
