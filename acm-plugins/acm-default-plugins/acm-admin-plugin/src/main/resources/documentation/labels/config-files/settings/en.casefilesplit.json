@@ -9,6 +9,11 @@
         "description": "",
         "value": "Split Case"
     }}},
+    "split-submitted-message": {
+        "defaultValue": "Split Case request has been submitted.  Please wait for the split operation to complete.",
+        "description": "",
+        "value": "Split Case request has been submitted.  Please wait for the split operation to complete."
+    },
     "bootstrap-wizard": {
         "tabs": {
             "summary": {

@@ -1,0 +1,48 @@
+{
+    "button": {
+        "go": "Go!",
+        "edit-costsheet": "Edit Costsheet",
+        "new-costsheet": "New Costsheet"
+    },
+    "msg": {"no-costsheet-selected": "(No costsheet is selected)"},
+    "context-menu": {"menu-title": {
+        "sub2": "Sub 2",
+        "edit": "Edit",
+        "more": "More",
+        "sub1": "Sub 1",
+        "copy": "Copy",
+        "paste": "Paste",
+        "menu": "Menu:",
+        "delete": "Delete"
+    }},
+    "person": {"table": {
+        "field": {
+            "role": "Role",
+            "id": "ID",
+            "full-name": "Full Name",
+            "username": "Username"
+        },
+        "title": "Person"
+    }},
+    "label": {
+        "search": "Search",
+        "other-menu-items": "Other menu items",
+        "edit": "Edit",
+        "save": "Save",
+        "details": "Details"
+    },
+    "detail": {"label": {"editing-costsheet-detail": "Editing Costsheet detail"}},
+    "title": "Cost Tracking",
+    "cost-summary": {"table": {
+        "field": {
+            "parent-number": "Parent Number",
+            "description": "Description",
+            "total-cost": "Total Cost",
+            "id": "ID",
+            "parent-id": "Parent ID",
+            "title": "Title",
+            "parent-type": "Parent Type"
+        },
+        "title": "Hours Summary"
+    }}
+}

@@ -14,5 +14,6 @@
             "next": "Next",
             "previous": "Previous"
         }
-    }
+    },
+    "split-submitted-message": "Split Case request has been submitted.  Please wait for the split operation to complete."
 }
