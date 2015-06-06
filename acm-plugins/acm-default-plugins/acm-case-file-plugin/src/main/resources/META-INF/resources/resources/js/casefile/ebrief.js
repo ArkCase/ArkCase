@@ -130,45 +130,6 @@ CaseFile.prepare = function() {
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
             CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
-//        ,onModelRetrievedGroups: function(groups) {
-//            var choices = [];
-//            $.each(groups, function(idx, val) {
-//                var opt = {};
-//                opt.value = val.object_id_s;
-//                opt.text = val.name;
-//                choices.push(opt);
-//            });
-//
-//            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkOrganisation, {
-//                source: choices
-//                ,success: function(response, newValue) {
-//                    CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
-//                }
-//                ,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
-//            });
-//
-//            // This is happen after loading the object, for that reason we should check here as well.
-//            // We need both, assignees and groups for checking.
-//            // For this to be happened, assignees and groups should be loaded. If in this stage
-//            // assignees or groups are not loaded, checking for assignees and groups will be skipped.
-//            CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
-//        }
-//        ,onModelFoundSubjectTypes: function(subjectTypes) {
-//            var choices = [];
-//            $.each(subjectTypes, function(idx, val) {
-//                var opt = {};
-//                opt.value = val;
-//                opt.text = val;
-//                choices.push(opt);
-//            });
-//
-//            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkCourt, {
-//                source: choices
-//                ,success: function(response, newValue) {
-//                    CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
-//                }
-//            });
-//        }
 
         ,onModelSavedCaseTitle: function(caseFileId, title) {
             if (title.hasError) {
@@ -311,16 +272,6 @@ CaseFile.prepare = function() {
                 }
             })
         }
-//        ,resolveProfileInfo: function(requests) {
-//            var resolver = $.Deferred();
-//            $.when.apply(this, requests).then(function(data) {
-//                    resolver.resolve();
-//                }, function(e) {
-//                    resolver.reject();
-//                }
-//            );
-//            return resolver;
-//        }
     }
 
     CaseFile.View.Participants = {
@@ -562,62 +513,53 @@ CaseFile.prepare = function() {
         ,onClickBtnNewFolder: function(event, ctrl) {
             DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
 
-//            var node = DocTree.View.tree.getActiveNode();
-//            var names = DocTree.View.getNodePathNames(node);
-//            var n = DocTree.View.findNodeByPathNames(names);
-//            var last = names.pop();
-//            var n2 = DocTree.View.findNodeByPathNames(names);
-//            var z = 1;
             //var topNode = DocTree.View.getTopNode();
             //DocTree.View.Op.createFolder(topNode, "hahahaha");
         }
         ,onClickBtnLodgeDocs: function(event, ctrl) {
-//            var parent = DocTree.View.tree.getRootNode();
-//            var node = DocTree.View.tree.getActiveNode();
-//            var names = DocTree.View.getNodePathNames(node);
-//            names.push("abc");
-//            DocTree.View.Op.createFolders(parent, names)
-//                .done(function(data){
-//                    var z = 1;
-//                })
-//                .fail(function(data){
-//                    var z = 2;
-//                })
-//            ;
-//            var z = 3;
-//            return;
-//            //get list of sel nodes
-//            //for each loop
-//            //   get path names
-//            //   create target folders
-//            //   find target folder
-//            //   node
-
-
             CaseFile.View.Documents.setValueEdtBmailAddr("");
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
-            //Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
-                var email = CaseFile.View.Documents.getValueEdtBmailAddr();
+            Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
+                var emailAddresses = CaseFile.View.Documents.getValueEdtBmailAddr();
+                if (Acm.isEmpty(emailAddresses)) {
+                    Acm.Dialog.alert("Email Address is required");
+                    return;
+                }
                 var nodes = DocTree.View.getSelectedOrActiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
+                    DocTree.Controller.viewSentEmail(emailNotifications);
+                    var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
+
+//                    var frNodes = [];
+//                    var toNodes = [];
+//                    var nodeCount = nodes.length;
                     for (var i = 0; i < nodes.length; i++) {
                         var node = nodes[i];
-                        var pathNames = DocTree.View.getNodePathNames(node);
-                        pathNames.pop(); //remove last leaf node
+                        var pathNames = CaseFile.View.Documents.getFolderNames(node, CaseFile.View.Documents.FOLDER_COURT_BRIEF);
                         pathNames.shift(); //remove top node
-                        pathNames.shift(); //remove 1st level node (either "Prosecution Brief" or "Court Brief")
-                        pathNames.unshift(CaseFile.View.Documents.FOLDER_COURT_BRIEF);
                         var path = "/" + pathNames.join("/");
-
                         DocTree.View.Op.createFolderByPath(path, node)
                             .done(function(data) {
                                 var folderId = data.folderId;
+                                Acm.log("=====craetFolderByPath done, folderId=" + folderId);
                                 var node = data.node;
-                                var pathNames = DocTree.View.getNodePathNames(node);
-                                pathNames.pop();
-                                pathNames[1] = CaseFile.View.Documents.FOLDER_COURT_BRIEF;
-                                DocTree.View.expandNodesByNames(pathNames)
-                                    .done(function(){
+                                var pathNames = CaseFile.View.Documents.getFolderNames(node, CaseFile.View.Documents.FOLDER_COURT_BRIEF);
+                                DocTree.View.expandNodesByNames(pathNames, node)
+                                    .done(function(srcNode){
+                                        var folderNames = CaseFile.View.Documents.getFolderNames(srcNode, CaseFile.View.Documents.FOLDER_COURT_BRIEF);
+                                        var folderNode = DocTree.View.findNodeByPathNames(folderNames);
+
+//                                        var a = nodes.length;
+//                                        frNodes.push(srcNode);
+//                                        toNodes.push(folderNode);
+//                                        var b = frNodes.length;
+//                                        var c = toNodes.length;
+//                                        if (nodeCount == frNodes.length) {
+//                                            DocTree.View.batMove(frNodes, toNodes, "child");
+//                                        }
+                                        Acm.log("=====expandNodes, a=" + srcNode.title);
+                                        DocTree.View.doMove(srcNode, folderNode, "child");
+
                                         var z = 1;
                                     })
                                     .fail(function(){
@@ -633,12 +575,8 @@ CaseFile.prepare = function() {
                     }
                 }
 
-                var lodgeFolderId = CaseFile.View.Documents.getLodgeFolderId();
-
-
-                //DocTree.View.tree.batMove(frNodes, toNode, "child");
-                Acm.log("lodge doc: Yes" + lodgeFolderId);
-//            });
+                //var lodgeFolderId = CaseFile.View.Documents.getLodgeFolderId();
+            });
         }
         ,onClickBtnRejectDocs: function(event, ctrl) {
             Acm.Dialog.modal(CaseFile.View.Documents.dlgRejectDocs, function() {
@@ -648,8 +586,15 @@ CaseFile.prepare = function() {
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
         }
+
         ,FOLDER_COURT_BRIEF: "Court Brief"
         ,FOLDER_PROSECUTION_BRIEF: "Prosecution Brief"
+        ,getFolderNames: function(node, firstLevelFolder) {
+            var pathNames = DocTree.View.getNodePathNames(node);
+            pathNames.pop();
+            pathNames[1] = firstLevelFolder;
+            return pathNames;
+        }
 
         ,_lodgeFolderId: 0
         ,getLodgeFolderId: function() {

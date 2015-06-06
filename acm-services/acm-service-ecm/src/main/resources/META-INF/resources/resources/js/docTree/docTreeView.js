@@ -134,7 +134,7 @@ DocTree.View = DocTree.View || {
                         dlgSendEmail.show();
                     }
                     else{
-                        var emailNotifications = DocTree.View.Email._makeEmailData(emailAddresses, nodes);
+                        var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
                         DocTree.Controller.viewSentEmail(emailNotifications);
                     }
                 }
@@ -244,7 +244,7 @@ DocTree.View = DocTree.View || {
                 }
             });
         }
-        ,_makeEmailData: function(emailAddresses, nodes){
+        ,makeEmailData: function(emailAddresses, nodes){
             var emailNotifications = [];
             var emailData = {};
             emailData.emailAddresses = emailAddresses;
@@ -1766,18 +1766,18 @@ DocTree.View = DocTree.View || {
         }
         ,createFolderByPath: function(folderPath, node) {
             var $dfd = $.Deferred();
-            $dfd.resolve({folderId: 2314, node: node});
+            //$dfd.resolve({folderId: 2314, node: node});
 
-//            DocTree.Service.createFolderByPath(folderPath)
-//                .done(function(createdFolder) {
-//                    $dfd.resolve();
-//                    var z = 2;
-//                })
-//                .fail(function(response) {
-//                    $dfd.reject(response);
-//                    var z = 1;
-//                })
-//            ;
+            DocTree.Service.createFolderByPath(folderPath)
+                .done(function(createdFolder) {
+                    $dfd.resolve({node: node, folderId: createdFolder.objectId});
+                    var z = 2;
+                })
+                .fail(function(response) {
+                    $dfd.reject(response);
+                    var z = 1;
+                })
+            ;
             return $dfd;
         }
 
@@ -2098,17 +2098,17 @@ DocTree.View = DocTree.View || {
         return topNode;
     }
 
-    ,expandNodesByNames: function(names) {
+    ,expandNodesByNames: function(names, src) {
         var $dfdAll = $.Deferred();
 
-        DocTree.View._expandFirstNodeByName(DocTree.View.getTopNode(), names, $dfdAll);
+        DocTree.View._expandFirstNodeByName(DocTree.View.getTopNode(), names, $dfdAll, src);
         return $dfdAll.promise();
     }
-    ,_expandFirstNodeByName: function(node, names, $dfdAll) {
+    ,_expandFirstNodeByName: function(node, names, $dfdAll, src) {
         var $dfd = $.Deferred();
 
         if (Acm.isEmpty(node) || Acm.isArrayEmpty(names)) {
-            $dfdAll.resolve();
+            $dfdAll.resolve(src);
 
 
         } else {
@@ -2120,7 +2120,7 @@ DocTree.View = DocTree.View || {
                     } else {
                         node = DocTree.View.findChildNodeByName(node, names[0]);
                     }
-                    DocTree.View._expandFirstNodeByName(node, names, $dfdAll);
+                    DocTree.View._expandFirstNodeByName(node, names, $dfdAll, src);
                 });
             } else {
                 $dfdAll.reject();
