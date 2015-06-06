@@ -97,6 +97,9 @@
     <bean id="createFolderByPathAPIController" class="com.armedia.acm.plugins.ecm.web.api.CreateFolderByPathAPIController">
         <property name="folderService" ref="acmFolderService"/>
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>
 
 </beans>
