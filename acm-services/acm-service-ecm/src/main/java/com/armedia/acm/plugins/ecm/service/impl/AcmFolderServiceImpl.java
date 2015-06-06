@@ -154,7 +154,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     f.setName(cmisObject.getName());
                     AcmFolder parentF = getFolderDao().findByCmisFolderId(parent.getId());
                     f.setParentFolderId(parentF.getId());
-                    result = getFolderDao().save(f);
+                    try {
+                         AcmFolder fol = getFolderDao().findFolderByNameInTheGivenParentFolder(cmisObject.getName(), parentF.getId());
+                        result = fol;
+                    } catch (NoResultException e) {
+                        result = getFolderDao().save(f);
+                    }
                     break;
                 } else {
                     AcmFolder folder = new AcmFolder();
@@ -162,10 +167,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     folder.setName(previousParent.getName());
                     AcmFolder parentFolder = getFolderDao().findByCmisFolderId(parent.getId());
                     folder.setParentFolderId(parentFolder.getId());
-                    getFolderDao().save(folder);
-                    existingFolderCmisId = previousParent.getId();
-                    parent = returnParentFolder(cmisObject.getId());
-                    isLastFolderForSaving = true;
+                    try{
+                        existingFolderCmisId = previousParent.getId();
+                        parent = returnParentFolder(cmisObject.getId());
+                        isLastFolderForSaving = true;
+                        getFolderDao().findFolderByNameInTheGivenParentFolder(previousParent.getName(), parentFolder.getId());
+                    } catch (NoResultException e){
+                        getFolderDao().save(folder);
+                        existingFolderCmisId = previousParent.getId();
+                        parent = returnParentFolder(cmisObject.getId());
+                        isLastFolderForSaving = true;
+                    }
                 }
             }
 
