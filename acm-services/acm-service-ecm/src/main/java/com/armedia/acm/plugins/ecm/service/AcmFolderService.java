@@ -44,4 +44,5 @@ public interface AcmFolderService {
 
     void addFolderStructure(AcmContainer container, AcmFolder parentFolder, JSONArray folderStructure) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    String getFolderPath(AcmFolder folder) throws AcmObjectNotFoundException;
 }

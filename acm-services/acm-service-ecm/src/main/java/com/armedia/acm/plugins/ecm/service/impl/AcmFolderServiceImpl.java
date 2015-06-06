@@ -87,7 +87,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         String cmisFolderId = null;
         try {
 
-            cmisFolderId = createNewFolderAndReturnCmisID(parentFolder,properties);
+            cmisFolderId = createNewFolderAndReturnCmisID(parentFolder, properties);
             if ( log.isDebugEnabled() ) {
                 log.debug("Folder with name: " + newFolderName +"  exists inside the folder: "+ parentFolder.getName());
             }
@@ -834,6 +834,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     	}
     	
     	return false;
+    }
+
+    @Override
+    public String getFolderPath(AcmFolder folder) throws AcmObjectNotFoundException {
+        if (folder.getParentFolderId() != null) {
+            AcmFolder parent = findById(folder.getParentFolderId());
+            if (parent == null)
+                throw new AcmObjectNotFoundException(folder.getObjectType(), folder.getParentFolderId(), "Folder not found in database");
+            return getFolderPath(parent) + "/" + folder.getName();
+        } else
+            return "";
     }
 
     public EcmFileDao getFileDao() {
