@@ -593,13 +593,36 @@ CaseFile.prepare = function() {
 //            //   node
 
 
-            var selNodes = DocTree.View.tree.getSelectedNodes();
             var node = DocTree.View.tree.getActiveNode();
-            var nodes = (Acm.isArrayEmpty(selNodes))? [node] : selNodes;
-            CaseFile.View.Documents.setSelectedLodgeNodes(nodes);
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
+            var pathNames = DocTree.View.getNodePathNames(node);
+            if (DocTree.View.isFileNode(node)) {
+                pathNames.pop(); //remove file node
+            }
+            pathNames.shift(); //remove top node
+            pathNames.shift(); //remove 1st level node (either "Prosecution Brief" or "Court Brief")
+            pathNames.unshift("Court Brief");
+            var path = "/" + pathNames.join("/");
 
+            DocTree.Service.createFolderByPath(path, null)
+                .done(function(data) {
+                    var z = 2;
+                })
+                .fail(function(data) {
+                    var z = 1;
+                })
+            ;
+
+
+            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
             Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
+
+                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                if (DocTree.View.validateNodes(nodes)) {
+                    for (var i = 0; i < nodes.length; i++) {
+//
+                    }
+                }
+
                 var lodgeFolderId = CaseFile.View.Documents.getLodgeFolderId();
 
 
@@ -614,14 +637,6 @@ CaseFile.prepare = function() {
         }
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
-        }
-
-        ,_selectedLodgeNodes: []
-        ,getSelectedLodgeNodes: function() {
-            return this._selectedLodgeNodes;
-        }
-        ,setSelectedLodgeNodes: function(selectedLodgeNodes) {
-            this._selectedLodgeNodes = selectedLodgeNodes;
         }
 
         ,_lodgeFolderId: 0
@@ -650,7 +665,7 @@ CaseFile.prepare = function() {
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var nodes = CaseFile.View.Documents.getSelectedLodgeNodes();
+                        var nodes = DocTree.View.getSelectedOrActiveNodes();
                         if (DocTree.View.validateNodes(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 var record = {};
@@ -692,7 +707,7 @@ CaseFile.prepare = function() {
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var nodes = CaseFile.View.Documents.getSelectedLodgeNodes();
+                        var nodes = DocTree.View.getSelectedOrActiveNodes();
                         if (DocTree.View.validateNodes(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 var record = {};
