@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import org.mule.api.MuleException;
 
 /**
  * Created by marjan.stefanoski on 03.04.2015.
@@ -20,6 +21,10 @@ public interface AcmFolderService {
     AcmFolder addNewFolder(AcmFolder parentFolder, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException;
 
     AcmFolder addNewFolderByPath(String targetObjectType, Long targetObjectId, String newPath) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
+
+    String findContainerFolderPath(AcmContainer container) throws MuleException, AcmUserActionFailedException;
+
+    String findFolderPath(String cmisFolderObjectId) throws MuleException, AcmUserActionFailedException;
 
     AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
 
