@@ -9,6 +9,16 @@
         <property name="location" value="file:${propertiesFileName}"/>
     </bean>
 
+    <bean id="${id}_RoleToGroupProperties"
+                class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+             to be able to read the file; otherwise it will try to read from the
+             classpath -->
+        <property name="location" value="file:${r'${user.home}'}/.acm/applicationRoleToUserGroup.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+
     <!-- change the ref to match the bean name of your ldap sync job; and change the 
          cron to the desired cron expression (see JavaDoc for org.springframework.scheduling.support.CronSequenceGenerator).  
          No other changes are needed. -->
