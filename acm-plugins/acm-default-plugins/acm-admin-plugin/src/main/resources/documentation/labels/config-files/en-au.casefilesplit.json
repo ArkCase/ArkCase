@@ -15,5 +15,6 @@
             "next": "Next",
             "previous": "Previous"
         }
-    }
+    },
+    "split-submitted-message": "Split Brief request has been submitted.  Please wait for the split operation to complete."
 }

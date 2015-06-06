@@ -11,8 +11,6 @@
             "description": ""
         },
         "case-file": {
-            "__xxx__value": "Case File",
-            "__xxx__defaultValue": "Case File",
             "value": "Brief",
             "defaultValue": "Brief",
             "description": ""
@@ -30,8 +28,8 @@
     },
     "label": {
         "search": {
-            "value": "Search complaints, cases...",
-            "defaultValue": "Search complaints, cases...",
+            "value": "Search briefs...",
+            "defaultValue": "Search briefs...",
             "description": ""
         },
         "see-all-notifications": {
@@ -78,8 +76,6 @@
             "description": ""
         },
         "case-files": {
-            "__xxx__value": "Case Files",
-            "__xxx__defaultValue": "Case Files",
             "value": "Briefs",
             "defaultValue": "Briefs",
             "description": ""
@@ -132,13 +128,13 @@
     }
 }, "date": {
     "short": {
-        "value": "MM/DD/YYYY",
-        "defaultValue": "MM/DD/YYYY",
+        "value": "DD/MM/YYYY",
+        "defaultValue": "DD/MM/YYYY",
         "description": ""
     },
     "full": {
-        "value": "MM/DD/YYYY h:mm:ss a",
-        "defaultValue": "MM/DD/YYYY h:mm:ss a",
+        "value": "DD/MM/YYYY h:mm:ss a",
+        "defaultValue": "DD/MM/YYYY h:mm:ss a",
         "description": ""
     },
 	"frevvo": {

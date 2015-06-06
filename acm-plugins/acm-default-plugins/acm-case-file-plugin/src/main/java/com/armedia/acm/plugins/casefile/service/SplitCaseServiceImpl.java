@@ -50,7 +50,11 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         CaseFile copyCaseFile = new CaseFile();
         copyCaseFile.setCaseType(original.getCaseType());
         copyCaseFile.setCourtroomName(original.getCourtroomName());
-        copyCaseFile.setTitle(original.getTitle());
+        copyCaseFile.setNextCourtDate(original.getNextCourtDate());
+        copyCaseFile.setResponsibleOrganization(original.getResponsibleOrganization());
+
+        // do not set title, so the rules will get us a new title
+        // copyCaseFile.setTitle(original.getTitle());
         copyCaseFile.setDetails(original.getDetails());
         copyCaseFile.setStatus(original.getStatus());
 

@@ -4,7 +4,7 @@
     "object-type": {
         "values": {
             "all": "ALL",
-            "case-files": "Briefs",
+            "case-files": "Case Files",
             "complaints": "Complaints",
             "files": "Files",
             "tasks": "Tasks"
@@ -18,7 +18,7 @@
     },
     "title": "Audit",
     "object-id": {
-        "label": "Brief# ...",
+        "label": "Case#, Complaint#...",
         "desc": "Object Number"
     }
 }

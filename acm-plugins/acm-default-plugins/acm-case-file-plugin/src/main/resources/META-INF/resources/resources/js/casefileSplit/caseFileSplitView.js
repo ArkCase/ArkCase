@@ -525,6 +525,7 @@ CaseFileSplit.View = CaseFileSplit.View || {
         ,onClickBtnSplitCase: function(event,ctrl) {
             var summary = this.getSummary();
             if(CaseFileSplit.Model.Summary.validateSummary(summary)){
+                App.View.MessageBoard.show($.t("casefilesplit:split-submitted-message"));
                 CaseFileSplit.Controller.viewRetrievedSummary(summary);
             }
         }
