@@ -762,25 +762,23 @@ DocTree.View = DocTree.View || {
         var z = 1;
     }
 
-//    ,showDialog: function(args) {
-//        if (Acm.isEmpty(args.$dlgDocumentPicker)) {
-//            args.$dlgDocumentPicker = $("#dlgDocumentPicker");
-//        }
-//        if (Acm.isNotEmpty(args.title)) {
-//            args.$dlgDocumentPicker.find('.modal-title').text(args.title);
-//        }
-//        if (Acm.isNotEmpty(args.btnOkText)) {
-//            args.$dlgDocumentPicker.find('button.btn-primary').text(args.btnOkText);
-//        }
-//        if (Acm.isNotEmpty(args.btnCancelText)) {
-//            args.$dlgDocumentPicker.find('button.btn-default').text(args.btnCancelText);
-//        }
-//        Acm.Dialog.modal(args.$dlgDocumentPicker, args.onClickBtnPrimary, args.onClickBtnDefault);
-//    }
-    ,getSelectedNodes: function() {
-        return this.tree.getSelectedNodes();
-    }
 
+    ,getSelectedNodes: function() {
+        var nodes = null;
+        if (this.tree) {
+            nodes = this.tree.getSelectedNodes();
+        }
+        return nodes;
+    }
+    ,getSelectedOrActiveNodes: function() {
+        var nodes = null;
+        if (this.tree) {
+            var selNodes = this.tree.getSelectedNodes();
+            var node = this.tree.getActiveNode();
+            nodes= (Acm.isArrayEmpty(selNodes))? [node] : selNodes;
+        }
+        return nodes;
+    }
 
     ,_isEditing: false
     ,isEditing: function() {

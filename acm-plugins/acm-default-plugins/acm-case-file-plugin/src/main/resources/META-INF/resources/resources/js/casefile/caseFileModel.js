@@ -1124,6 +1124,13 @@ CaseFile.Model = CaseFile.Model || {
         }
     }
 
+    ,Participants: {
+        create : function() {
+        }
+        ,onInitialized: function() {
+        }
+    }
+
     ,Cost: {
         create : function() {
             this.cacheCostsheets = new Acm.Model.CacheFifo();
