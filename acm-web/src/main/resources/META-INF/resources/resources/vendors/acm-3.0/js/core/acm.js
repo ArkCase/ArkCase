@@ -224,10 +224,6 @@ var Acm = Acm || {
         //return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     }
 
-    ,deferred: function(fn) {
-        setTimeout(fn, 200);
-    }
-
     ,deferredTimer: function(data, interval) {
         var dfd = $.Deferred();
         var t = Acm.goodValue(interval, 200);
@@ -235,6 +231,40 @@ var Acm = Acm || {
             dfd.resolve(data);
         }, t);
         return dfd;
+    }
+
+    ,copyObjectFunction: function(obj, frFn, toFn) {
+        var ext =  $.extend({}, obj);
+        obj[toFn] = ext[frFn];
+        return obj[toFn];
+    }
+
+    ,Promise: {
+        resolvePromises: function(promises) {
+            var resolver = $.Deferred();
+            $.when.apply(null, promises).then(function(data) {
+                    resolver.resolve();
+                }, function(e) {
+                    resolver.reject();
+                }
+            );
+            return resolver;
+        }
+        ,donePromise: function(data) {
+            var resolver = $.Deferred();
+            resolver.resolve(data);
+            return resolver;
+        }
+        ,failPromise: function(data) {
+            var resolver = $.Deferred();
+            resolver.reject(data);
+            return resolver;
+        }
+
+    }
+
+    ,deferred: function(fn) {
+        setTimeout(fn, 200);
     }
 
     ,keepTrying: function(fn, trials, interval) {

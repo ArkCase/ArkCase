@@ -300,10 +300,17 @@
                                                     </li>
                                                     <li>
                                                         <div class="btn-group padder-v2">
-                                                            <button class="btn btn-default btn-sm" id="btnLodge" data-i18n="ebrief:documents.btn-lodge"><i class="fa fa-share"></i>Lodge</button>
+                                                            <%--<button class="btn btn-default btn-sm" id="btnLodgeDocs" data-i18n="ebrief:documents.btn-lodge" data-toggle="modal" data-target="#dlgLodgeDocs"><i class="fa fa-share"></i>Lodge Document(s)</button>--%>
+                                                            <button class="btn btn-default btn-sm" id="btnLodgeDocs" data-i18n="ebrief:documents.btn-lodge"><i class="fa fa-share"></i>Lodge Document(s)</button>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" id="btnRejectDocs" data-i18n="ebrief:documents.btn-reject"><i class="fa fa-share"></i>Reject Document(s)</button>
                                                         </div>
                                                     </li>
                                                 </ul>
+
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             </div>
 
@@ -422,5 +429,79 @@
                 </section>
             </section>
         </section>
+
+
+
+        <div class="modal fade" id="createnewfolder" tabindex="-1" role="dialog" aria-labelledby="labNewFolderTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="labNewFolderTitle" data-i18n="ebrief:documents.dialog.title-create-folder">Create Folder</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Enter a name for the folder you would like to create:</p>
+                        <label for="folderName2">Folder Name</label>
+                        <br/>
+                        <input type="text" id="folderName2" class="input-lg" placeholder="Folder Name" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Create Folder<</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="dlgLodgeDocs" tabindex="-1" role="dialog" aria-labelledby="labLodgeDlgTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="labLodgeDlgTitle" data-i18n="ebrief:dialog.lodge-title">Lodge Documents</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label for="edtBmailAddr" data-i18n="ebrief:dialog.lodge-email-label">Lodge document(s) and notify to</label>
+                        <br/>
+                        <input type="text" id="edtBmailAddr" class="form-control" data-i18n="[placeholder]ebrief:dialog.lodge-email-placeholder" placeholder="Email Address" />
+                        <br/>
+                        <div id="divLodgeDocs">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="ebrief:dialog.lodge-btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-i18n="ebrief:dialog.lodge-btn-ok">Lodge</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="dlgRejectDocs" tabindex="-1" role="dialog" aria-labelledby="labRejectDlgTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="labRejectDlgTitle" data-i18n="ebrief:dialog.reject-title">Reject Documents</h4>
+                    </div>
+                    <div class="modal-body">
+                        <label for="edtBmailReject" data-i18n="ebrief:dialog.reject-email-label">Reject document(s) and notify to</label>
+                        <br/>
+                        <input type="text" id="edtBmailReject" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-email-placeholder" placeholder="Email Address" />
+                        <br/>
+                        <label for="edtRejectReason" data-i18n="ebrief:dialog.lodge-reason-label">Reason</label>
+                        <br/>
+                        <input type="text" id="edtRejectReason" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-reason-placeholder" placeholder="Reject Reason" />
+                        <br/>
+                        <div id="divRejectDocs">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="ebrief:dialog.reject-btn-cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-i18n="ebrief:dialog.reject-btn-ok">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </jsp:body>
 </t:layout>
