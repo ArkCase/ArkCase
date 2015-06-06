@@ -17,6 +17,14 @@ public class AcmObjectNotFoundException extends Exception
         this.objectType = objectType;
     }
 
+    public AcmObjectNotFoundException(String objectType, Long objectId, String message)
+    {
+        super(message);
+
+        this.objectId = objectId;
+        this.objectType = objectType;
+    }
+
     public String getObjectType()
     {
         return objectType;

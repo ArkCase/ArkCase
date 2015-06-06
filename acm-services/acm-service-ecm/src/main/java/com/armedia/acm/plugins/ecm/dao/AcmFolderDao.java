@@ -39,12 +39,7 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder> {
         query.setParameter("folderName", folderName);
         query.setParameter("parentFolderId", parentFolderId);
 
-        AcmFolder folder = null;
-        try {
-            folder = query.getSingleResult();
-        } catch (NoResultException e) {
-
-        }
+        AcmFolder folder = query.getSingleResult();
 
         return folder;
 
