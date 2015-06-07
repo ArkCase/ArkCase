@@ -671,7 +671,7 @@ CaseFile.prepare = function() {
 
         ,createJTableLodgeDocs: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
-                title: $.t("ebrief:dialog.lodge-table-title")
+                title: $.t("ebrief:documents.dialog.lodge-table-title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 16
@@ -713,7 +713,7 @@ CaseFile.prepare = function() {
 
         ,createJTableRejectDocs: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
-                title: $.t("ebrief:dialog.reject-table-title")
+                title: $.t("ebrief:documents.dialog.reject-table-title")
                 ,paging: true
                 ,sorting: true
                 ,pageSize: 16
