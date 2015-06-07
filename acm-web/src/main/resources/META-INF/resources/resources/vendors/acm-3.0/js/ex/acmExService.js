@@ -36,7 +36,16 @@ AcmEx.Service = {
                     }
                 }
             }
-            return Acm.Service.deferredGet(responseHandler, url, postData);
+            //return Acm.Service.deferredGet(responseHandler, url, postData);
+            return Acm.Service.call({type: "GET"
+                ,url: url
+                ,data: postData
+                ,callback: function(data) {
+                    if (!data.hasError) {
+                        return responseHandler(data);
+                    }
+                }
+            });
         }
     }
 

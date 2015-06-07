@@ -30,7 +30,7 @@ ObjNav.Service = {
             var filter = treeInfo.filter;
             var q      = treeInfo.q;
 
-            var url = App.getContextPath() + ObjNav.Model.interface.apiListObjects();
+            var url = ObjNav.Model.interface.apiListObjects();
             if (0 <= treeInfo.start) {
                 url += "?start=" + treeInfo.start;
             }
@@ -44,12 +44,14 @@ ObjNav.Service = {
                 url += "&filters=" + treeInfo.filter;
             }
 
-            Acm.Service.asyncGet(
-                function(response) {
+            return Acm.Service.call({type: "GET"
+                ,url: url
+                ,callback: function(response) {
                     if (response.hasError) {
                         ObjNav.Controller.modelRetrievedObjectListError(response);
 
                     } else {
+                        var key = null;
                         if (Acm.Validator.validateSolrData(response)) {
                             var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
                             treeInfo.total = response.response.numFound;
@@ -62,7 +64,6 @@ ObjNav.Service = {
 
                             var objId = 0;
                             var objType = "";
-                            var key;
                             if (null == subKey) {
                                 if (0 < objList.length) {
                                     objId = ObjNav.Model.interface.nodeId(objList[0]);
@@ -86,10 +87,10 @@ ObjNav.Service = {
                                 ObjNav.Controller.modelRetrievedObjectList(key);
                             }
                         }
+                        return key;
                     }
                 }
-                ,url
-            )
+            });
         }
     }
 
@@ -100,9 +101,10 @@ ObjNav.Service = {
         }
 
         ,retrieveObject : function(objType, objId) {
-            var url = App.getContextPath() + ObjNav.Model.interface.apiRetrieveObject(objType, objId);
-            Acm.Service.asyncGet(
-                function(response) {
+            var url = ObjNav.Model.interface.apiRetrieveObject(objType, objId);
+            return Acm.Service.call({type: "GET"
+                ,url: url
+                ,callback: function(response) {
                     if (response.hasError) {
                         ObjNav.Controller.modelRetrievedObjectError(response);
 
@@ -132,15 +134,16 @@ ObjNav.Service = {
                                 ObjNav.Model.setObjectType(nodeType);
                                 var key = ObjNav.Model.Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                                 ObjNav.Controller.modelRetrievedObjectList(key);
+                                return key;
 
                             } else {
                                 ObjNav.Controller.modelRetrievedObject(objData);
+                                return objData;
                             }
                         }
                     }
                 }
-                ,url
-            )
+            });
         }
 
         ,retrieveObjectDeferred : function(objType, objId, callbackSuccess) {
@@ -160,9 +163,11 @@ ObjNav.Service = {
         }
 
         ,saveObject : function(objType, objId, objData, handler) {
-            var url = App.getContextPath() + ObjNav.Model.interface.apiSaveObject(objType, objId);
-            Acm.Service.asyncPost(
-                function(response) {
+            var url = ObjNav.Model.interface.apiSaveObject(objType, objId);
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data:JSON.stringify(objData)
+                ,callback: function(response) {
                     if (response.hasError) {
                         if (handler) {
                             handler(response);
@@ -178,12 +183,11 @@ ObjNav.Service = {
                             } else {
                                 ObjNav.Controller.modelSavedObject(objType, objId, response);
                             }
+                            return response;
                         }
                     }
                 }
-                ,url
-                ,JSON.stringify(objData)
-            )
+            });
         }
     }
 };
