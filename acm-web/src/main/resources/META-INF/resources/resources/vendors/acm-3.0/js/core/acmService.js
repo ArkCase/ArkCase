@@ -67,7 +67,7 @@ Acm.Service = {
         return jQuery.ajax(arg);
     }
 
-    ,promise : function(arg) {
+    ,call : function(arg) {
         var $dfd = jQuery.Deferred();
 
         if (arg.success) {
@@ -78,7 +78,6 @@ Acm.Service = {
                 App.Model.Login.setErrorCount(0);
             }
 
-            //Acm.Service._process2($dfd, response, arg);
             if (arg.successCallback) {
                 arg.successCallback(response);
                 $dfd.resolve(response);
@@ -108,6 +107,14 @@ Acm.Service = {
         this.ajax(arg);
         return $dfd.promise();
     }
+
+    ///////////////////////////////////////////////////
+
+    ,promise : function(arg) {
+        Acm.log("Acm.Service.promise() is phasing out. Please use Acm.Service.call() instead");
+        return this.call(arg);
+    }
+
     ,_process2: function($dfd, response, arg) {
         if (arg.successCallback) {
             arg.successCallback(response);
@@ -136,7 +143,7 @@ Acm.Service = {
         }
     }
 
-    ,call : function(arg) {
+    ,call_save : function(arg) {
         return this.ajax({type: arg.type
             ,url: arg.url
             ,data: arg.data
@@ -167,6 +174,7 @@ Acm.Service = {
 
 
     ,asyncGet : function(callback, url, param) {
+        //Acm.log("Acm.Service.asyncGet() is phasing out. Please use Acm.Service.call() instead");
         return this.ajax({url: url
             ,data: param
             ,success: function(response) {
@@ -176,6 +184,7 @@ Acm.Service = {
     }
 
     ,asyncPost : function(callback, url, param) {
+        //Acm.log("Acm.Service.asyncPost() is phasing out. Please use Acm.Service.call() instead");
         return this.ajax({type: 'POST'
             ,url: url
             ,data: param
@@ -198,6 +207,7 @@ Acm.Service = {
      * This is an ajax form data submit, not a <form> with a form submit button type of submit.
      */
     ,asyncPostForm : function(callback, url, form) {
+        Acm.log("Acm.Service.asyncPostForm() is phasing out. Please use Acm.Service.call() instead");
 	    var postData = $(form).serializeArray();
         return this.ajax({type: 'POST'
             ,url: url
@@ -210,6 +220,7 @@ Acm.Service = {
     }
 
     ,asyncPut : function(callback, url, param) {
+        Acm.log("Acm.Service.asyncPut() is phasing out. Please use Acm.Service.call() instead");
         return this.ajax({type: 'PUT'
             ,url: url
             ,data: param
@@ -220,6 +231,7 @@ Acm.Service = {
     }
 
     ,asyncDelete : function(callback, url) {
+        Acm.log("Acm.Service.asyncDelete() is phasing out. Please use Acm.Service.call() instead");
         return this.ajax({type: 'DELETE'
             ,url: url
             ,success: function(response) {
@@ -230,6 +242,7 @@ Acm.Service = {
 
 
     ,deferredGet: function(callbackSuccess, url, param) {
+        Acm.log("Acm.Service.deferredGet() is phasing out. Please use Acm.Service.call() instead");
         return $.Deferred(function ($dfd) {
             var arg = {
                 url: url

@@ -249,31 +249,41 @@ CaseFile.Service = {
         ,onInitialized: function() {
         }
 
+        ,saveCaseFileItem: function(caseFileId, item, value) {
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                caseFile[item] = value;
+                return ObjNav.Service.Detail.saveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile);
+            } else {
+                return Acm.Promise.failPromise();
+            }
+        }
+
         ,_saveCaseFile: function(caseFileId, caseFile, handler) {
             ObjNav.Service.Detail.saveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile, handler);
         }
-        ,saveCaseTitle: function(caseFileId, title) {
-            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                caseFile.title = title;
-                this._saveCaseFile(caseFileId, caseFile
-                    ,function(data) {
-                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, Acm.Service.responseWrapper(data, data.title));
-                    }
-                );
-            }
-        }
-        ,saveIncidentDate: function(caseFileId, incidentDate) {
-            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                caseFile.incidentDate = incidentDate;
-                this._saveCaseFile(caseFileId, caseFile
-                    ,function(data) {
-                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, Acm.Service.responseWrapper(data, data.incidentDate));
-                    }
-                );
-            }
-        }
+//        ,saveCaseTitle: function(caseFileId, title) {
+//            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+//            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+//                caseFile.title = title;
+//                this._saveCaseFile(caseFileId, caseFile
+//                    ,function(data) {
+//                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, Acm.Service.responseWrapper(data, data.title));
+//                    }
+//                );
+//            }
+//        }
+//        ,saveIncidentDate: function(caseFileId, incidentDate) {
+//            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+//            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+//                caseFile.incidentDate = incidentDate;
+//                this._saveCaseFile(caseFileId, caseFile
+//                    ,function(data) {
+//                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, Acm.Service.responseWrapper(data, data.incidentDate));
+//                    }
+//                );
+//            }
+//        }
         ,saveAssignee: function(caseFileId, assignee) {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
