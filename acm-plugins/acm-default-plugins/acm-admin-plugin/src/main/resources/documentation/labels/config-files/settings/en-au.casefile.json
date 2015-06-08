@@ -766,9 +766,9 @@
                 "value": "Participants"
             },
             "calendar": {
+                "value": "Calendar",
                 "defaultValue": "Calendar",
-                "description": "",
-                "value": "Calendar"
+                "description": ""
             }
         }
     },
