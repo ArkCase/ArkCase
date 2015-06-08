@@ -238,23 +238,25 @@ CaseFile.prepare = function() {
         }
         ,reloadParticipants: function(){
             var caseFile = CaseFile.View.getActiveCaseFile();
-            var participants = caseFile.participants;
-            var requests = [];
-            for(var i= 0; i< participants.length; i++){
-                var participant = participants[i];
-                if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
-                    var user = participant.participantLdapId;
-                    var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
-                    requests.push(req);
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                var participants = caseFile.participants;
+                var requests = [];
+                for(var i= 0; i< participants.length; i++){
+                    var participant = participants[i];
+                    if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
+                        var user = participant.participantLdapId;
+                        var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
+                        requests.push(req);
+                    }
                 }
+                Acm.Promise.resolvePromises(requests)
+                    .done(function() {
+                        AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                    })
+                    .fail(function() {
+                        App.View.MessageBoard.show("Error retrieving participants");
+                    });
             }
-            Acm.Promise.resolvePromises(requests)
-                .done(function() {
-                    AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
-                })
-                .fail(function() {
-                    App.View.MessageBoard.show("Error retrieving participants");
-                });
         }
         ,onModelRetrievedObject: function(objData) {
             CaseFile.View.Participants.reloadParticipants();
