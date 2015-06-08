@@ -119,6 +119,26 @@ CaseFile.View = CaseFile.View || {
         }
     }
 
+
+    ,interfaceNavObj: {
+        nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')';
+
+//        	var defaultExpression = "Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')'";
+//        	var caseFileTreeRootNameExpression = Acm.Object.MicroData.get("caseFileTreeRootNameExpression");
+//            if (Acm.isEmpty(caseFileTreeRootNameExpression)) {
+//                caseFileTreeRootNameExpression = defaultExpression;
+//            }
+//            return eval(caseFileTreeRootNameExpression);
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable);
+        }
+        ,nodeTypeMap: function() {
+            return CaseFile.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,Navigator: {
         create: function() {
             this.$ulFilter = $("#ulFilter");
@@ -156,114 +176,150 @@ CaseFile.View = CaseFile.View || {
 //            return false;
 //        }
 
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"      ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"     ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"            ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/CASE_FILE"  ,icon: "i i-folder"       ,tabIds: ["tabTitle"
+                ,"tabDetail"
+                ,"tabPeople"
+                ,"tabDocs"
+                ,"tabParticipants"
+                ,"tabNotes"
+                ,"tabTasks"
+                ,"tabRefs"
+                ,"tabHistory"
+                ,"tabCorrespondence"
+                ,"tabOutlookCalendar"
+                ,"tabTime"
+                ,"tabCost"
+            ]}
+            ,{nodeType: "p/CASE_FILE/det"       ,icon: "" ,res: "casefile:navigation.leaf-title.details"        ,tabIds: ["tabDetail"]}
+            ,{nodeType: "p/CASE_FILE/ppl"       ,icon: "" ,res: "casefile:navigation.leaf-title.people"         ,tabIds: ["tabPeople"]}
+            ,{nodeType: "p/CASE_FILE/doc"       ,icon: "" ,res: "casefile:navigation.leaf-title.documents"      ,tabIds: ["tabDocs"]}
+            //,{nodeType: "p/CASE_FILE/doc/c"     ,icon: "",tabIds: ["tabDoc"]}
+            ,{nodeType: "p/CASE_FILE/par"       ,icon: "" ,res: "casefile:navigation.leaf-title.participants"   ,tabIds: ["tabParticipants"]}
+            ,{nodeType: "p/CASE_FILE/note"      ,icon: "" ,res: "casefile:navigation.leaf-title.notes"          ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/CASE_FILE/task"      ,icon: "" ,res: "casefile:navigation.leaf-title.tasks"          ,tabIds: ["tabTasks"]}
+            ,{nodeType: "p/CASE_FILE/ref"       ,icon: "" ,res: "casefile:navigation.leaf-title.references"     ,tabIds: ["tabRefs"]}
+            ,{nodeType: "p/CASE_FILE/his"       ,icon: "" ,res: "casefile:navigation.leaf-title.history"        ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/CASE_FILE/tpl"       ,icon: "" ,res: "casefile:navigation.leaf-title.correspondence" ,tabIds: ["tabCorrespondence"]}
+            ,{nodeType: "p/CASE_FILE/calendar"  ,icon: "" ,res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabOutlookCalendar"]}
+            ,{nodeType: "p/CASE_FILE/time"      ,icon: "" ,res: "casefile:navigation.leaf-title.time"           ,tabIds: ["tabTime"]}
+            ,{nodeType: "p/CASE_FILE/cost"      ,icon: "" ,res: "casefile:navigation.leaf-title.cost"           ,tabIds: ["tabCost"]}
+
+        ]
+
         ,getTreeArgs: function() {
             return {
-                lazyLoad: function(event, data) {
-                    CaseFile.View.Navigator.lazyLoad(event, data);
-                }
-                ,getContextMenu: function(node) {
+//                lazyLoad: function(event, data) {
+//                    CaseFile.View.Navigator.lazyLoad(event, data);
+//                }
+//                ,
+                getContextMenu: function(node) {
                     CaseFile.View.Navigator.getContextMenu(node);
                 }
             };
         }
-        ,lazyLoad: function(event, data) {
-            var key = data.node.key;
-            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            var builder = AcmEx.FancyTreeBuilder.reset();
-            if (ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]) == nodeType) {
-                var nodeTypeMap = CaseFile.Model.Tree.Key.nodeTypeMap;
-                for (var i = 0; i < nodeTypeMap.length; i++) {
-                    if (0 == nodeTypeMap[i].nodeType.indexOf(nodeType)) {
-                        var lastSep = nodeTypeMap[i].nodeType.lastIndexOf(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
-                        if (nodeType.length == lastSep) {
-                            var subPart = nodeTypeMap[i].nodeType.substring(lastSep);
-                            builder.addLeaf({key: key + subPart
-                                ,title: $.t(nodeTypeMap[i].res)
-                            });
-                        }
-                    }
-                }
-            }
-            data.result = builder.getTree();
-
-
-//            switch (nodeType) {
-//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]):
-//                    data.result = AcmEx.FancyTreeBuilder
-//                        .reset()
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-//                            ,title: $.t("casefile:navigation.leaf-title.details")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
-//                            ,title: $.t("casefile:navigation.leaf-title.people")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-//                            ,title: $.t("casefile:navigation.leaf-title.documents")
-////                            ,folder: true
-////                            ,lazy: true
-////                            ,cache: false
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-//                            ,title: $.t("casefile:navigation.leaf-title.participants")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES
-//                            ,title: $.t("casefile:navigation.leaf-title.notes")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS
-//                            ,title: $.t("casefile:navigation.leaf-title.tasks")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
-//                            ,title: $.t("casefile:navigation.leaf-title.references")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-//                            ,title: $.t("casefile:navigation.leaf-title.history")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
-//                            ,title: $.t("casefile:navigation.leaf-title.correspondence")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
-//                            ,title: "Calendar"
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
-//                            ,title: $.t("casefile:navigation.leaf-title.time")
-//                        })
-//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_COST
-//                            ,title: $.t("casefile:navigation.leaf-title.cost")
-//                        })
-//                        .getTree();
-//
-//                    break;
-//
-//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]):
-//                    var caseFileId = ObjNav.Model.Tree.Key.getObjIdByKey(key);
-//                    var c = ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
-//                    if (c) {
-//                        data.result = [
-//                            {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.1", title: "Document1" + "[Status]"}
-//                            ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.2", title: "Doc2" + "[Status]"}
-//                        ];
-//                    } else {
-//                        data.result = ObjNav.Service.Detail.retrieveObjectDeferred(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId
-//                            ,function(response) {
-//                                var z = 1;
-//
-//                                var resultFake = [
-//                                    {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.3", title: "Document3" + "[Status]"}
-//                                    ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.4", title: "Doc4" + "[Status]"}
-//                                ];
-//                                return resultFake;
-//                            }
-//                        );
-//
+//retired
+//        ,lazyLoad: function(event, data) {
+//            var key = data.node.key;
+//            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+//            var builder = AcmEx.FancyTreeBuilder.reset();
+//            if (ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]) == nodeType) {
+//                var nodeTypeMap = CaseFile.View.Navigator.nodeTypeMap;
+//                for (var i = 0; i < nodeTypeMap.length; i++) {
+//                    if (0 == nodeTypeMap[i].nodeType.indexOf(nodeType)) {
+//                        var lastSep = nodeTypeMap[i].nodeType.lastIndexOf(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
+//                        if (nodeType.length == lastSep) {
+//                            var subPart = nodeTypeMap[i].nodeType.substring(lastSep);
+//                            builder.addLeaf({key: key + subPart
+//                                ,title: $.t(nodeTypeMap[i].res)
+//                            });
+//                        }
 //                    }
-//
-//                    break;
-//
-//                default:
-//                    data.result = [];
-//                    break;
+//                }
 //            }
-        }
+//            data.result = builder.getTree();
+//            return;
+//
+////            switch (nodeType) {
+////                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]):
+////                    data.result = AcmEx.FancyTreeBuilder
+////                        .reset()
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+////                            ,title: $.t("casefile:navigation.leaf-title.details")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
+////                            ,title: $.t("casefile:navigation.leaf-title.people")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
+////                            ,title: $.t("casefile:navigation.leaf-title.documents")
+//////                            ,folder: true
+//////                            ,lazy: true
+//////                            ,cache: false
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
+////                            ,title: $.t("casefile:navigation.leaf-title.participants")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES
+////                            ,title: $.t("casefile:navigation.leaf-title.notes")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS
+////                            ,title: $.t("casefile:navigation.leaf-title.tasks")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
+////                            ,title: $.t("casefile:navigation.leaf-title.references")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+////                            ,title: $.t("casefile:navigation.leaf-title.history")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
+////                            ,title: $.t("casefile:navigation.leaf-title.correspondence")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+////                            ,title: "Calendar"
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
+////                            ,title: $.t("casefile:navigation.leaf-title.time")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_COST
+////                            ,title: $.t("casefile:navigation.leaf-title.cost")
+////                        })
+////                        .getTree();
+////
+////                    break;
+////
+////                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]):
+////                    var caseFileId = ObjNav.Model.Tree.Key.getObjIdByKey(key);
+////                    var c = ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+////                    if (c) {
+////                        data.result = [
+////                            {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.1", title: "Document1" + "[Status]"}
+////                            ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.2", title: "Doc2" + "[Status]"}
+////                        ];
+////                    } else {
+////                        data.result = ObjNav.Service.Detail.retrieveObjectDeferred(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId
+////                            ,function(response) {
+////                                var z = 1;
+////
+////                                var resultFake = [
+////                                    {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.3", title: "Document3" + "[Status]"}
+////                                    ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.4", title: "Doc4" + "[Status]"}
+////                                ];
+////                                return resultFake;
+////                            }
+////                        );
+////
+////                    }
+////
+////                    break;
+////
+////                default:
+////                    data.result = [];
+////                    break;
+////            }
+//        }
 
         ,getContextMenu: function(node) {
             var key = node.key;
