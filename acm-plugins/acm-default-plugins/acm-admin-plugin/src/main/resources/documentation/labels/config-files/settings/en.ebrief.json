@@ -212,11 +212,31 @@
     }
 
     ,"email-documents-dialog": {
-        "label": {"email-address": "Email Address"},
-        "title": "Send Email",
-        "body": "Where would you like to email this file?",
-        "btn-ok": "Send Email",
-        "btn-close": "Close"
+        "label": {"email-address": {
+            "value": "Email Address"
+        ,"defaultValue": "Email Address"
+        ,"description": ""
+        }},
+        "title": {
+            "value": "Send Email"
+        ,"defaultValue": "Send Email"
+        ,"description": ""
+        },
+        "body": {
+            "value": "Where would you like to email this file?"
+        ,"defaultValue": "Where would you like to email this file?"
+        ,"description": ""
+        },
+        "btn-ok": {
+            "value": "Send Email"
+        ,"defaultValue": "Send Email"
+        ,"description": ""
+        },
+        "btn-close":{
+            "value": "Close"
+        ,"defaultValue": "Close"
+        ,"description": ""
+        }
     }
 
 }
