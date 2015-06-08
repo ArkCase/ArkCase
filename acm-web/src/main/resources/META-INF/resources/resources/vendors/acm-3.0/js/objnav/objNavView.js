@@ -5,6 +5,8 @@
  */
 ObjNav.View = {
     create : function(args) {
+        this.interface = args.viewInterface;
+
         if (ObjNav.View.Navigator.create)          {ObjNav.View.Navigator.create(args);}
         if (ObjNav.View.Content.create)            {ObjNav.View.Content.create(args);}
     }
@@ -94,7 +96,52 @@ ObjNav.View = {
             ObjNav.Controller.viewSelectedTreeNode(node.key);
         }
 
-        ,_getDefaultTreeArgs: function() {
+
+        ,getTabIdsByKey: function(key) {
+            var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+            var tabIds = [];
+            //var tabIds = ["tabBlank"];
+            if (Acm.isNotEmpty(key)) {
+                var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+                for (var i = 0; i < nodeTypeMap.length; i++) {
+                    if (nodeType == nodeTypeMap[i].nodeType) {
+                        tabIds = nodeTypeMap[i].tabIds;
+                        break;
+                    }
+                }
+            }
+            return tabIds;
+        }
+        ,getIconByKey: function(key) {
+            var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+            var icon = null;
+            if (Acm.isNotEmpty(key)) {
+                var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+                for (var i = 0; i < nodeTypeMap.length; i++) {
+                    if (nodeType == nodeTypeMap[i].nodeType) {
+                        icon = nodeTypeMap[i].icon;
+                        break;
+                    }
+                }
+            }
+            return icon;
+        }
+        ,getTabIds: function() {
+            var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+            var tabIds = [];
+            for (var i = 0; i < nodeTypeMap.length; i++) {
+                var tabIdsThis = nodeTypeMap[i].tabIds;
+                for (var j = 0; j < tabIdsThis.length; j++) {
+                    var tabId = tabIdsThis[j];
+                    if (!Acm.isItemInArray(tabId, tabIds)) {
+                        tabIds.push(tabId);
+                    }
+                }
+            }
+            return tabIds;
+        }
+
+        ,_getDefaultTreeArg: function() {
             return {
                 activate: function(event, data) {
                     ObjNav.View.Navigator.onTreeNodeActivated(data.node);
@@ -121,8 +168,8 @@ ObjNav.View = {
                         var obj = objList[i];
                         var nodeId      = ObjNav.Model.interface.nodeId(obj);
                         var nodeType    = ObjNav.Model.interface.nodeType(obj);
-                        var nodeTitle   = ObjNav.Model.interface.nodeTitle(obj);
-                        var nodeToolTip = ObjNav.Model.interface.nodeToolTip(obj);
+                        var nodeTitle   = ObjNav.View.interface.nodeTitle(obj);
+                        var nodeToolTip = ObjNav.View.interface.nodeToolTip(obj);
                         if (nodeId && nodeType) {
                             var objKey = ObjNav.Model.Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                             builder.addLeaf({key: objKey
@@ -153,14 +200,42 @@ ObjNav.View = {
                 }
             };
         }
-
-        ,_createTree: function(treeArgs) {
-            var treeArgsToUse = this._getDefaultTreeArgs();
-            for (var arg in treeArgs) {
-                treeArgsToUse[arg] = treeArgs[arg];
+        ,_defaultLazyLoad2ndLevel: function(event, data) {
+            var builder = AcmEx.FancyTreeBuilder.reset();
+            var key = data.node.key;
+            var nodeTypePath = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+            var arr = nodeTypePath.split(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
+            if (!Acm.isArrayEmpty(arr) && 2 == arr.length) {
+                var nodeType = arr[1];
+                if (ObjNav.Model.interface.nodeTypeSupported(nodeType)) {
+                    var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+                    for (var i = 0; i < nodeTypeMap.length; i++) {
+                        if (0 == nodeTypeMap[i].nodeType.indexOf(nodeTypePath)) {
+                            var lastSep = nodeTypeMap[i].nodeType.lastIndexOf(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
+                            if (nodeTypePath.length == lastSep) {
+                                var subPart = nodeTypeMap[i].nodeType.substring(lastSep);
+                                builder.addLeaf({key: key + subPart
+                                    ,title: $.t(nodeTypeMap[i].res)
+                                });
+                            }
+                        }
+                    }
+                }
             }
 
-            this.useFancyTree(this.$tree, treeArgsToUse);
+            data.result = builder.getTree();
+        }
+        ,_createTree: function(treeArg) {
+            var treeArgToUse = this._getDefaultTreeArg();
+            for (var opt in treeArg) {
+                treeArgToUse[opt] = treeArg[opt];
+            }
+
+            if (!treeArgToUse.lazyLoad) {
+                treeArgToUse.lazyLoad = this._defaultLazyLoad2ndLevel;
+            }
+
+            this.useFancyTree(this.$tree, treeArgToUse);
 
 
             if (ObjNav.View.Navigator.getContextMenu) {
@@ -247,7 +322,7 @@ ObjNav.View = {
         ,fixNodeIcon: function(node) {
             var key = node.key;
             var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            var acmIcon = ObjNav.Model.Tree.Key.getIconByKey(key);
+            var acmIcon = ObjNav.View.Navigator.getIconByKey(key);
             if (acmIcon) {
                 var span = node.span;
                 var $spanIcon = $(span.children[1]);
@@ -266,7 +341,7 @@ ObjNav.View = {
         ,updateObjNode: function(nodeType, nodeId) {
             var objSolr = ObjNav.Model.List.getSolrObject(nodeType, nodeId);
             if (ObjNav.Model.List.validateObjSolr(objSolr)) {
-                var nodeTitle = ObjNav.Model.interface.nodeTitle(objSolr);
+                var nodeTitle = ObjNav.View.interface.nodeTitle(objSolr);
                 var key = ObjNav.Model.Tree.Key.getKeyByObj(nodeType, nodeId);
                 ObjNav.View.Navigator.setTitle(key, nodeTitle);
             }
@@ -453,8 +528,8 @@ ObjNav.View = {
             Acm.Object.show(this.$tabTopBlank, !show);
         }
         ,showPanel: function(key) {
-            var tabIds = ObjNav.Model.Tree.Key.getTabIds();
-            var tabIdsToShow = ObjNav.Model.Tree.Key.getTabIdsByKey(key);
+            var tabIds = ObjNav.View.Navigator.getTabIds();
+            var tabIdsToShow = ObjNav.View.Navigator.getTabIdsByKey(key);
             for (var i = 0; i < tabIds.length; i++) {
                 var show = Acm.isItemInArray(tabIds[i], tabIdsToShow);
                 Acm.Object.show($("#" + tabIds[i]), show);

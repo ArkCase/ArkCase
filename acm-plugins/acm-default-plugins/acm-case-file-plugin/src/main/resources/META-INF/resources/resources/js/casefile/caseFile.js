@@ -17,7 +17,8 @@ var CaseFile = CaseFile || {
                 ,treeFilter        : CaseFile.View.MicroData.treeFilter
                 ,$ulSort           : CaseFile.View.Navigator.$ulSort
                 ,treeSort          : CaseFile.View.MicroData.treeSort
-                ,modelInterface    : CaseFile.Model.interface
+                ,modelInterface    : CaseFile.Model.interfaceNavObj
+                ,viewInterface     : CaseFile.View.interfaceNavObj
             });
         }
 

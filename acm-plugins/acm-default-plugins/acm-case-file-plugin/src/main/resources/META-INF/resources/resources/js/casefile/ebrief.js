@@ -5,7 +5,11 @@
  */
 CaseFile.prepare = function() {
 
-    CaseFile.Model.Tree.Key.nodeTypeMap = [
+    CaseFile.View.interfaceNavObj.nodeTitle = function(objSolr) {
+        return Acm.goodValue(objSolr.title_parseable);
+    }
+
+    CaseFile.View.Navigator.nodeTypeMap = [
         {nodeType: "prevPage"      ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
         ,{nodeType: "nextPage"     ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
         ,{nodeType: "p"            ,icon: ""                 ,tabIds: ["tabBlank"]}
@@ -24,10 +28,6 @@ CaseFile.prepare = function() {
         ,{nodeType: "p/CASE_FILE/his"       ,icon: "", res: "casefile:navigation.leaf-title.history"       ,tabIds: ["tabHistory"]}
         ,{nodeType: "p/CASE_FILE/cal"       ,icon: "", res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabCalendar"]}
     ];
-
-    CaseFile.Model.interface.nodeTitle = function(objSolr) {
-        return Acm.goodValue(objSolr.title_parseable);
-    }
 
     CaseFile.View.Ribbon = {
         create: function() {
