@@ -1,127 +1,242 @@
 {
     "page-title": {
         "value": "Brief | ACM | Ark Case Management"
-        ,"defaultValue": "Brief | ACM | Ark Case Management"
-        ,"description": ""
+    ,"defaultValue": "Brief | ACM | Ark Case Management"
+    ,"description": ""
     }
-    ,"title": {
-        "value": "Brief"
-        ,"defaultValue": "Brief"
+,"title": {
+    "value": "Brief"
+,"defaultValue": "Brief"
+,"description": ""
+}
+,"header": {
+    "labels": {
+        "assigned-to": {
+            "value": "Assigned To"
+        ,"defaultValue": "Assigned To"
         ,"description": ""
+        }
+    ,"organisation": {
+            "value": "Organisation"
+        ,"defaultValue": "Organisation"
+        ,"description": ""
+        }
+    ,"hearing-date": {
+            "value": "Next Count Hearing Date"
+        ,"defaultValue": "Next Count Hearing Date"
+        ,"description": ""
+        }
+    ,"court": {
+            "value": "Court"
+        ,"defaultValue": "Court"
+        ,"description": ""
+        }
+    ,"enter-assignee": {
+            "value": "Enter Assignee"
+        ,"defaultValue": "Enter Assignee"
+        ,"description": ""
+        }
+    ,"enter-organisation": {
+            "value": "Enter Organisation"
+        ,"defaultValue": "Enter Organisation"
+        ,"description": ""
+        }
+    ,"enter-hearing-date": {
+            "value": "Enter Hearing Date"
+        ,"defaultValue": "Enter Hearing Date"
+        ,"description": ""
+        }
+    ,"enter-court": {
+            "value": "Enter Court"
+        ,"defaultValue": "Enter Court"
+        ,"description": ""
+        }
     }
-    ,"header": {
-        "labels": {
-            "assigned-to": {
-                "value": "Assigned To"
-                ,"defaultValue": "Assigned To"
-                ,"description": ""
+}
+,"navigation": {
+    "leaf-title": {
+        "participants": {
+            "value": "Key Contacts"
+        ,"defaultValue": "Key Contacts"
+        ,"description": ""
+        }
+    }
+}
+,"participants": {
+    "msg": {
+        "add-new-record": {
+            "value": "Add Contact"
+        ,"defaultValue": "Add Contact"
+        ,"description": ""
+        }
+    }
+,"table": {
+        "title": {
+            "value": "Key Contacts"
+        ,"defaultValue": "Key Contacts"
+        ,"description": ""
+        }
+    ,"field": {
+            "name": {
+                "value": "Name"
+            ,"defaultValue": "Name"
+            ,"description": ""
             }
-            ,"organisation": {
+        ,"id": {
+                "value": "ID"
+            ,"defaultValue": "ID"
+            ,"description": ""
+            }
+        ,"organisation": {
                 "value": "Organisation"
-                ,"defaultValue": "Organisation"
-                ,"description": ""
-            }
-            ,"hearing-date": {
-                "value": "Next Count Hearing Date"
-                ,"defaultValue": "Next Count Hearing Date"
-                ,"description": ""
-            }
-            ,"court": {
-                "value": "Court"
-                ,"defaultValue": "Court"
-                ,"description": ""
-            }
-            ,"enter-assignee": {
-                "value": "Enter Assignee"
-                ,"defaultValue": "Enter Assignee"
-                ,"description": ""
-            }
-            ,"enter-organisation": {
-                "value": "Enter Organisation"
-                ,"defaultValue": "Enter Organisation"
-                ,"description": ""
-            }
-            ,"enter-hearing-date": {
-                "value": "Enter Hearing Date"
-                ,"defaultValue": "Enter Hearing Date"
-                ,"description": ""
-            }
-            ,"enter-court": {
-                "value": "Enter Court"
-                ,"defaultValue": "Enter Court"
-                ,"description": ""
-            }
-        }
-    }
-    ,"navigation": {
-        "leaf-title": {
-            "participants": {
-                "value": "Key Contacts"
-                ,"defaultValue": "Key Contacts"
-                ,"description": ""
-            }
-        }
-    }
-    ,"participants": {
-        "msg": {
-            "add-new-record": {
-                "value": "Add Contact"
-                ,"defaultValue": "Add Contact"
-                ,"description": ""
-            }
-        }
-        ,"table": {
-            "title": {
-                "value": "Key Contacts"
-                ,"defaultValue": "Key Contacts"
-                ,"description": ""
-            }
-            ,"field": {
-                "name": {
-                    "value": "Name"
-                    ,"defaultValue": "Name"
-                    ,"description": ""
-                }
-                ,"id": {
-                    "value": "ID"
-                    ,"defaultValue": "ID"
-                    ,"description": ""
-                }
-                ,"organisation": {
-                    "value": "Organisation"
-                    ,"defaultValue": "Organisation"
-                    ,"description": ""
-                }
-                ,"type": {
-                    "value": "Access"
-                    ,"defaultValue": "Access"
-                    ,"description": ""
-                }
-                ,"email": {
-                    "value": "Email"
-                    ,"defaultValue": "Email"
-                    ,"description": ""
-                }
-                ,"phone": {
-                    "value": "Contact Number"
-                    ,"defaultValue": "Contact Number"
-                    ,"description": ""
-                }
-            }
-        }
-    }
-    ,"documents": {
-        "btn-new-folder": {
-            "value": "New Folder"
-            ,"defaultValue": "New Folder"
+            ,"defaultValue": "Organisation"
             ,"description": ""
+            }
+        ,"type": {
+                "value": "Access"
+            ,"defaultValue": "Access"
+            ,"description": ""
+            }
+        ,"email": {
+                "value": "Email"
+            ,"defaultValue": "Email"
+            ,"description": ""
+            }
+        ,"phone": {
+                "value": "Contact Number"
+            ,"defaultValue": "Contact Number"
+            ,"description": ""
+            }
         }
-        ,"btn-lodge": {
+    }
+}
+,"documents": {
+    "btn-new-folder": {
+        "value": "New Folder"
+    ,"defaultValue": "New Folder"
+    ,"description": ""
+    }
+,"btn-lodge": {
+        "value": "Lodge Document(s)"
+    ,"defaultValue": "Lodge Document(s)"
+    ,"description": ""
+    }
+,"btn-reject": {
+        "value": "Reject Document(s)"
+    ,"defaultValue": "Reject Document(s)"
+    ,"description": ""
+    }
+,"dialog": {
+        "lodge-title": {
+            "value": "Lodge Documents"
+        ,"defaultValue": "Lodge Documents"
+        ,"description": ""
+        }
+    ,"lodge-email-label": {
+            "value": "Lodge document(s) and notify to"
+        ,"defaultValue": "Lodge document(s) and notify to"
+        ,"description": ""
+        }
+    ,"lodge-email-placeholder": {
+            "value": "Email Address"
+        ,"defaultValue": "Email Address"
+        ,"description": ""
+        }
+    ,"lodge-btn-cancel": {
+            "value": "Cancel"
+        ,"defaultValue": "Cancel"
+        ,"description": ""
+        }
+    ,"lodge-btn-ok": {
             "value": "Lodge"
-            ,"defaultValue": "Lodge"
-            ,"description": ""
+        ,"defaultValue": "Lodge"
+        ,"description": ""
+        }
+    ,"lodge-table-title": {
+            "value": "Selected Items"
+        ,"defaultValue": "Selected Items"
+        ,"description": ""
+        }
+    ,"lodge-name-column": {
+            "value": "Name"
+        ,"defaultValue": "Name"
+        ,"description": ""
+        }
+
+    ,"reject-title": {
+            "value": "Reject Documents"
+        ,"defaultValue": "Reject Documents"
+        ,"description": ""
+        }
+    ,"reject-email-label": {
+            "value": "Reject document(s) and notify to"
+        ,"defaultValue": "Reject document(s) and notify to"
+        ,"description": ""
+        }
+    ,"reject-email-placeholder": {
+            "value": "Email Address"
+        ,"defaultValue": "Email Address"
+        ,"description": ""
+        }
+    ,"reject-reason-label": {
+            "value": "Reason"
+        ,"defaultValue": "Reason"
+        ,"description": ""
+        }
+    ,"reject-reason-placeholder": {
+            "value": "Reject Reason"
+        ,"defaultValue": "Reject Reason"
+        ,"description": ""
+        }
+    ,"reject-btn-cancel": {
+            "value": "Cancel"
+        ,"defaultValue": "Cancel"
+        ,"description": ""
+        }
+    ,"reject-btn-ok": {
+            "value": "Reject"
+        ,"defaultValue": "Reject"
+        ,"description": ""
+        }
+    ,"reject-table-title": {
+            "value": "Selected Items"
+        ,"defaultValue": "Selected Items"
+        ,"description": ""
+        }
+    ,"reject-name-column": {
+            "value": "Name"
+        ,"defaultValue": "Name"
+        ,"description": ""
         }
     }
+}
 
+,"email-documents-dialog": {
+    "label": {"email-address": {
+        "value": "Email Address"
+    ,"defaultValue": "Email Address"
+    ,"description": ""
+    }},
+    "title": {
+        "value": "Send Email"
+    ,"defaultValue": "Send Email"
+    ,"description": ""
+    },
+    "body": {
+        "value": "Where would you like to email this file?"
+    ,"defaultValue": "Where would you like to email this file?"
+    ,"description": ""
+    },
+    "btn-ok": {
+        "value": "Send Email"
+    ,"defaultValue": "Send Email"
+    ,"description": ""
+    },
+    "btn-close":{
+        "value": "Close"
+    ,"defaultValue": "Close"
+    ,"description": ""
+    }
+}
 
 }
