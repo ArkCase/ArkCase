@@ -15,12 +15,14 @@ CaseFile.prepare = function() {
             ,"tabPeople"
             ,"tabDocs"
             ,"tabHistory"
+            ,"tabCalendar"
         ]}
         ,{nodeType: "p/CASE_FILE/task"      ,icon: "", res: "casefile:navigation.leaf-title.tasks"         ,tabIds: ["tabTasks"]}
         ,{nodeType: "p/CASE_FILE/par"       ,icon: "", res: "ebrief:navigation.leaf-title.participants"    ,tabIds: ["tabParticipants"]}
         ,{nodeType: "p/CASE_FILE/ppl"       ,icon: "", res: "casefile:navigation.leaf-title.people"        ,tabIds: ["tabPeople"]}
         ,{nodeType: "p/CASE_FILE/doc"       ,icon: "", res: "casefile:navigation.leaf-title.documents"     ,tabIds: ["tabDocs"]}
         ,{nodeType: "p/CASE_FILE/his"       ,icon: "", res: "casefile:navigation.leaf-title.history"       ,tabIds: ["tabHistory"]}
+        ,{nodeType: "p/CASE_FILE/cal"       ,icon: "", res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabCalendar"]}
     ];
 
     CaseFile.Model.interface.nodeTitle = function(objSolr) {
@@ -234,7 +236,7 @@ CaseFile.prepare = function() {
         }
         ,onInitialized: function() {
         }
-        ,onModelRetrievedObject: function(objData) {
+        ,reloadParticipants: function(){
             var caseFile = CaseFile.View.getActiveCaseFile();
             var participants = caseFile.participants;
             var requests = [];
@@ -246,7 +248,6 @@ CaseFile.prepare = function() {
                     requests.push(req);
                 }
             }
-            //CaseFile.Model.Participants.resolveProfileInfo(requests)
             Acm.Promise.resolvePromises(requests)
                 .done(function() {
                     AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
@@ -254,6 +255,9 @@ CaseFile.prepare = function() {
                 .fail(function() {
                     App.View.MessageBoard.show("Error retrieving participants");
                 });
+        }
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.View.Participants.reloadParticipants();
         }
 
         ,onModelSavedAssignee: function(caseFileId, assginee) {
@@ -268,7 +272,7 @@ CaseFile.prepare = function() {
             }
         }
         ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+            CaseFile.View.Participants.reloadParticipants();
         }
 //        ,updateParticipant: function(participant,profileInfo) {
 //            if(Acm.isNotEmpty(profileInfo)){
@@ -301,9 +305,16 @@ CaseFile.prepare = function() {
                                     record.type = Acm.goodValue(participant.participantType);
 
                                     var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant.participantLdapId));
-                                    record.organisation = Acm.goodValue(profile.organisation);
-                                    record.email = Acm.goodValue(profile.email);
-                                    record.phone = Acm.goodValue(profile.phone);
+                                    if(Acm.isNotEmpty(profile)){
+                                        record.organisation = Acm.goodValue(profile.organisation);
+                                        record.email = Acm.goodValue(profile.email);
+                                        record.phone = Acm.goodValue(profile.phone);
+                                    }
+                                    else{
+                                        record.organisation = "N/A";
+                                        record.email = "N/A";
+                                        record.phone = "N/A";
+                                    }
 
                                     rc.Records.push(record);
                                 }
@@ -728,7 +739,7 @@ CaseFile.prepare = function() {
     CaseFile.View.Correspondence = {};
     CaseFile.View.Time = {};
     CaseFile.View.Cost = {};
-    Calendar = {};
+    //Calendar = {};
 
     CaseFile.Model.Config.requestOrig = Acm.copyObjectFunction(CaseFile.Model.Config, "request", "requestOrig");
     CaseFile.Model.Config.request = function() {
