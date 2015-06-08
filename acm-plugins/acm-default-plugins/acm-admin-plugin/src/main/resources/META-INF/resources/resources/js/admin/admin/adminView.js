@@ -557,7 +557,11 @@ Admin.View = Admin.View || {
                         ,visibility: 'hidden'
                     }
                     ,'ldapConfig.groupSearchBase': {
-                        title: 'Auth User Search Base'
+                        title: 'Group Search Base'
+                        ,visibility: 'hidden'
+                    }
+                    ,'ldapConfig.groupSearchBaseOU': {
+                        title: 'Group Search Base OU'
                         ,visibility: 'hidden'
                     }
                     ,'ldapConfig.userIdAttributeName': {
@@ -1145,8 +1149,8 @@ Admin.View = Admin.View || {
         }
 
         ,clearPrivilegesLists: function(){
-            this.$selectPrivileges.remove('option');
-            this.$selectAvailablePrivileges.remove('option');
+            this.$selectPrivileges.find('option').remove();
+            this.$selectAvailablePrivileges.find('option').remove();
         }
 
         ,saveRolePrivileges: function() {

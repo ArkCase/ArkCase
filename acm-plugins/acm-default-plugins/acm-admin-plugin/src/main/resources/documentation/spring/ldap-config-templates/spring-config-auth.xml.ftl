@@ -30,7 +30,7 @@
             <beans:bean
                     class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
                 <beans:constructor-arg ref="${id}_contextSource" />
-                <beans:constructor-arg value="OU=Groups,OU=ACM3,OU=Clients"/>
+                <beans:constructor-arg value='${r"${ldapConfig.groupSearchBaseOU}"}'/>
                 <beans:property name="groupSearchFilter" value="member={0}"/>
                 <beans:property name="rolePrefix" value=""/>
                 <beans:property name="searchSubtree" value="true"/>
