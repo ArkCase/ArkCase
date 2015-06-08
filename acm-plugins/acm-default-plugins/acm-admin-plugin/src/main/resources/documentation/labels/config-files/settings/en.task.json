@@ -64,7 +64,13 @@
             "value": "Reject Comments",
             "defaultValue": "Reject Comments",
             "description": ""
+        },
+        "electronic-signatures": {
+            "value": "dSignatures",
+            "defaultValue": "eSignatures",
+            "description": ""
         }
+
     }
 }, "context-menu": {
     "menu-title": {

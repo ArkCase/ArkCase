@@ -17,7 +17,8 @@ var Task = Task || {
                 ,treeFilter        : Task.View.MicroData.treeFilter
                 ,$ulSort           : Task.View.Navigator.$ulSort
                 ,treeSort          : Task.View.MicroData.treeSort
-                ,modelInterface    : Task.Model.interface
+                ,modelInterface    : Task.Model.interfaceNavObj
+                ,viewInterface     : Task.View.interfaceNavObj
             });
         }
 
