@@ -43,10 +43,10 @@ ObjNav.Model = {
         if (0 < treeInfo.objId) { //single caseFile
             ObjNav.Model.setObjectId(treeInfo.objId);
             ObjNav.Model.setObjectType(treeInfo.objType);
-            ObjNav.Service.Detail.retrieveObject(treeInfo.objType, treeInfo.objId);
+            return ObjNav.Service.Detail.retrieveObject(treeInfo.objType, treeInfo.objId);
 
         } else {
-            ObjNav.Service.List.retrieveObjectList(treeInfo);
+            return ObjNav.Service.List.retrieveObjectList(treeInfo);
         }
     }
 

@@ -309,7 +309,14 @@ CaseFile.View = CaseFile.View || {
 
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.getActiveCaseFileId(), newValue);
+                    CaseFile.Service.Detail.saveCaseFileItem(CaseFile.View.getActiveCaseFileId(), "title", newValue)
+                        .done(function(response){
+                            CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.getActiveCaseFileId(), newValue);
+                        })
+                        .fail(function(response){
+                            CaseFile.View.Ribbon.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
+                        })
+                    ;
                 }
             });
     //            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
@@ -319,7 +326,12 @@ CaseFile.View = CaseFile.View || {
     //            });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedDueDate(CaseFile.View.getActiveCaseFileId(), newValue);
+                    newValue = AcmEx.Object.XEditable.xDateToDatetime(newValue);
+                    CaseFile.Service.Detail.saveCaseFileItem(CaseFile.View.getActiveCaseFileId(), "incidentDate", newValue)
+                        .fail(function(response){
+                            CaseFile.View.Ribbon.setTextLnkDueDate($.t("casefile:detail.error-value"));
+                        })
+                    ;
                 }
             });
 
@@ -330,13 +342,13 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES         ,this.onModelFoundPriorities);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	           ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE       ,this.onModelSavedSubjectType);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
 
         }
         ,onInitialized: function() {
@@ -428,16 +440,16 @@ CaseFile.View = CaseFile.View || {
                 }
             });
         }
-        ,onModelSavedCaseTitle: function(caseFileId, title) {
-            if (title.hasError) {
-                CaseFile.View.Ribbon.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
-            }
-        }
-        ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
-            if (incidentDate.hasError) {
-                CaseFile.View.Ribbon.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
-            }
-        }
+//        ,onModelSavedCaseTitle: function(caseFileId, title) {
+//            if (title.hasError) {
+//                CaseFile.View.Ribbon.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
+//            }
+//        }
+//        ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
+//            if (incidentDate.hasError) {
+//                CaseFile.View.Ribbon.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
+//            }
+//        }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (assginee.hasError) {
                 CaseFile.View.Ribbon.setTextLnkAssignee($.t("casefile:detail.error-value"));
@@ -458,11 +470,11 @@ CaseFile.View = CaseFile.View || {
                 CaseFile.View.Ribbon.setTextLnkPriority($.t("casefile:detail.error-value"));
             }
         }
-        ,onModelSavedDueDate: function(caseFileId, created) {
-            if (created.hasError) {
-                CaseFile.View.Ribbon.setTextLnkDueDate($.t("casefile:detail.error-value"));
-            }
-        }
+//        ,onModelSavedDueDate: function(caseFileId, created) {
+//            if (created.hasError) {
+//                CaseFile.View.Ribbon.setTextLnkDueDate($.t("casefile:detail.error-value"));
+//            }
+//        }
 
         ,populateCaseFile: function(c) {
             if (CaseFile.Model.Detail.validateCaseFile(c)) {

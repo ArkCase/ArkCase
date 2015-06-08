@@ -42,7 +42,7 @@ DocTree.Service = {
 //            url += "&s=" + setting.sortBy + "&dir=" + setting.sortDirection;
 //        }
 //
-//        return Acm.Service.promise({type: "GET"
+//        return Acm.Service.call({type: "GET"
 //            ,url: url
 //            ,callback: function(response) {
 //                if (response.hasError) {
@@ -64,9 +64,11 @@ DocTree.Service = {
 //        });
 //    }
 
+
+
     ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
         var setting = DocTree.Model.Config.getSetting();
-        var url = App.getContextPath() + DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
         //var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
         if (0 < folderId) {
             url += "/" + folderId;
@@ -77,7 +79,9 @@ DocTree.Service = {
             url += "&s=" + setting.sortBy + "&dir=" + setting.sortDirection;
         }
 
-        return Acm.Service.deferredGet(function(data) {
+        return Acm.Service.call({type: "GET"
+            ,url: url
+            ,callback: function(data) {
                 var folderList = null;
                 if (DocTree.Model.validateFolderList(data)) {
                     folderList = data;
@@ -94,10 +98,10 @@ DocTree.Service = {
                 DocTree.Controller.modelRetrievedFolderList(folderList, objType, objId, folderId, pageId, callerData);
                 return rc;
             }
-            ,url
-        );
+        });
 
     }
+
 
     ,_findFolderNode: function(folderNode, fileId) {
         var node = null;
@@ -176,7 +180,7 @@ DocTree.Service = {
     }
 
     ,uploadFiles: function(formData, cacheKey) {
-        return Acm.Service.promise({type: 'POST'
+        return Acm.Service.call({type: 'POST'
             ,url: DocTree.Service.API_UPLOAD_FILE
             ,data: formData
             ,processData: false
@@ -207,7 +211,7 @@ DocTree.Service = {
 
     ,replaceFile: function(formData, fileId, cacheKey) {
         var url = this.API_REPLACE_FILE_ + fileId;
-        return Acm.Service.promise({type: 'POST'
+        return Acm.Service.call({type: 'POST'
             ,url: url
             ,data: formData
             ,processData: false
@@ -246,7 +250,7 @@ DocTree.Service = {
 
     ,createFolder: function(parentId, folderName, cacheKey) {
         var url = this.API_CREATE_FOLDER_ + parentId + "/" + folderName;
-        return Acm.Service.promise({type: "PUT"
+        return Acm.Service.call({type: "PUT"
             ,url: url
             ,callback: function(response) {
                 if (!response.hasError) {
@@ -277,7 +281,7 @@ DocTree.Service = {
         if (!Acm.isArrayEmpty(docIds)) {
             url += "&docIds=" + docIds.join();
         }
-        return Acm.Service.promise({type: "PUT"
+        return Acm.Service.call({type: "PUT"
             ,url: url
             ,callback: function(response) {
                 if (!response.hasError) {
@@ -455,7 +459,7 @@ DocTree.Service = {
     ,copyFile: function(objType, objId, folderId, fileId, toCacheKey) {
         var url = this.API_COPY_FILE_ + objType + "/" + objId;
         var data = {"id": fileId, "folderId": folderId};
-        return Acm.Service.promise({type: "POST"
+        return Acm.Service.call({type: "POST"
             ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
@@ -517,7 +521,7 @@ DocTree.Service = {
 //        var url = App.getContextPath() + this.API_COPY_FOLDER_ + objType + "/" + objId;
 //        var data = {"id": subFolderId, "folderId": folderId};
         var url = this.API_COPY_FOLDER_ + subFolderId + "/" + folderId + "/" + objType + "/" + objId;
-        return Acm.Service.promise({type: "POST"
+        return Acm.Service.call({type: "POST"
             ,url: url
             //,data: JSON.stringify(data)
             ,callback: function(response) {
