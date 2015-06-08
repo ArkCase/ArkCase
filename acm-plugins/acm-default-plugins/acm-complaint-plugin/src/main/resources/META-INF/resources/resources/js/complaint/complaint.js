@@ -17,7 +17,8 @@ var Complaint = Complaint || {
                 ,treeFilter       : Complaint.View.MicroData.treeFilter
                 ,$ulSort          : Complaint.View.Navigator.$ulSort
                 ,treeSort         : Complaint.View.MicroData.treeSort
-                ,modelInterface   : Complaint.Model.interface
+                ,modelInterface   : Complaint.Model.interfaceNavObj
+                ,viewInterface    : Complaint.View.interfaceNavObj
             });
         }
 
