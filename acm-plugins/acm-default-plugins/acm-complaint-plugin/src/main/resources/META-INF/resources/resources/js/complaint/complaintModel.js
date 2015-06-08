@@ -41,7 +41,7 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
 
-    ,interface: {
+    ,interfaceNavObj: {
         apiListObjects: function() {
             return "/api/latest/plugin/search/COMPLAINT";
         }
@@ -58,11 +58,8 @@ Complaint.Model = Complaint.Model || {
         ,nodeType: function(objSolr) {
             return Complaint.Model.DOC_TYPE_COMPLAINT;
         }
-        ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable);
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
+        ,nodeTypeSupported: function(nodeType) {
+            return (Complaint.Model.DOC_TYPE_COMPLAINT == nodeType);
         }
         ,objToSolr: function(objData) {
             var solr = {};
@@ -81,9 +78,6 @@ Complaint.Model = Complaint.Model || {
         }
         ,validateObjData: function(data) {
             return Complaint.Model.Detail.validateComplaint(data);
-        }
-        ,nodeTypeMap: function() {
-            return Complaint.Model.Tree.Key.nodeTypeMap;
         }
     }
 
@@ -133,47 +127,47 @@ Complaint.Model = Complaint.Model || {
 
 
 
-            ,nodeTypeMap: [
-                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
-                    ,tabIds: ["tabAction"
-                        ,"tabDetail"
-                        ,"tabLocation"
-                        ,"tabInitiator"
-                        ,"tabPeople"
-                        ,"tabNotes"
-                        ,"tabDocuments"
-                        ,"tabTasks"
-                        ,"tabRefs"
-//                    ,"tabRefComplaints"
-//                    ,"tabRefCases"
-//                    ,"tabRefTasks"
-//                    ,"tabRefDocuments"
-//                    ,"tabApprovers"
-//                    ,"tabCollaborators"
-//                    ,"tabWatchers"
-                        ,"tabParticipants"
-                        ,"tabHistory"
-                        ,"tabTime"
-                        ,"tabCost"
-                        ,"tabOutlookCalendar"
-                    ]}
-                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
-                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
-                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
-                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
-                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
-                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
-                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
-                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
-                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
-                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
-                ]
+//            ,nodeTypeMap: [
+//                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
+//                    ,tabIds: ["tabAction"
+//                        ,"tabDetail"
+//                        ,"tabLocation"
+//                        ,"tabInitiator"
+//                        ,"tabPeople"
+//                        ,"tabNotes"
+//                        ,"tabDocuments"
+//                        ,"tabTasks"
+//                        ,"tabRefs"
+////                    ,"tabRefComplaints"
+////                    ,"tabRefCases"
+////                    ,"tabRefTasks"
+////                    ,"tabRefDocuments"
+////                    ,"tabApprovers"
+////                    ,"tabCollaborators"
+////                    ,"tabWatchers"
+//                        ,"tabParticipants"
+//                        ,"tabHistory"
+//                        ,"tabTime"
+//                        ,"tabCost"
+//                        ,"tabOutlookCalendar"
+//                    ]}
+//                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
+//                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
+//                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
+//                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
+//                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
+//                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
+//                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
+//                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
+//                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
+//                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
+//                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
+//                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
+//                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
+//                ]
         }
     }
 
