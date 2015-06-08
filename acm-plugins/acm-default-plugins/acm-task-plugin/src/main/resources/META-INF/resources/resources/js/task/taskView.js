@@ -104,6 +104,32 @@ Task.View = Task.View || {
 
     }
 
+
+    ,interfaceNavObj: {
+        nodeTitle: function(objSolr) {
+            var title;
+            if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s) && Acm.isNotEmpty(objSolr.due_tdt)){
+                title = Acm.getDateFromDatetime(objSolr.due_tdt) + ", " + objSolr.priority_s +", "+ objSolr.name;
+            }
+            else if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s)){
+                title = objSolr.priority_s +", "+ objSolr.name;
+            }
+            else if(Acm.isNotEmpty(objSolr.name)){
+                title = objSolr.name;
+            }
+            else{
+                title = "(No title)";
+            }
+            return title;
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeTypeMap: function() {
+            return Task.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,Navigator: {
         create: function() {
             this.$ulFilter = $("#ulFilter");
@@ -123,84 +149,146 @@ Task.View = Task.View || {
             }
         }
 
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/TASK"     ,icon: "i i-checkmark"    ,tabIds:
+                ["tabDetails"
+                    ,"tabDocuments"
+                    ,"tabNotes"
+                    ,"tabHistory"
+                    ,"tabReworkInstructions"
+                    ,"tabWorkflowOverview"
+                    ,"tabAttachments"
+                    ,"tabSignature"
+                ]}
+            ,{nodeType: "p/ADHOC"     ,icon: "i i-checkmark"    ,tabIds:
+                ["tabDetails"
+                    ,"tabNotes"
+                    ,"tabHistory"
+                    ,"tabRejectComments"
+                    ,"tabWorkflowOverview"
+                    ,"tabAttachments"
+                    ,"tabSignature"
+
+                ]}
+            ,{nodeType: "p/TASK/det"      ,icon: "", res: "task:navigation.leaf-title.task-details"            ,tabIds: ["tabDetails"]}
+            ,{nodeType: "p/TASK/rewk"     ,icon: "", res: "task:navigation.leaf-title.rework-details"          ,tabIds: ["tabReworkInstructions"]}
+            ,{nodeType: "p/TASK/doc"      ,icon: "", res: "task:navigation.leaf-title.documents-under-review"  ,tabIds: ["tabDocuments"]}
+            ,{nodeType: "p/TASK/att"      ,icon: "", res: "task:navigation.leaf-title.attachments"             ,tabIds: ["tabAttachments"]}
+            ,{nodeType: "p/TASK/note"     ,icon: "", res: "task:navigation.leaf-title.notes"                   ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/TASK/wkfl"     ,icon: "", res: "task:navigation.leaf-title.workflow-overview"       ,tabIds: ["tabWorkflowOverview"]}
+            ,{nodeType: "p/TASK/his"      ,icon: "", res: "task:navigation.leaf-title.history"                 ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/TASK/sig"      ,icon: "", res: "task:navigation.leaf-title.electronic-signatures"   ,tabIds: ["tabSignature"]}
+
+            ,{nodeType: "p/ADHOC/det"     ,icon: "", res: "task:navigation.leaf-title.task-details"            ,tabIds: ["tabDetails"]}
+            ,{nodeType: "p/ADHOC/rej"     ,icon: "", res: "task:navigation.leaf-title.reject-comments"         ,tabIds: ["tabRejectComments"]}
+            ,{nodeType: "p/ADHOC/att"     ,icon: "", res: "task:navigation.leaf-title.attachments"             ,tabIds: ["tabAttachments"]}
+            ,{nodeType: "p/ADHOC/note"    ,icon: "", res: "task:navigation.leaf-title.notes"                   ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/ADHOC/wkfl"    ,icon: "", res: "task:navigation.leaf-title.workflow-overview"       ,tabIds: ["tabWorkflowOverview"]}
+            ,{nodeType: "p/ADHOC/his"     ,icon: "", res: "task:navigation.leaf-title.history"                 ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/ADHOC/sig"     ,icon: "", res: "task:navigation.leaf-title.electronic-signatures"   ,tabIds: ["tabSignature"]}
+        ]
+
         ,getTreeArgs: function() {
             return {
-                lazyLoad: function(event, data) {
-                    Task.View.Navigator.lazyLoad(event, data);
-                }
-                ,getContextMenu: function(node) {
+//                lazyLoad: function(event, data) {
+//                    Task.View.Navigator.lazyLoad(event, data);
+//                }
+//                ,
+                getContextMenu: function(node) {
                     Task.View.Navigator.getContextMenu(node);
                 }
             };
         }
-        ,lazyLoad: function(event, data) {
-            var key = data.node.key;
-            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            switch (nodeType) {
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_TASK]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("task:navigation.leaf-title.task-details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REWORK
-                            ,title: $.t("task:navigation.leaf-title.rework-details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: $.t("task:navigation.leaf-title.documents-under-review")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
-                            ,title: $.t("task:navigation.leaf-title.attachments")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("task:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
-                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("task:navigation.leaf-title.history")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
-                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
-                        })
-                        .getTree();
-
-                    break;
-
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_ADHOC_TASK]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("task:navigation.leaf-title.details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REJECT
-                            ,title: $.t("task:navigation.leaf-title.reject-comments")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
-                            ,title: $.t("task:navigation.leaf-title.attachments")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("task:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
-                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("task:navigation.leaf-title.history")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
-                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
-                        })
-                        .getTree();
-
-                    break;
-
-                default:
-                    data.result = [];
-                    break;
-            }
-        }
+//retired
+//        ,lazyLoad: function(event, data) {
+//            var key = data.node.key;
+//            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+//            var builder = AcmEx.FancyTreeBuilder.reset();
+//            if (ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_TASK]) == nodeType
+//                || ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_ADHOC]) == nodeType) {
+//                var nodeTypeMap = Task.View.Navigator.nodeTypeMap;
+//                for (var i = 0; i < nodeTypeMap.length; i++) {
+//                    if (0 == nodeTypeMap[i].nodeType.indexOf(nodeType)) {
+//                        var lastSep = nodeTypeMap[i].nodeType.lastIndexOf(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
+//                        if (nodeType.length == lastSep) {
+//                            var subPart = nodeTypeMap[i].nodeType.substring(lastSep);
+//                            builder.addLeaf({key: key + subPart
+//                                ,title: $.t(nodeTypeMap[i].res)
+//                            });
+//                        }
+//                    }
+//                }
+//            }
+//            data.result = builder.getTree(); return;
+//
+//            switch (nodeType) {
+//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_TASK]):
+//                    data.result = AcmEx.FancyTreeBuilder
+//                        .reset()
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+//                            ,title: $.t("task:navigation.leaf-title.task-details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REWORK
+//                            ,title: $.t("task:navigation.leaf-title.rework-details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
+//                            ,title: $.t("task:navigation.leaf-title.documents-under-review")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
+//                            ,title: $.t("task:navigation.leaf-title.attachments")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
+//                            ,title: $.t("task:navigation.leaf-title.notes")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
+//                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+//                            ,title: $.t("task:navigation.leaf-title.history")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
+//                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
+//                        })
+//                        .getTree();
+//
+//                    break;
+//
+//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_ADHOC_TASK]):
+//                    data.result = AcmEx.FancyTreeBuilder
+//                        .reset()
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+//                            ,title: $.t("task:navigation.leaf-title.task-details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REJECT
+//                            ,title: $.t("task:navigation.leaf-title.reject-comments")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
+//                            ,title: $.t("task:navigation.leaf-title.attachments")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
+//                            ,title: $.t("task:navigation.leaf-title.notes")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
+//                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+//                            ,title: $.t("task:navigation.leaf-title.history")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
+//                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
+//                        })
+//                        .getTree();
+//
+//                    break;
+//
+//                default:
+//                    data.result = [];
+//                    break;
+//            }
+//        }
 
         ,getContextMenu: function(node) {
             var key = node.key;
