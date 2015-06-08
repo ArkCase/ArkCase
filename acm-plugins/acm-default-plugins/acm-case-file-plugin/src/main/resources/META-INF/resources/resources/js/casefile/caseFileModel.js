@@ -237,13 +237,13 @@ CaseFile.Model = CaseFile.Model || {
     ,Detail: {
         create : function() {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_FILE           , this.onViewChangedCaseFile);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE          , this.onViewChangedCaseTitle);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_CASE_TITLE          , this.onViewChangedCaseTitle);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_INCIDENT_DATE       , this.onViewChangedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_ASSIGNEE            , this.onViewChangedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_GROUP            	 , this.onViewChangedGroup);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_SUBJECT_TYPE        , this.onViewChangedSubjectType);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_PRIORITY            , this.onViewChangedPriority);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DUE_DATE            , this.onViewChangedDueDate);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DUE_DATE            , this.onViewChangedDueDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CHANGED_DETAIL              , this.onViewChangedDetail);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_RESTRICT_CHECKBOX   , this.onViewClickedRestrictCheckbox);
         }
@@ -253,13 +253,12 @@ CaseFile.Model = CaseFile.Model || {
         ,onViewChangedCaseFile: function(caseFileId) {
             ObjNav.Service.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
         }
-        ,onViewChangedCaseTitle: function(caseFileId, title) {
-            CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
-        }
-
-        ,onViewChangedIncidentDate: function(caseFileId, incidentDate) {
-            CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
-        }
+//        ,onViewChangedCaseTitle: function(caseFileId, title) {
+//            CaseFile.Service.Detail.saveCaseTitle(caseFileId, title);
+//        }
+//        ,onViewChangedIncidentDate: function(caseFileId, incidentDate) {
+//            CaseFile.Service.Detail.saveIncidentDate(caseFileId, incidentDate);
+//        }
         ,onViewChangedAssignee: function(caseFileId, assignee) {
             CaseFile.Service.Detail.saveAssignee(caseFileId, assignee);
         }
@@ -272,9 +271,9 @@ CaseFile.Model = CaseFile.Model || {
         ,onViewChangedPriority: function(caseFileId, priority) {
             CaseFile.Service.Detail.savePriority(caseFileId, priority);
         }
-        ,onViewChangedDueDate: function(caseFileId, dueDate) {
-            CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
-        }
+//        ,onViewChangedDueDate: function(caseFileId, dueDate) {
+//            CaseFile.Service.Detail.saveDueDate(caseFileId, dueDate);
+//        }
         ,onViewChangedDetail: function(caseFileId, details) {
             CaseFile.Service.Detail.saveDetail(caseFileId, details);
         }
