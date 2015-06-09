@@ -9,6 +9,7 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.FunctionalAccessControl.create) {Admin.Model.FunctionalAccessControl.create();}
         if (Admin.Model.ReportsConfiguration.create)    {Admin.Model.ReportsConfiguration.create();}
         if (Admin.Model.WorkflowConfiguration.create)   {Admin.Model.WorkflowConfiguration.create();}
+        if (Admin.Model.Forms.create)   				{Admin.Model.Forms.create();}
 
 
         if (Admin.Model.Tree.create)                    {Admin.Model.Tree.create();}
@@ -19,6 +20,7 @@ Admin.Model = Admin.Model || {
         if (Admin.Model.FunctionalAccessControl.onInitialized)  {Admin.Model.FunctionalAccessControl.onInitialized();}
         if (Admin.Model.ReportsConfiguration.onInitialized)     {Admin.Model.ReportsConfiguration.onInitialized();}
         if (Admin.Model.WorkflowConfiguration.onInitialized)    {Admin.Model.WorkflowConfiguration.onInitialized();}
+        if (Admin.Model.Forms.onInitialized)   				 	{Admin.Model.Forms.onInitialized();}
 
 
         if (Admin.Model.Tree.onInitialized)                     {Admin.Model.Tree.onInitialized();}
@@ -334,6 +336,23 @@ Admin.Model = Admin.Model || {
         , onInitialized: function () {
         }
     }
+    
+    ,Forms:{
+        create: function () {
+        	if (Admin.Model.Forms.PlainForms.create)   				 	{Admin.Model.Forms.PlainForms.create();}
+        }
+        , onInitialized: function () {
+        	if (Admin.Model.Forms.PlainForms.onInitialized)   			{Admin.Model.Forms.PlainForms.onInitialized();}
+        }
+        ,PlainForms:{
+        	create: function () {
+        		
+            }
+            , onInitialized: function () {
+            	
+            }
+        }
+    }
 
     ,Tree: {
         create : function() {
@@ -372,6 +391,8 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_LEAF_LABEL_CONFIGURATION            :          "lc"
             ,NODE_TYPE_PART_BRANCH_TEMPLATES                    :          "ct"
             ,NODE_TYPE_PART_LEAF_TEMPLATES                      :          "cm"
+            ,NODE_TYPE_PART_BRANCH_FORMS                        :          "forms"
+            ,NODE_TYPE_PART_LEAF_FORMS	                        :          "fc"
 
 
 
@@ -393,6 +414,8 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "ldap"     ,icon: "",tabIds: ["tabLDAPConfiguration"]}
                 ,{nodeType: "wfc"      ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
                 ,{nodeType: "wf"       ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
+                ,{nodeType: "forms"    ,icon: "",tabIds: ["tabPlainForms"]}
+                ,{nodeType: "fc"       ,icon: "",tabIds: ["tabPlainForms"]}
             ]
 
             ,getTabIdsByKey: function(key) {
@@ -453,6 +476,10 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_BRANCH_WORKFLOW_CONFIGURATION;
                 } else if (key == this.NODE_TYPE_PART_LEAF_WORKFLOW_CONFIGURATION) {
                     return this.NODE_TYPE_PART_LEAF_WORKFLOW_CONFIGURATION;
+                } else if (key == this.NODE_TYPE_PART_BRANCH_FORMS) {
+                    return this.NODE_TYPE_PART_BRANCH_FORMS;
+                } else if (key == this.NODE_TYPE_PART_LEAF_FORMS) {
+                    return this.NODE_TYPE_PART_LEAF_FORMS;
                 }
                 return null;
             }

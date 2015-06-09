@@ -13,6 +13,7 @@ Admin.View = Admin.View || {
         if (Admin.View.RolesPrivileges.create)          {Admin.View.RolesPrivileges.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
+        if (Admin.View.Forms.create)    				{Admin.View.Forms.create();}
 
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
@@ -25,7 +26,8 @@ Admin.View = Admin.View || {
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
-        if (Admin.View.WorkflowConfiguration.onInitialized)    {Admin.View.WorkflowConfiguration.onInitialized();}
+        if (Admin.View.WorkflowConfiguration.onInitialized)     {Admin.View.WorkflowConfiguration.onInitialized();}
+        if (Admin.View.Forms.onInitialized)    					{Admin.View.Forms.onInitialized();}
 
 
         if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
@@ -1648,6 +1650,100 @@ Admin.View = Admin.View || {
                 }
             });
             $s.jtable('load');
+        }
+    }
+    
+    ,Forms:{
+        create: function () {
+            if (Admin.View.Forms.PlainForms.create)        	{Admin.View.Forms.PlainForms.create();}
+        }
+        , onInitialized: function () {
+            if (Admin.View.Forms.PlainForms.onInitialized)        	{Admin.View.Forms.PlainForms.onInitialized();}
+        }
+        ,PlainForms: {
+            create: function () {
+            	this.$btnAddPlainForm = $("#btnAddPlainForm");	
+            	this.$btnAddPlainForm.on("click", function(e) {Admin.View.Forms.PlainForms.onClickBtnAddPlainForm(e, this);});
+            	
+            	this.$plainFormTarget = $("#plainFormTarget");
+            	
+                this.$divPlainForms = $("#divPlainForms");
+                this.createJTablePlainForms(this.$divPlainForms);
+            }
+            , onInitialized: function () {
+            }
+            
+            ,onClickBtnAddPlainForm: function(event, ctrl) {
+            	var target = Admin.View.Forms.PlainForms.$plainFormTarget.val();
+            	if (!Acm.isEmpty(target)) {
+            		var plainConfigurationFormUrl = Acm.Object.MicroData.get("plainConfigurationFormUrl");
+            		plainConfigurationFormUrl = plainConfigurationFormUrl.replace("_data=(", "_data=(target:'" + target + "',");
+	                if (Acm.isNotEmpty(plainConfigurationFormUrl)) {
+	                	Acm.Dialog.openWindow(plainConfigurationFormUrl, "", 1060, 700
+	                        ,function() {
+	                            // TODO: Refresh after closing the form
+	                        }
+	                    );
+	                }
+            	} else {
+            		// TODO: Add this message to the labels
+            		Acm.Dialog.error("Please select target.");
+            	}
+            }
+            
+            ,createJTablePlainForms: function ($s) {
+                $s.jtable({
+                	title:'Plain Forms'
+            		,paging: true
+                    ,sorting: true
+                    ,pageSize: 10 //Set page size (default: 10)
+                    ,actions: {
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            //show some dummy records for now
+                            rc.Records = [
+                                 {"id": 1, "name": "ROI Form", "description": "ROI Form Description", "target": "Case File"}
+                                ,{"id": 2, "name": "Electronic Communication", "description": "EC Description", "target": "Case File"}
+                                ,{"id": 3, "name": "ROI Form", "description": "ROI Form Description", "target": "Complaint"}
+                                ,{"id": 4, "name": "Electronic Communication", "description": "EC Description", "target": "Complaint"}
+                            ];
+                            return rc;
+                        }
+		                ,updateAction: function(postData, jtParams) {
+		                    var rc = AcmEx.Object.JTable.getEmptyRecord();
+		                    // TODO: Finish update action
+		                    return rc;
+		                }
+		                ,deleteAction: function(postData, jtParams) {
+		                	// TODO: Finish delete action
+		                    return {
+		                       "Result": "OK"
+		                    };
+		                }
+                    }
+                    , fields: {
+                        id: {
+                            title: 'ID'
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
+                        }, name: {
+                            title: 'Form Name'
+                            , width: '25%'
+                        }, description: {
+                            title: 'Description'
+                            , width: '15%'
+                            , edit: false
+                        }, target: {
+                            title: 'Target'
+                            , width: '15%'
+                            , edit: false
+                        }
+                    }
+                });
+                $s.jtable('load');
+            }
         }
     }
 

@@ -291,6 +291,30 @@
         </dependency>
         
         <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-ebrief</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-project</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-change-status</artifactId>
             <version>${acm.version}</version>
