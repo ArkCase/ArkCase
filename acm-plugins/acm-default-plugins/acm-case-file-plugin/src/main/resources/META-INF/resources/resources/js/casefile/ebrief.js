@@ -253,8 +253,14 @@ CaseFile.prepare = function() {
                     var participant = participants[i];
                     if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
                         var user = participant.participantLdapId;
-                        var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
-                        requests.push(req);
+                        var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(user));
+                        if(Acm.isNotEmpty(profile)){
+                            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                        }
+                        else{
+                            var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
+                            requests.push(req);
+                        }
                     }
                 }
                 Acm.Promise.resolvePromises(requests)
