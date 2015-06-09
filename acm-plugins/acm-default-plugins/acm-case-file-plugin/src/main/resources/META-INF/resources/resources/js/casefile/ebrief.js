@@ -457,6 +457,7 @@ CaseFile.prepare = function() {
             this.$btnNewFolder  = $("#btnNewFolder") .on("click", function(e) {CaseFile.View.Documents.onClickBtnNewFolder(e, this);});
             this.$btnLodgeDocs  = $("#btnLodgeDocs") .on("click", function(e) {CaseFile.View.Documents.onClickBtnLodgeDocs(e, this);});
             this.$btnRejectDocs = $("#btnRejectDocs").on("click", function(e) {CaseFile.View.Documents.onClickBtnRejectDocs(e, this);});
+            this.$btnRefreshDocs = $("#btnRefreshDocs").on("click", function(e) {CaseFile.View.Documents.onClickBtnRefreshDocs(e, this);});
 
             this.$dlgLodgeDocs  = $("#dlgLodgeDocs");
             this.$edtBmailAddr  = $("#edtBmailAddr");
@@ -599,6 +600,9 @@ CaseFile.prepare = function() {
                     });
                 }
             });
+        }
+        ,onClickBtnRefreshDocs: function(event,ctrl){
+            DocTree.View.tree.reload(DocTree.View.Source.source());
         }
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
