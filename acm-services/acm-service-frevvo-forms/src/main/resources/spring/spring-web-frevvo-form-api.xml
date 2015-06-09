@@ -13,6 +13,16 @@
             </props>
         </property>    
     </bean>
+    
+    <bean id="plainFormProperties" class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
+        <property name="location" value="file:${user.home}/.acm/acm-forms-plain.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
 	   
     <bean id="frevvoFormController" class="com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController">
 		<property name="properties" ref="acm-form-properties" />
@@ -55,6 +65,12 @@
         <property name="projectFactory" ref="projectFactory"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="frevvoService" ref="frevvoService" />
+        <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+        <property name="plainFormPropertiesLocation" value="C:/Users/riste.tutureski/.acm/acm-forms-plain.properties"/>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
 	</bean>
 
 </beans>

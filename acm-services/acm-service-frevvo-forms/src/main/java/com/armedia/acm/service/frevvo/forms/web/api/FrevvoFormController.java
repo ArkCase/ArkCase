@@ -47,13 +47,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
 import com.armedia.acm.form.cost.service.CostFactory;
 import com.armedia.acm.form.ebrief.service.EbriefFactory;
+import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFactory;
 import com.armedia.acm.form.project.service.ProjectFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
+import com.armedia.acm.frevvo.config.FrevvoService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -137,6 +140,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private FolderAndFilesUtils folderAndFilesUtils;
 	private AcmFolderService acmFolderService;
+	
+	private FrevvoService frevvoService;
+	
+	private PlainConfigurationFormFactory plainConfigurationFormFactory;
+	
+	private String plainFormPropertiesLocation;
+	
+	private PropertyFileManager propertyFileManager;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -613,4 +624,36 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		this.acmFolderService = acmFolderService;
 	}
 	
+	public FrevvoService getFrevvoService() {
+		return frevvoService;
+	}
+
+	public void setFrevvoService(FrevvoService frevvoService) {
+		this.frevvoService = frevvoService;
+	}
+
+	public PlainConfigurationFormFactory getPlainConfigurationFormFactory() {
+		return plainConfigurationFormFactory;
+	}
+
+	public void setPlainConfigurationFormFactory(
+			PlainConfigurationFormFactory plainConfigurationFormFactory) {
+		this.plainConfigurationFormFactory = plainConfigurationFormFactory;
+	}
+
+	public String getPlainFormPropertiesLocation() {
+		return plainFormPropertiesLocation;
+	}
+
+	public void setPlainFormPropertiesLocation(String plainFormPropertiesLocation) {
+		this.plainFormPropertiesLocation = plainFormPropertiesLocation;
+	}
+
+	public PropertyFileManager getPropertyFileManager() {
+		return propertyFileManager;
+	}
+
+	public void setPropertyFileManager(PropertyFileManager propertyFileManager) {
+		this.propertyFileManager = propertyFileManager;
+	}	
 }

@@ -24,5 +24,9 @@
 	<bean id="formsPropertyConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
 		<property name="properties" ref="acm-forms-properties"/>
 	</bean>
+	
+	<bean id="frevvoService" class="com.armedia.acm.frevvo.config.FrevvoServiceImpl">
+		<property name="formUrl" ref="formResource" />
+	</bean>
     
 </beans>
