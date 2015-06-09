@@ -216,9 +216,17 @@ CaseFile.prepare = function() {
                             profile.email = Acm.goodValue(profileInfo.email);
                             profile.phone = Acm.goodValue(profileInfo.phone);
                             CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
-                            return profileInfo;
+                            return profile;
                         }
-                    } //end else
+                    }
+                    else if (response.hasError)  {
+                        var profile = {};
+                        profile.organisation = "N/A";
+                        profile.email = "N/A";
+                        profile.phone = "N/A";
+                        CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
+                        return profile;
+                    }//end else
                 }
             })
         }
@@ -254,7 +262,7 @@ CaseFile.prepare = function() {
                         AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
                     })
                     .fail(function() {
-                        App.View.MessageBoard.show("Error retrieving participants");
+                        AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
                     });
             }
         }
