@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.auth.AcmGrantedAuthority;
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -12,13 +13,13 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleException;
@@ -104,7 +105,6 @@ public class SplitCaseFileServiceIT extends EasyMock {
 
     @Test
     @Transactional
-    @Ignore
     public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException {
         auditAdapter.setUserId("auditUser");
         auth = createMock(Authentication.class);
@@ -206,7 +206,7 @@ public class SplitCaseFileServiceIT extends EasyMock {
         attachments.add(new SplitCaseOptions.AttachmentDTO(folderInSourceCase2.getId(), "folder"));
         splitCaseOptions.setAttachments(attachments);
         splitCaseOptions.setPreserveFolderStructure(true);
-        
+
         CaseFile copyCaseFile = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
 
         CaseFile originalCase = caseFileDao.find(sourceId);
@@ -228,8 +228,6 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertNotNull(copyOa);
         assertNotNull(copyOa.getTargetId());
         assertEquals(copyOa.getTargetId().longValue(), originalCase.getId().longValue());
-
-        assertEquals(originalCase.getContainer().getFolder().getParentFolderId(), copyCaseFile.getContainer().getFolder().getId());
 
 
     }
