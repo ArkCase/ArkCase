@@ -24,6 +24,7 @@
     <jsp:invoke fragment="endOfHead"/>
 </head>
 <body class="">
+<a href="#skipnav" style="display:none;">Skip Navigation</a>
 <section class="vbox">
     <%--<%@include file="/WEB-INF/tagf/topbar.tagf"%>--%>
     <%@include file="/resources/include/topbar.jspf" %>
@@ -33,6 +34,7 @@
             <%--<%@include file="/WEB-INF/tagf/sidebar.tagf"%>--%>
             <%@include file="/resources/include/sidebar.jspf" %>
             <section id="content">
+            <a name="skipnav"></a>
                 <%--<%@include file="/WEB-INF/tagf/msgBoard.tagf"%>--%>
                 <%@include file="/resources/include/msgBoard.jspf" %>
                 <jsp:doBody/>

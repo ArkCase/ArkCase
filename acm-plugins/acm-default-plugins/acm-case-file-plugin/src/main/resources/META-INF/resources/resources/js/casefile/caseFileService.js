@@ -8,6 +8,7 @@
 CaseFile.Service = {
     create : function() {
         if (CaseFile.Service.Lookup.create) {CaseFile.Service.Lookup.create();}
+        if (CaseFile.Service.Action.create) {CaseFile.Service.Action.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
         if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
         //if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
@@ -15,12 +16,12 @@ CaseFile.Service = {
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
         if (CaseFile.Service.History.create) {CaseFile.Service.History.create();}
-        if (CaseFile.Service.OutlookCalendar.create)   {CaseFile.Service.OutlookCalendar.create();}
         if (CaseFile.Service.Time.create)   {CaseFile.Service.Time.create();}
         if (CaseFile.Service.Cost.create)   {CaseFile.Service.Cost.create();}
     }
     ,onInitialized: function() {
         if (CaseFile.Service.Lookup.onInitialized) {CaseFile.Service.Lookup.onInitialized();}
+        if (CaseFile.Service.Action.onInitialized) {CaseFile.Service.Action.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
         if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
         //if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
@@ -28,7 +29,6 @@ CaseFile.Service = {
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
         if (CaseFile.Service.History.onInitialized)        {CaseFile.Service.History.onInitialized();}
-        if (CaseFile.Service.OutlookCalendar.onInitialized)        {CaseFile.Service.OutlookCalendar.onInitialized();}
         if (CaseFile.Service.Time.onInitialized)        {CaseFile.Service.Time.onInitialized();}
         if (CaseFile.Service.Cost.onInitialized)        {CaseFile.Service.Cost.onInitialized();}
     }
@@ -215,37 +215,75 @@ CaseFile.Service = {
         }
     }
 
+    ,Action: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+        ,API_MERGE_CASE_FILES : "/api/v1/plugin/merge-casefiles"
+
+        ,mergeCaseFiles: function(sourceCaseFileId, targetCaseFileId){
+            var url = App.getContextPath() + this.API_MERGE_CASE_FILES;
+            var data = {"sourceCaseFileId": sourceCaseFileId, "targetCaseFileId": targetCaseFileId};
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data: JSON.stringify(data)
+                ,callback: function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelMergedCaseFiles(response);
+                    } else {
+                        if (CaseFile.Model.Detail.validateCaseFile(response)) {
+                            var targetCaseFile = response;
+                            CaseFile.Controller.modelMergedCaseFiles(targetCaseFile);
+                            return true;
+                        }
+                    } //end else
+                }
+            });
+        }
+
+    }
     ,Detail: {
         create: function() {
         }
         ,onInitialized: function() {
         }
 
+        ,saveCaseFileItem: function(caseFileId, item, value) {
+            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+                caseFile[item] = value;
+                return ObjNav.Service.Detail.saveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile);
+            } else {
+                return Acm.Promise.failPromise();
+            }
+        }
+
         ,_saveCaseFile: function(caseFileId, caseFile, handler) {
             ObjNav.Service.Detail.saveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId, caseFile, handler);
         }
-        ,saveCaseTitle: function(caseFileId, title) {
-            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                caseFile.title = title;
-                this._saveCaseFile(caseFileId, caseFile
-                    ,function(data) {
-                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, Acm.Service.responseWrapper(data, data.title));
-                    }
-                );
-            }
-        }
-        ,saveIncidentDate: function(caseFileId, incidentDate) {
-            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                caseFile.incidentDate = incidentDate;
-                this._saveCaseFile(caseFileId, caseFile
-                    ,function(data) {
-                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, Acm.Service.responseWrapper(data, data.incidentDate));
-                    }
-                );
-            }
-        }
+//        ,saveCaseTitle: function(caseFileId, title) {
+//            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+//            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+//                caseFile.title = title;
+//                this._saveCaseFile(caseFileId, caseFile
+//                    ,function(data) {
+//                        CaseFile.Controller.modelSavedCaseTitle(caseFileId, Acm.Service.responseWrapper(data, data.title));
+//                    }
+//                );
+//            }
+//        }
+//        ,saveIncidentDate: function(caseFileId, incidentDate) {
+//            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+//            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+//                caseFile.incidentDate = incidentDate;
+//                this._saveCaseFile(caseFileId, caseFile
+//                    ,function(data) {
+//                        CaseFile.Controller.modelSavedIncidentDate(caseFileId, Acm.Service.responseWrapper(data, data.incidentDate));
+//                    }
+//                );
+//            }
+//        }
         ,saveAssignee: function(caseFileId, assignee) {
             var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
@@ -1527,35 +1565,6 @@ CaseFile.Service = {
                     return jtData;
                 }
             );
-        }
-    }
-
-    ,OutlookCalendar: {
-        create : function() {
-        }
-        ,onInitialized: function() {
-        }
-
-        , API_RETRIEVE_CALENDAR_ITEMS: "/api/v1/plugin/outlook/calendar"
-
-
-        ,retrieveOutlookOutlookCalendarItems : function(caseFileId) {
-            var url = App.getContextPath() + this.API_RETRIEVE_CALENDAR_ITEMS;
-            Acm.Service.asyncGet(
-                function(response) {
-                    if (response.hasError) {
-                        CaseFile.Controller.modelRetrievedOutlookCalendarItems(response);
-
-                    } else {
-                        if (CaseFile.Model.OutlookCalendar.validateOutlookCalendarItems(response)) {
-                            var outlookCalendarItems = response;
-                            CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.put(caseFileId, outlookCalendarItems);
-                            CaseFile.Controller.modelRetrievedOutlookCalendarItems(outlookCalendarItems);
-                        }
-                    }
-                }
-                ,url
-            )
         }
     }
 

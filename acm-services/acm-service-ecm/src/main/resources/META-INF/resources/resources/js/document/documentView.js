@@ -26,7 +26,12 @@ AcmDocument.View = AcmDocument.View || {
         if (AcmDocument.View.Participants.onInitialized)            {AcmDocument.View.Participants.onInitialized();}
         if (AcmDocument.View.EventHistory.onInitialized)            {AcmDocument.View.EventHistory.onInitialized();}
         if (AcmDocument.View.VersionHistory.onInitialized)          {AcmDocument.View.VersionHistory.onInitialized();}
-        if (AcmDocument.View.AssociatedTags.onInitialized)                    {AcmDocument.View.AssociatedTags.onInitialized();}
+        if (AcmDocument.View.AssociatedTags.onInitialized)          {AcmDocument.View.AssociatedTags.onInitialized();}
+
+//        Acm.deferredTimer(null, 1000).done(function() {
+//            document.location.reload(true);
+//        });
+
     }
 
     ,getActiveDocumentId: function() {
@@ -45,6 +50,7 @@ AcmDocument.View = AcmDocument.View || {
         create : function() {
             this.documentId   = Acm.Object.MicroData.get("objId");
             this.participantTypes   = Acm.Object.MicroData.getJson("participantTypes");
+            this.viewerSrc   = Acm.Object.MicroData.get("viewerSrc");
         }
         ,onInitialized: function() {
         }
@@ -163,13 +169,20 @@ AcmDocument.View = AcmDocument.View || {
 
     ,DocViewer: {
         create: function() {
-            this.$divDocViewer    = $("#divDocViewer");
+            this.$divDocViewer = $("#divDocViewer");
+            this.$iframeViewer = this.$divDocViewer.find("iframe");
+
             //this.createJTableDocViewer(this.$divDocViewer);
 
             /*Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
              Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);*/
         }
         ,onInitialized: function() {
+            Acm.deferredTimer(null, 500).done(function() {
+                AcmDocument.View.DocViewer.$iframeViewer.attr("src", AcmDocument.View.MicroData.viewerSrc);
+                //document.location.reload(true);
+            });
+
         }
         /*,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(AcmDocument.View.DocViewer.$divDocViewer);
@@ -267,15 +280,15 @@ AcmDocument.View = AcmDocument.View || {
             }
         }
         ,pickParticipant: function() {
-            SearchBase.showSearchDialog({name: "New Participant"
-                ,title: "Add New Participant"
-                ,prompt: "Enter to search for user.."
-                ,btnGoText: "Search Now!"
-                ,btnOkText: "Select"
-                ,btnCancelText: "Cancel"
+            SearchBase.Dialog.create({name: $.t("docdetail:participants.picker.name")
+                ,title: $.t("docdetail:participants.picker.title")
+                ,prompt: $.t("docdetail:participants.picker.prompt")
+                ,btnGoText: $.t("docdetail:participants.picker.btnTextGo")
+                ,btnOkText: $.t("docdetail:participants.picker.btnTextOk")
+                ,btnCancelText: $.t("docdetail:participants.picker.btnTextCancel")
                 ,filters: [{key: "Object Type", values: ["USER"]}]
                 ,$dlgObjectPicker : AcmDocument.View.Participants.$dlgObjectPicker
-            });
+            }).show();
         }
 
         ,onClickBtnNewParticipant: function() {
@@ -288,7 +301,6 @@ AcmDocument.View = AcmDocument.View || {
                 };
             }
             AcmDocument.View.Participants.pickParticipant();
-            return;
         }
 
         ,onClickBtnAddParticipant : function(event, ctrl) {
@@ -375,8 +387,8 @@ AcmDocument.View = AcmDocument.View || {
                         + "<div class='btn-group pull-right'>"
                         + "<button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i> </button>"
                         + "<ul class='dropdown-menu'>"
-                        + "<li><a href='#' class='removeParticipant'>Remove</a></li>"
-                        + "<li><a href='#' class='changeParticipantRole'>Change Role</a></li>"
+                        + "<li><a href='#' class='removeParticipant'>" + $.t("docdetail:participants.table.button.remove") + "</a></li>"
+                        + "<li><a href='#' class='changeParticipantRole'>" + $.t("docdetail:participants.table.button.change-role") + "</a></li>"
                         + "</ul>"
                         + "</div>"
                         + "<div class='media-body' id='" + Acm.goodValue(participants[i].id) + "'>"
@@ -448,12 +460,12 @@ AcmDocument.View = AcmDocument.View || {
 
             AcmEx.Object.JTable.usePaging($jt
                 ,{
-                    title: 'Notes'
+                    title: $.t("docdetail:notes.table.title")
                     ,paging: true
                     ,sorting: true
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Note'
+                        addNewRecord: $.t("docdetail:notes.msg.add-new-record")
                     }
                     ,actions: {
                         pagingListAction: function (postData, jtParams, sortMap) {
@@ -517,29 +529,29 @@ AcmDocument.View = AcmDocument.View || {
 
                     ,fields: {
                         id: {
-                            title: 'ID'
+                            title: $.t("docdetail:notes.table.field.id")
                             ,key: true
                             ,list: false
                             ,create: false
                             ,edit: false
                         }
                         ,note: {
-                            title: 'Note'
+                            title: $.t("docdetail:notes.table.field.note")
                             ,type: 'textarea'
                             ,width: '50%'
                             ,edit: true
                             ,display: function (data) {
-                                return "<p id='acm-docDetailLongNote' title='" + data.record.note + "'>" + data.record.note + "</p>";
+                                return "<p class='acm-docDetailLongText' title='" + data.record.note + "'>" + data.record.note + "</p>";
                             }
                         }
                         ,created: {
-                            title: 'Created'
+                            title: $.t("docdetail:notes.table.field.created")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
                         }
                         ,creator: {
-                            title: 'Author'
+                            title: $.t("docdetail:notes.table.field.creator")
                             ,width: '15%'
                             ,edit: false
                             ,create: false
@@ -746,7 +758,7 @@ AcmDocument.View = AcmDocument.View || {
                             +"<td tagId='" + Acm.goodValue(associatedTags[i].id) + "'>" + Acm.goodValue(associatedTags[i].tagName) + "</td>"
                             +"<td><button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
                             +"<ul class='dropdown-menu'>"
-                            +"<li><a href='#' class='removeTag'>Remove</a></li>"
+                            +"<li><a href='#' class='removeTag'>" + $.t("docdetail:tags.table.button.remove") + "</a></li>"
                             +"</ul></td>"
                             +"</tr>"
                     }
@@ -815,7 +827,7 @@ AcmDocument.View = AcmDocument.View || {
 
                             +"<button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
                             +"<ul class='dropdown-menu'>"
-                            +"<li><a href='#' class='makeActiveVersion'>Make Active</a></li>"
+                            +"<li><a href='#' class='makeActiveVersion'>" + $.t("docdetail:version-history.table.button.make-active") + "</a></li>"
                             +"</ul></div></td>"
                             +"</tr>"
                     }
@@ -826,43 +838,100 @@ AcmDocument.View = AcmDocument.View || {
     }
 
     ,EventHistory: {
-        create: function() {
-            this.$tabEventHistory = $("#tabEventHistory");
-
-            //dummy
-            var eventHistoryList = [{"event" : "Assigned" , "date" : "03/17/2015", "user" : "ann-acm"},
-                {"event" : "Unassigned" , "date" : "03/17/2015", "user" : "ann-acm"},
-                {"event" : "Approved" , "date" : "03/17/2015", "user" : "ann-acm"}];
-
-            this.buildEventHistoryTable(eventHistoryList);
-
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
-        }
-        ,onInitialized: function() {
-        }
-
-        ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(AcmDocument.View.EventHistory.buildEventHistoryTable());
-        }
-        ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(AcmDocument.View.EventHistory.buildEventHistoryTable());
-        }
-        ,setHtmlTabEventHistory: function(val) {
-            AcmDocument.View.EventHistory.$tabEventHistory.append(val);
-        }
-        ,buildEventHistoryTable: function(eventHistoryList) {
-            var html = "";
-            for (var i = 0; i < eventHistoryList.length; i++) {
-
-                html+= "<tr>"
-                            +"<td>" + eventHistoryList[i].event + "</td>"
-                            +"<td>" + eventHistoryList[i].date + "</td>"
-                            +"<td>" + eventHistoryList[i].user +  "</td>"
-                        +"</tr>"
+            create: function() {
+                this.$divEventHistory          = $("#divEventHistory");
+                this.createJTableEventHistory(this.$divEventHistory);
             }
-            this.setHtmlTabEventHistory(html);
+            ,onInitialized: function() {
+            }
+
+
+            ,_makeJtData: function(history) {
+                var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                if (Acm.isNotEmpty(history.events)) {
+                    var events = history.events;
+                    for (var i = 0; i < events.length; i++) {
+                        if(AcmDocument.Model.EventHistory.validateEvent(events[i])){
+                            var Record = {};
+                            Record.eventType = Acm.goodValue(events[i].eventType);
+                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                            Record.userId = Acm.goodValue(events[i].userId);
+                            jtData.Records.push(Record);
+                        }
+                    }
+                    jtData.TotalRecordCount = history.totalEvents;
+                }
+                return jtData;
+            }
+            ,createJTableEventHistory: function($jt) {
+                var sortMap = {};
+                sortMap["created"] = "created";
+
+                AcmEx.Object.JTable.usePaging($jt
+                    ,{
+                        title: $.t("docdetail:event-history.table.title")
+                        ,paging: true
+                        ,pageList: 'minimal'
+                        ,pageSizeChangeArea: false
+                        ,sorting: true
+                        ,pageSize: 5 //Set page size (default: 10)
+                        ,actions: {
+                            pagingListAction: function (postData, jtParams, sortMap) {
+                                var documentId = AcmDocument.View.MicroData.documentId;
+                                if (0 >= documentId) {
+                                    return AcmEx.Object.JTable.getEmptyRecords();
+                                }
+                                var historyCache = AcmDocument.Model.EventHistory.cacheEventHistory.get(documentId + "." + jtParams.jtStartIndex);
+                                if (AcmDocument.Model.EventHistory.validateEventHistory(historyCache)) {
+                                    var history = {};
+                                    history.events = historyCache.resultPage;
+                                    history.totalEvents = historyCache.totalCount;
+                                    return AcmDocument.View.EventHistory._makeJtData(history);
+                                } else {
+                                    return AcmDocument.Service.EventHistory.retrieveHistoryDeferred(documentId
+                                        ,postData
+                                        ,jtParams
+                                        ,sortMap
+                                        ,function(data) {
+                                            if(AcmDocument.Model.EventHistory.validateEventHistory(data)){
+                                                var history = {};
+                                                history.events = data.resultPage;
+                                                history.totalEvents = data.totalCount;
+                                                return AcmDocument.View.EventHistory._makeJtData(history);
+                                            }
+                                            return AcmEx.Object.JTable.getEmptyRecords();
+                                        }
+                                        ,function(error) {
+                                        }
+                                    );
+                                }  //end else
+                            }
+                        }
+                        , fields: {
+                            id: {
+                                title: $.t("docdetail:event-history.table.field.id")
+                                ,key: true
+                                ,list: false
+                                ,create: false
+                                ,edit: false
+                            }, eventType: {
+                                title: $.t("docdetail:event-history.table.field.event-name")
+                                ,width: '50%'
+                                ,display: function (data) {
+                                    return "<p class='acm-docDetailLongText' title='" + data.record.eventType + "'>" + data.record.eventType + "</p>";
+                                }
+                            }, eventDate: {
+                                title: $.t("docdetail:event-history.table.field.date")
+                                ,width: '25%'
+                            }, userId: {
+                                title: $.t("docdetail:event-history.table.field.user")
+                                ,width: '25%'
+                            }
+                        } //end field
+                    } //end arg
+                    ,sortMap
+                );
+            }
         }
-    }
 };
 

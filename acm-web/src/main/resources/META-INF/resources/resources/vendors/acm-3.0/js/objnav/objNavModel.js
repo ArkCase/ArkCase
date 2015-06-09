@@ -43,10 +43,10 @@ ObjNav.Model = {
         if (0 < treeInfo.objId) { //single caseFile
             ObjNav.Model.setObjectId(treeInfo.objId);
             ObjNav.Model.setObjectType(treeInfo.objType);
-            ObjNav.Service.Detail.retrieveObject(treeInfo.objType, treeInfo.objId);
+            return ObjNav.Service.Detail.retrieveObject(treeInfo.objType, treeInfo.objId);
 
         } else {
-            ObjNav.Service.List.retrieveObjectList(treeInfo);
+            return ObjNav.Service.List.retrieveObjectList(treeInfo);
         }
     }
 
@@ -201,50 +201,50 @@ ObjNav.Model = {
             ,NODE_TYPE_PART_PAGE         : "p"
             //,NODE_TYPE_PART_OBJECT       : "o"
 
-
-            ,getTabIdsByKey: function(key) {
-                var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
-                var tabIds = [];
-                //var tabIds = ["tabBlank"];
-                if (Acm.isNotEmpty(key)) {
-                    var nodeType = this.getNodeTypeByKey(key);
-                    for (var i = 0; i < nodeTypeMap.length; i++) {
-                        if (nodeType == nodeTypeMap[i].nodeType) {
-                            tabIds = nodeTypeMap[i].tabIds;
-                            break;
-                        }
-                    }
-                }
-                return tabIds;
-            }
-            ,getIconByKey: function(key) {
-                var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
-                var icon = null;
-                if (Acm.isNotEmpty(key)) {
-                    var nodeType = this.getNodeTypeByKey(key);
-                    for (var i = 0; i < nodeTypeMap.length; i++) {
-                        if (nodeType == nodeTypeMap[i].nodeType) {
-                            icon = nodeTypeMap[i].icon;
-                            break;
-                        }
-                    }
-                }
-                return icon;
-            }
-            ,getTabIds: function() {
-                var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
-                var tabIds = [];
-                for (var i = 0; i < nodeTypeMap.length; i++) {
-                    var tabIdsThis = nodeTypeMap[i].tabIds;
-                    for (var j = 0; j < tabIdsThis.length; j++) {
-                        var tabId = tabIdsThis[j];
-                        if (!Acm.isItemInArray(tabId, tabIds)) {
-                            tabIds.push(tabId);
-                        }
-                    }
-                }
-                return tabIds;
-            }
+//
+//            ,getTabIdsByKey: function(key) {
+//                var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
+//                var tabIds = [];
+//                //var tabIds = ["tabBlank"];
+//                if (Acm.isNotEmpty(key)) {
+//                    var nodeType = this.getNodeTypeByKey(key);
+//                    for (var i = 0; i < nodeTypeMap.length; i++) {
+//                        if (nodeType == nodeTypeMap[i].nodeType) {
+//                            tabIds = nodeTypeMap[i].tabIds;
+//                            break;
+//                        }
+//                    }
+//                }
+//                return tabIds;
+//            }
+//            ,getIconByKey: function(key) {
+//                var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
+//                var icon = null;
+//                if (Acm.isNotEmpty(key)) {
+//                    var nodeType = this.getNodeTypeByKey(key);
+//                    for (var i = 0; i < nodeTypeMap.length; i++) {
+//                        if (nodeType == nodeTypeMap[i].nodeType) {
+//                            icon = nodeTypeMap[i].icon;
+//                            break;
+//                        }
+//                    }
+//                }
+//                return icon;
+//            }
+//            ,getTabIds: function() {
+//                var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
+//                var tabIds = [];
+//                for (var i = 0; i < nodeTypeMap.length; i++) {
+//                    var tabIdsThis = nodeTypeMap[i].tabIds;
+//                    for (var j = 0; j < tabIdsThis.length; j++) {
+//                        var tabId = tabIdsThis[j];
+//                        if (!Acm.isItemInArray(tabId, tabIds)) {
+//                            tabIds.push(tabId);
+//                        }
+//                    }
+//                }
+//                return tabIds;
+//            }
             ,getNodeTypeByKey: function(key) {
                 var nt = "";
                 if (Acm.isNotEmpty(key)) {

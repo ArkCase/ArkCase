@@ -57,26 +57,26 @@ CaseFile.Controller = CaseFile.Controller || {
     ,viewChangedCaseTitle: function(caseFileId, title) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_CASE_TITLE, caseFileId, title);
     }
-    ,MODEL_SAVED_CASE_TITLE                : "case-model-saved-case-title"
-    ,modelSavedCaseTitle : function(caseFileId, title) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_TITLE, caseFileId, title);
-    }
-    ,VIEW_CHANGED_INCIDENT_DATE            : "case-view-changed-incident-date"
-    ,viewChangedIncidentDate: function(caseFileId, incidentDate) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_INCIDENT_DATE, caseFileId, incidentDate);
-    }
-    ,MODEL_SAVED_INCIDENT_DATE             : "case-model-saved-incident-date"
-    ,modelSavedIncidentDate : function(caseFileId, incidentDate) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_INCIDENT_DATE, caseFileId, incidentDate);
-    }
-    ,VIEW_CHANGED_DUE_DATE                 : "case-view-changed-due-date"
-    ,viewChangedDueDate: function(caseFileId, dueDate) {
-        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DUE_DATE, caseFileId, dueDate);
-    }
-    ,MODEL_SAVED_DUE_DATE                  : "case-model-saved-due-date"
-    ,modelSavedDueDate : function(caseFileId, dueDate) {
-        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DUE_DATE, caseFileId, dueDate);
-    }
+//    ,MODEL_SAVED_CASE_TITLE                : "case-model-saved-case-title"
+//    ,modelSavedCaseTitle : function(caseFileId, title) {
+//        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_CASE_TITLE, caseFileId, title);
+//    }
+//    ,VIEW_CHANGED_INCIDENT_DATE            : "case-view-changed-incident-date"
+//    ,viewChangedIncidentDate: function(caseFileId, incidentDate) {
+//        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_INCIDENT_DATE, caseFileId, incidentDate);
+//    }
+//    ,MODEL_SAVED_INCIDENT_DATE             : "case-model-saved-incident-date"
+//    ,modelSavedIncidentDate : function(caseFileId, incidentDate) {
+//        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_INCIDENT_DATE, caseFileId, incidentDate);
+//    }
+//    ,VIEW_CHANGED_DUE_DATE                 : "case-view-changed-due-date"
+//    ,viewChangedDueDate: function(caseFileId, dueDate) {
+//        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DUE_DATE, caseFileId, dueDate);
+//    }
+//    ,MODEL_SAVED_DUE_DATE                  : "case-model-saved-due-date"
+//    ,modelSavedDueDate : function(caseFileId, dueDate) {
+//        Acm.Dispatcher.fireEvent(this.MODEL_SAVED_DUE_DATE, caseFileId, dueDate);
+//    }
     ,VIEW_CHANGED_DETAIL                   : "case-view-changed-detail"
     ,viewChangedDetail: function(caseFileId, details) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_DETAIL, caseFileId, details);
@@ -386,6 +386,16 @@ CaseFile.Controller = CaseFile.Controller || {
     ,VIEW_REFRESHED_OUTLOOK_CALENDAR                : "case-file-view-refreshed-outlook-calendar"
     ,viewRefreshedOutlookCalendar: function(caseFileId){
         Acm.Dispatcher.fireEvent(this.VIEW_REFRESHED_OUTLOOK_CALENDAR, caseFileId);
+    }
+
+    //merge casefiles
+    ,VIEW_MERGED_CASE_FILES                     : "case-file-view-merged-case-files"
+    ,viewMergedCaseFiles: function(sourceCaseFileId, targetCaseFileId){
+        Acm.Dispatcher.fireEvent(this.VIEW_MERGED_CASE_FILES, sourceCaseFileId, targetCaseFileId);
+    }
+    ,MODEL_MERGED_CASE_FILES                     : "case-file-model-merged-case-files"
+    ,modelMergedCaseFiles: function(targetCaseFile){
+        Acm.Dispatcher.fireEvent(this.MODEL_MERGED_CASE_FILES, targetCaseFile);
     }
 };
 

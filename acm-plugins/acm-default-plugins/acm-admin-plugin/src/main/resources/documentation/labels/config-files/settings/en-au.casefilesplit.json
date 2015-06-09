@@ -1,0 +1,68 @@
+{
+    "footer": {"buttons": {"split-case": {
+        "defaultValue": "Split Brief",
+        "description": "",
+        "value": "Split Brief"
+    }}},
+    "header": {"labels": {"split-case": {
+        "defaultValue": "Split Brief",
+        "description": "",
+        "value": "Split Brief"
+    }}},
+    "window-title": {
+        "defaultValue": "Brief | ACM | Ark Case Management",
+        "description": "",
+        "value": "Brief | ACM | Ark Case Management"
+    },
+    "split-submitted-message": {
+        "defaultValue": "Split Brief request has been submitted.  Please wait for the split operation to complete.",
+        "description": "",
+        "value": "Split Brief request has been submitted.  Please wait for the split operation to complete."
+    },
+    "bootstrap-wizard": {
+        "tabs": {
+            "summary": {
+                "defaultValue": "Summary",
+                "description": "",
+                "value": "Summary"
+            },
+            "notes": {
+                "defaultValue": "Notes",
+                "description": "",
+                "value": "Notes"
+            },
+            "documents": {
+                "defaultValue": "Documents",
+                "description": "",
+                "value": "Documents"
+            },
+            "details": {
+                "defaultValue": "Details",
+                "description": "",
+                "value": "Details"
+            },
+            "people": {
+                "defaultValue": "People",
+                "description": "",
+                "value": "People"
+            },
+            "participants": {
+                "defaultValue": "Participants",
+                "description": "",
+                "value": "Participants"
+            }
+        },
+        "direction": {
+            "next": {
+                "defaultValue": "Next",
+                "description": "",
+                "value": "Next"
+            },
+            "previous": {
+                "defaultValue": "Previous",
+                "description": "",
+                "value": "Previous"
+            }
+        }
+    }
+}

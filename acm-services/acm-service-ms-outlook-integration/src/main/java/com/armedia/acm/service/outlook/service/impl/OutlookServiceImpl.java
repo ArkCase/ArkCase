@@ -10,10 +10,13 @@ import com.armedia.acm.service.outlook.exception.AcmOutlookListItemsFailedExcept
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
+import com.armedia.acm.service.outlook.model.OutlookFolder;
+import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -26,23 +29,29 @@ import microsoft.exchange.webservices.data.core.service.item.Task;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ContactSchema;
 import microsoft.exchange.webservices.data.core.service.schema.EmailMessageSchema;
+import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.core.service.schema.TaskSchema;
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.EmailAddressKey;
 import microsoft.exchange.webservices.data.enumeration.PhoneNumberKey;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 4/20/15.
  */
-public class OutlookServiceImpl implements OutlookService
+public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,7 +59,7 @@ public class OutlookServiceImpl implements OutlookService
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                         boolean sortAscending)
+                                                         boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -62,7 +71,7 @@ public class OutlookServiceImpl implements OutlookService
         );
 
         FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Inbox, mailProperties, start,
-                maxItems, sortField, sortAscending);
+                maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookMailItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -76,7 +85,7 @@ public class OutlookServiceImpl implements OutlookService
 
     @Override
     public OutlookResults<OutlookTaskItem> findTaskItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                         boolean sortAscending)
+                                                         boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -90,7 +99,7 @@ public class OutlookServiceImpl implements OutlookService
         );
 
         FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Tasks, taskProperties, start,
-            maxItems, sortField, sortAscending);
+            maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookTaskItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -177,6 +186,7 @@ public class OutlookServiceImpl implements OutlookService
             oci.setRecurring(appt.getIsRecurring());
             oci.setStartDate(appt.getStart());
             oci.setEndDate(appt.getEnd());
+            oci.setFolderId(item.getParentFolderId().getUniqueId());
 
             return oci;
         }
@@ -227,8 +237,8 @@ public class OutlookServiceImpl implements OutlookService
     }
 
     @Override
-    public OutlookResults<OutlookCalendarItem> findCalendarItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                                 boolean sortAscending)
+    public OutlookResults<OutlookCalendarItem> findCalendarItems(String folderId, AcmOutlookUser user, int start, int maxItems, String sortField,
+                                                                 boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -239,11 +249,15 @@ public class OutlookServiceImpl implements OutlookService
                 AppointmentSchema.IsMeeting,
                 AppointmentSchema.IsRecurring,
                 AppointmentSchema.Start,
-                AppointmentSchema.End
+                AppointmentSchema.End,
+                ItemSchema.ParentFolderId
         );
 
-        FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start,
-                maxItems, sortField, sortAscending);
+
+        FindItemsResults<Item> items = folderId != null ?
+                getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter) :
+                getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start,
+                maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookCalendarItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -257,7 +271,7 @@ public class OutlookServiceImpl implements OutlookService
 
     @Override
     public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                               boolean sortAscending)
+                                                               boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -273,7 +287,7 @@ public class OutlookServiceImpl implements OutlookService
         );
 
         FindItemsResults<Item> items = getDao().findItems(service, WellKnownFolderName.Contacts, contactProperties, start,
-                maxItems, sortField, sortAscending);
+                maxItems, sortField, sortAscending, filter);
 
         OutlookResults<OutlookContactItem> results = new OutlookResults<>();
         populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(),
@@ -286,13 +300,16 @@ public class OutlookServiceImpl implements OutlookService
     }
 
     @Override
-    public OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, WellKnownFolderName folderName, OutlookCalendarItem calendarItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException {
+    public OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, OutlookCalendarItem calendarItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException {
         ExchangeService service = connect(user);
         Folder folder;
         try {
-            folder = Folder.bind(service, folderName);
+            if(calendarItem.getFolderId()!=null)
+                folder = Folder.bind(service, new FolderId(calendarItem.getFolderId()));
+            else
+                folder = Folder.bind(service, WellKnownFolderName.Calendar);
         } catch (Exception e) {
-            throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
+            throw new AcmOutlookException("Can't bind to folder id(" + calendarItem.getFolderId() + ")!", e);
         }
         return getDao().createCalendarAppointment(service, folder, calendarItem);
     }
@@ -332,6 +349,83 @@ public class OutlookServiceImpl implements OutlookService
         ExchangeService service = connect(user);
         getDao().deleteAppointmentItem(service, appointmentId, recurring, deleteMode);
     }
+    @Override
+    public OutlookFolder createFolder(AcmOutlookUser user,
+                                      WellKnownFolderName parentFolderName,
+                                      OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException {
+        ExchangeService service = connect(user);
+        return getDao().createFolder(service, user.getEmailAddress(), parentFolderName, newFolder);
+    }
+
+
+    @Override
+    public OutlookFolder getFolder(AcmOutlookUser user, String folderId) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException {
+        ExchangeService service = connect(user);
+        Folder folder = getDao().getFolder(service, folderId);
+
+        try {
+            return mapFolderToOutlookFolder(folder);
+        } catch (ServiceLocalException e) {
+            throw new AcmOutlookConnectionFailedException("Error retrieving folder properties. ", e);
+        }
+    }
+
+
+    @Override
+    public void deleteFolder(AcmOutlookUser user,
+                             String folderId,
+                             DeleteMode deleteMode) throws AcmOutlookItemNotFoundException {
+        ExchangeService service = connect(user);
+        getDao().deleteFolder(service, folderId, deleteMode);
+    }
+
+    @Override
+    public void addFolderPermission(AcmOutlookUser user,
+                                    String folderId,
+                                    OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException {
+        ExchangeService service = connect(user);
+        getDao().addFolderPermission(service, folderId, permission);
+    }
+
+    @Override
+    public void removeFolderPermission(AcmOutlookUser user,
+                                       String folderId,
+                                       OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException {
+        ExchangeService service = connect(user);
+        getDao().removeFolderPermission(service, folderId, permission);
+    }
+
+    @Override
+    public void updateFolderPermissions(AcmOutlookUser user, String calendarFolderId, List<OutlookFolderPermission> folderPermissions) {
+
+        List<OutlookFolderPermission> existingFolderPermissions = getFolder(user, calendarFolderId).getPermissions();
+        List<OutlookFolderPermission> folderPermissionsToBeAdded = new LinkedList<>();
+        List<OutlookFolderPermission> folderPermissionsToBeRemoved = new ArrayList<>(existingFolderPermissions);
+
+        for (OutlookFolderPermission outlookFolderPermission : folderPermissions) {
+            if (!existingFolderPermissions.contains(outlookFolderPermission))
+                folderPermissionsToBeAdded.add(outlookFolderPermission);//this is new permissions and needs to be added
+            else
+                folderPermissionsToBeRemoved.remove(outlookFolderPermission);//this is existing permission and not to be removed
+        }
+
+        for (OutlookFolderPermission outlookFolderPermission : folderPermissionsToBeAdded) {
+            try {
+                addFolderPermission(user, calendarFolderId, outlookFolderPermission);
+            } catch (Exception e) {
+                log.error("Can't add permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
+            }
+        }
+
+        for (OutlookFolderPermission outlookFolderPermission : folderPermissionsToBeRemoved) {
+            try {
+                if(!outlookFolderPermission.isFolderOwner())
+                    removeFolderPermission(user, calendarFolderId, outlookFolderPermission);
+            } catch (Exception e) {
+                log.error("Can't remove permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
+            }
+        }
+    }
 
     protected ExchangeService connect(AcmOutlookUser user) throws AcmOutlookConnectionFailedException
     {
@@ -346,5 +440,37 @@ public class OutlookServiceImpl implements OutlookService
     public void setDao(OutlookDao dao)
     {
         this.dao = dao;
+    }
+
+    private OutlookFolder mapFolderToOutlookFolder(Folder folder) throws ServiceLocalException {
+        OutlookFolder of = new OutlookFolder();
+        of.setDisplayName(folder.getDisplayName());
+        of.setId(folder.getId().getUniqueId());
+        of.setParentId(folder.getParentFolderId().getUniqueId());
+
+        List<OutlookFolderPermission> permissions = folder.getPermissions().getItems().
+                stream().
+                map(this::mapFolderPermission).
+                collect(Collectors.toCollection(() -> new LinkedList<>()));
+        of.setPermissions(permissions);
+
+        return of;
+
+    }
+
+    private OutlookFolderPermission mapFolderPermission(FolderPermission folderPermission) {
+        OutlookFolderPermission outlookFolderPermission = new OutlookFolderPermission();
+        outlookFolderPermission.setEmail(folderPermission.getUserId().getPrimarySmtpAddress());
+        outlookFolderPermission.setLevel(outlookFolderPermission.getLevel());
+        outlookFolderPermission.setCanCreateItems(folderPermission.getCanCreateItems());
+        outlookFolderPermission.setCanCreateSubFolders(folderPermission.getCanCreateSubFolders());
+        outlookFolderPermission.setFolderOwner(folderPermission.getIsFolderOwner());
+        outlookFolderPermission.setFolderVisible(folderPermission.getIsFolderVisible());
+        outlookFolderPermission.setFolderContact(folderPermission.getIsFolderContact());
+        outlookFolderPermission.setEditItems(folderPermission.getEditItems());
+        outlookFolderPermission.setDeleteItems(folderPermission.getDeleteItems());
+        outlookFolderPermission.setReadItems(outlookFolderPermission.getReadItems());
+
+        return outlookFolderPermission;
     }
 }

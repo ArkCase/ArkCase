@@ -46,8 +46,8 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
-            String fileType,
             String originalFileName,
+            String fileType,
             MultipartFile file,
             Authentication authentication,
             String targetCmisFolderId,
@@ -103,6 +103,8 @@ public interface EcmFileService
     EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
+    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 

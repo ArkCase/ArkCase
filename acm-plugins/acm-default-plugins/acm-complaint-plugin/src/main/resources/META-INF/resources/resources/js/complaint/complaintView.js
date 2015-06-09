@@ -18,7 +18,6 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.create)       {Complaint.View.Participants.create();}
         if (Complaint.View.Location.create)           {Complaint.View.Location.create();}
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
-        if (Complaint.View.OutlookCalendar.create)    {Complaint.View.OutlookCalendar.create();}
         if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
         if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
     }
@@ -36,7 +35,6 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.onInitialized)   {Complaint.View.Participants.onInitialized();}
         if (Complaint.View.Location.onInitialized)       {Complaint.View.Location.onInitialized();}
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
-        if (Complaint.View.OutlookCalendar.onInitialized) {Complaint.View.OutlookCalendar.onInitialized();}
         if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
         if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
     }
@@ -109,6 +107,19 @@ Complaint.View = Complaint.View || {
         }
     }
 
+
+    ,interfaceNavObj: {
+        nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable);
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeTypeMap: function() {
+            return Complaint.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,Navigator: {
         create: function() {
             this.$ulFilter = $("#ulFilter");
@@ -128,71 +139,107 @@ Complaint.View = Complaint.View || {
             }
         }
 
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"            ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"           ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"                  ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
+                ,tabIds: ["tabAction"
+                    ,"tabDetail"
+                    ,"tabLocation"
+                    ,"tabInitiator"
+                    ,"tabPeople"
+                    ,"tabNotes"
+                    ,"tabDocuments"
+                    ,"tabTasks"
+                    ,"tabRefs"
+                    ,"tabParticipants"
+                    ,"tabHistory"
+                    ,"tabTime"
+                    ,"tabCost"
+                    ,"tabOutlookCalendar"
+                ]}
+            ,{nodeType: "p/COMPLAINT/det"      ,icon: "" ,res: "complaint:navigation.leaf-title.details"      ,tabIds: ["tabDetail"]}
+            ,{nodeType: "p/COMPLAINT/loc"      ,icon: "" ,res: "complaint:navigation.leaf-title.location"     ,tabIds: ["tabLocation"]}
+            ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "" ,res: "complaint:navigation.leaf-title.people"       ,tabIds: ["tabPeople"]}
+            ,{nodeType: "p/COMPLAINT/doc"      ,icon: "" ,res: "complaint:navigation.leaf-title.documents"    ,tabIds: ["tabDocuments"]}
+            ,{nodeType: "p/COMPLAINT/task"     ,icon: "" ,res: "complaint:navigation.leaf-title.tasks"        ,tabIds: ["tabTasks"]}
+            ,{nodeType: "p/COMPLAINT/note"     ,icon: "" ,res: "complaint:navigation.leaf-title.notes"        ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/COMPLAINT/part"     ,icon: "" ,res: "complaint:navigation.leaf-title.participants" ,tabIds: ["tabParticipants"]}
+            ,{nodeType: "p/COMPLAINT/ref"      ,icon: "" ,res: "complaint:navigation.leaf-title.references"   ,tabIds: ["tabRefs"]}
+            ,{nodeType: "p/COMPLAINT/his"      ,icon: "" ,res: "complaint:navigation.leaf-title.history"      ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/COMPLAINT/calendar" ,icon: "" ,res: "complaint:navigation.leaf-title.calendar"     ,tabIds: ["tabOutlookCalendar"]}
+            ,{nodeType: "p/COMPLAINT/time"     ,icon: "" ,res: "complaint:navigation.leaf-title.time"         ,tabIds: ["tabTime"]}
+            ,{nodeType: "p/COMPLAINT/cost"     ,icon: "" ,res: "complaint:navigation.leaf-title.cost"         ,tabIds: ["tabCost"]}
+        ]
+
         ,getTreeArgs: function() {
             return {
-                lazyLoad: function(event, data) {
-                    Complaint.View.Navigator.lazyLoad(event, data);
-                }
-                ,getContextMenu: function(node) {
+//                lazyLoad: function(event, data) {
+//                    Complaint.View.Navigator.lazyLoad(event, data);
+//                }
+//                ,
+                getContextMenu: function(node) {
                     Complaint.View.Navigator.getContextMenu(node);
                 }
             };
         }
-        ,lazyLoad: function(event, data) {
-            var key = data.node.key;
-            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            switch (nodeType) {
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Complaint.Model.DOC_TYPE_COMPLAINT]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("complaint:navigation.leaf-title.details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_LOCATION
-                            ,title: $.t("complaint:navigation.leaf-title.location")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
-                            ,title: $.t("complaint:navigation.leaf-title.people")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: $.t("complaint:navigation.leaf-title.documents")
-//                            ,folder: true
-//                            ,lazy: true
-//                            ,cache: false
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
-                            ,title: $.t("complaint:navigation.leaf-title.tasks")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("complaint:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-                            ,title: $.t("complaint:navigation.leaf-title.participants")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
-                            ,title: $.t("complaint:navigation.leaf-title.references")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("complaint:navigation.leaf-title.history")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
-                            ,title: $.t("complaint:navigation.leaf-title.calendar")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
-                            ,title: $.t("complaint:navigation.leaf-title.time")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_COST
-                            ,title: $.t("complaint:navigation.leaf-title.cost")
-                        })
-                        .getTree();
-
-                    break;
-
-                default:
-                    data.result = [];
-                    break;
-            }
-        }
+//retired
+//        ,lazyLoad: function(event, data) {
+//            var key = data.node.key;
+//            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+//            switch (nodeType) {
+//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Complaint.Model.DOC_TYPE_COMPLAINT]):
+//                    data.result = AcmEx.FancyTreeBuilder
+//                        .reset()
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+//                            ,title: $.t("complaint:navigation.leaf-title.details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_LOCATION
+//                            ,title: $.t("complaint:navigation.leaf-title.location")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
+//                            ,title: $.t("complaint:navigation.leaf-title.people")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
+//                            ,title: $.t("complaint:navigation.leaf-title.documents")
+////                            ,folder: true
+////                            ,lazy: true
+////                            ,cache: false
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
+//                            ,title: $.t("complaint:navigation.leaf-title.tasks")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_NOTES
+//                            ,title: $.t("complaint:navigation.leaf-title.notes")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
+//                            ,title: $.t("complaint:navigation.leaf-title.participants")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
+//                            ,title: $.t("complaint:navigation.leaf-title.references")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+//                            ,title: $.t("complaint:navigation.leaf-title.history")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+//                            ,title: $.t("complaint:navigation.leaf-title.calendar")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
+//                            ,title: $.t("complaint:navigation.leaf-title.time")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_COST
+//                            ,title: $.t("complaint:navigation.leaf-title.cost")
+//                        })
+//                        .getTree();
+//
+//                    break;
+//
+//                default:
+//                    data.result = [];
+//                    break;
+//            }
+//        }
 
         ,getContextMenu: function(node) {
             var key = node.key;
@@ -1694,7 +1741,7 @@ Complaint.View = Complaint.View || {
                     url = url.replace("_data=(", "_data=(type:'complaint'"
                         + ", complaintId:'" + complaint.complaintId
                         + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber)
-                        + "',complaintTitle:'" + complaintTitle
+                        + "',complaintTitle:'" + encodeURIComponent(complaintTitle)
                         + "',complaintPriority:'" + Acm.goodValue(complaint.priority)
                         + "',folderId:'" + folderId
                         + "',");
@@ -2883,180 +2930,6 @@ Complaint.View = Complaint.View || {
                 }
             });
             $s.jtable('load');
-        }
-    }
-
-    ,OutlookCalendar: {
-        create: function() {
-            this.$outlookCalendar          = $(".calendar");
-            this.$weekView                 = $("#weekview");
-            this.$monthView                = $("#monthview");
-            this.$dayView                  = $("#dayview");
-            this.$btnRefreshCalendar       = $("#refreshCalendar");
-
-            this.$btnRefreshCalendar.on("click", function(e) {Complaint.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
-
-            this.createOutlookCalendarWidget(this.$outlookCalendar);
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
-        }
-        ,onInitialized: function() {
-        }
-        ,onViewSelectedObject: function(nodeType, nodeId) {
-            Complaint.View.OutlookCalendar.$outlookCalendar.html("");
-            Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
-        }
-        ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
-            if(outlookCalendarItems.hasError){
-                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
-            }
-            else{
-                Complaint.View.OutlookCalendar.$outlookCalendar.html("");
-                Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
-            }
-        }
-        ,onClickbtnRefreshCalendar: function(){
-            Complaint.Controller.viewRefreshedOutlookCalendar(Complaint.View.getActiveComplaintId());
-        }
-        ,createCalendarSource:function(){
-            var calendarSource = [];
-            var outlookCalendarItems = Complaint.Model.OutlookCalendar.cacheOutlookCalendarItems.get(Complaint.View.getActiveComplaintId());
-            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
-                for(var i = 0; i<outlookCalendarItems.items.length; i++){
-                    if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
-                        var outlookCalendarItem = {};
-                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
-                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
-                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
-                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
-                        outlookCalendarItem.detail = Complaint.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
-                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
-                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
-                        calendarSource.push(outlookCalendarItem);
-                    }
-                }
-            }
-            return calendarSource;
-        }
-
-        ,makeDetail: function(calendarItem){
-            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
-                var body = Acm.goodValue(calendarItem.body) + "</br>";
-                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
-                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
-                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
-                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
-                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
-                return detail;
-            }
-        }
-
-        ,createOutlookCalendarWidget: function($s){
-            var calendarSource = this.createCalendarSource();
-            var addDragEvent = function($this){
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-                var eventObject = {
-                    title: $.trim($this.text()), // use the element's text as the event title
-                    className: $this.attr('class').replace('label','')
-                };
-
-                // store the Event Object in the DOM element so we can get to it later
-                $this.data('eventObject', eventObject);
-
-                // make the event draggable using jQuery UI
-                $this.draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-            };
-
-            $s.fullCalendar({
-                header: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next'
-                },
-                timeFormat: 'h(:mm)t {-h(:mm)t}',
-                displayEventEnd : true,
-                editable: true,
-                //disable fullcalendar droppable as it creates conflict with the doctree's.
-                //looks like fullcalendar uses the generic jquery draggable
-                //we might need to add our own external draggable event handlers
-                //tailored for fullcalendar
-                droppable: false, // this allows things to be dropped onto the calendar !!!
-                drop: function(date, allDay) { // this function is called when something is dropped
-
-                    // retrieve the dropped element's stored Event Object
-                    var originalEventObject = $(this).data('eventObject');
-
-                    // we need to copy it, so that multiple events don't have a reference to the same object
-                    var copiedEventObject = $.extend({}, originalEventObject);
-
-                    // assign it the date that was reported
-                    copiedEventObject.start = date;
-                    copiedEventObject.allDay = allDay;
-
-                    // render the event on the calendar
-                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                    this.$outlookCalendar.fullCalendar('renderEvent', copiedEventObject, true);
-
-                    // is the "remove after drop" checkbox checked?
-                    if ($('#drop-remove').is(':checked')) {
-                        // if so, remove the element from the "Draggable Events" list
-                        $(this).remove();
-                    }
-
-                }
-                ,events: calendarSource
-                ,eventRender: function (event, element) {
-                    element.qtip({
-                        content: {
-                            text: Acm.goodValue(event.detail),
-                            title: {
-                                text: Acm.goodValue(event.title)
-                            }
-                        }
-                        ,position: {
-                            my: 'right center',
-                            at: 'left center',
-                            //target: 'mouse',
-                            viewport: $s,
-                            adjust: {
-                                mouse: false,
-                                scroll: false
-                            }
-                        }
-                        ,style: {
-                            classes: "qtip-rounded qtip-shadow"
-                        }
-                        ,show: { solo: true} //, ready: true, when: false
-                        ,hide: { when: 'mouseout', fixed: true}
-                    });
-                }
-            });
-            $('#myEvents').on('change', function(e, item){
-                addDragEvent($(item));
-            });
-
-            $('#myEvents li > div').each(function() {
-                addDragEvent($(this));
-            });
-
-            this.$dayView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaDay')
-            });
-
-            this.$weekView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaWeek')
-            });
-
-            this.$monthView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'month')
-            });
-
         }
     }
 

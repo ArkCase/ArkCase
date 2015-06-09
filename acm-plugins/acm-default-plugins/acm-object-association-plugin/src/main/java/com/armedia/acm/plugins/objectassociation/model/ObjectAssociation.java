@@ -14,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "acm_object_association")
@@ -242,5 +243,24 @@ public class ObjectAssociation implements AcmEntity, Serializable
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Objects.requireNonNull(obj, "Comparable object must not be null");
+        if (!(obj instanceof ObjectAssociation))
+            return false;
+        ObjectAssociation other = (ObjectAssociation) obj;
+        if (this.getAssociationId() == null || other.getAssociationId() == null)
+            return false;
+        return getAssociationId().equals(other.getAssociationId());
+    }
+
+    @Override
+    public int hashCode() {
+        if (getAssociationId() == null)
+            return super.hashCode();
+        else
+            return getAssociationId().hashCode();
     }
 }

@@ -30,6 +30,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher applicationEventPublisher;
 
+    private FolderAndFilesUtils folderAndFilesUtils;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/download/byId/{ecmFileId}", method = RequestMethod.GET)
@@ -57,55 +59,13 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             event.setSucceeded(true);
 
             getApplicationEventPublisher().publishEvent(event);
-            String cmisFileId = FolderAndFilesUtils.getActiveVersionCmisId(ecmFile);
+            String cmisFileId = getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile);
             download(cmisFileId, response,inline);
         }
         else
         {
-            fileNotFound(response);
+            fileNotFound();
         }
-    }
-
-    @RequestMapping(value = "/download/{fileId}", method = RequestMethod.GET)
-    @ResponseBody
-    public void downloadFile(
-            @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-            @PathVariable("fileId") String fileId,
-            Authentication authentication,
-            HttpSession httpSession,
-            HttpServletResponse response
-    ) throws IOException, MuleException, AcmObjectNotFoundException
-    {
-        if (log.isInfoEnabled())
-        {
-            log.info("Downloading file '" + fileId + "'");
-        }
-
-        download(fileId, response,inline);
-    }
-
-    /**
-     * special help for Alfresco object IDs
-     * @return
-     */
-    @RequestMapping(value = "/download/workspace:/SpacesStore/{fileId}", method = RequestMethod.GET)
-    @ResponseBody
-    public void downloadAlfrescoFile(
-            @RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-            @PathVariable("fileId") String fileId,
-            Authentication authentication,
-            HttpSession httpSession,
-            HttpServletResponse response
-    ) throws IOException, MuleException, AcmObjectNotFoundException
-    {
-        if (log.isInfoEnabled())
-        {
-            log.info("Downloading Alfresco file '" + fileId + "'");
-        }
-
-        fileId = "workspace://SpacesStore/" + fileId;
-
-        download(fileId, response,inline);
     }
 
     protected void download(String fileId, HttpServletResponse response,boolean isInline) throws IOException, MuleException, AcmObjectNotFoundException
@@ -119,7 +79,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
         else
         {
-            fileNotFound(response);
+            fileNotFound();
         }
 
     }
@@ -169,7 +129,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called when the file was not found.
-    private void fileNotFound(HttpServletResponse response) throws AcmObjectNotFoundException
+    private void fileNotFound() throws AcmObjectNotFoundException
     {
         throw new AcmObjectNotFoundException(null, null, "File not found", null);
     }
@@ -203,5 +163,13 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
+    }
+
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }

@@ -4351,9 +4351,9 @@ tr.dragover {
     border: 2px solid #0B85A1;
 }
 
-/* document detail page - notes table
- prevent overflow of notes from the notes column*/
-#acm-docDetailLongNote{
+/* document detail page - notes table/event history table
+ prevent overflow of text from the columns*/
+.acm-docDetailLongText{
   width:180px;
   overflow:auto;
 }
@@ -4367,6 +4367,12 @@ tr.dragover {
 
 /*fullcalendar title text */
 .acm-fullCalendarTitleText{
+  font-weight: bold;
+  color: #fff;
+}
+
+/*doc detail tables title text */
+.acm-DocDetailTitleText{
   font-weight: bold;
   color: #fff;
 }

@@ -18,6 +18,7 @@ import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by jwu on 8/28/14.
@@ -26,6 +27,7 @@ import java.util.Map;
 public class CaseFileUiController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+    private Properties properties;
     private AcmPlugin plugin;
 	private FormUrl formUrl;
 	private Map<String, Object> formProperties;
@@ -34,7 +36,7 @@ public class CaseFileUiController
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView openComplaints(Authentication auth) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("casefile");
+        mv.setViewName(getViewName());
         initModelAndView(mv);
         return mv;
     }
@@ -43,10 +45,15 @@ public class CaseFileUiController
     public ModelAndView openComplaint(Authentication auth, @PathVariable(value = "caseId") Long caseId
     ) {
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("casefile");
+        mv.setViewName(getViewName());
         initModelAndView(mv);
         mv.addObject("objId", caseId);
         return mv;
+    }
+
+    private String getViewName() {
+        String jsp = (String)getProperties().getProperty("jsp", "casefile");
+        return jsp;
     }
 
     private void addJsonArrayProp(ModelAndView mv, Map<String, Object> props, String propName, String attrName) {
@@ -78,6 +85,7 @@ public class CaseFileUiController
         mv.addObject("editCaseFileFormUrl", getCaseFileUrl());
         mv.addObject("reinvestigateCaseFileFormUrl", getCaseFileUrl());
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
+        mv.addObject("caseFileTreeRootNameExpression", props.get("casefile.tree.root.name.expression"));
         return mv;
     }
 
@@ -91,7 +99,20 @@ public class CaseFileUiController
         mv.addObject("newCaseFileFormUrl", getCaseFileUrl());
 
         return mv;
+    }
 
+    @RequestMapping(value = "/split/{parentCasefileId}", method = RequestMethod.GET)
+    public ModelAndView caseFileSplit(@PathVariable(value = "parentCasefileId") Long parentCasefileId)
+    {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("casefileSplit");
+        mv.addObject("parentCasefileId", parentCasefileId);
+
+        Map<String, Object> props = plugin.getPluginProperties();
+        addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
+        mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
+        mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
+        return mv;
     }
     
     private String getCaseFileUrl()
@@ -144,5 +165,13 @@ public class CaseFileUiController
 
     public void setNotificationProperties(Map<String, Object> notificationProperties) {
         this.notificationProperties = notificationProperties;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

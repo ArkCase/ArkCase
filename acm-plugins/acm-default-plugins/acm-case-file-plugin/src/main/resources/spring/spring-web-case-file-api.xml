@@ -30,4 +30,10 @@
         <property name="caseFileProperties" ref="caseFilePluginProperties"/>
     </bean>
 
+    <bean id="mergeCaseFileAPIController" class="com.armedia.acm.plugins.casefile.web.api.MergeCaseFilesAPIController">
+        <property name="mergeCaseService" ref="mergeCaseService"/>
+    </bean>
+    <bean id="splitCaseFileAPIController" class="com.armedia.acm.plugins.casefile.web.api.SplitCaseFilesAPIController">
+        <property name="splitCaseService" ref="splitCaseService"/>
+    </bean>
 </beans>
