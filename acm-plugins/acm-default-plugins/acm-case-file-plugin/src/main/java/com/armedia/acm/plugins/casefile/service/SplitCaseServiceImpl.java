@@ -104,39 +104,44 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                             Long folderId,
                             AcmContainer containerOfCopy,
                             AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmFolderException {
-        AcmFolder folderForMoving = acmFolderService.findById(folderId);
+
         if (options.isPreserveFolderStructure()) {
-            //if folder path exists on the copy of case file, than move all sub folders and document, else just move the folder
+            AcmFolder folderForMoving = acmFolderService.findById(folderId);
+            String folderPath = acmFolderService.getFolderPath(folderForMoving);
 
-            //create parent folder structure
-            AcmFolder parentFolderOfForMoving = acmFolderService.findById(folderForMoving.getParentFolderId());
-            AcmFolder parentFolderOfCopy = createFolderStructure(parentFolderOfForMoving, rootFolderOfCopy, folderMap);
+            AcmFolder alreadyHandledFolder = folderMap.get(folderId);
+            //check if folder path exists in the copy
+            if (alreadyHandledFolder != null || folderForMoving.getParentFolderId() == null || acmFolderService.folderPathExists(folderPath, containerOfCopy)) {
+                //move the folder children (folders documents) into existing folder of the copy case file
+                //this should create or return existing path, but path already exists so it should return existing folder
 
-            AcmFolder foundByName = acmFolderService.findByNameAndParent(folderForMoving.getName(), parentFolderOfCopy);
-            if (foundByName != null) {
-                List<AcmObject> objects = acmFolderService.getFolderChildren(parentFolderOfForMoving.getId());
-                for (AcmObject obj : objects) {
-                    if (obj instanceof EcmFile) {
-                        ecmFileService.moveFile(obj.getId(),
-                                containerOfCopy.getContainerObjectId(),
-                                containerOfCopy.getContainerObjectType(),
-                                foundByName.getId());
-                    } else if (obj instanceof AcmFolder) {
-                        acmFolderService.moveFolder((AcmFolder) obj, foundByName);
-                    } else {
-                        log.error("Error: this should not execute.");
+                List<AcmObject> folderChildren = acmFolderService.getFolderChildren(folderForMoving.getId());
+                for (AcmObject obj : folderChildren) {
+                    if (obj.getObjectType() == null)
+                        continue;
+                    if ("FILE".equals(obj.getObjectType().toUpperCase())) {
+                        moveDocument(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
+                    } else if ("FOLDER".equals(obj.getObjectType().toUpperCase())) {
+                        moveFolder(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
                     }
                 }
-
-                folderMap.put(folderForMoving.getId(), foundByName);
             } else {
-                AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, parentFolderOfCopy);
+                if (folderForMoving.getParentFolderId() == null)
+                    return;
+                //just move the folder to new parent
+                AcmFolder parentInSource = acmFolderService.findById(folderForMoving.getParentFolderId());
+                String folderPathParentInSource = acmFolderService.getFolderPath(parentInSource);
+
+                //this folder will be created if doesn't exits
+                AcmFolder createdParentFolderInCopy = acmFolderService.addNewFolderByPath(
+                        containerOfCopy.getContainerObjectType(),
+                        containerOfCopy.getContainerObjectId(),
+                        folderPathParentInSource);
+                AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, createdParentFolderInCopy);
                 folderMap.put(folderForMoving.getId(), movedFolder);
             }
-        } else {
-            AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, rootFolderOfCopy);
-            folderMap.put(folderForMoving.getId(), movedFolder);
         }
+
     }
 
     private void moveDocument(SplitCaseOptions options,
@@ -152,7 +157,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
             ecmFileService.moveFile(documentId,
                     containerOfCopy.getContainerObjectId(),
                     containerOfCopy.getContainerObjectType(),
-                    foundFolder.getId());
+                    foundFolder);
         }
 
         AcmFolder documentFolder = fileForMoving.getFolder();
@@ -162,7 +167,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
             ecmFileService.moveFile(documentId,
                     containerOfCopy.getContainerObjectId(),
                     containerOfCopy.getContainerObjectType(),
-                    rootFolderOfCopy.getId());
+                    rootFolderOfCopy);
         } else {
             //create folder structure in saved case file same as in source for the document
             String folderPath = acmFolderService.getFolderPath(fileForMoving.getFolder());
