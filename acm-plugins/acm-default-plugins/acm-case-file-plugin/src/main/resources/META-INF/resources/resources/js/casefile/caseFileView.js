@@ -8,8 +8,9 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.MicroData.create)       {CaseFile.View.MicroData.create();}
         if (CaseFile.View.Navigator.create)       {CaseFile.View.Navigator.create();}
         if (CaseFile.View.Content.create)         {CaseFile.View.Content.create();}
+        if (CaseFile.View.Ribbon.create)          {CaseFile.View.Ribbon.create();}
         if (CaseFile.View.Action.create)          {CaseFile.View.Action.create();}
-        if (CaseFile.View.Detail.create)          {CaseFile.View.Detail.create();}
+        if (CaseFile.View.DetailNote.create)      {CaseFile.View.DetailNote.create();}
         if (CaseFile.View.People.create)    	  {CaseFile.View.People.create();}
         if (CaseFile.View.Documents.create)       {CaseFile.View.Documents.create();}
         if (CaseFile.View.Participants.create)    {CaseFile.View.Participants.create();}
@@ -18,7 +19,6 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.create)      {CaseFile.View.References.create();}
         if (CaseFile.View.History.create)         {CaseFile.View.History.create();}
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
-        if (CaseFile.View.OutlookCalendar.create) {CaseFile.View.OutlookCalendar.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
 
@@ -30,8 +30,9 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.MicroData.onInitialized)       {CaseFile.View.MicroData.onInitialized();}
         if (CaseFile.View.Navigator.onInitialized)       {CaseFile.View.Navigator.onInitialized();}
         if (CaseFile.View.Content.onInitialized)         {CaseFile.View.Content.onInitialized();}
+        if (CaseFile.View.Ribbon.onInitialized)          {CaseFile.View.Ribbon.onInitialized();}
         if (CaseFile.View.Action.onInitialized)          {CaseFile.View.Action.onInitialized();}
-        if (CaseFile.View.Detail.onInitialized)          {CaseFile.View.Detail.onInitialized();}
+        if (CaseFile.View.DetailNote.onInitialized)      {CaseFile.View.DetailNote.onInitialized();}
         if (CaseFile.View.People.onInitialized)          {CaseFile.View.People.onInitialized();}
         if (CaseFile.View.Documents.onInitialized)       {CaseFile.View.Documents.onInitialized();}
         if (CaseFile.View.Participants.onInitialized)    {CaseFile.View.Participants.onInitialized();}
@@ -40,7 +41,6 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.References.onInitialized)      {CaseFile.View.References.onInitialized();}
         if (CaseFile.View.History.onInitialized)         {CaseFile.View.History.onInitialized();}
         if (CaseFile.View.Correspondence.onInitialized)  {CaseFile.View.Correspondence.onInitialized();}
-        if (CaseFile.View.OutlookCalendar.onInitialized) {CaseFile.View.OutlookCalendar.onInitialized();}
         if (CaseFile.View.Time.onInitialized)            {CaseFile.View.Time.onInitialized();}
         if (CaseFile.View.Cost.onInitialized)            {CaseFile.View.Cost.onInitialized();}
     }
@@ -119,6 +119,26 @@ CaseFile.View = CaseFile.View || {
         }
     }
 
+
+    ,interfaceNavObj: {
+        nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')';
+
+//        	var defaultExpression = "Acm.goodValue(objSolr.title_parseable) + ' (' + Acm.goodValue(objSolr.name) + ')'";
+//        	var caseFileTreeRootNameExpression = Acm.Object.MicroData.get("caseFileTreeRootNameExpression");
+//            if (Acm.isEmpty(caseFileTreeRootNameExpression)) {
+//                caseFileTreeRootNameExpression = defaultExpression;
+//            }
+//            return eval(caseFileTreeRootNameExpression);
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable);
+        }
+        ,nodeTypeMap: function() {
+            return CaseFile.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,Navigator: {
         create: function() {
             this.$ulFilter = $("#ulFilter");
@@ -156,96 +176,150 @@ CaseFile.View = CaseFile.View || {
 //            return false;
 //        }
 
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"      ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"     ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"            ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/CASE_FILE"  ,icon: "i i-folder"       ,tabIds: ["tabTitle"
+                ,"tabDetail"
+                ,"tabPeople"
+                ,"tabDocs"
+                ,"tabParticipants"
+                ,"tabNotes"
+                ,"tabTasks"
+                ,"tabRefs"
+                ,"tabHistory"
+                ,"tabCorrespondence"
+                ,"tabOutlookCalendar"
+                ,"tabTime"
+                ,"tabCost"
+            ]}
+            ,{nodeType: "p/CASE_FILE/det"       ,icon: "" ,res: "casefile:navigation.leaf-title.details"        ,tabIds: ["tabDetail"]}
+            ,{nodeType: "p/CASE_FILE/ppl"       ,icon: "" ,res: "casefile:navigation.leaf-title.people"         ,tabIds: ["tabPeople"]}
+            ,{nodeType: "p/CASE_FILE/doc"       ,icon: "" ,res: "casefile:navigation.leaf-title.documents"      ,tabIds: ["tabDocs"]}
+            //,{nodeType: "p/CASE_FILE/doc/c"     ,icon: "",tabIds: ["tabDoc"]}
+            ,{nodeType: "p/CASE_FILE/par"       ,icon: "" ,res: "casefile:navigation.leaf-title.participants"   ,tabIds: ["tabParticipants"]}
+            ,{nodeType: "p/CASE_FILE/note"      ,icon: "" ,res: "casefile:navigation.leaf-title.notes"          ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/CASE_FILE/task"      ,icon: "" ,res: "casefile:navigation.leaf-title.tasks"          ,tabIds: ["tabTasks"]}
+            ,{nodeType: "p/CASE_FILE/ref"       ,icon: "" ,res: "casefile:navigation.leaf-title.references"     ,tabIds: ["tabRefs"]}
+            ,{nodeType: "p/CASE_FILE/his"       ,icon: "" ,res: "casefile:navigation.leaf-title.history"        ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/CASE_FILE/tpl"       ,icon: "" ,res: "casefile:navigation.leaf-title.correspondence" ,tabIds: ["tabCorrespondence"]}
+            ,{nodeType: "p/CASE_FILE/calendar"  ,icon: "" ,res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabOutlookCalendar"]}
+            ,{nodeType: "p/CASE_FILE/time"      ,icon: "" ,res: "casefile:navigation.leaf-title.time"           ,tabIds: ["tabTime"]}
+            ,{nodeType: "p/CASE_FILE/cost"      ,icon: "" ,res: "casefile:navigation.leaf-title.cost"           ,tabIds: ["tabCost"]}
+
+        ]
+
         ,getTreeArgs: function() {
             return {
-                lazyLoad: function(event, data) {
-                    CaseFile.View.Navigator.lazyLoad(event, data);
-                }
-                ,getContextMenu: function(node) {
+//                lazyLoad: function(event, data) {
+//                    CaseFile.View.Navigator.lazyLoad(event, data);
+//                }
+//                ,
+                getContextMenu: function(node) {
                     CaseFile.View.Navigator.getContextMenu(node);
                 }
             };
         }
-        ,lazyLoad: function(event, data) {
-            var key = data.node.key;
-            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            switch (nodeType) {
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("casefile:navigation.leaf-title.details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
-                            ,title: $.t("casefile:navigation.leaf-title.people")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: $.t("casefile:navigation.leaf-title.documents")
-//                            ,folder: true
-//                            ,lazy: true
-//                            ,cache: false
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-                            ,title: $.t("casefile:navigation.leaf-title.participants")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("casefile:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS
-                            ,title: $.t("casefile:navigation.leaf-title.tasks")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
-                            ,title: $.t("casefile:navigation.leaf-title.references")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("casefile:navigation.leaf-title.history")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
-                            ,title: $.t("casefile:navigation.leaf-title.correspondence")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
-                            ,title: "Calendar"
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
-                            ,title: $.t("casefile:navigation.leaf-title.time")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_COST
-                            ,title: $.t("casefile:navigation.leaf-title.cost")
-                        })
-                        .getTree();
-
-                    break;
-
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]):
-                    var caseFileId = ObjNav.Model.Tree.Key.getObjIdByKey(key);
-                    var c = ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
-                    if (c) {
-                        data.result = [
-                            {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.1", title: "Document1" + "[Status]"}
-                            ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.2", title: "Doc2" + "[Status]"}
-                        ];
-                    } else {
-                        data.result = ObjNav.Service.Detail.retrieveObjectDeferred(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId
-                            ,function(response) {
-                                var z = 1;
-
-                                var resultFake = [
-                                    {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.3", title: "Document3" + "[Status]"}
-                                    ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.4", title: "Doc4" + "[Status]"}
-                                ];
-                                return resultFake;
-                            }
-                        );
-
-                    }
-
-                    break;
-
-                default:
-                    data.result = [];
-                    break;
-            }
-        }
+//retired
+//        ,lazyLoad: function(event, data) {
+//            var key = data.node.key;
+//            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+//            var builder = AcmEx.FancyTreeBuilder.reset();
+//            if (ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]) == nodeType) {
+//                var nodeTypeMap = CaseFile.View.Navigator.nodeTypeMap;
+//                for (var i = 0; i < nodeTypeMap.length; i++) {
+//                    if (0 == nodeTypeMap[i].nodeType.indexOf(nodeType)) {
+//                        var lastSep = nodeTypeMap[i].nodeType.lastIndexOf(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
+//                        if (nodeType.length == lastSep) {
+//                            var subPart = nodeTypeMap[i].nodeType.substring(lastSep);
+//                            builder.addLeaf({key: key + subPart
+//                                ,title: $.t(nodeTypeMap[i].res)
+//                            });
+//                        }
+//                    }
+//                }
+//            }
+//            data.result = builder.getTree();
+//            return;
+//
+////            switch (nodeType) {
+////                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE]):
+////                    data.result = AcmEx.FancyTreeBuilder
+////                        .reset()
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+////                            ,title: $.t("casefile:navigation.leaf-title.details")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
+////                            ,title: $.t("casefile:navigation.leaf-title.people")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
+////                            ,title: $.t("casefile:navigation.leaf-title.documents")
+//////                            ,folder: true
+//////                            ,lazy: true
+//////                            ,cache: false
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
+////                            ,title: $.t("casefile:navigation.leaf-title.participants")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_NOTES
+////                            ,title: $.t("casefile:navigation.leaf-title.notes")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TASKS
+////                            ,title: $.t("casefile:navigation.leaf-title.tasks")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
+////                            ,title: $.t("casefile:navigation.leaf-title.references")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+////                            ,title: $.t("casefile:navigation.leaf-title.history")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TEMPLATES
+////                            ,title: $.t("casefile:navigation.leaf-title.correspondence")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+////                            ,title: "Calendar"
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_TIME
+////                            ,title: $.t("casefile:navigation.leaf-title.time")
+////                        })
+////                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + CaseFile.Model.Tree.Key.NODE_TYPE_PART_COST
+////                            ,title: $.t("casefile:navigation.leaf-title.cost")
+////                        })
+////                        .getTree();
+////
+////                    break;
+////
+////                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, CaseFile.Model.DOC_TYPE_CASE_FILE, CaseFile.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS]):
+////                    var caseFileId = ObjNav.Model.Tree.Key.getObjIdByKey(key);
+////                    var c = ObjNav.Model.Detail.getCacheObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
+////                    if (c) {
+////                        data.result = [
+////                            {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.1", title: "Document1" + "[Status]"}
+////                            ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.2", title: "Doc2" + "[Status]"}
+////                        ];
+////                    } else {
+////                        data.result = ObjNav.Service.Detail.retrieveObjectDeferred(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId
+////                            ,function(response) {
+////                                var z = 1;
+////
+////                                var resultFake = [
+////                                    {key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.3", title: "Document3" + "[Status]"}
+////                                    ,{key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + "c.4", title: "Doc4" + "[Status]"}
+////                                ];
+////                                return resultFake;
+////                            }
+////                        );
+////
+////                    }
+////
+////                    break;
+////
+////                default:
+////                    data.result = [];
+////                    break;
+////            }
+//        }
 
         ,getContextMenu: function(node) {
             var key = node.key;
@@ -276,192 +350,8 @@ CaseFile.View = CaseFile.View || {
         }
     }
 
-    ,Action: {
+    ,Ribbon: {
         create: function() {
-            this.$olMilestoneTrack          = $(".track-progress");
-            this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
-            this.$dlgConsolidateCase       = $("#consolidateCase");
-            this.$edtConsolidateCase       = $("#edtConsolidateCase");
-            this.$btnEditCaseFile    	   = $("#btnEditCaseFile");
-            this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus");
-            this.$btnConsolidateCase       = $("#btnConsolidateCase");
-            this.$btnReinvestigateCaseFile = $("#btnReinvestigate");
-            this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
-            this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
-            this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
-            this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
-        }
-        ,onInitialized: function() {
-        }
-
-        ,onClickBtnEditCaseFile: function(event, ctrl) {
-        	var urlEditCaseFileForm = CaseFile.View.MicroData.formUrls.urlEditCaseFileForm;
-        	var caseFileId = CaseFile.View.getActiveCaseFileId();
-            var c = CaseFile.View.getActiveCaseFile();
-            if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var containerId = c.container.id;
-            	var folderId = c.container.folder.id;
-
-            	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
-            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
-            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
-                    ,function() {
-                        CaseFile.Controller.viewChangedCaseFile(caseFileId);
-                    }
-                );
-            }
-        }
-        
-        ,onClickBtnChangeCaseStatus: function() {
-            CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
-                var urlChangeCaseStatusForm = CaseFile.View.MicroData.formUrls.urlChangeCaseStatusForm;
-                var caseFileId = CaseFile.View.getActiveCaseFileId();
-                //var objType = ObjNav.View.Navigator.getActiveObjType();
-                //var c = ObjNav.Model.Detail.getCacheObject(objType, caseFileId);
-                var c = CaseFile.View.getActiveCaseFile();
-                if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
-                    if (Acm.isNotEmpty(c.caseNumber)) {
-                        urlChangeCaseStatusForm = urlChangeCaseStatusForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
-                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 1060, 700
-                            ,function() {
-                                CaseFile.Controller.viewClosedCaseFile(caseFileId);
-                            }
-                        );
-                    }
-                }
-            });
-        }
-
-        //---- demo how to use object picker ----
-        ,onPickObjectDemo: function() {
-            SearchBase.Dialog.create({name: "demoDialog"
-                ,title: "My Dialog Title"
-                ,prompt: "Enter to search Case or Task"
-                ,btnGoText: "Search Now!"
-                ,btnOkText: "Select"
-                ,btnCancelText: "Away"
-                ,filters: [{key: "Object Type", values: ["CASE_FILE", "TASK"]}]
-                ,onClickBtnPrimary : function(event, ctrl) {
-                    SearchBase.View.Results.getSelectedRows().each(function () {
-                        var record = $(this).data('record');
-
-                        var z = 1;
-                        alert("ok");
-                    });
-                }
-                ,onClickBtnDefault : function(event, ctrl) {
-                    alert("cancel");
-                }
-            }).show();
-        }
-        //---------------------------------------
-
-        ,onClickBtnConsolidateCase: function() {
-//borrow it to test object picker dialog
-//            this.onPickObjectDemo();
-//            return;
-
-            CaseFile.View.Action.setValueEdtConsolidateCase("");
-            CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
-                var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
-                alert("Consolidate case:" + caseNumber);
-            });
-        }
-        ,onClickBtnReinvestigateCaseFile: function() {
-        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
-        	var caseFileId = CaseFile.View.getActiveCaseFileId();
-            var c = CaseFile.View.getActiveCaseFile();
-            if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var containerId = c.container.id;
-            	var folderId = c.container.folder.id;
-            	
-            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
-            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
-            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
-                    ,function() {
-            			// TODO: When James will find solution, we should change this
-            			window.location.href = App.getContextPath() + '/plugin/casefile';
-                    }
-                );
-            }
-        }
-
-        ,onModelRetrievedObject: function(objData) {
-                CaseFile.View.Action.populate(objData);
-        }
-        ,onViewSelectedObject: function(objType, objId) {
-            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
-            CaseFile.View.Action.populate(objData);
-            SubscriptionOp.Model.checkSubscription(App.getUserName(), objType, objId);
-        }
-
-        ,populate: function(caseFile) {
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(caseFile.changeCaseStatus, true));
-                //Comment out temporarily
-                //CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
-            }
-        }
-        ,showMilestone: function(milestones) {
-            var achievedMilestones = [];
-            for ( var m = 0; m < milestones.length; m++ )
-            {
-                achievedMilestones.push(milestones[m].milestoneName);
-            }
-
-            var allMilestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
-
-            var html = "";
-            for ( var i = 0; i < allMilestones.length; i++ )
-            {
-                html += "<li";
-                for ( var j = 0; j < achievedMilestones.length; j++ )
-                {
-                    if ( achievedMilestones[j] === allMilestones[i] )
-                    {
-                        html += " class='done'";
-                        break;
-                    }
-                }
-                html += "><span>" + allMilestones[i] + "</span><i></i></li>\r";
-            }
-            this.setHtmlOlMilestoneTracker(html);
-            this.setAttrOlMilestoneTracker("data-steps", allMilestones.length);
-        }
-        ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
-            Acm.Dialog.modal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
-        }
-        ,showDlgConsolidateCase: function(onClickBtnPrimary) {
-            Acm.Dialog.modal(this.$dlgConsolidateCase, onClickBtnPrimary);
-        }
-        ,getValueEdtConsolidateCase: function() {
-            return Acm.Object.getValue(this.$edtConsolidateCase);
-        }
-        ,setValueEdtConsolidateCase: function(val) {
-            Acm.Object.setValue(this.$edtConsolidateCase, val);
-        }
-        ,showBtnChangeCaseStatus: function(show) {
-            Acm.Object.show(this.$btnChangeCaseStatus, show);
-        }
-        ,setHtmlOlMilestoneTracker: function(html) {
-            Acm.Object.setHtml(this.$olMilestoneTrack, html);
-        }
-        ,setAttrOlMilestoneTracker: function(name, value) {
-            this.$olMilestoneTrack.attr(name, value);
-        }
-    }
-
-    ,Detail: {
-        create: function() {
-            this.$divDetail       = $(".divDetail");
-            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
-            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
-            this.$btnEditDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnEditDetail(e, this);});
-            this.$btnSaveDetail.on("click", function(e) {CaseFile.View.Detail.onClickBtnSaveDetail(e, this);});
-
             this.$labCaseNumber   = $("#caseNumber");
             this.$lnkCaseTitle    = $("#caseTitle");
             this.$lnkIncidentDate = $("#incident");
@@ -472,48 +362,61 @@ CaseFile.View = CaseFile.View || {
             this.$lnkDueDate      = $("#dueDate");
             this.$lnkStatus       = $("#status");
 
-            this.$chkRestrict     = $("#restrict");
-            this.$chkRestrict.on("click", function(e) {CaseFile.View.Detail.onClickRestrictCheckbox(e, this);});
-
 
             AcmEx.Object.XEditable.useEditable(this.$lnkCaseTitle, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.getActiveCaseFileId(), newValue);
+                    CaseFile.Service.Detail.saveCaseFileItem(CaseFile.View.getActiveCaseFileId(), "title", newValue)
+                        .done(function(response){
+                            CaseFile.Controller.viewChangedCaseTitle(CaseFile.View.getActiveCaseFileId(), newValue);
+                        })
+                        .fail(function(response){
+                            CaseFile.View.Ribbon.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
+                        })
+                    ;
                 }
             });
-//            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
-//                success: function(response, newValue) {
-//                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.getActiveCaseFileId(), newValue);
-//                }
-//            });
+    //            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
+    //                success: function(response, newValue) {
+    //                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.getActiveCaseFileId(), newValue);
+    //                }
+    //            });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
                 success: function(response, newValue) {
-                    CaseFile.Controller.viewChangedDueDate(CaseFile.View.getActiveCaseFileId(), newValue);
+                    newValue = AcmEx.Object.XEditable.xDateToDatetime(newValue);
+                    CaseFile.Service.Detail.saveCaseFileItem(CaseFile.View.getActiveCaseFileId(), "incidentDate", newValue)
+                        .fail(function(response){
+                            CaseFile.View.Ribbon.setTextLnkDueDate($.t("casefile:detail.error-value"));
+                        })
+                    ;
                 }
             });
 
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
 
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_ASSIGNEES          ,this.onModelFoundAssignees);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_GROUPS         ,this.onModelRetrievedGroups);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_SUBJECT_TYPES      ,this.onModelFoundSubjectTypes);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PRIORITIES         ,this.onModelFoundPriorities);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_TITLE         ,this.onModelSavedCaseTitle);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_INCIDENT_DATE      ,this.onModelSavedIncidentDate);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE           ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	           ,this.onModelSavedGroup);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_SUBJECT_TYPE       ,this.onModelSavedSubjectType);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_PRIORITY           ,this.onModelSavedPriority);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DUE_DATE           ,this.onModelSavedDueDate);
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_ERROR     ,this.onModelRetrievedObjectError);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
         }
 
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            CaseFile.View.Ribbon.populateCaseFile(objData);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.View.Ribbon.populateCaseFile(objData);
+        }
 
         ,onModelFoundAssignees: function(assignees) {
             var choices = [];
@@ -524,19 +427,19 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkAssignee, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkAssignee, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedAssignee(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
-            	,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
+                ,currentValue: CaseFile.Model.Detail.getAssignee(CaseFile.View.getActiveCaseFile())
             });
-            
+
             // This is happen after loading the object, for that reason we should check here as well.
             // We need both, assignees and groups for checking.
-            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // For this to be happened, assignees and groups should be loaded. If in this stage
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
-            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
+            CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelRetrievedGroups: function(groups) {
             var choices = [];
@@ -547,19 +450,19 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkGroup, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkGroup, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedGroup(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
-            	,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
+                ,currentValue: CaseFile.Model.Detail.getGroup(CaseFile.View.getActiveCaseFile())
             });
-            
+
             // This is happen after loading the object, for that reason we should check here as well.
             // We need both, assignees and groups for checking.
-            // For this to be happened, assignees and groups should be loaded. If in this stage 
+            // For this to be happened, assignees and groups should be loaded. If in this stage
             // assignees or groups are not loaded, checking for assignees and groups will be skipped.
-            CaseFile.View.Detail.populateRestriction(CaseFile.View.getActiveCaseFile());
+            CaseFile.View.Action.populateRestriction(CaseFile.View.getActiveCaseFile());
         }
         ,onModelFoundSubjectTypes: function(subjectTypes) {
             var choices = [];
@@ -570,7 +473,7 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkSubjectType, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkSubjectType, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedSubjectType(CaseFile.View.getActiveCaseFileId(), newValue);
@@ -586,78 +489,48 @@ CaseFile.View = CaseFile.View || {
                 choices.push(opt);
             });
 
-            AcmEx.Object.XEditable.useEditable(CaseFile.View.Detail.$lnkPriority, {
+            AcmEx.Object.XEditable.useEditable(CaseFile.View.Ribbon.$lnkPriority, {
                 source: choices
                 ,success: function(response, newValue) {
                     CaseFile.Controller.viewChangedPriority(CaseFile.View.getActiveCaseFileId(), newValue);
                 }
             });
         }
-
-
-        ,onModelRetrievedObject: function(objData) {
-            CaseFile.View.Detail.populateCaseFile(objData);
-        }
-        ,onModelSavedCaseTitle: function(caseFileId, title) {
-            if (title.hasError) {
-                CaseFile.View.Detail.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
-            }
-        }
-        ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
-            if (incidentDate.hasError) {
-                CaseFile.View.Detail.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
-            }
-        }
+//        ,onModelSavedCaseTitle: function(caseFileId, title) {
+//            if (title.hasError) {
+//                CaseFile.View.Ribbon.setTextLnkCaseTitle($.t("casefile:detail.error-value"));
+//            }
+//        }
+//        ,onModelSavedIncidentDate: function(caseFileId, incidentDate) {
+//            if (incidentDate.hasError) {
+//                CaseFile.View.Ribbon.setTextLnkIncidentDate($.t("casefile:detail.error-value"));
+//            }
+//        }
         ,onModelSavedAssignee: function(caseFileId, assginee) {
             if (assginee.hasError) {
-                CaseFile.View.Detail.setTextLnkAssignee($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkAssignee($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedGroup: function(caseFileId, group) {
             if (group.hasError) {
-                CaseFile.View.Detail.setTextLnkGroup($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkGroup($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedSubjectType: function(caseFileId, subjectType) {
             if (subjectType.hasError) {
-                CaseFile.View.Detail.setTextLnkSubjectType($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkSubjectType($.t("casefile:detail.error-value"));
             }
         }
         ,onModelSavedPriority: function(caseFileId, priority) {
             if (priority.hasError) {
-                CaseFile.View.Detail.setTextLnkPriority($.t("casefile:detail.error-value"));
+                CaseFile.View.Ribbon.setTextLnkPriority($.t("casefile:detail.error-value"));
             }
         }
-        ,onModelSavedDueDate: function(caseFileId, created) {
-            if (created.hasError) {
-                CaseFile.View.Detail.setTextLnkDueDate($.t("casefile:detail.error-value"));
-            }
-        }
-        ,onModelSavedDetail: function(caseFileId, details) {
-            if (details.hasError) {
-                CaseFile.View.Detail.setHtmlDivDetail($.t("casefile:detail.error-value"));
-            }
-        }
-
-        ,onViewSelectedObject: function(objType, objId) {
-            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
-            CaseFile.View.Detail.populateCaseFile(objData);
-        }
-
-        ,DIRTY_EDITING_DETAIL: "Editing case detail"
-        ,onClickBtnEditDetail: function(event, ctrl) {
-            App.View.Dirty.declare(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
-            CaseFile.View.Detail.editDivDetail();
-        }
-        ,onClickBtnSaveDetail: function(event, ctrl) {
-            var htmlDetail = CaseFile.View.Detail.saveDivDetail();
-            CaseFile.Controller.viewChangedDetail(CaseFile.View.getActiveCaseFileId(), htmlDetail);
-            App.View.Dirty.clear(CaseFile.View.Detail.DIRTY_EDITING_DETAIL);
-        }
-        ,onClickRestrictCheckbox: function(event,ctrl){
-            var restriction = ($(ctrl).prop('checked')) ? true : false;
-            CaseFile.Controller.viewClickedRestrictCheckbox(CaseFile.View.getActiveCaseFileId(),restriction);
-        }
+//        ,onModelSavedDueDate: function(caseFileId, created) {
+//            if (created.hasError) {
+//                CaseFile.View.Ribbon.setTextLnkDueDate($.t("casefile:detail.error-value"));
+//            }
+//        }
 
         ,populateCaseFile: function(c) {
             if (CaseFile.Model.Detail.validateCaseFile(c)) {
@@ -668,16 +541,12 @@ CaseFile.View = CaseFile.View || {
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
-                this.setPropertyRestricted(Acm.goodValue(c.restricted));
-                this.setHtmlDivDetail(Acm.goodValue(c.details));
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
                 this.setTextLnkAssignee(Acm.goodValue(assignee));
-                
+
                 var group = CaseFile.Model.Detail.getGroup(c);
                 this.setTextLnkGroup(Acm.goodValue(group));
-                
-                CaseFile.View.Detail.populateRestriction(c);
             }
         }
 
@@ -709,8 +578,279 @@ CaseFile.View = CaseFile.View || {
         ,setTextLnkStatus: function(txt) {
             Acm.Object.setText(this.$lnkStatus, txt);
         }
+
+    }
+
+    ,Action: {
+        create: function() {
+            this.$olMilestoneTrack         = $(".track-progress");
+            this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
+            //this.$dlgConsolidateCase       = $("#consolidateCase");
+            //this.$edtConsolidateCase       = $("#edtConsolidateCase");
+            this.$btnEditCaseFile    	   = $("#btnEditCaseFile");
+            this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus");
+            this.$btnSplitCase             = $("#btnSplitCase");
+            this.$btnMergeCase       = $("#btnMergeCase");
+            this.$btnConsolidateCase       = $("#btnConsolidateCase");
+            this.$btnReinvestigateCaseFile = $("#btnReinvestigate");
+            this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
+            this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
+            //this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
+            this.$btnSplitCase            .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
+            this.$btnMergeCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnMergeCase(e, this);});
+
+            this.$chkRestrict = $("#restrict");
+            this.$chkRestrict.on("click", function(e) {CaseFile.View.Action.onClickRestrictCheckbox(e, this);});
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES           , this.onModelMergedCaseFiles);
+
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onClickBtnEditCaseFile: function(event, ctrl) {
+        	var urlEditCaseFileForm = CaseFile.View.MicroData.formUrls.urlEditCaseFileForm;
+        	var caseFileId = CaseFile.View.getActiveCaseFileId();
+            var c = CaseFile.View.getActiveCaseFile();
+            if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var containerId = c.container.id;
+                var folderId = c.container.attachmentFolder.id;
+
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
+            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
+            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
+                    ,function() {
+                        CaseFile.Controller.viewChangedCaseFile(caseFileId);
+                    }
+                );
+            }
+        }
+        
+        ,onClickBtnChangeCaseStatus: function() {
+            CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
+                var urlChangeCaseStatusForm = CaseFile.View.MicroData.formUrls.urlChangeCaseStatusForm;
+                var caseFileId = CaseFile.View.getActiveCaseFileId();
+                //var objType = ObjNav.View.Navigator.getActiveObjType();
+                //var c = ObjNav.Model.Detail.getCacheObject(objType, caseFileId);
+                var c = CaseFile.View.getActiveCaseFile();
+                if (Acm.isNotEmpty(urlChangeCaseStatusForm) && Acm.isNotEmpty(c)) {
+                    if (Acm.isNotEmpty(c.caseNumber)) {
+                        urlChangeCaseStatusForm = urlChangeCaseStatusForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',");
+                        Acm.Dialog.openWindow(urlChangeCaseStatusForm, "", 1060, 700
+                            ,function() {
+                                CaseFile.Controller.viewClosedCaseFile(caseFileId);
+                            }
+                        );
+                    }
+                }
+            });
+        }
+        ,onClickBtnSplitCase: function(event,ctrl){
+            var url = App.getContextPath() + "/plugin/casefile/split/" + CaseFile.View.getActiveCaseFileId();
+            window.open(url);
+        }
+
+        ,onClickBtnMergeCase: function() {
+            SearchBase.Dialog.create({name: $.t("casefile:case-picker.name")
+                ,title: $.t("casefile:case-picker.title")
+                ,prompt: $.t("casefile:case-picker.prompt")
+                ,btnGoText: $.t("casefile:case-picker.btn-search")
+                ,btnOkText: $.t("casefile:case-picker.btn-ok")
+                ,btnCancelText: $.t("casefile:case-picker.btn-cancel")
+                ,filters: [{key: "Object Type", values: ["CASE_FILE"]}]
+                ,onClickBtnPrimary : function(event, ctrl) {
+                    var selectedRows = SearchBase.Dialog.getSelectedRows();
+                    if(selectedRows.length > 1){
+                        Acm.Dialog.info("casefile:case-picker.selection-error")
+                    }else{
+                        selectedRows.each(function () {
+                            var record = $(this).data('record');
+                            var targetCaseFileId = record.id;
+                            var sourceCaseFileId = CaseFile.View.getActiveCaseFileId();
+                            if(Acm.isEmpty(sourceCaseFileId) && Acm.isEmpty(targetCaseFileId)){
+                                Acm.Dialog.info("Please check your selection and try again.");
+                            }
+                            else {
+                                CaseFile.Controller.viewMergedCaseFiles(sourceCaseFileId, targetCaseFileId);
+                            }
+                        });
+                    }
+                }
+            }).show();
+        }
+
+//        ,onClickBtnConsolidateCase: function() {
+//            CaseFile.View.Action.setValueEdtConsolidateCase("");
+//            CaseFile.View.Action.showDlgConsolidateCase(function(event, ctrl) {
+//                var caseNumber = CaseFile.View.Action.getValueEdtConsolidateCase();
+//                alert("Consolidate case:" + caseNumber);
+//            });
+//        }
+        ,onClickBtnReinvestigateCaseFile: function() {
+        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
+        	var caseFileId = CaseFile.View.getActiveCaseFileId();
+            var c = CaseFile.View.getActiveCaseFile();
+            if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
+            	var containerId = c.container.id;
+                var folderId = c.container.attachmentFolder.id;
+            	
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
+            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
+            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
+                    ,function() {
+            			// TODO: When James will find solution, we should change this
+            			window.location.href = App.getContextPath() + '/plugin/casefile';
+                    }
+                );
+            }
+        }
+
+        ,onModelRetrievedObject: function(objData) {
+                CaseFile.View.Action.populate(objData);
+        }
+        ,onModelMergedCaseFiles: function(targetCaseFile){
+            if(targetCaseFile.hasError) {
+                App.View.MessageBoard.show("Merge failed" , targetCaseFile.errorMsg);
+            }
+            else{
+                if(CaseFile.Model.Detail.validateCaseFile(targetCaseFile)){
+                    var url = "/plugin/casefile/" + Acm.goodValue(targetCaseFile.id);
+                    App.View.gotoPage(url);
+                }
+            }
+        }
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            CaseFile.View.Action.populate(objData);
+            SubscriptionOp.Model.checkSubscription(App.getUserName(), objType, objId);
+        }
+        ,onClickRestrictCheckbox: function(event,ctrl){
+            var restriction = ($(ctrl).prop('checked')) ? true : false;
+            CaseFile.Controller.viewClickedRestrictCheckbox(CaseFile.View.getActiveCaseFileId(),restriction);
+        }
+
+        ,populate: function(c) {
+            if (CaseFile.Model.Detail.validateCaseFile(c)) {
+                CaseFile.View.Action.showBtnChangeCaseStatus(Acm.goodValue(c.changeCaseStatus, true));
+
+                this.setPropertyRestricted(Acm.goodValue(c.restricted));
+                CaseFile.View.Action.populateRestriction(c);
+
+                //Comment out temporarily
+                //CaseFile.View.Action.showMilestone(Acm.goodValue(caseFile.milestones));
+            }
+        }
+        ,populateRestriction: function(c) {
+            if (CaseFile.Model.Detail.validateCaseFile(c)) {
+                var assignee = CaseFile.Model.Detail.getAssignee(c);
+                var group = CaseFile.Model.Detail.getGroup(c);
+                var assignees = CaseFile.Model.Lookup.getAssignees(c.id);
+                var groups = CaseFile.Model.Lookup.getGroups(c.id);
+
+                var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
+                CaseFile.View.Action.$chkRestrict.prop('disabled', restrict);
+            }
+        }
         ,setPropertyRestricted: function(restriction){
             this.$chkRestrict.prop('checked', restriction);
+        }
+        ,showMilestone: function(milestones) {
+            var achievedMilestones = [];
+            for ( var m = 0; m < milestones.length; m++ )
+            {
+                achievedMilestones.push(milestones[m].milestoneName);
+            }
+
+            var allMilestones = ["Initiated", "Waiver", "Adjudication", "Issued", "Closed"];
+
+            var html = "";
+            for ( var i = 0; i < allMilestones.length; i++ )
+            {
+                html += "<li";
+                for ( var j = 0; j < achievedMilestones.length; j++ )
+                {
+                    if ( achievedMilestones[j] === allMilestones[i] )
+                    {
+                        html += " class='done'";
+                        break;
+                    }
+                }
+                html += "><span>" + allMilestones[i] + "</span><i></i></li>\r";
+            }
+            this.setHtmlOlMilestoneTracker(html);
+            this.setAttrOlMilestoneTracker("data-steps", allMilestones.length);
+        }
+        ,showDlgChangeCaseStatus: function(onClickBtnPrimary) {
+            Acm.Dialog.modal(this.$dlgChangeCaseStatus, onClickBtnPrimary);
+        }
+//        ,showDlgConsolidateCase: function(onClickBtnPrimary) {
+//            Acm.Dialog.modal(this.$dlgConsolidateCase, onClickBtnPrimary);
+//        }
+//        ,getValueEdtConsolidateCase: function() {
+//            return Acm.Object.getValue(this.$edtConsolidateCase);
+//        }
+//        ,setValueEdtConsolidateCase: function(val) {
+//            Acm.Object.setValue(this.$edtConsolidateCase, val);
+//        }
+        ,showBtnChangeCaseStatus: function(show) {
+            Acm.Object.show(this.$btnChangeCaseStatus, show);
+        }
+        ,setHtmlOlMilestoneTracker: function(html) {
+            Acm.Object.setHtml(this.$olMilestoneTrack, html);
+        }
+        ,setAttrOlMilestoneTracker: function(name, value) {
+            this.$olMilestoneTrack.attr(name, value);
+        }
+    }
+
+    ,DetailNote: {
+        create: function() {
+            this.$divDetail       = $(".divDetail");
+            this.$btnEditDetail   = $("#tabDetail button:eq(0)");
+            this.$btnSaveDetail   = $("#tabDetail button:eq(1)");
+            this.$btnEditDetail.on("click", function(e) {CaseFile.View.DetailNote.onClickBtnEditDetail(e, this);});
+            this.$btnSaveDetail.on("click", function(e) {CaseFile.View.DetailNote.onClickBtnSaveDetail(e, this);});
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT             ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_DETAIL             ,this.onModelSavedDetail);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_CASE_FILE          ,this.onModelSavedCaseFile);
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onViewSelectedObject: function(objType, objId) {
+            var objData = ObjNav.Model.Detail.getCacheObject(objType, objId);
+            CaseFile.View.DetailNote.populateCaseFile(objData);
+        }
+        ,onModelRetrievedObject: function(objData) {
+            CaseFile.View.DetailNote.populateCaseFile(objData);
+        }
+        ,onModelSavedDetail: function(caseFileId, details) {
+            if (details.hasError) {
+                CaseFile.View.DetailNote.setHtmlDivDetail($.t("casefile:detail.error-value"));
+            }
+        }
+
+
+        ,DIRTY_EDITING_DETAIL: "Editing case detail"
+        ,onClickBtnEditDetail: function(event, ctrl) {
+            App.View.Dirty.declare(CaseFile.View.DetailNote.DIRTY_EDITING_DETAIL);
+            CaseFile.View.DetailNote.editDivDetail();
+        }
+        ,onClickBtnSaveDetail: function(event, ctrl) {
+            var htmlDetail = CaseFile.View.DetailNote.saveDivDetail();
+            CaseFile.Controller.viewChangedDetail(CaseFile.View.getActiveCaseFileId(), htmlDetail);
+            App.View.Dirty.clear(CaseFile.View.DetailNote.DIRTY_EDITING_DETAIL);
+        }
+
+        ,populateCaseFile: function(c) {
+            if (CaseFile.Model.Detail.validateCaseFile(c)) {
+                this.setHtmlDivDetail(Acm.goodValue(c.details));
+            }
         }
         ,getHtmlDivDetail: function() {
             return AcmEx.Object.SummerNote.get(this.$divDetail);
@@ -734,18 +874,6 @@ CaseFile.View = CaseFile.View || {
 //        		CaseFile.View.Action.$btnChangeCaseStatus.hide();
 //        	}
 //        }
-        
-        ,populateRestriction: function(c) {
-        	if (CaseFile.Model.Detail.validateCaseFile(c)) {
-	        	var assignee = CaseFile.Model.Detail.getAssignee(c);
-	        	var group = CaseFile.Model.Detail.getGroup(c);
-	        	var assignees = CaseFile.Model.Lookup.getAssignees(c.id);
-	        	var groups = CaseFile.Model.Lookup.getGroups(c.id);
-	            
-	            var restrict = Acm.checkRestriction(assignee, group, assignees, groups);
-	            CaseFile.View.Detail.$chkRestrict.prop('disabled', restrict);
-        	}
-        }
     }
     
     ,People: {
@@ -1073,7 +1201,7 @@ CaseFile.View = CaseFile.View || {
                             //,displayFormat: 'yy-mm-dd'
                         }
                         ,creator: {
-                            title: $.t("casefile:people.table.communication.table.field.added-by")
+                            title: $.t("casefile:people.table.contact-methods.table.field.added-by")
                             ,width: '30%'
                             ,create: false
                             ,edit: false
@@ -1844,7 +1972,7 @@ CaseFile.View = CaseFile.View || {
 
                     url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
                         + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + caseTitle
+                        + "',caseTitle:'" + encodeURIComponent(caseTitle)
                         + "',casePriority:'" + Acm.goodValue(caseFile.priority)
                         + "',folderId:'" + folderId
                         + "',"
@@ -1855,262 +1983,262 @@ CaseFile.View = CaseFile.View || {
         }
     }
 
-    ,Documents_JTable_To_Retire: {
-        create: function() {
-            //for cases frevvo form is disabled in the properties file
-            this.$formAddDocument = $("#formAddDocument");
-            this.$btnAddDocument = $("#addDocument")
-            this.$btnAddDocument.on("change", function(e) {CaseFile.View.Documents.onChangeFileInput(e, this);});
-            this.$formAddDocument.submit(function(e) {CaseFile.View.Documents.onSubmitAddDocument(e, this);});
-
-            this.$divDocuments    = $("#divDocs");
-            this.createJTableDocuments(this.$divDocuments);
-            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments, CaseFile.View.Documents.onClickSpanAddDocument);
-            this.$spanAddDocument = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-            CaseFile.View.Documents.fillReportSelection();
-
-
-
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE     ,this.onModelRetrievedCaseFile);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT          ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_CREATED_CORRESPONDENCE  ,this.onModelCreatedCorrespondence);
-            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT            ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE         ,this.onViewClosedCaseFile);
-        }
-        ,onInitialized: function() {
-        }
-
-        ,onChangeFileInput: function(event, ctrl) {
-            CaseFile.View.Documents.$formAddDocument.submit();
-        }
-        ,onSubmitAddDocument: function(event, ctrl) {
-            event.preventDefault();
-            var count = CaseFile.View.Documents.$btnAddDocument[0].files.length;
-            var report = CaseFile.View.Documents.getSelectReportText();
-
-            var fd = new FormData();
-            fd.append("fileType", report);
-            fd.append("parentObjectId", CaseFile.Model.getCaseFileId());
-            fd.append("parentObjectType", CaseFile.Model.DOC_TYPE_CASE_FILE);
-            for(var i = 0; i < count; i++ ){
-                fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
-            }
-            CaseFile.Service.Documents.uploadDocument(fd);
-            this.$formAddDocument[0].reset();
-        }
-        ,onModelAddedDocument: function(caseFileId) {
-            if (caseFileId.hasError) {
-                ;
-            } else {
-                CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
-            }
-        }
-        ,onModelCreatedCorrespondence: function(caseFileId) {
-            if (caseFileId.hasError) {
-                ;
-            } else {
-                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-            }
-        }
-        ,onModelRetrievedObject: function(objData) {
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-        }
-        ,onViewSelectedObject: function(objType, objId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-        }
-        ,onViewClosedCaseFile: function(caseFileId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-        }
-        ,onViewAddedDocument: function(caseFileId) {
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-        }
-
-
-        ,onClickSpanAddDocument: function(event, ctrl) {
-            var enableFrevvoFormEngine = CaseFile.View.MicroData.formUrls.enableFrevvoFormEngine;
-            var report = CaseFile.View.Documents.getSelectReport();
-            var reportext = CaseFile.View.Documents.getSelectReportText();
-
-            if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
-                var token = CaseFile.View.MicroData.getToken();
-
-                var caseFileId = CaseFile.View.getActiveCaseFileId();
-                var caseFile = CaseFile.View.getActiveCaseFile();
-
-                if (caseFile) {
-                    var url = CaseFile.View.MicroData.getFormUrls()[report];
-                    if (Acm.isNotEmpty(url)) {
-                        // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
-                        // the Frevvo form will decode it.
-                        var caseTitle = Acm.goodValue(caseFile.title);
-                        caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-
-                        url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-                            + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                            + "',caseTitle:'" + caseTitle
-                            + "',casePriority:'" + Acm.goodValue(caseFile.priority)
-                            + "',");
-
-                        Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30
-                            ,function() {
-                        		CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
-                            }
-                        );
-                    }
-                }
-            }
-            else if(report && report != ""){
-                CaseFile.View.Documents.$btnAddDocument.click();
-            }
-        }
-//html+= "<form id='formFiles' style='display:none;'>"
-//    + "<input id='newAttachment' type='file' name='files[]' multiple/>"
-//    + "</form>"
-
-        ,fillReportSelection: function() {
-        	var formDocuments = null;
-        	try {
-        		formDocuments = JSON.parse(Acm.Object.MicroData.get("formDocuments"));
-        	} catch(e) {
-        		
-        	}
-        	
-            var html = "<span>"
-                + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value=''>"+ $.t("casefile:documents.form-document.document-type") +"</option>";
-
-            if (formDocuments != null && formDocuments.length > 0) {
-            	for (var i = 0; i < formDocuments.length; i ++) {
-            		html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
-            	}
-            }
-                
-            html += "<option value='mr'>"+ $.t("casefile:documents.form-document.medical-release") +"</option>"
-                + "<option value='gr'>"+ $.t("casefile:documents.form-document.general-release") +"</option>"
-                + "<option value='ev'>"+ $.t("casefile:documents.form-document.e-delivery") +"</option>"
-                + "<option value='sig'>" +$.t("casefile:documents.form-document.sf86-signature") + "</option>"
-                + "<option value='noi'>" + $.t("casefile:documents.form-document.notice-of-investigation") + "</option>"
-                + "<option value='wir'>"+ $.t("casefile:documents.form-document.within-interview-request") +"</option>"
-                + "<option value='ot'>" + $.t("casefile:documents.form-document.other") + "</option>"
-                + "</select>"
-                + "</span>";
-
-
-            this.$spanAddDocument.before(html);
-        }
-        ,getSelectReport: function() {
-            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
-        }
-        ,getSelectReportText: function() {
-            return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
-        }
-        ,_makeJtData: function(documents, totalDocuments) {
-            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (Acm.isNotEmpty(documents)) {
-                for (var i = 0; i < documents.length; i++) {
-                    if(CaseFile.Model.Documents.validateDocument(documents[i])){
-                        var Record = {};
-                        Record.id = Acm.goodValue(documents[i].objectId)
-                        Record.title = Acm.goodValue(documents[i].name);
-                        Record.created = Acm.getDateFromDatetime(documents[i].created);
-                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
-                        jtData.Records.push(Record);
-                    }
-                }
-                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
-            }
-            return jtData;
-        }
-        , reloadDocs: function()
-        {
-            var divDocuments = $("#divDocs");
-            CaseFile.View.Documents.createJTableDocuments(divDocuments);
-        }
-        , createJTableDocuments: function ($s) {
-            AcmEx.Object.JTable.usePaging($s, {
-                title: $.t("casefire:documents.table.title")
-                ,paging: true
-                ,sorting: true
-                ,pageSize: 10 //Set page size (default: 10)
-                , messages: {
-                    addNewRecord: $.t("casefire:documents.msg.add-new-record")
-                }
-                , actions: {
-                    pagingListAction: function (postData, jtParams, sortMap) {
-                        var caseId = CaseFile.View.getActiveCaseFileId();
-                        if ( ! caseId || 0 >= caseId )
-                        {
-                            return AcmEx.Object.JTable.getEmptyRecords();
-                        }
-                        //var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + jtParams.jtStartIndex);
-                        //if (CaseFile.Model.Documents.validateDocuments(documentsCache)) {
-                        //    var documents = documentsCache.children;
-                        //    var totalDocuments = documentsCache.totalChildren;
-                        //    return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
-                        //} else {
-                            return CaseFile.Service.Documents.retrieveDocumentsDeferred(caseId
-                                ,postData
-                                ,jtParams
-                                ,sortMap
-                                ,function(data) {
-                                    if(CaseFile.Model.Documents.validateDocuments(data)){
-                                        var documents = data.children;
-                                        var totalDocuments = data.totalChildren;
-                                        return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
-                                    }
-                                    return AcmEx.Object.JTable.getEmptyRecords();
-                                }
-                                ,function(error) {
-                                }
-                            );
-                        //}  //end else
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        //placeholder. this action should never be called
-                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
-                        return rc;
-                    }
-                }
-                , fields: {
-                    id: {
-                        title: $.t("casefile:documents.table.field.id")
-                        , key: true
-                        , list: false
-                        , create: false
-                        , edit: false
-                        , defaultvalue: 0
-                    }
-                    , title: {
-                        title: $.t("casefile:documents.table.field.title")
-                        , width: '50%'
-                        , edit: false
-                        , create: false
-                        ,display: function (commData) {
-                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
-                                + ((0 >= commData.record.id)? "#" : commData.record.id)
-                                + "'>" + commData.record.title + "</a>";
-                            return $(a);
-                        }
-                    }
-                    , created: {
-                        title: $.t("casefile:documents.table.field.date-added")
-                        , width: '15%'
-                        , edit: false
-                        , create: false
-                    }
-                    , creator: {
-                        title: $.t("casefile:documents.table.field.added-by")
-                        , width: '15%'
-                        , edit: false
-                        , create: false
-                    }
-                }
-            });
-        }
-
-    }
+//    ,Documents_JTable_To_Retire: {
+//        create: function() {
+//            //for cases frevvo form is disabled in the properties file
+//            this.$formAddDocument = $("#formAddDocument");
+//            this.$btnAddDocument = $("#addDocument")
+//            this.$btnAddDocument.on("change", function(e) {CaseFile.View.Documents.onChangeFileInput(e, this);});
+//            this.$formAddDocument.submit(function(e) {CaseFile.View.Documents.onSubmitAddDocument(e, this);});
+//
+//            this.$divDocuments    = $("#divDocs");
+//            this.createJTableDocuments(this.$divDocuments);
+//            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments, CaseFile.View.Documents.onClickSpanAddDocument);
+//            this.$spanAddDocument = this.$divDocuments.find(".jtable-toolbar-item-add-record");
+//            CaseFile.View.Documents.fillReportSelection();
+//
+//
+//
+//            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE     ,this.onModelRetrievedCaseFile);
+//            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT          ,this.onModelRetrievedObject);
+//            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
+//            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_CREATED_CORRESPONDENCE  ,this.onModelCreatedCorrespondence);
+//            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
+//            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT            ,this.onViewSelectedObject);
+//            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE         ,this.onViewClosedCaseFile);
+//        }
+//        ,onInitialized: function() {
+//        }
+//
+//        ,onChangeFileInput: function(event, ctrl) {
+//            CaseFile.View.Documents.$formAddDocument.submit();
+//        }
+//        ,onSubmitAddDocument: function(event, ctrl) {
+//            event.preventDefault();
+//            var count = CaseFile.View.Documents.$btnAddDocument[0].files.length;
+//            var report = CaseFile.View.Documents.getSelectReportText();
+//
+//            var fd = new FormData();
+//            fd.append("fileType", report);
+//            fd.append("parentObjectId", CaseFile.Model.getCaseFileId());
+//            fd.append("parentObjectType", CaseFile.Model.DOC_TYPE_CASE_FILE);
+//            for(var i = 0; i < count; i++ ){
+//                fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
+//            }
+//            CaseFile.Service.Documents.uploadDocument(fd);
+//            this.$formAddDocument[0].reset();
+//        }
+//        ,onModelAddedDocument: function(caseFileId) {
+//            if (caseFileId.hasError) {
+//                ;
+//            } else {
+//                CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
+//            }
+//        }
+//        ,onModelCreatedCorrespondence: function(caseFileId) {
+//            if (caseFileId.hasError) {
+//                ;
+//            } else {
+//                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+//            }
+//        }
+//        ,onModelRetrievedObject: function(objData) {
+//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+//        }
+//        ,onViewSelectedObject: function(objType, objId) {
+//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+//        }
+//        ,onViewClosedCaseFile: function(caseFileId) {
+//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+//        }
+//        ,onViewAddedDocument: function(caseFileId) {
+//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
+//        }
+//
+//
+//        ,onClickSpanAddDocument: function(event, ctrl) {
+//            var enableFrevvoFormEngine = CaseFile.View.MicroData.formUrls.enableFrevvoFormEngine;
+//            var report = CaseFile.View.Documents.getSelectReport();
+//            var reportext = CaseFile.View.Documents.getSelectReportText();
+//
+//            if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
+//                var token = CaseFile.View.MicroData.getToken();
+//
+//                var caseFileId = CaseFile.View.getActiveCaseFileId();
+//                var caseFile = CaseFile.View.getActiveCaseFile();
+//
+//                if (caseFile) {
+//                    var url = CaseFile.View.MicroData.getFormUrls()[report];
+//                    if (Acm.isNotEmpty(url)) {
+//                        // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
+//                        // the Frevvo form will decode it.
+//                        var caseTitle = Acm.goodValue(caseFile.title);
+//                        caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
+//
+//                        url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
+//                            + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
+//                            + "',caseTitle:'" + caseTitle
+//                            + "',casePriority:'" + Acm.goodValue(caseFile.priority)
+//                            + "',");
+//
+//                        Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30
+//                            ,function() {
+//                        		CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
+//                            }
+//                        );
+//                    }
+//                }
+//            }
+//            else if(report && report != ""){
+//                CaseFile.View.Documents.$btnAddDocument.click();
+//            }
+//        }
+////html+= "<form id='formFiles' style='display:none;'>"
+////    + "<input id='newAttachment' type='file' name='files[]' multiple/>"
+////    + "</form>"
+//
+//        ,fillReportSelection: function() {
+//        	var formDocuments = null;
+//        	try {
+//        		formDocuments = JSON.parse(Acm.Object.MicroData.get("formDocuments"));
+//        	} catch(e) {
+//
+//        	}
+//
+//            var html = "<span>"
+//                + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
+//                + "<option value=''>"+ $.t("casefile:documents.form-document.document-type") +"</option>";
+//
+//            if (formDocuments != null && formDocuments.length > 0) {
+//            	for (var i = 0; i < formDocuments.length; i ++) {
+//            		html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
+//            	}
+//            }
+//
+//            html += "<option value='mr'>"+ $.t("casefile:documents.form-document.medical-release") +"</option>"
+//                + "<option value='gr'>"+ $.t("casefile:documents.form-document.general-release") +"</option>"
+//                + "<option value='ev'>"+ $.t("casefile:documents.form-document.e-delivery") +"</option>"
+//                + "<option value='sig'>" +$.t("casefile:documents.form-document.sf86-signature") + "</option>"
+//                + "<option value='noi'>" + $.t("casefile:documents.form-document.notice-of-investigation") + "</option>"
+//                + "<option value='wir'>"+ $.t("casefile:documents.form-document.within-interview-request") +"</option>"
+//                + "<option value='ot'>" + $.t("casefile:documents.form-document.other") + "</option>"
+//                + "</select>"
+//                + "</span>";
+//
+//
+//            this.$spanAddDocument.before(html);
+//        }
+//        ,getSelectReport: function() {
+//            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
+//        }
+//        ,getSelectReportText: function() {
+//            return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
+//        }
+//        ,_makeJtData: function(documents, totalDocuments) {
+//            var jtData = AcmEx.Object.JTable.getEmptyRecords();
+//            if (Acm.isNotEmpty(documents)) {
+//                for (var i = 0; i < documents.length; i++) {
+//                    if(CaseFile.Model.Documents.validateDocument(documents[i])){
+//                        var Record = {};
+//                        Record.id = Acm.goodValue(documents[i].objectId)
+//                        Record.title = Acm.goodValue(documents[i].name);
+//                        Record.created = Acm.getDateFromDatetime(documents[i].created);
+//                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+//                        jtData.Records.push(Record);
+//                    }
+//                }
+//                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
+//            }
+//            return jtData;
+//        }
+//        , reloadDocs: function()
+//        {
+//            var divDocuments = $("#divDocs");
+//            CaseFile.View.Documents.createJTableDocuments(divDocuments);
+//        }
+//        , createJTableDocuments: function ($s) {
+//            AcmEx.Object.JTable.usePaging($s, {
+//                title: $.t("casefire:documents.table.title")
+//                ,paging: true
+//                ,sorting: true
+//                ,pageSize: 10 //Set page size (default: 10)
+//                , messages: {
+//                    addNewRecord: $.t("casefire:documents.msg.add-new-record")
+//                }
+//                , actions: {
+//                    pagingListAction: function (postData, jtParams, sortMap) {
+//                        var caseId = CaseFile.View.getActiveCaseFileId();
+//                        if ( ! caseId || 0 >= caseId )
+//                        {
+//                            return AcmEx.Object.JTable.getEmptyRecords();
+//                        }
+//                        //var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + jtParams.jtStartIndex);
+//                        //if (CaseFile.Model.Documents.validateDocuments(documentsCache)) {
+//                        //    var documents = documentsCache.children;
+//                        //    var totalDocuments = documentsCache.totalChildren;
+//                        //    return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
+//                        //} else {
+//                            return CaseFile.Service.Documents.retrieveDocumentsDeferred(caseId
+//                                ,postData
+//                                ,jtParams
+//                                ,sortMap
+//                                ,function(data) {
+//                                    if(CaseFile.Model.Documents.validateDocuments(data)){
+//                                        var documents = data.children;
+//                                        var totalDocuments = data.totalChildren;
+//                                        return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
+//                                    }
+//                                    return AcmEx.Object.JTable.getEmptyRecords();
+//                                }
+//                                ,function(error) {
+//                                }
+//                            );
+//                        //}  //end else
+//                    }
+//                    ,createAction: function(postData, jtParams) {
+//                        //placeholder. this action should never be called
+//                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
+//                        return rc;
+//                    }
+//                }
+//                , fields: {
+//                    id: {
+//                        title: $.t("casefile:documents.table.field.id")
+//                        , key: true
+//                        , list: false
+//                        , create: false
+//                        , edit: false
+//                        , defaultvalue: 0
+//                    }
+//                    , title: {
+//                        title: $.t("casefile:documents.table.field.title")
+//                        , width: '50%'
+//                        , edit: false
+//                        , create: false
+//                        ,display: function (commData) {
+//                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
+//                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+//                                + "'>" + commData.record.title + "</a>";
+//                            return $(a);
+//                        }
+//                    }
+//                    , created: {
+//                        title: $.t("casefile:documents.table.field.date-added")
+//                        , width: '15%'
+//                        , edit: false
+//                        , create: false
+//                    }
+//                    , creator: {
+//                        title: $.t("casefile:documents.table.field.added-by")
+//                        , width: '15%'
+//                        , edit: false
+//                        , create: false
+//                    }
+//                }
+//            });
+//        }
+//
+//    }
 
     ,Participants: {
         create: function() {
@@ -3174,180 +3302,6 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
             });
-        }
-    }
-
-    ,OutlookCalendar: {
-        create: function() {
-            this.$outlookCalendar          = $(".calendar");
-            this.$weekView                 = $("#weekview");
-            this.$monthView                = $("#monthview");
-            this.$dayView                  = $("#dayview");
-            this.$btnRefreshCalendar       = $("#refreshCalendar");
-
-            this.$btnRefreshCalendar.on("click", function(e) {CaseFile.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
-
-            this.createOutlookCalendarWidget(this.$outlookCalendar);
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
-        }
-        ,onInitialized: function() {
-        }
-        ,onViewSelectedObject: function(nodeType, nodeId) {
-            CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
-            CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
-        }
-        ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
-            if(outlookCalendarItems.hasError){
-                App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"), outlookCalendarItems.errorMsg);
-            }
-            else{
-                CaseFile.View.OutlookCalendar.$outlookCalendar.html("");
-                CaseFile.View.OutlookCalendar.createOutlookCalendarWidget(CaseFile.View.OutlookCalendar.$outlookCalendar);
-            }
-        }
-        ,onClickbtnRefreshCalendar: function(){
-                CaseFile.Controller.viewRefreshedOutlookCalendar(CaseFile.View.getActiveCaseFileId());
-        }
-        ,createCalendarSource:function(){
-            var calendarSource = [];
-            var outlookCalendarItems = CaseFile.Model.OutlookCalendar.cacheOutlookCalendarItems.get(CaseFile.View.getActiveCaseFileId());
-            if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
-                for(var i = 0; i<outlookCalendarItems.items.length; i++){
-                    if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
-                        var outlookCalendarItem = {};
-                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
-                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
-                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
-                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
-                        outlookCalendarItem.detail = CaseFile.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
-                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
-                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
-                        calendarSource.push(outlookCalendarItem);
-                    }
-                }
-            }
-            return calendarSource;
-        }
-
-        ,makeDetail: function(calendarItem){
-            if(CaseFile.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
-                var body = Acm.goodValue(calendarItem.body) + "</br>";
-                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
-                var startDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.start") + " " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
-                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
-                var endDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.end") + " " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
-                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
-                return detail;
-            }
-        }
-
-        ,createOutlookCalendarWidget: function($s){
-            var calendarSource = this.createCalendarSource();
-            var addDragEvent = function($this){
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-                var eventObject = {
-                    title: $.trim($this.text()), // use the element's text as the event title
-                    className: $this.attr('class').replace('label','')
-                };
-
-                // store the Event Object in the DOM element so we can get to it later
-                $this.data('eventObject', eventObject);
-
-                // make the event draggable using jQuery UI
-                $this.draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-            };
-
-            $s.fullCalendar({
-                header: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next'
-                },
-                timeFormat: 'h(:mm)t {-h(:mm)t}',
-                displayEventEnd : true,
-                editable: true,
-                //disable fullcalendar droppable as it creates conflict with the doctree's.
-                //looks like fullcalendar uses the generic jquery draggable
-                //we might need to add our own external draggable event handlers
-                //tailored for fullcalendar
-                droppable: false, // this allows things to be dropped onto the calendar !!!
-                drop: function(date, allDay) { // this function is called when something is dropped
-
-                    // retrieve the dropped element's stored Event Object
-                    var originalEventObject = $(this).data('eventObject');
-
-                    // we need to copy it, so that multiple events don't have a reference to the same object
-                    var copiedEventObject = $.extend({}, originalEventObject);
-
-                    // assign it the date that was reported
-                    copiedEventObject.start = date;
-                    copiedEventObject.allDay = allDay;
-
-                    // render the event on the calendar
-                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                    this.$outlookCalendar.fullCalendar('renderEvent', copiedEventObject, true);
-
-                    // is the "remove after drop" checkbox checked?
-                    if ($('#drop-remove').is(':checked')) {
-                        // if so, remove the element from the "Draggable Events" list
-                        $(this).remove();
-                    }
-
-                }
-                ,events: calendarSource
-                ,eventRender: function (event, element) {
-                    element.qtip({
-                        content: {
-                            text: Acm.goodValue(event.detail),
-                            title: {
-                                text: Acm.goodValue(event.title)
-                            }
-                        }
-                        ,position: {
-                            my: 'right center',
-                            at: 'left center',
-                            target: 'mouse',
-                            viewport: $s,
-                            adjust: {
-                                mouse: false,
-                                scroll: false
-                            }
-                        }
-                        ,style: {
-                            classes: "qtip-rounded qtip-shadow"
-                        }
-                        ,show: { solo: true} //, ready: true, when: false
-                        ,hide: { when: 'mouseout', fixed: true}
-                    });
-                }
-            });
-            $('#myEvents').on('change', function(e, item){
-                addDragEvent($(item));
-            });
-
-            $('#myEvents li > div').each(function() {
-                addDragEvent($(this));
-            });
-
-            this.$dayView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaDay')
-            });
-
-            this.$weekView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaWeek')
-            });
-
-            this.$monthView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'month')
-            });
-
         }
     }
 

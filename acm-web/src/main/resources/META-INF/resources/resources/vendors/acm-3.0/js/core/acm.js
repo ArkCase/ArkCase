@@ -4,7 +4,10 @@
  * @author jwu
  */
 var Acm = Acm || {
-    create : function() {
+    prepare: function(context) {
+        Acm.Service.setContextPath(context.path);
+    }
+    ,create : function() {
         Acm.Dialog.create();
         Acm.Dispatcher.create();
         Acm.Ajax.create();
@@ -118,6 +121,17 @@ var Acm = Acm || {
         return this.isEmpty(val) ? replacedWith : val;
     }
 
+    ,parseJson: function (str, replacement)  {
+        var replacedWith = (undefined === replacement) ? {} : replacement;
+        var json = replacedWith;
+        try {
+            json = JSON.parse(str);
+        } catch (e) {
+            json = replacedWith;
+        }
+        return json;
+    }
+
     //append random parameter after a url to avoid undesired cached session variables
     //This function handles input url in following sample cases:
     //  some.com/some/path
@@ -153,6 +167,7 @@ var Acm = Acm || {
         var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
         return results[1] || 0;
     }
+
 
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
@@ -209,6 +224,45 @@ var Acm = Acm || {
         //return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     }
 
+    ,deferredTimer: function(data, interval) {
+        var dfd = $.Deferred();
+        var t = Acm.goodValue(interval, 200);
+        setTimeout(function() {
+            dfd.resolve(data);
+        }, t);
+        return dfd;
+    }
+
+    ,copyObjectFunction: function(obj, frFn, toFn) {
+        var ext =  $.extend({}, obj);
+        obj[toFn] = ext[frFn];
+        return obj[toFn];
+    }
+
+    ,Promise: {
+        resolvePromises: function(promises) {
+            var resolver = $.Deferred();
+            $.when.apply(null, promises).then(function(data) {
+                    resolver.resolve();
+                }, function(e) {
+                    resolver.reject();
+                }
+            );
+            return resolver;
+        }
+        ,donePromise: function(data) {
+            var resolver = $.Deferred();
+            resolver.resolve(data);
+            return resolver;
+        }
+        ,failPromise: function(data) {
+            var resolver = $.Deferred();
+            resolver.reject(data);
+            return resolver;
+        }
+
+    }
+
     ,deferred: function(fn) {
         setTimeout(fn, 200);
     }
@@ -243,6 +297,13 @@ var Acm = Acm || {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
             d = moment(dt).format($.t("common:date.frevvo"))
+        }
+        return d;
+    }
+    ,getPentahoDateFromDateTime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            d = moment(dt).format($.t("common:date.pentaho"))
         }
         return d;
     }

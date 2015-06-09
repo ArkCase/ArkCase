@@ -70,6 +70,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         AcmFolder folder = new AcmFolder();
                         folder.setName("ROOT");
                         payload.getContainer().setFolder(folder);
+                        payload.getContainer().setAttachmentFolder(folder);
                     }
 
                     return payload;

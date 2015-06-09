@@ -16,8 +16,8 @@
             "description": ""
         },
         "case-number": {
-            "value": "Case Number",
-            "defaultValue": "Case Number",
+            "value": "Brief Number",
+            "defaultValue": "Brief Number",
             "description": ""
         },
         "state": {
@@ -58,8 +58,8 @@
     }
 }, "msg": {
     "case-number-invalid": {
-        "value": "Case number field was blank or invalid. Please enter a valid case number.",
-        "defaultValue": "Case number field was blank or invalid. Please enter a valid case number.",
+        "value": "Brief number field was blank or invalid. Please enter a valid brief number.",
+        "defaultValue": "Brief number field was blank or invalid. Please enter a valid brief number.",
         "description": ""
     }
 }}

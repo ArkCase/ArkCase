@@ -8,7 +8,7 @@ describe("DocTree.View", function() {
     beforeEach(function() {
     });
 
-    it("DocTree.View: _getNameOrig()", function() {
+    xit("DocTree.View: _getNameOrig()", function() {
         expect(DocTree.View._getNameOrig(null)).toEqual(null);
         expect(DocTree.View._getNameOrig("")).toEqual("");
         expect(DocTree.View._getNameOrig("some name")).toEqual("some name");

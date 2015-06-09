@@ -28,11 +28,13 @@ Audit.View = Audit.View || {
         }
         ,onClickBtnGenerateReport: function(event,ctrl){
             var auditFieldsValues = Audit.View.AuditCriteria.getFieldsValues();
+            var dateFormat = $.t("common:date.pentaho");
             var pageUrl = Audit.View.MicroData.auditReportUrl
                 + "&startDate=" + auditFieldsValues.startDate
                 + "&endDate=" + auditFieldsValues.endDate
                 + "&objectType=" + auditFieldsValues.objectType
-                + "&objectId=" + auditFieldsValues.objectId;
+                + "&objectId=" + auditFieldsValues.objectId
+                + "&dateFormat=" + encodeURIComponent(dateFormat);
 
             window.open(pageUrl, 'audit_iframe');
         }
@@ -52,8 +54,8 @@ Audit.View = Audit.View || {
             // we need to initialize datepickers once the markup is ready
             //additionally, set default dates to current date
             this.$datePickers = $(".datepicker-input");
-            this.$datePickers.datepicker();
-            this.$datePickers.datepicker("setDate", Acm.getCurrentDay());
+            this.$datePickers.datepicker({dateFormat: $.t("common:date.datepicker")});
+            this.$datePickers.datepicker("setDate", Acm.getPentahoDateFromDateTime(new Date()));
         }
         ,getDate: function(selector) {
             var date = Acm.Object.getValue(selector).replace(/\//g, "-");
@@ -124,7 +126,7 @@ Audit.View = Audit.View || {
 
                             html+= "<label class='label col-sm-12'>" + $.t("audit:label.date-from") + "</label>"
                             + "<div class='col-sm-12'>"
-                            +"<input class='datepicker-input form-control' type='text' data-date-format='mm-dd-yyyy' placeholder='mm/dd/yyyy"
+                            +"<input class='datepicker-input form-control' type='text' data-i18n='[data-date-format;placeholder]common:date.datepicker'"
                             + "' id='" + Acm.goodValue(field.nameStartDate)
                             + "' value='" + Acm.goodValue(field.value)
                             + "' placeholder='" + Acm.goodValue(Acm.getCurrentDay())
@@ -133,7 +135,7 @@ Audit.View = Audit.View || {
 
                             html+= "<label class='label col-sm-12'>" + $.t("audit:label.date-to") + "</label>"
                             + "<div class='col-sm-12'>"
-                            +"<input class='datepicker-input form-control' type='text' data-date-format='mm-dd-yyyy' placeholder='mm/dd/yyyy"
+                            +"<input class='datepicker-input form-control' type='text' data-i18n='[data-date-format;placeholder]common:date.datepicker'"
                             + "' id='" + Acm.goodValue(field.nameEndDate)
                             + "' value='" + Acm.goodValue(field.value)
                             + "' placeholder='" + Acm.goodValue(Acm.getCurrentDay())

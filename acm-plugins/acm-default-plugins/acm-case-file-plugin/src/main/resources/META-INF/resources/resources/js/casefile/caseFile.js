@@ -17,7 +17,8 @@ var CaseFile = CaseFile || {
                 ,treeFilter        : CaseFile.View.MicroData.treeFilter
                 ,$ulSort           : CaseFile.View.Navigator.$ulSort
                 ,treeSort          : CaseFile.View.MicroData.treeSort
-                ,modelInterface    : CaseFile.Model.interface
+                ,modelInterface    : CaseFile.Model.interfaceNavObj
+                ,viewInterface     : CaseFile.View.interfaceNavObj
             });
         }
 
@@ -27,6 +28,16 @@ var CaseFile = CaseFile || {
                 ,uploadForm    : CaseFile.View.Documents.uploadForm
                 ,arkcaseUrl    : CaseFile.View.MicroData.arkcaseUrl
                 ,arkcasePort    : CaseFile.View.MicroData.arkcasePort
+            });
+        }
+
+        if (Calendar.create) {
+            Calendar.create({name: "caseFile"
+                ,getObjectInfo: function() {
+                    return {
+                        objectType: CaseFile.Model.DOC_TYPE_CASE_FILE
+                    };
+                }
             });
         }
 
@@ -47,6 +58,10 @@ var CaseFile = CaseFile || {
         if (CaseFile.View.onInitialized)       {CaseFile.View.onInitialized();}
         if (ObjNav.onInitialized)              {ObjNav.onInitialized();}
         if (SubscriptionOp.onInitialized)      {SubscriptionOp.onInitialized();}
+    }
+
+    ,config: function() {
+        CaseFile.Model.Config.request();
     }
 };
 

@@ -17,7 +17,8 @@ var Complaint = Complaint || {
                 ,treeFilter       : Complaint.View.MicroData.treeFilter
                 ,$ulSort          : Complaint.View.Navigator.$ulSort
                 ,treeSort         : Complaint.View.MicroData.treeSort
-                ,modelInterface   : Complaint.Model.interface
+                ,modelInterface   : Complaint.Model.interfaceNavObj
+                ,viewInterface    : Complaint.View.interfaceNavObj
             });
         }
 
@@ -35,6 +36,16 @@ var Complaint = Complaint || {
 //                ,getActiveObjId     : ObjNav.View.Navigator.getActiveObjId
 //                ,getPreviousObjId   : ObjNav.View.Navigator.getPreviousObjId
 //                ,getContextMenu     : Complaint.View.Documents.getContextMenu()
+            });
+        }
+
+        if (Calendar.create) {
+            Calendar.create({name: "complaint"
+                ,getObjectInfo: function() {
+                    return {
+                        objectType: Complaint.Model.DOC_TYPE_COMPLAINT
+                    };
+                }
             });
         }
 

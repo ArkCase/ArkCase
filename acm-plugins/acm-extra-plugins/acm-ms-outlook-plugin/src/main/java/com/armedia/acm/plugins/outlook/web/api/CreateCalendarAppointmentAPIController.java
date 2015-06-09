@@ -41,7 +41,8 @@ public class CreateCalendarAppointmentAPIController {
         OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(authentication);
 
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
-        in = outlookService.createOutlookAppointment(outlookUser, WellKnownFolderName.Calendar, in);
+
+        in =  outlookService.createOutlookAppointment(outlookUser, in);
 
         return in;
     }

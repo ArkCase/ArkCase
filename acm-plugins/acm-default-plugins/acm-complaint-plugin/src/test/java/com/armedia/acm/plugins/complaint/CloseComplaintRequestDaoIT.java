@@ -38,7 +38,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-person.xml"
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-ecm-file.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class CloseComplaintRequestDaoIT

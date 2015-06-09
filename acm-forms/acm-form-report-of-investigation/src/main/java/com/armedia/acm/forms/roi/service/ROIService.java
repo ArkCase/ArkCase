@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.armedia.acm.forms.roi.model.ReportOfInvestigationFormEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,8 @@ public class ROIService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception {
 		
+		
+		Long folderId = getFolderAndFilesUtils().convertToLong((String) getRequest().getParameter("folderId"));
 		String cmisFolderId = null;
 		String parentObjectType = null;
 		Long parentObjectId = null;
@@ -91,7 +94,7 @@ public class ROIService extends FrevvoFormAbstractService {
 			forObjectType = "Complaint";
 			forObjectNumber = complaint.getComplaintNumber();
 			
-			cmisFolderId = findFolderId(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
+			cmisFolderId = findCmisFolderId(folderId, complaint.getContainer(), complaint.getObjectType(), complaint.getId());
 			parentObjectType = FrevvoFormName.COMPLAINT.toUpperCase();
 			parentObjectId = complaint.getComplaintId();
 
@@ -108,7 +111,7 @@ public class ROIService extends FrevvoFormAbstractService {
 			forObjectType = "Case File";
 			forObjectNumber = caseFile.getCaseNumber();
 
-            cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+            cmisFolderId = findCmisFolderId(folderId, caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 			parentObjectType = FrevvoFormName.CASE_FILE.toUpperCase();
 			parentObjectId = caseFile.getId();
 			
@@ -202,5 +205,11 @@ public class ROIService extends FrevvoFormAbstractService {
 	 */
 	public void setUserActionDao(UserActionDao userActionDao) {
 		this.userActionDao = userActionDao;
+	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
 	}
 }

@@ -1,4 +1,8 @@
-{"title": {
+{"page-title": {
+    "value": "Tasks | ACM | Ark Case Management",
+    "defaultValue": "Tasks | ACM | Ark Case Management",
+    "description": ""
+}, "title": {
     "value": "Tasks",
     "defaultValue": "Tasks",
     "description": ""
@@ -60,7 +64,13 @@
             "value": "Reject Comments",
             "defaultValue": "Reject Comments",
             "description": ""
+        },
+        "electronic-signatures": {
+            "value": "dSignatures",
+            "defaultValue": "eSignatures",
+            "description": ""
         }
+
     }
 }, "context-menu": {
     "menu-title": {

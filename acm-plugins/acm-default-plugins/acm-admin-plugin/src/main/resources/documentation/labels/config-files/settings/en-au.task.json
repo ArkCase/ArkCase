@@ -1,4 +1,8 @@
-{"title": {
+{"page-title": {
+    "value": "Tasks | ACM | Ark Case Management",
+    "defaultValue": "Tasks | ACM | Ark Case Management",
+    "description": ""
+}, "title": {
     "value": "Tasks",
     "defaultValue": "Tasks",
     "description": ""
@@ -59,6 +63,11 @@
         "reject-comments": {
             "value": "Reject Comments",
             "defaultValue": "Reject Comments",
+            "description": ""
+        },
+        "electronic-signatures": {
+            "value": "dSignatures",
+            "defaultValue": "eSignatures",
             "description": ""
         }
     }
@@ -458,8 +467,8 @@
                 "description": ""
             },
             "change-case-status": {
-                "value": "Change Case Status",
-                "defaultValue": "Change Case Status",
+                "value": "Change Brief Status",
+                "defaultValue": "Change Brief Status",
                 "description": ""
             }
         },
@@ -606,8 +615,8 @@
             "description": ""
         },
         "change-case-status": {
-            "value": "Change Case Status",
-            "defaultValue": "Change Case Status",
+            "value": "Change Brief Status",
+            "defaultValue": "Change Brief Status",
             "description": ""
         }
     }
@@ -1143,13 +1152,13 @@
             "description": ""
         },
         "associate-complaint-case": {
-            "value": "Associate with Complaint or Case",
-            "defaultValue": "Associate with Complaint or Case",
+            "value": "Associate with Brief",
+            "defaultValue": "Associate with Brief",
             "description": ""
         },
         "complaint-or-case": {
-            "value": "Complaint or Case #",
-            "defaultValue": "Complaint or Case #",
+            "value": "Brief #",
+            "defaultValue": "Brief #",
             "description": ""
         },
         "subject": {

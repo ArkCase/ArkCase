@@ -19,7 +19,6 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
         if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
-        if (Complaint.Model.OutlookCalendar.create)           {Complaint.Model.OutlookCalendar.create();}
         if (Complaint.Model.Time.create)                  {Complaint.Model.Time.create();}
         if (Complaint.Model.Cost.create)                  {Complaint.Model.Cost.create();}
     }
@@ -38,12 +37,11 @@ Complaint.Model = Complaint.Model || {
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
         if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
         if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
-        if (Complaint.Model.OutlookCalendar.onInitialized)           {Complaint.Model.OutlookCalendar.onInitialized();}
         if (Complaint.Model.Time.onInitialized)           {Complaint.Model.Time.onInitialized();}
         if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
 
-    ,interface: {
+    ,interfaceNavObj: {
         apiListObjects: function() {
             return "/api/latest/plugin/search/COMPLAINT";
         }
@@ -60,11 +58,8 @@ Complaint.Model = Complaint.Model || {
         ,nodeType: function(objSolr) {
             return Complaint.Model.DOC_TYPE_COMPLAINT;
         }
-        ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable);
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
+        ,nodeTypeSupported: function(nodeType) {
+            return (Complaint.Model.DOC_TYPE_COMPLAINT == nodeType);
         }
         ,objToSolr: function(objData) {
             var solr = {};
@@ -83,9 +78,6 @@ Complaint.Model = Complaint.Model || {
         }
         ,validateObjData: function(data) {
             return Complaint.Model.Detail.validateComplaint(data);
-        }
-        ,nodeTypeMap: function() {
-            return Complaint.Model.Tree.Key.nodeTypeMap;
         }
     }
 
@@ -135,47 +127,47 @@ Complaint.Model = Complaint.Model || {
 
 
 
-            ,nodeTypeMap: [
-                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
-                    ,tabIds: ["tabAction"
-                        ,"tabDetail"
-                        ,"tabLocation"
-                        ,"tabInitiator"
-                        ,"tabPeople"
-                        ,"tabNotes"
-                        ,"tabDocuments"
-                        ,"tabTasks"
-                        ,"tabRefs"
-//                    ,"tabRefComplaints"
-//                    ,"tabRefCases"
-//                    ,"tabRefTasks"
-//                    ,"tabRefDocuments"
-//                    ,"tabApprovers"
-//                    ,"tabCollaborators"
-//                    ,"tabWatchers"
-                        ,"tabParticipants"
-                        ,"tabHistory"
-                        ,"tabTime"
-                        ,"tabCost"
-                        ,"tabOutlookCalendar"
-                    ]}
-                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
-                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
-                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
-                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
-                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
-                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
-                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
-                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
-                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
-                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
-                ]
+//            ,nodeTypeMap: [
+//                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
+//                    ,tabIds: ["tabAction"
+//                        ,"tabDetail"
+//                        ,"tabLocation"
+//                        ,"tabInitiator"
+//                        ,"tabPeople"
+//                        ,"tabNotes"
+//                        ,"tabDocuments"
+//                        ,"tabTasks"
+//                        ,"tabRefs"
+////                    ,"tabRefComplaints"
+////                    ,"tabRefCases"
+////                    ,"tabRefTasks"
+////                    ,"tabRefDocuments"
+////                    ,"tabApprovers"
+////                    ,"tabCollaborators"
+////                    ,"tabWatchers"
+//                        ,"tabParticipants"
+//                        ,"tabHistory"
+//                        ,"tabTime"
+//                        ,"tabCost"
+//                        ,"tabOutlookCalendar"
+//                    ]}
+//                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
+//                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
+//                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
+//                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
+//                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
+//                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
+//                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
+//                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
+//                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
+//                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
+//                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
+//                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
+//                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
+//                ]
         }
     }
 
@@ -1023,73 +1015,6 @@ Complaint.Model = Complaint.Model || {
         }
 
     }
-    ,OutlookCalendar: {
-        create : function() {
-            this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
-
-        }
-        ,onInitialized: function() {
-        }
-        ,onModelRetrievedObject: function(objData) {
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
-        }
-        ,onViewSelectedObject: function(nodeType,objId){
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
-        }
-        ,onViewRefreshedOutlookCalendar: function(complaintId){
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(complaintId);
-        }
-        ,validateOutlookCalendarItems: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isNotArray(data.items)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.totalItems)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateOutlookCalendarItem: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.id)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.size)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.sent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.allDayEvent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.cancelled)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.meeting)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.recurring)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.startDate)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.endDate)) {
-                return false;
-            }
-            return true;
-        }
-    }
-
 
     ,Time: {
         create : function() {

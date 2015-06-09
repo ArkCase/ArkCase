@@ -5,9 +5,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title data-i18n="casefile:window-title">Case Files | ACM | Ark Case Management</title>
+    <title data-i18n="casefile:page-title">Case Files | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search,subscription</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription,doctree</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -25,6 +25,8 @@
         <span itemprop="roiFormUrl">${roiFormUrl}</span>
         <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
+        
+        <span itemprop="caseFileTreeRootNameExpression">${caseFileTreeRootNameExpression}</span>
     </div>
 </jsp:attribute>
 
@@ -47,6 +49,12 @@
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendar.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarService.js'/>"></script>
 
 
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
@@ -192,6 +200,11 @@
                                         </div>
                                     </div>
 
+                                        <%--<c:import url="ribbon-ebrief.jspf">--%>
+                                        <%--<c:import url="ribbon-case.jsp"></c:import>--%>
+                                        <%--<jsp:include page="ribbon-case.jsp" />--%>
+                                        <%--<jsp:include page="abcd" + "/acm-law" + "2.jsp" />--%>
+
                                     <div class="row" id="tabTopBlank">
                                         <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span data-i18n=casefile:"msg.no-case-selected">(No case is selected)</span></p>
                                     </div>
@@ -220,14 +233,16 @@
                                                 <button class="btn btn-default btn-sm" id="btnChangeCaseStatus" data-i18n="[data-title]casefile:header.buttons.change-case-status"data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.change-case-status">Change Case Status</span>
                                                 </button>
-                                                    <%--<button class="btn btn-default btn-sm" data-title="Consolidate Case"  data-toggle="modal" data-target="#consolidateCase"><i class="fa fa-random"></i> Consolidate</button>--%>
                                                 <button class="btn btn-default btn-sm" id="btnReinvestigate" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
                                                     <span data-i18n="casefile:header.buttons.reinvestigate">Reinvestigate</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnConsolidateCase" data-i18n="[data-title]casefile:header.buttons.consolidate-case" data-title="Consolidate Case"><i class="fa fa-random"></i>
-                                                    <span data-i18n="casefile:header.buttons.consolidate">Consolidate</span>
-                                                </button>
                                                 <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
+                                                </button>
+                                                <button class="btn btn-default btn-sm" id="btnMergeCase" data-i18n="[data-title]casefile:header.buttons.merge-case" data-title="Merge Case"><i class="fa fa-random"></i>
+                                                    <span data-i18n="casefile:header.buttons.merge">Merge</span>
+                                                </button>
+                                                <button class="btn btn-default btn-sm" id="btnSplitCase" data-i18n="[data-title]casefile:header.buttons.split-case"data-title="Split Case"><i class="fa fa-code-fork"></i>
+                                                    <span data-i18n="casefile:header.buttons.split-case">Split Case</span>
                                                 </button>
                                                 <!-- Modal -->
                                                 <div class="modal fade" id="changeCaseStatus" tabindex="-1" role="dialog" aria-labelledby="labChangeCaseStatus" aria-hidden="true">
@@ -241,30 +256,6 @@
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:change-case-status-dialog.btn-cancel">Cancel</button>
                                                                 <button type="button" class="btn btn-primary" data-i18n="casefile:change-case-status-dialog.btn-ok">Change Case Status</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal fade" id="consolidateCase" tabindex="-1" role="dialog" aria-labelledby="labConsolidateCase" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="casefile:consolidate-case-dialog.btn-close">Close</span></button>
-                                                                <h4 class="modal-title" id="labConsolidateCase" data-i18n="casefile:consolidate-case-dialog.title">Consolidate Case</h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <section class="row">
-                                                                    <div class="col-sm-12">
-                                                                        <label for="edtConsolidateCase" class="label" data-i18n="casefile:consolidate-case-dialog.enter-case-like-consolidate">
-                                                                            Enter the case you would like to consolidate with:
-                                                                        </label>
-                                                                        <input id="edtConsolidateCase" type="text" class="form-control" placeholder="Case #" >
-                                                                    </div>
-                                                                </section>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default" data-dismiss="modal" data-i18n="casefile:consolidate-case-dialog.btn-cancel">Cancel</button>
-                                                                <button type="button" class="btn btn-primary" data-i18n="casefile:consolidate-case-dialog.btn-ok">Consolidate Case</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -430,7 +421,7 @@
                                     </div>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
+                                    <div class="col-md-12"  id="tabOutlookCalendar">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
@@ -443,27 +434,12 @@
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
-                                                    <div class="btn-group pull-right" data-toggle="buttons">
-                                                        <label class="btn btn-sm btn-bg btn-default active" id="monthview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.month">Month</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="weekview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.week">Week</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="dayview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="casefile:outlook-calendar.label.day">Day</span>
-                                                        </label>
-                                                    </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="casefile:outlook-calendar.label.refresh">Refresh</button>
-
-                                                <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
-                                                  Calendar
-                                                </span>
+                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="casefile:outlook-calendar.label.calendar">
+                                                      Calendar
+                                                    </span>
                                                 </header>
-                                                <div class="calendar">
+                                                <div id="calendar">
                                                 </div>
                                             </section>
                                     </div>

@@ -8,9 +8,9 @@
     },
     "label": {
         "input-search": {
-            "defaultValue": "Type in your search query to find complaints, cases, tasks, and documents.",
+            "defaultValue": "Type in your search query to find briefs, tasks, and documents.",
             "description": "",
-            "value": "Type in your search query to find complaints, cases, tasks, and documents."
+            "value": "Type in your search query to find briefs, tasks, and documents."
         }
     },
     "table": {

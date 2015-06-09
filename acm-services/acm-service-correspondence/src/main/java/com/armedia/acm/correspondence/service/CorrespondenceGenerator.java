@@ -103,7 +103,7 @@ public class CorrespondenceGenerator
 
         String fileName = generateUniqueFilename(template);
         EcmFile retval = ecmFileService.upload(
-                template.getTemplateFilename(),
+                template.getDocumentType()+".docx",
                 template.getDocumentType(),
                 CORRESPONDENCE_CATEGORY,
                 correspondenceInputStream,

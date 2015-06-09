@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -51,6 +52,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private MuleClient mockMuleClient;
     private MuleMessage mockMuleMessage;
     private ContentStream mockContentStream;
+    private FolderAndFilesUtils mockFolderAndFilesUtils;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -67,12 +69,14 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockMuleClient = createMock(MuleClient.class);
         mockMuleMessage = createMock(MuleMessage.class);
         mockContentStream = createMock(ContentStream.class);
+        mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
 
         unit = new FileDownloadAPIController();
 
         unit.setFileDao(mockFileDao);
         unit.setApplicationEventPublisher(mockEventPublisher);
         unit.setMuleClient(mockMuleClient);
+        unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -100,8 +104,9 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
+        expect(mockFolderAndFilesUtils.getActiveVersionCmisId(fromDb)).andReturn(cmisId);
         expect(mockMuleClient.send("vm://downloadFileFlow.in", "cmisId", null)).andReturn(mockMuleMessage);
-        expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).atLeastOnce();
+        expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
         expect(mockContentStream.getStream()).andReturn(log4jis);
