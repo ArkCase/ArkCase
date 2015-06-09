@@ -126,7 +126,7 @@
             ,"defaultValue": "Reject Document(s)"
             ,"description": ""
         }
-        ,"btn-reject": {
+        ,"btn-refresh": {
             "value": "Refresh"
             ,"defaultValue": "Refresh"
             ,"description": ""
