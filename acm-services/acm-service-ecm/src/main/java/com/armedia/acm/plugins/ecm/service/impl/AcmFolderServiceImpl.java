@@ -17,6 +17,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
@@ -590,8 +591,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 					Boolean attachments = folderJSONObject.getBoolean(AcmFolderConstants.FOLDER_STRUCTURE_KEY_ATTACHMENT);
 					
 					AcmFolder folder = addNewFolder(parentFolder, name);
-					
-					if (attachments != null && attachments)
+
+                    folder = addFolderParticipants(folderJSONObject, folder);
+
+                    if (attachments != null && attachments)
 					{
 						container.setAttachmentFolder(folder);
 						getContainerDao().save(container);
@@ -605,7 +608,25 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 			}
 		}
 	}
-    
+
+    private AcmFolder addFolderParticipants(JSONObject folderJSONObject, AcmFolder folder)
+    {
+        if ( folderJSONObject.has("participants"))
+        {
+            JSONArray participants = folderJSONObject.getJSONArray("participants");
+            for ( int a = 0; a < participants.length(); a++ )
+            {
+                JSONObject participant = participants.getJSONObject(a);
+                AcmParticipant ap = new AcmParticipant();
+                ap.setParticipantType(participant.getString("type"));
+                ap.setParticipantLdapId(participant.getString("id"));
+                folder.getParticipants().add(ap);
+            }
+            folder = getFolderDao().save(folder);
+        }
+        return folder;
+    }
+
     private boolean isJSONObject(Object json, Object key)
     {
     	if (json != null)
