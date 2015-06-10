@@ -49,21 +49,6 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
                     }
                 }
             }
-
-            // Load information about form types from acm-forms-plain.properties file
-            Properties formsProps = new Properties();
-            formsProps.load(FileUtils.openInputStream(new File(propertiesLocation + acmFormsPlainPropertiesFile)));
-
-            for (Object propKey: formsProps.keySet()) {
-                int dotIndex = ((String)propKey).indexOf('.');
-                if (dotIndex  > 0) {
-                    String propName = ((String)propKey).substring(0, dotIndex);
-                    if (!fileTypes.contains(propName)) {
-                        fileTypes.add(propName);
-                    }
-                }
-
-            }
             return fileTypes;
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
@@ -72,6 +57,34 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
             throw new AcmFileTypesException("Can't get file types from properties files", e);
         }
     }
+
+    @Override
+    public List<String> getForms() throws AcmFileTypesException {
+        try {
+            List<String> forms = new ArrayList();
+            // Load information about form types from acm-forms-plain.properties file
+            Properties formsProps = new Properties();
+            formsProps.load(FileUtils.openInputStream(new File(propertiesLocation + acmFormsPlainPropertiesFile)));
+
+            for (Object propKey : formsProps.keySet()) {
+                int dotIndex = ((String) propKey).indexOf('.');
+                if (dotIndex > 0) {
+                    String propName = ((String) propKey).substring(0, dotIndex);
+                    if (!forms.contains(propName)) {
+                        forms.add(propName);
+                    }
+                }
+
+            }
+            return forms;
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Can't get forms info from properties files", e);
+            }
+            throw new AcmFileTypesException("Can't get forms info from properties files", e);
+        }
+    }
+
 
     public void setPropertyFiles(List<String> propertyFiles) {
         this.propertyFiles = propertyFiles;
