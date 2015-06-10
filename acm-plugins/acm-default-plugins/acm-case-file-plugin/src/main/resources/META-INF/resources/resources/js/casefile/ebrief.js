@@ -216,9 +216,17 @@ CaseFile.prepare = function() {
                             profile.email = Acm.goodValue(profileInfo.email);
                             profile.phone = Acm.goodValue(profileInfo.phone);
                             CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
-                            return profileInfo;
+                            return profile;
                         }
-                    } //end else
+                    }
+                    else if (response.hasError)  {
+                        var profile = {};
+                        profile.organisation = "N/A";
+                        profile.email = "N/A";
+                        profile.phone = "N/A";
+                        CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
+                        return profile;
+                    }//end else
                 }
             })
         }
@@ -245,8 +253,14 @@ CaseFile.prepare = function() {
                     var participant = participants[i];
                     if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
                         var user = participant.participantLdapId;
-                        var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
-                        requests.push(req);
+                        var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(user));
+                        if(Acm.isNotEmpty(profile)){
+                            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                        }
+                        else{
+                            var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
+                            requests.push(req);
+                        }
                     }
                 }
                 Acm.Promise.resolvePromises(requests)
@@ -254,7 +268,7 @@ CaseFile.prepare = function() {
                         AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
                     })
                     .fail(function() {
-                        App.View.MessageBoard.show("Error retrieving participants");
+                        AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
                     });
             }
         }
