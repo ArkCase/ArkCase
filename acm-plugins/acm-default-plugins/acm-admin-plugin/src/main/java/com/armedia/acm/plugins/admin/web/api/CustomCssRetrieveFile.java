@@ -15,12 +15,12 @@ import java.io.IOException;
  * Created by sergey.kolomiets on 6/19/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
+@RequestMapping( {"/branding"} )
 public class CustomCssRetrieveFile {
     private Logger log = LoggerFactory.getLogger(getClass());
     private CustomCssService customCssService;
 
-    @RequestMapping(value = "/branding/customcss", method = RequestMethod.GET, produces = "text/css")
+    @RequestMapping(value = "/customcss", method = RequestMethod.GET, produces = "text/css")
     @ResponseBody
     public String retrieveFile(
             HttpServletResponse response) throws IOException, CustomCssException {

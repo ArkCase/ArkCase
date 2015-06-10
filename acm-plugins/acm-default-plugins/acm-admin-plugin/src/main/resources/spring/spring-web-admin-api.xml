@@ -167,6 +167,21 @@
         <property name="customCssService" ref="customCssService"/>
     </bean>
 
+    <!-- Custom Logo -->
+    <bean id="customLogoService" class="com.armedia.acm.plugins.admin.web.api.CustomLogoService">
+        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/branding/"/>
+        <property name="headerLogoFile" value="header-logo.png"/>
+        <property name="loginLogoFile" value="login-logo.png"/>
+    </bean>
+
+    <bean id="customLogoRetrieveFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoRetrieveFile">
+        <property name="customLogoService" ref="customLogoService"/>
+    </bean>
+
+    <bean id="customLogoUploadFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoUploadFile">
+        <property name="customLogoService" ref="customLogoService"/>
+    </bean>
+
 
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
     
