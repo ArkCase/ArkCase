@@ -197,7 +197,7 @@
 <![endif]-->
 
 <!-- Custom  CSS file -->
-<link rel="stylesheet" media="screen" href="<c:url value='/api/latest/plugin/admin/branding/customcss'/>"/>
+<link rel="stylesheet" media="screen" href="<c:url value='/branding/customcss'/>"/>
 
 <!-- from http://getbootstrap.com/getting-started:  -->
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

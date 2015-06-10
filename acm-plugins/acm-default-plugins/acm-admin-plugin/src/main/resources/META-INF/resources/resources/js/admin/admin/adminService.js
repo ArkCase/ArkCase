@@ -718,16 +718,37 @@ Admin.Service = {
     }
 
     ,Logo: {
-        create: function() {
+        API_UPLOAD_LOGOS: '/api/latest/plugin/admin/branding/customlogos'
+
+        ,create: function() {
         }
 
         ,onInitialized: function() {
         }
 
+        ,uploadLogos: function(fd) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.Logo.API_UPLOAD_LOGOS;
+            Acm.Service.asyncPostFormData(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject("Can't upload custom logos:" + response.errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,fd
+            );
+
+            return $dfd.promise();
+
+        }
     }
 
     ,CustomCss: {
-        API_CUSTOM_CSS: '/api/latest/plugin/admin/branding/customcss'
+        API_RETRIEVE_CUSTOM_CSS: '/branding/customcss'
+        ,API_UPDATE_CUSTOM_CSS: '/api/latest/plugin/admin/branding/customcss'
 
         ,create: function() {
         }
@@ -736,7 +757,7 @@ Admin.Service = {
         }
 
         ,retrieveCustomCss: function(){
-            var url = App.getContextPath() + Admin.Service.CustomCss.API_CUSTOM_CSS;
+            var url = App.getContextPath() + Admin.Service.CustomCss.API_RETRIEVE_CUSTOM_CSS;
             var $dfd = jQuery.Deferred();
 
             $.ajax({
@@ -750,21 +771,21 @@ Admin.Service = {
                     $dfd.resolve(response);
                 })
                 .fail(function(){
-                    $dfd.reject();
+                    $dfd.reject('Can\'t retrieve custom CSS file');
                 });
 
             return $dfd.promise();
         }
 
         ,updateCustomCss: function(customCss){
-            var url = App.getContextPath() + Admin.Service.CustomCss.API_CUSTOM_CSS;
+            var url = App.getContextPath() + Admin.Service.CustomCss.API_UPDATE_CUSTOM_CSS;
             var $dfd = jQuery.Deferred();
 
             Acm.Service.asyncPut(
                 function(response) {
                     if (response.hasError) {
                         var errorMsg = "Failed to update custom CSS:" + response.errorMsg;
-                        $dfd.reject();
+                        $dfd.reject(errorMsg);
                     } else {
                         $dfd.resolve(response);
                     }

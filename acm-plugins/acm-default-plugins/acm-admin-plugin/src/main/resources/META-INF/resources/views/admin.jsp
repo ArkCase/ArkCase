@@ -95,7 +95,7 @@
         }
 
         #customCssTextArea {
-            height: 600px;
+            height: 500px;
             position: relative;
         }
 
@@ -444,23 +444,55 @@
 
                                     <%-- Logo Branding --%>
                                     <div class="row" id="tabLogo" style="display:none">
-                                        <div class="col-md-12">
-                                            <h3>Logo</h3>
-                                        </div>
+                                        <section class="row m-b-md">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-b-xs text-black">Logo</h3>
+                                            </div>
+                                        </section>
+                                        <section class="panel panel-body bg-light">
+                                            <div class="row m-b-lg ">
+                                                <div class="col-lg-6">
+                                                    <h3>Header</h3>
+                                                    <img id="imgCustomHeaderLogo" src="<c:url value='/branding/headerlogo'/>" />
+                                                </div>
+                                                <div class="col-lg-6 text-center">
+                                                    <br/><br/>
+                                                    <label for="customHeaderLogo">Upload New</label>
+                                                    <input id="customHeaderLogo" name="customHeaderLogo" type="file" accept="image/png"/>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row m-b-lg ">
+                                                <div class="col-lg-6">
+                                                    <h3>Login Page</h3>
+                                                    <img id="imgCustomLoginLogo" src="<c:url value='/branding/loginlogo'/>" />
+                                                </div>
+                                                <div class="col-lg-6 text-center">
+                                                    <br/><br/>
+                                                    <label for="customLoginLogo">Upload New</label>
+                                                    <input id="customLoginLogo" name="customLoginLogo" type="file" accept="image/png"/>
+                                                </div>
+                                            </div>
+                                            <button id="btnUploadLogos" class="btn btn-s-md btn-primary">Save</button>
+
+                                        </section>
                                     </div>
 
                                     <%-- Custom CSS --%>
                                     <div class="row" id="tabCustomCss" style="display:none">
-                                        <section class="row m-b-md">
-                                            <div class="col-sm-12">
-                                                <h3 class="m-b-xs text-black">Custom CSS</h3>
-                                            </div>
-                                        </section>
-                                        <section class="panel panel-body">
-                                            <div id="customCssTextArea" class="form-control" class="custom-css-textarea"></div>
-                                            <br>
-                                            <button id="btnSaveCustomCss" class="btn btn-s-md btn-primary">Save</button>
-                                        </section>
+                                        <form>
+                                            <section class="row m-b-md">
+                                                <div class="col-sm-12">
+                                                    <h3 class="m-b-xs text-black">Custom CSS</h3>
+                                                </div>
+                                            </section>
+                                            <section class="panel panel-body">
+                                                <div id="customCssTextArea" class="form-control" class="custom-css-textarea"></div>
+                                                <br>
+                                                <button id="btnSaveCustomCss" class="btn btn-s-md btn-primary">Save</button>
+                                            </section>
+                                        </form>
                                     </div>
 
 
@@ -473,7 +505,7 @@
                                             <section class="panel panel-default">
                                                 <div id="divCorrespondenceTemplates" style="width:100%">
                                                     <form id="formAddNewTemplate" style="display:none;">
-                                                        <input id="addNewTemplate" type="file" name="files[]" multiple/>
+                                                        <input id="addNewTemplate" type="file" name="files[]"/>
                                                     </form>
                                                 </div>
                                             </section>

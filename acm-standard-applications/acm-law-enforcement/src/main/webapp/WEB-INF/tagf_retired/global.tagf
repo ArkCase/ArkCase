@@ -176,7 +176,7 @@
 <![endif]-->
 
 <!-- Custom  CSS file -->
-<link rel="stylesheet" media="screen" href="<c:url value='/api/latest/plugin/admin/branding/customcss'/>"/>
+<link rel="stylesheet" media="screen" href="<c:url value='/branding/customcss'/>"/>
 
 
 <!-- from http://getbootstrap.com/getting-started:  -->

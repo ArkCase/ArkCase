@@ -969,10 +969,63 @@ Admin.View = Admin.View || {
 
     ,Logo: {
         create: function() {
-
+            $('#btnUploadLogos').click($.proxy(this.uploadLogos, this));
+            this.$headerLogo = $('#customHeaderLogo');
+            this.$loginLogo = $('#customLoginLogo');
         }
         ,onInitialized : function(){
 
+        },
+
+        uploadLogos: function(e) {
+            var isValid = false;
+            var fd = new FormData();
+            if (this.$headerLogo[0].files.length > 0) {
+                fd.append('headerLogo', this.$headerLogo[0].files[0]);
+                isValid = true;
+            }
+
+            if (this.$loginLogo[0].files.length > 0) {
+                fd.append('loginLogo', this.$loginLogo[0].files[0]);
+                isValid = true;
+            }
+
+            // Show error message and return if no images selected
+            if (!isValid) {
+                Acm.Dialog.error('Select image to upload');
+                return;
+            }
+
+
+
+
+            var context = this;
+            Admin.Service.Logo.uploadLogos(fd)
+                .done(function(){
+                    // clear form values and update images
+                    context.$headerLogo.val('');
+                    context.$loginLogo.val('');
+                    var headerLogoSrc = $('#imgCustomHeaderLogo').attr('src');
+                    var d = (new Date()).getTime();
+                    if (headerLogoSrc.indexOf('?') != -1) {
+                        headerLogoSrc = headerLogoSrc.slice(0, headerLogoSrc.indexOf('?'));
+                    }
+
+                    headerLogoSrc += '?d=' + d;
+                    $('#imgCustomHeaderLogo').attr('src', headerLogoSrc);
+
+                    var loginLogoSrc = $('#imgCustomLoginLogo').attr('src');
+                    if (loginLogoSrc.indexOf('?') != -1) {
+                        loginLogoSrc = loginLogoSrc.slice(0, loginLogoSrc.indexOf('?'));
+                    }
+                    loginLogoSrc += '?d=' + d;
+                    $('#imgCustomLoginLogo').attr('src', loginLogoSrc);
+
+                    Acm.Dialog.info("Custom logo files updated. Refresh browser page to see result.");
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
         }
     }
 
@@ -990,21 +1043,23 @@ Admin.View = Admin.View || {
                 .done(function(cssText){
                     context.cssEditor.setValue(cssText);
                 })
-                .fail(function(){
-                    Acm.Dialog.error('Can\'t retrieve custom CSS file');
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
                 });
         }
         ,onInitialized : function() {
         }
 
         ,updateCustomCss: function(e) {
+            e.preventDefault();
+
             var cssText = this.cssEditor.getValue();
             Admin.Service.CustomCss.updateCustomCss(cssText)
                 .done(function(){
                     Acm.Dialog.info("Custom CSS updated. Refresh browser page to see result.");
                 })
                 .fail(function(errorMsg){
-                    Acm.Dialog.error('Can\'t update custom CSS file');
+                    Acm.Dialog.error(errorMsg);
                 });
         }
     }
