@@ -2,23 +2,34 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "acm_folder")
-public class AcmFolder implements AcmEntity, Serializable, AcmObject
+public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssignedObject
 {
 
     private static final String OBJECT_TYPE = "FOLDER";
@@ -51,6 +62,48 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_parent_folder_id")
     private Long parentFolderId;
+
+    @Column(name = "cm_folder_status")
+    private String status = "ACTIVE";
+
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    private String objectType = AcmFolderConstants.OBJECT_FOLDER_TYPE;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
+    private List<AcmParticipant> participants = new ArrayList<>();
+
+    // looking up the parent folder's participants makes the data access control so much easier
+    @OneToMany(cascade = {})
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_parent_folder_id", insertable = false, updatable = false),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type", insertable = false, updatable = false)
+    })
+    private List<AcmParticipant> parentFolderParticipants = new ArrayList<>();
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        setupChildPointers();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        setupChildPointers();
+    }
+
+    protected void setupChildPointers()
+    {
+        for ( AcmParticipant ap : getParticipants() )
+        {
+            ap.setObjectId(getId());
+            ap.setObjectType(getObjectType());
+        }
+    }
 
     @Override
     public Date getCreated()
@@ -103,7 +156,7 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject
     @JsonIgnore
     @Override
     public String getObjectType() {
-        return OBJECT_TYPE;
+        return objectType;
     }
 
     @Override
@@ -145,6 +198,38 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject
     public void setParentFolderId(Long parentFolderId)
     {
         this.parentFolderId = parentFolderId;
+    }
+
+    @Override
+    public List<AcmParticipant> getParticipants()
+    {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants)
+    {
+        this.participants = participants;
+    }
+
+    public List<AcmParticipant> getParentFolderParticipants()
+    {
+        return parentFolderParticipants;
+    }
+
+    public void setParentFolderParticipants(List<AcmParticipant> parentFolderParticipants)
+    {
+        this.parentFolderParticipants = parentFolderParticipants;
+    }
+
+    @Override
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 
     @Override
