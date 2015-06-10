@@ -12,4 +12,5 @@ import java.util.List;
 public interface AcmFileTypesService {
 
     List<String> getFileTypes() throws AcmFileTypesException;
+    List<String> getForms() throws AcmFileTypesException;
 }
