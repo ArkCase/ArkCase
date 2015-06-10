@@ -472,6 +472,10 @@ CaseFile.prepare = function() {
         }
 
         ,onClickBtnNewFolder: function(event, ctrl) {
+            var nodes = DocTree.View.getEffectiveNodes();
+            if (!Acm.isArrayEmpty(nodes)) {
+                nodes[0].setActive();
+            }
             DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
 
             //var topNode = DocTree.View.getTopNode();
@@ -486,7 +490,7 @@ CaseFile.prepare = function() {
                     Acm.Dialog.alert("Email Address is required");
                     return;
                 }
-                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                var nodes = DocTree.View.getEffectiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
@@ -522,7 +526,7 @@ CaseFile.prepare = function() {
                     Acm.Dialog.alert("Email Address is required");
                     return;
                 }
-                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                var nodes = DocTree.View.getEffectiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
@@ -573,7 +577,7 @@ CaseFile.prepare = function() {
                     return;
                 }
                 var reason = CaseFile.View.Documents.getValueEdtRejectReason();
-                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                var nodes = DocTree.View.getEffectiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, reason);
@@ -639,7 +643,7 @@ CaseFile.prepare = function() {
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var nodes = DocTree.View.getSelectedOrActiveNodes();
+                        var nodes = DocTree.View.getEffectiveNodes();
                         if (DocTree.View.validateNodes(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 var record = {};
@@ -681,7 +685,7 @@ CaseFile.prepare = function() {
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var nodes = DocTree.View.getSelectedOrActiveNodes();
+                        var nodes = DocTree.View.getEffectiveNodes();
                         if (DocTree.View.validateNodes(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 var record = {};
