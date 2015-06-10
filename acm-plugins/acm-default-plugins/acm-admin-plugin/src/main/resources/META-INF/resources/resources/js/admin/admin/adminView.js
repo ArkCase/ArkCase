@@ -1776,16 +1776,16 @@ Admin.View = Admin.View || {
                     ,tooltip: "Link Forms/Workflows"
                 })
 
-                .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
-                    ,title: "Business Objects"
-                    ,tooltip: "Business Objects"
-                    ,folder : true
-                    ,expanded: true
-                })
-                .addLeafLast({key: "boc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
-                    ,title: "Business Object Configuration"
-                    ,tooltip: "Business Object Configuration"
-                })
+//                .addBranch({key: "bo"                                                               //level 4.3.1: /Forms/Form Configuration/Form/Business Objects
+//                    ,title: "Business Objects"
+//                    ,tooltip: "Business Objects"
+//                    ,folder : true
+//                    ,expanded: true
+//                })
+//                .addLeafLast({key: "boc"                                                                    //level 4.3.1.1: /Forms/Form Configuration/Form/Business Objects/Business Object Configuration
+//                    ,title: "Business Object Configuration"
+//                    ,tooltip: "Business Object Configuration"
+//                })
 
                 .addBranch({key: "al"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
                     ,title: "Application Labels"
