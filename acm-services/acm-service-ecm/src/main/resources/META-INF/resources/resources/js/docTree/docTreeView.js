@@ -770,7 +770,7 @@ DocTree.View = DocTree.View || {
         }
         return nodes;
     }
-    ,getSelectedOrActiveNodes: function() {
+    ,getEffectiveNodes: function() {
         var nodes = null;
         if (this.tree) {
             var selNodes = this.tree.getSelectedNodes();
@@ -793,14 +793,14 @@ DocTree.View = DocTree.View || {
             extensions: ["table", "gridnav", "edit", "dnd"]
             ,checkbox: true
             ,selectMode: 2
-            ,select: function(event, data) {
-                var selNodes = data.tree.getSelectedNodes();
-                var selKeys = $.map(selNodes, function(node){
-                    return "[" + node.key + "]: '" + node.title + "'";
-                });
-                var a = selKeys.join(", ");
-                var z = 1;
-            }
+//            ,select: function(event, data) {
+//                var selNodes = data.tree.getSelectedNodes();
+//                var selKeys = $.map(selNodes, function(node){
+//                    return "[" + node.key + "]: '" + node.title + "'";
+//                });
+//                var a = selKeys.join(", ");
+//                var z = 1;
+//            }
             ,table: {
                 indentation: 10,      // indent 20px per node level
                 nodeColumnIdx: 2,     // render the node title into the 2nd column
@@ -1148,7 +1148,7 @@ DocTree.View = DocTree.View || {
                 //,delegate: "span.fancytree-node"
                 ,delegate: "tr"
                 ,beforeOpen: function(event, ui) {
-                    var selNodes = DocTree.View.tree.getSelectedNodes();
+                    var selNodes = DocTree.View.getSelectedNodes();
                     if (!Acm.isArrayEmpty(selNodes)) {
                         $s.contextmenu("replaceMenu", DocTree.View.Menu.getBatchMenu(selNodes));
                         return true;
@@ -1490,7 +1490,8 @@ DocTree.View = DocTree.View || {
         onCommand: function(event, data){
             var refNode;
             var moveMode;
-            var tree = $(this).fancytree("getTree");
+            //var tree = $(this).fancytree("getTree");
+            var tree = DocTree.View.tree;
             var selNodes = tree.getSelectedNodes();
             var node = tree.getActiveNode();
             var batch = !Acm.isArrayEmpty(selNodes);
@@ -1600,6 +1601,7 @@ DocTree.View = DocTree.View || {
                     var nodes = (batch)? selNodes : [node];
                     if (batch) {
                         DocTree.View.checkNodes(nodes, false);
+                        nodes = DocTree.View.tree.getSelectedNodes(true);
                     }
                     DocTree.View.CLIPBOARD = {mode: data.cmd, batch: batch, data: nodes};
                     break;
@@ -1607,6 +1609,7 @@ DocTree.View = DocTree.View || {
                     var nodes = (batch)? selNodes : [node];
                     if (batch) {
                         DocTree.View.checkNodes(nodes, false);
+                        nodes = DocTree.View.tree.getSelectedNodes(true);
                     }
                     var clones = [];
                     for (var i = 0; i < nodes.length; i++) {
@@ -1932,10 +1935,41 @@ DocTree.View = DocTree.View || {
         DocTree.View.$formDownloadDoc.attr("action", App.getContextPath() + DocTree.Service.API_DOWNLOAD_DOCUMENT_ + node.data.objectId);
         DocTree.View.$formDownloadDoc.submit();
     }
+
+    //find oldest parent in the array(not include topnode). inNodes need to be in order from top down
+    ,findOldestParent: function(node, inNodes) {
+        var found = null;
+        if (DocTree.View.validateNode(node) && DocTree.View.validateNodes(inNodes)) {
+            for (var i = 0; i < inNodes.length; i++) {
+                if (!DocTree.View.isTopNode(inNodes[i])) {
+                    var parent = node.parent;
+                    while (parent && !DocTree.View.isTopNode(parent)) {
+                        if (parent.data.objectId == inNodes[i].data.objectId) {
+                            found = parent;
+                            break;
+                        }
+                        parent = parent.parent;
+                    }
+                }
+            }
+        }
+        return found;
+    }
     ,_doBatRemove: function(nodes) {
         if (!Acm.isArrayEmpty(nodes)) {
+            //remove nodes whose parent is selected
+            var removeNodes = [];
             for (var i = 0; i < nodes.length; i++) {
-                this._doRemove(nodes[i]);
+                if (!DocTree.View.isTopNode(nodes[i])) {
+                    var parent = this.findOldestParent(nodes[i], nodes);
+                    if (!parent) {
+                        removeNodes.push(nodes[i]);
+                    }
+                }
+            }
+
+            for (var i = 0; i < removeNodes.length; i++) {
+                this._doRemove(removeNodes[i]);
             }
         }
     }
@@ -1943,11 +1977,7 @@ DocTree.View = DocTree.View || {
         if (DocTree.View.isFolderNode(node) || DocTree.View.isFileNode(node)) {
             var parent = node.parent;
             if (parent) {
-//                var pageId = Acm.goodValue(parent.data.startRow, 0);
-//                var parentId = parent.data.objectId;
-//                var cacheKey = DocTree.Model.getCacheKey(DocTree.View.isTopNode(parent)? 0 : parentId , pageId);
                 var cacheKey = DocTree.View.getCacheKey(parent);
-
                 var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
                 node.remove();
                 if( refNode ) {
@@ -2278,6 +2308,9 @@ DocTree.View = DocTree.View || {
             return false;
         }
         if (Acm.isEmpty(data.data)) {
+            return false;
+        }
+        if (Acm.isEmpty(data.data.objectId)) {
             return false;
         }
         if (Acm.isEmpty(data.key)) {
