@@ -144,7 +144,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         String[] targetPathComponents = newPath.split("/");
         AcmFolder parent = container.getFolder();
-
+        if (newPath != null && newPath.trim().length() < 1)
+            return parent;
         for ( String targetPathComponent : targetPathComponents )
         {
             log.info("Checking for folder named " + targetPathComponent);
@@ -399,11 +400,17 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder toBeCopied = getFolderDao().find(folderToBeCopiedId);
         AcmFolder dstFolder = getFolderDao().find(copyDstFolderId);
 
-        if ( toBeCopied == null ){
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderToBeCopiedId,"Folder not found",null);
+        return copyFolder(toBeCopied,dstFolder,targetObjectId,targetObjectType);
+    }
+
+    @Override
+    public AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException {
+
+        if( toBeCopied == null ) {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null, "Folder that need to be copied not found",null);
         }
-        if ( dstFolder == null ){
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderToBeCopiedId,"Parent folder not found",null);
+        if( dstFolder == null ) {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null, "Destination folder not found",null);
         }
 
         if ( toBeCopied.getParentFolderId() == null ) {
