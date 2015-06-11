@@ -429,6 +429,8 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_LEAF_LINK_FORMS_WORKFLOWS           :          "wflc"
             ,NODE_TYPE_PART_BRANCH_LABEL_CONFIGURATION          :          "al"
             ,NODE_TYPE_PART_LEAF_LABEL_CONFIGURATION            :          "lc"
+            ,NODE_TYPE_PART_LEAF_LOGO	                        :          "brl"
+            ,NODE_TYPE_PART_LEAF_CUSTOM_CSS                     :          "brcss"
             ,NODE_TYPE_PART_BRANCH_TEMPLATES                    :          "ct"
             ,NODE_TYPE_PART_LEAF_TEMPLATES                      :          "cm"
             ,NODE_TYPE_PART_BRANCH_FORMS                        :          "forms"
@@ -446,6 +448,8 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "rc"       ,icon: "",tabIds: ["tabReports"]}
                 ,{nodeType: "al"       ,icon: "",tabIds: ["tabLabelConfiguration"]}
                 ,{nodeType: "lc"       ,icon: "",tabIds: ["tabLabelConfiguration"]}
+                ,{nodeType: "brl"      ,icon: "",tabIds: ["tabLogo"]}
+                ,{nodeType: "brcss"    ,icon: "",tabIds: ["tabCustomCss"]}
                 ,{nodeType: "ct"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "cm"       ,icon: "",tabIds: ["tabCorrespondenceTemplates"]}
                 ,{nodeType: "og"       ,icon: "",tabIds: ["tOrganization"]}
@@ -526,7 +530,12 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_BRANCH_FORMS;
                 } else if (key == this.NODE_TYPE_PART_LEAF_FORMS) {
                     return this.NODE_TYPE_PART_LEAF_FORMS;
+                } else if (key == this.NODE_TYPE_PART_LEAF_LOGO) {
+                    return this.NODE_TYPE_PART_LEAF_LOGO;
+                } else if (key == this.NODE_TYPE_PART_LEAF_CUSTOM_CSS) {
+                    return this.NODE_TYPE_PART_LEAF_CUSTOM_CSS;
                 }
+
                 return null;
             }
         }

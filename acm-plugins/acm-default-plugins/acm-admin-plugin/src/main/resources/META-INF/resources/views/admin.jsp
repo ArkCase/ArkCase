@@ -57,6 +57,12 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_handsontable}/dist/${css_handsontable}'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_handsontable}/dist/${js_handsontable}'/>"></script>
 
+    <!-- Ace editor-->
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace_mode_css}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace_worker_css}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace_theme_chrome}'/>"></script>
+
     /////////////////////////////////////////////////////////////////////
     <style>
         table.fancytree-ext-table {
@@ -86,6 +92,11 @@
             float:left;
             width:80%;
             min-height:100px;
+        }
+
+        #customCssTextArea {
+            height: 600px;
+            position: relative;
         }
 
     </style>
@@ -383,7 +394,7 @@
                                         </div>
                                     </div>
 
-                                        <%--JTable - Label Configuration --%>
+                                    <%--JTable - Label Configuration --%>
                                     <div class="row" id="tabLabelConfiguration" style="display:none;">
                                         <div class="col-md-12">
 
@@ -430,6 +441,29 @@
 
                                         </div>
                                     </div>
+
+                                    <%-- Logo Branding --%>
+                                    <div class="row" id="tabLogo" style="display:none">
+                                        <div class="col-md-12">
+                                            <h3>Logo</h3>
+                                        </div>
+                                    </div>
+
+                                    <%-- Custom CSS --%>
+                                    <div class="row" id="tabCustomCss" style="display:none">
+                                        <section class="row m-b-md">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-b-xs text-black">Custom CSS</h3>
+                                            </div>
+                                        </section>
+                                        <section class="panel panel-body">
+                                            <div id="customCssTextArea" class="form-control" class="custom-css-textarea"></div>
+                                            <br>
+                                            <button id="btnSaveCustomCss" class="btn btn-s-md btn-primary">Save</button>
+                                        </section>
+                                    </div>
+
+
 
 
                                     <%--JTable - Correspondence--%>

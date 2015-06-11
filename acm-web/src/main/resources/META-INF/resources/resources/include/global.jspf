@@ -174,6 +174,12 @@
 <c:set var="vd_numberformatter"    scope="session" value="numberformatter-1.2.4"/>
 <c:set var="js_numberformatter"    scope="session" value="jquery.numberformatter-1.2.4.js"/>
 
+<c:set var="vd_ace"                scope="session" value="ace"/>
+<c:set var="js_ace"                scope="session" value="ace.js"/>
+<c:set var="js_ace_mode_css"       scope="session" value="mode-css.js"/>
+<c:set var="js_ace_worker_css"     scope="session" value="worker-css.js"/>
+<c:set var="js_ace_theme_chrome"   scope="session" value="theme-chrome.js"/>
+
 
 <!-- Bootstrap http://getbootstrap.com -->
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_jquery_ui}/css/ui-lightness/${css_jquery_ui}'/>" type="text/css"/>
@@ -189,6 +195,9 @@
 <!--[if lt IE 8]>
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_ie}/css/ie.css'/>" />
 <![endif]-->
+
+<!-- Custom  CSS file -->
+<link rel="stylesheet" media="screen" href="<c:url value='/api/latest/plugin/admin/branding/customcss'/>"/>
 
 <!-- from http://getbootstrap.com/getting-started:  -->
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
