@@ -103,6 +103,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER,AcmFolderConstants.OBJECT_FOLDER_TYPE,parentFolder.getId(),"Folder was no added under "+parentFolder.getName()+" successfully",null);
             }
             newFolder.setName(newFolderName);
+            newFolder.setParentFolderParticipants(parentFolder.getParticipants());
             newFolder.setParentFolderId(parentFolder.getId());
 
             AcmFolder result = getFolderDao().save(newFolder);
@@ -280,6 +281,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             folderForMoving.setCmisFolderId(newFolderId);
             folderForMoving.setParentFolderId(dstFolder.getId());
+            folderForMoving.getParticipants().clear();
+            folderForMoving.setParentFolderParticipants(dstFolder.getParticipants());
             movedFolder = getFolderDao().save(folderForMoving);
         } catch ( PersistenceException | MuleException e ) {
             if ( log.isErrorEnabled() ){
@@ -437,6 +440,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
             acmNewFolder.setParentFolderId(pFolder.getId());
             acmNewFolder.setName(newFolder.getName());
+            acmNewFolder.setParentFolderParticipants(pFolder.getParticipants());
             copiedFolder =  getFolderDao().save(acmNewFolder);
 
         } catch ( PersistenceException | MuleException e ){
@@ -526,6 +530,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         newFolder.setName(folderName);
         newFolder.setParentFolderId(folder.getId());
+        newFolder.setParentFolderParticipants(folder.getParticipants());
+        log.debug("# of parent folder participants: " + newFolder.getParentFolderParticipants().size());
+        for ( AcmParticipant ap : newFolder.getParentFolderParticipants() )
+        {
+            log.debug("Parent folder participant: " + ap.getParticipantType() + " " + ap.getParticipantLdapId());
+        }
         AcmFolder result;
         try {
              result = getFolderDao().save(newFolder);
