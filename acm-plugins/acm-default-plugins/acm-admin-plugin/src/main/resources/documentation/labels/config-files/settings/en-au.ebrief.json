@@ -131,6 +131,21 @@
     ,"defaultValue": "Refresh"
     ,"description": ""
     }
+,"lodge-doc-email-subject": {
+        "value": "Lodged Document(s)"
+    ,"defaultValue": "Lodged Document(s)"
+    ,"description": ""
+    }
+,"reject-doc-email-subject": {
+        "value": "Rejected Document(s)"
+    ,"defaultValue": "Rejected Document(s)"
+    ,"description": ""
+    }
+,"reject-doc-email-text": {
+        "value": "The reason for rejection is :"
+    ,"defaultValue": "The reason for rejection is :"
+    ,"description": ""
+    }
 ,"dialog": {
         "lodge-title": {
             "value": "Lodge Documents"
