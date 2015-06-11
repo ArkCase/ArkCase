@@ -153,7 +153,7 @@ CaseFile.prepare = function() {
                 //var displayTitle = Acm.goodValue(c.title) + " (" + Acm.goodValue(c.status) +")";
                 //var displayTitle = Acm.goodValue(c.caseNumber) + ", " + Acm.goodValue(c.title);
                 //this.setTextLabCaseNumber(Acm.goodValue(displayTitle));
-                this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
+                //this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
                 this.setTextLnkCourt(Acm.goodValue(c.courtroomName));
                 this.setTextLnkHearingDate(Acm.getDateFromDatetime(c.nextCourtDate));
@@ -254,10 +254,7 @@ CaseFile.prepare = function() {
                     if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
                         var user = participant.participantLdapId;
                         var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(user));
-                        if(Acm.isNotEmpty(profile)){
-                            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
-                        }
-                        else{
+                        if(Acm.isEmpty(profile)){
                             var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
                             requests.push(req);
                         }
@@ -290,13 +287,7 @@ CaseFile.prepare = function() {
         ,onViewSelectedObject: function(objType, objId) {
             CaseFile.View.Participants.reloadParticipants();
         }
-//        ,updateParticipant: function(participant,profileInfo) {
-//            if(Acm.isNotEmpty(profileInfo)){
-//                participant.organisation = Acm.goodValue(profileInfo.companyName);
-//                participant.email = Acm.goodValue(profileInfo.email);
-//                participant.phone = Acm.goodValue(profileInfo.phone);
-//            }
-//        }
+
         ,createJTableParticipants: function($s) {
             AcmEx.Object.JTable.useBasic($s, {
                 title: $.t("ebrief:participants.table.title")
@@ -487,10 +478,15 @@ CaseFile.prepare = function() {
 
         ,onClickBtnNewFolder: function(event, ctrl) {
             var nodes = DocTree.View.getEffectiveNodes();
+            //DocTree.View.Op.deleteFolder(nodes[0]);
+            DocTree.View.Op.batchRemove(nodes);
+            return;
+
+            var nodes = DocTree.View.getEffectiveNodes();
             if (!Acm.isArrayEmpty(nodes)) {
                 nodes[0].setActive();
             }
-            DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
+            DocTree.View.Command.trigger("newFolder");
 
             //var topNode = DocTree.View.getTopNode();
             //DocTree.View.Op.createFolder(topNode, "hahahaha");
@@ -525,59 +521,10 @@ CaseFile.prepare = function() {
                     $.each( folderMap, function( key, value ) {
                         var folderNames = key.split(",");
                         var entry = value;
-                        DocTree.View.Op.createFolderByPath(folderNames, entry.docIds, entry.parentNode);
+                        DocTree.View.Op.lodgeDocuments(folderNames, entry.docIds, entry.parentNode);
                         var z = 1;
                     });
                 }
-            });
-        }
-        ,onClickBtnLodgeDocs_not_working: function(event, ctrl) {
-            CaseFile.View.Documents.setValueEdtBmailAddr("");
-            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
-            Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
-                var emailAddresses = CaseFile.View.Documents.getValueEdtBmailAddr();
-                if (Acm.isEmpty(emailAddresses)) {
-                    Acm.Dialog.alert("Email Address is required");
-                    return;
-                }
-                var nodes = DocTree.View.getEffectiveNodes();
-                if (DocTree.View.validateNodes(nodes)) {
-                    DocTree.Controller.viewSentEmail(emailNotifications);
-                    var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
-
-                    for (var i = 0; i < nodes.length; i++) {
-                        var node = nodes[i];
-                        var pathNames = CaseFile.View.Documents.getFolderNames(node, CaseFile.View.Documents.FOLDER_COURT_BRIEF);
-                        DocTree.View.Op.createFolderByPath(pathNames, node)
-                            .done(function(data) {
-                                var folderId = data.folderId;
-                                Acm.log("=====craetFolderByPath done, folderId=" + folderId);
-                                var node = data.node;
-                                var pathNames = CaseFile.View.Documents.getFolderNames(node, CaseFile.View.Documents.FOLDER_COURT_BRIEF);
-                                DocTree.View.expandNodesByNames(pathNames, node)
-                                    .done(function(srcNode){
-                                        var folderNames = CaseFile.View.Documents.getFolderNames(srcNode, CaseFile.View.Documents.FOLDER_COURT_BRIEF);
-                                        var folderNode = DocTree.View.findNodeByPathNames(folderNames);
-
-                                        Acm.log("=====expandNodes, a=" + srcNode.title);
-                                        DocTree.View.doMove(srcNode, folderNode, "child");
-
-                                        var z = 1;
-                                    })
-                                    .fail(function(){
-                                        var z = 1;
-                                    })
-                                ;
-                                var z = 2;
-                            })
-                            .fail(function(data) {
-                                var z = 1;
-                            })
-                        ;
-                    }
-                }
-
-                //var lodgeFolderId = CaseFile.View.Documents.getLodgeFolderId();
             });
         }
         ,onClickBtnRejectDocs: function(event, ctrl) {
@@ -596,25 +543,7 @@ CaseFile.prepare = function() {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, reason);
 
-                    var folderMap = {};
-                    for (var i = 0; i < nodes.length; i++) {
-                        var folderNames = CaseFile.View.Documents.getFolderNames(nodes[i], CaseFile.View.Documents.FOLDER_PROSECUTION_BRIEF);
-                        var entry = folderMap[folderNames];
-                        if (!entry) {
-                            entry = {parentNode: nodes[i].parent, docIds: []};
-                        }
-                        entry.docIds.push(nodes[i].data.objectId);
-                        folderMap[folderNames] = entry;
-
-                        nodes[i].remove();
-                    }
-
-                    $.each( folderMap, function( key, value ) {
-                        var folderNames = key.split(",");
-                        var entry = value;
-                        DocTree.View.Op.createFolderByPath(folderNames, entry.docIds, entry.parentNode);
-                        var z = 1;
-                    });
+                    DocTree.View.Command.trigger("remove");
                 }
             });
         }
