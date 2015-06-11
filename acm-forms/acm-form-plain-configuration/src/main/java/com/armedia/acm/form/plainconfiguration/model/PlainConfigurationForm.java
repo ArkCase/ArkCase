@@ -6,14 +6,19 @@ package com.armedia.acm.form.plainconfiguration.model;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.armedia.acm.form.plainconfiguration.model.xml.UrlParameterItem;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 
 /**
  * @author riste.tutureski
  *
  */
+@XmlRootElement(name=FrevvoFormConstants.ELEMENT_KEY_PREFIX + FrevvoFormName.PLAIN_CONFIGURATION, namespace=FrevvoFormNamespace.PLAIN_CONFIGURATION_NAMESPACE)
 public class PlainConfigurationForm {
 
 	private String key;
@@ -26,6 +31,8 @@ public class PlainConfigurationForm {
 	private List<String> targetOptions;
 	private String description;
 	private List<UrlParameterItem> urlParameters;
+	private List<String> requiredUrlParemeters;
+	
 	
 	@XmlElement(name="key")
 	public String getKey() {
@@ -72,7 +79,7 @@ public class PlainConfigurationForm {
 		this.type = type;
 	}
 	
-	@XmlElement(name="mode")
+	@XmlElement(name="formMode")
 	public String getMode() {
 		return mode;
 	}
@@ -116,4 +123,13 @@ public class PlainConfigurationForm {
 	public void setUrlParameters(List<UrlParameterItem> urlParameters) {
 		this.urlParameters = urlParameters;
 	}	
+	
+	@XmlTransient
+	public List<String> getRequiredUrlParemeters() {
+		return requiredUrlParemeters;
+	}
+
+	public void setRequiredUrlParemeters(List<String> requiredUrlParemeters) {
+		this.requiredUrlParemeters = requiredUrlParemeters;
+	}
 }

@@ -941,5 +941,60 @@ Admin.Service = {
             )
         }
     }
+
+    ,Forms: {
+    	create: function () {
+    		if (Admin.Service.Forms.PlainForms.create)        	{Admin.Service.Forms.PlainForms.create();}
+        }
+        , onInitialized: function () {
+        	if (Admin.Service.Forms.PlainForms.onInitialized)        	{Admin.Service.Forms.PlainForms.onInitialized();}
+        }
+        
+        ,PlainForms:{
+        	create: function () {
+        		
+            }
+            , onInitialized: function () {
+            	
+            }
+            
+            ,API_RETRIEVE_PLAIN_FORMS: 			  "/api/latest/plugin/admin/plainforms"
+            ,API_DELETE_PLAIN_FORM: 			  "/api/latest/plugin/admin/plainforms"
+            	
+        	,retrievePlainForms: function() {
+                var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_RETRIEVE_PLAIN_FORMS;
+                Acm.Service.asyncGet(
+                    function(response) {
+                        if (response.hasError) {
+                            var errorMsg = "Failed to retrieve plain forms:" + response.errorMsg;
+                            Admin.Controller.modelReportConfigError(errorMsg);
+                        } else {
+                            if (Admin.Model.Forms.PlainForms.validatePlainForms(response)) {
+                                Admin.Model.Forms.PlainForms.setPlainForms(response);
+                                Admin.Controller.modelFormsConfigRetrievedPlainForms(response);
+                            }
+                        }
+                    }
+                    ,url
+                )
+            }
+            
+            ,deletePlainForm: function(key, target) {
+                var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_DELETE_PLAIN_FORM + '/' + key + '/' + target;
+                return Acm.Service.call({type: "DELETE"
+                    ,url: url
+                    ,callback: function(response) {
+                        if (response.hasError) {
+                        	var errorMsg = "Failed to delete plain form:" + response.errorMsg;
+                            Admin.Controller.modelReportConfigError(errorMsg);
+                        } else {
+                        	Admin.Controller.modelFormsConfigDeletedPlainForm(response);
+                            return true;
+                        }
+                    }
+                });
+            }
+        }
+    }
 };
 

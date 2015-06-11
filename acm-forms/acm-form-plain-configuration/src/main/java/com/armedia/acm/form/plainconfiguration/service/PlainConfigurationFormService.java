@@ -39,6 +39,30 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 	private PropertyFileManager propertyFileManager;
 	
 	@Override
+	public Object init() 
+	{
+		String result = "";
+		
+		String mode = getRequest().getParameter("mode");
+		String key = getRequest().getParameter("formKey");
+		String target = getRequest().getParameter("formTarget");
+		
+		if (mode != null && "edit".equals(mode) && 
+			key != null && !key.isEmpty() && 
+			target != null && !target.isEmpty())
+		{
+			PlainConfigurationForm form = getPlainConfigurationFormFactory().getFormInfoFromProperties(key, target);
+			if (form != null)
+			{
+				result = convertFromObjectToXML(form);
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	@Override
 	public Object get(String action) 
 	{
 		Object result = null;
@@ -55,6 +79,11 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 				result = initTargets();
 			}
 			
+			if ("init-required-url-parameters".equals(action)) 
+			{
+				result = initRequiredUrlParameters();
+			}
+			
 			if ("get-form-info".equals(action)) 
 			{
 				result = getFormInfo();
@@ -68,6 +97,8 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 	public boolean save(String xml,
 			MultiValueMap<String, MultipartFile> attachments) throws Exception 
 	{
+		String mode = getRequest().getParameter("mode");
+		
 		PlainConfigurationForm form = (PlainConfigurationForm) convertFromXMLToObject(cleanXML(xml), PlainConfigurationForm.class);
 		
 		if (form == null) {
@@ -75,10 +106,10 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 			return false;
 		}
 		
-		String formType = getPropertyFileManager().load(getPlainFormPropertiesLocation(), form.getKey() + ".type", null);
+		String formId = getPropertyFileManager().load(getPlainFormPropertiesLocation(), form.getFormId() + ".id", null);
 		String formParameters = getPropertyFileManager().load(getPlainFormPropertiesLocation(), form.getKey() + ".parameters." + form.getTarget(), null);
 		
-		if (formType == null || formParameters == null)
+		if (formId == null || formParameters == null || "edit".equals(mode))
 		{
 			Map<String, String> properties = getFormProperties(form);
 			getPropertyFileManager().storeMultiple(properties, getPlainFormPropertiesLocation(), false);
@@ -110,8 +141,9 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		PlainConfigurationForm form = new PlainConfigurationForm();
 		
 		LOG.debug("Start taking the application and forms from Frevvo.");
+		String applicationId = getFrevvoService().getFormUrl().getApplicationId();
 		getFrevvoService().login();
-		ApplicationEntry application = getFrevvoService().getApplication("_IgbIMDnTEeSjTrBIsoKK0g");
+		ApplicationEntry application = getFrevvoService().getApplication(applicationId);
 		List<FormTypeEntry> forms = getFrevvoService().getForms(application);
 		getFrevvoService().logout();
 		
@@ -131,6 +163,21 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		
 		List<String> targets = convertToList((String) getProperties().get(FrevvoFormName.PLAIN_CONFIGURATION + ".targets"), ",");
 		form.setTargetOptions(targets);
+		
+		JSONObject json = createResponse(form);
+		
+		LOG.debug("Response: " + json);
+
+		return json;
+	}
+	
+	private Object initRequiredUrlParameters()
+	{
+		LOG.debug("Targets initialization.");
+		PlainConfigurationForm form = new PlainConfigurationForm();
+		
+		List<String> requiredUrlParemeters = convertToList((String) getProperties().get(FrevvoFormName.PLAIN_CONFIGURATION + ".required.url.parameters"), ",");
+		form.setRequiredUrlParemeters(requiredUrlParemeters);
 		
 		JSONObject json = createResponse(form);
 		
@@ -190,6 +237,7 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		Map<String, String> properties = new HashMap<String, String>();
 		String key = form.getKey();
 		
+		properties.put(key + ".id", form.getFormId());
 		properties.put(key + ".name", form.getName());
 		properties.put(key + ".type", form.getType());
 		properties.put(key + ".mode", form.getMode());
