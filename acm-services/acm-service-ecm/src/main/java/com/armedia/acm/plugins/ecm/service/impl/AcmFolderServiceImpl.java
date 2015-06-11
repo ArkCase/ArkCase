@@ -22,6 +22,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
 import org.apache.chemistry.opencmis.client.api.ObjectType;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -795,6 +797,43 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             return getFolderPath(parent) + "/" + folder.getName();
         } else
             return "";
+    }
+
+    @Override
+    public boolean folderPathExists(String folderPath, AcmContainer container) throws AcmFolderException {
+        log.info("Checking existence of path {} in container id = ", folderPath, container);
+
+        Objects.requireNonNull(container, "Container should not be null");
+        if (folderPath != null)
+            folderPath = folderPath.trim();
+        if (StringUtils.isEmpty(folderPath))
+            throw new AcmFolderException("Folder path should not be null/empty");
+
+        // format path and prepare for split
+        if (folderPath.startsWith("/")) {
+            folderPath = folderPath.substring(1);
+        }
+        if (folderPath.endsWith("/")) {
+            folderPath = folderPath.substring(0, folderPath.length() - 1);
+        }
+
+        log.info("Formatted path: " + folderPath);
+
+        String[] targetPathComponents = folderPath.split("/");
+        AcmFolder parent = container.getFolder();
+
+        for (String targetPathComponent : targetPathComponents) {
+            log.info("Checking for folder named " + targetPathComponent);
+            try {
+                AcmFolder folder = getFolderDao().findFolderByNameInTheGivenParentFolder(targetPathComponent, parent.getId());
+                parent = folder;
+            } catch (NoResultException nre) {
+                //this folder doesn't exists in the path
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public EcmFileDao getFileDao() {
