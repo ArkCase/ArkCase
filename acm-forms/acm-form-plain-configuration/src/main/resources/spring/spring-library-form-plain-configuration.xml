@@ -7,6 +7,8 @@
     
     <bean id="plainConfigurationFormFactory" class="com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFactory">
     	<property name="frevvoService" ref="frevvoService" />
+    	<property name="formProperties" ref="acm-form-properties" />
+    	<property name="plainFormProperties" ref="plainFormProperties" />
     </bean>
     
 </beans>

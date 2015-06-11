@@ -346,10 +346,28 @@ Admin.Model = Admin.Model || {
         }
         ,PlainForms:{
         	create: function () {
-        		
+        		this.cachePlainForms = new Acm.Model.CacheFifo(1);
             }
             , onInitialized: function () {
-            	
+            	 Admin.Service.Forms.PlainForms.retrievePlainForms();
+            }
+            
+            ,validatePlainForms: function(plainForms) {
+                if (Acm.isEmpty(plainForms)) {
+                    return false;
+                }
+                if(!Acm.isArray(plainForms)){
+                    return false;
+                }
+                return true;
+            }
+            
+            ,getPlainForms: function() {
+            	return Admin.Model.Forms.PlainForms.cachePlainForms.get("forms.plainforms");
+            }
+            
+            ,setPlainForms: function(plainForms) {
+            	Admin.Model.Forms.PlainForms.cachePlainForms.put("forms.plainforms", plainForms);
             }
         }
     }

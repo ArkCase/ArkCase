@@ -98,7 +98,11 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP                  : "reports-configuration-model-saved-reports-to-groups-map"		                // param : success
 
-    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_ERROR                             : "reports-configuration-model-error"		                                    // param : errorMsg
+    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_ERROR                             : "reports-configuration-model-error"		
+    	
+    ,MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS                        : "forms-configuration-model-retrieved-plain-forms" 
+    
+    ,MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM                        	: "forms-configuration-model-deleted-plain-form"
 
     ,viewCreatedAdHocGroup: function(group,parentId){
         Acm.Dispatcher.fireEvent(this.VIEW_ORG_HIERARCHY_CREATED_AD_HOC_GROUP, group,parentId);
@@ -271,5 +275,11 @@ Admin.Controller = Admin.Controller || {
     }
     ,modelReportConfigSavedReportToGroupsMap: function(success){
         Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, success);
+    }
+    ,modelFormsConfigRetrievedPlainForms: function(plainForms){
+        Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS, plainForms);
+    }
+    ,modelFormsConfigDeletedPlainForm: function(plainForm){
+        Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM, plainForm);
     }
 }
