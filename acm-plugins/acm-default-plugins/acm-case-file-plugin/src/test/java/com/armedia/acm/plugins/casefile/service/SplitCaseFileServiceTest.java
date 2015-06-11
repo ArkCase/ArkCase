@@ -112,6 +112,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         sourceCaseFile.setTitle("Source");
         sourceCaseFile.setDetails("Source Details");
 
+        EasyMock.expect(auth.getName()).andReturn("ann-acm").anyTimes();
 
         Capture<CaseFile> caseFileCapture = new Capture<>();
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile).anyTimes();
