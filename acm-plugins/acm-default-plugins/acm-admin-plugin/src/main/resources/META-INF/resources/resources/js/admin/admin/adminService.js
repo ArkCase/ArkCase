@@ -717,6 +717,64 @@ Admin.Service = {
         }
     }
 
+    ,Logo: {
+        create: function() {
+        }
+
+        ,onInitialized: function() {
+        }
+
+    }
+
+    ,CustomCss: {
+        API_CUSTOM_CSS: '/api/latest/plugin/admin/branding/customcss'
+
+        ,create: function() {
+        }
+
+        ,onInitialized: function() {
+        }
+
+        ,retrieveCustomCss: function(){
+            var url = App.getContextPath() + Admin.Service.CustomCss.API_CUSTOM_CSS;
+            var $dfd = jQuery.Deferred();
+
+            $.ajax({
+                url: url,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Accept', 'text/css');
+                },
+                type: 'GET'
+            })
+                .done(function(response) {
+                    $dfd.resolve(response);
+                })
+                .fail(function(){
+                    $dfd.reject();
+                });
+
+            return $dfd.promise();
+        }
+
+        ,updateCustomCss: function(customCss){
+            var url = App.getContextPath() + Admin.Service.CustomCss.API_CUSTOM_CSS;
+            var $dfd = jQuery.Deferred();
+
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to update custom CSS:" + response.errorMsg;
+                        $dfd.reject();
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,customCss
+            );
+            return $dfd.promise();
+        }
+    }
 
     ,Correspondence : {
 

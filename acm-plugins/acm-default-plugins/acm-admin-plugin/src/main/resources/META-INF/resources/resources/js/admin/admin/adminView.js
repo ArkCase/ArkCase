@@ -15,6 +15,8 @@ Admin.View = Admin.View || {
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
         if (Admin.View.Forms.create)    				{Admin.View.Forms.create();}
         if (Admin.View.LinkFormsWorkflows.create)       {Admin.View.LinkFormsWorkflows.create();}
+        if (Admin.View.Logo.create)                     {Admin.View.Logo.create();}
+        if (Admin.View.CustomCss.create)                {Admin.View.CustomCss.create();}
 
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
@@ -28,6 +30,8 @@ Admin.View = Admin.View || {
         if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
         if (Admin.View.LinkFormsWorkflows.onInitialized)        {Admin.View.LinkFormsWorkflows.onInitialized();}
+        if (Admin.View.Logo.onInitialized)                      {Admin.View.Logo.onInitialized();}
+        if (Admin.View.CustomCss.onInitialized)                 {Admin.View.CustomCss.onInitialized();}
         if (Admin.View.WorkflowConfiguration.onInitialized)     {Admin.View.WorkflowConfiguration.onInitialized();}
         if (Admin.View.Forms.onInitialized)    					{Admin.View.Forms.onInitialized();}
 
@@ -963,6 +967,48 @@ Admin.View = Admin.View || {
         }
     }
 
+    ,Logo: {
+        create: function() {
+
+        }
+        ,onInitialized : function(){
+
+        }
+    }
+
+    ,CustomCss: {
+        create: function() {
+            this.cssEditor = ace.edit("customCssTextArea");
+            this.cssEditor.setTheme("ace/theme/chrome");
+            this.cssEditor.getSession().setMode("ace/mode/css");
+
+            $('#btnSaveCustomCss').click($.proxy(this.updateCustomCss, this));
+
+            // Load Custom Css
+            var context = this;
+            Admin.Service.CustomCss.retrieveCustomCss()
+                .done(function(cssText){
+                    context.cssEditor.setValue(cssText);
+                })
+                .fail(function(){
+                    Acm.Dialog.error('Can\'t retrieve custom CSS file');
+                });
+        }
+        ,onInitialized : function() {
+        }
+
+        ,updateCustomCss: function(e) {
+            var cssText = this.cssEditor.getValue();
+            Admin.Service.CustomCss.updateCustomCss(cssText)
+                .done(function(){
+                    Acm.Dialog.info("Custom CSS updated. Refresh browser page to see result.");
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error('Can\'t update custom CSS file');
+                });
+        }
+    }
+
     ,Correspondence : {
         create: function () {
 
@@ -1804,7 +1850,7 @@ Admin.View = Admin.View || {
                     }
 
 
-                    // Apply colors to cells
+                    // Apply styles to cells
                     var cellRenderer = function(instance, td, row, col, prop, value, cellProperties){
                         Handsontable.renderers.TextRenderer.apply(this, arguments);
 
@@ -1845,7 +1891,7 @@ Admin.View = Admin.View || {
                             var cellProperties = {};
                             var cellType = data.cells[row][col].type;
 
-                            // Add dropdow data if required
+                            // Add data for dropdown control if required
                             if (cellType && data.meta[cellType]) {
                                 cellProperties.type = 'dropdown';
                                 cellProperties.source = data.meta[cellType];
@@ -2209,6 +2255,22 @@ Admin.View = Admin.View || {
                     ,title: "Label Configuration"
                     ,tooltip: "Label Configuration"
                 })
+
+                .addBranch({key: "br"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
+                    ,title: "Branding"
+                    ,tooltip: "Branding"
+                    ,folder : true
+                    ,expanded: true
+                })
+                .addLeaf({key: "brl"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
+                    ,title: "Logo"
+                    ,tooltip: "Logo"
+                })
+                .addLeafLast({key: "brcss"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
+                    ,title: "Custom CSS"
+                    ,tooltip: "Custom CSS"
+                })
+
                 .addBranchLast({key: "cm"                                                           //level 4.5.1: /Forms/Form Configuration/Form/Correspondence Management
                     ,title: "Correspondence Management"
                     ,tooltip: "Correspondence Management"

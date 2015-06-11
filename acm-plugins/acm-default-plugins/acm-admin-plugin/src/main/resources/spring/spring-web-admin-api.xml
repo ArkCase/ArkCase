@@ -154,6 +154,20 @@
         <property name="linkFormsWorkflowsService"  ref="linkFormsWorkflowsService" />
     </bean>
 
+    <!-- Custom CSS -->
+    <bean id="customCssService" class="com.armedia.acm.plugins.admin.web.api.CustomCssService">
+        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.acm/branding/custom.css"/>
+    </bean>
+
+    <bean id="customCssRetrieveFile" class="com.armedia.acm.plugins.admin.web.api.CustomCssRetrieveFile">
+        <property name="customCssService" ref="customCssService"/>
+    </bean>
+
+    <bean id="customCssUpdateFile" class="com.armedia.acm.plugins.admin.web.api.CustomCssUpdateFile">
+        <property name="customCssService" ref="customCssService"/>
+    </bean>
+
+
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
     
     <bean id="getPlainFormsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormsAPIController">
@@ -167,7 +181,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
     </bean>
-    
+
     <bean id="getPlainFormTargetsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
     	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
     </bean>

@@ -63,6 +63,7 @@
         <property name="mediaTypes">
             <props>
                 <prop key="xml">text/xml</prop>
+                <prop key="xml">text/css</prop>
                 <prop key="json">application/json</prop>
             </props>
         </property>
