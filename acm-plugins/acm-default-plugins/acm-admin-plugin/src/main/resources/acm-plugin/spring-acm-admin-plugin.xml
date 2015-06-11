@@ -153,6 +153,17 @@
                     <property name="url" value="/api/{version}/plugin/admin/workflowconfiguration/workflows/{key}/versions/{version}/active"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>
                 </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/admin/linkformsworkflows/configuration"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/plugin/admin/linkformsworkflows/configuration"/>
+                    <property name="requiredPrivilege" ref="adminPrivilege"/>
+                </bean>
+
             </list>
         </property>
     </bean>

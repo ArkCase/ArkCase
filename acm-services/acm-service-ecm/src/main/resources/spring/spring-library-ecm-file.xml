@@ -113,5 +113,19 @@
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
     </bean>
-    
+
+    <bean id="acmFileTypesService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFileTypesServiceImpl">
+        <property name="propertiesLocation" value="#{ systemProperties ['user.home'] }/.acm/"></property>
+        <property name="propertyFiles">
+            <list>
+                <value>caseFilePlugin.properties</value>
+                <value>complaintPlugin.properties</value>
+                <value>taskPlugin.properties</value>
+                <value>acm-forms.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+
 </beans>

@@ -71,10 +71,10 @@
 <c:set var="vd_i18next"            scope="session" value="i18next-1.8.1"/>
 <c:set var="js_i18next"            scope="session" value="i18next-1.8.1.js"/>
 
-<c:set var="vd_moment"            scope="session" value="moment-2.10.2"/>
-<c:set var="js_moment"            scope="session" value="moment.js"/>
+<c:set var="vd_moment"             scope="session" value="moment-2.10.2"/>
+<c:set var="js_moment"             scope="session" value="moment.js"/>
 
-<c:set var="vd_jquery_qtip"       scope="session" value="jquery-qtip-2.2.1"/>
+<c:set var="vd_jquery_qtip"        scope="session" value="jquery-qtip-2.2.1"/>
 <c:set var="css_jquery_qtip"       scope="session" value="jquery.qtip.min.css"/>
 <c:set var="js_jquery_qtip"        scope="session" value="jquery.qtip.min.js"/>
 
@@ -86,6 +86,12 @@
 
 <c:set var="vd_jtable"             scope="session" value="jtable-2.4.0"/>
 <c:set var="js_jtable"             scope="session" value="jquery.jtable.js"/>
+
+
+<c:set var="vd_handsontable"       scope="session" value="handsontable-0.15.0-beta6"/>
+<c:set var="css_handsontable"      scope="session" value="handsontable.full.css"/>
+<c:set var="js_handsontable"       scope="session" value="handsontable.full.js"/>
+
 
 <c:set var="vd_jquery_validation"  scope="session" value="jquery-validation-engine-2.6.2"/>
 <c:set var="css_jquery_validation" scope="session" value="validationEngine.jquery.css"/>
