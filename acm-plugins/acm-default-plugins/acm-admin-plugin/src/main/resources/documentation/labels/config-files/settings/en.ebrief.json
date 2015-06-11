@@ -152,16 +152,6 @@
                 ,"defaultValue": "Lodge Documents"
                 ,"description": ""
             }
-            ,"lodge-email-label": {
-                "value": "Lodge document(s) and notify to"
-                ,"defaultValue": "Lodge document(s) and notify to"
-                ,"description": ""
-            }
-            ,"lodge-email-placeholder": {
-                "value": "Email Address"
-                ,"defaultValue": "Email Address"
-                ,"description": ""
-            }
             ,"lodge-btn-cancel": {
                 "value": "Cancel"
                 ,"defaultValue": "Cancel"
@@ -182,20 +172,15 @@
                 ,"defaultValue": "Name"
                 ,"description": ""
             }
+            ,"lodge-wrong-folder": {
+                "value": "Cannot lodge documents outside Prosecution Brief folder"
+                ,"defaultValue": "Cannot lodge documents outside Prosecution Brief folder"
+                ,"description": ""
+            }
 
             ,"reject-title": {
                 "value": "Reject Documents"
                 ,"defaultValue": "Reject Documents"
-                ,"description": ""
-            }
-            ,"reject-email-label": {
-                "value": "Reject document(s) and notify to"
-                ,"defaultValue": "Reject document(s) and notify to"
-                ,"description": ""
-            }
-            ,"reject-email-placeholder": {
-                "value": "Email Address"
-                ,"defaultValue": "Email Address"
                 ,"description": ""
             }
             ,"reject-reason-label": {
@@ -226,6 +211,11 @@
             ,"reject-name-column": {
                 "value": "Name"
                 ,"defaultValue": "Name"
+                ,"description": ""
+            }
+            ,"reject-wrong-folder": {
+                "value": "Cannot reject documents outside Court Brief folder"
+                ,"defaultValue": "Cannot reject documents outside Court Brief folder"
                 ,"description": ""
             }
         }

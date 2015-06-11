@@ -2010,6 +2010,12 @@ DocTree.View = DocTree.View || {
                 findNames.push(folderNames[i]);
             }
 
+
+            var node = DocTree.View.findNodeByPathNames(findNames);
+            if (DocTree.View.validateNode(node)) {
+                DocTree.View.markNodePending(node);
+            }
+
             DocTree.Model.lodgeDocuments(folderNames, docIds)
                 .done(function(createdFolder) {
 
@@ -2036,6 +2042,7 @@ DocTree.View = DocTree.View || {
                         DocTree.Model.cacheFolderList.remove(cacheKey);
                         node.setExpanded(false);
                         node.resetLazy();
+                        DocTree.View.markNodeOk(node);
                     }
 
                     while (2 < findNames.length) {
