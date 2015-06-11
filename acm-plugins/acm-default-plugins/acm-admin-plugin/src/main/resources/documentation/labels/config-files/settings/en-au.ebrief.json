@@ -126,6 +126,11 @@
     ,"defaultValue": "Reject Document(s)"
     ,"description": ""
     }
+,"btn-refresh": {
+        "value": "Refresh"
+    ,"defaultValue": "Refresh"
+    ,"description": ""
+    }
 ,"dialog": {
         "lodge-title": {
             "value": "Lodge Documents"

@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.auth.AcmGrantedAuthority;
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -13,12 +12,13 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -228,7 +228,18 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertNotNull(copyOa);
         assertNotNull(copyOa.getTargetId());
         assertEquals(copyOa.getTargetId().longValue(), originalCase.getId().longValue());
-
+        assertEquals(3, copyCaseFile.getParticipants().size());
+        AcmParticipant assignee = null;
+        for (AcmParticipant ap : copyCaseFile.getParticipants()) {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+                assignee = ap;
+                break;
+            }
+        }
+        assertNotNull(assignee);
+        assertEquals(auth.getName(), assignee.getParticipantLdapId());
+        assertEquals(copyCaseFile.getObjectType(), assignee.getObjectType());
+        assertEquals(copyCaseFile.getId(), assignee.getObjectId());
 
     }
 

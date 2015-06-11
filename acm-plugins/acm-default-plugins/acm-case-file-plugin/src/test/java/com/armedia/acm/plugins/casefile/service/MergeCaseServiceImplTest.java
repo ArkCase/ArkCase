@@ -10,6 +10,8 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.service.AcmParticipantService;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -44,6 +46,7 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
     private CaseFileDao caseFileDao;
     private Long sourceId;
     private Long targetId;
+    private AcmParticipantService acmParticipantService;
 
     @Before
     public void setUp() {
@@ -55,6 +58,8 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
         ecmFileService = createMock(EcmFileService.class);
         acmFolderService = createMock(AcmFolderService.class);
         ecmFileDao = createMock(EcmFileDao.class);
+        acmParticipantService = createMock(AcmParticipantService.class);
+
 
         mergeCaseService.setSaveCaseService(saveCaseService);
         mergeCaseService.setCaseFileDao(caseFileDao);
@@ -62,6 +67,10 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
         mergeCaseService.setAcmFolderDao(acmFolderDao);
         mergeCaseService.setAcmFolderService(acmFolderService);
         mergeCaseService.setEcmFileDao(ecmFileDao);
+        mergeCaseService.setAcmParticipantService(acmParticipantService);
+
+
+        EasyMock.expect(auth.getName()).andReturn("ann-acm").anyTimes();
 
         sourceId = 1L;
         targetId = 2L;
@@ -78,6 +87,7 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
 
         EasyMock.expect(saveCaseService.saveCase(sourceCaseFile, auth, ipAddress)).andReturn(sourceCaseFile);
         EasyMock.expect(saveCaseService.saveCase(targetCaseFile, auth, ipAddress)).andReturn(targetCaseFile);
+        EasyMock.expect(acmParticipantService.saveParticipant("ann-acm", "assignee", 2l, "CASE_FILE")).andReturn(new AcmParticipant());
 
         Capture<AcmFolder> folderCapture = new Capture<>();
 
