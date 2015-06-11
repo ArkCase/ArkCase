@@ -87,10 +87,10 @@ public class SplitCaseServiceImpl implements SplitCaseService {
             AcmFolder containerFolderOfCopy = containerOfCopy.getFolder();
             switch (attachmentDTO.getType()) {
                 case "folder":
-                    moveFolder(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
+                    copyFolder(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
                     break;
                 case "document":
-                    moveDocument(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
+                    copyDocument(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
                     break;
                 default:
                     log.warn("Invalid type({}) for for splitting attachments", attachmentDTO.getType());
@@ -99,7 +99,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         }
     }
 
-    private void moveFolder(SplitCaseOptions options,
+    private void copyFolder(SplitCaseOptions options,
                             Map<Long, AcmFolder> folderMap,
                             Long folderId,
                             AcmContainer containerOfCopy,
@@ -120,9 +120,9 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                     if (obj.getObjectType() == null)
                         continue;
                     if ("FILE".equals(obj.getObjectType().toUpperCase())) {
-                        moveDocument(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
+                        copyDocument(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
                     } else if ("FOLDER".equals(obj.getObjectType().toUpperCase())) {
-                        moveFolder(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
+                        copyFolder(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
                     }
                 }
             } else {
@@ -137,14 +137,17 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                         containerOfCopy.getContainerObjectType(),
                         containerOfCopy.getContainerObjectId(),
                         folderPathParentInSource);
-                AcmFolder movedFolder = acmFolderService.moveFolder(folderForMoving, createdParentFolderInCopy);
-                folderMap.put(folderForMoving.getId(), movedFolder);
+                AcmFolder copiedFolder = acmFolderService.copyFolder(folderForMoving,
+                        createdParentFolderInCopy,
+                        containerOfCopy.getContainerObjectId(),
+                        containerOfCopy.getContainerObjectType());
+                folderMap.put(folderForMoving.getId(), copiedFolder);
             }
         }
 
     }
 
-    private void moveDocument(SplitCaseOptions options,
+    private void copyDocument(SplitCaseOptions options,
                               Map<Long, AcmFolder> folderMap,
                               Long documentId,
                               AcmContainer containerOfCopy,
@@ -154,20 +157,20 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         if (folderMap.containsKey(fileForMoving.getFolder().getId())) {
             //we have already created that folder
             AcmFolder foundFolder = folderMap.get(fileForMoving.getFolder().getId());
-            ecmFileService.moveFile(documentId,
+            ecmFileService.copyFile(documentId,
                     containerOfCopy.getContainerObjectId(),
                     containerOfCopy.getContainerObjectType(),
-                    foundFolder);
+                    foundFolder.getId());
         }
 
         AcmFolder documentFolder = fileForMoving.getFolder();
         if (documentFolder.getParentFolderId() == null || !options.isPreserveFolderStructure()) {
             //recreate folder structure as on source
             //document is under root folder, no need to create additional folders
-            ecmFileService.moveFile(documentId,
+            ecmFileService.copyFile(documentId,
                     containerOfCopy.getContainerObjectId(),
                     containerOfCopy.getContainerObjectType(),
-                    rootFolderOfCopy);
+                    rootFolderOfCopy.getId());
         } else {
             //create folder structure in saved case file same as in source for the document
             String folderPath = acmFolderService.getFolderPath(fileForMoving.getFolder());
@@ -177,10 +180,10 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                         containerOfCopy.getContainerObjectType(),
                         containerOfCopy.getContainerObjectId(),
                         folderPath);
-                ecmFileService.moveFile(documentId,
+                ecmFileService.copyFile(documentId,
                         containerOfCopy.getContainerObjectId(),
                         containerOfCopy.getContainerObjectType(),
-                        createdFolder);
+                        createdFolder.getId());
                 folderMap.put(fileForMoving.getFolder().getId(), createdFolder);
             } catch (Exception e) {
                 log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be moved.", e);
