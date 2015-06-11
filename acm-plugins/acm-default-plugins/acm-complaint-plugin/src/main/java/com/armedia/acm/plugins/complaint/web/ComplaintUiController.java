@@ -103,9 +103,7 @@ public class ComplaintUiController
         log.debug("Security token: " + token);
 
         // Frevvo form URLs
-        mv.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        mv.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT));
-        mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
+        mv.addObject("closeComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT, false));
         mv.addObject("formDocuments", getFormProperties().get("form.documents"));
         return mv;
     }
@@ -117,7 +115,7 @@ public class ComplaintUiController
         mv.setViewName("complaintWizard");
 
         // Frevvo form URLs
-        mv.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT));
+        mv.addObject("newComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.COMPLAINT, false));
 
         return mv;
 

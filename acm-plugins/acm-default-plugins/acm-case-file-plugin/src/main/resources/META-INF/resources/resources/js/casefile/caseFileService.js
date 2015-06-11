@@ -11,7 +11,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Action.create) {CaseFile.Service.Action.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
         if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
-        //if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
+        if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
@@ -24,7 +24,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Action.onInitialized) {CaseFile.Service.Action.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
         if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
-        //if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
+        if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
@@ -44,6 +44,7 @@ CaseFile.Service = {
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
         ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
         ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
+        ,API_RETRIEVE_PERSON_ASSOCIATION_TYPES    : "/api/latest/plugin/person/types"
 
         ,_validateAssignees: function(data) {
             if (Acm.isEmpty(data)) {
@@ -205,6 +206,30 @@ CaseFile.Service = {
         }
         
         ,_validateUsers: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrievePersonAssocitaionTypes : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelFoundPersonAssociationTypes(response);
+                    } else {
+                        if (CaseFile.Service.Lookup._validatePersonAssocitaionTypes(response)) {
+                            CaseFile.Model.Lookup.setPersonTypes(response);
+                            CaseFile.Controller.modelFoundPersonAssociationTypes(response);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_RETRIEVE_PERSON_ASSOCIATION_TYPES
+            )
+        }
+        ,_validatePersonAssocitaionTypes: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
             }
@@ -548,7 +573,6 @@ CaseFile.Service = {
                 );
             }
         }
-
         ,_validateDeletedPersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -1109,6 +1133,32 @@ CaseFile.Service = {
             }
         }
     }
+    
+    ,Documents: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_RETRIEVE_PLAIN_FORMS      : "/api/latest/plugin/admin/plainforms"
+        	
+    	,retrievePlainForms: function() {
+            var url = App.getContextPath() + CaseFile.Service.Documents.API_RETRIEVE_PLAIN_FORMS + '/' + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	CaseFile.Controller.modelDocumentsRetrievedPlainForms(response);
+                    } else {
+                        if (CaseFile.Model.Documents.validatePlainForms(response)) {
+                        	CaseFile.Model.Documents.setPlainForms(response);
+                            CaseFile.Controller.modelDocumentsRetrievedPlainForms(response);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 
     ,Documents_JTable_Retire: {
         create: function() {
@@ -1448,9 +1498,11 @@ CaseFile.Service = {
                                 var task = {};
                                 task.id = doc.object_id_s;
                                 task.title = Acm.goodValue(response.docs[i].name); //title_parseable ?? //title_t ?
-                                task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                //task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                task.created = (Acm.getDateFromDatetime2(doc.create_tdt,$.t("common:date.short")));
                                 task.priority = Acm.goodValue(doc.priority_s);
-                                task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                //task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                task.dueDate = (Acm.getDateFromDatetime2(doc.due_tdt,$.t("common:date.short")));
                                 task.status = Acm.goodValue(doc.status_s);
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 taskList.push(task);

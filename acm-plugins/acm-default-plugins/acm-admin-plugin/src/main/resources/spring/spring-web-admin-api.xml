@@ -155,4 +155,20 @@
     </bean>
 
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
+    
+    <bean id="getPlainFormsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormsAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    </bean>
+    
+    <bean id="deletePlainFormAPIController" class="com.armedia.acm.plugins.admin.web.api.DeletePlainFormAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    	<property name="plainFormPropertiesLocation" value="#{ systemProperties ['user.home'] }/.acm/acm-forms-plain.properties"/>
+    	<property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+    </bean>
+    
+    <bean id="getPlainFormTargetsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    </bean>
 </beans>

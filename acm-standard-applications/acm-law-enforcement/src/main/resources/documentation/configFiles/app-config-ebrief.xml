@@ -18,7 +18,7 @@
             <list>
                 <!--<ref bean="createComplaintAction"/>-->
                 <ref bean="createCaseFileAction"/>
-                <!--<ref bean="createTaskAction"/>-->
+                <ref bean="createTaskAction"/>
                 <!--<ref bean="createTimesheetAction"/>-->
                 <!--<ref bean="createCostsheetAction"/>-->
             </list>
@@ -28,7 +28,7 @@
                 <ref bean="dashboardNavigatorAction"/>
                 <!--<ref bean="complaintNavigatorAction"/>-->
                 <ref bean="caseFileNavigatorAction"/>
-                <!--<ref bean="taskNavigatorAction"/>-->
+                <ref bean="taskNavigatorAction"/>
                 <!--<ref bean="searchNavigatorAction"/>-->
                 <ref bean="reportNavigatorAction"/>
                 <ref bean="notificationNavigatorAction"/>

@@ -12,9 +12,9 @@ AcmEx.Service = {
             return (0 < url.indexOf('?'))? "&" : "?";
         }
         ,deferredPagingListAction: function(postData, jtParams, sortMap, urlEvealuator, responseHandler) {
-            if (Acm.isEmpty(App.getContextPath())) {
-                return AcmEx.Object.JTable.getEmptyRecords();
-            }
+//            if (Acm.isEmpty(App.getContextPath())) {
+//                return AcmEx.Object.JTable.getEmptyRecords();
+//            }
 
             var url = urlEvealuator();
             if (Acm.isEmpty(url)) {
