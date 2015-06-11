@@ -9,15 +9,6 @@ DocTree.Model = DocTree.Model || {
         this.cacheFolderList = new Acm.Model.CacheFifo();
 
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
-        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_ADDED_FOLDER            ,this.onViewAddedFolder);
-        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FOLDER          ,this.onViewRemovedFolder);
-        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_REMOVED_FILE            ,this.onViewRemovedFile);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FOLDER          ,this.onViewRenamedFolder);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_RENAMED_FILE            ,this.onViewRenamedFile);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FILE              ,this.onViewMovedFile);
-        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FILE             ,this.onViewCopiedFile);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_MOVED_FOLDER            ,this.onViewMovedFolder);
-        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_COPIED_FOLDER           ,this.onViewCopiedFolder);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_VERSION         ,this.onViewChangedVersion);
         Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_SENT_EMAIL              ,this.onViewSentEmail);
 
@@ -58,33 +49,7 @@ DocTree.Model = DocTree.Model || {
         //
         var z = 1;
     }
-//    ,onViewAddedFolder: function(parentId, folderName, cacheKey, folderNode) {
-//        DocTree.Service.createFolder(parentId, folderName, cacheKey, folderNode);
-//    }
-//    ,onViewRemovedFolder: function(folderId, cacheKey, folderNode) {
-//        DocTree.Service.deleteFolder(folderId, cacheKey, folderNode);
-//    }
-//    ,onViewRemovedFile: function(fileId, cacheKey, folderNode) {
-//        DocTree.Service.deleteFile(fileId, cacheKey, folderNode);
-//    }
-    ,onViewRenamedFolder: function(name, id, cacheKey, node) {
-        DocTree.Service.renameFolder(name, id, cacheKey, node);
-    }
-    ,onViewRenamedFile: function(name, id, cacheKey, node) {
-        DocTree.Service.renameFile(name, id, cacheKey, node);
-    }
-    ,onViewMovedFile: function(fileId, folderId, frCacheKey, toCacheKey, node) {
-        DocTree.Service.moveFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, frCacheKey, toCacheKey, node);
-    }
-//    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
-//        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
-//    }
-    ,onViewMovedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
-        DocTree.Service.moveFolder(subFolderId, folderId, frCacheKey, toCacheKey, node);
-    }
-//    ,onViewCopiedFolder: function(subFolderId, folderId, frCacheKey, toCacheKey, node) {
-//        DocTree.Service.copyFolder(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, subFolderId, frCacheKey, toCacheKey, node);
-//    }
+
     ,onViewChangedVersion: function(fileId, version, cacheKey, node) {
         DocTree.Service.setActiveVersion(fileId, version, cacheKey, node);
     }
@@ -473,8 +438,16 @@ DocTree.Model = DocTree.Model || {
     ,lodgeDocuments: function(folderNames, docIds) {
         var objType = DocTree.Model.getObjType();
         var objId = DocTree.Model.getObjId();
-        folderNames.shift(); //remove top node
-        var folderPath = "/" + folderNames.join("/");
+
+        //folderNames.shift(); //remove top node
+
+        //make a copy except folderNames[0] - the top Node
+        var copyNames = [];
+        for (var i = 1; i < folderNames.length; i ++) {
+            copyNames.push(folderNames[i]);
+        }
+
+        var folderPath = "/" + copyNames.join("/");
         var url = this.API_LODGE_DOCUMENT + "targetObjectType=" + objType + "&targetObjectId=" + objId + "&newPath=" + folderPath;
         if (!Acm.isArrayEmpty(docIds)) {
             url += "&docIds=" + docIds.join();
