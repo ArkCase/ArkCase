@@ -1,10 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
-import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.io.IOException;
 
@@ -32,7 +28,7 @@ public class WorkflowConfigurationRetrieveWorkflows {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String retrieveWorkflows(
+    public List<AcmProcessDefinition> retrieveWorkflows(
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "length", required = false, defaultValue = "10") int length,
             @RequestParam(value = "orderBy", required = false, defaultValue = WorkflowConfigurationService.PROP_CREATED) String orderBy,
@@ -42,24 +38,7 @@ public class WorkflowConfigurationRetrieveWorkflows {
         try {
             List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveWorkflows(start, length, orderBy, isAsc);
 
-            JSONArray resultArray = new JSONArray();
-            SimpleDateFormat dateFormatter = new SimpleDateFormat(DateFormats.WORKFLOW_DATE_FORMAT);
-
-            for (AcmProcessDefinition processIter : processDefinitions) {
-                JSONObject processObj = new JSONObject();
-                processObj.put(WorkflowConfigurationService.PROP_ID, String.valueOf(processIter.getId()));
-                processObj.put(WorkflowConfigurationService.PROP_KEY, processIter.getKey());
-                processObj.put(WorkflowConfigurationService.PROP_NAME, (processIter.getName() !=  null ?  processIter.getName() : ""));
-                processObj.put(WorkflowConfigurationService.PROP_VERSION, String.valueOf(processIter.getVersion()));
-                processObj.put(WorkflowConfigurationService.PROP_DESCRIPTION, (processIter.getDescription() != null ? processIter.getDescription() : ""));
-                processObj.put(WorkflowConfigurationService.PROP_CREATED, (processIter.getCreated() != null ? dateFormatter.format(processIter.getCreated()) : ""));
-                processObj.put(WorkflowConfigurationService.PROP_CREATOR, (processIter.getCreator() != null ? processIter.getCreator() : ""));
-                processObj.put(WorkflowConfigurationService.PROP_MODIFIED, (processIter.getModified() != null ? dateFormatter.format(processIter.getModified()) : ""));
-                processObj.put(WorkflowConfigurationService.PROP_MODIFIER, (processIter.getModifier() != null ? processIter.getModifier() : ""));
-                resultArray.put(processObj);
-            }
-
-            return resultArray.toString();
+            return processDefinitions;
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Can't get workflows list", e);

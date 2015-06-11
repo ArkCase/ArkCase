@@ -1655,6 +1655,9 @@ Admin.View = Admin.View || {
                             title: 'Modified'
                             , width: '15%'
                             , edit: false
+                            , display: function(data){
+                                return Acm.getDateFromDatetime(data.record.modified)
+                            }
                         }, creator: {
                             title: 'Author'
                             , width: '15%'
@@ -1720,6 +1723,9 @@ Admin.View = Admin.View || {
                         title: 'Modified'
                         , width: '15%'
                         , edit: false
+                        , display: function(data){
+                            return Acm.getDateFromDatetime(data.record.modified)
+                        }
                     }, creator: {
                         title: 'Author'
                         , width: '15%'

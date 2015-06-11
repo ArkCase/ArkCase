@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
+import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -31,7 +32,11 @@ public class WorkflowConfigurationMakeActive {
 
         try {
             workflowConfigurationService.makeActive(key, version);
-            return "{}";
+
+            JSONObject result = new JSONObject();
+            result.put("key", key);
+            result.put("version", version);
+            return result.toString();
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Can't make workflow active", e);
