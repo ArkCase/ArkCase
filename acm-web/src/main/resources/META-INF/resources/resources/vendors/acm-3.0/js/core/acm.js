@@ -242,12 +242,17 @@ var Acm = Acm || {
     ,Promise: {
         resolvePromises: function(promises) {
             var resolver = $.Deferred();
-            $.when.apply(null, promises).then(function(data) {
-                    resolver.resolve();
-                }, function(e) {
-                    resolver.reject();
-                }
-            );
+            if (Acm.isArrayEmpty(promises)) {
+                resolver.resolve();
+
+            } else {
+                $.when.apply(null, promises).then(function(data) {
+                        resolver.resolve();
+                    }, function(e) {
+                        resolver.reject();
+                    }
+                );
+            }
             return resolver;
         }
         ,donePromise: function(data) {

@@ -163,7 +163,8 @@
 
                                                     <div class="row">
                                                         <div class="col-xs-6  b-r">
-                                                            <h4>(<a href="#" id="caseNumber"></a>)&nbsp;&nbsp; <a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a></h4>
+                                                            <%--<h4>(<a href="#" id="caseNumber"></a>)&nbsp;&nbsp; <a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a></h4>--%>
+                                                            <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a></h4>
                                                         </div>
 
                                                         <%--<div class="col-xs-6  b-r">--%>
