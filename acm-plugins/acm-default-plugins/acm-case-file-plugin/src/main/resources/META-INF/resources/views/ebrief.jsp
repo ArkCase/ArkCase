@@ -465,10 +465,16 @@
                         <h4 class="modal-title" id="labLodgeDlgTitle" data-i18n="ebrief:dialog.lodge-title">Lodge Documents</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="edtBmailAddr" data-i18n="ebrief:dialog.lodge-email-label">Lodge document(s) and notify to</label>
+
+                        <%--changes by manoj (not required) --%>
+
+                        <%--<label for="edtBmailAddr" data-i18n="ebrief:dialog.lodge-email-label">Lodge document(s) and notify to</label>
                         <br/>
                         <input type="text" id="edtBmailAddr" class="form-control" data-i18n="[placeholder]ebrief:dialog.lodge-email-placeholder" placeholder="Email Address" />
-                        <br/>
+                        <br/>--%>
+
+                        <%--changes end--%>
+
                         <div id="divLodgeDocs">
                         </div>
 
@@ -488,10 +494,16 @@
                         <h4 class="modal-title" id="labRejectDlgTitle" data-i18n="ebrief:dialog.reject-title">Reject Documents</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="edtBmailReject" data-i18n="ebrief:dialog.reject-email-label">Reject document(s) and notify to</label>
+
+                        <%--changes by manoj (not required) --%>
+
+                        <%--<label for="edtBmailReject" data-i18n="ebrief:dialog.reject-email-label">Reject document(s) and notify to</label>
                         <br/>
                         <input type="text" id="edtBmailReject" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-email-placeholder" placeholder="Email Address" />
-                        <br/>
+                        <br/>--%>
+
+                        <%--changes end--%>
+
                         <label for="edtRejectReason" data-i18n="ebrief:dialog.lodge-reason-label">Reason</label>
                         <br/>
                         <input type="text" id="edtRejectReason" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-reason-placeholder" placeholder="Reject Reason" />
