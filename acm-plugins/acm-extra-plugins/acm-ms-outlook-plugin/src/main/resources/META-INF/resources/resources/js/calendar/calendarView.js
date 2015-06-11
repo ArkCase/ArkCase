@@ -21,6 +21,8 @@ Calendar.View = Calendar.View || {
             this.createOutlookCalendarWidget(this.$outlookCalendar);
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
+
             Acm.Dispatcher.addEventListener(Calendar.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
         }
         ,onInitialized: function() {
@@ -32,10 +34,16 @@ Calendar.View = Calendar.View || {
         ,setParentId: function(parentId){
             this._parentId = parentId;
         }
-        ,onViewSelectedObject: function(nodeType, nodeId) {
-            Calendar.View.OutlookCalendar.setParentId(nodeId);
+        ,reloadOutlookCalendar : function(objId){
+            Calendar.View.OutlookCalendar.setParentId(objId);
             Calendar.View.OutlookCalendar.$outlookCalendar.html("");
             Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
+        }
+        ,onModelRetrievedObject: function(objData){
+            Calendar.View.OutlookCalendar.reloadOutlookCalendar(Acm.goodValue(objData.id));
+        }
+        ,onViewSelectedObject: function(nodeType, nodeId) {
+            Calendar.View.OutlookCalendar.reloadOutlookCalendar(nodeId);
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
