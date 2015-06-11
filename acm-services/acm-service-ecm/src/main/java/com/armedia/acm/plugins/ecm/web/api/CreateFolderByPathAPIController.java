@@ -45,6 +45,7 @@ public class CreateFolderByPathAPIController {
             @RequestParam("targetObjectId") Long targetObjectId,
             @RequestParam("newPath") String newPath,
             @RequestParam(value = "docIds", required = false) String docIds,
+            @RequestParam(value = "isCopy", required = false, defaultValue = "false") boolean isCopy,
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
         /**
@@ -63,7 +64,11 @@ public class CreateFolderByPathAPIController {
                 log.info("Created new folder " + newFolder.getId());
             }
 
-            moveDocumentsToNewFolder(targetObjectType, targetObjectId, docIds, newFolder, authentication, ipAddress);
+            if ( isCopy ){
+               copyDocumentsToNewFolder(targetObjectType, targetObjectId, docIds, newFolder, authentication, ipAddress);
+            }  else {
+                moveDocumentsToNewFolder(targetObjectType, targetObjectId, docIds, newFolder, authentication, ipAddress);
+            }
 
             getFolderEventPublisher().publishFolderCreatedEvent(newFolder,authentication,ipAddress,true);
             return newFolder;
@@ -79,6 +84,38 @@ public class CreateFolderByPathAPIController {
             }
             getFolderEventPublisher().publishFolderCreatedEvent(null, authentication, ipAddress, false);
             throw e;
+        }
+    }
+
+    private void copyDocumentsToNewFolder(
+            String targetObjectType,
+            Long targetObjectId,
+            String docIds,
+            AcmFolder newFolder,
+            Authentication auth,
+            String ipAddress)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
+    {
+        if ( docIds != null )
+        {
+            String[] arrDocIds = docIds.split(",");
+            for ( String docId : arrDocIds )
+            {
+                if ( docId == null || docId.trim().isEmpty() )
+                {
+                    continue;
+                }
+
+                Long lngDocId = getFolderAndFilesUtils().convertToLong(docId.trim());
+                if ( lngDocId == null )
+                {
+                    continue;
+                }
+
+                EcmFile copied = getEcmFileService().copyFile(lngDocId, targetObjectId, targetObjectType, newFolder.getId());
+                getFileEventPublisher().publishFileCopiedEvent(copied, auth, ipAddress, true);
+
+            }
         }
     }
 
