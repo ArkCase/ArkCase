@@ -16,6 +16,9 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
+import com.armedia.acm.services.participants.service.AcmParticipantService;
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -38,6 +41,7 @@ public class MergeCaseServiceImpl implements MergeCaseService {
     private AcmContainerDao acmContainerDao;
     private EcmFileDao ecmFileDao;
     private List<String> excludeDocumentTypesList;
+    private AcmParticipantService acmParticipantService;
 
     @Override
     @Transactional
@@ -76,10 +80,54 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         target.addChildObject(childObjectTarget);
 
         source.setStatus("CLOSED");
+
+        //set current user as assignee
+        handleParticipants(auth, target);
+
+
         saveCaseService.saveCase(source, auth, ipAddress);
-        saveCaseService.saveCase(target, auth, ipAddress);
+        target = saveCaseService.saveCase(target, auth, ipAddress);
+
 
         return target;
+    }
+
+    private void handleParticipants(Authentication auth, CaseFile target) throws MergeCaseFilesException {
+        //1. if current user is already assignee do nothing
+        //2. change case file assignee into follower
+        //2.1. if current user is follower, change is into assignee
+        //2.2. if current user is not participant, than add it as assignee
+        
+        //set assignee as follower if exists
+        if (target.getParticipants() != null) {
+            AcmParticipant foundAssignee = null;
+            for (AcmParticipant ap : target.getParticipants()) {
+                if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+                    try {
+                        foundAssignee = ap;
+                        break;
+                    } catch (Exception e) {
+                        throw new MergeCaseFilesException("Unable to change role on " + ap.toString() + " into follower.", e);
+                    }
+                }
+            }
+            if (foundAssignee != null) {
+                if (foundAssignee.getParticipantLdapId().equals(auth.getName()))
+                    return;
+                foundAssignee.setParticipantType(ParticipantTypes.FOLLOWER);
+                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                target.getParticipants().add(addedAssignee);
+            } else {
+                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+                target.getParticipants().add(addedAssignee);
+            }
+        } else {
+            //there are no participants in target case file, just add current user as assignee
+            AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(), target.getObjectType());
+            List<AcmParticipant> participants = new ArrayList<>();
+            participants.add(addedAssignee);
+            target.setParticipants(participants);
+        }
     }
 
     private boolean hasBeenMerged(CaseFile source) {
@@ -98,7 +146,7 @@ public class MergeCaseServiceImpl implements MergeCaseService {
 
             //change source case file documents with target's container id
             long documentsUpdated = ecmFileDao.changeContainer(source.getContainer(), target.getContainer(), excludeDocumentTypesList);
-            log.info("moved {} documents  from container id={} to container id={}", documentsUpdated,source.getContainer().getId(), target.getContainer().getId());
+            log.info("moved {} documents  from container id={} to container id={}", documentsUpdated, source.getContainer().getId(), target.getContainer().getId());
 
         } catch (AcmFolderException | AcmUserActionFailedException | AcmObjectNotFoundException e) {
             throw new MergeCaseFilesException("Error merging case files. Exception in moving documents and folders.", e);
@@ -132,6 +180,10 @@ public class MergeCaseServiceImpl implements MergeCaseService {
 
     public void setEcmFileDao(EcmFileDao ecmFileDao) {
         this.ecmFileDao = ecmFileDao;
+    }
+
+    public void setAcmParticipantService(AcmParticipantService acmParticipantService) {
+        this.acmParticipantService = acmParticipantService;
     }
 
     public void setExcludeDocumentTypes(String excludeDocumentTypes) {
