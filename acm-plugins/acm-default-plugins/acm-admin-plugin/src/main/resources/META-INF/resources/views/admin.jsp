@@ -39,8 +39,6 @@
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/jquery.fancytree.table.js'/>"></script>
 
-
-
     <!-- Dashboard -->
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular-resource.min.js'/>"></script>
@@ -54,6 +52,9 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
+    <!-- Hands on table -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_handsontable}/dist/${css_handsontable}'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_handsontable}/dist/${js_handsontable}'/>"></script>
 
     /////////////////////////////////////////////////////////////////////
     <style>
@@ -355,6 +356,28 @@
 
                                             <section class="panel panel-default">
                                                 <div id="divLDAPDirectories" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" id="tabLinkFormsWorkflows" style="display:none;">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button id="btnLinkFormsWorkflowsUndo" class="btn btn-default btn-sm">
+                                                    <i class="fa fa-undo"></i>
+                                                    <span class="text">Undo</span>
+                                                </button>
+
+                                                <button id="btnLinkFormsWorkflowsSave" class="btn btn-default btn-sm">
+                                                    <i class="fa fa-save"></i>
+                                                    <span class="text">Save Changes</span>
+                                                </button>
+                                            </div>
+                                            <h3>Link Forms/Workflows</h3>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <section class="panel panel-default">
+                                                <div id="divLinkFormsWorkflowsSpreadSheet" style="width:100%"></div>
                                             </section>
                                         </div>
                                     </div>

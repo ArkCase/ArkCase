@@ -6,13 +6,14 @@
 Admin.View = Admin.View || {
     create: function() {
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
-        if (Admin.View.LDAPConfiguration.create)       {Admin.View.LDAPConfiguration.create();}
+        if (Admin.View.LDAPConfiguration.create)        {Admin.View.LDAPConfiguration.create();}
         if (Admin.View.LabelConfiguration.create)       {Admin.View.LabelConfiguration.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
         if (Admin.View.RolesPrivileges.create)          {Admin.View.RolesPrivileges.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
+        if (Admin.View.LinkFormsWorkflows.create)       {Admin.View.LinkFormsWorkflows.create();}
 
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
@@ -25,7 +26,8 @@ Admin.View = Admin.View || {
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
-        if (Admin.View.WorkflowConfiguration.onInitialized)    {Admin.View.WorkflowConfiguration.onInitialized();}
+        if (Admin.View.WorkflowConfiguration.onInitialized)     {Admin.View.WorkflowConfiguration.onInitialized();}
+        if (Admin.View.LinkFormsWorkflows.onInitialized)        {Admin.View.LinkFormsWorkflows.onInitialized();}
 
 
         if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
@@ -1750,6 +1752,114 @@ Admin.View = Admin.View || {
                 }
             });
             $s.jtable('load');
+        }
+    }
+
+    ,LinkFormsWorkflows: {
+        create:  function() {
+            this.$spreadsheetDiv = $("#divLinkFormsWorkflowsSpreadSheet");
+            this.createSpreadSheet(this.$spreadsheetDiv);
+            this.spreadSheet = null;
+
+            $('#btnLinkFormsWorkflowsSave').click($.proxy(this.onSaveSpreadSheet, this));
+            $('#btnLinkFormsWorkflowsUndo').click($.proxy(this.onUndoEdit, this));
+        }
+
+        ,onInitialized: function(){
+        }
+
+        ,onSaveSpreadSheet: function (e) {
+            var data = this.spreadSheet.getData();
+            Admin.Service.LinkFormsWorkflows.updateConfiguration(data)
+                .done(function(){
+                    Acm.Dialog.info("Link Forms/Workflows configuration saved successfully");
+                })
+                .fail(function(err){
+                    Acm.Dialog.error("Can't save Link Forms/Workflows configuration: " + err);
+                });
+        }
+
+        ,onUndoEdit: function (e) {
+            if (this.spreadSheet) {
+                this.spreadSheet.undo();
+            }
+        }
+
+        ,createSpreadSheet: function($s){
+
+            Admin.Service.LinkFormsWorkflows.retrieveConfiguration()
+                .done(function(data){
+
+                    // Get cells values
+                    var cells = [];
+                    for(var i = 0; i < data.cells.length; i++) {
+                        var rowValues = _.pluck(data.cells[i], 'value');
+                        cells.push(rowValues);
+                    }
+
+
+                    // Apply colors to cells
+                    var cellRenderer = function(instance, td, row, col, prop, value, cellProperties){
+                        Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+                        var cellInfo = data.cells[row][col];
+                        if (cellInfo) {
+
+                            td.style.wordWrap = 'break-word';
+
+                            if (cellInfo.bgColor) {
+                                td.style.background = cellInfo.bgColor;
+                            }
+
+                            if (cellInfo.color ){
+                                td.style.color = cellInfo.color;
+                            }
+
+                            if (cellInfo.readonly) {
+                                cellProperties.readOnly = true;
+                            }
+
+                            if (cellInfo.fontSize) {
+                                td.style.fontSize = cellInfo.fontSize + "px";
+                            }
+                        }
+                    };
+
+                    Admin.View.LinkFormsWorkflows.spreadSheet = new Handsontable($s[0], {
+                        data: cells,
+                        height: 750,
+                        colWidths: data.columnsWidths,
+                        colHeaders: true,
+                        rowHeaders: true,
+                        stretchH: 'all',
+                        columnSorting: false,
+                        contextMenu: false,
+                        cells: function(row, col, prop) {
+                            var cellProperties = {};
+                            var cellType = data.cells[row][col].type;
+
+                            // Add dropdow data if required
+                            if (cellType && data.meta[cellType]) {
+                                cellProperties.type = 'dropdown';
+                                cellProperties.source = data.meta[cellType];
+                            } else if (cellType == 'priority') {
+                                cellProperties.type = 'numeric'
+                                cellProperties.allowInvalid = false;
+                                cellProperties.validator = function (value, callback){
+                                    callback((value >= 0) && (value <= 100) && (value % 1 === 0));
+                                }
+                            }
+
+
+                            cellProperties.renderer = cellRenderer;
+                            return cellProperties;
+                        }
+                    });
+
+                })
+                .fail(function(){
+                    Acm.Dialog.error('Can\'t retrieve link forms workflows configuration');
+                });
         }
     }
 

@@ -427,6 +427,51 @@ Admin.Service = {
 
     }
 
+    , LinkFormsWorkflows: {
+        API_CONFIGURATION: "/api/latest/plugin/admin/linkformsworkflows/configuration"
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+
+        }
+
+        ,retrieveConfiguration: function(){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LinkFormsWorkflows.API_CONFIGURATION;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                , url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,updateConfiguration: function(data) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LinkFormsWorkflows.API_CONFIGURATION;
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                , url
+                ,JSON.stringify(data)
+            );
+
+            return $dfd.promise();
+        }
+    }
+
     , LDAPConfiguration: {
         API_RETRIEVE_LDAP_DIRECTORIES: "/api/latest/plugin/admin/ldapconfiguration/directories"
         ,API_CREATE_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories"
@@ -451,7 +496,7 @@ Admin.Service = {
                         $dfd.resolve(response);
                     }
                 }
-                ,url
+                , url
             );
 
             return $dfd.promise();
