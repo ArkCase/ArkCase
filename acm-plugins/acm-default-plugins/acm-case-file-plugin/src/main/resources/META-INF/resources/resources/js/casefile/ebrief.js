@@ -517,7 +517,7 @@ CaseFile.prepare = function() {
                     //changes by manoj(added)
                     var emailAddresses = CaseFile.View.Documents.getCurrentUserEmailAddress();
                     if (Acm.isNotEmpty(emailAddresses)) {
-                        var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, "Lodged Document(s)");
+                        var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, $.t("ebrief:documents.lodged-doc-email-subject"));
                         if(Acm.isNotEmpty(emailNotifications)){
                             DocTree.Controller.viewSentEmail(emailNotifications);
                         }
@@ -553,7 +553,7 @@ CaseFile.prepare = function() {
             });
         }
         ,onClickBtnLodgeDocs_not_working: function(event, ctrl) {
-            CaseFile.View.Documents.setValueEdtBmailAddr("");
+            //CaseFile.View.Documents.setValueEdtBmailAddr("");
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divLodgeDocs);
             Acm.Dialog.modal(CaseFile.View.Documents.$dlgLodgeDocs, function() {
                 var emailAddresses = CaseFile.View.Documents.getValueEdtBmailAddr();
@@ -602,7 +602,7 @@ CaseFile.prepare = function() {
             });
         }
         ,onClickBtnRejectDocs: function(event, ctrl) {
-            CaseFile.View.Documents.setValueEdtBmailReject("");
+            //CaseFile.View.Documents.setValueEdtBmailReject("");
             CaseFile.View.Documents.setValueEdtRejectReason("");
             AcmEx.Object.JTable.load(CaseFile.View.Documents.$divRejectDocs);
             Acm.Dialog.modal(CaseFile.View.Documents.$dlgRejectDocs, function() {
@@ -620,8 +620,14 @@ CaseFile.prepare = function() {
                     //changes by manoj
                     var emailAddresses = CaseFile.View.Documents.getCurrentUserEmailAddress();
                     if (Acm.isNotEmpty(emailAddresses)) {
-                        var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, "Rejected Document(s)");
+                        var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, $.t("ebrief:documents.reject-doc-email-subject"));
                         if(Acm.isNotEmpty(emailNotifications)){
+                            if(Acm.isNotEmpty(reason)){
+                                if(Acm.isNotEmpty(emailNotifications[0].note)){
+                                    emailNotifications[0].note += $.t("ebrief:documents.reject-doc-email-text") + "\n\n";
+                                    emailNotifications[0].note += Acm.goodValue(reason);
+                                }
+                            }
                             DocTree.Controller.viewSentEmail(emailNotifications);
                         }
                     }
