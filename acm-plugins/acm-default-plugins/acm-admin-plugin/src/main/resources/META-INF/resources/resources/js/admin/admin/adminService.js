@@ -336,6 +336,97 @@ Admin.Service = {
         }
     }
 
+    , WorkflowConfiguration: {
+        API_RETRIEVE_WORKFLOWS: "/api/latest/plugin/admin/workflowconfiguration/workflows"
+        ,API_RETRIEVE_HISTORY: "/api/latest/plugin/admin/workflowconfiguration/workflows/{0}/versions/{1}/history"
+        ,API_FILE: "/api/latest/plugin/admin/workflowconfiguration/workflows/{0}/versions/{1}/file"
+        ,API_UPLOAD_FILE: "/api/latest/plugin/admin/workflowconfiguration/files"
+        ,API_MAKE_ACTIVE: "/api/latest/plugin/admin/workflowconfiguration/workflows/{0}/versions/{1}/active"
+
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+
+        }
+        ,retrieveWorkflows : function(start, length, orderBy, isAsc) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_RETRIEVE_WORKFLOWS;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,retrieveHistory : function(key, version) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_RETRIEVE_HISTORY.format(key, version);
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject();
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+
+        makeActive: function(key, version) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_MAKE_ACTIVE.format(key, version);
+
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+
+        getFileLink: function(key, version){
+            return App.getContextPath() + Admin.Service.WorkflowConfiguration.API_FILE.format(key, version)
+        },
+
+        uploadWorkflowFile: function(fd) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_UPLOAD_FILE;
+            Acm.Service.asyncPostFormData(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject();
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,fd
+            );
+
+            return $dfd.promise();
+        }
+
+    }
+
     , LDAPConfiguration: {
         API_RETRIEVE_LDAP_DIRECTORIES: "/api/latest/plugin/admin/ldapconfiguration/directories"
         ,API_CREATE_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories"

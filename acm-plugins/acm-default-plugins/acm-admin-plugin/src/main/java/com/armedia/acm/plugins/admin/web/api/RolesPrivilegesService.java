@@ -145,7 +145,7 @@ public class RolesPrivilegesService {
             }
 
             return priveleges;
-        } catch (Exception e){
+        } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Can't load privileges file", e);
             }
