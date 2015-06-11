@@ -310,6 +310,11 @@
                                                             <button class="btn btn-default btn-sm" id="btnRejectDocs" data-i18n="ebrief:documents.btn-reject"><i class="fa fa-share"></i>Reject Document(s)</button>
                                                         </div>
                                                     </li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" id="btnRefreshDocs" data-i18n="ebrief:documents.btn-refresh"><i class="fa fa-share"></i>Refresh Document(s)</button>
+                                                        </div>
+                                                    </li>
                                                 </ul>
 
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
