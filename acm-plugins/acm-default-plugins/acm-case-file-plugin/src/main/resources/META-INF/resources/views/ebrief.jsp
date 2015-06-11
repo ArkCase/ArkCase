@@ -410,7 +410,7 @@
                                     <%--</div>--%>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar">
+                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
