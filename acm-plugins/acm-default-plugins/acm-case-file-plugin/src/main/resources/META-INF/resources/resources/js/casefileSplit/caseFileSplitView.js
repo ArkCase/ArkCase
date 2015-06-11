@@ -113,10 +113,12 @@ CaseFileSplit.View = CaseFileSplit.View || {
             if (CaseFileSplit.Model.Detail.validateCaseFile(c)) {
                 this.setOriginalCaseId(Acm.goodValue(c.id));
                 this.setCaseTitle(Acm.goodValue(c.title));
-                this.setIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
+                //this.setIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
+                this.setIncidentDate(Acm.getDateFromDatetime2(c.created,$.t("common:date.short")));
                 this.setSubjectType(Acm.goodValue(c.caseType));
                 this.setPriority(Acm.goodValue(c.priority));
-                this.setDueDate(Acm.getDateFromDatetime(c.dueDate));
+                //this.setDueDate(Acm.getDateFromDatetime(c.dueDate));
+                this.setDueDate(Acm.getDateFromDatetime2(c.dueDate,$.t("common:date.short")));
                 this.setHtmlDivDetail(Acm.goodValue(c.details));
 
                 var assignee = CaseFileSplit.Model.Detail.getAssignee(c);
@@ -430,8 +432,11 @@ CaseFileSplit.View = CaseFileSplit.View || {
                     var Record = {};
                     Record.id         = Acm.goodValue(noteList[i].id, 0);
                     Record.note       = Acm.goodValue(noteList[i].note);
-                    Record.created    = Acm.getDateFromDatetime(noteList[i].created);
-                    Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                    Record.created    = (Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short")));
+                    //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(noteList[i].creator));
+
                     jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = noteList.length;
@@ -515,10 +520,9 @@ CaseFileSplit.View = CaseFileSplit.View || {
     }
     ,Summary:{
         create: function() {
-            this.$btnSplitCase          = $("#btnSplitCase");
-            this.$btnSplitCase.on("click", function(e){CaseFileSplit.View.Summary.onClickBtnSplitCase(e,this);});
+            this.$btnSplitCase = $("#btnSplitCase").on("click", function(e){CaseFileSplit.View.Summary.onClickBtnSplitCase(e,this);});
 
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_SPLIT_CASE_FILE             ,this.onModelSplitCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_SPLIT_CASE_FILE ,this.onModelSplitCaseFile);
         }
         ,onInitialized: function() {
         }
@@ -535,8 +539,11 @@ CaseFileSplit.View = CaseFileSplit.View || {
             }
             else{
                 if(CaseFileSplit.Model.Detail.validateCaseFile(splitCaseFile)){
-                    var url = "/plugin/casefile/" + Acm.goodValue(splitCaseFile.id);
-                    App.View.gotoPage(url);
+                    //var url = "/plugin/casefile/" + Acm.goodValue(splitCaseFile.id);
+                    //App.View.gotoPage(url);
+                    var splitInfo = new Acm.Model.LocalData("AcmSplitTmp");
+                    splitInfo.set(Acm.goodValue(splitCaseFile.id));
+                    window.close();
                 }
             }
         }

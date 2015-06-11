@@ -104,7 +104,9 @@ Topbar.View = {
                         html += '<div class="icontype">' + icon + '</div>'
                             + '<div class="title">' + Acm.goodValue(ctr.title_parseable) + '</div>'
                             + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
-                            + '<div class="author">By ' + ctr.author_s  + ' on '+ Acm.getDateTimeFromDatetime(ctr.last_modified_tdt) + '</div>'
+                            + '<div class="author">By ' + ctr.author_s  + ' on '
+                            //+ Acm.getDateTimeFromDatetime(ctr.last_modified_tdt) + '</div>'
+                            + Acm.getDateTimeFromDatetime2(ctr.last_modified_tdt,$.t("common:date.full")) + '</div>'
                         html += '</div>';
                     }
                     return html;
@@ -129,11 +131,13 @@ Topbar.View = {
             this.$lnkAsn = $("ul.nav-user a[data-toggle='dropdown']");
             this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
             this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
-
+            this.$asnPopUp = $("#asnPopUp");
+            
             // AFDP-931 we don't want the notification popups right now.
             // Modification - As per AFDP-905, we want 5 recent notifications to show up when
             // user clicks the notification icon, but no popups should appear
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_POPUP_ASN_LIST  ,this.onModelRetrievedPopUpAsnList);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_SAVED_ASN                 ,this.onModelSavedAsn);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_ACTION        ,this.onModelUpdatedAsnAction);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_STATUS        ,this.onModelUpdatedAsnStatus);
@@ -187,6 +191,25 @@ Topbar.View = {
                 Topbar.Model.Flash.add("Failed to connect to server");
             } else {
                 Topbar.View.Asn.showNewAsn(asnList);
+            }
+        }
+        ,onModelRetrievedPopUpAsnList: function(asnList) {
+            if (Acm.isArray(asnList)) {
+            	for (var i = 0; i < asnList.length; i++) {
+        			var body = '';
+        			if (asnList[i].description_parseable) {
+        				body += asnList[i].description_parseable;
+        			}
+        			if (asnList[i].data_lcs) {
+        				var data = JSON.parse(asnList[i].data_lcs);
+        				if (data.usr) {
+        					body += 'Click <a href="' + App.getContextPath() + data.usr  + '">here</a> to view.';
+        				}
+        			}
+        			$('#asnPopUpTitle').html(asnList[i].title_parseable);
+        			$('#asnPopUpBody').html(body);
+        			Acm.Dialog.modal(Topbar.View.Asn.$asnPopUp);
+            	}
             }
         }
         ,onModelSavedAsn: function(asn) {
@@ -553,7 +576,8 @@ Topbar.View = {
                             + "<span class='media-body block m-b-none'>"
                             + Acm.goodValue(asn.title_parseable)
                             + "<br><small class='text-muted'>"
-                            + Acm.getDateFromDatetime(asn.create_tdt)
+                            //+ Acm.getDateFromDatetime(asn.create_tdt)
+                            + Acm.getDateFromDatetime2(asn.create_tdt,$.t("common:date.short"))
                             + "</small></span></a><input type='hidden' name='asnId' value='"
                             + Acm.goodValue(asn.id)
                             + "' />"

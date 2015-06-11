@@ -28,6 +28,10 @@
     <bean id="acmContainerFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmContainerDao"/>
     <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
 
+    <bean id="folderDataAccessUpdateLocator" class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
+        <property name="folderDao" ref="acmFolderDao"/>
+    </bean>
+
     <bean id="ecmFileTransaction" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileTransactionImpl">
         <lookup-method name="getMuleClient" bean="muleClient"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
@@ -84,6 +88,7 @@
 
     <bean id="acmFolderToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmFolderToSolrTransformer">
         <property name="dao" ref="acmFolderDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule">
@@ -115,7 +120,12 @@
     </bean>
 
     <bean id="acmFileTypesService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFileTypesServiceImpl">
-        <property name="propertiesLocation" value="#{ systemProperties ['user.home'] }/.acm/"></property>
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+
+        <property name="propertiesLocation" value="${user.home}/.acm/"></property>
+        <property name="acmFormsPlainPropertiesFile" value="acm-forms-plain.properties"></property>
         <property name="propertyFiles">
             <list>
                 <value>caseFilePlugin.properties</value>

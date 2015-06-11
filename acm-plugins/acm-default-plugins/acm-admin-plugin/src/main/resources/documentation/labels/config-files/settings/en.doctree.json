@@ -3,7 +3,7 @@
         ,"defaultValue": "New Folder"
         ,"description": ""
     }
-    ,"wait-upload": {"value": "Uploading "
+    ,"wait-upload": {"value": "Uploading"
         ,"defaultValue": "Uploading"
         ,"description": ""
     }
@@ -36,7 +36,7 @@
             ,"defaultValue": "Error occurred when copying folder "
             ,"description": ""
         }
-        ,"upload-file": {"value": "Error occurred when uploading files "
+        ,"upload-files": {"value": "Error occurred when uploading files "
             ,"defaultValue": "Error occurred when uploading files "
             ,"description": ""
         }

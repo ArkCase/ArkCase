@@ -194,6 +194,10 @@ public class LinkFormsWorkflowsService {
                     cellsMatrix.add(cellsRow);
                 }
 
+                // Add Tail rows
+
+
+
                 // Get Process Names. There are no ways to get all processes
                 List<AcmProcessDefinition> processDefinitions = acmBpmnService.listPage(0, 1000, "name", true);
                 List<String> processNames = new ArrayList();
@@ -202,8 +206,10 @@ public class LinkFormsWorkflowsService {
                     processNames.add(processDefinitionIter.getKey());
                 }
 
+                List<String> fileTypes = new ArrayList();
+                fileTypes.add("");
+                fileTypes.addAll(acmFileTypesService.getFileTypes());
 
-                List<String> fileTypes= acmFileTypesService.getFileTypes();
 
                 // Add metadata (available values or some columns)
                 JSONObject metaObject = new JSONObject();

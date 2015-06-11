@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -15,6 +16,8 @@ import java.util.List;
 public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmFolder>
 {
     private AcmFolderDao dao;
+
+    private SearchAccessControlFields searchAccessControlFields;
 
     @Override
     public List<AcmFolder> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -35,8 +38,7 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
 
         SolrDocument doc = new SolrDocument();
 
-        // no access control on folders (yet)
-        doc.setPublic_doc_b(true);
+        getSearchAccessControlFields().setAccessControlFields(doc, in);
 
         doc.setAuthor_s(in.getCreator());
         doc.setAuthor(in.getCreator());
@@ -86,5 +88,15 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     public void setDao(AcmFolderDao dao)
     {
         this.dao = dao;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }

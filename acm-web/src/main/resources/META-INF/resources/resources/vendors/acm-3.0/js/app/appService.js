@@ -9,6 +9,8 @@ App.Service = {
     create : function() {
         if (App.Service.I18n.create)             {App.Service.I18n.create();}
         if (App.Service.Config.create)           {App.Service.Config.create();}
+        if (App.Service.Users.create)           {App.Service.Users.create();}
+
     }
 
     ,I18n: {
@@ -82,6 +84,27 @@ App.Service = {
             })
         }
 
+    }
+    ,Users:{
+        create: function() {
+        }
+
+        ,API_RETRIEVE_USERS:  "/api/latest/plugin/search/advanced/USER/all"
+
+        ,retrieveUsers: function(name) {
+            return Acm.Service.call({type: "GET"
+                ,url: this.API_RETRIEVE_USERS
+                ,callback: function(response) {
+                    if (! response.hasError) {
+                        if (App.Model.Users.validateUsers(response)) {
+                            var users = response;
+                            App.Model.Users.setUsers(name, users);
+                            return users;
+                        }
+                    }
+                } //end callback
+            })
+        }
     }
 
 //    ,API_GET_APPROVERS             : "/api/latest/service/functionalaccess/users/acm-complaint-approve"

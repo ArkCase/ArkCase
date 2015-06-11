@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
 
@@ -20,6 +21,8 @@ import java.util.List;
  */
 public class AcmFileTypesServiceImpl implements AcmFileTypesService {
     private Logger log = LoggerFactory.getLogger(getClass());
+    private PropertyFileManager propertyFileManager;
+
     private final String PROP_FILE_TYPES = "fileTypes";
     private final String PROP_TYPE = "type";
     private final String PROP_FORM = "form";
@@ -28,6 +31,7 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
 
     private String propertiesLocation;
     private List<String> propertyFiles;
+    private String acmFormsPlainPropertiesFile;
 
     @Override
     public List<String> getFileTypes() throws AcmFileTypesException {
@@ -35,10 +39,8 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
             List<String> fileTypes = new ArrayList();
             // Load properties file and get fileTypes property
             for (String fileName : propertyFiles) {
-                Properties props = new Properties();
-                props.load(FileUtils.openInputStream(new File(propertiesLocation + fileName)));
-
-                JSONArray fileTypesArray = new JSONArray(props.getProperty(PROP_FILE_TYPES));
+                String fileTypesStr = propertyFileManager.load(propertiesLocation + fileName, PROP_FILE_TYPES, "[]");
+                JSONArray fileTypesArray = new JSONArray(fileTypesStr);
                 for (int  i = 0; i < fileTypesArray.length(); i++) {
                     JSONObject fileTypeObj = fileTypesArray.getJSONObject(i);
                     String fileType = fileTypeObj.getString(PROP_TYPE);
@@ -46,6 +48,21 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
                         fileTypes.add(fileType);
                     }
                 }
+            }
+
+            // Load information about form types from acm-forms-plain.properties file
+            Properties formsProps = new Properties();
+            formsProps.load(FileUtils.openInputStream(new File(propertiesLocation + acmFormsPlainPropertiesFile)));
+
+            for (Object propKey: formsProps.keySet()) {
+                int dotIndex = ((String)propKey).indexOf('.');
+                if (dotIndex  > 0) {
+                    String propName = ((String)propKey).substring(0, dotIndex);
+                    if (!fileTypes.contains(propName)) {
+                        fileTypes.add(propName);
+                    }
+                }
+
             }
             return fileTypes;
         } catch (Exception e) {
@@ -62,5 +79,13 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
 
     public void setPropertiesLocation(String propertiesLocation) {
         this.propertiesLocation = propertiesLocation;
+    }
+
+    public void setAcmFormsPlainPropertiesFile(String acmFormsPlainPropertiesFile) {
+        this.acmFormsPlainPropertiesFile = acmFormsPlainPropertiesFile;
+    }
+
+    public void setPropertyFileManager(PropertyFileManager propertyFileManager) {
+        this.propertyFileManager = propertyFileManager;
     }
 }

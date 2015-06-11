@@ -503,6 +503,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                         	null != folderIdString && !"".equals(folderIdString))
                         {
                         	EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase());
+                        	file.setFileName(pdfAttachment.getName());
+                        	getEcmFileDao().save(file);
                         	
                         	pdfRendition = getEcmFileService().update(
                         			file,
