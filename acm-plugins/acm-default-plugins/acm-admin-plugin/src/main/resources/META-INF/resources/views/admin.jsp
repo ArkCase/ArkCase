@@ -473,7 +473,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Make Active</button>
+                <button id="makeProcessActive" type="button" class="btn btn-primary">Make Active</button>
             </div>
         </div>
     </div>

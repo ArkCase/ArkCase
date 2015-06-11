@@ -28,4 +28,6 @@ public interface AcmBpmnService {
 
     public AcmProcessDefinition getActive(String processDefinitionKey);
 
+    public AcmProcessDefinition getByKeyAndVersion(String processDefinitionKey, int version);
+
 }
