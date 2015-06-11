@@ -21,7 +21,7 @@ CaseFile.prepare = function() {
             ,"tabDocs"
             ,"tabRefs"
             ,"tabHistory"
-            ,"tabCalendar"
+            ,"tabOutlookCalendar"
         ]}
         ,{nodeType: "p/CASE_FILE/det"       ,icon: "" ,res: "casefile:navigation.leaf-title.details"        ,tabIds: ["tabDetail"]}
         ,{nodeType: "p/CASE_FILE/task"      ,icon: "", res: "casefile:navigation.leaf-title.tasks"         ,tabIds: ["tabTasks"]}
@@ -30,7 +30,7 @@ CaseFile.prepare = function() {
         ,{nodeType: "p/CASE_FILE/doc"       ,icon: "", res: "casefile:navigation.leaf-title.documents"     ,tabIds: ["tabDocs"]}
         ,{nodeType: "p/CASE_FILE/ref"       ,icon: "" ,res: "casefile:navigation.leaf-title.references"     ,tabIds: ["tabRefs"]}
         ,{nodeType: "p/CASE_FILE/his"       ,icon: "", res: "casefile:navigation.leaf-title.history"       ,tabIds: ["tabHistory"]}
-        ,{nodeType: "p/CASE_FILE/cal"       ,icon: "", res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabCalendar"]}
+        ,{nodeType: "p/CASE_FILE/calendar"       ,icon: "", res: "casefile:navigation.leaf-title.calendar"       ,tabIds: ["tabOutlookCalendar"]}
     ];
 
     CaseFile.View.Ribbon = {
@@ -624,7 +624,7 @@ CaseFile.prepare = function() {
             });
         }
         ,onClickBtnRefreshDocs: function(event,ctrl){
-            DocTree.View.tree.reload(DocTree.View.Source.source());
+            DocTree.View.refreshTree();
         }
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
