@@ -2235,6 +2235,35 @@ DocTree.View = DocTree.View || {
         }
         return $promise;
     }
+    ,refreshTree: function() {
+        var objType = DocTree.Model.getObjType();
+        var objId = DocTree.Model.getObjId();
+        if (Acm.isNotEmpty(objType) && Acm.isNotEmpty(objId)) {
+            //remove tree cache for current obj
+            DocTree.Model.cacheTree.remove(objType + "." + objId);
+            //remove individual folder cache for current obj
+            var cacheFolderList = DocTree.Model.cacheFolderList.cache;
+            if(Acm.isNotEmpty(cacheFolderList)) {
+                for(var cacheKey in cacheFolderList){
+                    if(cacheFolderList.hasOwnProperty(cacheKey)){
+                        var cacheKeySplit = cacheKey.split(".");
+                        if(Acm.isArray(cacheKeySplit)){
+                            // cache keys have following format :
+                            // CASE_FILE.1258.0.0.name.ASC.16
+                            // ojType.objId.folderId.pageId.soryBy.sortDirection.maxSize
+                            var cacheKeyObjId = cacheKeySplit[1];
+                            if(Acm.isNotEmpty(cacheKeyObjId)){
+                                if(Acm.goodValue(cacheKeyObjId) == Acm.goodValue(objId)){
+                                    DocTree.Model.cacheFolderList.remove(cacheKey);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        DocTree.View.tree.reload(DocTree.View.Source.source());
+    }
     ,switchObject: function(activeObjType, activeObjId) {
         if (!DocTree.View.tree) {
             return;
