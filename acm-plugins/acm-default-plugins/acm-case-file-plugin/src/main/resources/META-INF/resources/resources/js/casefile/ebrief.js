@@ -216,9 +216,17 @@ CaseFile.prepare = function() {
                             profile.email = Acm.goodValue(profileInfo.email);
                             profile.phone = Acm.goodValue(profileInfo.phone);
                             CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
-                            return profileInfo;
+                            return profile;
                         }
-                    } //end else
+                    }
+                    else if (response.hasError)  {
+                        var profile = {};
+                        profile.organisation = "N/A";
+                        profile.email = "N/A";
+                        profile.phone = "N/A";
+                        CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
+                        return profile;
+                    }//end else
                 }
             })
         }
@@ -245,8 +253,14 @@ CaseFile.prepare = function() {
                     var participant = participants[i];
                     if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group"){
                         var user = participant.participantLdapId;
-                        var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
-                        requests.push(req);
+                        var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(user));
+                        if(Acm.isNotEmpty(profile)){
+                            AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
+                        }
+                        else{
+                            var req = CaseFile.Model.Participants.retrieveProfileInfo(user);
+                            requests.push(req);
+                        }
                     }
                 }
                 Acm.Promise.resolvePromises(requests)
@@ -254,7 +268,7 @@ CaseFile.prepare = function() {
                         AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
                     })
                     .fail(function() {
-                        App.View.MessageBoard.show("Error retrieving participants");
+                        AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
                     });
             }
         }
@@ -457,6 +471,7 @@ CaseFile.prepare = function() {
             this.$btnNewFolder  = $("#btnNewFolder") .on("click", function(e) {CaseFile.View.Documents.onClickBtnNewFolder(e, this);});
             this.$btnLodgeDocs  = $("#btnLodgeDocs") .on("click", function(e) {CaseFile.View.Documents.onClickBtnLodgeDocs(e, this);});
             this.$btnRejectDocs = $("#btnRejectDocs").on("click", function(e) {CaseFile.View.Documents.onClickBtnRejectDocs(e, this);});
+            this.$btnRefreshDocs = $("#btnRefreshDocs").on("click", function(e) {CaseFile.View.Documents.onClickBtnRefreshDocs(e, this);});
 
             this.$dlgLodgeDocs  = $("#dlgLodgeDocs");
             this.$edtBmailAddr  = $("#edtBmailAddr");
@@ -472,6 +487,10 @@ CaseFile.prepare = function() {
         }
 
         ,onClickBtnNewFolder: function(event, ctrl) {
+            var nodes = DocTree.View.getEffectiveNodes();
+            if (!Acm.isArrayEmpty(nodes)) {
+                nodes[0].setActive();
+            }
             DocTree.View.$tree.trigger("command", {cmd: "newFolder"});
 
             //var topNode = DocTree.View.getTopNode();
@@ -486,7 +505,7 @@ CaseFile.prepare = function() {
                     Acm.Dialog.alert("Email Address is required");
                     return;
                 }
-                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                var nodes = DocTree.View.getEffectiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
@@ -522,7 +541,7 @@ CaseFile.prepare = function() {
                     Acm.Dialog.alert("Email Address is required");
                     return;
                 }
-                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                var nodes = DocTree.View.getEffectiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
@@ -573,7 +592,7 @@ CaseFile.prepare = function() {
                     return;
                 }
                 var reason = CaseFile.View.Documents.getValueEdtRejectReason();
-                var nodes = DocTree.View.getSelectedOrActiveNodes();
+                var nodes = DocTree.View.getEffectiveNodes();
                 if (DocTree.View.validateNodes(nodes)) {
                     DocTree.Controller.viewSentEmail(emailNotifications);
                     var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, reason);
@@ -599,6 +618,9 @@ CaseFile.prepare = function() {
                     });
                 }
             });
+        }
+        ,onClickBtnRefreshDocs: function(event,ctrl){
+            DocTree.View.tree.reload(DocTree.View.Source.source());
         }
         ,onViewSelectedTreeNode: function(key) {
             DocTree.View.expandTopNode();
@@ -639,7 +661,7 @@ CaseFile.prepare = function() {
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var nodes = DocTree.View.getSelectedOrActiveNodes();
+                        var nodes = DocTree.View.getEffectiveNodes();
                         if (DocTree.View.validateNodes(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 var record = {};
@@ -681,7 +703,7 @@ CaseFile.prepare = function() {
                 ,actions: {
                     listAction: function(postData, jtParams) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        var nodes = DocTree.View.getSelectedOrActiveNodes();
+                        var nodes = DocTree.View.getEffectiveNodes();
                         if (DocTree.View.validateNodes(nodes)) {
                             for (var i = 0; i < nodes.length; i++) {
                                 var record = {};
