@@ -560,6 +560,10 @@ Admin.View = Admin.View || {
                         title: 'Group Search Base'
                         ,visibility: 'hidden'
                     }
+                    ,'ldapConfig.groupSearchBaseOU': {
+                        title: 'Group Search Base OU'
+                        ,visibility: 'hidden'
+                    }
                     ,'ldapConfig.userIdAttributeName': {
                         title: 'User Id Attribute Name'
                         ,visibility: 'hidden'
