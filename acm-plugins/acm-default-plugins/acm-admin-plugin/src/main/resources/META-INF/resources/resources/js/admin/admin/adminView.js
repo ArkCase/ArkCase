@@ -556,6 +556,10 @@ Admin.View = Admin.View || {
                         title: 'Auth User Password'
                         ,visibility: 'hidden'
                     }
+                    ,'ldapConfig.userSearchBase': {
+                        title: 'User Search Base'
+                        ,visibility: 'hidden'
+                    }
                     ,'ldapConfig.groupSearchBase': {
                         title: 'Group Search Base'
                         ,visibility: 'hidden'
