@@ -67,6 +67,11 @@
                     <property name="url" value="/api/{version}/plugin/search/getAvailableFilters"/>
                     <property name="requiredPrivilege" ref="searchPrivilege"/>
                 </bean>
+                <bean id="getNotificationsAdvancedSearch" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/searchNotifications/advanced"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
             </list>
         </property>
 
@@ -138,6 +143,11 @@
                 <bean id="getAvailableFiltersUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/plugin/search/getAvailableFilters"/>
+                    <property name="requiredPrivilege" ref="searchPrivilege"/>
+                </bean>
+                <bean id="getNotificationsAdvancedSearch" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/searchNotifications/advanced"/>
                     <property name="requiredPrivilege" ref="searchPrivilege"/>
                 </bean>
             </list>
