@@ -76,6 +76,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         childObjectCopy.setCategory("COPY_FROM");
         childObjectCopy.setTargetId(original.getId());
         childObjectCopy.setTargetType(original.getObjectType());
+        childObjectCopy.setTargetName(original.getCaseNumber());
         copyCaseFile.addChildObject(childObjectCopy);
 
         copyCaseFile = saveCaseService.saveCase(copyCaseFile, auth, ipAddress);
@@ -85,6 +86,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         childObjectOriginal.setCategory("COPY_TO");
         childObjectOriginal.setTargetId(copyCaseFile.getId());
         childObjectOriginal.setTargetType(copyCaseFile.getObjectType());
+        childObjectOriginal.setTargetName(copyCaseFile.getCaseNumber());
         original.addChildObject(childObjectOriginal);
         saveCaseService.saveCase(original, auth, ipAddress);
 
@@ -169,20 +171,17 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         if (folderMap.containsKey(fileForCopying.getFolder().getId())) {
             //we have already created that folder
             AcmFolder foundFolder = folderMap.get(fileForCopying.getFolder().getId());
-            ecmFileService.copyFile(documentId,
-                    containerOfCopy.getContainerObjectId(),
-                    containerOfCopy.getContainerObjectType(),
-                    foundFolder.getId());
+            ecmFileService.copyFile(documentId, foundFolder, containerOfCopy);
+
+            // file is copied, we are done
+            return;
         }
 
         AcmFolder documentFolder = fileForCopying.getFolder();
         if (documentFolder.getParentFolderId() == null || !options.isPreserveFolderStructure()) {
             //recreate folder structure as on source
             //document is under root folder, no need to create additional folders
-            ecmFileService.copyFile(documentId,
-                    containerOfCopy.getContainerObjectId(),
-                    containerOfCopy.getContainerObjectType(),
-                    rootFolderOfCopy.getId());
+            ecmFileService.copyFile(documentId, rootFolderOfCopy, containerOfCopy);
         } else {
             //create folder structure in saved case file same as in source for the document
             String folderPath = acmFolderService.getFolderPath(fileForCopying.getFolder());
@@ -192,10 +191,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
                         containerOfCopy.getContainerObjectType(),
                         containerOfCopy.getContainerObjectId(),
                         folderPath);
-                ecmFileService.copyFile(documentId,
-                        containerOfCopy.getContainerObjectId(),
-                        containerOfCopy.getContainerObjectType(),
-                        createdFolder.getId());
+                ecmFileService.copyFile(documentId, createdFolder,containerOfCopy );
                 folderMap.put(fileForCopying.getFolder().getId(), createdFolder);
             } catch (Exception e) {
                 log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be copied.", e);
