@@ -36,7 +36,7 @@ public class SearchNotificationsAPIController {
 
 
     @RequestMapping(
-            value = {"/api/v1/plugin/search/advanced/notifications", "/api/latest/plugin/search/advanced/notifications"},
+            value = {"/api/v1/plugin/searchNotifications/advanced", "/api/latest/plugin/searchNotifications/advanced"},
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
