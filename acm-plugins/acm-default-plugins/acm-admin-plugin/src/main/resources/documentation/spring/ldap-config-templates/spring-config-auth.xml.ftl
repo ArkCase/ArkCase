@@ -12,7 +12,7 @@
 
     <beans:bean id="${id}_userSearch"
                 class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
-        <beans:constructor-arg index="0" value="CN=Users" />
+        <beans:constructor-arg index="0" value='${r"${ldapConfig.userSearchBase}"}' />
         <beans:constructor-arg index="1" value="sAMAccountName={0}" />
         <beans:constructor-arg index="2" ref="${id}_contextSource" />
     </beans:bean>
