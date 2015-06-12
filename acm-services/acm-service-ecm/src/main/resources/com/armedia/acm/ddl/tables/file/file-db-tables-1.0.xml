@@ -801,5 +801,23 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="files-39-add-object-type-in-acm-folder-table" author="dmiller">
+        <addColumn tableName="acm_folder">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="FOLDER"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="FOLDER"
+                              tableName="acm_folder"/>
+    </changeSet>
+
+    <changeSet id="files-40-add-folder-status-in-acm-folder-table" author="dmiller">
+        <addColumn tableName="acm_folder">
+            <column name="cm_folder_status" type="VARCHAR(100)" defaultValue="ACTIVE"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_folder_status"
+                              defaultNullValue="ACTIVE"
+                              tableName="acm_folder"/>
+    </changeSet>
+
 </databaseChangeLog>
 
