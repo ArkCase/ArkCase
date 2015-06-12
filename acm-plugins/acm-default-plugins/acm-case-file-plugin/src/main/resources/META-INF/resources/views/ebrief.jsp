@@ -270,6 +270,28 @@
 
                                     <br/>
 
+                                    <div class="col-md-12" id="tabDetail" style="display:none;">
+                                        <section class="panel b-a ">
+                                            <div class="panel-heading b-b bg-info">
+                                                <ul class="nav nav-pills pull-right">
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
+                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                            <ul class="dropdown-menu pull-right">
+                                                                <li><a href="#" data-i18n="casefile:detail.other-menu-items">Other menu items</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                    <li>&nbsp;</li>
+                                                </ul>
+                                                </span> <a href="#" class="font-bold" data-i18n="casefile:detail.details">Details</a></div>
+                                            <div class="panel-body">
+                                                <div class="divDetail"></div>
+                                            </div>
+                                        </section>
+                                    </div>
+
                                     <div class="col-md-12" id="tabTasks" style="display:none;">
                                         <section class="panel b-a ">
                                             <div id="divTasks" style="width:100%"></div>
@@ -351,43 +373,23 @@
                                         </section>
                                     </div>
 
+                                    <div class="col-md-12" id="tabRefs" style="display:none;">
+                                        <section class="panel b-a ">
+                                            <div id="divRefs" style="width:100%"></div>
+                                        </section>
+                                    </div>
+
                                     <div class="col-md-12" id="tabHistory" style="display:none;">
                                         <section class="panel b-a ">
                                             <div id="divHistory" style="width:100%"></div>
                                         </section>
                                     </div>
 
-                                    <%--<div class="col-md-12" id="tabDetail" style="display:none;">--%>
-                                        <%--<section class="panel b-a ">--%>
-                                            <%--<div class="panel-heading b-b bg-info">--%>
-                                                <%--<ul class="nav nav-pills pull-right">--%>
-                                                    <%--<li>--%>
-                                                        <%--<div class="btn-group padder-v2">--%>
-                                                            <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>--%>
-                                                            <%--<button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>--%>
-                                                            <%--<ul class="dropdown-menu pull-right">--%>
-                                                                <%--<li><a href="#" data-i18n="casefile:detail.other-menu-items">Other menu items</a></li>--%>
-                                                            <%--</ul>--%>
-                                                        <%--</div>--%>
-                                                    <%--</li>--%>
-                                                    <%--<li>&nbsp;</li>--%>
-                                                <%--</ul>--%>
-                                                <%--</span> <a href="#" class="font-bold" data-i18n="casefile:detail.details">Details</a></div>--%>
-                                            <%--<div class="panel-body">--%>
-                                                <%--<div class="divDetail"></div>--%>
-                                            <%--</div>--%>
-                                        <%--</section>--%>
-                                    <%--</div>--%>
+
 
                                     <%--<div class="col-md-12" id="tabNotes" style="display:none;">--%>
                                         <%--<section class="panel b-a ">--%>
                                             <%--<div id="divNotes" style="width:100%"></div>--%>
-                                        <%--</section>--%>
-                                    <%--</div>--%>
-
-                                    <%--<div class="col-md-12" id="tabRefs" style="display:none;">--%>
-                                        <%--<section class="panel b-a ">--%>
-                                            <%--<div id="divRefs" style="width:100%"></div>--%>
                                         <%--</section>--%>
                                     <%--</div>--%>
 
@@ -410,7 +412,7 @@
                                     <%--</div>--%>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar">
+                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
@@ -465,10 +467,16 @@
                         <h4 class="modal-title" id="labLodgeDlgTitle" data-i18n="ebrief:dialog.lodge-title">Lodge Documents</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="edtBmailAddr" data-i18n="ebrief:dialog.lodge-email-label">Lodge document(s) and notify to</label>
+
+                        <%--changes by manoj (not required) --%>
+
+                        <%--<label for="edtBmailAddr" data-i18n="ebrief:dialog.lodge-email-label">Lodge document(s) and notify to</label>
                         <br/>
                         <input type="text" id="edtBmailAddr" class="form-control" data-i18n="[placeholder]ebrief:dialog.lodge-email-placeholder" placeholder="Email Address" />
-                        <br/>
+                        <br/>--%>
+
+                        <%--changes end--%>
+
                         <div id="divLodgeDocs">
                         </div>
 
@@ -488,10 +496,16 @@
                         <h4 class="modal-title" id="labRejectDlgTitle" data-i18n="ebrief:dialog.reject-title">Reject Documents</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="edtBmailReject" data-i18n="ebrief:dialog.reject-email-label">Reject document(s) and notify to</label>
+
+                        <%--changes by manoj (not required) --%>
+
+                        <%--<label for="edtBmailReject" data-i18n="ebrief:dialog.reject-email-label">Reject document(s) and notify to</label>
                         <br/>
                         <input type="text" id="edtBmailReject" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-email-placeholder" placeholder="Email Address" />
-                        <br/>
+                        <br/>--%>
+
+                        <%--changes end--%>
+
                         <label for="edtRejectReason" data-i18n="ebrief:dialog.lodge-reason-label">Reason</label>
                         <br/>
                         <input type="text" id="edtRejectReason" class="form-control" data-i18n="[placeholder]ebrief:dialog.reject-reason-placeholder" placeholder="Reject Reason" />
