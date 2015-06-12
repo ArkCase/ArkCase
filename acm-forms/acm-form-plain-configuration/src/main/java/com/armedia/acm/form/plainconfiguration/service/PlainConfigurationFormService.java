@@ -224,12 +224,41 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		{
 			for (FormTypeEntry form : forms)
 			{
-				String keyValuePair = form.getId() + "=" + form.getTitle().getPlainText();
-				keyValuePairs.add(keyValuePair);
+				String target = getRequest().getParameter("target");
+				PlainConfigurationForm registeredForm = getRegisteredForm(form.getId(), target);
+				
+				if (registeredForm == null)
+				{
+					String keyValuePair = form.getId() + "=" + form.getTitle().getPlainText();
+					keyValuePairs.add(keyValuePair);
+				}
 			}
 		}
 		
 		return keyValuePairs;
+	}
+	
+	private PlainConfigurationForm getRegisteredForm(String id, String target)
+	{
+		List<PlainConfigurationForm> registeredForms = getPlainConfigurationFormFactory().convertFromProperties();
+		PlainConfigurationForm registeredForm = null;
+		
+		if (registeredForms != null && id != null && target != null)
+		{
+			try
+			{
+				registeredForm = registeredForms.stream()
+											    .filter(element -> id.equals(element.getFormId()) && target.equals(element.getTarget()))
+											    .findFirst()
+											    .get();
+			}
+			catch(Exception e)
+			{
+				LOG.debug("The form with id=" + id + " is not registered in the system.");
+			}
+		}
+		
+		return registeredForm;
 	}
 	
 	private Map<String, String> getFormProperties(PlainConfigurationForm form)

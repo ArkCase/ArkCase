@@ -3,7 +3,9 @@
  */
 package com.armedia.acm.plugins.admin.web.api;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -47,7 +49,23 @@ public class GetPlainFormsAPIController {
 		
 		List<PlainConfigurationForm> plainForms = getPlainConfigurationFormFactory().convertFromProperties();
 		
-		return plainForms;
+		if (plainForms != null)
+		{
+			try
+			{
+				// TODO: Finish the sorting ... add Comparator to the stream ...
+				return plainForms.stream()
+				                 .skip(startRow)
+				                 .limit(maxRows)
+				                 .collect(Collectors.toList());
+			}
+			catch (Exception e)
+			{
+				LOG.error("Cannot return requested page: start=" + startRow + ", n=" + maxRows, e);
+			}
+		}
+		
+		return new ArrayList<PlainConfigurationForm>();
     }
 
 	public PlainConfigurationFormFactory getPlainConfigurationFormFactory() {
