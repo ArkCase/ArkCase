@@ -202,7 +202,22 @@ Acm.Service = {
             }
         });
     }
-    
+
+    ,asyncPostFormData : function(callback, url, formData) {
+        //Acm.log("Acm.Service.asyncPost() is phasing out. Please use Acm.Service.call() instead");
+        return this.ajax({
+            type: 'POST'
+            ,url: url
+            ,cache: false
+            ,contentType: false
+            ,processData: false
+            ,data: formData
+            ,success: function(response) {
+                callback(response);
+            }
+        });
+    }
+
     /*
      * This is an ajax form data submit, not a <form> with a form submit button type of submit.
      */
