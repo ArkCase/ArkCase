@@ -146,6 +146,16 @@
             ,"defaultValue": "The reason for rejection is :"
             ,"description": ""
         }
+        ,"lodge-wrong-folder": {
+            "value": "Cannot lodge documents outside Prosecution Brief folder"
+            ,"defaultValue": "Cannot lodge documents outside Prosecution Brief folder"
+            ,"description": ""
+        }
+        ,"reject-wrong-folder": {
+            "value": "Cannot reject documents outside Court Brief folder"
+            ,"defaultValue": "Cannot reject documents outside Court Brief folder"
+            ,"description": ""
+        }
         ,"dialog": {
             "lodge-title": {
                 "value": "Lodge Documents"
@@ -170,11 +180,6 @@
             ,"lodge-name-column": {
                 "value": "Name"
                 ,"defaultValue": "Name"
-                ,"description": ""
-            }
-            ,"lodge-wrong-folder": {
-                "value": "Cannot lodge documents outside Prosecution Brief folder"
-                ,"defaultValue": "Cannot lodge documents outside Prosecution Brief folder"
                 ,"description": ""
             }
 
@@ -211,11 +216,6 @@
             ,"reject-name-column": {
                 "value": "Name"
                 ,"defaultValue": "Name"
-                ,"description": ""
-            }
-            ,"reject-wrong-folder": {
-                "value": "Cannot reject documents outside Court Brief folder"
-                ,"defaultValue": "Cannot reject documents outside Court Brief folder"
                 ,"description": ""
             }
         }
