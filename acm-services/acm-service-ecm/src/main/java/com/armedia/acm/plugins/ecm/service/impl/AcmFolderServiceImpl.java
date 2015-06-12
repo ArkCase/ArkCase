@@ -474,7 +474,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private void copyDir(Folder parentFolder,Folder toBeCopiedFolder,Long targetObjectId,String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException {
 
         Map<String,Object> newFolderProperties = new HashMap<>();
-        AcmFolder parFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
         AcmFolder toCopyFolder = getFolderDao().findByCmisFolderId(toBeCopiedFolder.getId());
 
         String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(toCopyFolder.getName());
@@ -500,6 +499,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             CmisObject cmisObjectNewFolder = message.getPayload(CmisObject.class);
             newFolder =(Folder) cmisObjectNewFolder;
 
+            //TODO create DB index on parentFolderId and folderName to prevent equal folder names under same parent Folder and solve naming like in Widnows (folder_name -> "folder_name copy (x)")
             acmNewFolder.setCmisFolderId(newFolder.getId());
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
             acmNewFolder.setParentFolderId(pFolder.getId());
