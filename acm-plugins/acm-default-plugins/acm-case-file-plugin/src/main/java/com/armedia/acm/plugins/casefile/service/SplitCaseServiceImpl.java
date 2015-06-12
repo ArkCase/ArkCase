@@ -15,12 +15,15 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +60,15 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         // copyCaseFile.setTitle(original.getTitle());
         copyCaseFile.setDetails(original.getDetails());
         copyCaseFile.setStatus(original.getStatus());
+
+        //add assignee to new case
+        AcmParticipant participant = new AcmParticipant();
+        participant.setParticipantLdapId(auth.getName());
+        participant.setParticipantType(ParticipantTypes.ASSIGNEE);
+
+        if (copyCaseFile.getParticipants() != null)
+            copyCaseFile.setParticipants(new ArrayList<>());
+        copyCaseFile.getParticipants().add(participant);
 
 
         ObjectAssociation childObjectCopy = new ObjectAssociation();
