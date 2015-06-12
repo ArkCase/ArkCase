@@ -61,6 +61,8 @@ import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
@@ -137,6 +139,9 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private FolderAndFilesUtils folderAndFilesUtils;
 	private AcmFolderService acmFolderService;
+	
+	private NotificationDao notificationDao;
+	private NotificationEventPublisher notificationEventPublisher;
 	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
@@ -612,5 +617,21 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	public void setAcmFolderService(AcmFolderService acmFolderService) {
 		this.acmFolderService = acmFolderService;
 	}
-	
+
+	public NotificationDao getNotificationDao() {
+		return notificationDao;
+	}
+
+	public void setNotificationDao(NotificationDao notificationDao) {
+		this.notificationDao = notificationDao;
+	}
+
+	public NotificationEventPublisher getNotificationEventPublisher() {
+		return notificationEventPublisher;
+	}
+
+	public void setNotificationEventPublisher(
+			NotificationEventPublisher notificationEventPublisher) {
+		this.notificationEventPublisher = notificationEventPublisher;
+	}	
 }
