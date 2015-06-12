@@ -47,6 +47,8 @@
                 <!-- EclipseLink specific: logging level - FINER shows SQL and transaction details -->
                 <prop key="eclipselink.logging.level">FINER</prop>
 
+
+
                 <!-- JPA package scanning:
                     - comma separated list of packages to scan for JPA entity classes.
                     - NOTE: Cannot start with a wild card.  The leading package name must be specified.
@@ -114,6 +116,17 @@
                 <prop key="eclipselink.cache.shared.default">false</prop>
                 <prop key="eclipselink.persistence-context.close-on-commit">true</prop>
                 <prop key="eclipselink.validate-existence">true</prop>
+                <!--<prop key="eclipselink.connection-pool.initial">5</prop>-->
+                <!--<prop key="eclipselink.connection-pool.min">5</prop>-->
+                <!--<prop key="eclipselink.connection-pool.max">10</prop>-->
+                <!--<prop key="eclipselink.connection-pool.wait">500</prop>-->
+                <!--<prop key="eclipselink.connection-pool.url">${acm.url}</prop>-->
+                <!--<prop key="eclipselink.connection-pool.user">${acm.username}</prop>-->
+                <!--<prop key="eclipselink.connection-pool.password">${acm.password}</prop>-->
+                <!--<prop key="eclipselink.connection-pool.shared">false</prop>-->
+                <!--<prop key="eclipselink.connection-pool.jtaDataSource">jdbc/acmDataSource</prop>-->
+                <!--<prop key="eclipselink.connection-pool.nonJtaDataSource">jdbc/acmDataSource</prop>-->
+
             </props>
         </property>
         <!--<property name="packagesToScan" value="${jpa.model.packages}"/>-->

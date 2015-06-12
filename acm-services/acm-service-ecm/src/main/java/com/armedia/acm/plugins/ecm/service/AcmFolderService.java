@@ -25,8 +25,6 @@ public interface AcmFolderService {
 
     AcmFolder addNewFolderByPath(String targetObjectType, Long targetObjectId, String newPath) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
 
-    String findContainerFolderPath(AcmContainer container) throws MuleException, AcmUserActionFailedException;
-
     String findFolderPath(String cmisFolderObjectId) throws MuleException, AcmUserActionFailedException;
 
     AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException;
@@ -36,8 +34,6 @@ public interface AcmFolderService {
     void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     AcmFolder findById(Long folderId);
-
-    AcmCmisObjectList getFolderChildren(String objectType,Long objectId, Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     List<AcmObject> getFolderChildren(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
