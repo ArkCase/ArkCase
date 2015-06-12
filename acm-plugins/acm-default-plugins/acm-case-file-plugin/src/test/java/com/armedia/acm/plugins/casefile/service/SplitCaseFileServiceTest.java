@@ -36,8 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -139,24 +138,22 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
 
 
         Capture<Long> fileIdCapture = new Capture<>();
-        Capture<Long> targetObjectIdCapture = new Capture<>();
-        Capture<String> targetObjectTypeCapture = new Capture<>();
-        Capture<Long> dstFolderCapture = new Capture<>();
+        Capture<AcmFolder> targetFolderCapture = new Capture<>();
+        Capture<AcmContainer> targetContainerCapture = new Capture<>();
         EasyMock.expect(ecmFileService.copyFile(capture(fileIdCapture),
-                capture(targetObjectIdCapture),
-                capture(targetObjectTypeCapture),
-                capture(dstFolderCapture))).andAnswer(new IAnswer<EcmFile>() {
+                capture(targetFolderCapture),
+                capture(targetContainerCapture))).andAnswer(new IAnswer<EcmFile>() {
             public EcmFile answer() throws Throwable {
                 EcmFile copydFile = new EcmFile();
                 //we will keep same id's
                 copydFile.setFileId(fileIdCapture.getValue());
-                copydFile.setFolder(folderMap.get(dstFolderCapture.getValue()));
+                copydFile.setFolder(targetFolderCapture.getValue());
                 documentMap.put(copydFile.getId(), copydFile);
                 return copydFile;
             }
         }).anyTimes();
 
-        EasyMock.expect(acmFolderService.folderPathExists(EasyMock.anyObject(), EasyMock.anyObject())).andReturn(false).anyTimes();
+        EasyMock.expect(acmFolderService.folderPathExists(anyObject(), anyObject())).andReturn(false).anyTimes();
 
 
         Capture<Long> findFileIdCapture = new Capture<>();
