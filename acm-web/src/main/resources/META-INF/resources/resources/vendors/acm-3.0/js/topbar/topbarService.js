@@ -51,13 +51,13 @@ Topbar.Service = {
         //,API_RETRIEVE_ASN_LIST_       : "/resources/asn.json"
         //,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
         //for now we need 5 recent notifications in descending order by date
-        ,API_RETRIEVE_ASN_LIST_       : "/api/v1/plugin/search/quickSearch"
+        ,API_RETRIEVE_ASN_LIST_       : "/api/v1/plugin/search/advanced/notifications"
         ,API_SAVE_ASN                 : "/api/latest/plugin/notification"
         ,API_DELETE_ASN_              : "/api/latest/plugin/notification/"
 
         ,retrieveAsnList: function(user,n) {
             var url = App.getContextPath() + this.API_RETRIEVE_ASN_LIST_;
-            url+= "?q=" + Topbar.Model.Asn.OBJECT_TYPE;
+            url+= "?owner=" + App.getUserName();
             url+= "&n=" + n;
             url+= "&s=" + Topbar.Model.Asn.SORT_FIELD + " " + Topbar.Model.Asn.SORT_ORDER;
             Acm.Service.call({type: "GET"
