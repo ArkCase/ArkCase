@@ -7,7 +7,15 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -16,7 +24,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.Relationship;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -30,15 +38,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.management.relation.Relation;
 import javax.persistence.PersistenceException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by armdev on 5/1/14.
@@ -538,12 +548,15 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                         "File " + file.getFileName() + " can not be copied successfully", muleException);
             }
 
-            CmisObject cmisObject = message.getPayload(CmisObject.class);
+            Document cmisObject = message.getPayload(Document.class);
 
-            String newFileId = cmisObject.getId();
             EcmFile fileCopy = new EcmFile();
 
 
+            // TODO this has to be fixed, we can't just copy the versions from the original file to the
+            // new file.  The original file's versions belong to a different versionSeriesId after all.  In reality
+            // we should start from scratch with just the single version we just created.... And also, the original
+            // new file we just now created, will not be in the version list!!!
             List<EcmFileVersion> versionList = new ArrayList<>();
             List<EcmFileVersion> versions = file.getVersions();
             if( versions!=null ) {
@@ -558,7 +571,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
 
             AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
-            fileCopy.setVersionSeriesId(newFileId);
+            fileCopy.setVersionSeriesId(cmisObject.getVersionSeriesId());
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(file.getActiveVersionTag());
             fileCopy.setFileName(file.getFileName());
