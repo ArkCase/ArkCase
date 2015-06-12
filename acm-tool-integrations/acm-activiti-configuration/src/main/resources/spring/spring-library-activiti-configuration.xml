@@ -80,6 +80,7 @@
         <property name="transactionManager" ref="transactionManager" />
         <property name="databaseSchemaUpdate" value="true" />
         <property name="transactionsExternallyManaged" value="true"/>
+        <property name="databaseType" value="${activiti.db.type}"/>
         <property name="preBpmnParseHandlers">
             <list>
                 <ref bean="acmActivitiProcessHandler"/>
