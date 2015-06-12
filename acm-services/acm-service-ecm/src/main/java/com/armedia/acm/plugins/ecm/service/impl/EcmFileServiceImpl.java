@@ -519,20 +519,39 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return sortParam;
     }
 
+    @Override
+    public EcmFile copyFile(Long fileId,Long targetObjectId,String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        try
+        {
+            AcmFolder folder = folderDao.find(dstFolderId);
+
+            AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
+
+            return copyFile(fileId, folder, container);
+        }
+        catch (AcmCreateObjectFailedException e) {
+            if(log.isErrorEnabled()){
+                log.error("Could not copy file "+e.getMessage(),e);
+            }
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE, fileId,"Could not copy file",e);
+        }
+    }
+
 
     @Override
-    public EcmFile copyFile(Long fileId,Long targetObjectId,String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException {
-
+    public EcmFile copyFile(Long fileId, AcmFolder targetFolder, AcmContainer targetContainer) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
         EcmFile file = getEcmFileDao().find(fileId);
-        AcmFolder folder = folderDao.find(dstFolderId);
 
-        if( file == null || folder == null) {
+        if( file == null || targetFolder == null) {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File or Destination folder not found",null);
         }
         String internalFileName = getFolderAndFilesUtils().createUniqueIdentificator(file.getFileName());
         Map<String,Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
-        props.put(EcmFileConstants.DST_FOLDER_ID, folder.getCmisFolderId());
+        props.put(EcmFileConstants.DST_FOLDER_ID, targetFolder.getCmisFolderId());
         props.put(EcmFileConstants.FILE_NAME, internalFileName);
         EcmFile result;
 
@@ -570,13 +589,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             }
 
 
-            AcmContainer container = getOrCreateContainer(targetObjectType,targetObjectId);
+
             fileCopy.setVersionSeriesId(cmisObject.getVersionSeriesId());
             fileCopy.setFileType(file.getFileType());
             fileCopy.setActiveVersionTag(file.getActiveVersionTag());
             fileCopy.setFileName(file.getFileName());
-            fileCopy.setFolder(folder);
-            fileCopy.setContainer(container);
+            fileCopy.setFolder(targetFolder);
+            fileCopy.setContainer(targetContainer);
             fileCopy.setStatus(file.getStatus());
             fileCopy.setCategory(file.getCategory());
             fileCopy.setFileMimeType(file.getFileMimeType());
@@ -586,11 +605,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             result = getEcmFileDao().save(fileCopy);
             return result;
         } catch ( MuleException e  ) {
-            if(log.isErrorEnabled()){
-                log.error("Could not copy file "+e.getMessage(),e);
-            }
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE,EcmFileConstants.OBJECT_FILE_TYPE,file.getId(),"Could not copy file",e);
-        } catch (AcmCreateObjectFailedException e) {
             if(log.isErrorEnabled()){
                 log.error("Could not copy file "+e.getMessage(),e);
             }
