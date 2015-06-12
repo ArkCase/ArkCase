@@ -192,7 +192,7 @@ Task.Service = {
 
         ,saveDetail: function(nodeType, taskId, details) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.details = details;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -204,7 +204,7 @@ Task.Service = {
         }
         ,saveReworkDetails: function(nodeType, taskId, reworkDetails) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.reworkInstructions = reworkDetails;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -216,7 +216,7 @@ Task.Service = {
         }
         ,saveTitle: function(nodeType, taskId, title) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.title = title;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -228,7 +228,7 @@ Task.Service = {
         }
         ,saveStartDate: function(nodeType, taskId, startDate) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.incidentDate = startDate;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -240,7 +240,7 @@ Task.Service = {
         }
         ,saveAssignee: function(nodeType, taskId, assignee) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.assignee = assignee
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -252,7 +252,7 @@ Task.Service = {
         }
         ,savePercentCompleted: function(nodeType, taskId, percent) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.percentComplete = percent;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -264,7 +264,7 @@ Task.Service = {
         }
         ,savePriority: function(nodeType, taskId, priority) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.priority = priority;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -276,7 +276,7 @@ Task.Service = {
         }
         ,saveDueDate: function(nodeType, taskId, dueDate) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.dueDate = dueDate;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -289,7 +289,7 @@ Task.Service = {
         ,completeTask : function(task) {
             var data;
             var url = App.getContextPath() + this.API_COMPLETE_TASK;
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 data = task;
 
             }
@@ -305,7 +305,7 @@ Task.Service = {
                     if (response.hasError) {
                         Task.Controller.modelCompletedTask(response);
                     } else {
-                        if (Task.Model.interface.validateObjData(response)) {
+                        if (Task.Model.interfaceNavObj.validateObjData(response)) {
                             Task.Controller.modelCompletedTask(response);
                         }
                     }
@@ -320,7 +320,7 @@ Task.Service = {
                     if (response.hasError) {
                         Task.Controller.modelDeletedTask(response);
                     } else {
-                        if (Task.Model.interface.validateObjData(response)) {
+                        if (Task.Model.interfaceNavObj.validateObjData(response)) {
                             Task.Controller.modelDeletedTask(response);
                         }
                     }
@@ -341,7 +341,7 @@ Task.Service = {
                         Task.Controller.modelRetrievedUsers(response);
 
                     } else {
-                        //if (Task.Model.interface.validateParentObjData(response)) {
+                        //if (Task.Model.interfaceNavObj.validateParentObjData(response)) {
                         Task.Controller.modelRetrievedUsers(response);
                         //}
                     }
