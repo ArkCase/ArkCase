@@ -359,8 +359,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if( toBeCopied == null ) {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null, "Folder that need to be copied not found",null);
         }
-        if( dstFolder == null ) {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null, "Destination folder not found",null);
+        if ( dstFolder == null ){
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,null,"Destination folder not found",null);
         }
 
         if ( toBeCopied.getParentFolderId() == null ) {
@@ -423,8 +423,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private AcmFolder copyDir(Folder parentFolder,Folder toBeCopiedFolder,Long targetObjectId,String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException {
 
         Map<String,Object> newFolderProperties = new HashMap<>();
+        AcmFolder toCopyFolder = getFolderDao().findByCmisFolderId(toBeCopiedFolder.getId());
+
+        String uniqueFolderName = getFolderAndFilesUtils().createUniqueFolderName(toCopyFolder.getName());
+
         newFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolder.getId());
-        newFolderProperties.put(AcmFolderConstants.NEW_FOLDER_NAME, toBeCopiedFolder.getName());
+        newFolderProperties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
 
         Folder newFolder;
         AcmFolder copiedFolder = null;
@@ -446,7 +450,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             acmNewFolder.setCmisFolderId(newFolder.getId());
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
             acmNewFolder.setParentFolderId(pFolder.getId());
-            acmNewFolder.setName(newFolder.getName());
+            acmNewFolder.setName(toCopyFolder.getName());
             acmNewFolder.setParentFolderParticipants(pFolder.getParticipants());
             copiedFolder =  getFolderDao().save(acmNewFolder);
 
@@ -538,11 +542,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         newFolder.setName(folderName);
         newFolder.setParentFolderId(folder.getId());
         newFolder.setParentFolderParticipants(folder.getParticipants());
-        log.debug("# of parent folder participants: " + newFolder.getParentFolderParticipants().size());
-        for ( AcmParticipant ap : newFolder.getParentFolderParticipants() )
-        {
-            log.debug("Parent folder participant: " + ap.getParticipantType() + " " + ap.getParticipantLdapId());
-        }
         AcmFolder result;
         try {
              result = getFolderDao().save(newFolder);
@@ -591,7 +590,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     @Override
     public AcmFolder findByNameAndParent(String name, AcmFolder parent) {
-        return getFolderDao().findFolderByNameInTheGivenParentFolder(name,parent.getId());
+        return getFolderDao().findFolderByNameInTheGivenParentFolder(name, parent.getId());
     }
 
     @Override
