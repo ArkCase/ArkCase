@@ -11,5 +11,6 @@ public interface DateFormats {
 	
 	public final String TASK_NAME_DATE_FORMAT = "M/dd/yyyy";
 	public final String TIMESHEET_DATE_FORMAT = "M/dd/yyyy";
+    public final String WORKFLOW_DATE_FORMAT = "M/dd/yyyy";
 	
 }

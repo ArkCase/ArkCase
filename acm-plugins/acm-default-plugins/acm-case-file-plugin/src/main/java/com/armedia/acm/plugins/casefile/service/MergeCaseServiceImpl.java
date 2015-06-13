@@ -69,14 +69,16 @@ public class MergeCaseServiceImpl implements MergeCaseService {
         childObjectSource.setAssociationType("REFERENCE");
         childObjectSource.setCategory("MERGED_TO");
         childObjectSource.setTargetId(target.getId());
-        childObjectSource.setTargetType(source.getObjectType());
+        childObjectSource.setTargetType(target.getObjectType());
+        childObjectSource.setTargetName(target.getCaseNumber());
         source.addChildObject(childObjectSource);
 
         ObjectAssociation childObjectTarget = new ObjectAssociation();
         childObjectTarget.setAssociationType("REFERENCE");
         childObjectTarget.setCategory("MERGED_FROM");
         childObjectTarget.setTargetId(source.getId());
-        childObjectTarget.setTargetType(target.getObjectType());
+        childObjectTarget.setTargetType(source.getObjectType());
+        childObjectTarget.setTargetName(source.getCaseNumber());
         target.addChildObject(childObjectTarget);
 
         source.setStatus("CLOSED");
