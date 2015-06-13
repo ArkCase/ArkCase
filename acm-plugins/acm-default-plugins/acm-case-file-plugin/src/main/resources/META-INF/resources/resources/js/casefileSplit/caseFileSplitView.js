@@ -515,10 +515,9 @@ CaseFileSplit.View = CaseFileSplit.View || {
     }
     ,Summary:{
         create: function() {
-            this.$btnSplitCase          = $("#btnSplitCase");
-            this.$btnSplitCase.on("click", function(e){CaseFileSplit.View.Summary.onClickBtnSplitCase(e,this);});
+            this.$btnSplitCase = $("#btnSplitCase").on("click", function(e){CaseFileSplit.View.Summary.onClickBtnSplitCase(e,this);});
 
-            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_SPLIT_CASE_FILE             ,this.onModelSplitCaseFile);
+            Acm.Dispatcher.addEventListener(CaseFileSplit.Controller.MODEL_SPLIT_CASE_FILE ,this.onModelSplitCaseFile);
         }
         ,onInitialized: function() {
         }
@@ -535,8 +534,11 @@ CaseFileSplit.View = CaseFileSplit.View || {
             }
             else{
                 if(CaseFileSplit.Model.Detail.validateCaseFile(splitCaseFile)){
-                    var url = "/plugin/casefile/" + Acm.goodValue(splitCaseFile.id);
-                    App.View.gotoPage(url);
+                    //var url = "/plugin/casefile/" + Acm.goodValue(splitCaseFile.id);
+                    //App.View.gotoPage(url);
+                    var splitInfo = new Acm.Model.LocalData("AcmSplitTmp");
+                    splitInfo.set(Acm.goodValue(splitCaseFile.id));
+                    window.close();
                 }
             }
         }
