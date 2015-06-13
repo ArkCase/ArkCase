@@ -556,6 +556,10 @@ Admin.View = Admin.View || {
                         title: 'Auth User Password'
                         ,visibility: 'hidden'
                     }
+                    ,'ldapConfig.userSearchBase': {
+                        title: 'User Search Base'
+                        ,visibility: 'hidden'
+                    }
                     ,'ldapConfig.groupSearchBase': {
                         title: 'Group Search Base'
                         ,visibility: 'hidden'
@@ -1149,8 +1153,8 @@ Admin.View = Admin.View || {
         }
 
         ,clearPrivilegesLists: function(){
-            this.$selectPrivileges.find('option').remove();
-            this.$selectAvailablePrivileges.find('option').remove();
+            this.$selectPrivileges.remove('option');
+            this.$selectAvailablePrivileges.remove('option');
         }
 
         ,saveRolePrivileges: function() {
@@ -1509,53 +1513,104 @@ Admin.View = Admin.View || {
 
     ,WorkflowConfiguration:{
         create: function () {
-            if (Admin.View.WorkflowConfiguration.History.create)        	{Admin.View.WorkflowConfiguration.History.create();}
-
             this.$divWorkflowConfiguration = $("#divWorkflowConfiguration");
             this.createJTableWorkflowConfiguration(this.$divWorkflowConfiguration);
+            this.$BPMNHistory = $("#BPMNHistory");
+            this.$btnMakeProcessActive = $("#makeProcessActive");
+            this.$btnMakeProcessActive.on("click", function(e) {Admin.View.WorkflowConfiguration.onMakeActiveProcess(e, this);})
 
             this.$modalUploadBPMN = $("#uploadBPMNModal");
             this.$formUploadBPMN = $("#formUploadBPMN");
             this.$filesSelection = $("#filesSelection");
             this.$btnUploadBPMNConfirm = $("#btnUploadBPMNConfirm");
             this.$btnUploadBPMNConfirm.on("click", function(e) {Admin.View.WorkflowConfiguration.onSubmitUploadBPMN(e, this);});
+
+
+
+            // Modal window shoe event handler
+            this.$BPMNHistory.on("show.bs.modal", Admin.View.WorkflowConfiguration.onHistoryDialogShow)
         }
         , onInitialized: function () {
             if (Admin.View.WorkflowConfiguration.History.onInitialized)        	{Admin.View.WorkflowConfiguration.History.onInitialized();}
         }
+
+        ,onHistoryDialogShow: function(e) {
+            // Get key and version from A tag attributes
+            var key = $(e.relatedTarget).data('key');
+            var version = $(e.relatedTarget).data('version');
+
+            if (Admin.View.WorkflowConfiguration.History.create)        	{Admin.View.WorkflowConfiguration.History.create(key, version);}
+        }
+
+        ,onMakeActiveProcess: function(e){
+            // Get selected process
+            var $selectedCheckbox = $('input[name="activeBPMN"]:checked', Admin.View.WorkflowConfiguration.History.$divBPMNHistory);
+
+            if ($selectedCheckbox.length > 0) {
+                var key = $selectedCheckbox.data('key');
+                var version = $selectedCheckbox.data('version');
+                Admin.Service.WorkflowConfiguration.makeActive(key, version)
+                    .done (function(){
+                    Admin.View.WorkflowConfiguration.$BPMNHistory.modal('hide');
+
+                    // Update Workflows table
+                    Admin.View.WorkflowConfiguration.$divWorkflowConfiguration.jtable('load');
+                })
+                    .fail (function(){
+                    Acm.Dialog.error('Can\'t make this process active');
+                });
+            } else {
+                Acm.Dialog.error('There are no selected processes');
+            }
+        }
+
         ,onSubmitUploadBPMN: function(event, ctrl) {
             event.preventDefault();
             var count = Admin.View.WorkflowConfiguration.$filesSelection[0].files.length;
             if(count > 0){
                 var fd = new FormData();
-                for(var i = 0; i < count; i++ ){
-                    fd.append("files[]", Admin.View.WorkflowConfiguration.$filesSelection[0].files[i]);
-                }
+                fd.append('file', Admin.View.WorkflowConfiguration.$filesSelection[0].files[0])
 
-                //todo: fire an event here with fd as content once service is available
+                Admin.Service.WorkflowConfiguration.uploadWorkflowFile(fd)
+                    .done(function(){
+                        Admin.View.WorkflowConfiguration.$formUploadBPMN[0].reset();
+                        Admin.View.WorkflowConfiguration.$modalUploadBPMN.modal('hide');
+                    })
+                    .fail(function(){
+                        Acm.Dialog.error('Can\'t upload new workflow file');
+                    });
 
-                Admin.View.WorkflowConfiguration.$formUploadBPMN[0].reset();
-                Admin.View.WorkflowConfiguration.$modalUploadBPMN.modal('hide');
             }
         }
         ,History: {
-            create: function () {
+            create: function (key, version) {
                 this.$divBPMNHistory = $("#divBPMNHistory");
-                this.createJTableBPMNHistory(this.$divBPMNHistory);
+                this.createJTableBPMNHistory(this.$divBPMNHistory, key, version);
             }
             , onInitialized: function () {
             }
-            ,createJTableBPMNHistory: function ($s) {
+            ,createJTableBPMNHistory: function ($s, key, version) {
                 $s.jtable({
                     actions: {
-                        listAction: function (postData, jtParams) {
-                            var rc = AcmEx.Object.jTableGetEmptyRecords();
-                            //show some dummy records for now
-                            rc.Records = [
-                                 {"id": 1, "title": "BPMN", "description": "BPMN description", "author": "ArkCase", "modified": "02/12/2015"}
-                                ,{"id": 2, "title": "BPMN_1", "description": "BPMN_1 description", "author": "ArkCase", "modified": "02/13/2015"}
-                            ];
-                            return rc;
+                        listAction: function(postData, jtParams) {
+                            return $.Deferred(function ($dfd){
+                                var rc = {};
+                                Admin.Service.WorkflowConfiguration.retrieveHistory(postData.key, postData.version)
+                                    .done(function(data) {
+                                        rc = {
+                                            Result: 'OK',
+                                            Records: data
+                                        }
+                                        $dfd.resolve(rc);
+                                    })
+                                    .fail(function(){
+                                        rc = {
+                                            Result: 'OK',
+                                            Records: []
+                                        }
+                                        $dfd.resolve(rc);
+                                    });
+                            });
                         }
                     }
                     , fields: {
@@ -1565,17 +1620,35 @@ Admin.View = Admin.View || {
                             , list: false
                             , create: false
                             , edit: false
+                        }, key: {
+                            title: 'Key'
+                            , list: false
+                            , create: false
+                            , edit: false
+
+                        }, version: {
+                            title: 'Version'
+                            , list: false
+                            , create: false
+                            , edit: false
+                        }, active: {
+                            title: 'Active'
+                            , list: false
+                            , create: false
+                            , edit: false
+
                         }, actions: {
                             title: 'Active'
                             , width: '3%'
                             , edit: false
                             , display: function (data) {
                                 if (data.record) {
+                                    var isActive = data.record.active ? 'checked': '';
                                     // custom action.
-                                    return '<input type="radio" name="activeBPMN" checked/>';
+                                    return '<input type="radio" '+ isActive +' name="activeBPMN" data-key="' +  data.record.key + '" data-version="' + data.record.version + '" />';
                                 }
                             }
-                        }, title: {
+                        }, name: {
                             title: 'Business Process'
                             , width: '25%'
                         }, description: {
@@ -1586,14 +1659,17 @@ Admin.View = Admin.View || {
                             title: 'Modified'
                             , width: '15%'
                             , edit: false
-                        }, author: {
+                            , display: function(data){
+                                return Acm.getDateFromDatetime(data.record.modified)
+                            }
+                        }, creator: {
                             title: 'Author'
                             , width: '15%'
                             , edit: false
                         }
                     }
                 });
-                $s.jtable('load');
+                $s.jtable('load', {key: key, version: version});
             }
 
         }
@@ -1601,13 +1677,25 @@ Admin.View = Admin.View || {
             $s.jtable({
                 title:'Workflow Configuration'
                 , actions: {
-                    listAction: function (postData, jtParams) {
-                        var rc = AcmEx.Object.jTableGetEmptyRecords();
-                        rc.Records = [
-                            {"id": 1, "title": "BPMN", "description": "BPMN description", "author": "ArkCase", "modified": "02/12/2015"}
-                            ,{"id": 2, "title": "BPMN_1", "description": "BPMN_1 description", "author": "ArkCase", "modified": "02/13/2015"}
-                        ];
-                        return rc;
+                    listAction: function(postData, jtParams) {
+                        return $.Deferred(function ($dfd){
+                            var rc = {};
+                            Admin.Service.WorkflowConfiguration.retrieveWorkflows()
+                                .done(function(data) {
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: data
+                                    }
+                                    $dfd.resolve(rc);
+                                })
+                                .fail(function(){
+                                    rc = {
+                                        Result: 'OK',
+                                        Records: []
+                                    }
+                                    $dfd.resolve(rc);
+                                });
+                        });
                     }
                 }
                 , fields: {
@@ -1617,7 +1705,18 @@ Admin.View = Admin.View || {
                         , list: false
                         , create: false
                         , edit: false
-                    }, title: {
+                    }, key: {
+                        title: 'Key'
+                        , list: false
+                        , create: false
+                        , edit: false
+
+                    }, version: {
+                        title: 'Version'
+                        , list: false
+                        , create: false
+                        , edit: false
+                    }, name: {
                         title: 'Business Process'
                         , width: '20%'
                     }, description: {
@@ -1628,7 +1727,10 @@ Admin.View = Admin.View || {
                         title: 'Modified'
                         , width: '15%'
                         , edit: false
-                    }, author: {
+                        , display: function(data){
+                            return Acm.getDateFromDatetime(data.record.modified)
+                        }
+                    }, creator: {
                         title: 'Author'
                         , width: '15%'
                         , edit: false
@@ -1638,10 +1740,10 @@ Admin.View = Admin.View || {
                         , edit: false
                         , display: function (data) {
                             if (data.record) {
-                                // custom action.
-                                return '<a href="#" class="active"><i class="fa fa-download text-active"> Download </i></a>'
+                                var downloadLink = Admin.Service.WorkflowConfiguration.getFileLink(data.record.key, data.record.version);
+                                return '<a href="' + downloadLink + '" target="_blank" class="active"><i class="fa fa-download text-active"> Download </i></a>'
                                     + ' | <a href="#" class="active" data-toggle="modal" data-target="#uploadBPMNModal"><i class="fa fa-upload text-active"> Replace File </i></a>'
-                                    + ' | <a href="#" class="active"   data-toggle="modal" data-target="#BPMNHistory"><i class="fa fa-retweet text-active"> Version History </i></a>';
+                                    + ' | <a href="#" class="active"   data-toggle="modal" data-target="#BPMNHistory" data-key="' + data.record.key + '" data-version="' + data.record.version + '"><i class="fa fa-retweet text-active"> Version History </i></a>';
                             }
                         }
                     }

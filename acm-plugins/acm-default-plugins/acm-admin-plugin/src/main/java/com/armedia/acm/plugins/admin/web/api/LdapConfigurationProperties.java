@@ -10,6 +10,7 @@ public class LdapConfigurationProperties {
     static public String LDAP_PROP_DIR_NAME = "ldapConfig.directoryName";
     static public String LDAP_PROP_AUTH_USER_DN = "ldapConfig.authUserDn";
     static public String LDAP_PROP_AUTH_USER_PASSWORD = "ldapConfig.authUserPassword";
+    static public String LDAP_PROP_USER_SEARCH_BASE = "ldapConfig.userSearchBase";
     static public String LDAP_PROP_GROUP_SEARCH_BASE = "ldapConfig.groupSearchBase";
     static public String LDAP_PROP_GROUP_SEARCH_BASE_OU = "ldapConfig.groupSearchBaseOU";
     static public String LDAP_PROP_LDAP_URL = "ldapConfig.ldapUrl";
