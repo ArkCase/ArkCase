@@ -47,6 +47,13 @@
                     <property name="url" value="/api/{version}/service/notification/email"/>
                     <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
                 </bean>
+                
+                <bean id="acmPopUpNotificationsUrlPrivilege"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/notification/{user}/popup"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
