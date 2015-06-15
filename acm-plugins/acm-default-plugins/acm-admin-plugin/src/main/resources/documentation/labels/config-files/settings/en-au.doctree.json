@@ -36,7 +36,7 @@
             ,"defaultValue": "Error occurred when copying folder "
             ,"description": ""
         }
-        ,"upload-file": {"value": "Error occurred when uploading files "
+        ,"upload-files": {"value": "Error occurred when uploading files "
             ,"defaultValue": "Error occurred when uploading files "
             ,"description": ""
         }
@@ -70,43 +70,43 @@
         "title-separator": {"value": "----"
             ,"defaultValue": "----"
             ,"description": ""
-        }
+            }
         ,"title-new-folder": {"value": "New Folder <kbd>Ctrl+N</kbd>"
             ,"defaultValue": "New Folder <kbd>Ctrl+N</kbd>"
             ,"description": ""
-        }
+            }
         ,"title-new-file": {"value": "New Document"
             ,"defaultValue": "New Document"
             ,"description": ""
-        }
+            }
         ,"title-rename": {"value": "Rename <kbd>[F2]</kbd>"
             ,"defaultValue": "Rename <kbd>[F2]</kbd>"
             ,"description": ""
-        }
+            }
         ,"title-cut": {"value": "Cut <kbd>Ctrl+X</kbd>"
             ,"defaultValue": "Cut <kbd>Ctrl+X</kbd>"
             ,"description": ""
-        }
+            }
         ,"title-copy": {"value": "Copy <kbd>Ctrl+C</kbd>"
             ,"defaultValue": "Copy <kbd>Ctrl+C</kbd>"
             ,"description": ""
-        }
+            }
         ,"title-paste": {"value": "Paste <kbd>Ctrl+V</kbd>"
             ,"defaultValue": "Paste <kbd>Ctrl+V</kbd>"
             ,"description": ""
-        }
+            }
         ,"title-delete": {"value": "Delete <kbd>Ctrl+D</kbd>"
             ,"defaultValue": "Delete <kbd>Ctrl+D</kbd>"
             ,"description": ""
-        }
+            }
         ,"title-open": {"value": "Open"
             ,"defaultValue": "Open"
             ,"description": ""
-        }
+            }
         ,"title-edit": {"value": "Edit"
             ,"defaultValue": "Edit"
             ,"description": ""
-        }
+            }
         ,"title-download": {"value": "Download"
             ,"defaultValue": "Download"
             ,"description": ""
