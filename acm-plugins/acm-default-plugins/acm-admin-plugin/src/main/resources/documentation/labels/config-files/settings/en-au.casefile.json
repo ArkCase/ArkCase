@@ -475,6 +475,11 @@
                     "description": "",
                     "value": "Add Device"
                 }},
+                "table-title": {
+                    "defaultValue": "Security Tags",
+                    "description": "",
+                    "value": "Security Tags"
+                },
                 "addresses": {
                     "msg": {"add-new-record": {
                         "defaultValue": "Add Location",

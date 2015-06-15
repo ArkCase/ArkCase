@@ -898,11 +898,6 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Controller.modelRetrievedUsers(users);
             }
         }
-        
-        ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS:     "Organizations"
-        ,PERSON_SUBTABLE_TITLE_ADDRESSES:         "Locations"
-        ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
-        ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
         ,getAssignees: function(caseFileId) {
             return this._assignees.get(caseFileId);

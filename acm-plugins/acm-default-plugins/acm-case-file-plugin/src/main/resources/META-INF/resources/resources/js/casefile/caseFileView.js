@@ -1290,19 +1290,19 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, $.t("casefile:people.table.security-tags.table-title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS
+                    title: $.t("casefile:people.table.security-tags.table-title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Device'
+                        addNewRecord: $.t("casefile:people.table.security-tags.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1446,14 +1446,14 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='"+ $.t("casefile:people.table.security-tags.organizations.table.title") +"'><i class='fa fa-book'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, $.t("casefile:people.table.security-tags.organizations.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                    title: $.t("casefile:people.table.security-tags.organizations.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1600,14 +1600,14 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.addresses.table.title") + "'><i class='fa fa-map-marker'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, $.t("casefile:people.table.security-tags.addresses.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES
+                    title: $.t("casefile:people.table.security-tags.addresses.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1813,19 +1813,19 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.aliases.table.title") + "'><i class='fa fa-users'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, $.t("casefile:people.table.security-tags.aliases.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES
+                    title: $.t("casefile:people.table.security-tags.aliases.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Alias'
+                        addNewRecord: $.t("casefile:people.table.security-tags.aliases.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
