@@ -46,6 +46,11 @@ public interface NotificationConstants {
     public static final String STATE_NOT_SENT = "NOT_SENT";	
     
     /**
+     * Notification message state when popup is shown on the screen that shows the notification 
+     */
+    public static final String STATE_READ = "READ";
+    
+    /**
      * The property key to use in the properties file that keeps email host address
      */
     public static final String EMAIL_HOST_KEY = "notification.user.email.host";
@@ -85,4 +90,6 @@ public interface NotificationConstants {
      * Notification message action empty (default one)
      */
     public static final String ACTION_DEFAULT = "";
+    
+    public static final String TYPE_POPUP = "popup";
 }
