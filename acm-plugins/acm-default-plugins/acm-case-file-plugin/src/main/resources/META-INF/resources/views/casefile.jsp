@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title data-i18n="casefile:page-title">Case Files | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">casefile,search,subscription,doctree</span>
+        <span itemprop="resourceNamespace">casefile,search,subscription,doctree,common</span>
         <span itemprop="objType">CASE_FILE</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>

@@ -1448,9 +1448,11 @@ CaseFile.Service = {
                                 var task = {};
                                 task.id = doc.object_id_s;
                                 task.title = Acm.goodValue(response.docs[i].name); //title_parseable ?? //title_t ?
-                                task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                //task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                task.created = (Acm.getDateFromDatetime2(doc.create_tdt,$.t("common:date.short")));
                                 task.priority = Acm.goodValue(doc.priority_s);
-                                task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                //task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                task.dueDate = (Acm.getDateFromDatetime2(doc.due_tdt,$.t("common:date.short")));
                                 task.status = Acm.goodValue(doc.status_s);
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 taskList.push(task);
