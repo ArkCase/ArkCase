@@ -28,6 +28,7 @@
 <section class="vbox">
     <%--<%@include file="/WEB-INF/tagf/topbar.tagf"%>--%>
     <%@include file="/resources/include/topbar.jspf" %>
+    <%@include file="/resources/include/dlgAsnPopUp.jspf" %>
 
     <section>
         <section class="hbox stretch">
