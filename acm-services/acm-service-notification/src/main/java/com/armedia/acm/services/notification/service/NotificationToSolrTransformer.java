@@ -62,6 +62,8 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         solr.setModifier_lcs(in.getModifier());
         
         solr.setStatus_lcs(in.getStatus());
+        
+        solr.setType_lcs(in.getType());
 		
 		return solr;
 	}
@@ -89,6 +91,8 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 		solr.setData_s(in.getData());
 
         solr.setStatus_s(in.getStatus());
+        
+        solr.setType_s(in.getType());
 
 		return solr;
 	}
