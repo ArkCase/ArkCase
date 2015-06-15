@@ -1119,14 +1119,14 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.contact-methods.table.title") + "'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, $.t("casefile:people.table.contact-methods.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS
+                    title: $.t("casefile:people.table.contact-methods.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)

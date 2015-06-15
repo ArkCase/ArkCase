@@ -899,7 +899,6 @@ CaseFile.Model = CaseFile.Model || {
             }
         }
         
-        ,PERSON_SUBTABLE_TITLE_CONTACT_METHODS:   "Communication Devices"
         ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS:     "Organizations"
         ,PERSON_SUBTABLE_TITLE_ADDRESSES:         "Locations"
         ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
