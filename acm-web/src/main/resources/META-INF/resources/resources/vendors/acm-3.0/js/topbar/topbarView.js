@@ -129,11 +129,13 @@ Topbar.View = {
             this.$lnkAsn = $("ul.nav-user a[data-toggle='dropdown']");
             this.$lnkAsn.on("click", function(e) {Topbar.View.Asn.onClickLnkAsn(e, this);});
             this.$sectionAsn = this.$divAsnList.closest("section.dropdown-menu");
-
+            this.$asnPopUp = $("#asnPopUp");
+            
             // AFDP-931 we don't want the notification popups right now.
             // Modification - As per AFDP-905, we want 5 recent notifications to show up when
             // user clicks the notification icon, but no popups should appear
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST        ,this.onModelRetrievedAsnList);
+            Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_RETRIEVED_ASN_LIST_BY_TYPE,this.onModelRetrievedAsnListByType);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_SAVED_ASN                 ,this.onModelSavedAsn);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_ACTION        ,this.onModelUpdatedAsnAction);
             Acm.Dispatcher.addEventListener(Topbar.Controller.Asn.MODEL_UPDATED_ASN_STATUS        ,this.onModelUpdatedAsnStatus);
@@ -187,6 +189,37 @@ Topbar.View = {
                 Topbar.Model.Flash.add("Failed to connect to server");
             } else {
                 Topbar.View.Asn.showNewAsn(asnList);
+            }
+        }
+        ,onModelRetrievedAsnListByType: function(asnList) {
+            if (Acm.isArray(asnList)) {
+            	for (var i = 0; i < asnList.length; i++) {
+            		// Here we can add multiple types, like 'popup', 'error' ... etc
+            		switch(asnList[i].type_lcs) {
+	            		case 'popup':
+	            			var body = '';
+	            			
+	            			if (asnList[i].description_parseable) {
+	            				body += asnList[i].description_parseable;
+	            			}
+	            			
+	            			if (asnList[i].data_lcs) {
+	            				var data = JSON.parse(asnList[i].data_lcs);
+	            				if (data.usr) {
+	            					var dot = '';
+		            				if (!Acm.isEmpty(body)) {
+		            					dot = '. ';
+		            				}
+	            					body += dot + 'Click <a href="' + App.getContextPath() + data.usr  + '">here</a> to view.';
+	            				}
+	            			}
+	            			
+	            			$('#asnPopUpTitle').html(asnList[i].title_parseable);
+	            			$('#asnPopUpBody').html(body);
+	            			Acm.Dialog.modal(Topbar.View.Asn.$asnPopUp);
+	            			break;
+            		}
+            	}
             }
         }
         ,onModelSavedAsn: function(asn) {

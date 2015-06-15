@@ -193,6 +193,7 @@ public class EbriefService extends FrevvoFormAbstractService {
 			notification.setParentType(caseFile.getObjectType());
 			notification.setParentName(caseFile.getCaseNumber());
 			notification.setParentTitle(caseFile.getTitle());
+			notification.setType(NotificationConstants.TYPE_POPUP);
 	
 	        getNotificationDao().save(notification);
 	        
