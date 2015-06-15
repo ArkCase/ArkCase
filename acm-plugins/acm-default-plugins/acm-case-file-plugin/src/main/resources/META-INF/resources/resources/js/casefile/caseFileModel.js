@@ -947,8 +947,10 @@ CaseFile.Model = CaseFile.Model || {
             return this._personTitles;
         }
 
-        ,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
-            'Email','Instant messenger', 'Social media','Website','Blog']
+        ,_contactMethodTypes : ['Home phone', 'Work phone', 'Mobile', 'Email','Facebook']
+
+        /*,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+            'Email','Instant messenger', 'Social media','Website','Blog'] */
         ,getContactMethodTypes : function() {
             return this._contactMethodTypes;
         }
