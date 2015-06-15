@@ -52,7 +52,7 @@ Topbar.Service = {
         //,API_RETRIEVE_ASN_LIST_       : "/api/latest/plugin/notification/"
         //for now we need 5 recent notifications in descending order by date
         ,API_RETRIEVE_ASN_LIST_       : "/api/v1/plugin/searchNotifications/advanced"
-        ,API_RETRIEVE_ASN_LIST_BY_TYPE: "/api/latest/plugin/notification/type"
+        ,API_RETRIEVE_ASN_LIST_BY_TYPE: "/api/latest/plugin/notification"
         ,API_SAVE_ASN                 : "/api/latest/plugin/notification"
         ,API_DELETE_ASN_              : "/api/latest/plugin/notification/"
 
@@ -78,20 +78,19 @@ Topbar.Service = {
             });
         }
         
-        ,retrieveAsnListByType: function(user,n, type) {
-            var url = App.getContextPath() + this.API_RETRIEVE_ASN_LIST_BY_TYPE + '/' + type;
-            url+= "?owner=" + App.getUserName();
-            url+= "&n=" + n;
+        ,retrievePopUpAsnList: function(user, n) {
+            var url = App.getContextPath() + this.API_RETRIEVE_ASN_LIST_BY_TYPE + '/' + user + '/popup';
+            url+= "?n=" + n;
             url+= "&s=" + Topbar.Model.Asn.SORT_FIELD + " " + Topbar.Model.Asn.SORT_ORDER;
             Acm.Service.call({type: "GET"
                 ,url: url
                 ,callback: function(response) {
                     if (response.hasError) {
-                        Topbar.Controller.Asn.modelRetrievedAsnListByType(response);
+                        Topbar.Controller.Asn.onModelRetrievedPopUpAsnList(response);
                     } else {
                         if (Acm.Validator.validateSolrData(response)) {
                             var asnList = response.response.docs;
-                            Topbar.Controller.Asn.modelRetrievedAsnListByType(asnList);
+                            Topbar.Controller.Asn.onModelRetrievedPopUpAsnList(asnList);
                             return true;
                         }
                     }

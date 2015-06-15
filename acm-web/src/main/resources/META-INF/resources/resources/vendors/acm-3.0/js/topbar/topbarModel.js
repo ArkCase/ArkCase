@@ -85,7 +85,7 @@ Topbar.Model = {
             Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
             
             // Get popup ASN without waiting for the timer when the page is loaded
-            Topbar.Service.Asn.retrieveAsnListByType(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+            Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
         }
 
         ,_pullInterval: 16
@@ -100,7 +100,7 @@ Topbar.Model = {
                     }
 
                     Topbar.Service.Asn.retrieveAsnList(App.getUserName(),Topbar.Model.Asn._rows);
-                    Topbar.Service.Asn.retrieveAsnListByType(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+                    Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows);
                     return true;
                 }
             );

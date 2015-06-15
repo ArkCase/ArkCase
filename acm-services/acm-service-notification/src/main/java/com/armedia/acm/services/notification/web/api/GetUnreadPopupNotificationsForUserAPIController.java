@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/notification", "/api/latest/plugin/notification" })
-public class ListNotificationsByTypeAPIController {
+public class GetUnreadPopupNotificationsForUserAPIController {
 
     private NotificationDao notificationDao;
     private ExecuteSolrQuery executeSolrQuery;
@@ -30,30 +30,23 @@ public class ListNotificationsByTypeAPIController {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(
-            value = {"/type/{type}"},
+            value = {"/{user}/popup"},
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchAdvancedObjectByType(
-    		@PathVariable(value = "type") String type,
+    		@PathVariable(value = "user") String user,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            @RequestParam(value = "owner", required = false, defaultValue = "") String owner,
             Authentication authentication,
             HttpSession httpSession
     ) throws MuleException {
-        String query = "object_type_s:" + "NOTIFICATION";
-
-        if (type != null) {
-            query += " AND type_lcs:" + type;
-        }
+        String query = "object_type_s:" + "NOTIFICATION AND type_lcs:popup AND -state_lcs:" + NotificationConstants.STATE_READ;
         
-        if (owner != null) {
-            query += " AND owner_lcs:" + owner;
+        if (user != null) {
+            query += " AND owner_lcs:" + user;
         }
-        
-        query += " AND -state_lcs:" + NotificationConstants.STATE_READ;
 
         if (log.isDebugEnabled()) {
             log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");

@@ -45,7 +45,7 @@ Topbar.Controller = {
         }
 
         ,MODEL_RETRIEVED_ASN_LIST                 : "topbar-model-retrieved-asn-list"                    //param: asnList
-        ,MODEL_RETRIEVED_ASN_LIST_BY_TYPE         : "topbar-model-retrieved-asn-list-by-type"            //param: asnList
+        ,MODEL_RETRIEVED_POPUP_ASN_LIST           : "topbar-model-retrieved-popup-asn-list"              //param: asnList
         ,MODEL_SAVED_ASN                          : "topbar-model-saved-asn"                             //param: asn
         ,MODEL_UPDATED_ASN_ACTION                 : "topbar-model-updated-asn-action"                    //param: asnId, action
         ,MODEL_UPDATED_ASN_STATUS                 : "topbar-model-updated-asn-status"                    //param: asnId, status
@@ -59,8 +59,8 @@ Topbar.Controller = {
         ,modelRetrievedAsnList: function(asnList) {
             Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ASN_LIST, asnList);
         }
-        ,modelRetrievedAsnListByType: function(asnList) {
-            Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_ASN_LIST_BY_TYPE, asnList);
+        ,onModelRetrievedPopUpAsnList: function(asnList) {
+            Acm.Dispatcher.fireEvent(this.MODEL_RETRIEVED_POPUP_ASN_LIST, asnList);
         }
         ,modelSavedAsn: function(asn) {
             Acm.Dispatcher.fireEvent(this.MODEL_SAVED_ASN, asn);
