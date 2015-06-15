@@ -375,11 +375,11 @@ CaseFile.View = CaseFile.View || {
                     ;
                 }
             });
-    //            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
-    //                success: function(response, newValue) {
-    //                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.getActiveCaseFileId(), newValue);
-    //                }
-    //            });
+            //            AcmEx.Object.XEditable.useEditableDate(this.$lnkIncidentDate, {
+            //                success: function(response, newValue) {
+            //                    CaseFile.Controller.viewChangedIncidentDate(CaseFile.View.getActiveCaseFileId(), newValue);
+            //                }
+            //            });
             AcmEx.Object.XEditable.useEditableDate(this.$lnkDueDate, {
                 success: function(response, newValue) {
                     newValue = AcmEx.Object.XEditable.xDateToDatetime(newValue);
@@ -587,48 +587,40 @@ CaseFile.View = CaseFile.View || {
             this.$dlgChangeCaseStatus      = $("#changeCaseStatus");
             //this.$dlgConsolidateCase       = $("#consolidateCase");
             //this.$edtConsolidateCase       = $("#edtConsolidateCase");
-            this.$btnEditCaseFile    	   = $("#btnEditCaseFile");
-            this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus");
-            this.$btnSplitCase             = $("#btnSplitCase");
-            this.$btnMergeCase       = $("#btnMergeCase");
-            this.$btnConsolidateCase       = $("#btnConsolidateCase");
-            this.$btnReinvestigateCaseFile = $("#btnReinvestigate");
-            this.$btnEditCaseFile   	  .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
-            this.$btnChangeCaseStatus     .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
-            //this.$btnConsolidateCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
-            this.$btnReinvestigateCaseFile.on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
-            this.$btnSplitCase            .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
-            this.$btnMergeCase      .on("click", function(e) {CaseFile.View.Action.onClickBtnMergeCase(e, this);});
-
-            this.$chkRestrict = $("#restrict");
-            this.$chkRestrict.on("click", function(e) {CaseFile.View.Action.onClickRestrictCheckbox(e, this);});
+            //this.$btnConsolidateCase       = $("#btnConsolidateCase")   .on("click", function(e) {CaseFile.View.Action.onClickBtnConsolidateCase(e, this);});
+            this.$btnEditCaseFile    	   = $("#btnEditCaseFile")      .on("click", function(e) {CaseFile.View.Action.onClickBtnEditCaseFile(e, this);});
+            this.$btnChangeCaseStatus      = $("#btnChangeCaseStatus")  .on("click", function(e) {CaseFile.View.Action.onClickBtnChangeCaseStatus(e, this);});
+            this.$btnSplitCase             = $("#btnSplitCase")         .on("click", function(e) {CaseFile.View.Action.onClickBtnSplitCase(e, this);});
+            this.$btnMergeCase             = $("#btnMergeCase")         .on("click", function(e) {CaseFile.View.Action.onClickBtnMergeCase(e, this);});;
+            this.$btnReinvestigateCaseFile = $("#btnReinvestigate")     .on("click", function(e) {CaseFile.View.Action.onClickBtnReinvestigateCaseFile(e, this);});
+            this.$chkRestrict              = $("#restrict")             .on("click", function(e) {CaseFile.View.Action.onClickRestrictCheckbox(e, this);});
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT         ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES           , this.onModelMergedCaseFiles);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_MERGED_CASE_FILES      ,this.onModelMergedCaseFiles);
 
         }
         ,onInitialized: function() {
         }
 
         ,onClickBtnEditCaseFile: function(event, ctrl) {
-        	var urlEditCaseFileForm = CaseFile.View.MicroData.formUrls.urlEditCaseFileForm;
-        	var caseFileId = CaseFile.View.getActiveCaseFileId();
+            var urlEditCaseFileForm = CaseFile.View.MicroData.formUrls.urlEditCaseFileForm;
+            var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlEditCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var containerId = c.container.id;
+                var containerId = c.container.id;
                 var folderId = c.container.attachmentFolder.id;
 
-            	urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
-            	urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
-            	Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
+                urlEditCaseFileForm = urlEditCaseFileForm.replace("/embed?", "/popupform?");
+                urlEditCaseFileForm = urlEditCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'edit',containerId:'" + containerId + "',folderId:'" + folderId + "',");
+                Acm.Dialog.openWindow(urlEditCaseFileForm, "", 1060, 700
                     ,function() {
                         CaseFile.Controller.viewChangedCaseFile(caseFileId);
                     }
                 );
             }
         }
-        
+
         ,onClickBtnChangeCaseStatus: function() {
             CaseFile.View.Action.showDlgChangeCaseStatus(function(event, ctrl){
                 var urlChangeCaseStatusForm = CaseFile.View.MicroData.formUrls.urlChangeCaseStatusForm;
@@ -650,7 +642,22 @@ CaseFile.View = CaseFile.View || {
         }
         ,onClickBtnSplitCase: function(event,ctrl){
             var url = App.getContextPath() + "/plugin/casefile/split/" + CaseFile.View.getActiveCaseFileId();
-            window.open(url);
+//            window.open(url);
+            Acm.Dialog.openWindow2({url: url}).done(function() {
+                var splitInfo = new Acm.Model.LocalData("AcmSplitTmp");
+                var splitId = splitInfo.get();
+                if (Acm.isNotEmpty(splitId)) {
+                    var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
+                    var key = CaseFile.Model.DOC_TYPE_CASE_FILE + ObjNav.Model.Tree.Key.TYPE_ID_SEPARATOR + splitId;
+                    treeInfo.key = key;
+                    splitInfo.set(null);
+
+                    var pageId = ObjNav.Model.Tree.Config.getPageId();
+                    ObjNav.Model.List.cachePage.remove(pageId);
+
+                    ObjNav.Model.retrieveData(treeInfo);
+                }
+            });
         }
 
         ,onClickBtnMergeCase: function() {
@@ -690,26 +697,26 @@ CaseFile.View = CaseFile.View || {
 //            });
 //        }
         ,onClickBtnReinvestigateCaseFile: function() {
-        	var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
-        	var caseFileId = CaseFile.View.getActiveCaseFileId();
+            var urlReinvestigateCaseFileForm = CaseFile.View.MicroData.formUrls.urlReinvestigateCaseFileForm;
+            var caseFileId = CaseFile.View.getActiveCaseFileId();
             var c = CaseFile.View.getActiveCaseFile();
             if (Acm.isNotEmpty(urlReinvestigateCaseFileForm) && Acm.isNotEmpty(c)) {
-            	var containerId = c.container.id;
+                var containerId = c.container.id;
                 var folderId = c.container.attachmentFolder.id;
-            	
-            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
-            	urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
-            	Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
+
+                urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("/embed?", "/popupform?");
+                urlReinvestigateCaseFileForm = urlReinvestigateCaseFileForm.replace("_data=(", "_data=(caseId:'" + caseFileId + "',caseNumber:'" + c.caseNumber + "',mode:'reinvestigate',containerId:'" + containerId + "',folderId:'" + folderId + "',");
+                Acm.Dialog.openWindow(urlReinvestigateCaseFileForm, "", 1060, 700
                     ,function() {
-            			// TODO: When James will find solution, we should change this
-            			window.location.href = App.getContextPath() + '/plugin/casefile';
+                        // TODO: When James will find solution, we should change this
+                        window.location.href = App.getContextPath() + '/plugin/casefile';
                     }
                 );
             }
         }
 
         ,onModelRetrievedObject: function(objData) {
-                CaseFile.View.Action.populate(objData);
+            CaseFile.View.Action.populate(objData);
         }
         ,onModelMergedCaseFiles: function(targetCaseFile){
             if(targetCaseFile.hasError) {
@@ -875,7 +882,7 @@ CaseFile.View = CaseFile.View || {
 //        	}
 //        }
     }
-    
+
     ,People: {
         create: function() {
             this.$divPeople = $("#divPeople");
@@ -969,14 +976,14 @@ CaseFile.View = CaseFile.View || {
                                 rc.TotalRecordCount = rc.Records.length;
                             }
                             return rc;
-    //                        return {
-    //	                          "Result": "OK"&& c.originator
-    //	                          ,"Records": [
-    //	                              {"id": 11, "title": "Mr", "givenName": "Some Name 1", "familyName": "Some Second Name 1", "personType": "Initiator"}
-    //	                              ,{"id": 12, "title": "Mrs", "givenName": "Some Name 2", "familyName": "Some Second Name 2", "personType": "Complaintant"}
-    //	                          ]
-    //	                          ,"TotalRecordCount": 2
-    //	                      };
+                            //                        return {
+                            //	                          "Result": "OK"&& c.originator
+                            //	                          ,"Records": [
+                            //	                              {"id": 11, "title": "Mr", "givenName": "Some Name 1", "familyName": "Some Second Name 1", "personType": "Initiator"}
+                            //	                              ,{"id": 12, "title": "Mrs", "givenName": "Some Name 2", "familyName": "Some Second Name 2", "personType": "Complaintant"}
+                            //	                          ]
+                            //	                          ,"TotalRecordCount": 2
+                            //	                      };
                         }
                         ,createAction: function(postData, jtParams) {
                             var record = Acm.urlToJson(postData);
@@ -998,7 +1005,7 @@ CaseFile.View = CaseFile.View || {
                         }
                         ,deleteAction: function(postData, jtParams) {
                             return {
-                               "Result": "OK"
+                                "Result": "OK"
                             };
                         }
                     }
@@ -1041,7 +1048,7 @@ CaseFile.View = CaseFile.View || {
                             pa.person.familyName = record.familyName;
                             CaseFile.Controller.viewAddedPersonAssociation(caseFileId, pa);
                         }
-                     }
+                    }
 
                     ,recordUpdated: function(event, data){
                         var whichRow = data.row.prevAll("tr").length;  //count prev siblings
@@ -2337,40 +2344,40 @@ CaseFile.View = CaseFile.View || {
                         ,create: false
                         ,edit: false
                     }
-	                ,type: {
-	                    title: $.t("casefile:participants.table.field.type")
-	                    ,width: '30%'
-	                    ,options: CaseFile.Model.Lookup.getParticipantTypes()
-	                    ,display: function (data) {
+                    ,type: {
+                        title: $.t("casefile:participants.table.field.type")
+                        ,width: '30%'
+                        ,options: CaseFile.Model.Lookup.getParticipantTypes()
+                        ,display: function (data) {
                             if (data.record.type == '*') {
-                            	// Default user. This is needed to show default user in the table.
-                        		// I am setting it here, because i don't want to show it in the popup while
-                        		// creating new participant. If we set it in the popup, it should be removed from here.
-                        		// This is used only to recognize the * type.
-                            	return '*';
+                                // Default user. This is needed to show default user in the table.
+                                // I am setting it here, because i don't want to show it in the popup while
+                                // creating new participant. If we set it in the popup, it should be removed from here.
+                                // This is used only to recognize the * type.
+                                return '*';
                             } else {
-                            	var options = CaseFile.Model.Lookup.getParticipantTypes();
-                            	return options[data.record.type];
+                                var options = CaseFile.Model.Lookup.getParticipantTypes();
+                                return options[data.record.type];
                             }
                         }
-	                }
+                    }
                     ,title: {
                         title: $.t("casefile:participants.table.field.name")
                         ,width: '70%'
                         ,dependsOn: 'type'
                         ,options: function (data) {
-                        	if (data.dependedValues.type == '*') {
-                        		// Default user. This is needed to show default user in the table.
-                        		// I am setting it here, because i don't want to show it in the popup while
-                        		// creating new participant. If we set it in the popup, it should be removed from here.
-                        		// This is used only to recognize the * type.
-                        		return {"*": "*"}
-                        	}else if (data.dependedValues.type == 'owning group') {
-                        		var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        		return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups(caseFileId));
-                    		} else {
-                    			return Acm.createKeyValueObject(CaseFile.Model.Lookup.getUsers());
-                    		}
+                            if (data.dependedValues.type == '*') {
+                                // Default user. This is needed to show default user in the table.
+                                // I am setting it here, because i don't want to show it in the popup while
+                                // creating new participant. If we set it in the popup, it should be removed from here.
+                                // This is used only to recognize the * type.
+                                return {"*": "*"}
+                            }else if (data.dependedValues.type == 'owning group') {
+                                var caseFileId = CaseFile.View.getActiveCaseFileId();
+                                return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups(caseFileId));
+                            } else {
+                                return Acm.createKeyValueObject(CaseFile.Model.Lookup.getUsers());
+                            }
                         }
                     }
                 }
@@ -2697,7 +2704,7 @@ CaseFile.View = CaseFile.View || {
             alert("onClickBtnTaskUnassign");
         }
         ,onClickBtnCompleteTask : function(taskId) {
-           // alert("adhoc task");
+            // alert("adhoc task");
 
             CaseFile.Service.Tasks.completeTask(taskId);
         }
@@ -2733,12 +2740,12 @@ CaseFile.View = CaseFile.View || {
                             $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>");
                         }
                         else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
-                             var availableOutcomes = task.availableOutcomes;
-                             for(var j = 0; j < availableOutcomes.length; j++ ){
-                                 if(availableOutcomes[j].name == 'COMPLETE'){
-                                 $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task-outcome") + "'>" + $.t("casefile:tasks.buttons.complete") + "</button></div>");
-                                 }
-                             }
+                            var availableOutcomes = task.availableOutcomes;
+                            for(var j = 0; j < availableOutcomes.length; j++ ){
+                                if(availableOutcomes[j].name == 'COMPLETE'){
+                                    $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task-outcome") + "'>" + $.t("casefile:tasks.buttons.complete") + "</button></div>");
+                                }
+                            }
                         }
                     }
                 }
@@ -3208,15 +3215,15 @@ CaseFile.View = CaseFile.View || {
 
         ,fillReportSelection: function() {
             var html = "<span>"
-                + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-                + "<option value='GeneralRelease.docx'>" + $.t("casefile:correspondence.form-document.general-release") + "</option>"
-                + "<option value='MedicalRelease.docx'>" + $.t("casefile:correspondence.form-document.medical-release") + "</option>"
-                + "<option value='ClearanceGranted.docx'>" + $.t("casefile:correspondence.form-document.clearance-granted") + "</option>"
-                + "<option value='ClearanceDenied.docx'>" + $.t("casefile:correspondence.form-document.clearance-denied") + "</option>"
-                + "<option value='NoticeofInvestigation.docx'>" + $.t("casefile:correspondence.form-document.notice-of-investigation") + "</option>"
-                + "<option value='InterviewRequest.docx'>" + $.t("casefile:correspondence.form-document.witness-interview-request") + "</option>"
-                + "</select>"
-                + "</span>"
+                    + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
+                    + "<option value='GeneralRelease.docx'>" + $.t("casefile:correspondence.form-document.general-release") + "</option>"
+                    + "<option value='MedicalRelease.docx'>" + $.t("casefile:correspondence.form-document.medical-release") + "</option>"
+                    + "<option value='ClearanceGranted.docx'>" + $.t("casefile:correspondence.form-document.clearance-granted") + "</option>"
+                    + "<option value='ClearanceDenied.docx'>" + $.t("casefile:correspondence.form-document.clearance-denied") + "</option>"
+                    + "<option value='NoticeofInvestigation.docx'>" + $.t("casefile:correspondence.form-document.notice-of-investigation") + "</option>"
+                    + "<option value='InterviewRequest.docx'>" + $.t("casefile:correspondence.form-document.witness-interview-request") + "</option>"
+                    + "</select>"
+                    + "</span>"
                 ;
 
 
