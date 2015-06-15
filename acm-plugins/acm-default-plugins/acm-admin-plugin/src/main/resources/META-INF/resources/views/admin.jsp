@@ -192,7 +192,7 @@
                                                                         class="sr-only">Close</span></button>
                                                                 <h4 class="modal-title" id="myModalLabel">Create Role</h4>
                                                             </div>
-                                                            <div class="modal-body"> Enter the role name in the boxe below.<br/><br/>
+                                                            <div class="modal-body"> Enter the role name in the box below.<br/><br/>
                                                                 <label for="newRoleName" class="label">Name</label>
                                                                 <input id="newRoleName" type="text" class="form-control" placeholder="Name">
                                                             </div>
