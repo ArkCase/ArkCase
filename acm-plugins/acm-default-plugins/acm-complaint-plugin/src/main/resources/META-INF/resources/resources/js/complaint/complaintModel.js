@@ -962,8 +962,9 @@ Complaint.Model = Complaint.Model || {
             return this._personTitles;
         }
 
-        ,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
-            'Email','Instant messenger', 'Social media','Website','Blog']
+        ,_deviceTypes : ['Home phone', 'Work phone', 'Mobile', 'Email','Facebook']
+        /*,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+            'Email','Instant messenger', 'Social media','Website','Blog']*/
         ,getDeviceTypes : function() {
             return this._deviceTypes;
         }

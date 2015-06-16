@@ -898,12 +898,6 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Controller.modelRetrievedUsers(users);
             }
         }
-        
-        ,PERSON_SUBTABLE_TITLE_CONTACT_METHODS:   "Communication Devices"
-        ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS:     "Organizations"
-        ,PERSON_SUBTABLE_TITLE_ADDRESSES:         "Locations"
-        ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
-        ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
         ,getAssignees: function(caseFileId) {
             return this._assignees.get(caseFileId);
@@ -948,8 +942,10 @@ CaseFile.Model = CaseFile.Model || {
             return this._personTitles;
         }
 
-        ,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
-            'Email','Instant messenger', 'Social media','Website','Blog']
+        ,_contactMethodTypes : ['Home phone', 'Work phone', 'Mobile', 'Email','Facebook']
+
+        /*,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+            'Email','Instant messenger', 'Social media','Website','Blog'] */
         ,getContactMethodTypes : function() {
             return this._contactMethodTypes;
         }

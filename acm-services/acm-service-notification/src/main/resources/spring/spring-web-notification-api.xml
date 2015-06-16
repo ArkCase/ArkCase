@@ -6,6 +6,11 @@
     <bean id="listNotificationsAPIController" class="com.armedia.acm.services.notification.web.api.ListAllNotificationsAPIController">
         <property name="notificationDao" ref="notificationDao"/>
     </bean>
+    
+    <bean id="getUnreadPopupNotificationsForUserAPIController" class="com.armedia.acm.services.notification.web.api.GetUnreadPopupNotificationsForUserAPIController">
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
 
     <bean id="deleteNotificationByNotificationId" class="com.armedia.acm.services.notification.web.api.DeleteNotificationByIdAPIController">
         <property name="notificationDao" ref="notificationDao"/>

@@ -193,7 +193,7 @@
                                                                         class="sr-only">Close</span></button>
                                                                 <h4 class="modal-title" id="myModalLabel">Create Role</h4>
                                                             </div>
-                                                            <div class="modal-body"> Enter the role name in the boxe below.<br/><br/>
+                                                            <div class="modal-body"> Enter the role name in the box below.<br/><br/>
                                                                 <label for="newRoleName" class="label">Name</label>
                                                                 <input id="newRoleName" type="text" class="form-control" placeholder="Name">
                                                             </div>
@@ -510,7 +510,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Make Active</button>
+                <button id="makeProcessActive" type="button" class="btn btn-primary">Make Active</button>
             </div>
         </div>
     </div>

@@ -50,6 +50,8 @@
         <property name="propertyFileManager">
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
+        <property name="notificationDao" ref="notificationDao"/>
+        <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
 	</bean>
 
 </beans>
