@@ -270,7 +270,7 @@ DocTree.View = DocTree.View || {
     }
 
     ,_addFileNode: function(folderNode, name, type) {
-        var fileNode = folderNode.addChildren({"title": $.t("doctree:wait-upload") + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.Source.getHtmlAction()});
+        var fileNode = folderNode.addChildren({"title": $.t("doctree:wait-upload") + " " + name + "...", "name": name, "type": type, "loadStatus": "loading", "action": DocTree.View.Source.getHtmlAction()});
         //fileNode.setStatus("loading");
         DocTree.View.markNodePending(fileNode);
         return fileNode;
