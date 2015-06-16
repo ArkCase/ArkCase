@@ -318,6 +318,8 @@ public class FrevvoFormServiceFactory {
 	            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
 	            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
 	            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            service.setNotificationDao(frevvoFormController.getNotificationDao());
+            service.setNotificationEventPublisher(frevvoFormController.getNotificationEventPublisher());
 	            
 	            return service;
 			}

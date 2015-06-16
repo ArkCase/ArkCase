@@ -3,7 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI">
     </bean>
 
@@ -108,6 +107,32 @@
 
     <bean id="rolesPrivilegesUpdateRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRolePrivileges">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <!-- Workflow Configuration -->
+    <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationService">
+        <property name="acmBpmnService" ref="processDefinitionManagementService" />
+        <property name="temporaryFolder" value="#{ systemProperties ['user.home'] }/.acm/activiti/temp/" />
+    </bean>
+
+    <bean id="workflowConfigurationRetrieveWorkflows" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveWorkflows">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationRetrieveHistory" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveHistory">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationRetrieveBpmnFile" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveBpmnFile">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationReplaceBpmnFile" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationReplaceBpmnFile">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationMakeActive" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationMakeActive">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>

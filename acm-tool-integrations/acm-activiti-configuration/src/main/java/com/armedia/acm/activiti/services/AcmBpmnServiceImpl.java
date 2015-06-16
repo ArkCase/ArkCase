@@ -224,6 +224,11 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
         return acmBpmnDao.getActive(processDefinitionKey);
     }
 
+    @Override
+    public AcmProcessDefinition getByKeyAndVersion(String processDefinitionKey, int version) {
+        return acmBpmnDao.getByKeyAndVersion(processDefinitionKey, version);
+    }
+
     public void setActivitiRepositoryService(RepositoryService activitiRepositoryService) {
         this.activitiRepositoryService = activitiRepositoryService;
     }

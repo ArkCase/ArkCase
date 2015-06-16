@@ -215,9 +215,336 @@ securitySchemes:
             description: Resource files were not updated successfully.
           200:
             description: Resource files were updated successfully.
+    
+    /ldapconfiguration/directories:
+      get:
+        description: Get LDAP directories list
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+        responses:
+          500:
+            description: Can't get LDAP directories information
+          200:
+            description: LDAP directories information retrieved
+            body:
+              application/json:
+                example: |
+                  [
+                    {
+                      "ldapConfig.id":"newldap",
+                      "ldapConfig.name":"New LDAP configuration",
+                      "ldapConfig.ldapUrl":"ldap://internaldc.armedia.com:389",
+                      "ldapConfig.base":"dc=armedia,dc=com",
+                      "ldapConfig.directoryName":"arm_ldap",
+                      "ldapConfig.authUserDn":"CN=Ann Administrator,CN=Users,dc=armedia,dc=com",
+                      "ldapConfig.authUserPassword":"Pa$$word",
+                      "ldapConfig.userSearchBase":"CN=Users",
+                      "ldapConfig.groupSearchBase":"OU=Groups,OU=ACM3,OU=Clients,DC=armedia,DC=com",
+                      "ldapConfig.groupSearchBaseOU":"OU=Groups,OU=ACM3,OU=Clients",
+                      "ldapConfig.userIdAttributeName":"samAccountName"                    
+                    }
+                  ]
+      post:
+        description: Create new LDAP directory
+        securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+        body:
+          application/json:
+            example: |                  
+              {              
+                "ldapConfig.id":"newldap",
+                "ldapConfig.name":"New LDAP configuration",
+                "ldapConfig.ldapUrl":"ldap://internaldc.armedia.com:389",
+                "ldapConfig.base":"dc=armedia,dc=com",
+                "ldapConfig.directoryName":"arm_ldap",
+                "ldapConfig.authUserDn":"CN=Ann Administrator,CN=Users,dc=armedia,dc=com",
+                "ldapConfig.authUserPassword":"Pa$$word",
+                "ldapConfig.userSearchBase":"CN=Users",
+                "ldapConfig.groupSearchBase":"OU=Groups,OU=ACM3,OU=Clients,DC=armedia,DC=com",
+                "ldapConfig.groupSearchBaseOU":"OU=Groups,OU=ACM3,OU=Clients",
+                "ldapConfig.userIdAttributeName":"samAccountName"
+              }
+        responses:
+          500:
+            description: Error happend during new LDAP directoy creation
+          200:
+            description: New LDAP direcory created successfully
+            body:
+              application/json:
+                example: |
+                  {              
+                    "ldapConfig.id":"newldap",
+                    "ldapConfig.name":"New LDAP configuration",
+                    "ldapConfig.ldapUrl":"ldap://internaldc.armedia.com:389",
+                    "ldapConfig.base":"dc=armedia,dc=com",
+                    "ldapConfig.directoryName":"arm_ldap",
+                    "ldapConfig.authUserDn":"CN=Ann Administrator,CN=Users,dc=armedia,dc=com",
+                    "ldapConfig.authUserPassword":"Pa$$word",
+                    "ldapConfig.userSearchBase":"CN=Users",
+                    "ldapConfig.groupSearchBase":"OU=Groups,OU=ACM3,OU=Clients,DC=armedia,DC=com",
+                    "ldapConfig.groupSearchBaseOU":"OU=Groups,OU=ACM3,OU=Clients",
+                    "ldapConfig.userIdAttributeName":"samAccountName"
+                  }                
+  /ldapconfiguration/directories/{directoryId}:
+    uriParameters:
+      directoryId:
+        description: LDAP directory identifier
+        example: newldapdir
+        required: true
+        type: string
+    
+    put:
+      description: Modify LDAP properties
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+      body:
+        application/json:
+          example: |
+            {              
+              "ldapConfig.id":"newldap",
+              "ldapConfig.name":"New LDAP configuration",
+              "ldapConfig.ldapUrl":"ldap://internaldc.armedia.com:389",
+              "ldapConfig.base":"dc=armedia,dc=com",
+              "ldapConfig.directoryName":"arm_ldap",
+              "ldapConfig.authUserDn":"CN=Ann Administrator,CN=Users,dc=armedia,dc=com",
+              "ldapConfig.authUserPassword":"Pa$$word",
+              "ldapConfig.userSearchBase":"CN=Users",
+              "ldapConfig.groupSearchBase":"OU=Groups,OU=ACM3,OU=Clients,DC=armedia,DC=com",
+              "ldapConfig.groupSearchBaseOU":"OU=Groups,OU=ACM3,OU=Clients",
+              "ldapConfig.userIdAttributeName":"samAccountName"
+            }                
+      responses:
+        500:
+          description: Error happened durn LDAP directory modification
+        200:
+          description: LDAP directory was modified successfully
+      
+    delete:
+      description: Delete LDAP directory
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+      responses:
+        500:
+          description: Can't delete LDAP directory
+        200:
+          description: LDAP directory was deleted successfully
+  /rolesprivileges/roles:
+    get:
+      description: Return list of all roles
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+      responses:
+        500:
+          description: Can't retrieve roles list
+        200:
+          description: Roles list retrieved successfully
+          body:
+            application/json: 
+              example: |
+                [
+                  "ROLE_INVESTIGATOR",
+                  "ROLE_INVESTIGATOR_SUPERVISOR",
+                  "ROLE_ANALYST",
+                  "ROLE_CALLCENTER",
+                  "ROLE_ADMINISTRATOR"
+                ]       
+    post:
+      description: Create new role
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+      body:
+        application/json: 
+          example: |
+            {
+              roleName: "NEW_ROLE
+            }
+      responses:
+        500:
+          description: Can't create new role
+        200:
+          description: New role created successfully
+  /rolesprivileges/roles/{roleName}/privileges:
+    uriParameters:
+      roleName:
+        description: Role name
+        example: ROLE_ADMINISTRATOR
+        required: true
+        type: string      
+    get:
+      description: Return information about role's privileges
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+      responses:
+        500:
+          description: Can't return role's privileges
+        200:
+          description: Object with role's privileges returned successfully
+          body:
+            application/json:
+              example: |
+                {
+                  "dashboardPrivilege":"Dashboard Privilege",
+                  "acmPersonListPrivilege":"Person List Privilege",
+                  "reportPrivilege":"Report Privilege",
+                  "auditPrivilege":"Audit Privilege",
+                  "subscribePrivilege":"Subscribe Privilege",
+                  "timesheetPrivilege":"Timesheet Privilege"
+                }                
+    put:
+      description: Change privileges of role
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]  
+      body:
+        application/json:
+          example: |
+            {
+              "privileges": 
+                [
+                  "subscribePrivilege",
+                  "saveCasePrivilege",
+                  "costsheetApprovePrivilege",
+                  "tagPrivilege"
+                ]
+            }
+      responses:
+        500:
+          description: Can't apply changes to role's privileges
+        200:
+          description: Changes applied successfully
+      
+  /rolesprivileges/privileges:
+    get: 
+      description: Return list of all available privileges
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      responses:
+        500:
+          description: Can't retrieve all privileges
+        200:
+          description: Privileges retrieved successfully
+          body:
+            application/json:
+              example: |
+                {
+                  "dashboardPrivilege":"Dashboard Privilege",
+                  "acmPersonListPrivilege":"Person List Privilege",
+                  "acmCaseApprovePrivilege":"Case Approve Privilege",
+                  "costsheetApprovePrivilege":"Costsheet Approve Privilege"
+                }
+  /workflowconfiguration/workflows:
+    get:
+      description: Return list of workflows
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      responses:
+        500:
+          description: Can't retrieve workflows list
+        200:
+          description: Workflows list  retrieved successfully
+          body:
+            application/json:
+              example: |
+                [
+                  {
+                    "id":168,
+                    "description": "Description of workflow",
+                    "name":"ACM Document Approval Process",
+                    "version":1,
+                    "key":"acmDocumentWorkflow",
+                    "deploymentId":"1",
+                    "fileName":"acmDocumentWorkflow_v1.bpmn20.xml",
+                    "active":false,
+                    "md5Hash":"4fed194d605a93eb5b219682785e3a17",
+                    "created":"2015-04-21T06:23:29.395-0400",
+                    "creator": "admin",
+                    "modified":"2015-04-21T06:23:29.395-0400",
+                    "modifier": "admin"
+                  }
+                ]
+
+  /workflowconfiguration/files:
+    post:
+      description: Upload new workflow's BPNM file
+      body:
+        multipart/form-data:
+      responses:
+        500:
+          description: Can't upload BPNM file
+        200:
+          description: New NPNM file uploaded successfully
+  /workflowconfiguration/workflows/{key}/versions/{version}/history:
+    uriParameters:
+      key:
+        description: Workflow key value
+        example: acmDocumentWorkflow
+        required: true
+        type: string
+      version:
+        description: Workflow version number
+        example: 3
+        required: true
+        type: integer
+    get:
+      description: Return list of workflow's history
+      securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
+      responses:
+        500:
+          description: Can't retrieve workflow's history
+        200:
+          description: Workflow's history retrieved successfully
+          body:
+            application/json:
+              example: |
+                [
+                  {
+                    "id":168,
+                    "description": "Description of workflow",
+                    "name":"ACM Document Approval Process",
+                    "version":1,
+                    "key":"acmDocumentWorkflow",
+                    "deploymentId":"1",
+                    "fileName":"acmDocumentWorkflow_v1.bpmn20.xml",
+                    "active":false,
+                    "md5Hash":"4fed194d605a93eb5b219682785e3a17",
+                    "created":"2015-04-21T06:23:29.395-0400",
+                    "creator": "admin",
+                    "modified":"2015-04-21T06:23:29.395-0400",
+                    "modifier": "admin"
+                  }
+                ]
+  /workflowconfiguration/workflows/{key}/versions/{version}/file:
+    uriParameters:
+      key:
+        description: Workflow key value
+        example: acmDocumentWorkflow
+        required: true
+        type: string
+      version:
+        description: Workflow version number
+        example: 3
+        required: true
+        type: integer
+    get:
+      description: Return workflow's BPNM XML file
+      responses:
+        500:
+          description: Can't retrive workflow's BPNM file
+        200:
+          description: Workflow's BPNM file retrieved successfully
+          body:
+            application/xml:
+  /workflowconfiguration/workflows/{key}/versions/{version}/active:
+    uriParameters:
+      key:
+        description: Workflow key value
+        example: acmDocumentWorkflow
+        required: true
+        type: string
+      version:
+        description: Workflow version number
+        example: 3
+        required: true
+        type: integer   
+    put:
+      description: Make workflow active
+      responses:
+        500:
+          description: Can't make workflow active
+        200:
+          description: Workflow made acive successfully
   /casefile:
     post:
-      description: create a a new case file, or update an existing one.
+      description: create a new case file, or update an existing one.
       securedBy: [ spring_security_form_auth, spring_security_basic_auth ]
       body:
         application/json:
