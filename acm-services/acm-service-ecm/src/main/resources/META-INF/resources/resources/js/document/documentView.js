@@ -137,7 +137,8 @@ AcmDocument.View = AcmDocument.View || {
             else if (AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)) {
                 AcmDocument.View.Detail.setTextLnkDocTitle(Acm.goodValue(documentDetail.fileName));
                 AcmDocument.View.Detail.setTextLnkActiveVersion("(v" + Acm.goodValue(documentDetail.activeVersionTag)+ ")");
-                AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.created));
+                //AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime(documentDetail.created));
+                AcmDocument.View.Detail.setTextLnkCreateDate(Acm.getDateFromDatetime2(documentDetail.created,$.t("common:date.short")));
                 AcmDocument.View.Detail.setTextLnkType(Acm.goodValue(documentDetail.fileType));
                 AcmDocument.View.Detail.setTextLnkOwner(Acm.__FixMe__getUserFullName(documentDetail.creator));
                 AcmDocument.View.Detail.setTextLnkStatus(Acm.goodValue(documentDetail.status));
@@ -445,7 +446,8 @@ AcmDocument.View = AcmDocument.View || {
                         var Record = {};
                         Record.id         = Acm.goodValue(noteList[i].id, 0);
                         Record.note       = Acm.goodValue(noteList[i].note);
-                        Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                        //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                        Record.created    = (Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short")));
                         Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
                         jtData.Records.push(Record);
                     }
@@ -820,7 +822,8 @@ AcmDocument.View = AcmDocument.View || {
                     if(AcmDocument.Model.VersionHistory.validateVersionHistory(versionHistoryList[i])){
                         html+= "<tr>"
                             +"<td id='" + Acm.goodValue(versionHistoryList[i].id) + "'>" + Acm.goodValue(versionHistoryList[i].versionTag) + "</td>"
-                            +"<td>" + Acm.getDateFromDatetime(versionHistoryList[i].created) + "</td>"
+                            //+"<td>" + Acm.getDateFromDatetime(versionHistoryList[i].created) + "</td>"
+                            +"<td>" + Acm.getDateFromDatetime2(versionHistoryList[i].created,$.t("common:date.short")) + "</td>"
                             +"<td>" + Acm.goodValue(versionHistoryList[i].creator) +  "</td>"
                             +"<td>"
                             +"<div class='btn-group pull-right'>"
@@ -854,7 +857,8 @@ AcmDocument.View = AcmDocument.View || {
                         if(AcmDocument.Model.EventHistory.validateEvent(events[i])){
                             var Record = {};
                             Record.eventType = Acm.goodValue(events[i].eventType);
-                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                            //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                            Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
                             Record.userId = Acm.goodValue(events[i].userId);
                             jtData.Records.push(Record);
                         }
