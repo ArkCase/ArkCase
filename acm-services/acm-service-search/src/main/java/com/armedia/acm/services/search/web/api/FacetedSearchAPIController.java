@@ -54,7 +54,7 @@ public class FacetedSearchAPIController {
         String rowQueryParametars = buildSolrQuery(filters);
         String sort= "";
         String query = SearchConstants.CATCH_ALL_QUERY + q;
-        query = updateQueryWithExcludedObjects(query);
+        query = updateQueryWithExcludedObjects(query, rowQueryParametars);
         query = URLEncoder.encode(query, "UTF-8");
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
@@ -286,13 +286,13 @@ public class FacetedSearchAPIController {
         return queryBuilder.toString();
     }
     
-    private String updateQueryWithExcludedObjects(String query)
+    private String updateQueryWithExcludedObjects(String query, String rowQueryParametars)
     {    	
     	if (query != null)
     	{
 			String[] objectsToExcludeArray = getObjectsToExclude();
 
-			String subQuery = getObjectsToExcludeSubQuery(objectsToExcludeArray);
+			String subQuery = getObjectsToExcludeSubQuery(objectsToExcludeArray, rowQueryParametars);
 			
 			if (!"".equals(subQuery))
 			{
@@ -320,16 +320,23 @@ public class FacetedSearchAPIController {
 		return null;
     }
     
-    private String getObjectsToExcludeSubQuery(String[] objectsToExcludeArray)
+    private String getObjectsToExcludeSubQuery(String[] objectsToExcludeArray, String queryParameters)
     {
     	String subQuery = "";
     	
     	if (objectsToExcludeArray != null)
     	{
+
+            // AFDP-1101: the filter line says, "if the user specifically requested a certain object type, then do not
+            // exclude it after all".  We have to check for the URL-encoded search term... Value sent to SOLR is like:
+            // {!term f=object_type_s}NOTIFICATION - meaning to include objects of type NOTIFICATION.  The
+            // URL-encoded version of this search term is "%21term+f%3Dobject_type_s%7DNOTIFICATION"... so that's
+            // what we exclude from the results of this stream.
     		subQuery = Arrays.stream(objectsToExcludeArray)
-    						 .map((String element) -> {return "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element;})
-							 .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
-							 .get();
+                             .filter((String element) -> !queryParameters.contains("%21term+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
+    						 .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element)
+                             .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
+							 .orElse("");
     	}
     	
     	return subQuery;
