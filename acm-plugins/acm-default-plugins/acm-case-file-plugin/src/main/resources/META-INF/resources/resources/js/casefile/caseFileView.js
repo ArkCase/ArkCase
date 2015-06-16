@@ -1034,7 +1034,7 @@ CaseFile.View = CaseFile.View || {
                         }
                         ,personType: {
                             title: $.t("casefile:people.table.field.type")
-                            ,options: CaseFile.Model.Lookup.getPersonTypes()
+                            ,options: CaseFile.Model.Lookup.getPersonTypes
                         }
                     }
                     ,recordAdded: function(event, data){
