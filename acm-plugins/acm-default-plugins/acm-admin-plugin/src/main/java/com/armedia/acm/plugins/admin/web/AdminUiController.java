@@ -22,7 +22,7 @@ public class AdminUiController
         ModelAndView retval = new ModelAndView();
         
         // Add Frevvo form URLs
-        retval.addObject("plainConfigurationFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.PLAIN_CONFIGURATION));
+        retval.addObject("plainConfigurationFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.PLAIN_CONFIGURATION, false));
         
         retval.setViewName("admin");
         return retval;

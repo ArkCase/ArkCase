@@ -78,9 +78,7 @@ public class CaseFileUiController
         mv.addObject("arkcaseUrl",getNotificationProperties().get("arkcase.url"));
         mv.addObject("arkcasePort",getNotificationProperties().get("arkcase.port"));
 
-        mv.addObject("roiFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ROI));
-        mv.addObject("electronicCommunicationFormUrl", formUrl.getNewFormUrl(FrevvoFormName.ELECTRONIC_COMMUNICATION));
-        mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS));
+        mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS, false));
         mv.addObject("enableFrevvoFormEngine", formUrl.enableFrevvoFormEngine(FrevvoFormName.ROI));
         mv.addObject("editCaseFileFormUrl", getCaseFileUrl());
         mv.addObject("reinvestigateCaseFileFormUrl", getCaseFileUrl());
@@ -132,7 +130,7 @@ public class CaseFileUiController
 			}
 		}
     	
-    	return formUrl.getNewFormUrl(caseFileFormName);
+    	return formUrl.getNewFormUrl(caseFileFormName, false);
     }
 
 	public FormUrl getFormUrl() {

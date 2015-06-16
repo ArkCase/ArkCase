@@ -8,7 +8,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Action.create)         {CaseFile.Model.Action.create();}
         if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
-        //if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
+        if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
         if (CaseFile.Model.People.create)         {CaseFile.Model.People.create();}
         if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
@@ -30,7 +30,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
         if (CaseFile.Model.Action.onInitialized)         {CaseFile.Model.Action.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
-        //if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
+        if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
         if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
         if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
         if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
@@ -606,6 +606,35 @@ CaseFile.Model = CaseFile.Model || {
             CaseFile.Service.Tasks.retrieveTask();
         }
     }
+    
+    ,Documents: {
+        create : function() {
+            this.cachePlainForms = new Acm.Model.CacheFifo(1);
+        }
+        ,onInitialized: function() {
+        	CaseFile.Service.Documents.retrievePlainForms();
+        }
+        
+        ,validatePlainForms: function(plainForms) {
+            if (Acm.isEmpty(plainForms)) {
+                return false;
+            }
+            if(!Acm.isArray(plainForms)){
+                return false;
+            }
+            return true;
+        }
+        
+        ,getPlainForms: function() {
+        	return CaseFile.Model.Documents.cachePlainForms.get("forms.plainforms");
+        }
+        
+        ,setPlainForms: function(plainForms) {
+        	 CaseFile.Model.Documents.cachePlainForms.put("forms.plainforms", plainForms);
+        }
+    }
+    
+    
     ,Documents_JTable_To_Retire: {
         create : function() {
             this.cacheDocuments = new Acm.Model.CacheFifo(4);

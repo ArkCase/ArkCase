@@ -783,7 +783,7 @@ DocTree.View = DocTree.View || {
 
         this.tree = $tree.fancytree("getTree");
         var $treeBody = $tree.find("tbody");
-        DocTree.View.Menu.useContextMenu($treeBody);
+        DocTree.View.Menu.useContextMenu($treeBody, false);
         DocTree.View.ExternalDnd.useExternalDnd($treeBody);
 
         $treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
@@ -792,6 +792,12 @@ DocTree.View = DocTree.View || {
         var $treeHead = $tree.find("thead");
         $treeHead.find("input:checkbox").on("click", function(e) {DocTree.View.onClickBtnChkAllDocument(e, this);});
 
+    }
+    
+    ,refreshDocTree: function() {
+    	var $tree = this.$tree;
+    	var $treeBody = $tree.find("tbody");
+    	DocTree.View.Menu.useContextMenu($treeBody, true);
     }
 
     ,ExternalDnd: {
@@ -886,8 +892,8 @@ DocTree.View = DocTree.View || {
     }
 
     ,Menu: {
-        useContextMenu: function($s) {
-            if (!this.docSubMenu) {
+        useContextMenu: function($s, refresh) {
+            if (!this.docSubMenu || refresh) {
                 this.docSubMenu = this.makeDocSubMenu(DocTree.View.fileTypes);
             }
 

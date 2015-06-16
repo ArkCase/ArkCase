@@ -620,6 +620,13 @@ var Acm = Acm || {
         
         return restrict;
     }
+    
+    ,silentReplace: function(value, replace, replacement) {
+    	if (Acm.isNotEmpty(value) && value.replace) {
+    		value = value.replace(replace, replacement);
+    	}
+    	return value;
+    }
 
 };
 

@@ -32,6 +32,8 @@ public class PlainConfigurationForm {
 	private String description;
 	private List<UrlParameterItem> urlParameters;
 	private List<String> requiredUrlParemeters;
+	private List<String> objectPropertiesOptions;
+	private String url;
 	
 	
 	@XmlElement(name="key")
@@ -131,5 +133,23 @@ public class PlainConfigurationForm {
 
 	public void setRequiredUrlParemeters(List<String> requiredUrlParemeters) {
 		this.requiredUrlParemeters = requiredUrlParemeters;
+	}
+
+	@XmlTransient
+	public List<String> getObjectPropertiesOptions() {
+		return objectPropertiesOptions;
+	}
+
+	public void setObjectPropertiesOptions(List<String> objectPropertiesOptions) {
+		this.objectPropertiesOptions = objectPropertiesOptions;
+	}
+
+	@XmlTransient
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

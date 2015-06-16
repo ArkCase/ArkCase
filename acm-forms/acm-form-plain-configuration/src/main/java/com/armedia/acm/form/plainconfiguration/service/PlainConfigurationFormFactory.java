@@ -43,6 +43,7 @@ public class PlainConfigurationFormFactory {
 				form.setFormId(formEntry.getId());
 				form.setName(formEntry.getTitle().getPlainText());
 				form.setType(getFrevvoService().getFormType(formEntry));
+				form.setUrl(getFrevvoService().getFormUrl().getNewFormUrl(form.getKey(), true));
 			}
 		}
 		catch(Exception e)
@@ -53,13 +54,16 @@ public class PlainConfigurationFormFactory {
 		return form;
 	}
 	
-	public List<PlainConfigurationForm> convertFromProperties()
+	public List<PlainConfigurationForm> convertFromProperties(List<String> targets)
 	{
 		List<PlainConfigurationForm> plainForms = new ArrayList<PlainConfigurationForm>();
 		
 		if (getFormProperties() != null && getPlainFormProperties() != null)
 		{		
-			List<String> targets = getTargets();
+			if (targets == null)
+			{
+				targets = getTargets();
+			}
 			
 			if (targets != null && targets.size() > 0)
 			{
@@ -171,6 +175,8 @@ public class PlainConfigurationFormFactory {
 		form.setType(getPlainFormProperties().getProperty(formKey + ".type", null));
 		form.setMode(getPlainFormProperties().getProperty(formKey + ".mode", null));
 		form.setTarget(target);
+		form.setDescription(getPlainFormProperties().getProperty(formKey + ".description." + target, null));
+		form.setUrl(getFrevvoService().getFormUrl().getNewFormUrl(formKey, true));
 		
 		List<UrlParameterItem> urlParameters = null;
 		

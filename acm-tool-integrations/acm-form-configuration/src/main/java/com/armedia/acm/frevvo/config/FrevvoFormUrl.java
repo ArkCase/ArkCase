@@ -5,6 +5,7 @@ package com.armedia.acm.frevvo.config;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,7 @@ public class FrevvoFormUrl implements FormUrl {
 	private Logger LOG = LoggerFactory.getLogger(FrevvoFormUrl.class);
 
 	private Map<String, Object> properties;
+	private Properties plainFormProperties;
 	private AuthenticationTokenService authenticationTokenService;
 	
 	public String getBaseUrl() {
@@ -85,7 +87,7 @@ public class FrevvoFormUrl implements FormUrl {
 	}
 
 	@Override
-	public String getNewFormUrl(String formName) {
+	public String getNewFormUrl(String formName, boolean plain) {
 		String uri = (String) properties.get(FrevvoFormConstants.URI);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -97,8 +99,8 @@ public class FrevvoFormUrl implements FormUrl {
 		String tenant = getTenant();
 		String user = getDesignerUser();
 		String applicationId = getApplicationId();
-		String type = (String) properties.get(formName + ".type");
-		String mode = (String) properties.get(formName + ".mode");
+		String type = plain == false ? (String) properties.get(formName + ".type") : (String) getPlainFormProperties().get(formName + ".type");
+		String mode = plain == false ? (String) properties.get(formName + ".mode") : (String) getPlainFormProperties().get(formName + ".mode");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
 		String service = (String) properties.get(FrevvoFormConstants.SERVICE);
 		String redirect = (String) properties.get(FrevvoFormConstants.REDIRECT);
@@ -311,6 +313,14 @@ public class FrevvoFormUrl implements FormUrl {
 		}
 		
 		return null;
+	}
+
+	public Properties getPlainFormProperties() {
+		return plainFormProperties;
+	}
+
+	public void setPlainFormProperties(Properties plainFormProperties) {
+		this.plainFormProperties = plainFormProperties;
 	}
 
 }

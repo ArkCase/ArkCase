@@ -53,6 +53,7 @@ public class DeletePlainFormAPIController {
 		if (key != null && target != null)
 		{
 			String parameterKey = key + ".parameters." + target;
+			String descriptionKey = key + ".description." + target;
 			if (getPlainConfigurationFormFactory().getPlainFormProperties().getProperty(parameterKey) != null)
 			{
 				form = getPlainConfigurationFormFactory().getFormInfoFromProperties(key, target);
@@ -60,7 +61,7 @@ public class DeletePlainFormAPIController {
 				if (form.getType() != null && !form.getType().isEmpty())
 				{
 					LOG.debug("Removing form type = " + form.getType());
-					getPropertyFileManager().removeMultiple(Arrays.asList(parameterKey), getPlainFormPropertiesLocation());
+					getPropertyFileManager().removeMultiple(Arrays.asList(parameterKey, descriptionKey), getPlainFormPropertiesLocation());
 				}
 			}
 			
