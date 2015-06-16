@@ -8,7 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title data-i18n="complaint:page-title">Complaints | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">complaint,subscription,search,doctree</span>
+        <span itemprop="resourceNamespace">complaint,subscription,search,doctree,common</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>

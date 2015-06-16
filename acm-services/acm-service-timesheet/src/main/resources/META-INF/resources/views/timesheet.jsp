@@ -8,7 +8,7 @@
 	<jsp:attribute name="endOfHead">
 	    <title><spring:message code="timesheet.page.title" text="Time Tracking | ACM | ArkCase" /></title>
         <div id="detailData" itemscope="true" style="display: none">
-            <span itemprop="resourceNamespace">timesheet</span>
+            <span itemprop="resourceNamespace">timesheet,common</span>
             <span itemprop="newTimesheetFormUrl">${newTimesheetFormUrl}</span>
             <span itemprop="objType">TIMESHEET</span>
             <span itemprop="objId">${objId}</span>

@@ -8,7 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title data-i18n="task:page-title">Tasks | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">task,search,subscription,doctree</span>
+        <span itemprop="resourceNamespace">task,search,subscription,doctree,common</span>
         <span itemprop="objType">TASK</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
