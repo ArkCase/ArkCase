@@ -51,7 +51,9 @@ Timesheet.Model = {
             solr.author_s = objData.creator;
             solr.object_id_s = objData.id;
             solr.object_type_s = Timesheet.Model.DOC_TYPE_TIMESHEET;
-            solr.name = "Timesheet" + " " + Acm.getDateFromDatetime(objData.startDate) + " - " + Acm.getDateFromDatetime(objData.endDate)
+            //solr.name = "Timesheet" + " " + Acm.getDateFromDatetime(objData.startDate) + " - " + Acm.getDateFromDatetime(objData.endDate)
+            solr.name = "Timesheet" + " " + AcmEx.Object.Date.getDateFromDatetime(objData.startDate,$.t("common:date.short"))
+                + " - " + AcmEx.Object.Date.getDateFromDatetime(objData.endDate,$.t("common:date.short"));
             return solr;
         }
         ,validateObjData: function(data) {
