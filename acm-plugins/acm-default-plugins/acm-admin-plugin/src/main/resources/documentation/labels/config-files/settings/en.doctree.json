@@ -3,7 +3,7 @@
         ,"defaultValue": "New Folder"
         ,"description": ""
     }
-    ,"wait-upload": {"value": "Uploading "
+    ,"wait-upload": {"value": "Uploading"
         ,"defaultValue": "Uploading"
         ,"description": ""
     }
