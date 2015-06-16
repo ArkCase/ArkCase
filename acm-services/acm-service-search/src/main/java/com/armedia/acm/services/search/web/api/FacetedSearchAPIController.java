@@ -242,9 +242,10 @@ public class FacetedSearchAPIController {
             try {
                 if( isFirst ) {
                     isFirst = false;
-                    queryBuilder.append(URLEncoder.encode("_query_:\"{!term f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(orFilter.trim()+"\"", "UTF-8"));
+                    // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query parser.
+                    queryBuilder.append(URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(orFilter.trim()+"\"", "UTF-8"));
                 } else {
-                    queryBuilder.append(URLEncoder.encode(" OR _query_:\"{!term f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(orFilter.trim()+"\"", "UTF-8"));
+                    queryBuilder.append(URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(orFilter.trim()+"\"", "UTF-8"));
                 }
             } catch (UnsupportedEncodingException e1) {
                 if(log.isErrorEnabled()) {
@@ -259,7 +260,8 @@ public class FacetedSearchAPIController {
         StringBuilder queryBuilder = new StringBuilder();
         String substitutionName = filterKey.split(SearchConstants.FACET_PRE_KEY)[1];
         try {
-            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + URLEncoder.encode("{!term f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(filterValue, "UTF-8"));
+            // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query parser.
+            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + URLEncoder.encode("{!field f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(filterValue, "UTF-8"));
         } catch ( UnsupportedEncodingException e ) {
             if( log.isErrorEnabled() ) {
                 log.error("Encoding problem occur while building regular AND SOLR query sub-string", e);
@@ -329,11 +331,11 @@ public class FacetedSearchAPIController {
 
             // AFDP-1101: the filter line says, "if the user specifically requested a certain object type, then do not
             // exclude it after all".  We have to check for the URL-encoded search term... Value sent to SOLR is like:
-            // {!term f=object_type_s}NOTIFICATION - meaning to include objects of type NOTIFICATION.  The
-            // URL-encoded version of this search term is "%21term+f%3Dobject_type_s%7DNOTIFICATION"... so that's
+            // {!field f=object_type_s}NOTIFICATION - meaning to include objects of type NOTIFICATION.  The
+            // URL-encoded version of this search term is "%21field+f%3Dobject_type_s%7DNOTIFICATION"... so that's
             // what we exclude from the results of this stream.
     		subQuery = Arrays.stream(objectsToExcludeArray)
-                             .filter((String element) -> !queryParameters.contains("%21term+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
+                             .filter((String element) -> !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
     						 .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element)
                              .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
 							 .orElse("");
