@@ -558,53 +558,5 @@
             <column name="cm_modifier" valueComputed="USER"/>
         </insert>        
     </changeSet>
-
-    <changeSet id="27-add-person-association-types" author="nebojsha.davidovikj" failOnError="false">
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Other"/>
-            <column name="cm_order" valueNumeric="34"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Primary Victim"/>
-            <column name="cm_order" valueNumeric="36"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_order" value="30"/>
-            <where>cm_value = 'Complaintant'</where>
-        </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_order" value="31"/>
-            <where>cm_value = 'Subject'</where>
-        </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_order" value="32"/>
-            <where>cm_value = 'Witness'</where>
-        </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_order" value="33"/>
-            <where>cm_value = 'Wrongdoer'</where>
-        </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_order" value="35"/>
-            <where>cm_value = 'Initiator'</where>
-        </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_status" value="DISABLED"/>
-            <column name="cm_order" value="37"/>
-            <where>cm_value = 'SpouseCohab'</where>
-        </update>
-    </changeSet>
 </databaseChangeLog>
 

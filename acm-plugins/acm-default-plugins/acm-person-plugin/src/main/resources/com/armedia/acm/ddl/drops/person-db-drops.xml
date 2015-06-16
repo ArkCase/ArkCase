@@ -5,5 +5,8 @@
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!-- need an empty changelog file here so Liquibase will stop complaining -->
+    <changeSet id="person-drops-01-drop-person-table" author="nebojsha.davidovikj" failOnError="false">
+        <dropTable tableName="ACM_PERSON_TYPE_LU" cascadeConstraints="true"/>
+    </changeSet>
 </databaseChangeLog>
 
