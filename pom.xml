@@ -63,9 +63,9 @@
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
 
-        <maven.changes.version>2.9</maven.changes.version>
+        <maven.changes.version>2.11</maven.changes.version>
         <maven.javadoc.version>2.9.1</maven.javadoc.version>
-        <maven.project-info-reports.version>2.7</maven.project-info-reports.version>
+        <maven.project-info-reports.version>2.8</maven.project-info-reports.version>
         <maven.resources.version>2.6</maven.resources.version>
         <maven.site.basedir>${project.basedir}</maven.site.basedir>
         <maven.site.id>acm3-documentation</maven.site.id>
@@ -146,6 +146,28 @@
             <name>Marjan Stefanoski</name>
             <email>marjan.stefanoski@armedia.com</email>
             <id>marjan.stefanoski</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Nebojsha Davidovic</name>
+            <email>nebojsha.davidovic@armedia.com</email>
+            <id>nebojsha.davidovic</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <name>Nikolche Jonovski</name>
+            <email>nikolche.jonovski@armedia.com</email>
+            <id>nikolche.jonovski</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -262,12 +284,12 @@
 
     <issueManagement>
         <system>JIRA</system>
-        <url>http://arm-proj-web01:8989/jira/browse/AFDP</url>
+        <url>http://internal.armedia.com/jira/browse/AFDP</url>
     </issueManagement>
 
     <ciManagement>
         <system>Bamboo</system>
-        <url>http://arm-proj-web02.armedia.com:8085/browse/ACM-AFDP</url>
+        <url>http://internal.armedia.com/bamboo/browse/ACM-AFDP</url>
     </ciManagement>
 
     <distributionManagement>
@@ -378,11 +400,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.17</version>
                 <executions>
@@ -414,26 +431,6 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-maven-plugin</artifactId>
-                <version>${liquibase.version}</version>
-                <configuration>
-                    <driver>${acm.driverClassName}</driver>
-                    <url>${acm.url}</url>
-                    <username>${acm.username}</username>
-                    <password>${acm.password}</password>
-                    <changeLogFile>ddl/acm-database-changelog.xml</changeLogFile>
-                    <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.oracle</groupId>
-                        <artifactId>jdbc</artifactId>
-                        <version>${oracle.jdbc.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -481,8 +478,9 @@
 
             <!-- need these report plugins defined here to avoid spurious Maven warning about missing versions -->
             <plugin>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${maven.project-info-reports.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven.project-info-reports.version}</version>
             </plugin>
 
             <plugin>
@@ -1147,18 +1145,23 @@
 
             <!-- end of testing -->
 
+
+
+
         </dependencies>
 
     </dependencyManagement>
 
 
     <reporting>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>${maven.project-info-reports.version}</version>
                 <inherited>false</inherited>
+
                 <configuration>
                     <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                     <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
@@ -1201,6 +1204,10 @@
                     <statusIds>${jira.statusIds}</statusIds>
                     <useJql>true</useJql>
                     <sortColumnNames>Key</sortColumnNames>
+                    <useJql>true</useJql>
+                    <password>${jira.password}</password>
+                    <username>${jira.username}</username>
+
                 </configuration>
                 <reportSets>
                     <reportSet>

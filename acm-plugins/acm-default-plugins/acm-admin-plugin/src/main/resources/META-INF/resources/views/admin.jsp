@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">search</span>
+        <span itemprop="resourceNamespace">search,common</span>
     </div>
     <%--<div id="detailData" itemscope="true" style="display: none">
         <span itemprop="helpUrl">${helpUrl}</span>

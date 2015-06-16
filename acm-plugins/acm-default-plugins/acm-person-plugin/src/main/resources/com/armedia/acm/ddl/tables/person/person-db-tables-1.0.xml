@@ -558,6 +558,5 @@
             <column name="cm_modifier" valueComputed="USER"/>
         </insert>        
     </changeSet>
-    
 </databaseChangeLog>
 
