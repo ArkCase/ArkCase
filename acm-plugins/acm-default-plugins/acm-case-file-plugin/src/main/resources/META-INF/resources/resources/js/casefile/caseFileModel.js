@@ -852,7 +852,8 @@ CaseFile.Model = CaseFile.Model || {
             this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
             this._groups    =  new Acm.Model.CacheFifo();
             this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
-            
+            //this._personTypes = new Acm.Model.SessionData(Application.SESSION_DATA_PERSON_TYPES);
+
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
         }
@@ -872,6 +873,13 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Service.Lookup.retrieveSubjectTypes();
             } else {
                 CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
+            }
+
+            var personAssociationTypes = CaseFile.Model.Lookup.getPersonTypes();
+            if (Acm.isArrayEmpty(personAssociationTypes)) {
+                CaseFile.Service.Lookup.retrievePersonAssocitaionTypes();
+            } else {
+                CaseFile.Controller.modelFoundPersonAssociationTypes(personAssociationTypes);
             }
 
             var priorities = CaseFile.Model.Lookup.getPriorities();
@@ -932,9 +940,12 @@ CaseFile.Model = CaseFile.Model || {
 
 
         //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Primary Victim', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
+        ,_personTypes : [] //['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Primary Victim', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
         ,getPersonTypes : function() {
-            return this._personTypes;
+            return CaseFile.Model.Lookup._personTypes;
+        }
+        ,setPersonTypes : function(personTypes) {
+            this._personTypes = personTypes;
         }
 
         ,_personTitles : ['Mr','mr', 'Mrs','mrs', 'Ms','ms', 'Miss','miss']

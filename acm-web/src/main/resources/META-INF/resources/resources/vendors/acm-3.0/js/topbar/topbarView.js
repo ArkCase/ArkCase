@@ -574,7 +574,8 @@ Topbar.View = {
                             + "<span class='media-body block m-b-none'>"
                             + Acm.goodValue(asn.title_parseable)
                             + "<br><small class='text-muted'>"
-                            + Acm.getDateFromDatetime(asn.create_tdt)
+                            //+ Acm.getDateFromDatetime(asn.create_tdt)
+                            + Acm.getDateFromDatetime2(asn.create_tdt,$.t("common:date.short"))
                             + "</small></span></a><input type='hidden' name='asnId' value='"
                             + Acm.goodValue(asn.id)
                             + "' />"

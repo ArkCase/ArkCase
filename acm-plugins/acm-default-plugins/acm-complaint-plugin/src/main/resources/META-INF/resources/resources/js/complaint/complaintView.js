@@ -547,7 +547,8 @@ Complaint.View = Complaint.View || {
 
                 this.setTextLnkComplaintTitle(Acm.goodValue(c.complaintTitle));
                 this.setTextLabComplaintNumber(Acm.goodValue(c.complaintNumber));
-                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                //this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime2(c.incidentDate,$.t("common:date.short")));
                 this.setTextLnkComplaintType(Acm.goodValue(c.complaintType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
@@ -915,7 +916,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(contactMethods[i].id, 0)
                                                 ,type    : Acm.goodValue(contactMethods[i].type)
                                                 ,value   : Acm.goodValue(contactMethods[i].value)
-                                                ,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                //,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                ,created : Acm.getDateFromDatetime2(contactMethods[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(contactMethods[i].creator)
                                             });
                                         }
@@ -1080,7 +1082,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(securityTags[i].id, 0)
                                                 ,type    : Acm.goodValue(securityTags[i].type)
                                                 ,value   : Acm.goodValue(securityTags[i].value)
-                                                ,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                //,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                ,created : Acm.getDateFromDatetime2(securityTags[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(securityTags[i].creator)
                                             });
                                         }
@@ -1237,7 +1240,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(organizations[i].organizationId, 0)
                                                 ,type    : Acm.goodValue(organizations[i].organizationType)
                                                 ,value   : Acm.goodValue(organizations[i].organizationValue)
-                                                ,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                //,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                ,created : Acm.getDateFromDatetime2(organizations[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(organizations[i].creator)
                                             });
                                         }
@@ -1396,7 +1400,8 @@ Complaint.View = Complaint.View || {
                                                 ,state         : Acm.goodValue(addresses[i].state)
                                                 ,zip           : Acm.goodValue(addresses[i].zip)
                                                 ,country       : Acm.goodValue(addresses[i].country)
-                                                ,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                //,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                ,created       : Acm.getDateFromDatetime2(addresses[i].created,$.t("common:date.short"))
                                                 ,creator       : Acm.goodValue(addresses[i].creator)
                                             });
                                         }
@@ -1606,7 +1611,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(personAliases[i].id, 0)
                                                 ,type    : Acm.goodValue(personAliases[i].aliasType)
                                                 ,value   : Acm.goodValue(personAliases[i].aliasValue)
-                                                ,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                //,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                ,created : Acm.getDateFromDatetime2(personAliases[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(personAliases[i].creator)
                                             });
                                         }
@@ -1914,7 +1920,8 @@ Complaint.View = Complaint.View || {
                         var Record = {};
                         Record.id = Acm.goodValue(documents[i].objectId)
                         Record.title = Acm.goodValue(documents[i].name);
-                        Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        //Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        Record.created = Acm.getDateFromDatetime2(documents[i].created,$.t("common:date.short"));
                         Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
                         jtData.Records.push(Record);
                     }
@@ -2062,7 +2069,8 @@ Complaint.View = Complaint.View || {
                         var Record = {};
                         Record.id         = Acm.goodValue(notes[i].id, 0);
                         Record.note       = Acm.goodValue(notes[i].note);
-                        Record.created    = Acm.getDateFromDatetime(notes[i].created);
+                        //Record.created    = Acm.getDateFromDatetime(notes[i].created);
+                        Record.created    = Acm.getDateFromDatetime2(notes[i].created,$.t("common:date.short"));
                         Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
                         //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                         //Record.parentType = Acm.goodValue(noteList[i].parentType);
@@ -2252,7 +2260,8 @@ Complaint.View = Complaint.View || {
                     if(Complaint.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
                         Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
                         jtData.Records.push(Record);
                     }
@@ -2361,7 +2370,8 @@ Complaint.View = Complaint.View || {
                         var record = {};
                         record.id = Acm.goodValue(documents[i].targetId, 0);
                         record.title = Acm.goodValue(documents[i].targetName);
-                        record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        //record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        record.modified = Acm.getDateFromDatetime2(documents[i].modified,$.t("common:date.short"));
                         record.type = Acm.goodValue(documents[i].targetType);
                         record.status = Acm.goodValue(documents[i].status);
                         jtData.Records.push(record);
@@ -2976,12 +2986,14 @@ Complaint.View = Complaint.View || {
                     var timesheet = timesheets[j];
                     var Record = {};
                     Record.id = Acm.goodValue(timesheet.id);
-                    Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    //Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.name = $.t("complaint:time.table.label.timesheet") + " " + Acm.getDateFromDatetime2(timesheet.startDate,$.t("common:date.short")) + " - " +  Acm.getDateFromDatetime2(timesheet.endDate,$.t("common:date.short"));
                     Record.type = Complaint.Model.DOC_TYPE_TIMESHEET;
                     Record.status = Acm.goodValue(timesheet.status);
                     Record.username = Acm.goodValue(timesheet.creator);
                     Record.hours = Acm.goodValue(Complaint.View.Time.findTotalHours(timesheet.times));
-                    Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(timesheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
@@ -3088,7 +3100,8 @@ Complaint.View = Complaint.View || {
                     Record.status = Acm.goodValue(costsheet.status);
                     Record.username = Acm.goodValue(costsheet.creator);
                     Record.cost = Acm.goodValue(Complaint.View.Cost.findTotalCost(costsheet.costs));
-                    Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(costsheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
