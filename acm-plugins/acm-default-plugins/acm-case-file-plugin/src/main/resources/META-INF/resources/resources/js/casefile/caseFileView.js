@@ -893,6 +893,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_PERSON_ASSOCIATION    ,this.onModelAddedPersonAssociation);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PERSON_ASSOCIATION  ,this.onModelUpdatedPersonAssociation);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PERSON_ASSOCIATION_TYPES  ,this.onModelFoundPersonAssociationTypes);
 
             if (this.ContactMethods.create)     {this.ContactMethods.create();}
             if (this.SecurityTags.create)       {this.SecurityTags.create();}
@@ -933,6 +934,14 @@ CaseFile.View = CaseFile.View || {
         ,onModelDeletedPersonAssociation: function(personAssociationId) {
             if (personAssociationId.hasError) {
                 Acm.Dialog.info(personAssociationId.errorMsg);
+            }
+            else{
+                AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
+            }
+        }
+        ,onModelFoundPersonAssociationTypes: function(personAssociation) {
+            if (personAssociation && personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
             }
             else{
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
@@ -1016,7 +1025,7 @@ CaseFile.View = CaseFile.View || {
 //                        }
                         ,personType: {
                             title: $.t("casefile:people.table.field.type")
-                            ,options: CaseFile.Model.Lookup.getPersonTypes()
+                            ,options: CaseFile.Model.Lookup.getPersonTypes
                         }
                         ,familyName: {
                             title: $.t("casefile:people.table.field.last-name")
