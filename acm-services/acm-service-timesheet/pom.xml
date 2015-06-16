@@ -49,6 +49,11 @@
             <artifactId>acm-object-change-status</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
         
 		 <!-- logging -->
         <dependency>
