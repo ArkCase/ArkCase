@@ -160,7 +160,9 @@ CaseFile.prepare = function() {
                 //this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
                 this.setTextLnkCourt(Acm.goodValue(c.courtroomName));
-                this.setTextLnkHearingDate(Acm.getDateFromDatetime(c.nextCourtDate));
+
+                //this.setTextLnkHearingDate(Acm.getDateFromDatetime(c.nextCourtDate));
+                this.setTextLnkHearingDate(Acm.getDateFromDatetime2(c.nextCourtDate,$.t("common:date.short")));
                 this.setTextLnkOrganisation(Acm.goodValue(c.responsibleOrganization));
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
@@ -368,6 +370,23 @@ CaseFile.prepare = function() {
                         ,create: false
                         ,edit: false
                     }
+                    ,type: {
+                        title: $.t("ebrief:participants.table.field.type")
+                        ,width: '20%'
+                        ,options: CaseFile.Model.Lookup.getParticipantTypes()
+                        ,display: function (data) {
+                            if (data.record.type == '*') {
+                                // Default user. This is needed to show default user in the table.
+                                // I am setting it here, because i don't want to show it in the popup while
+                                // creating new participant. If we set it in the popup, it should be removed from here.
+                                // This is used only to recognize the * type.
+                                return '*';
+                            } else {
+                                var options = CaseFile.Model.Lookup.getParticipantTypes();
+                                return options[data.record.type];
+                            }
+                        }
+                    }
                     ,title: {
                         title: $.t("ebrief:participants.table.field.name")
                         ,width: '25%'
@@ -390,23 +409,6 @@ CaseFile.prepare = function() {
                     ,organisation: {
                         title: $.t("ebrief:participants.table.field.organisation")
                         ,width: '20%'
-                    }
-                    ,type: {
-                        title: $.t("ebrief:participants.table.field.type")
-                        ,width: '20%'
-                        ,options: CaseFile.Model.Lookup.getParticipantTypes()
-                        ,display: function (data) {
-                            if (data.record.type == '*') {
-                                // Default user. This is needed to show default user in the table.
-                                // I am setting it here, because i don't want to show it in the popup while
-                                // creating new participant. If we set it in the popup, it should be removed from here.
-                                // This is used only to recognize the * type.
-                                return '*';
-                            } else {
-                                var options = CaseFile.Model.Lookup.getParticipantTypes();
-                                return options[data.record.type];
-                            }
-                        }
                     }
                     ,email: {
                         title: $.t("ebrief:participants.table.field.email")

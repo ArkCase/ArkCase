@@ -536,10 +536,12 @@ CaseFile.View = CaseFile.View || {
             if (CaseFile.Model.Detail.validateCaseFile(c)) {
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
+                //this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime2(c.created,$.t("common:date.short")));
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
-                this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
+                //this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
+                this.setTextLnkDueDate(Acm.getDateFromDatetime2(c.dueDate,$.t("common:date.short")));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
@@ -893,6 +895,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_PERSON_ASSOCIATION    ,this.onModelAddedPersonAssociation);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PERSON_ASSOCIATION  ,this.onModelUpdatedPersonAssociation);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PERSON_ASSOCIATION_TYPES  ,this.onModelFoundPersonAssociationTypes);
 
             if (this.ContactMethods.create)     {this.ContactMethods.create();}
             if (this.SecurityTags.create)       {this.SecurityTags.create();}
@@ -933,6 +936,14 @@ CaseFile.View = CaseFile.View || {
         ,onModelDeletedPersonAssociation: function(personAssociationId) {
             if (personAssociationId.hasError) {
                 Acm.Dialog.info(personAssociationId.errorMsg);
+            }
+            else{
+                AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
+            }
+        }
+        ,onModelFoundPersonAssociationTypes: function(personAssociation) {
+            if (personAssociation && personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
             }
             else{
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
@@ -1016,7 +1027,7 @@ CaseFile.View = CaseFile.View || {
 //                        }
                         ,personType: {
                             title: $.t("casefile:people.table.field.type")
-                            ,options: CaseFile.Model.Lookup.getPersonTypes()
+                            ,options: CaseFile.Model.Lookup.getPersonTypes
                         }
                         ,familyName: {
                             title: $.t("casefile:people.table.field.last-name")
@@ -1152,7 +1163,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(contactMethods[i].id, 0)
                                                 ,type    : Acm.goodValue(contactMethods[i].type)
                                                 ,value   : Acm.goodValue(contactMethods[i].value)
-                                                ,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                //,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                ,created : Acm.getDateFromDatetime2(contactMethods[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(contactMethods[i].creator)
                                             });
                                         }
@@ -1316,7 +1328,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(securityTags[i].id, 0)
                                                 ,type    : Acm.goodValue(securityTags[i].type)
                                                 ,value   : Acm.goodValue(securityTags[i].value)
-                                                ,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                //,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                ,created : Acm.getDateFromDatetime2(securityTags[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(securityTags[i].creator)
                                             });
                                         }
@@ -1472,7 +1485,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(organizations[i].organizationId, 0)
                                                 ,type    : Acm.goodValue(organizations[i].organizationType)
                                                 ,value   : Acm.goodValue(organizations[i].organizationValue)
-                                                ,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                //,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                ,created : Acm.getDateFromDatetime2(organizations[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(organizations[i].creator)
                                             });
                                         }
@@ -1630,7 +1644,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,state         : Acm.goodValue(addresses[i].state)
                                                 ,zip           : Acm.goodValue(addresses[i].zip)
                                                 ,country       : Acm.goodValue(addresses[i].country)
-                                                ,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                //,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                ,created       : Acm.getDateFromDatetime2(addresses[i].created,$.t("common:date.short"))
                                                 ,creator       : Acm.goodValue(addresses[i].creator)
                                             });
                                         }
@@ -1839,7 +1854,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(personAliases[i].id, 0)
                                                 ,type    : Acm.goodValue(personAliases[i].aliasType)
                                                 ,value   : Acm.goodValue(personAliases[i].aliasValue)
-                                                ,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                //,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                ,created : Acm.getDateFromDatetime2(personAliases[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(personAliases[i].creator)
                                             });
                                         }
@@ -2463,7 +2479,9 @@ CaseFile.View = CaseFile.View || {
                     var Record = {};
                     Record.id         = Acm.goodValue(noteList[i].id, 0);
                     Record.note       = Acm.goodValue(noteList[i].note);
-                    Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                    //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                    Record.created    = Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short"));
+
                     Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
                     //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                     //Record.parentType = Acm.goodValue(noteList[i].parentType);
@@ -2935,7 +2953,8 @@ CaseFile.View = CaseFile.View || {
                                     var record = {};
                                     record.id = Acm.goodValue(reference.targetId, 0);
                                     record.title = Acm.goodValue(reference.targetName);
-                                    record.modified = Acm.getDateFromDatetime(reference.modified);
+                                    //record.modified = Acm.getDateFromDatetime(reference.modified);
+                                    record.modified    = Acm.getDateFromDatetime2(reference.modified,$.t("common:date.short"));
                                     record.type = Acm.goodValue(reference.targetType);
                                     record.status = Acm.goodValue(reference.status);
                                     rc.Records.push(record);
@@ -3070,7 +3089,8 @@ CaseFile.View = CaseFile.View || {
                     if(CaseFile.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
                         Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
                         jtData.Records.push(Record);
                     }
@@ -3195,7 +3215,8 @@ CaseFile.View = CaseFile.View || {
                         var Record = {};
                         Record.id = Acm.goodValue(correspondences[i].objectId)
                         Record.title = Acm.goodValue(correspondences[i].name);
-                        Record.created = Acm.getDateFromDatetime(correspondences[i].created);
+                        //Record.created = Acm.getDateFromDatetime(correspondences[i].created);
+                        Record.created = Acm.getDateFromDatetime2(correspondences[i].created,$.t("common:date.short"));
                         Record.creator = Acm.__FixMe__getUserFullName(correspondences[i].creator);
                         jtData.Records.push(Record);
                     }
@@ -3347,12 +3368,14 @@ CaseFile.View = CaseFile.View || {
                     var timesheet = timesheets[j];
                     var Record = {};
                     Record.id = Acm.goodValue(timesheet.id);
-                    Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    //Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime2(timesheet.startDate,$.t("common:date.short")) + " - " +  Acm.getDateFromDatetime2(timesheet.endDate,$.t("common:date.short"));
                     Record.type = CaseFile.Model.DOC_TYPE_TIMESHEET;
                     Record.status = Acm.goodValue(timesheet.status);
                     Record.username = Acm.goodValue(timesheet.creator);
                     Record.hours = Acm.goodValue(CaseFile.View.Time.findTotalHours(timesheet.times));
-                    Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(timesheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
@@ -3459,7 +3482,8 @@ CaseFile.View = CaseFile.View || {
                     Record.status = Acm.goodValue(costsheet.status);
                     Record.username = Acm.goodValue(costsheet.creator);
                     Record.cost = Acm.goodValue(CaseFile.View.Cost.findTotalCost(costsheet.costs));
-                    Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(costsheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
