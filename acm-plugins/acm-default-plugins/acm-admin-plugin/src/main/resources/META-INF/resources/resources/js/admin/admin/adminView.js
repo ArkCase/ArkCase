@@ -1790,7 +1790,9 @@ Admin.View = Admin.View || {
 	                if (Acm.isNotEmpty(plainConfigurationFormUrl)) {
 	                	Acm.Dialog.openWindow(plainConfigurationFormUrl, "", 1060, 700
 	                        ,function() {
-	                            // TODO: Refresh after closing the form
+	                            setTimeout(function(){
+	                            	Admin.Service.Forms.PlainForms.retrievePlainForms();
+	                            }, 2000);
 	                        }
 	                    );
 	                }
@@ -1807,7 +1809,9 @@ Admin.View = Admin.View || {
 	                if (Acm.isNotEmpty(plainConfigurationFormUrl)) {
 	                	Acm.Dialog.openWindow(plainConfigurationFormUrl, "", 1060, 700
 	                        ,function() {
-	                            // TODO: Refresh after closing the form
+		                		setTimeout(function(){
+	                            	Admin.Service.Forms.PlainForms.retrievePlainForms();
+	                            }, 2000);
 	                        }
 	                    );
 	                }
@@ -1826,7 +1830,9 @@ Admin.View = Admin.View || {
             }
             
             ,onModelFormConfigDeletedPlainForm: function() {
-            	Admin.Service.Forms.PlainForms.retrievePlainForms();
+            	setTimeout(function(){
+                	Admin.Service.Forms.PlainForms.retrievePlainForms();
+                }, 2000);
             }
             
             ,getFormKey: function(recordId){

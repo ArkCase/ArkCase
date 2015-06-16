@@ -79,6 +79,11 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 				result = initTargets();
 			}
 			
+			if ("init-object-properties".equals(action)) 
+			{
+				result = initObjectProperties();
+			}
+			
 			if ("init-required-url-parameters".equals(action)) 
 			{
 				result = initRequiredUrlParameters();
@@ -171,9 +176,33 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		return json;
 	}
 	
+	private Object initObjectProperties()
+	{
+		LOG.debug("Object Properties initialization.");
+		String target = getRequest().getParameter("target");
+		
+		PlainConfigurationForm form = new PlainConfigurationForm();
+		if (target != null && !target.isEmpty())
+		{
+			LOG.debug("Object Properties initialization for target=" + target);
+			List<String> objectProperties = convertToList((String) getProperties().get(FrevvoFormName.PLAIN_CONFIGURATION + "." + target + ".properties"), ",");
+			form.setObjectPropertiesOptions(objectProperties);
+		}
+		else 
+		{
+			LOG.debug("Cannot initialize object properties. No target specified.");
+		}
+		
+		JSONObject json = createResponse(form);
+		
+		LOG.debug("Response: " + json);
+
+		return json;
+	}
+	
 	private Object initRequiredUrlParameters()
 	{
-		LOG.debug("Targets initialization.");
+		LOG.debug("Require URL Parameters initialization.");
 		PlainConfigurationForm form = new PlainConfigurationForm();
 		
 		List<String> requiredUrlParemeters = convertToList((String) getProperties().get(FrevvoFormName.PLAIN_CONFIGURATION + ".required.url.parameters"), ",");
@@ -224,8 +253,14 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		{
 			for (FormTypeEntry form : forms)
 			{
+				String mode = getRequest().getParameter("mode");
 				String target = getRequest().getParameter("target");
-				PlainConfigurationForm registeredForm = getRegisteredForm(form.getId(), target);
+				PlainConfigurationForm registeredForm = null;
+				
+				if (!"edit".equals(mode))
+				{
+					registeredForm = getRegisteredForm(form.getId(), target);
+				}
 				
 				if (registeredForm == null)
 				{
@@ -240,7 +275,7 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 	
 	private PlainConfigurationForm getRegisteredForm(String id, String target)
 	{
-		List<PlainConfigurationForm> registeredForms = getPlainConfigurationFormFactory().convertFromProperties();
+		List<PlainConfigurationForm> registeredForms = getPlainConfigurationFormFactory().convertFromProperties(null);
 		PlainConfigurationForm registeredForm = null;
 		
 		if (registeredForms != null && id != null && target != null)
@@ -266,20 +301,16 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		Map<String, String> properties = new HashMap<String, String>();
 		String key = form.getKey();
 		
-		properties.put(key + ".id", form.getFormId());
-		properties.put(key + ".name", form.getName());
-		properties.put(key + ".type", form.getType());
-		properties.put(key + ".mode", form.getMode());
+		properties.put(key + ".id", form.getFormId() == null ? "" : form.getFormId());
+		properties.put(key + ".name", form.getName() == null ? "" : form.getName());
+		properties.put(key + ".type", form.getType() == null ? "" : form.getType());
+		properties.put(key + ".mode", form.getMode() == null ? "" : form.getMode());
+		properties.put(key + ".description." + form.getTarget(), form.getDescription() == null ? "" : form.getDescription());
 		
 		AcmMarshaller marshaller = ObjectConverter.createJSONMarshaller();
 		String jsonParameters = marshaller.marshal(form.getUrlParameters());
 		
-		if (jsonParameters == null)
-		{
-			jsonParameters = "";
-		}
-		
-		properties.put(key + ".parameters." + form.getTarget(), jsonParameters);
+		properties.put(key + ".parameters." + form.getTarget(), jsonParameters == null ? "" : jsonParameters);
 		
 		return properties;
 	}

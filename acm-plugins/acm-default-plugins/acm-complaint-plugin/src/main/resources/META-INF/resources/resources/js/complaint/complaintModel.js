@@ -13,7 +13,7 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.create)                {Complaint.Model.Action.create();}
         if (Complaint.Model.Detail.create)                {Complaint.Model.Detail.create();}
         if (Complaint.Model.People.create)                {Complaint.Model.People.create();}
-        //if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
+        if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
         if (Complaint.Model.Notes.create)                 {Complaint.Model.Notes.create();}
         if (Complaint.Model.References.create)            {Complaint.Model.References.create();}
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
@@ -31,7 +31,7 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.onInitialized)         {Complaint.Model.Action.onInitialized();}
         if (Complaint.Model.Detail.onInitialized)         {Complaint.Model.Detail.onInitialized();}
         if (Complaint.Model.People.onInitialized)         {Complaint.Model.People.onInitialized();}
-        //if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
+        if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
         if (Complaint.Model.Notes.onInitialized)          {Complaint.Model.Notes.onInitialized();}
         if (Complaint.Model.References.onInitialized)     {Complaint.Model.References.onInitialized();}
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
@@ -518,6 +518,33 @@ Complaint.Model = Complaint.Model || {
             return true;
         }
 
+    }
+    
+    ,Documents: {
+        create : function() {
+            this.cachePlainForms = new Acm.Model.CacheFifo(1);
+        }
+        ,onInitialized: function() {
+        	Complaint.Service.Documents.retrievePlainForms();
+        }
+        
+        ,validatePlainForms: function(plainForms) {
+            if (Acm.isEmpty(plainForms)) {
+                return false;
+            }
+            if(!Acm.isArray(plainForms)){
+                return false;
+            }
+            return true;
+        }
+        
+        ,getPlainForms: function() {
+        	return Complaint.Model.Documents.cachePlainForms.get("forms.plainforms");
+        }
+        
+        ,setPlainForms: function(plainForms) {
+        	Complaint.Model.Documents.cachePlainForms.put("forms.plainforms", plainForms);
+        }
     }
 
     ,Documents_JTable_To_Retire: {

@@ -71,8 +71,6 @@ CaseFile.View = CaseFile.View || {
             this.formUrls.enableFrevvoFormEngine         = Acm.Object.MicroData.get("enableFrevvoFormEngine");
             this.formUrls.urlChangeCaseStatusForm        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
             this.formUrls.urlEditChangeCaseStatusForm    = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
-            this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
-            this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
 
             var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
             var mapDocForms = {};
@@ -85,37 +83,12 @@ CaseFile.View = CaseFile.View || {
                 }
             }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form = this.fileTypes[i].form;
-                    if (Acm.isNotEmpty(form)) {
-                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = mapDocForms[form];
-                        if (formDocument) {
-                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
-                        }
-                    }
-                }
-            }
         }
         ,onInitialized: function() {
         }
 
         ,getToken: function() {
             return this.token;
-        }
-
-        ,findFileTypeByType: function(type) {
-            var ft = null;
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    if (type == this.fileTypes[i].type) {
-                        ft = this.fileTypes[i];
-                        break;
-                    }
-                }
-            }
-            return ft;
         }
     }
 
@@ -1954,6 +1927,7 @@ CaseFile.View = CaseFile.View || {
         create: function() {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
         }
         ,onInitialized: function() {
         }
@@ -1967,6 +1941,11 @@ CaseFile.View = CaseFile.View || {
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
+        
+        ,onModelDocumentsRetrievedPlainForms: function() {
+        	DocTree.View.fileTypes = CaseFile.View.Documents.getFileTypes();
+        	DocTree.View.refreshDocTree();
+        }
 
         ,uploadForm: function(type, folderId, onCloseForm) {
             //var token = CaseFile.View.MicroData.token;
@@ -1975,26 +1954,77 @@ CaseFile.View = CaseFile.View || {
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 //var url = Acm.goodValue(CaseFile.View.MicroData.formUrls[report]);
                 var url = null;
-                var fileType = CaseFile.View.MicroData.findFileTypeByType(type);
+                var fileType = CaseFile.View.Documents.getFileTypeByType(type);
                 if (fileType) {
                     url = Acm.goodValue(fileType.url);
                 }
                 if (Acm.isNotEmpty(url)) {
-                    // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
-                    // the Frevvo form will decode it.
-                    var caseTitle = Acm.goodValue(caseFile.title);
-                    caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-
-                    url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-                        + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + encodeURIComponent(caseTitle)
-                        + "',casePriority:'" + Acm.goodValue(caseFile.priority)
-                        + "',folderId:'" + folderId
-                        + "',"
-                    );
+                    var data = "_data=(";
+                    if (fileType && fileType.urlParameters && fileType.urlParameters.length > 0) {
+                    	var urlParameters = fileType.urlParameters;
+                    	var parametersAsString = '';
+                    	for (var i = 0; i < urlParameters.length; i++) {
+                    		var key = urlParameters[i].name;
+                    		var value = '';
+                    		if (Acm.isNotEmpty(urlParameters[i].defaultValue)) {
+                    			value = Acm.silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
+                    		} else if (Acm.isNotEmpty(urlParameters[i].keyValue)) {
+                    			if (Acm.isNotEmpty(caseFile[urlParameters[i].keyValue])) {
+                    				value = Acm.silentReplace(caseFile[urlParameters[i].keyValue], "'", "_0027_");
+                    			}
+                    		}
+                    		parametersAsString += key + ":'" + Acm.goodValue(value) + "',";
+                    	}
+                    	parametersAsString +="folderId:'" + folderId + "',";
+                    	data += parametersAsString;
+                    }
+                    url = url.replace("_data=(", data);
                     Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
+        }
+        
+        ,getFileTypes: function() {
+        	var fileTypes = CaseFile.View.MicroData.fileTypes;
+        	var plainForms = CaseFile.Model.Documents.getPlainForms();
+        	var plainFormsAsFileTypes = [];
+        	
+        	if (CaseFile.Model.Documents.validatePlainForms(plainForms)) {
+        		for (var i = 0; i < plainForms.length; i++) {
+        			if (Acm.isNotEmpty(plainForms[i].key)) {
+        				var fileType = {};
+            			fileType.type = plainForms[i].key;
+            			fileType.label = Acm.goodValue(plainForms[i].name);
+            			fileType.url = Acm.goodValue(plainForms[i].url);
+            			fileType.form = true;
+            			fileType.urlParameters = plainForms[i].urlParameters;
+            			
+            			plainFormsAsFileTypes.push(fileType);
+        			}
+        		}
+        	}
+        	
+        	if (Acm.isArray(fileTypes)) {
+                fileTypes = plainFormsAsFileTypes.concat(fileTypes);
+            }else {
+            	fileTypes = plainFormsAsFileTypes;
+            }
+        	
+        	return fileTypes;
+        }
+        
+        ,getFileTypeByType: function(type) {
+            var ft = null;
+            var _fileTypes = CaseFile.View.Documents.getFileTypes();
+            if (Acm.isArray(_fileTypes)) {
+                for (var i = 0; i < _fileTypes.length; i++) {
+                    if (type == _fileTypes[i].type) {
+                        ft = _fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
     }
 

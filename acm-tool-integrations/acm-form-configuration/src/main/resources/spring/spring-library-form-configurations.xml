@@ -8,6 +8,7 @@
 
     <bean id="formResource" class="com.armedia.acm.frevvo.config.FrevvoFormUrl">
         <property name="properties" ref="acm-forms-properties"/>
+        <property name="plainFormProperties" ref="plainFormProperties"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 

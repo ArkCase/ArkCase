@@ -4,6 +4,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +49,7 @@ public class GetPlainFormsAPIController {
 			LOG.info("Taking all plain forms.");
 		}
 		
-		List<PlainConfigurationForm> plainForms = getPlainConfigurationFormFactory().convertFromProperties();
+		List<PlainConfigurationForm> plainForms = getPlainConfigurationFormFactory().convertFromProperties(null);
 		
 		if (plainForms != null)
 		{
@@ -66,6 +68,22 @@ public class GetPlainFormsAPIController {
 		}
 		
 		return new ArrayList<PlainConfigurationForm>();
+    }
+	
+	@RequestMapping(value="/plainforms/{target}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<PlainConfigurationForm> getPlainFormsForTarget(@PathVariable("target") String target,
+    						  Authentication auth,
+    						  HttpSession httpSession) throws Exception
+    {
+		if (LOG.isInfoEnabled()) 
+		{
+			LOG.info("Taking all plain forms for target=" + target);
+		}
+		
+		List<PlainConfigurationForm> plainForms = getPlainConfigurationFormFactory().convertFromProperties(Arrays.asList(target));
+		
+		return plainForms;
     }
 
 	public PlainConfigurationFormFactory getPlainConfigurationFormFactory() {

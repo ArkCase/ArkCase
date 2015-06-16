@@ -7,7 +7,7 @@ public interface FormUrl {
 	 * @param formName
 	 * @return
 	 */
-	public String getNewFormUrl(String formName);
+	public String getNewFormUrl(String formName, boolean plain);
 	
 	/**
 	 * Retrieve the form server url for the PDF attachment base on the form name.
