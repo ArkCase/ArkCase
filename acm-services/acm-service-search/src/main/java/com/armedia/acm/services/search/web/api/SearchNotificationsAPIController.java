@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
@@ -41,7 +42,7 @@ public class SearchNotificationsAPIController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchAdvancedObjectByType(
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "s", required = false, defaultValue = SearchConstants.PROPERTY_CREATED + " " + SearchConstants.SORT_DESC) String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
             @RequestParam(value = "owner", required = false, defaultValue = "") String owner,
