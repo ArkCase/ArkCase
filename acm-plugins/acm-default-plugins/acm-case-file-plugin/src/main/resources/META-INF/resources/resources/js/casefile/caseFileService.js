@@ -44,6 +44,7 @@ CaseFile.Service = {
         ,API_GET_PRIORITIES            : "/api/latest/plugin/complaint/priorities"
         ,API_GET_GROUPS				   : "/api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
         ,API_GET_USERS				   : "/api/latest/plugin/search/USER?n=1000&s=name asc"
+        ,API_RETRIEVE_PERSON_ASSOCIATION_TYPES    : "/api/latest/plugin/person/types"
 
         ,_validateAssignees: function(data) {
             if (Acm.isEmpty(data)) {
@@ -205,6 +206,30 @@ CaseFile.Service = {
         }
         
         ,_validateUsers: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,retrievePersonAssocitaionTypes : function() {
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelFoundPersonAssociationTypes(response);
+                    } else {
+                        if (CaseFile.Service.Lookup._validatePersonAssocitaionTypes(response)) {
+                            CaseFile.Model.Lookup.setPersonTypes(response);
+                            CaseFile.Controller.modelFoundPersonAssociationTypes(response);
+                        }
+                    }
+                }
+                ,App.getContextPath() + this.API_RETRIEVE_PERSON_ASSOCIATION_TYPES
+            )
+        }
+        ,_validatePersonAssocitaionTypes: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
             }
@@ -548,7 +573,6 @@ CaseFile.Service = {
                 );
             }
         }
-
         ,_validateDeletedPersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
