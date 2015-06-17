@@ -84,33 +84,42 @@ public class PlainConfigurationFormFactory {
 		return plainForms;
 	}
 	
+	public String[] getKeyValueTargets()
+	{
+		String[] retval = null;
+		String keyValuePairsTargets = getFormProperties().getProperty(FrevvoFormName.PLAIN_CONFIGURATION + ".targets", null);
+		
+		if (keyValuePairsTargets != null && !keyValuePairsTargets.isEmpty())
+		{	
+			retval = keyValuePairsTargets.split(",");
+		}
+		
+		return retval;
+	}
+	
 	public List<String> getTargets()
 	{
 		List<String> targets = new ArrayList<String>();
 		
-		String keyValuePairsTargets = getFormProperties().getProperty(FrevvoFormName.PLAIN_CONFIGURATION + ".targets", null);
+		String[] keyValuePairsTargetsArray = getKeyValueTargets();
 		
-		if (keyValuePairsTargets != null && !keyValuePairsTargets.isEmpty())
-		{			
-			try
+		try
+		{
+			if (keyValuePairsTargetsArray != null && keyValuePairsTargetsArray.length > 0)
 			{
-				String[] keyValuePairsTargetsArray = keyValuePairsTargets.split(",");
-				if (keyValuePairsTargetsArray != null && keyValuePairsTargetsArray.length > 0)
-				{
-					for (int i = 0; i < keyValuePairsTargetsArray.length; i++) {
-						String target = getFormTarget(keyValuePairsTargetsArray[i]);
-						
-						if (target != null)
-						{
-							targets.add(target);
-						}
+				for (int i = 0; i < keyValuePairsTargetsArray.length; i++) {
+					String target = getFormTarget(keyValuePairsTargetsArray[i]);
+					
+					if (target != null)
+					{
+						targets.add(target);
 					}
 				}
 			}
-			catch(Exception e)
-			{
-				LOG.error("Cannot create list of targets.", e);
-			}
+		}
+		catch(Exception e)
+		{
+			LOG.error("Cannot create list of targets.", e);
 		}
 		
 		return targets;

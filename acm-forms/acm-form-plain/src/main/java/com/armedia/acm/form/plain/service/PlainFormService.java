@@ -24,13 +24,15 @@ public class PlainFormService extends FrevvoFormAbstractService {
 	@Override
 	public Object get(String action) 
 	{
-		// TODO Auto-generated method stub
+		// No implementation is needed so far
 		return null;
 	}
 
 	@Override
 	public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception 
 	{
+		Long folderId = getFolderAndFilesUtils().convertToLong((String) getRequest().getParameter("folderId"));
+		String cmisFolderId = null;
 		PlainForm form = (PlainForm) convertFromXMLToObject(cleanXML(xml), PlainForm.class);
 		
 		if (form == null) 
@@ -39,7 +41,17 @@ public class PlainFormService extends FrevvoFormAbstractService {
 			return false;
 		}
 		
-		saveAttachments(attachments, form.getCmisFolderId(), form.getObjectType(), form.getObjectId());
+		try 
+		{
+			cmisFolderId = findCmisFolderId(folderId, null, form.getObjectType(), form.getId());
+		} 
+		catch (Exception e) 
+		{
+			LOG.error("Cannot take CMIS folder id to be able to save attachments.", e);
+			return false;
+		}
+		
+		saveAttachments(attachments, cmisFolderId, form.getObjectType(), form.getObjectId());
 		
 		return true;
 	}

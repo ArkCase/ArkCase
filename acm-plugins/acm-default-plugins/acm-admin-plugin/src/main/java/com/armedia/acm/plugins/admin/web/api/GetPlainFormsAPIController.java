@@ -55,7 +55,9 @@ public class GetPlainFormsAPIController {
 		{
 			try
 			{
-				// TODO: Finish the sorting ... add Comparator to the stream ...
+				// TODO: Finish paging and sorting ... add Comparator to the stream ...
+				// For now avoid paging. UI should first support paging. After that, remove this line below
+				maxRows = plainForms.size();
 				return plainForms.stream()
 				                 .skip(startRow)
 				                 .limit(maxRows)

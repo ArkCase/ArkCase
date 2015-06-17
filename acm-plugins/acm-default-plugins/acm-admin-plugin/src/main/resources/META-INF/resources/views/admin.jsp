@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">search,common</span>
+        <span itemprop="resourceNamespace">search,common,admin</span>
         <span itemprop="plainConfigurationFormUrl">${plainConfigurationFormUrl}</span>
     </div>
     <%--<div id="detailData" itemscope="true" style="display: none">
@@ -438,9 +438,6 @@
                                             
                                             <div class="pull-right  m-t-md" style="margin-right: 10px">
                                                <select id="plainFormTarget" class="form-control" style="height: 32px; font-size: 14px;">
-                                               		<option value="">Select Target</option>
-                                               		<option value="CASE_FILE">Case File</option>
-                                               		<option value="COMPLAINT">Complaint</option>
                                                </select>
                                             </div>
                                             
