@@ -7,7 +7,8 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">search</span>
+        <span itemprop="resourceNamespace">search,common,admin</span>
+        <span itemprop="plainConfigurationFormUrl">${plainConfigurationFormUrl}</span>
     </div>
     <%--<div id="detailData" itemscope="true" style="display: none">
         <span itemprop="helpUrl">${helpUrl}</span>
@@ -421,6 +422,39 @@
                                             </section>
                                         </div>
                                     </div>
+                                    
+                                    <%--JTable - Forms - START--%>
+                                    <%--So far we have only plain forms configuration, but in future maybe we are going to add more configuration related to forms--%>
+                                    
+                                    <%--JTable - Plain Forms - start--%>
+                                    <div class="row" id="tabPlainForms" style="display:none;">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button id="btnAddPlainForm" class="btn btn-default btn-sm">
+                                                    <i class="fa fa-plus text"></i>
+                                                    <span class="text">Add Plain Form</span>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="pull-right  m-t-md" style="margin-right: 10px">
+                                               <select id="plainFormTarget" class="form-control" style="height: 32px; font-size: 14px;">
+                                               </select>
+                                            </div>
+                                            
+                                            <h3>Plain Forms</h3>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <section class="panel panel-default">
+                                                <div id="divPlainForms" style="width:100%">
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                    <%--JTable - Plain Forms - end--%>
+                                    
+                                    
+                                    <%--JTable - Forms - END--%>
 
                             </section>
                         </section>

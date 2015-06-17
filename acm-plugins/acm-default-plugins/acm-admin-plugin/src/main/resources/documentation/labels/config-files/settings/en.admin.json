@@ -1,1 +1,21 @@
-{}
+{
+	"forms": {
+		"plainforms": {
+			"title": {
+				"value": "Plain Forms",
+				"defaultValue": "Plain Forms",
+				"description": ""
+			},
+			"select-target": {
+				"value": "Select Target",
+				"defaultValue": "Select Target",
+				"description": ""
+			},
+			"select-target-msg": {
+				"value": "Please Select Target",
+				"defaultValue": "Please Select Target",
+				"description": ""
+			}
+		}
+	}
+}

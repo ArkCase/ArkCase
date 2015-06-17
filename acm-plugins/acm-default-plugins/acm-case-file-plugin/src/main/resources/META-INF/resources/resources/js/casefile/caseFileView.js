@@ -71,8 +71,6 @@ CaseFile.View = CaseFile.View || {
             this.formUrls.enableFrevvoFormEngine         = Acm.Object.MicroData.get("enableFrevvoFormEngine");
             this.formUrls.urlChangeCaseStatusForm        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
             this.formUrls.urlEditChangeCaseStatusForm    = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
-            this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
-            this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
 
             var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
             var mapDocForms = {};
@@ -85,37 +83,12 @@ CaseFile.View = CaseFile.View || {
                 }
             }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form = this.fileTypes[i].form;
-                    if (Acm.isNotEmpty(form)) {
-                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = mapDocForms[form];
-                        if (formDocument) {
-                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
-                        }
-                    }
-                }
-            }
         }
         ,onInitialized: function() {
         }
 
         ,getToken: function() {
             return this.token;
-        }
-
-        ,findFileTypeByType: function(type) {
-            var ft = null;
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    if (type == this.fileTypes[i].type) {
-                        ft = this.fileTypes[i];
-                        break;
-                    }
-                }
-            }
-            return ft;
         }
     }
 
@@ -536,10 +509,12 @@ CaseFile.View = CaseFile.View || {
             if (CaseFile.Model.Detail.validateCaseFile(c)) {
                 this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
-                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
+                //this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.created));//c.incidentDate
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime2(c.created,$.t("common:date.short")));
                 this.setTextLnkSubjectType(Acm.goodValue(c.caseType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
-                this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
+                //this.setTextLnkDueDate(Acm.getDateFromDatetime(c.dueDate));
+                this.setTextLnkDueDate(Acm.getDateFromDatetime2(c.dueDate,$.t("common:date.short")));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);
@@ -893,6 +868,7 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_PERSON_ASSOCIATION    ,this.onModelAddedPersonAssociation);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PERSON_ASSOCIATION  ,this.onModelUpdatedPersonAssociation);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DELETED_PERSON_ASSOCIATION  ,this.onModelDeletedPersonAssociation);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_FOUND_PERSON_ASSOCIATION_TYPES  ,this.onModelFoundPersonAssociationTypes);
 
             if (this.ContactMethods.create)     {this.ContactMethods.create();}
             if (this.SecurityTags.create)       {this.SecurityTags.create();}
@@ -937,6 +913,14 @@ CaseFile.View = CaseFile.View || {
         ,onModelDeletedPersonAssociation: function(personAssociationId) {
             if (personAssociationId.hasError) {
                 Acm.Dialog.info(personAssociationId.errorMsg);
+            }
+            else{
+                AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
+            }
+        }
+        ,onModelFoundPersonAssociationTypes: function(personAssociation) {
+            if (personAssociation && personAssociation.hasError) {
+                Acm.Dialog.info(personAssociation.errorMsg);
             }
             else{
                 AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
@@ -1135,14 +1119,14 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.contact-methods.table.title") + "'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, $.t("casefile:people.table.contact-methods.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS
+                    title: $.t("casefile:people.table.contact-methods.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_CONTACT_METHODS
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1169,7 +1153,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(contactMethods[i].id, 0)
                                                 ,type    : Acm.goodValue(contactMethods[i].type)
                                                 ,value   : Acm.goodValue(contactMethods[i].value)
-                                                ,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                //,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                ,created : Acm.getDateFromDatetime2(contactMethods[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(contactMethods[i].creator)
                                             });
                                         }
@@ -1299,19 +1284,19 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, $.t("casefile:people.table.security-tags.table-title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS
+                    title: $.t("casefile:people.table.security-tags.table-title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_SECURITY_TAGS
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Device'
+                        addNewRecord: $.t("casefile:people.table.security-tags.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1333,7 +1318,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(securityTags[i].id, 0)
                                                 ,type    : Acm.goodValue(securityTags[i].type)
                                                 ,value   : Acm.goodValue(securityTags[i].value)
-                                                ,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                //,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                ,created : Acm.getDateFromDatetime2(securityTags[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(securityTags[i].creator)
                                             });
                                         }
@@ -1455,14 +1441,14 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='"+ $.t("casefile:people.table.security-tags.organizations.table.title") +"'><i class='fa fa-book'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, $.t("casefile:people.table.security-tags.organizations.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
+                    title: $.t("casefile:people.table.security-tags.organizations.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ORGANIZATIONS
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1489,7 +1475,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(organizations[i].organizationId, 0)
                                                 ,type    : Acm.goodValue(organizations[i].organizationType)
                                                 ,value   : Acm.goodValue(organizations[i].organizationValue)
-                                                ,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                //,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                ,created : Acm.getDateFromDatetime2(organizations[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(organizations[i].creator)
                                             });
                                         }
@@ -1609,14 +1596,14 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.addresses.table.title") + "'><i class='fa fa-map-marker'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, $.t("casefile:people.table.security-tags.addresses.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES
+                    title: $.t("casefile:people.table.security-tags.addresses.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ADDRESSES
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
@@ -1647,7 +1634,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,state         : Acm.goodValue(addresses[i].state)
                                                 ,zip           : Acm.goodValue(addresses[i].zip)
                                                 ,country       : Acm.goodValue(addresses[i].country)
-                                                ,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                //,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                ,created       : Acm.getDateFromDatetime2(addresses[i].created,$.t("common:date.short"))
                                                 ,creator       : Acm.goodValue(addresses[i].creator)
                                             });
                                         }
@@ -1822,19 +1810,19 @@ CaseFile.View = CaseFile.View || {
             ,createLink: function($jt) {
                 var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.aliases.table.title") + "'><i class='fa fa-users'></i></a>");
                 $link.click(function (e) {
-                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES);
+                    AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, $.t("casefile:people.table.security-tags.aliases.table.title"));
                     e.preventDefault();
                 });
                 return $link;
             }
             ,onOpen: function($jt, $row) {
                 AcmEx.Object.JTable.useAsChild($jt, $row, {
-                    title: CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES
+                    title: $.t("casefile:people.table.security-tags.aliases.table.title") //CaseFile.Model.Lookup.PERSON_SUBTABLE_TITLE_ALIASES
                     ,paging: true //fix me
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: 'Add Alias'
+                        addNewRecord: $.t("casefile:people.table.security-tags.aliases.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1856,7 +1844,8 @@ CaseFile.View = CaseFile.View || {
                                                 ,id      : Acm.goodValue(personAliases[i].id, 0)
                                                 ,type    : Acm.goodValue(personAliases[i].aliasType)
                                                 ,value   : Acm.goodValue(personAliases[i].aliasValue)
-                                                ,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                //,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                ,created : Acm.getDateFromDatetime2(personAliases[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(personAliases[i].creator)
                                             });
                                         }
@@ -1955,6 +1944,7 @@ CaseFile.View = CaseFile.View || {
         create: function() {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
         }
         ,onInitialized: function() {
         }
@@ -1968,6 +1958,11 @@ CaseFile.View = CaseFile.View || {
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
+        
+        ,onModelDocumentsRetrievedPlainForms: function() {
+        	DocTree.View.fileTypes = CaseFile.View.Documents.getFileTypes();
+        	DocTree.View.refreshDocTree();
+        }
 
         ,uploadForm: function(type, folderId, onCloseForm) {
             //var token = CaseFile.View.MicroData.token;
@@ -1976,26 +1971,78 @@ CaseFile.View = CaseFile.View || {
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 //var url = Acm.goodValue(CaseFile.View.MicroData.formUrls[report]);
                 var url = null;
-                var fileType = CaseFile.View.MicroData.findFileTypeByType(type);
+                var fileType = CaseFile.View.Documents.getFileTypeByType(type);
                 if (fileType) {
                     url = Acm.goodValue(fileType.url);
                 }
                 if (Acm.isNotEmpty(url)) {
-                    // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
-                    // the Frevvo form will decode it.
-                    var caseTitle = Acm.goodValue(caseFile.title);
-                    caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-
-                    url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-                        + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + encodeURIComponent(caseTitle)
-                        + "',casePriority:'" + Acm.goodValue(caseFile.priority)
-                        + "',folderId:'" + folderId
-                        + "',"
-                    );
+                    var data = "_data=(";
+                    if (fileType && fileType.urlParameters && fileType.urlParameters.length > 0) {
+                    	var urlParameters = fileType.urlParameters;
+                    	var parametersAsString = '';
+                    	for (var i = 0; i < urlParameters.length; i++) {
+                    		var key = urlParameters[i].name;
+                    		var value = '';
+                    		if (Acm.isNotEmpty(urlParameters[i].defaultValue)) {
+                    			value = Acm.silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
+                    		} else if (Acm.isNotEmpty(urlParameters[i].keyValue)) {
+                    			if (Acm.isNotEmpty(caseFile[urlParameters[i].keyValue])) {
+                    				value = Acm.silentReplace(caseFile[urlParameters[i].keyValue], "'", "_0027_");
+                    			}
+                    		}
+                    		value = encodeURIComponent(value);
+                    		parametersAsString += key + ":'" + Acm.goodValue(value) + "',";
+                    	}
+                    	parametersAsString +="folderId:'" + folderId + "',";
+                    	data += parametersAsString;
+                    }
+                    url = url.replace("_data=(", data);
                     Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
+        }
+        
+        ,getFileTypes: function() {
+        	var fileTypes = CaseFile.View.MicroData.fileTypes;
+        	var plainForms = CaseFile.Model.Documents.getPlainForms();
+        	var plainFormsAsFileTypes = [];
+        	
+        	if (CaseFile.Model.Documents.validatePlainForms(plainForms)) {
+        		for (var i = 0; i < plainForms.length; i++) {
+        			if (Acm.isNotEmpty(plainForms[i].key)) {
+        				var fileType = {};
+            			fileType.type = plainForms[i].key;
+            			fileType.label = Acm.goodValue(plainForms[i].name);
+            			fileType.url = Acm.goodValue(plainForms[i].url);
+            			fileType.form = true;
+            			fileType.urlParameters = plainForms[i].urlParameters;
+            			
+            			plainFormsAsFileTypes.push(fileType);
+        			}
+        		}
+        	}
+        	
+        	if (Acm.isArray(fileTypes)) {
+                fileTypes = plainFormsAsFileTypes.concat(fileTypes);
+            }else {
+            	fileTypes = plainFormsAsFileTypes;
+            }
+        	
+        	return fileTypes;
+        }
+        
+        ,getFileTypeByType: function(type) {
+            var ft = null;
+            var _fileTypes = CaseFile.View.Documents.getFileTypes();
+            if (Acm.isArray(_fileTypes)) {
+                for (var i = 0; i < _fileTypes.length; i++) {
+                    if (type == _fileTypes[i].type) {
+                        ft = _fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
     }
 
@@ -2230,7 +2277,9 @@ CaseFile.View = CaseFile.View || {
                     var Record = {};
                     Record.id         = Acm.goodValue(noteList[i].id, 0);
                     Record.note       = Acm.goodValue(noteList[i].note);
-                    Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                    //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
+                    Record.created    = Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short"));
+
                     Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
                     //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                     //Record.parentType = Acm.goodValue(noteList[i].parentType);
@@ -2700,7 +2749,8 @@ CaseFile.View = CaseFile.View || {
                                     var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
                                     record.id = Acm.goodValue(reference.targetId, 0);
                                     record.title = Acm.goodValue(reference.targetName);
-                                    record.modified = Acm.getDateFromDatetime(reference.modified);
+                                    //record.modified = Acm.getDateFromDatetime(reference.modified);
+                                    record.modified    = Acm.getDateFromDatetime2(reference.modified,$.t("common:date.short"));
                                     record.type = Acm.goodValue(reference.targetType);
                                     record.status = Acm.goodValue(reference.status);
                                     rc.Records.push(record);
@@ -2787,7 +2837,8 @@ CaseFile.View = CaseFile.View || {
                     if(CaseFile.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
                         Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
                         jtData.Records.push(Record);
                     }
@@ -2912,7 +2963,8 @@ CaseFile.View = CaseFile.View || {
                         var Record = {};
                         Record.id = Acm.goodValue(correspondences[i].objectId)
                         Record.title = Acm.goodValue(correspondences[i].name);
-                        Record.created = Acm.getDateFromDatetime(correspondences[i].created);
+                        //Record.created = Acm.getDateFromDatetime(correspondences[i].created);
+                        Record.created = Acm.getDateFromDatetime2(correspondences[i].created,$.t("common:date.short"));
                         Record.creator = Acm.__FixMe__getUserFullName(correspondences[i].creator);
                         jtData.Records.push(Record);
                     }
@@ -3064,12 +3116,14 @@ CaseFile.View = CaseFile.View || {
                     var timesheet = timesheets[j];
                     var Record = {};
                     Record.id = Acm.goodValue(timesheet.id);
-                    Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    //Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.name = $.t("casefile:time.table.label.timesheet") + " " + Acm.getDateFromDatetime2(timesheet.startDate,$.t("common:date.short")) + " - " +  Acm.getDateFromDatetime2(timesheet.endDate,$.t("common:date.short"));
                     Record.type = CaseFile.Model.DOC_TYPE_TIMESHEET;
                     Record.status = Acm.goodValue(timesheet.status);
                     Record.username = Acm.goodValue(timesheet.creator);
                     Record.hours = Acm.goodValue(CaseFile.View.Time.findTotalHours(timesheet.times));
-                    Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(timesheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
@@ -3176,7 +3230,8 @@ CaseFile.View = CaseFile.View || {
                     Record.status = Acm.goodValue(costsheet.status);
                     Record.username = Acm.goodValue(costsheet.creator);
                     Record.cost = Acm.goodValue(CaseFile.View.Cost.findTotalCost(costsheet.costs));
-                    Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(costsheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
