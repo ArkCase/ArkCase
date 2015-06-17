@@ -95,14 +95,11 @@ App.Service = {
             return Acm.Service.call({type: "GET"
                 ,url: this.API_RETRIEVE_USERS
                 ,callback: function(response) {
-                    if (response.hasError) {
-                        ;
-
-                    } else {
+                    if (! response.hasError) {
                         if (App.Model.Users.validateUsers(response)) {
                             var users = response;
                             App.Model.Users.setUsers(name, users);
-                            return true;
+                            return users;
                         }
                     }
                 } //end callback
