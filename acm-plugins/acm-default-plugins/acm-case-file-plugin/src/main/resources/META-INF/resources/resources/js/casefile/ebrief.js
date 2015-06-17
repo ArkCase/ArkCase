@@ -293,167 +293,195 @@ CaseFile.prepare = function() {
         }
 
         ,createJTableParticipants: function($s) {
-            AcmEx.Object.JTable.useBasic($s, {
-                title: $.t("ebrief:participants.table.title")
-                ,paging: true //fix me
-                ,sorting: true //fix me
-                ,pageSize: 10 //Set page size (default: 10)
-                ,messages: {
-                    addNewRecord: $.t("ebrief:participants.msg.add-new-record")
-                }
-                ,actions: {
-                    listAction: function(postData, jtParams) {
-                        var rc = AcmEx.Object.JTable.getEmptyRecords();
-                        //var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        var c = CaseFile.View.getActiveCaseFile();
-                        if (CaseFile.Model.Detail.validateCaseFile(c)) {
-                            for (var i = 0; i < c.participants.length; i++) {
-                                var participant = c.participants[i];
-                                if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group") {
-                                    var record = {};
-                                    record.id = Acm.goodValue(participant.id, 0);
-                                    record.title = Acm.goodValue(participant.participantLdapId);
-                                    record.type = Acm.goodValue(participant.participantType);
+            AcmEx.Object.JTable.usePaging($s
+                ,{
+                    title: $.t("ebrief:participants.table.title")
+                    ,messages: {
+                        addNewRecord: $.t("ebrief:participants.msg.add-new-record")
+                    }
+                    ,actions: {
+                        pagingListAction: function(postData, jtParams, comparator) {
+                            var rc = AcmEx.Object.JTable.getEmptyRecords();
+                            //var caseFileId = CaseFile.View.getActiveCaseFileId();
+                            var c = CaseFile.View.getActiveCaseFile();
+                            if (CaseFile.Model.Detail.validateCaseFile(c)) {
+                                var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, c.participants, comparator);
+                                for (var i = 0; i < pagingItems.length; i++) {
+                                    var participant = AcmEx.Object.JTable.getPagingItemData(pagingItems[i]);
+                                    var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
 
-                                    var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant.participantLdapId));
-                                    if(Acm.isNotEmpty(profile)){
-                                        record.organisation = Acm.goodValue(profile.organisation);
-                                        record.email = Acm.goodValue(profile.email);
-                                        record.phone = Acm.goodValue(profile.phone);
-                                    }
-                                    else{
-                                        record.organisation = "N/A";
-                                        record.email = "N/A";
-                                        record.phone = "N/A";
-                                    }
+                                    if(Acm.goodValue(participant.participantType) !== "*" && Acm.goodValue(participant.participantType) !== "owning group") {
+                                        record.id = Acm.goodValue(participant.id, 0);
+                                        record.title = Acm.goodValue(participant.participantLdapId);
+                                        record.type = Acm.goodValue(participant.participantType);
 
-                                    rc.Records.push(record);
+                                        var profile = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant.participantLdapId));
+                                        if(Acm.isNotEmpty(profile)){
+                                            record.organisation = Acm.goodValue(profile.organisation);
+                                            record.email = Acm.goodValue(profile.email);
+                                            record.phone = Acm.goodValue(profile.phone);
+                                        }
+                                        else{
+                                            record.organisation = "N/A";
+                                            record.email = "N/A";
+                                            record.phone = "N/A";
+                                        }
+
+                                        rc.Records.push(record);
+                                    }
+                                }
+                                rc.TotalRecordCount = rc.Records.length;
+                            }
+                            return rc;
+                        }
+                        ,createAction: function(postData, jtParams) {
+                            var record = Acm.urlToJson(postData);
+                            var rc = AcmEx.Object.JTable.getEmptyRecord();
+                            var caseFile = CaseFile.View.getActiveCaseFile();
+                            if (caseFile) {
+                                rc.Record.title = record.title;
+                                rc.Record.type = record.type;
+                            }
+                            return rc;
+                        }
+                        ,updateAction: function(postData, jtParams) {
+                            var record = Acm.urlToJson(postData);
+                            var rc = AcmEx.Object.JTable.getEmptyRecord();
+                            var caseFile = CaseFile.View.getActiveCaseFile();
+                            if (caseFile) {
+                                rc.Record.title = record.title;
+                                rc.Record.type = record.type;
+                            }
+                            return rc;
+                        }
+                        ,deleteAction: function(postData, jtParams) {
+                            return {
+                                "Result": "OK"
+                            };
+                        }
+                    }
+                    ,fields: {
+                        id: {
+                            title: $.t("ebrief:participants.table.field.id")
+                            ,key: true
+                            ,list: false
+                            ,create: false
+                            ,edit: false
+                        }
+                        ,title: {
+                            title: $.t("ebrief:participants.table.field.name")
+                            ,width: '25%'
+                            ,dependsOn: 'type'
+                            ,options: function (data) {
+                                if (data.dependedValues.type == '*') {
+                                    // Default user. This is needed to show default user in the table.
+                                    // I am setting it here, because i don't want to show it in the popup while
+                                    // creating new participant. If we set it in the popup, it should be removed from here.
+                                    // This is used only to recognize the * type.
+                                    return {"*": "*"}
+                                }else if (data.dependedValues.type == 'owning group') {
+                                    var caseFileId = CaseFile.View.getActiveCaseFileId();
+                                    return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups(caseFileId));
+                                } else {
+                                    return Acm.createKeyValueObject(CaseFile.Model.Lookup.getUsers());
                                 }
                             }
-                            rc.TotalRecordCount = rc.Records.length;
                         }
-                        return rc;
-                    }
-                    ,createAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        var caseFile = CaseFile.View.getActiveCaseFile();
-                        if (caseFile) {
-                            rc.Record.title = record.title;
-                            rc.Record.type = record.type;
+                        ,organisation: {
+                            title: $.t("ebrief:participants.table.field.organisation")
+                            ,width: '20%'
                         }
-                        return rc;
-                    }
-                    ,updateAction: function(postData, jtParams) {
-                        var record = Acm.urlToJson(postData);
-                        var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        var caseFile = CaseFile.View.getActiveCaseFile();
-                        if (caseFile) {
-                            rc.Record.title = record.title;
-                            rc.Record.type = record.type;
-                        }
-                        return rc;
-                    }
-                    ,deleteAction: function(postData, jtParams) {
-                        return {
-                            "Result": "OK"
-                        };
-                    }
-                }
-                ,fields: {
-                    id: {
-                        title: $.t("ebrief:participants.table.field.id")
-                        ,key: true
-                        ,list: false
-                        ,create: false
-                        ,edit: false
-                    }
-                    ,title: {
-                        title: $.t("ebrief:participants.table.field.name")
-                        ,width: '25%'
-                        ,dependsOn: 'type'
-                        ,options: function (data) {
-                            if (data.dependedValues.type == '*') {
-                                // Default user. This is needed to show default user in the table.
-                                // I am setting it here, because i don't want to show it in the popup while
-                                // creating new participant. If we set it in the popup, it should be removed from here.
-                                // This is used only to recognize the * type.
-                                return {"*": "*"}
-                            }else if (data.dependedValues.type == 'owning group') {
-                                var caseFileId = CaseFile.View.getActiveCaseFileId();
-                                return Acm.createKeyValueObject(CaseFile.Model.Lookup.getGroups(caseFileId));
-                            } else {
-                                return Acm.createKeyValueObject(CaseFile.Model.Lookup.getUsers());
+                        ,type: {
+                            title: $.t("ebrief:participants.table.field.type")
+                            ,width: '20%'
+                            ,options: CaseFile.Model.Lookup.getParticipantTypes()
+                            ,display: function (data) {
+                                if (data.record.type == '*') {
+                                    // Default user. This is needed to show default user in the table.
+                                    // I am setting it here, because i don't want to show it in the popup while
+                                    // creating new participant. If we set it in the popup, it should be removed from here.
+                                    // This is used only to recognize the * type.
+                                    return '*';
+                                } else {
+                                    var options = CaseFile.Model.Lookup.getParticipantTypes();
+                                    return options[data.record.type];
+                                }
                             }
                         }
-                    }
-                    ,organisation: {
-                        title: $.t("ebrief:participants.table.field.organisation")
-                        ,width: '20%'
-                    }
-                    ,type: {
-                        title: $.t("ebrief:participants.table.field.type")
-                        ,width: '20%'
-                        ,options: CaseFile.Model.Lookup.getParticipantTypes()
-                        ,display: function (data) {
-                            if (data.record.type == '*') {
-                                // Default user. This is needed to show default user in the table.
-                                // I am setting it here, because i don't want to show it in the popup while
-                                // creating new participant. If we set it in the popup, it should be removed from here.
-                                // This is used only to recognize the * type.
-                                return '*';
-                            } else {
-                                var options = CaseFile.Model.Lookup.getParticipantTypes();
-                                return options[data.record.type];
-                            }
+                        ,email: {
+                            title: $.t("ebrief:participants.table.field.email")
+                            ,width: '20%'
+                        }
+                        ,phone: {
+                            title: $.t("ebrief:participants.table.field.phone")
+                            ,width: '15%'
                         }
                     }
-                    ,email: {
-                        title: $.t("ebrief:participants.table.field.email")
-                        ,width: '20%'
-                    }
-                    ,phone: {
-                        title: $.t("ebrief:participants.table.field.phone")
-                        ,width: '15%'
-                    }
-                }
-                ,recordAdded : function (event, data) {
-                    var record = data.record;
-                    var caseFileId = CaseFile.View.getActiveCaseFileId();
-                    if (0 < caseFileId) {
-                        var participant = {};
-                        participant.participantLdapId = record.title;
-                        participant.participantType = record.type;
-                        CaseFile.Controller.viewAddedParticipant(caseFileId, participant);
-                    }
-                }
-                ,recordUpdated : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var caseFileId = CaseFile.View.getActiveCaseFileId();
-                    var c = CaseFile.View.getActiveCaseFile();
-                    if (c && Acm.isArray(c.participants)) {
-                        if (0 < c.participants.length && whichRow < c.participants.length) {
-                            var participant = c.participants[whichRow];
+                    ,recordAdded : function (event, data) {
+                        var record = data.record;
+                        var caseFileId = CaseFile.View.getActiveCaseFileId();
+                        if (0 < caseFileId) {
+                            var participant = {};
                             participant.participantLdapId = record.title;
                             participant.participantType = record.type;
-                            CaseFile.Controller.viewUpdatedParticipant(caseFileId, participant);
+                            CaseFile.Controller.viewAddedParticipant(caseFileId, participant);
+                        }
+                    }
+                    ,recordUpdated : function (event, data) {
+                        var whichRow = AcmEx.Object.JTable.getPagingRow(data);
+                        var record = data.record;
+                        var caseFileId = CaseFile.View.getActiveCaseFileId();
+                        var c = CaseFile.View.getActiveCaseFile();
+                        if (c && Acm.isArray(c.participants)) {
+                            if (0 < c.participants.length && whichRow < c.participants.length) {
+                                var participant = c.participants[whichRow];
+                                participant.participantLdapId = record.title;
+                                participant.participantType = record.type;
+                                CaseFile.Controller.viewUpdatedParticipant(caseFileId, participant);
+                            }
+                        }
+                    }
+                    ,recordDeleted : function (event, data) {
+                        var whichRow = AcmEx.Object.JTable.getPagingRow(data);
+                        var record = data.record;
+                        var caseFileId = CaseFile.View.getActiveCaseFileId();
+                        var c = CaseFile.View.getActiveCaseFile();
+                        if (c && Acm.isArray(c.participants)) {
+                            if (0 < c.participants.length && whichRow < c.participants.length) {
+                                var participant = c.participants[whichRow];
+                                CaseFile.Controller.viewDeletedParticipant(caseFileId, participant.id);
+                            }
                         }
                     }
                 }
-                ,recordDeleted : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-                    var record = data.record;
-                    var caseFileId = CaseFile.View.getActiveCaseFileId();
-                    var c = CaseFile.View.getActiveCaseFile();
-                    if (c && Acm.isArray(c.participants)) {
-                        if (0 < c.participants.length && whichRow < c.participants.length) {
-                            var participant = c.participants[whichRow];
-                            CaseFile.Controller.viewDeletedParticipant(caseFileId, participant.id);
+                ,function(participant1, participant2, sortBy, sortDir) {
+                    var value1 = "";
+                    var value2 = "";
+
+                    if ("title" == sortBy) {
+                        value1 = Acm.goodValue([participant1, "participantLdapId"]);
+                        value2 = Acm.goodValue([participant2, "participantLdapId"]);
+                    } else if ("type" == sortBy) {
+                        value1 = Acm.goodValue([participant1, "participantType"]);
+                        value2 = Acm.goodValue([participant2, "participantType"]);
+                    } else {
+                        var profile1 = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant1.participantLdapId));
+                        var profile2 = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant2.participantLdapId));
+                        if ("organisation" == sortBy) {
+                            value1 = Acm.goodValue([profile1, "organisation"]);
+                            value2 = Acm.goodValue([profile2, "organisation"]);
+                        } else if ("email" == sortBy) {
+                            value1 = Acm.goodValue([profile1, "email"]);
+                            value2 = Acm.goodValue([profile2, "email"]);
+                        } else if ("phone" == sortBy) {
+                            value1 = Acm.goodValue([profile1, "phone"]);
+                            value2 = Acm.goodValue([profile2, "phone"]);
                         }
                     }
+                    var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
+                    return ("DESC" == sortDir)? -rc : rc;
                 }
-            });
+            );
         }
     };
 
