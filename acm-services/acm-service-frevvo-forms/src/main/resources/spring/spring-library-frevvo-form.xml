@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+     <bean id="acm-form-properties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.acm/acm-forms.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>    
+    </bean>
+    
+    <bean id="plainFormProperties" class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
+        <property name="location" value="file:${user.home}/.acm/acm-forms-plain.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="plainFormPropertiesConfigurer" class="net.unicon.springframework.addons.properties.ReloadingPropertyPlaceholderConfigurer">
+		<property name="properties" ref="plainFormProperties"/>
+	</bean>
+
+</beans>
