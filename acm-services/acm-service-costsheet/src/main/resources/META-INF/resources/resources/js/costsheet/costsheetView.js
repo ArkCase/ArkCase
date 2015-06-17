@@ -206,7 +206,9 @@ Costsheet.View = {
                 //this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
                 this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime2(parentObjData.incidentDate,$.t("common:date.short")));
                 this.setTextLnkParentObjPriority(parentObjData.priority);
-                this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                //this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                this.setTextLnkParentObjAssigned(App.Model.Users.getUserFullName(Acm.goodValue(parentObjData.assignee)));
+
                 this.setTextLnkParentObjStatus(parentObjData.status);
                 this.setTextLnkParentObjSubjectType(parentObjData.subjectType);
                 this.setTextLnkParentObjNumber(parentObjData.number);
