@@ -523,6 +523,20 @@ CaseFile.Model = CaseFile.Model || {
             return personAssociation;
         }
 
+        ,validatePersonAssociations: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validatePersonAssociation(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
         ,validatePersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -940,9 +954,8 @@ CaseFile.Model = CaseFile.Model || {
         //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
         ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Primary Victim', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
         ,getPersonTypes : function() {
-            return this._personTypes;
+            return CaseFile.Model.Lookup._personTypes;
         }
-
         ,_personTitles : ['Mr','mr', 'Mrs','mrs', 'Ms','ms', 'Miss','miss']
         ,getPersonTitles : function() {
             return this._personTitles;
