@@ -1051,6 +1051,7 @@ Admin.Service = {
             
             ,API_RETRIEVE_PLAIN_FORMS: 			  "/api/latest/plugin/admin/plainforms"
             ,API_DELETE_PLAIN_FORM: 			  "/api/latest/plugin/admin/plainforms"
+            ,API_RETRIEVE_PLAIN_FORM_TARGETS:	  "/api/latest/plugin/admin/plainform/targets"
             	
         	,retrievePlainForms: function() {
                 var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_RETRIEVE_PLAIN_FORMS;
@@ -1084,6 +1085,24 @@ Admin.Service = {
                         }
                     }
                 });
+            }
+            
+            ,retrievePlainFormTargets: function() {
+                var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_RETRIEVE_PLAIN_FORM_TARGETS;
+                Acm.Service.asyncGet(
+                    function(response) {
+                        if (response.hasError) {
+                            var errorMsg = "Failed to retrieve plain form targets:" + response.errorMsg;
+                            Admin.Controller.modelReportConfigError(errorMsg);
+                        } else {
+                            if (Admin.Model.Forms.PlainForms.validatePlainFormTargets(response)) {
+                                Admin.Model.Forms.PlainForms.setPlainFormTargets(response);
+                                Admin.Controller.modelFormsConfigRetrievedPlainFormTargets(response);
+                            }
+                        }
+                    }
+                    ,url
+                )
             }
         }
     }

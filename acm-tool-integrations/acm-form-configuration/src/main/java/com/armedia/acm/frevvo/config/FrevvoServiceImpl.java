@@ -5,6 +5,7 @@ package com.armedia.acm.frevvo.config;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -145,6 +146,29 @@ public class FrevvoServiceImpl implements FrevvoService {
 		catch (Exception e) 
 		{
 			LOG.error("Cannot take Forms for given application.", e);
+		}
+
+		return null;
+	}
+	
+	@Override
+	public List<FormTypeEntry> getPlainForms(ApplicationEntry application) 
+	{
+		List<FormTypeEntry> allForms = getForms(application);
+		List<FormTypeEntry> plainForms = new ArrayList<FormTypeEntry>();
+		
+		if (allForms != null)
+		{
+			for (FormTypeEntry formEntity: allForms)
+			{
+				if (formEntity.getSummary() != null && formEntity.getSummary().getPlainText() != null && 
+						FrevvoFormConstants.PLAIN.equalsIgnoreCase(formEntity.getSummary().getPlainText().trim()))
+				{
+					plainForms.add(formEntity);
+				}
+			}
+			
+			return plainForms;
 		}
 
 		return null;

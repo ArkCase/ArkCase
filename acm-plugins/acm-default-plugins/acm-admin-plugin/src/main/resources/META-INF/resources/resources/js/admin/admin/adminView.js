@@ -1778,6 +1778,7 @@ Admin.View = Admin.View || {
                 
                 Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS, this.onModelFormConfigRetrievedPlainForms);
                 Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM, this.onModelFormConfigDeletedPlainForm);
+                Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORM_TARGETS, this.onModelFormConfigRetrievedPlainFormTargets);
             }
             , onInitialized: function () {
             }
@@ -1797,8 +1798,7 @@ Admin.View = Admin.View || {
 	                    );
 	                }
             	} else {
-            		// TODO: Add this message to the labels
-            		Acm.Dialog.error("Please select target.");
+            		Acm.Dialog.error($.t("admin:forms.plainforms.select-target-msg"));
             	}
             }
             
@@ -1816,8 +1816,7 @@ Admin.View = Admin.View || {
 	                    );
 	                }
             	} else {
-            		// TODO: Add this message to the labels
-            		Acm.Dialog.error("Please select target.");
+            		Acm.Dialog.error($.t("admin:forms.plainforms.select-target-msg"));
             	}
             }
             
@@ -1833,6 +1832,26 @@ Admin.View = Admin.View || {
             	setTimeout(function(){
                 	Admin.Service.Forms.PlainForms.retrievePlainForms();
                 }, 2000);
+            }
+            
+            ,onModelFormConfigRetrievedPlainFormTargets: function() {
+            	var options = [];
+            	options.push($('<option value="{0}">{1}</option>'.format("", $.t("admin:forms.plainforms.select-target"))));
+            	
+            	var targets = Admin.Model.Forms.PlainForms.getPlainFormTargets();
+            	if (Acm.isNotEmpty(targets) && !Acm.isArrayEmpty(targets)) {
+            		for (var i = 0; i < targets.length; i++) {
+            			var target = targets[i];
+            			if (Acm.isNotEmpty(target)) {
+            				var targetArray = target.split("=");
+            				if (!Acm.isArrayEmpty(targetArray) && targetArray.length === 2) {
+            					options.push($('<option value="{0}">{1}</option>'.format(targetArray[0], targetArray[1])));
+            				}
+            			}
+            		} 
+            	}
+            	
+            	Admin.View.Forms.PlainForms.$plainFormTarget.html(options);
             }
             
             ,getFormKey: function(recordId){
@@ -1854,10 +1873,10 @@ Admin.View = Admin.View || {
             }
             
             ,createJTablePlainForms: function ($s) {
-                $s.jtable({
-                	title:'Plain Forms'
-            		,paging: true
-                    ,sorting: true
+            	AcmEx.Object.JTable.useBasic($s, {
+                	title:$.t("admin:forms.plainforms.title")
+            		,paging: false // For now make these to false
+                    ,sorting: false // For now make these to false
                     ,pageSize: 10 //Set page size (default: 10)
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1929,7 +1948,6 @@ Admin.View = Admin.View || {
 			            }
                     }
                 });
-                $s.jtable('load');
             }
         }
     }

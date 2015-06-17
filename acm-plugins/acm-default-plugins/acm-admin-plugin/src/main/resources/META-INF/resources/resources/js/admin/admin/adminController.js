@@ -103,6 +103,8 @@ Admin.Controller = Admin.Controller || {
     ,MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS                        : "forms-configuration-model-retrieved-plain-forms" 
     
     ,MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM                        	: "forms-configuration-model-deleted-plain-form"
+    	
+    ,MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORM_TARGETS                 : "forms-configuration-model-retrieved-plain-form-targets"
 
     ,viewCreatedAdHocGroup: function(group,parentId){
         Acm.Dispatcher.fireEvent(this.VIEW_ORG_HIERARCHY_CREATED_AD_HOC_GROUP, group,parentId);
@@ -281,5 +283,8 @@ Admin.Controller = Admin.Controller || {
     }
     ,modelFormsConfigDeletedPlainForm: function(plainForm){
         Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM, plainForm);
+    }
+    ,modelFormsConfigRetrievedPlainFormTargets: function(plainFormTargets){
+        Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORM_TARGETS, plainFormTargets);
     }
 }
