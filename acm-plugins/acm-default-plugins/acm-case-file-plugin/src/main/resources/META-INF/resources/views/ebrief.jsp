@@ -22,8 +22,6 @@
         <span itemprop="urlEditChangeCaseStatusForm">${editChangeCaseStatusFormUrl}</span>
         <span itemprop="enableFrevvoFormEngine">${enableFrevvoFormEngine}</span>
         <span itemprop="formDocuments">${formDocuments}</span>
-        <span itemprop="roiFormUrl">${roiFormUrl}</span>
-        <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
         <span itemprop="caseFileTreeRootNameExpression">${caseFileTreeRootNameExpression}</span>
     </div>
