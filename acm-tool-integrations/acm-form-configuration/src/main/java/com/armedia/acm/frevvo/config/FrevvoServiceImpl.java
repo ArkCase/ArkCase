@@ -283,8 +283,8 @@ public class FrevvoServiceImpl implements FrevvoService {
 			
 			if (urlAsString != null)
 			{
-				urlAsString.replace(getFormUrl().getProtocol(), getFormUrl().getInternalProtocol());
-				urlAsString.replace(getFormUrl().getHost(), getFormUrl().getInternalHost());
+				urlAsString = urlAsString.replace(getFormUrl().getProtocol(), getFormUrl().getInternalProtocol());
+				urlAsString = urlAsString.replace(getFormUrl().getHost(), getFormUrl().getInternalHost());
 				
 				// If internal port is null or empty, we should remove the original ":8082" and replace with ""
 				String separator = "";
@@ -295,7 +295,7 @@ public class FrevvoServiceImpl implements FrevvoService {
 					internalPort = "";
 				}
 				
-				urlAsString.replace(separator + getFormUrl().getPort(), internalPort);
+				urlAsString = urlAsString.replace(separator + getFormUrl().getPort(), internalPort);
 				
 				LOG.debug("Changed URL: " + urlAsString);
 				
