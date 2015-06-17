@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchEventPublisher;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
@@ -142,6 +144,62 @@ public class SearchObjectByTypeAPIController {
         publishSearchEvent(authentication, httpSession, true, results);
 
         return results;
+    }
+
+    @RequestMapping(value = "/advanced/{objectType}/all", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<String> searchAllAdvancedObjectByType(
+            @PathVariable("objectType") String objectType,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
+            @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
+            Authentication authentication,
+            HttpSession httpSession
+    ) throws MuleException
+    {
+        String query = "object_type_s:" + objectType;
+
+        if (!StringUtils.isBlank(assignee)) {
+            query += " AND assignee_s:" + assignee;
+        }
+
+        if ( activeOnly )
+        {
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+        }
+
+        if ( log.isDebugEnabled() )
+        {
+            log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
+        }
+
+        String results;
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs;
+        List<String> foundObjects = new ArrayList();
+        do {
+            results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
+                    query, startRow, maxRows, sort);
+            docs = searchResults.getDocuments(results);
+            if(docs != null && docs.length() > 0){
+                for (int i = 0; i < docs.length(); i++)
+                {
+                    JSONObject doc = docs.getJSONObject(i);
+                    if (doc != null && doc.has(SearchConstants.PROPERTY_OBJECT_TYPE))
+                    {
+                        if(objectType.equals(doc.getString(SearchConstants.PROPERTY_OBJECT_TYPE))){
+                            foundObjects.add(doc.toString());
+                        }
+                    }
+                }
+            }
+            startRow += maxRows;
+        } while(docs != null && docs.length() > 0);
+
+        publishSearchEvent(authentication, httpSession, true, results);
+        return foundObjects;
     }
     
     protected void publishSearchEvent(Authentication authentication,

@@ -2482,7 +2482,9 @@ CaseFile.View = CaseFile.View || {
                     //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
                     Record.created    = Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short"));
 
-                    Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(noteList[i].creator));
+
                     //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                     //Record.parentType = Acm.goodValue(noteList[i].parentType);
                     jtData.Records.push(Record);
@@ -2774,7 +2776,9 @@ CaseFile.View = CaseFile.View || {
                     Record.priority = taskList[i].priority;
                     Record.dueDate  = taskList[i].dueDate;
                     Record.status   = taskList[i].status;
-                    Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
+                    //Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
+                    Record.assignee = App.Model.Users.getUserFullName(Acm.goodValue(taskList[i].assignee));
+
                     jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = taskList.length;
@@ -3091,7 +3095,8 @@ CaseFile.View = CaseFile.View || {
                         Record.eventType = Acm.goodValue(events[i].eventType);
                         //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
                         Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
-                        Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                         jtData.Records.push(Record);
                     }
                 }
@@ -3154,7 +3159,7 @@ CaseFile.View = CaseFile.View || {
                         }, eventDate: {
                             title: $.t("casefile:history.table.field.date")
                             ,width: '25%'
-                        }, userId: {
+                        }, user: {
                             title: $.t("casefile:history.table.field.user")
                             ,width: '25%'
                         }
@@ -3217,7 +3222,8 @@ CaseFile.View = CaseFile.View || {
                         Record.title = Acm.goodValue(correspondences[i].name);
                         //Record.created = Acm.getDateFromDatetime(correspondences[i].created);
                         Record.created = Acm.getDateFromDatetime2(correspondences[i].created,$.t("common:date.short"));
-                        Record.creator = Acm.__FixMe__getUserFullName(correspondences[i].creator);
+                        //Record.creator = Acm.__FixMe__getUserFullName(correspondences[i].creator);
+                        Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(correspondences[i].creator));
                         jtData.Records.push(Record);
                     }
                 }
