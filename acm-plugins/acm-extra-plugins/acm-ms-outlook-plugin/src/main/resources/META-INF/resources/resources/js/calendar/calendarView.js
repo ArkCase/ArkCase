@@ -87,9 +87,11 @@ Calendar.View = Calendar.View || {
         ,makeDetail: function(calendarItem){
             if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
                 var body = Acm.goodValue(calendarItem.body) + "</br>";
-                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
+                //var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
+                var startDateTime = Acm.getDateTimeFromDatetime2(calendarItem.startDate,$.t("common:date.full"));
                 var startDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.start") + " " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
-                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
+                //var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
+                var endDateTime = Acm.getDateTimeFromDatetime2(calendarItem.endDate,$.t("common:date.full"));
                 var endDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.end") + " " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
                 var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
                 return detail;
