@@ -347,9 +347,11 @@ Admin.Model = Admin.Model || {
         ,PlainForms:{
         	create: function () {
         		this.cachePlainForms = new Acm.Model.CacheFifo(1);
+        		this.cachePlainFormTargets = new Acm.Model.CacheFifo(1);
             }
             , onInitialized: function () {
             	 Admin.Service.Forms.PlainForms.retrievePlainForms();
+            	 Admin.Service.Forms.PlainForms.retrievePlainFormTargets();
             }
             
             ,validatePlainForms: function(plainForms) {
@@ -362,12 +364,30 @@ Admin.Model = Admin.Model || {
                 return true;
             }
             
+            ,validatePlainFormTargets: function(plainFormTargets) {
+                if (Acm.isEmpty(plainFormTargets)) {
+                    return false;
+                }
+                if(!Acm.isArray(plainFormTargets)){
+                    return false;
+                }
+                return true;
+            }
+            
             ,getPlainForms: function() {
             	return Admin.Model.Forms.PlainForms.cachePlainForms.get("forms.plainforms");
             }
             
             ,setPlainForms: function(plainForms) {
             	Admin.Model.Forms.PlainForms.cachePlainForms.put("forms.plainforms", plainForms);
+            }
+            
+            ,getPlainFormTargets: function() {
+            	return Admin.Model.Forms.PlainForms.cachePlainFormTargets.get("forms.plainform.targets");
+            }
+            
+            ,setPlainFormTargets: function(plainFormTargets) {
+            	Admin.Model.Forms.PlainForms.cachePlainFormTargets.put("forms.plainform.targets", plainFormTargets);
             }
         }
     }
