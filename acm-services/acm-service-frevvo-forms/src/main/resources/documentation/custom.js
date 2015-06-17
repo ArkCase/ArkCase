@@ -61,6 +61,8 @@ document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picke
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseService.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseView.js"></script>');
 
+// Frevvo Patch
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/patch/form.pack.js.patch"></script>');
 
 var CustomEventHandlers = {
    setup: function (el) {

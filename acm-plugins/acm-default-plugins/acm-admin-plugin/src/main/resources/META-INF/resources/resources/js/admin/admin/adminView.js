@@ -13,6 +13,7 @@ Admin.View = Admin.View || {
         if (Admin.View.RolesPrivileges.create)          {Admin.View.RolesPrivileges.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
+        if (Admin.View.Forms.create)    				{Admin.View.Forms.create();}
 
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
@@ -25,7 +26,8 @@ Admin.View = Admin.View || {
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
-        if (Admin.View.WorkflowConfiguration.onInitialized)    {Admin.View.WorkflowConfiguration.onInitialized();}
+        if (Admin.View.WorkflowConfiguration.onInitialized)     {Admin.View.WorkflowConfiguration.onInitialized();}
+        if (Admin.View.Forms.onInitialized)    					{Admin.View.Forms.onInitialized();}
 
 
         if (Admin.View.Tree.onInitialized)                 		{Admin.View.Tree.onInitialized();}
@@ -1010,10 +1012,12 @@ Admin.View = Admin.View || {
                                 var record = {};
                                 //record.id = Acm.goodValue(template.id, 0);
                                 record.title = Acm.goodValue(template.name);
-                                record.created = Acm.getDateFromDatetime(template.created);
+                                //record.created = Acm.getDateFromDatetime(template.created);
+                                record.created =  (Acm.getDateFromDatetime2(template.created,$.t("common:date.short")));
                                 record.creator = Acm.goodValue(template.creator);
                                 record.path = Acm.goodValue(template.path);
-                                record.modified = Acm.getDateFromDatetime(template.modified);
+                                //record.modified = Acm.getDateFromDatetime(template.modified);
+                                record.modified =  (Acm.getDateFromDatetime2(template.modified,$.t("common:date.short")));
                                 rc.Records.push(record);
                             }
                         }
@@ -1660,7 +1664,8 @@ Admin.View = Admin.View || {
                             , width: '15%'
                             , edit: false
                             , display: function(data){
-                                return Acm.getDateFromDatetime(data.record.modified)
+                                return (Acm.getDateFromDatetime2(data.record.modified,$.t("common:date.short")));
+                                //return Acm.getDateFromDatetime(data.record.modified)
                             }
                         }, creator: {
                             title: 'Author'
@@ -1728,7 +1733,8 @@ Admin.View = Admin.View || {
                         , width: '15%'
                         , edit: false
                         , display: function(data){
-                            return Acm.getDateFromDatetime(data.record.modified)
+                            return (Acm.getDateFromDatetime2(data.record.modified,$.t("common:date.short")));
+                            //return Acm.getDateFromDatetime(data.record.modified)
                         }
                     }, creator: {
                         title: 'Author'
@@ -1750,6 +1756,199 @@ Admin.View = Admin.View || {
                 }
             });
             $s.jtable('load');
+        }
+    }
+    
+    ,Forms:{
+        create: function () {
+            if (Admin.View.Forms.PlainForms.create)        	{Admin.View.Forms.PlainForms.create();}
+        }
+        , onInitialized: function () {
+            if (Admin.View.Forms.PlainForms.onInitialized)        	{Admin.View.Forms.PlainForms.onInitialized();}
+        }
+        ,PlainForms: {
+            create: function () {
+            	this.$btnAddPlainForm = $("#btnAddPlainForm");	
+            	this.$btnAddPlainForm.on("click", function(e) {Admin.View.Forms.PlainForms.onClickBtnAddPlainForm(e, this);});
+            	
+            	this.$plainFormTarget = $("#plainFormTarget");
+            	
+                this.$divPlainForms = $("#divPlainForms");
+                this.createJTablePlainForms(this.$divPlainForms);
+                
+                Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS, this.onModelFormConfigRetrievedPlainForms);
+                Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM, this.onModelFormConfigDeletedPlainForm);
+                Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORM_TARGETS, this.onModelFormConfigRetrievedPlainFormTargets);
+            }
+            , onInitialized: function () {
+            }
+            
+            ,onClickBtnAddPlainForm: function(event, ctrl) {
+            	var target = Admin.View.Forms.PlainForms.$plainFormTarget.val();
+            	if (!Acm.isEmpty(target)) {
+            		var plainConfigurationFormUrl = Acm.Object.MicroData.get("plainConfigurationFormUrl");
+            		plainConfigurationFormUrl = plainConfigurationFormUrl.replace("_data=(", "_data=(target:'" + target + "',");
+	                if (Acm.isNotEmpty(plainConfigurationFormUrl)) {
+	                	Acm.Dialog.openWindow(plainConfigurationFormUrl, "", 1060, 700
+	                        ,function() {
+	                            setTimeout(function(){
+	                            	Admin.Service.Forms.PlainForms.retrievePlainForms();
+	                            }, 2000);
+	                        }
+	                    );
+	                }
+            	} else {
+            		Acm.Dialog.error($.t("admin:forms.plainforms.select-target-msg"));
+            	}
+            }
+            
+            ,onClickBtnEditPlainForm: function (key, target) {
+            	if (!Acm.isEmpty(key) && !Acm.isEmpty(target)) {
+            		var plainConfigurationFormUrl = Acm.Object.MicroData.get("plainConfigurationFormUrl");
+            		plainConfigurationFormUrl = plainConfigurationFormUrl.replace("_data=(", "_data=(formKey:'" + key + "',formTarget:'" + target + "',mode:'edit',");
+	                if (Acm.isNotEmpty(plainConfigurationFormUrl)) {
+	                	Acm.Dialog.openWindow(plainConfigurationFormUrl, "", 1060, 700
+	                        ,function() {
+		                		setTimeout(function(){
+	                            	Admin.Service.Forms.PlainForms.retrievePlainForms();
+	                            }, 2000);
+	                        }
+	                    );
+	                }
+            	} else {
+            		Acm.Dialog.error($.t("admin:forms.plainforms.select-target-msg"));
+            	}
+            }
+            
+            ,onClickBtnDeletePlainForm: function (key, target) {
+            	Admin.Service.Forms.PlainForms.deletePlainForm(key, target);
+            }
+            
+            ,onModelFormConfigRetrievedPlainForms: function() {
+            	AcmEx.Object.JTable.load(Admin.View.Forms.PlainForms.$divPlainForms);
+            }
+            
+            ,onModelFormConfigDeletedPlainForm: function() {
+            	setTimeout(function(){
+                	Admin.Service.Forms.PlainForms.retrievePlainForms();
+                }, 2000);
+            }
+            
+            ,onModelFormConfigRetrievedPlainFormTargets: function() {
+            	var options = [];
+            	options.push($('<option value="{0}">{1}</option>'.format("", $.t("admin:forms.plainforms.select-target"))));
+            	
+            	var targets = Admin.Model.Forms.PlainForms.getPlainFormTargets();
+            	if (Acm.isNotEmpty(targets) && !Acm.isArrayEmpty(targets)) {
+            		for (var i = 0; i < targets.length; i++) {
+            			var target = targets[i];
+            			if (Acm.isNotEmpty(target)) {
+            				var targetArray = target.split("=");
+            				if (!Acm.isArrayEmpty(targetArray) && targetArray.length === 2) {
+            					options.push($('<option value="{0}">{1}</option>'.format(targetArray[0], targetArray[1])));
+            				}
+            			}
+            		} 
+            	}
+            	
+            	Admin.View.Forms.PlainForms.$plainFormTarget.html(options);
+            }
+            
+            ,getFormKey: function(recordId){
+            	var key = '';
+            	if (Acm.isNotEmpty(recordId)) {
+    				var idArray = recordId.split('_');
+    				if (Acm.isArray(idArray) && idArray.length > 1) {
+    					for (var i = 1; i < idArray.length; i++) {
+    						if ((i + 1) == idArray.length) {
+    							key += idArray[i].trim()
+    						} else {
+    							key += idArray[i].trim() + '_';
+    						}
+    							
+    					}
+    				}
+    			}
+            	return key;
+            }
+            
+            ,createJTablePlainForms: function ($s) {
+            	AcmEx.Object.JTable.useBasic($s, {
+                	title:$.t("admin:forms.plainforms.title")
+            		,paging: false // For now make these to false
+                    ,sorting: false // For now make these to false
+                    ,pageSize: 10 //Set page size (default: 10)
+                    ,actions: {
+                        listAction: function (postData, jtParams) {
+                            var rc = AcmEx.Object.jTableGetEmptyRecords();
+                            
+                            var plainForms =  Admin.Model.Forms.PlainForms.getPlainForms();
+                            if (Admin.Model.Forms.PlainForms.validatePlainForms(plainForms)) {
+                            	for (var i = 0; i < plainForms.length; i++) {
+                            		rc.Records.push({
+                                        id:     i + "_" + plainForms[i].key
+                                        ,name:      plainForms[i].name
+                                        ,description:  plainForms[i].description
+                                        ,target: plainForms[i].target
+                                    });
+                            	}
+                            }
+                            return rc;
+                        }
+                    }
+                    , fields: {
+                        id: {
+                            title: 'ID'
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
+                        }, name: {
+                            title: 'Form Name'
+                            , width: '25%'
+                            , edit: false
+                        }, description: {
+                            title: 'Description'
+                            , width: '15%'
+                            , edit: false
+                        }, target: {
+                            title: 'Target'
+                            , width: '15%'
+                            , edit: false
+                        }, customEditAction:{
+		                	title: ''
+		                	,width: '1%'
+		                	,sorting: false
+		                	,create: false
+		                	,edit: false
+		                	,list: true
+		                	,display: function(data) {
+		                		if (data.record) {
+		                			var key = Admin.View.Forms.PlainForms.getFormKey(data.record.id);
+		                			var target = data.record.target;
+		                			var expression = "Admin.View.Forms.PlainForms.onClickBtnEditPlainForm('" + key + "', '" + target + "');";
+		                			return '<button title="Edit Record" class="jtable-command-button jtable-edit-command-button" onclick="' + expression + ' return false;"><span>Edit Record</span></button>';
+		                		}
+		                	}
+                        }, customDeleteAction:{
+		                	title: ''
+		                	,width: '1%'
+		                	,sorting: false
+		                	,create: false
+		                	,edit: false
+		                	,list: true
+		                	,display: function(data) {
+		                		if (data.record) {
+		                			var key = Admin.View.Forms.PlainForms.getFormKey(data.record.id);
+		                			var target = data.record.target;
+		                			var expression = "Admin.View.Forms.PlainForms.onClickBtnDeletePlainForm('" + key + "', '" + target + "');";
+		                			return '<button title="Delete" class="jtable-command-button jtable-delete-command-button" onclick="' + expression + ' return false;"><span>Delete</span></button>';
+		                		}
+		                	}
+			            }
+                    }
+                });
+            }
         }
     }
 

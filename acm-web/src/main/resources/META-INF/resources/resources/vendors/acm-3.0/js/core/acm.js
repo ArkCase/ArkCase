@@ -286,14 +286,29 @@ var Acm = Acm || {
     }
 
     //Get date part from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime: function(dt) {
+    ,getDateFromDatetime2: function(dt, format) {
+        Acm.log("Acm.getDateFromDatetime() is phasing out.Using Acm.getDateFromDatetime2() for now till the transition is complete");
         var d = "";
-        if (Acm.isNotEmpty(dt)) {
+        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
+            d = moment(dt).format(format)
+        }
+        return d;
+    }
+    ,getDateFromDatetime: function(dt, format) {
+        var d = "";
+        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format($.t("common:date.short"))
         }
         return d;
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
+    ,getDateTimeFromDatetime2: function(dt, format) {
+        var d = "";
+        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
+            d = moment(dt).format(format)
+        }
+        return d;
+    }
     ,getDateTimeFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
@@ -301,6 +316,8 @@ var Acm = Acm || {
         }
         return d;
     }
+
+    //////////////////////////////////////////
     ,getFrevvoDateFromDateTime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
@@ -605,6 +622,13 @@ var Acm = Acm || {
         }
         
         return restrict;
+    }
+    
+    ,silentReplace: function(value, replace, replacement) {
+    	if (Acm.isNotEmpty(value) && value.replace) {
+    		value = value.replace(replace, replacement);
+    	}
+    	return value;
     }
 
 };
