@@ -24,4 +24,9 @@ public interface FormUrl {
     public String getHost();
     public String getPort();
     public Integer getPortAsInteger();
+    
+    public String getInternalProtocol();
+    public String getInternalHost();
+    public String getInternalPort();
+    public Integer getInternalPortAsInteger();
 }
