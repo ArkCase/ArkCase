@@ -149,7 +149,7 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		String applicationId = getFrevvoService().getFormUrl().getApplicationId();
 		getFrevvoService().login();
 		ApplicationEntry application = getFrevvoService().getApplication(applicationId);
-		List<FormTypeEntry> forms = getFrevvoService().getForms(application);
+		List<FormTypeEntry> forms = getFrevvoService().getPlainForms(application);
 		getFrevvoService().logout();
 		
 		form.setFormOptions(getKeyValuePairsForForms(forms));

@@ -50,6 +50,8 @@ public class FrevvoFormServiceFactory {
             service.setUserDao(frevvoFormController.getUserDao());
             service.setUserActionDao(frevvoFormController.getUserActionDao());
             service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
+            service.setAcmFolderService(frevvoFormController.getAcmFolderService());
+            service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             
             return service;
 		}

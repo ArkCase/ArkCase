@@ -93,4 +93,6 @@ public interface FrevvoFormConstants {
 	 */
 	public static final String ELEMENT_KEY_PREFIX = "form_";
 	
+	public static final String PLAIN = "plain";
+	
 }

@@ -148,4 +148,8 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
     </bean>
+    
+    <bean id="getPlainFormTargetsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    </bean>
 </beans>

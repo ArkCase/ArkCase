@@ -21,6 +21,7 @@ public interface FrevvoService {
 	public ApplicationEntry getApplication(String id);
 	public FormTypeEntry getForm(String id);
 	public List<FormTypeEntry> getForms(ApplicationEntry application);
+	public List<FormTypeEntry> getPlainForms(ApplicationEntry application);
 	public String getFormKey(SchemaEntry schema);
 	public String getFormType(FormTypeEntry form);
 	public SchemaEntry getSchema(String id);
