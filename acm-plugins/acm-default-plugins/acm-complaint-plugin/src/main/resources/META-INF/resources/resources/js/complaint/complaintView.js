@@ -1733,6 +1733,7 @@ Complaint.View = Complaint.View || {
                     				value = Acm.silentReplace(complaint[urlParameters[i].keyValue], "'", "_0027_");
                     			}
                     		}
+                    		value = encodeURIComponent(value);
                     		parametersAsString += key + ":'" + Acm.goodValue(value) + "',";
                     	}
                     	parametersAsString +="folderId:'" + folderId + "',";

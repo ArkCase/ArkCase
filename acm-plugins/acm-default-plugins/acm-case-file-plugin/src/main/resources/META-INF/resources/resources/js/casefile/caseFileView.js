@@ -1973,6 +1973,7 @@ CaseFile.View = CaseFile.View || {
                     				value = Acm.silentReplace(caseFile[urlParameters[i].keyValue], "'", "_0027_");
                     			}
                     		}
+                    		value = encodeURIComponent(value);
                     		parametersAsString += key + ":'" + Acm.goodValue(value) + "',";
                     	}
                     	parametersAsString +="folderId:'" + folderId + "',";
