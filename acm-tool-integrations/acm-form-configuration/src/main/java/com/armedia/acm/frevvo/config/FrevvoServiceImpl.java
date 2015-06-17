@@ -4,6 +4,7 @@
 package com.armedia.acm.frevvo.config;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,8 +103,8 @@ public class FrevvoServiceImpl implements FrevvoService {
 			
 			FormsService service = getFormsService();
 			URL appEntryUrl = service.getEntryURL(ApplicationEntry.class, id);
-		    ApplicationEntry application = service.getEntry(appEntryUrl, ApplicationEntry.class);
-
+		    ApplicationEntry application = service.getEntry(fixFrevvoUrl(appEntryUrl), ApplicationEntry.class);
+		    
 		    return application;
 		} 
 		catch (Exception e) 
@@ -123,7 +124,7 @@ public class FrevvoServiceImpl implements FrevvoService {
 			
 			FormsService service = getFormsService();
 			URL formEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
-		    FormTypeEntry form = service.getEntry(formEntryUrl, FormTypeEntry.class);
+		    FormTypeEntry form = service.getEntry(fixFrevvoUrl(formEntryUrl), FormTypeEntry.class);
 
 		    return form;
 		} 
@@ -139,7 +140,9 @@ public class FrevvoServiceImpl implements FrevvoService {
 	{
 		try 
 		{
-			FormTypeFeed formFeed = application.getFormTypeFeed();
+			FormsService service = getFormsService();
+			URL formTypeUrl = new URL(application.getFormTypeFeedLink().getHref());
+			FormTypeFeed formFeed = service.getFeed(fixFrevvoUrl(formTypeUrl), FormTypeFeed.class);
 			
 			return formFeed.getEntries();
 		} 
@@ -241,8 +244,8 @@ public class FrevvoServiceImpl implements FrevvoService {
 			LOG.debug("Taking Schema for id=" + id);
 			
 			FormsService service = getFormsService();
-			URL formEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
-		    SchemaEntry schema = service.getEntry(formEntryUrl, SchemaEntry.class);
+			URL schemaEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
+		    SchemaEntry schema = service.getEntry(fixFrevvoUrl(schemaEntryUrl), SchemaEntry.class);
 
 		    return schema;
 		} 
@@ -269,6 +272,41 @@ public class FrevvoServiceImpl implements FrevvoService {
 		}
 		
 		return service;
+	}
+	
+	private URL fixFrevvoUrl(URL url)
+	{
+		try 
+		{
+			String urlAsString = url.toString();
+			LOG.debug("Original URL: " + urlAsString);
+			
+			if (urlAsString != null)
+			{
+				urlAsString.replace(getFormUrl().getProtocol(), getFormUrl().getInternalProtocol());
+				urlAsString.replace(getFormUrl().getHost(), getFormUrl().getInternalHost());
+				
+				// If internal port is null or empty, we should remove the original ":8082" and replace with ""
+				String separator = "";
+				String internalPort = getFormUrl().getInternalPort();
+				if (internalPort == null || internalPort.isEmpty())
+				{
+					separator = ":";
+					internalPort = "";
+				}
+				
+				urlAsString.replace(separator + getFormUrl().getPort(), internalPort);
+				
+				LOG.debug("Changed URL: " + urlAsString);
+				
+				return new URL(urlAsString);				
+			}
+		} 
+		catch (MalformedURLException e) 
+		{
+			LOG.error("Cannot create URL from string.");
+		}
+		return null;
 	}
 
 	@Override
