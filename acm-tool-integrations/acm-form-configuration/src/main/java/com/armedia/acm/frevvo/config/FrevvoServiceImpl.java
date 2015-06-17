@@ -49,14 +49,14 @@ public class FrevvoServiceImpl implements FrevvoService {
 				logout();
 			}
 			
-			String protocol = getFormUrl().getProtocol();
-			String host = getFormUrl().getHost();
+			String protocol = getFormUrl().getInternalProtocol();
+			String host = getFormUrl().getInternalHost();
 			
 			// Frevvo API service need port (at least default). If not provided in the properties file let's try to default port 80.
 			int port = 80;
-			if (getFormUrl().getPortAsInteger() != null && getFormUrl().getPortAsInteger() > 0)
+			if (getFormUrl().getInternalPortAsInteger() != null && getFormUrl().getInternalPortAsInteger() > 0)
 			{
-				port = getFormUrl().getPortAsInteger();
+				port = getFormUrl().getInternalPortAsInteger();
 			}
 			
 			service = new FormsService(protocol, host, port, null);

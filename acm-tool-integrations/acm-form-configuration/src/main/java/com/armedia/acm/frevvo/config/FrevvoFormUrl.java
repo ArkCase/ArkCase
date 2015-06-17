@@ -314,6 +314,59 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		return null;
 	}
+	
+	@Override
+	public String getInternalProtocol() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_PROTOCOL)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.INTERNAL_PROTOCOL);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getInternalHost() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_HOST)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.INTERNAL_HOST);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getInternalPort() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_PORT)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.INTERNAL_PORT);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Integer getInternalPortAsInteger() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_PORT)) 
+		{
+			String port = (String) getProperties().get(FrevvoFormConstants.INTERNAL_PORT);
+			
+			try
+			{
+				return Integer.parseInt(port);
+			}
+			catch (Exception e)
+			{
+				LOG.warn("Cannot parse port=" + port + ". If empty, normal behaviour.");
+			}
+		}
+		
+		return null;
+	}
 
 	public Properties getPlainFormProperties() {
 		return plainFormProperties;
