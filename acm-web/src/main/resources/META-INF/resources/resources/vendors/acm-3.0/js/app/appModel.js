@@ -447,8 +447,7 @@ App.Model = {
         }
         ,create: function() {}
         ,onInitialized: function() {
-            var isLogin = App.Model.Login.isLogin();
-            if (isLogin) {
+            if (App.Model.Login.isLogin()) {
                 App.Service.Users.retrieveUsers(App.Model.Users.USER_NAMES_APP);
             }
         }
