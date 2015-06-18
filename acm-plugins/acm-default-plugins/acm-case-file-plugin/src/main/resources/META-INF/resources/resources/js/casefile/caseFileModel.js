@@ -798,10 +798,10 @@ CaseFile.Model = CaseFile.Model || {
     ,Lookup: {
         create: function() {
             this._assignees    =  new Acm.Model.CacheFifo();
-            this._subjectTypes = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_TYPES);
-            this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
+            this._subjectTypes = new Acm.Model.SessionData(ThisApp.SESSION_DATA_CASE_FILE_TYPES);
+            this._priorities   = new Acm.Model.SessionData(ThisApp.SESSION_DATA_CASE_FILE_PRIORITIES);
             this._groups    =  new Acm.Model.CacheFifo();
-            this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
+            this._users    = new Acm.Model.SessionData(ThisApp.SESSION_DATA_CASE_FILE_USERS);
             
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
