@@ -434,7 +434,9 @@ CaseFileSplit.View = CaseFileSplit.View || {
                     Record.note       = Acm.goodValue(noteList[i].note);
                     //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
                     Record.created    = (Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short")));
-                    Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(noteList[i].creator));
+
                     jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = noteList.length;
