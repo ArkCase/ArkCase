@@ -39,8 +39,7 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
-    @Autowired
-    Properties personPluginProperties;
+    private Properties personPluginProperties;
 
     @Autowired
     Properties wrongPersonPluginProperties;
@@ -51,6 +50,10 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
 
     @Before
     public void setUp() throws Exception {
+
+        personPluginProperties = new Properties();
+        personPluginProperties.setProperty("person.types", "one,two,three,four,five");
+
         unit = new GetPersonTypesAPIController();
 
 
@@ -86,7 +89,9 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
 
         String types[] = objectMapper.readValue(returned, String[].class);
 
-        assertEquals(11, types.length);
+        // the actual person properties could change at any time; so a unit test should not load the real
+        // properties file; but should use properties created just for this test.
+        assertEquals(5, types.length);
 
 
     }

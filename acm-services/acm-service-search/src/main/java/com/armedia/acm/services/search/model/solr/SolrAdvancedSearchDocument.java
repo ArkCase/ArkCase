@@ -124,6 +124,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
 
     private String parent_ref_s;
+    private boolean hidden_b;
 
     @JsonIgnore
     public String getEcmFileId() {
@@ -713,6 +714,16 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         return parent_ref_s;
     }
 
+    public void setHidden_b(boolean hidden_b)
+    {
+        this.hidden_b = hidden_b;
+    }
+
+    public boolean isHidden_b()
+    {
+        return hidden_b;
+    }
+
     @Override
     public String toString()
     {
@@ -742,6 +753,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\'' +
                 ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' +
                 ", incident_type_lcs='" + incident_type_lcs + '\'' +
+                ", tag_token_lcs='" + tag_token_lcs + '\'' +
                 ", status_lcs='" + status_lcs + '\'' +
                 ", person_title_lcs='" + person_title_lcs + '\'' +
                 ", first_name_lcs='" + first_name_lcs + '\'' +
@@ -778,6 +790,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", action_lcs='" + action_lcs + '\'' +
                 ", notification_type_lcs='" + notification_type_lcs + '\'' +
                 ", parent_ref_s='" + parent_ref_s + '\'' +
+                ", hidden_b=" + hidden_b +
                 '}';
     }
 }
