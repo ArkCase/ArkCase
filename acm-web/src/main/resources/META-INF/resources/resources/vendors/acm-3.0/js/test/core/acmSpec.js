@@ -92,15 +92,23 @@ describe("Acm", function()
         expect(Acm.goodValue(0,    123))     .toBe(0);      //0 is a valid number
     });
 
-    xit("Test Acm.goodValue() with array", function() {
+    it("Test Acm.goodValue() with array", function() {
         var good = {name:"John", child:{name:"Charlie"}};
         var bad1 = {name:"John", child:{}};
         var bad2 = {name:"John"};
+        var bad3 = {};
+        var bad4 = null;
 
-        expect(Acm.goodValue([good, "child", "name"])).toBe("Charlie");
+        expect(good.child.name).toBe("Charlie");
+        expect(Acm.goodValue([good, "child", "name"])).toBe(good.child.name);
         expect(Acm.goodValue([bad1, "child", "name"])).toBe("");
         expect(Acm.goodValue([bad2, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue([bad3, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue([bad4, "child", "name"], "BadValue")).toBe("BadValue");
 
+        expect(Acm.goodValue([good.child, "name"])  ,"if no need to check null good").toBe(good.child.name);
+        expect(Acm.goodValue([good.child.name])     ,"if no need to check null good and null child").toBe(good.child.name);
+        expect(Acm.goodValue(["hello"])             ,"why used this way? but still work").toBe("hello");
     });
 
     it("Test Acm.parseJson() function", function() {

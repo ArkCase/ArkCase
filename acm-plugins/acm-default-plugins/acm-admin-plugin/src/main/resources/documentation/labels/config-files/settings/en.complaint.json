@@ -907,6 +907,11 @@
         "defaultValue": "Time Tracking",
         "description": ""
     },
+    "label": {"timesheet": {
+        "defaultValue": "Timesheet",
+        "description": "",
+        "value": "Timesheet"
+    }},
     "table": {
         "field": {
             "id": {

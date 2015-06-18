@@ -8,7 +8,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Lookup.create)         {CaseFile.Model.Lookup.create();}
         if (CaseFile.Model.Action.create)         {CaseFile.Model.Action.create();}
         if (CaseFile.Model.Tree.create)           {CaseFile.Model.Tree.create();}
-        //if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
+        if (CaseFile.Model.Documents.create)      {CaseFile.Model.Documents.create();}
         if (CaseFile.Model.Detail.create)         {CaseFile.Model.Detail.create();}
         if (CaseFile.Model.People.create)         {CaseFile.Model.People.create();}
         if (CaseFile.Model.Notes.create)          {CaseFile.Model.Notes.create();}
@@ -30,7 +30,7 @@ CaseFile.Model = CaseFile.Model || {
         if (CaseFile.Model.Lookup.onInitialized)         {CaseFile.Model.Lookup.onInitialized();}
         if (CaseFile.Model.Action.onInitialized)         {CaseFile.Model.Action.onInitialized();}
         if (CaseFile.Model.Tree.onInitialized)           {CaseFile.Model.Tree.onInitialized();}
-        //if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
+        if (CaseFile.Model.Documents.onInitialized)      {CaseFile.Model.Documents.onInitialized();}
         if (CaseFile.Model.Detail.onInitialized)         {CaseFile.Model.Detail.onInitialized();}
         if (CaseFile.Model.Notes.onInitialized)          {CaseFile.Model.Notes.onInitialized();}
         if (CaseFile.Model.Tasks.onInitialized)          {CaseFile.Model.Tasks.onInitialized();}
@@ -523,6 +523,20 @@ CaseFile.Model = CaseFile.Model || {
             return personAssociation;
         }
 
+        ,validatePersonAssociations: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validatePersonAssociation(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
         ,validatePersonAssociation: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
@@ -606,98 +620,34 @@ CaseFile.Model = CaseFile.Model || {
             CaseFile.Service.Tasks.retrieveTask();
         }
     }
-    ,Documents_JTable_To_Retire: {
+
+    ,Documents: {
         create : function() {
-            this.cacheDocuments = new Acm.Model.CacheFifo(4);
-        	
-        	Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_ADD_DOCUMENT_WINDOW, this.onViewClosedAddDocumentWindow);
+            this.cachePlainForms = new Acm.Model.CacheFifo(1);
         }
         ,onInitialized: function() {
+        	CaseFile.Service.Documents.retrievePlainForms();
         }
-        ,onViewClosedAddDocumentWindow: function(caseFileId) {
-        	//CaseFile.Model.Documents.cacheDocuments = new Acm.Model.CacheFifo(4);
-        	//ObjNav.Service.Detail.retrieveObject(CaseFile.Model.DOC_TYPE_CASE_FILE, caseFileId);
-            setTimeout(CaseFile.View.Documents.reloadDocs, 5000);
-        }
-        ,validateDocuments:function(data){
-            if (Acm.isEmpty(data)) {
+
+        ,validatePlainForms: function(plainForms) {
+            if (Acm.isEmpty(plainForms)) {
                 return false;
             }
-            if (Acm.isEmpty(data.containerObjectId)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.folderId)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.children)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.totalChildren)) {
-                return false;
-            }
-            if (Acm.isNotArray(data.children)) {
+            if(!Acm.isArray(plainForms)){
                 return false;
             }
             return true;
         }
-        ,validateDocument: function(data){
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.objectId)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.name)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.created)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.creator)) {
-                return false;
-            }
-            if (!Acm.compare(data.objectType,CaseFile.Model.DOC_TYPE_FILE_SM)) {
-                return false;
-            }
-            return true;
+
+        ,getPlainForms: function() {
+        	return CaseFile.Model.Documents.cachePlainForms.get("forms.plainforms");
         }
-        ,validateNewDocument: function(data) {
-            // data will be an array of new documents
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if ( Acm.isNotArray(data))
-            {
-                return false;
-            }
-            for ( var a = 0; a < data.length; a++ )
-            {
-                var f = data[a];
-                if (Acm.isEmpty(f.category)) {
-                    return false;
-                }
-                if (!Acm.compare(f.category, CaseFile.Model.DOC_CATEGORY_FILE_SM)) {
-                    return false;
-                }
-                if (Acm.isEmpty(f.created)) {
-                    return false;
-                }
-                if (Acm.isEmpty(f.creator)) {
-                    return false;
-                }
-                if (Acm.isEmpty(f.fileId)) {
-                    return false;
-                }
-                if (Acm.isEmpty(f.fileName)) {
-                    return false;
-                }
-                if (Acm.isEmpty(f.fileType)) {
-                    return false;
-                }
-            }
-            return true;
+
+        ,setPlainForms: function(plainForms) {
+        	 CaseFile.Model.Documents.cachePlainForms.put("forms.plainforms", plainForms);
         }
     }
+
     ,Correspondence: {
         create : function() {
             this.cacheCorrespondences = new Acm.Model.CacheFifo();
@@ -848,10 +798,10 @@ CaseFile.Model = CaseFile.Model || {
     ,Lookup: {
         create: function() {
             this._assignees    =  new Acm.Model.CacheFifo();
-            this._subjectTypes = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_TYPES);
-            this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_PRIORITIES);
+            this._subjectTypes = new Acm.Model.SessionData(ThisApp.SESSION_DATA_CASE_FILE_TYPES);
+            this._priorities   = new Acm.Model.SessionData(ThisApp.SESSION_DATA_CASE_FILE_PRIORITIES);
             this._groups    =  new Acm.Model.CacheFifo();
-            this._users    = new Acm.Model.SessionData(Application.SESSION_DATA_CASE_FILE_USERS);
+            this._users    = new Acm.Model.SessionData(ThisApp.SESSION_DATA_CASE_FILE_USERS);
             
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
@@ -872,6 +822,13 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Service.Lookup.retrieveSubjectTypes();
             } else {
                 CaseFile.Controller.modelFoundSubjectTypes(subjectTypes);
+            }
+
+            var personAssociationTypes = CaseFile.Model.Lookup.getPersonTypes();
+            if (Acm.isArrayEmpty(personAssociationTypes)) {
+                CaseFile.Service.Lookup.retrievePersonAssocitaionTypes();
+            } else {
+                CaseFile.Controller.modelFoundPersonAssociationTypes(personAssociationTypes);
             }
 
             var priorities = CaseFile.Model.Lookup.getPriorities();
@@ -898,12 +855,6 @@ CaseFile.Model = CaseFile.Model || {
                 CaseFile.Controller.modelRetrievedUsers(users);
             }
         }
-        
-        ,PERSON_SUBTABLE_TITLE_CONTACT_METHODS:   "Communication Devices"
-        ,PERSON_SUBTABLE_TITLE_ORGANIZATIONS:     "Organizations"
-        ,PERSON_SUBTABLE_TITLE_ADDRESSES:         "Locations"
-        ,PERSON_SUBTABLE_TITLE_ALIASES:           "Aliases"
-        ,PERSON_SUBTABLE_TITLE_SECURITY_TAGS:     "Security Tags"
 
         ,getAssignees: function(caseFileId) {
             return this._assignees.get(caseFileId);
@@ -938,18 +889,22 @@ CaseFile.Model = CaseFile.Model || {
 
 
         //,options: App.getContextPath() + '/api/latest/plugin/complaint/types'
-        ,_personTypes : ['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Primary Victim', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
+        ,_personTypes : [] //['Complaintant','Subject','Witness','Wrongdoer','Other', 'Initiator', 'Primary Victim', 'Victim', 'Defendant', 'Investigating Officer', 'Police Witness']
         ,getPersonTypes : function() {
-            return this._personTypes;
+            return CaseFile.Model.Lookup._personTypes;
         }
-
+        ,setPersonTypes : function(personTypes) {
+            this._personTypes = personTypes;
+        }
         ,_personTitles : ['Mr','mr', 'Mrs','mrs', 'Ms','ms', 'Miss','miss']
         ,getPersonTitles : function() {
             return this._personTitles;
         }
 
-        ,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
-            'Email','Instant messenger', 'Social media','Website','Blog']
+        ,_contactMethodTypes : ['Home phone', 'Work phone', 'Mobile', 'Email','Facebook']
+
+        /*,_contactMethodTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+            'Email','Instant messenger', 'Social media','Website','Blog'] */
         ,getContactMethodTypes : function() {
             return this._contactMethodTypes;
         }

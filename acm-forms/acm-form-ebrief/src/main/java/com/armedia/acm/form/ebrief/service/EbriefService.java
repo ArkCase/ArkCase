@@ -26,6 +26,12 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationEventPublisher;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
 /**
  * @author riste.tutureski
@@ -41,6 +47,8 @@ public class EbriefService extends FrevvoFormAbstractService {
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 	private RuntimeService activitiRuntimeService;
 	private CaseFile caseFile;
+	private NotificationDao notificationDao;
+	private NotificationEventPublisher notificationEventPublisher;
 	
 	@Override
 	public Object get(String action) 
@@ -130,6 +138,11 @@ public class EbriefService extends FrevvoFormAbstractService {
             throw new AcmCreateObjectFailedException("eBrief", e.getMessage(), e);
         }
 		
+		if (mode == null || "".equals(mode) || "create".equals(mode))
+		{
+			createNotification(caseFile);
+		}
+		
 		setCaseFile(caseFile);
 		
 		form = getEbriefFactory().asFrevvoEbriefForm(caseFile, form, this);
@@ -163,6 +176,34 @@ public class EbriefService extends FrevvoFormAbstractService {
 	public Object convertToFrevvoForm(Object obj, Object form)
 	{
 		return getEbriefFactory().asFrevvoEbriefForm((CaseFile) obj, (EbriefForm) form, this);
+	}
+	
+	private void createNotification(CaseFile caseFile)
+	{
+		try
+		{
+			Notification notification = new Notification();
+	
+			notification.setStatus(NotificationConstants.STATUS_NEW);
+			notification.setTitle(caseFile.getTitle());
+			notification.setNote(caseFile.getTitle() + " was submitted.");
+			notification.setData("{\"usr\":\"/plugin/casefile/" + caseFile.getId() + "\"}");
+			notification.setUser(caseFile.getCreator());
+			notification.setParentId(caseFile.getId());
+			notification.setParentType(caseFile.getObjectType());
+			notification.setParentName(caseFile.getCaseNumber());
+			notification.setParentTitle(caseFile.getTitle());
+			notification.setType(NotificationConstants.TYPE_POPUP);
+	
+	        getNotificationDao().save(notification);
+	        
+	        ApplicationNotificationEvent event = new ApplicationNotificationEvent(notification, "notification", true, getUserIpAddress());
+	        getNotificationEventPublisher().publishNotificationEvent(event);
+		}
+		catch(Exception e)
+		{
+			LOG.error("Cannot publish notification ... ", e);
+		}
 	}
 
 	@Override
@@ -219,5 +260,22 @@ public class EbriefService extends FrevvoFormAbstractService {
 
 	public void setCaseFile(CaseFile caseFile) {
 		this.caseFile = caseFile;
+	}
+
+	public NotificationDao getNotificationDao() {
+		return notificationDao;
+	}
+
+	public void setNotificationDao(NotificationDao notificationDao) {
+		this.notificationDao = notificationDao;
+	}
+
+	public NotificationEventPublisher getNotificationEventPublisher() {
+		return notificationEventPublisher;
+	}
+
+	public void setNotificationEventPublisher(
+			NotificationEventPublisher notificationEventPublisher) {
+		this.notificationEventPublisher = notificationEventPublisher;
 	}
 }
