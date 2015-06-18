@@ -55,7 +55,7 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
         var context = App.getPageContext();
-        Application.run(context);
+        ThisApp.run(context);
     });
 </script>
 

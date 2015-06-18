@@ -886,10 +886,10 @@ Complaint.Model = Complaint.Model || {
     ,Lookup: {
         create: function() {
         	this._assignees    =  new Acm.Model.CacheFifo();
-            this._complaintTypes = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_TYPES);
-            this._priorities     = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_PRIORITIES);
+            this._complaintTypes = new Acm.Model.SessionData(ThisApp.SESSION_DATA_COMPLAINT_TYPES);
+            this._priorities     = new Acm.Model.SessionData(ThisApp.SESSION_DATA_COMPLAINT_PRIORITIES);
             this._groups    =  new Acm.Model.CacheFifo();
-            this._users    	 	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_USERS);
+            this._users    	 	 = new Acm.Model.SessionData(ThisApp.SESSION_DATA_COMPLAINT_USERS);
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
