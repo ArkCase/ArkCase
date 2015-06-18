@@ -74,7 +74,7 @@
     jQuery(document).ready(function() {
         var context = App.getPageContext();
         context.loginPage = true;
-        Application.run(context);
+        ThisApp.run(context);
     });
 </script>
 </body>

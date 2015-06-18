@@ -7,4 +7,34 @@
             id="personExceptionResolver"
             class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
+    <bean id="personPluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/personPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="person.types">Complaintant,Subject,Witness,Wrongdoer,Other,Initiator,Primary
+                    Victim,Victim,Defendant,Investigating Officer,Police Witness
+                </prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="wrongPersonPluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/personPlugin1.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+
+            </props>
+        </property>
+    </bean>
 </beans>

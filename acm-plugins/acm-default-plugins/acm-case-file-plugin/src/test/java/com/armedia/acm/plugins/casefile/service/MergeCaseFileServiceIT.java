@@ -15,6 +15,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,11 +35,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -211,4 +213,163 @@ public class MergeCaseFileServiceIT extends EasyMock {
 
     }
 
+    @Test
+    @Transactional
+    public void mergeCaseFilesParticipantSameAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
+        auditAdapter.setUserId("auditUser");
+        auth = createMock(Authentication.class);
+        ipAddress = "127.0.0.1";
+
+        String roleAdd = "ROLE_ADMINISTRATOR";
+        AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
+
+        assertNotNull(caseFileDao);
+        assertNotNull(ecmFileService);
+        assertNotNull(acmFolderService);
+        assertNotNull(mergeCaseService);
+
+        expect(auth.getName()).andReturn("ann-acm").anyTimes();
+        expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
+        replay(auth);
+        //create source case file
+        CaseFile sourceCaseFile = new CaseFile();
+        sourceCaseFile.setCaseType("caseType");
+        sourceCaseFile.setTitle("title");
+
+        CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
+        sourceId = sourceSaved.getId();
+
+        //create target case file
+        CaseFile targetCaseFile = new CaseFile();
+        targetCaseFile.setCaseType("caseType");
+        targetCaseFile.setTitle("title");
+
+        AcmParticipant assigneeParticipant = new AcmParticipant();
+        assigneeParticipant.setParticipantLdapId(auth.getName());
+        assigneeParticipant.setParticipantType(ParticipantTypes.ASSIGNEE);
+        if (targetCaseFile.getParticipants() == null)
+            targetCaseFile.setParticipants(new ArrayList<>());
+        targetCaseFile.getParticipants().add(assigneeParticipant);
+
+        CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
+
+        targetId = targetSaved.getId();
+
+
+        //verify that case files are saved
+        assertNotNull(sourceId);
+        assertNotNull(targetId);
+
+        MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
+        mergeCaseOptions.setSourceCaseFileId(sourceId);
+        mergeCaseOptions.setTargetCaseFileId(targetId);
+
+        mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
+
+        CaseFile sourceCase = caseFileDao.find(sourceId);
+        CaseFile targetCase = caseFileDao.find(targetId);
+
+        assertEquals(3, targetCase.getParticipants().size());
+
+        AcmParticipant foundAssignee = null;
+        for (AcmParticipant ap : targetCase.getParticipants()) {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+                foundAssignee = ap;
+                break;
+            }
+        }
+        assertNotNull(foundAssignee);
+        assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
+    }
+
+    @Test
+    @Transactional
+    public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException {
+        auditAdapter.setUserId("auditUser");
+        auth = createMock(Authentication.class);
+        ipAddress = "127.0.0.1";
+
+        String roleAdd = "ROLE_ADMINISTRATOR";
+        AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
+
+        assertNotNull(caseFileDao);
+        assertNotNull(ecmFileService);
+        assertNotNull(acmFolderService);
+        assertNotNull(mergeCaseService);
+
+        expect(auth.getName()).andReturn("ann-acm").anyTimes();
+        expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
+        replay(auth);
+        //create source case file
+        CaseFile sourceCaseFile = new CaseFile();
+        sourceCaseFile.setCaseType("caseType");
+        sourceCaseFile.setTitle("title");
+
+        CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
+        sourceId = sourceSaved.getId();
+
+        //create target case file
+        CaseFile targetCaseFile = new CaseFile();
+        targetCaseFile.setCaseType("caseType");
+        targetCaseFile.setTitle("title");
+
+        AcmParticipant assigneeParticipant = new AcmParticipant();
+        assigneeParticipant.setParticipantLdapId("ian-acm");
+        assigneeParticipant.setParticipantType(ParticipantTypes.ASSIGNEE);
+        if (targetCaseFile.getParticipants() == null)
+            targetCaseFile.setParticipants(new ArrayList<>());
+        targetCaseFile.getParticipants().add(assigneeParticipant);
+
+        CaseFile targetSaved = saveCaseService.saveCase(targetCaseFile, auth, ipAddress);
+
+        targetId = targetSaved.getId();
+
+
+        //verify that case files are saved
+        assertNotNull(sourceId);
+        assertNotNull(targetId);
+
+        assertEquals(3, targetSaved.getParticipants().size());
+
+        AcmParticipant foundAssignee = null;
+        for (AcmParticipant ap : targetSaved.getParticipants()) {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+                foundAssignee = ap;
+                break;
+            }
+        }
+        assertNotNull(foundAssignee);
+        assertEquals("ian-acm", foundAssignee.getParticipantLdapId());
+
+        //merge case files
+        MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
+        mergeCaseOptions.setSourceCaseFileId(sourceId);
+        mergeCaseOptions.setTargetCaseFileId(targetId);
+
+        mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
+
+        CaseFile sourceCase = caseFileDao.find(sourceId);
+        CaseFile targetCase = caseFileDao.find(targetId);
+
+        assertEquals(4, targetCase.getParticipants().size());
+
+        foundAssignee = null;
+        for (AcmParticipant ap : targetCase.getParticipants()) {
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {
+                foundAssignee = ap;
+                break;
+            }
+        }
+        assertNotNull(foundAssignee);
+        assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
+
+        AcmParticipant foundPreviousAssignee = null;
+        for (AcmParticipant ap : targetCase.getParticipants()) {
+            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm".equals(ap.getParticipantLdapId())) {
+                foundPreviousAssignee = ap;
+                break;
+            }
+        }
+        assertNotNull(foundPreviousAssignee);
+    }
 }

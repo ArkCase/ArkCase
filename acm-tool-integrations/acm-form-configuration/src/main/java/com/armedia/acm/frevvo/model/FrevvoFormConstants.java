@@ -57,4 +57,45 @@ public interface FrevvoFormConstants {
 	public final static String PDF = "pdf";
 	public final static String XML = "xml";
 	
+	/**
+	 * Frevvo form parameter keys
+	 */
+	public static final String FREVVO_FORMS_SERVICE = "frevvo.forms.service";
+	public static final String SERVICE = "frevvo.service.baseUrl";
+	public static final String REDIRECT = "frevvo.browser.redirect.baseUrl";
+	public static final String INTERNAL_PROTOCOL = "frevvo.protocol.internal";
+	public static final String INTERNAL_HOST = "frevvo.host.internal";
+	public static final String INTERNAL_PORT = "frevvo.port.internal";
+	public static final String PROTOCOL = "frevvo.protocol";
+	public static final String HOST = "frevvo.host";
+	public static final String PORT = "frevvo.port";
+	public static final String URI = "frevvo.uri";
+	public static final String TIMEZONE = "frevvo.timezone";
+	public static final String LOCALE = "frevvo.locale";
+	public static final String TENANT = "frevvo.tenant";
+	public static final String ADMIN_USER = "frevvo.admin.user";
+	public static final String ADMIN_PASSWORD = "frevvo.admin.password";
+	public static final String DESIGNER_USER = "frevvo.designer.user";
+	public static final String APPLICATION_ID = "frevvo.application.id";
+	
+	/**
+	 * XML Root element
+	 */
+	public static final String ROOT_START = "<root>";
+	public static final String ROOT_END = "</root>";
+	
+	/**
+	 * XML Node name and attribute where we can find the element key. The key is in format "form_<KEY>" (for example: "form_complaint").
+	 * The "form_<KEY>" should be unique identifier
+	 */
+	public static final String ELEMENT_KEY_NODE_NAME = "fd:extId";
+	public static final String ELEMENT_KEY_ATTRIBUTE_NAME = "value";
+	
+	/**
+	 * Form Key prefix
+	 */
+	public static final String ELEMENT_KEY_PREFIX = "form_";
+	
+	public static final String PLAIN = "plain";
+	
 }

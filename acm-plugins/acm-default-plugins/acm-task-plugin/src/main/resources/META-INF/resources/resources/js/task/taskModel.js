@@ -106,8 +106,8 @@ Task.Model = Task.Model || {
 
     ,Lookup: {
         create: function() {
-            this._assignees    = new Acm.Model.SessionData(Application.SESSION_DATA_TASK_ASSIGNEES);
-            this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_TASK_PRIORITIES);
+            this._assignees    = new Acm.Model.SessionData(ThisApp.SESSION_DATA_TASK_ASSIGNEES);
+            this._priorities   = new Acm.Model.SessionData(ThisApp.SESSION_DATA_TASK_PRIORITIES);
         }
         ,onInitialized: function() {
             var assignees = Task.Model.Lookup.getAssignees();

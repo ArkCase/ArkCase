@@ -10,7 +10,7 @@ Complaint.Service = {
         if (Complaint.Service.Lookup.create) {Complaint.Service.Lookup.create();}
         if (Complaint.Service.Detail.create) {Complaint.Service.Detail.create();}
         if (Complaint.Service.People.create) {Complaint.Service.People.create();}
-        //if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
+        if (Complaint.Service.Documents.create) {Complaint.Service.Documents.create();}
         if (Complaint.Service.Notes.create) {Complaint.Service.Notes.create();}
         if (Complaint.Service.Tasks.create) {Complaint.Service.Tasks.create();}
         if (Complaint.Service.History.create) {Complaint.Service.History.create();}
@@ -21,7 +21,7 @@ Complaint.Service = {
         if (Complaint.Service.Lookup.onInitialized) {Complaint.Service.Lookup.onInitialized();}
         if (Complaint.Service.Detail.onInitialized) {Complaint.Service.Detail.onInitialized();}
         if (Complaint.Service.People.onInitialized) {Complaint.Service.People.onInitialized();}
-        //if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
+        if (Complaint.Service.Documents.onInitialized) {Complaint.Service.Documents.onInitialized();}
         if (Complaint.Service.Notes.onInitialized) {Complaint.Service.Notes.onInitialized();}
         if (Complaint.Service.Tasks.onInitialized) {Complaint.Service.Tasks.onInitialized();}
         if (Complaint.Service.History.onInitialized) {Complaint.Service.History.onInitialized();}
@@ -1076,6 +1076,32 @@ Complaint.Service = {
             }
         }
     }
+    
+    ,Documents: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_RETRIEVE_PLAIN_FORMS      : "/api/latest/plugin/admin/plainforms"
+        	
+    	,retrievePlainForms: function() {
+            var url = App.getContextPath() + Complaint.Service.Documents.API_RETRIEVE_PLAIN_FORMS + '/' + Complaint.Model.DOC_TYPE_COMPLAINT;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	Complaint.Controller.modelDocumentsRetrievedPlainForms(response);
+                    } else {
+                        if (Complaint.Model.Documents.validatePlainForms(response)) {
+                        	Complaint.Model.Documents.setPlainForms(response);
+                        	Complaint.Controller.modelDocumentsRetrievedPlainForms(response);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 
     ,Documents_JTable_To_Retire: {
         create: function(){
@@ -1302,9 +1328,11 @@ Complaint.Service = {
                                 var task = {};
                                 task.id = doc.object_id_s;
                                 task.title = Acm.goodValue(response.docs[i].name); //title_parseable ?? //title_t ?
-                                task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                //task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                task.created = (Acm.getDateFromDatetime2(doc.create_tdt,$.t("common:date.short")));
                                 task.priority = Acm.goodValue(doc.priority_s);
-                                task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                //task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                task.dueDate = (Acm.getDateFromDatetime2(doc.due_tdt,$.t("common:date.short")));
                                 task.status = Acm.goodValue(doc.status_s);
                                 task.assignee = Acm.goodValue(doc.assignee_s);
                                 tasks.push(task);

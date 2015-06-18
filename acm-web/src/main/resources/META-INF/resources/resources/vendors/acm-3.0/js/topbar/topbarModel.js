@@ -83,6 +83,9 @@ Topbar.Model = {
             }
 
             Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+            
+            // Get popup ASN without waiting for the timer when the page is loaded
+            Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
         }
 
         ,_pullInterval: 16
@@ -97,6 +100,7 @@ Topbar.Model = {
                     }
 
                     Topbar.Service.Asn.retrieveAsnList(App.getUserName(),Topbar.Model.Asn._rows);
+                    Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows);
                     return true;
                 }
             );
@@ -113,7 +117,7 @@ Topbar.Model = {
 
         ,OBJECT_TYPE      : "NOTIFICATION"
         ,SORT_ORDER       : "desc"
-        ,SORT_FIELD       : "create_tdt"
+        ,SORT_FIELD       : "create_date_tdt"
         ,STATUS_AUTO     : "Auto"
         ,STATUS_NEW      : "New"
         ,STATUS_UNMARKED : "Unmarked"
