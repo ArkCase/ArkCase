@@ -777,8 +777,8 @@ CaseFile.prepare = function() {
     CaseFile.Model.Config.request = function() {
         CaseFile.Model.Config.requestOrig();
 
-        App.Model.Config.requestConfig(Application.CONFIG_NAME_ACM_FORMS).done(function(data) {
-            var cfg = App.Model.Config.getConfig(Application.CONFIG_NAME_ACM_FORMS);
+        App.Model.Config.requestConfig(ThisApp.CONFIG_NAME_ACM_FORMS).done(function(data) {
+            var cfg = App.Model.Config.getConfig(ThisApp.CONFIG_NAME_ACM_FORMS);
             if (Acm.isNotEmpty(cfg)) {
                 var myCfg = App.Model.Config.getMyConfig();
                 myCfg.courtLocations  = {};
