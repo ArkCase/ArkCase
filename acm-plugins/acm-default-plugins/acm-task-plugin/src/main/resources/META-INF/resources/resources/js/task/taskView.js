@@ -364,7 +364,8 @@ Task.View = Task.View || {
                         //this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
                         this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime2(parentObjData.incidentDate,$.t("common:date.short")));
                         this.setTextLnkParentObjPriority(Acm.goodValue(parentObjData.priority));
-                        this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                        //this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                        this.setTextLnkParentObjAssigned(App.Model.Users.getUserFullName(Acm.goodValue(parentObjData.assignee)));
                         this.setTextLnkParentObjStatus("  (" + Acm.goodValue(parentObjData.status) +")");
                         this.setTextLnkParentObjSubjectType(Acm.goodValue(parentObjData.subjectType));
                         this.setTextLnkParentObjNumber(Acm.goodValue(parentObjData.number));
@@ -1397,7 +1398,8 @@ Task.View = Task.View || {
                         Record.note       = Acm.goodValue(notes[i].note);
                         //Record.created    = Acm.getDateFromDatetime(notes[i].created);
                         Record.created    = Acm.getDateFromDatetime2(notes[i].created,$.t("common:date.short"));
-                        Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        Record.creator  = App.Model.Users.getUserFullName(Acm.goodValue(notes[i].creator));
                         //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                         //Record.parentType = Acm.goodValue(noteList[i].parentType);
                         jtData.Records.push(Record);
@@ -1590,7 +1592,8 @@ Task.View = Task.View || {
                         Record.eventType = Acm.goodValue(events[i].eventType);
                         //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
                         Record.eventDate    = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
-                        Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.user  = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                         jtData.Records.push(Record);
                     }
                 }
@@ -1656,7 +1659,7 @@ Task.View = Task.View || {
                         }, eventDate: {
                             title: $.t("task:history.table.field.date")
                             ,width: '25%'
-                        }, userId: {
+                        }, user: {
                             title: $.t("task:history.table.field.user")
                             ,width: '25%'
                         }
@@ -1856,7 +1859,8 @@ Task.View = Task.View || {
                         Record.title = Acm.goodValue(documents[i].name);
                         //Record.created = Acm.getDateFromDatetime(documents[i].created);
                         Record.created   = Acm.getDateFromDatetime2(documents[i].created,$.t("common:date.short"));
-                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        //Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        Record.creator  = App.Model.Users.getUserFullName(Acm.goodValue(documents[i].creator));
                         jtData.Records.push(Record);
                     }
                 }
@@ -2085,7 +2089,8 @@ Task.View = Task.View || {
                     record.title = Acm.goodValue(documentsUnderReview.fileName);
                     //record.created = Acm.getDateFromDatetime(documentsUnderReview.created);
                     record.created   = Acm.getDateFromDatetime2(documentsUnderReview.created,$.t("common:date.short"));
-                    record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    //record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    record.author = App.Model.Users.getUserFullName(Acm.goodValue(documentsUnderReview.creator));
                     record.status = Acm.goodValue(documentsUnderReview.status);
                     jtData.Records.push(record);
                 }
@@ -2202,7 +2207,8 @@ Task.View = Task.View || {
                             record.comment = rejectComments[i].note;
                             //record.created = Acm.getDateFromDatetime(rejectComments[i].created);
                             record.created = Acm.getDateFromDatetime2(rejectComments[i].created,$.t("common:date.short"));
-                            record.creator = Acm.__FixMe__getUserFullName(rejectComments[i].creator);
+                            //record.creator = Acm.__FixMe__getUserFullName(rejectComments[i].creator);
+                            record.creator = App.Model.Users.getUserFullName(Acm.goodValue(rejectComments[i].creator));
                             record.parentId = Acm.goodValue(rejectComments[i].parentId);
                             record.parentType = rejectComments[i].parentType;
                             jtData.Records.push(record);
@@ -2327,7 +2333,8 @@ Task.View = Task.View || {
                             var Record = {};
                             //Record.signedDate = Acm.getDateFromDatetime(electronicSignatures[i].signedDate)
                             Record.signedDate = Acm.getDateFromDatetime2(electronicSignatures[i].signedDate,$.t("common:date.short"));
-                            Record.user = Acm.__FixMe__getUserFullName(electronicSignatures[i].signedBy);
+                            //Record.user = Acm.__FixMe__getUserFullName(electronicSignatures[i].signedBy);
+                            Record.user = App.Model.Users.getUserFullName(Acm.goodValue(electronicSignatures[i].signedBy));
                             jtData.Records.push(Record);
                         }
                     }
