@@ -163,6 +163,9 @@ AcmEx.Object = {
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
+        //
+        // sortMap can be overloaded as hash map, comparator, or paging url builder
+        //
         ,usePaging: function($jt, jtArg, sortMap) {
             jtArg.paging = true;
             if (!jtArg.pageSize) {
@@ -191,10 +194,17 @@ AcmEx.Object = {
                 }
             }
 
+            jtArg.fields._idx = {
+                type: "hidden"
+                ,list: true
+                ,create: false
+                ,edit: false
+            }
+
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
-        ,useChildTable: function($jt, childLinks, arg) {
+        ,useChildTable: function($jt, childLinks, arg, sortMap) {
             var argNew = {fields:{}};
             argNew.fields.subTables = {
                 title: 'Entities'
@@ -224,8 +234,10 @@ AcmEx.Object = {
                     argNew[key] = arg[key];
                 }
             }
-            $jt.jtable(argNew);
-            $jt.jtable('load');
+
+//            $jt.jtable(argNew);
+//            $jt.jtable('load');
+            this.usePaging($jt, argNew, sortMap);
         }
         ,useAsChild: function($jt, $row, arg) {
             $jt.jtable('openChildTable'
@@ -235,10 +247,6 @@ AcmEx.Object = {
                     data.childTable.jtable('load');
                 }
             );
-        }
-        ,clickAddRecordHandler: function($jt, handler) {
-            var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
-            $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
         ,toggleChildTable: function($t, $row, fnOpen, title) {
             var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
@@ -258,25 +266,97 @@ AcmEx.Object = {
                 fnOpen($t, $row);
             }
         }
-
-        //toggleSubJTable is to be retired; use toggleChildTable
-        ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
-            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
-            var curTitle = $childRow.find("div.jtable-title-text").text();
-
-            var toClose;
-            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
-                toClose = (curTitle === title);
-            } else {
-                toClose = false;
-            }
-
-            if (toClose) {
-                fnClose($t, $row);
-            } else {
-                fnOpen($t, $row);
-            }
+        ,clickAddRecordHandler: function($jt, handler) {
+            var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
+            $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
+        ,_hashMapComparator: function(item1, item2, sortBy, sortDir) {
+            var value1 = item1[sortBy];
+            var value2 = item2[sortBy];
+            var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
+            return ("DESC" == sortDir)? -rc : rc;
+//            if ("DESC" == sortDir) {
+//                rc = -rc;
+//            }
+//            return rc;
+        }
+        //
+        // comparator can be overloaded with a sortMap, in that case, a default comparator is used
+        //
+        ,getPagingItems: function(jtParams, arr, comparator) {
+            var pagingItems = [];
+            if (!Acm.isArrayEmpty(arr)) {
+                var sortItems = [];
+                for (var i = 0; i < arr.length; i++) {
+                    var sortItem = {idx: i, item: arr[i]};
+                    sortItems.push(sortItem);
+                }
+
+                if (Acm.isNotEmpty(jtParams.jtSorting)) {
+                    sortItems.sort(function(a, b){
+                        var jtSorting = jtParams.jtSorting;
+                        var sortArr = jtSorting.split(" ");
+                        var sortBy = sortArr[0];
+                        var sortDir = sortArr[1];
+
+                        if (!comparator) {
+                            return 0;
+                        } else if (typeof comparator === "function") {
+                            return comparator(a.item, b.item, sortBy, sortDir);
+                        } else if (typeof comparator === "object") {
+                            var sortMap = comparator;
+                            var itemSortBy = sortMap[sortBy];
+                            return AcmEx.Object.JTable._hashMapComparator(a.item, b.item, itemSortBy, sortDir);
+                        } else {
+                            return 0;
+                        }
+
+                    });
+                }
+
+                var jtPageSize = jtParams.jtPageSize;
+                var jtStartIndex = jtParams.jtStartIndex;
+                for (var i = jtStartIndex; i < jtStartIndex + jtPageSize && i < sortItems.length; i++) {
+                    pagingItems.push(sortItems[i]);
+                }
+            }
+            return pagingItems;
+        }
+        ,getPagingRecord: function(pagingItem) {
+            var record = {};
+            record._idx = pagingItem.idx;
+            return record;
+        }
+        ,getPagingItemData: function(pagingItem) {
+            return pagingItem.item;
+        }
+        ,getPagingRow: function(data) {
+            var record = data.record;
+            return record._idx;
+        }
+        ,getTableRow: function(data) {
+            var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+            return whichRow;
+        }
+
+//        //toggleSubJTable is to be retired; use toggleChildTable
+//        ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
+//            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+//            var curTitle = $childRow.find("div.jtable-title-text").text();
+//
+//            var toClose;
+//            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+//                toClose = (curTitle === title);
+//            } else {
+//                toClose = false;
+//            }
+//
+//            if (toClose) {
+//                fnClose($t, $row);
+//            } else {
+//                fnOpen($t, $row);
+//            }
+//        }
     }
 
 
