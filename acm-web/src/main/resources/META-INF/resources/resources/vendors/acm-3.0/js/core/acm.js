@@ -300,6 +300,7 @@ var Acm = Acm || {
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
     ,getDateTimeFromDatetime2: function(dt, format) {
+        Acm.log("Acm.getDateTimeFromDatetime() is phasing out.Using Acm.getDateTimeFromDatetime2() for now till the transition is complete");
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format(format)
