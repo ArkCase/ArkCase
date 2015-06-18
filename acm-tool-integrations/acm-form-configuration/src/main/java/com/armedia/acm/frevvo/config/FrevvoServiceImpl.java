@@ -4,6 +4,7 @@
 package com.armedia.acm.frevvo.config;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +50,14 @@ public class FrevvoServiceImpl implements FrevvoService {
 				logout();
 			}
 			
-			String protocol = getFormUrl().getProtocol();
-			String host = getFormUrl().getHost();
+			String protocol = getFormUrl().getInternalProtocol();
+			String host = getFormUrl().getInternalHost();
 			
 			// Frevvo API service need port (at least default). If not provided in the properties file let's try to default port 80.
 			int port = 80;
-			if (getFormUrl().getPortAsInteger() != null && getFormUrl().getPortAsInteger() > 0)
+			if (getFormUrl().getInternalPortAsInteger() != null && getFormUrl().getInternalPortAsInteger() > 0)
 			{
-				port = getFormUrl().getPortAsInteger();
+				port = getFormUrl().getInternalPortAsInteger();
 			}
 			
 			service = new FormsService(protocol, host, port, null);
@@ -102,8 +103,8 @@ public class FrevvoServiceImpl implements FrevvoService {
 			
 			FormsService service = getFormsService();
 			URL appEntryUrl = service.getEntryURL(ApplicationEntry.class, id);
-		    ApplicationEntry application = service.getEntry(appEntryUrl, ApplicationEntry.class);
-
+		    ApplicationEntry application = service.getEntry(fixFrevvoUrl(appEntryUrl), ApplicationEntry.class);
+		    
 		    return application;
 		} 
 		catch (Exception e) 
@@ -123,7 +124,7 @@ public class FrevvoServiceImpl implements FrevvoService {
 			
 			FormsService service = getFormsService();
 			URL formEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
-		    FormTypeEntry form = service.getEntry(formEntryUrl, FormTypeEntry.class);
+		    FormTypeEntry form = service.getEntry(fixFrevvoUrl(formEntryUrl), FormTypeEntry.class);
 
 		    return form;
 		} 
@@ -139,7 +140,9 @@ public class FrevvoServiceImpl implements FrevvoService {
 	{
 		try 
 		{
-			FormTypeFeed formFeed = application.getFormTypeFeed();
+			FormsService service = getFormsService();
+			URL formTypeUrl = new URL(application.getFormTypeFeedLink().getHref());
+			FormTypeFeed formFeed = service.getFeed(fixFrevvoUrl(formTypeUrl), FormTypeFeed.class);
 			
 			return formFeed.getEntries();
 		} 
@@ -241,8 +244,8 @@ public class FrevvoServiceImpl implements FrevvoService {
 			LOG.debug("Taking Schema for id=" + id);
 			
 			FormsService service = getFormsService();
-			URL formEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
-		    SchemaEntry schema = service.getEntry(formEntryUrl, SchemaEntry.class);
+			URL schemaEntryUrl = service.getEntryURL(FormTypeEntry.class, id);
+		    SchemaEntry schema = service.getEntry(fixFrevvoUrl(schemaEntryUrl), SchemaEntry.class);
 
 		    return schema;
 		} 
@@ -269,6 +272,51 @@ public class FrevvoServiceImpl implements FrevvoService {
 		}
 		
 		return service;
+	}
+	
+	private URL fixFrevvoUrl(URL url)
+	{
+		try 
+		{
+			String urlAsString = url.toString();
+			LOG.debug("Original URL: " + urlAsString);
+			
+			if (urlAsString != null)
+			{
+				if (getFormUrl().getProtocol() != null && !getFormUrl().getProtocol().isEmpty())
+				{
+					urlAsString = urlAsString.replace(getFormUrl().getProtocol(), getFormUrl().getInternalProtocol());
+				}
+				
+				if (getFormUrl().getHost() != null && !getFormUrl().getHost().isEmpty())
+				{
+					urlAsString = urlAsString.replace(getFormUrl().getHost(), getFormUrl().getInternalHost());
+				}
+				
+				// If internal port is null or empty, we should remove the original ":8082" and replace with ""
+				String separator = "";
+				String internalPort = getFormUrl().getInternalPort();
+				if (internalPort == null || internalPort.isEmpty())
+				{
+					separator = ":";
+					internalPort = "";
+				}
+				
+				if (getFormUrl().getPort() != null && !getFormUrl().getPort().isEmpty())
+				{
+					urlAsString = urlAsString.replace(separator + getFormUrl().getPort(), internalPort);
+				}
+				
+				LOG.debug("Changed URL: " + urlAsString);
+				
+				return new URL(urlAsString);				
+			}
+		} 
+		catch (MalformedURLException e) 
+		{
+			LOG.error("Cannot create URL from string.");
+		}
+		return null;
 	}
 
 	@Override

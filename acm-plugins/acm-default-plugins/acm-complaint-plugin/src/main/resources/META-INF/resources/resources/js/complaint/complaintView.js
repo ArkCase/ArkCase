@@ -1954,7 +1954,9 @@ Complaint.View = Complaint.View || {
                         Record.title = Acm.goodValue(documents[i].name);
                         //Record.created = Acm.getDateFromDatetime(documents[i].created);
                         Record.created = Acm.getDateFromDatetime2(documents[i].created,$.t("common:date.short"));
-                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        //Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(documents[i].creator));
+
                         jtData.Records.push(Record);
                     }
                 }
@@ -2103,7 +2105,9 @@ Complaint.View = Complaint.View || {
                         Record.note       = Acm.goodValue(notes[i].note);
                         //Record.created    = Acm.getDateFromDatetime(notes[i].created);
                         Record.created    = Acm.getDateFromDatetime2(notes[i].created,$.t("common:date.short"));
-                        Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(notes[i].creator));
+
                         //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                         //Record.parentType = Acm.goodValue(noteList[i].parentType);
                         jtData.Records.push(Record);
@@ -2294,7 +2298,9 @@ Complaint.View = Complaint.View || {
                         Record.eventType = Acm.goodValue(events[i].eventType);
                         //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
                         Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
-                        Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
+
                         jtData.Records.push(Record);
                     }
                 }
@@ -2357,7 +2363,7 @@ Complaint.View = Complaint.View || {
                         }, eventDate: {
                             title: $.t("complaint:history.table.field.date")
                             ,width: '25%'
-                        }, userId: {
+                        }, user: {
                             title: $.t("complaint:history.table.field.user")
                             ,width: '25%'
                         }
@@ -2518,7 +2524,9 @@ Complaint.View = Complaint.View || {
                     Record.priority = tasks[i].priority;
                     Record.dueDate  = tasks[i].dueDate;
                     Record.status   = tasks[i].status;
-                    Record.assignee = Acm.__FixMe__getUserFullName(tasks[i].assignee);
+                    //Record.assignee = Acm.__FixMe__getUserFullName(tasks[i].assignee);
+                    Record.assignee = App.Model.Users.getUserFullName(Acm.goodValue(tasks[i].assignee));
+
                     jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = tasks.length;

@@ -66,7 +66,7 @@ describe("ObjNav.Model", function() {
     });
 
 
-    it("ObjNav.Model.Tree.Key: node type map info", function() {
+    xit("ObjNav.Model.Tree.Key: node type map info", function() {
         ObjNav.Model.interface = {nodeTypeMap: function() {
             return [
                 {nodeType: "prevPage"    ,icon: "i-arrow-up"   ,tabIds: ["tabBlank"]}
