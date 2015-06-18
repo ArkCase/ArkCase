@@ -1,11 +1,11 @@
 /**
- * Application
+ * ThisApp
  *
- * Application specific functions
+ * ThisApp specific functions
  *
  * @author jwu
  */
-var Application = Application || {
+var ThisApp = ThisApp || {
     run : function(context) {
 
         var acmModules = this.acmModules = [];
@@ -87,26 +87,26 @@ var Application = Application || {
         }
 
 
-        Application.prepareModules(context);
+        ThisApp.prepareModules(context);
 
 
         if (Acm.isEmpty(context.loginPage)) {
             App.Model.Login.setLoginStatus(true);
-            Application.configModules();
+            ThisApp.configModules();
         }
 
         var promiseConfig = App.checkConfig(context);
         var promiseI18n = App.initI18n(context);
 
         $.when(promiseConfig, promiseI18n).done(function() {
-            Application.createModules(context);
-            Application.initModules(context);
+            ThisApp.createModules(context);
+            ThisApp.initModules(context);
         });
     }
 
 
     ,prepareModules : function(context) {
-        var acmModules = Application.acmModules;
+        var acmModules = ThisApp.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
@@ -118,7 +118,7 @@ var Application = Application || {
     }
 
     ,configModules : function(context) {
-        var acmModules = Application.acmModules;
+        var acmModules = ThisApp.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
@@ -130,7 +130,7 @@ var Application = Application || {
     }
 
     ,createModules : function(context) {
-        var acmModules = Application.acmModules;
+        var acmModules = ThisApp.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
@@ -142,7 +142,7 @@ var Application = Application || {
     }
 
     ,initModules : function(context) {
-        var acmModules = Application.acmModules;
+        var acmModules = ThisApp.acmModules;
         for (var i = 0; i < acmModules.length; i++) {
             var module = acmModules[i];
             if ("undefined" != typeof module) {
