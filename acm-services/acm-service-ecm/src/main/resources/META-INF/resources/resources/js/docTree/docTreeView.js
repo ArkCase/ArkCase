@@ -2375,19 +2375,19 @@ DocTree.View = DocTree.View || {
 
 
     ,markNodePending: function(node) {
-        if (this.validateNode(node)) {
+        if (this.validateFancyTreeNode(node)) {
             $(node.span).addClass("pending");
             node.setStatus("loading");
         }
     }
     ,markNodeOk: function(node) {
-        if (this.validateNode(node)) {
+        if (this.validateFancyTreeNode(node)) {
             $(node.span).removeClass("pending");
             node.setStatus("ok");
         }
     }
     ,markNodeError: function(node) {
-        if (this.validateNode(node)) {
+        if (this.validateFancyTreeNode(node)) {
             $(node.span).addClass("pending");
             //node.setStatus("error");
             node.setStatus("ok");
