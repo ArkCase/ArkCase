@@ -447,7 +447,10 @@ App.Model = {
         }
         ,create: function() {}
         ,onInitialized: function() {
-            App.Service.Users.retrieveUsers(App.Model.Users.USER_NAMES_APP);
+            var isLogin = App.Model.Login.isLogin();
+            if (isLogin) {
+                App.Service.Users.retrieveUsers(App.Model.Users.USER_NAMES_APP);
+            }
         }
         ,USER_NAMES_APP : "AcmUsers"
 
