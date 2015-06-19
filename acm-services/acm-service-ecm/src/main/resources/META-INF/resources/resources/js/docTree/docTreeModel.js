@@ -164,7 +164,7 @@ DocTree.Model = DocTree.Model || {
         }
         return solrData;
     }
-    //xxxx
+
     ,retrieveFolderList: function(pageId, folderId) {
         var objType = DocTree.Model.getObjType();
         var objId = DocTree.Model.getObjId();

@@ -683,8 +683,14 @@ DocTree.View = DocTree.View || {
                 ,save: function(event, data){
                     var parent = data.node.getParent();
                     if (parent) {
-                        //var cacheKey = DocTree.View.getCacheKey(parent);
                         var name = data.input.val();
+
+                        if (DocTree.View.findSiblingNodeByName(data.node, name)) {
+                            Acm.Dialog.alert($.t("doctree:error.duplicate-name"));
+                            data.node.remove();
+                            return false;
+                        }
+
                         if (data.isNew) {
                             if (DocTree.View.isFolderNode(data.node)) {
                                  DocTree.View.Op.createFolder(data.node, name);
@@ -1208,18 +1214,13 @@ DocTree.View = DocTree.View || {
             return nodeData;
         }
         ,lazyLoad: function(event, data) {
-//            var objType = DocTree.Model.getObjType();
-//            var objId   = DocTree.Model.getObjId();
-//            var node = data.node;
-//            var folderId = Acm.goodValue(node.data.objectId, 0);
-//            if (DocTree.View.isTopNode(node)) {
-//                folderId = 0;
-//            }
-//            //zzz
-//            var pageId = Acm.goodValue(node.data.startRow);
-//            var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-
             var folderNode = data.node;
+            var folderId = Acm.goodValue(folderNode.data.objectId, 0);
+            if (0 >= folderId && !DocTree.View.isTopNode(folderNode)) {
+                data.result = [];
+                return;
+            }
+
             var cacheKey = DocTree.View.getCacheKey(folderNode);
             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
             if (DocTree.Model.validateFolderList(folderList)) {
@@ -2115,6 +2116,23 @@ DocTree.View = DocTree.View || {
         }
         return found;
     }
+    ,findSiblingNodeByName: function(node, name) {
+        var found = null;
+        var parentNode = node.getParent();
+        if (DocTree.View.validateFancyTreeNode(parentNode)) {
+            if (!Acm.isArrayEmpty(parentNode.children)) {
+                for (var i = 0; i < parentNode.children.length; i++) {
+                    if (parentNode.children[i].title == name) {
+                        if (node.key != parentNode.children[i]) {   //cannot be self
+                            found = parentNode.children[i];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return found;
+    }
     ,findChildNodeById: function(parentNode, id) {
         var found = null;
         for (var j = parentNode.children.length - 1; 0 <= j; j--) {
@@ -2389,6 +2407,8 @@ DocTree.View = DocTree.View || {
     ,markNodeError: function(node) {
         if (this.validateFancyTreeNode(node)) {
             $(node.span).addClass("pending");
+            node.title = $.t("doctree:error.node-title");
+            node.renderTitle();
             //node.setStatus("error");
             node.setStatus("ok");
         }
