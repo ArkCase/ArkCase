@@ -2,6 +2,7 @@ package com.armedia.acm.audit;
 
 
 import com.armedia.acm.event.AcmEvent;
+import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.commons.audit.AuditActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class AuditWriter implements ApplicationListener<AcmEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+    private AcmPlugin auditPlugin;
 
 
     @Override
@@ -64,5 +66,11 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
 
     }
 
+    public AcmPlugin getAuditPlugin() {
+        return auditPlugin;
+    }
 
+    public void setAuditPlugin(AcmPlugin auditPlugin) {
+        this.auditPlugin = auditPlugin;
+    }
 }
