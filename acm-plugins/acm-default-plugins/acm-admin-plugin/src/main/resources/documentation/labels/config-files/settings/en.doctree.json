@@ -68,6 +68,11 @@
             ,"defaultValue": "(Error!)"
             ,"description": ""
         }
+        ,"duplicate-name": {"value": "Same name exists"
+            ,"defaultValue": "Same name exists"
+            ,"description": ""
+        }
+
     }
 
     ,"menu": {
