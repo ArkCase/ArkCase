@@ -76,6 +76,16 @@
             <artifactId>acm-form-project</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
   	
 		 <!-- spring -->
         <dependency>

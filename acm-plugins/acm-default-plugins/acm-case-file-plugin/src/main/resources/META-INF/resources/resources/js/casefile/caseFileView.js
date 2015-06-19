@@ -71,8 +71,6 @@ CaseFile.View = CaseFile.View || {
             this.formUrls.enableFrevvoFormEngine         = Acm.Object.MicroData.get("enableFrevvoFormEngine");
             this.formUrls.urlChangeCaseStatusForm        = Acm.Object.MicroData.get("urlChangeCaseStatusForm");
             this.formUrls.urlEditChangeCaseStatusForm    = Acm.Object.MicroData.get("urlEditChangeCaseStatusForm");
-            this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
-            this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
 
             var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
             var mapDocForms = {};
@@ -85,37 +83,12 @@ CaseFile.View = CaseFile.View || {
                 }
             }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form = this.fileTypes[i].form;
-                    if (Acm.isNotEmpty(form)) {
-                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = mapDocForms[form];
-                        if (formDocument) {
-                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
-                        }
-                    }
-                }
-            }
         }
         ,onInitialized: function() {
         }
 
         ,getToken: function() {
             return this.token;
-        }
-
-        ,findFileTypeByType: function(type) {
-            var ft = null;
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    if (type == this.fileTypes[i].type) {
-                        ft = this.fileTypes[i];
-                        break;
-                    }
-                }
-            }
-            return ft;
         }
     }
 
@@ -914,6 +887,10 @@ CaseFile.View = CaseFile.View || {
         ,onModelRetrievedObject: function(objData) {
             AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
         }
+
+        ,onModelRetrievedObject: function(objData) {
+            AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
+        }
         ,onViewSelectedObject: function(objType, objId) {
             AcmEx.Object.JTable.load(CaseFile.View.People.$divPeople);
         }
@@ -960,31 +937,28 @@ CaseFile.View = CaseFile.View || {
                 ]
                 ,{
                     title: $.t("casefile:people.table.title")
-                    ,paging: true //fix me
-                    ,sorting: true //fix me
-                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: $.t("casefile:people.msg.add-new-record")
                     }
                     ,actions: {
-                        listAction: function(postData, jtParams) {
+                        pagingListAction: function(postData, jtParams, comparator) {
                             var rc = AcmEx.Object.JTable.getEmptyRecords();
-                            //var caseFileId = CaseFile.View.getActiveCaseFileId();
                             var c = CaseFile.View.getActiveCaseFile();
                             if (CaseFile.Model.Detail.validateCaseFile(c)) {
-                                var personAssociations = c.personAssociations;
-                                for (var i = 0; i < personAssociations.length; i++) {
-                                    if (CaseFile.Model.People.validatePersonAssociation(personAssociations[i])) {
-                                        rc.Records.push({
-                                            assocId:     personAssociations[i].id
-                                            //,title:      personAssociations[i].person.title
-                                            ,givenName:  personAssociations[i].person.givenName
-                                            ,familyName: personAssociations[i].person.familyName
-                                            ,personType: personAssociations[i].personType
-                                        });
+                                if (CaseFile.Model.People.validatePersonAssociations(c.personAssociations)) {
+                                    var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, c.personAssociations, comparator);
+                                    for (var i = 0; i < pagingItems.length; i++) {
+                                        var personAssociation = AcmEx.Object.JTable.getPagingItemData(pagingItems[i]);
+                                        var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
+                                        record.assocId = Acm.goodValue(personAssociation.id, 0);
+                                        record.personType = Acm.goodValue(personAssociation.personType);
+                                        record.familyName = Acm.goodValue(personAssociation.person.familyName);
+                                        record.givenName = Acm.goodValue(personAssociation.person.givenName);
+
+                                        rc.Records.push(record);
                                     }
+                                    rc.TotalRecordCount = rc.Records.length;
                                 }
-                                rc.TotalRecordCount = rc.Records.length;
                             }
                             return rc;
                         }
@@ -1054,7 +1028,7 @@ CaseFile.View = CaseFile.View || {
                     }
 
                     ,recordUpdated: function(event, data){
-                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                        var whichRow = AcmEx.Object.JTable.getPagingRow(data);
                         var record = data.record;
                         var assocId = record.assocId;
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
@@ -1073,7 +1047,7 @@ CaseFile.View = CaseFile.View || {
                         }
                     }
                     ,recordDeleted: function(event,data) {
-                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                        var whichRow = AcmEx.Object.JTable.getPagingRow(data);
                         var record = data.record;
                         var personAssociationId = record.assocId;
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
@@ -1081,6 +1055,22 @@ CaseFile.View = CaseFile.View || {
                             CaseFile.Controller.viewDeletedPersonAssociation(caseFileId, personAssociationId);
                         }
                     }
+                }
+                ,function(personAssociation1, personAssociation2, sortBy, sortDir) {
+                    var value1 = "";
+                    var value2 = "";
+                    if ("personType" == sortBy) {
+                        value1 = Acm.goodValue(personAssociation1.personType);
+                        value2 = Acm.goodValue(personAssociation2.personType);
+                    } else if ("familyName" == sortBy) {
+                        value1 = Acm.goodValue(personAssociation1.person.familyName);
+                        value2 = Acm.goodValue(personAssociation2.person.familyName);
+                    } else if ("givenName" == sortBy) {
+                        value1 = Acm.goodValue(personAssociation1.person.givenName);
+                        value2 = Acm.goodValue(personAssociation2.person.givenName);
+                    }
+                    var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
+                    return ("DESC" == sortDir)? -rc : rc;
                 }
             );
         }
@@ -1954,6 +1944,7 @@ CaseFile.View = CaseFile.View || {
         create: function() {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
         }
         ,onInitialized: function() {
         }
@@ -1967,6 +1958,11 @@ CaseFile.View = CaseFile.View || {
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
+        
+        ,onModelDocumentsRetrievedPlainForms: function() {
+        	DocTree.View.fileTypes = CaseFile.View.Documents.getFileTypes();
+        	DocTree.View.refreshDocTree();
+        }
 
         ,uploadForm: function(type, folderId, onCloseForm) {
             //var token = CaseFile.View.MicroData.token;
@@ -1975,285 +1971,81 @@ CaseFile.View = CaseFile.View || {
             if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
                 //var url = Acm.goodValue(CaseFile.View.MicroData.formUrls[report]);
                 var url = null;
-                var fileType = CaseFile.View.MicroData.findFileTypeByType(type);
+                var fileType = CaseFile.View.Documents.getFileTypeByType(type);
                 if (fileType) {
                     url = Acm.goodValue(fileType.url);
                 }
                 if (Acm.isNotEmpty(url)) {
-                    // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
-                    // the Frevvo form will decode it.
-                    var caseTitle = Acm.goodValue(caseFile.title);
-                    caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-
-                    url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-                        + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-                        + "',caseTitle:'" + encodeURIComponent(caseTitle)
-                        + "',casePriority:'" + Acm.goodValue(caseFile.priority)
-                        + "',folderId:'" + folderId
-                        + "',"
-                    );
+                    var data = "_data=(";
+                    if (fileType && fileType.urlParameters && fileType.urlParameters.length > 0) {
+                    	var urlParameters = fileType.urlParameters;
+                    	var parametersAsString = '';
+                    	for (var i = 0; i < urlParameters.length; i++) {
+                    		var key = urlParameters[i].name;
+                    		var value = '';
+                    		if (Acm.isNotEmpty(urlParameters[i].defaultValue)) {
+                    			value = Acm.silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
+                    		} else if (Acm.isNotEmpty(urlParameters[i].keyValue)) {
+                    			if (Acm.isNotEmpty(caseFile[urlParameters[i].keyValue])) {
+                    				value = Acm.silentReplace(caseFile[urlParameters[i].keyValue], "'", "_0027_");
+                    			}
+                    		}
+                    		value = encodeURIComponent(value);
+                    		parametersAsString += key + ":'" + Acm.goodValue(value) + "',";
+                    	}
+                    	parametersAsString +="folderId:'" + folderId + "',";
+                    	data += parametersAsString;
+                    }
+                    url = url.replace("_data=(", data);
                     Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
         }
+        
+        ,getFileTypes: function() {
+        	var fileTypes = CaseFile.View.MicroData.fileTypes;
+        	var plainForms = CaseFile.Model.Documents.getPlainForms();
+        	var plainFormsAsFileTypes = [];
+        	
+        	if (CaseFile.Model.Documents.validatePlainForms(plainForms)) {
+        		for (var i = 0; i < plainForms.length; i++) {
+        			if (Acm.isNotEmpty(plainForms[i].key)) {
+        				var fileType = {};
+            			fileType.type = plainForms[i].key;
+            			fileType.label = Acm.goodValue(plainForms[i].name);
+            			fileType.url = Acm.goodValue(plainForms[i].url);
+            			fileType.form = true;
+            			fileType.urlParameters = plainForms[i].urlParameters;
+            			
+            			plainFormsAsFileTypes.push(fileType);
+        			}
+        		}
+        	}
+        	
+        	if (Acm.isArray(fileTypes)) {
+                fileTypes = plainFormsAsFileTypes.concat(fileTypes);
+            }else {
+            	fileTypes = plainFormsAsFileTypes;
+            }
+        	
+        	return fileTypes;
+        }
+        
+        ,getFileTypeByType: function(type) {
+            var ft = null;
+            var _fileTypes = CaseFile.View.Documents.getFileTypes();
+            if (Acm.isArray(_fileTypes)) {
+                for (var i = 0; i < _fileTypes.length; i++) {
+                    if (type == _fileTypes[i].type) {
+                        ft = _fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
+        }
     }
 
-//    ,Documents_JTable_To_Retire: {
-//        create: function() {
-//            //for cases frevvo form is disabled in the properties file
-//            this.$formAddDocument = $("#formAddDocument");
-//            this.$btnAddDocument = $("#addDocument")
-//            this.$btnAddDocument.on("change", function(e) {CaseFile.View.Documents.onChangeFileInput(e, this);});
-//            this.$formAddDocument.submit(function(e) {CaseFile.View.Documents.onSubmitAddDocument(e, this);});
-//
-//            this.$divDocuments    = $("#divDocs");
-//            this.createJTableDocuments(this.$divDocuments);
-//            AcmEx.Object.JTable.clickAddRecordHandler(this.$divDocuments, CaseFile.View.Documents.onClickSpanAddDocument);
-//            this.$spanAddDocument = this.$divDocuments.find(".jtable-toolbar-item-add-record");
-//            CaseFile.View.Documents.fillReportSelection();
-//
-//
-//
-//            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_CASE_FILE     ,this.onModelRetrievedCaseFile);
-//            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT          ,this.onModelRetrievedObject);
-//            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_DOCUMENT          ,this.onModelAddedDocument);
-//            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_CREATED_CORRESPONDENCE  ,this.onModelCreatedCorrespondence);
-//            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_SELECTED_CASE_FILE       ,this.onViewSelectedCaseFile);
-//            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT            ,this.onViewSelectedObject);
-//            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLOSED_CASE_FILE         ,this.onViewClosedCaseFile);
-//        }
-//        ,onInitialized: function() {
-//        }
-//
-//        ,onChangeFileInput: function(event, ctrl) {
-//            CaseFile.View.Documents.$formAddDocument.submit();
-//        }
-//        ,onSubmitAddDocument: function(event, ctrl) {
-//            event.preventDefault();
-//            var count = CaseFile.View.Documents.$btnAddDocument[0].files.length;
-//            var report = CaseFile.View.Documents.getSelectReportText();
-//
-//            var fd = new FormData();
-//            fd.append("fileType", report);
-//            fd.append("parentObjectId", CaseFile.Model.getCaseFileId());
-//            fd.append("parentObjectType", CaseFile.Model.DOC_TYPE_CASE_FILE);
-//            for(var i = 0; i < count; i++ ){
-//                fd.append("files[]", CaseFile.View.Documents.$btnAddDocument[0].files[i]);
-//            }
-//            CaseFile.Service.Documents.uploadDocument(fd);
-//            this.$formAddDocument[0].reset();
-//        }
-//        ,onModelAddedDocument: function(caseFileId) {
-//            if (caseFileId.hasError) {
-//                ;
-//            } else {
-//                CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
-//            }
-//        }
-//        ,onModelCreatedCorrespondence: function(caseFileId) {
-//            if (caseFileId.hasError) {
-//                ;
-//            } else {
-//                AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-//            }
-//        }
-//        ,onModelRetrievedObject: function(objData) {
-//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-//        }
-//        ,onViewSelectedObject: function(objType, objId) {
-//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-//        }
-//        ,onViewClosedCaseFile: function(caseFileId) {
-//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-//        }
-//        ,onViewAddedDocument: function(caseFileId) {
-//            AcmEx.Object.JTable.load(CaseFile.View.Documents.$divDocuments);
-//        }
-//
-//
-//        ,onClickSpanAddDocument: function(event, ctrl) {
-//            var enableFrevvoFormEngine = CaseFile.View.MicroData.formUrls.enableFrevvoFormEngine;
-//            var report = CaseFile.View.Documents.getSelectReport();
-//            var reportext = CaseFile.View.Documents.getSelectReportText();
-//
-//            if(report == "roiFormUrl" || report == "electronicCommunicationFormUrl"){
-//                var token = CaseFile.View.MicroData.getToken();
-//
-//                var caseFileId = CaseFile.View.getActiveCaseFileId();
-//                var caseFile = CaseFile.View.getActiveCaseFile();
-//
-//                if (caseFile) {
-//                    var url = CaseFile.View.MicroData.getFormUrls()[report];
-//                    if (Acm.isNotEmpty(url)) {
-//                        // an apostrophe in case title will make Frevvo throw up.  Need to encode it here, then rules in
-//                        // the Frevvo form will decode it.
-//                        var caseTitle = Acm.goodValue(caseFile.title);
-//                        caseTitle = caseTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-//
-//                        url = url.replace("_data=(", "_data=(type:'case', caseId:'" + caseFileId
-//                            + "',caseNumber:'" + Acm.goodValue(caseFile.caseNumber)
-//                            + "',caseTitle:'" + caseTitle
-//                            + "',casePriority:'" + Acm.goodValue(caseFile.priority)
-//                            + "',");
-//
-//                        Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30
-//                            ,function() {
-//                        		CaseFile.Controller.viewClosedAddDocumentWindow(CaseFile.View.getActiveCaseFileId());
-//                            }
-//                        );
-//                    }
-//                }
-//            }
-//            else if(report && report != ""){
-//                CaseFile.View.Documents.$btnAddDocument.click();
-//            }
-//        }
-////html+= "<form id='formFiles' style='display:none;'>"
-////    + "<input id='newAttachment' type='file' name='files[]' multiple/>"
-////    + "</form>"
-//
-//        ,fillReportSelection: function() {
-//        	var formDocuments = null;
-//        	try {
-//        		formDocuments = JSON.parse(Acm.Object.MicroData.get("formDocuments"));
-//        	} catch(e) {
-//
-//        	}
-//
-//            var html = "<span>"
-//                + "<select class='input-sm form-control input-s-sm inline v-middle' id='docDropDownValue'>"
-//                + "<option value=''>"+ $.t("casefile:documents.form-document.document-type") +"</option>";
-//
-//            if (formDocuments != null && formDocuments.length > 0) {
-//            	for (var i = 0; i < formDocuments.length; i ++) {
-//            		html += "<option value='" + formDocuments[i]["value"] + "'>" + formDocuments[i]["label"] + "</option>"
-//            	}
-//            }
-//
-//            html += "<option value='mr'>"+ $.t("casefile:documents.form-document.medical-release") +"</option>"
-//                + "<option value='gr'>"+ $.t("casefile:documents.form-document.general-release") +"</option>"
-//                + "<option value='ev'>"+ $.t("casefile:documents.form-document.e-delivery") +"</option>"
-//                + "<option value='sig'>" +$.t("casefile:documents.form-document.sf86-signature") + "</option>"
-//                + "<option value='noi'>" + $.t("casefile:documents.form-document.notice-of-investigation") + "</option>"
-//                + "<option value='wir'>"+ $.t("casefile:documents.form-document.within-interview-request") +"</option>"
-//                + "<option value='ot'>" + $.t("casefile:documents.form-document.other") + "</option>"
-//                + "</select>"
-//                + "</span>";
-//
-//
-//            this.$spanAddDocument.before(html);
-//        }
-//        ,getSelectReport: function() {
-//            return Acm.Object.getSelectValue(this.$spanAddDocument.prev().find("select"));
-//        }
-//        ,getSelectReportText: function() {
-//            return Acm.Object.getSelectedText(this.$spanAddDocument.prev().find("select"));
-//        }
-//        ,_makeJtData: function(documents, totalDocuments) {
-//            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-//            if (Acm.isNotEmpty(documents)) {
-//                for (var i = 0; i < documents.length; i++) {
-//                    if(CaseFile.Model.Documents.validateDocument(documents[i])){
-//                        var Record = {};
-//                        Record.id = Acm.goodValue(documents[i].objectId)
-//                        Record.title = Acm.goodValue(documents[i].name);
-//                        Record.created = Acm.getDateFromDatetime(documents[i].created);
-//                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
-//                        jtData.Records.push(Record);
-//                    }
-//                }
-//                jtData.TotalRecordCount = Acm.goodValue(totalDocuments, 0);
-//            }
-//            return jtData;
-//        }
-//        , reloadDocs: function()
-//        {
-//            var divDocuments = $("#divDocs");
-//            CaseFile.View.Documents.createJTableDocuments(divDocuments);
-//        }
-//        , createJTableDocuments: function ($s) {
-//            AcmEx.Object.JTable.usePaging($s, {
-//                title: $.t("casefire:documents.table.title")
-//                ,paging: true
-//                ,sorting: true
-//                ,pageSize: 10 //Set page size (default: 10)
-//                , messages: {
-//                    addNewRecord: $.t("casefire:documents.msg.add-new-record")
-//                }
-//                , actions: {
-//                    pagingListAction: function (postData, jtParams, sortMap) {
-//                        var caseId = CaseFile.View.getActiveCaseFileId();
-//                        if ( ! caseId || 0 >= caseId )
-//                        {
-//                            return AcmEx.Object.JTable.getEmptyRecords();
-//                        }
-//                        //var documentsCache = CaseFile.Model.Documents.cacheDocuments.get(caseId + "." + jtParams.jtStartIndex);
-//                        //if (CaseFile.Model.Documents.validateDocuments(documentsCache)) {
-//                        //    var documents = documentsCache.children;
-//                        //    var totalDocuments = documentsCache.totalChildren;
-//                        //    return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
-//                        //} else {
-//                            return CaseFile.Service.Documents.retrieveDocumentsDeferred(caseId
-//                                ,postData
-//                                ,jtParams
-//                                ,sortMap
-//                                ,function(data) {
-//                                    if(CaseFile.Model.Documents.validateDocuments(data)){
-//                                        var documents = data.children;
-//                                        var totalDocuments = data.totalChildren;
-//                                        return CaseFile.View.Documents._makeJtData(documents, totalDocuments);
-//                                    }
-//                                    return AcmEx.Object.JTable.getEmptyRecords();
-//                                }
-//                                ,function(error) {
-//                                }
-//                            );
-//                        //}  //end else
-//                    }
-//                    ,createAction: function(postData, jtParams) {
-//                        //placeholder. this action should never be called
-//                        var rc = {"Result": "OK", "Record": {id:0, title:"", created:"", creator:""}};
-//                        return rc;
-//                    }
-//                }
-//                , fields: {
-//                    id: {
-//                        title: $.t("casefile:documents.table.field.id")
-//                        , key: true
-//                        , list: false
-//                        , create: false
-//                        , edit: false
-//                        , defaultvalue: 0
-//                    }
-//                    , title: {
-//                        title: $.t("casefile:documents.table.field.title")
-//                        , width: '50%'
-//                        , edit: false
-//                        , create: false
-//                        ,display: function (commData) {
-//                            var a = "<a href='" + App.getContextPath() + CaseFile.Service.Documents.API_DOWNLOAD_DOCUMENT_
-//                                + ((0 >= commData.record.id)? "#" : commData.record.id)
-//                                + "'>" + commData.record.title + "</a>";
-//                            return $(a);
-//                        }
-//                    }
-//                    , created: {
-//                        title: $.t("casefile:documents.table.field.date-added")
-//                        , width: '15%'
-//                        , edit: false
-//                        , create: false
-//                    }
-//                    , creator: {
-//                        title: $.t("casefile:documents.table.field.added-by")
-//                        , width: '15%'
-//                        , edit: false
-//                        , create: false
-//                    }
-//                }
-//            });
-//        }
-//
-//    }
 
     ,Participants: {
         create: function() {
@@ -2287,29 +2079,32 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,createJTableParticipants: function($s) {
-            AcmEx.Object.JTable.useBasic($s, {
+            var sortMap = {};
+            sortMap["type"]  = "participantType";
+            sortMap["title"] = "participantLdapId";
+
+            AcmEx.Object.JTable.usePaging($s, {
                 title: $.t("casefile:participants.table.title")
-                ,paging: true //fix me
-                ,sorting: true //fix me
-                ,pageSize: 10 //Set page size (default: 10)
                 ,messages: {
                     addNewRecord: $.t("casefile:participants.msg.add-new-record")
                 }
                 ,actions: {
-                    listAction: function(postData, jtParams) {
+                    pagingListAction: function(postData, jtParams, sortMap) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         //var caseFileId = CaseFile.View.getActiveCaseFileId();
                         var c = CaseFile.View.getActiveCaseFile();
                         if (CaseFile.Model.Detail.validateCaseFile(c)) {
-                            for (var i = 0; i < c.participants.length; i++) {
-                                var participant = c.participants[i];
-                                var record = {};
+                            var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, c.participants, sortMap);
+                            for (var i = 0; i < pagingItems.length; i++) {
+                                var participant = AcmEx.Object.JTable.getPagingItemData(pagingItems[i]);
+                                var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
                                 record.id = Acm.goodValue(participant.id, 0);
-                                // Here I am not taking user full name. It will be automatically shown because now 
+                                // Here I am not taking user full name. It will be automatically shown because now
                                 // I am sending key-value object with key=username and value=fullname
                                 record.title = Acm.goodValue(participant.participantLdapId);
                                 //record.title = Acm.__FixMe__getUserFullName(Acm.goodValue(participant.participantLdapId));
                                 record.type = Acm.goodValue(participant.participantType);
+                                //record._idx = pagingItems[i].idx;
                                 rc.Records.push(record);
                             }
                             rc.TotalRecordCount = rc.Records.length;
@@ -2319,23 +2114,21 @@ CaseFile.View = CaseFile.View || {
                     ,createAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        //var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        var caseFile = CaseFile.View.getActiveCaseFile();
-                        if (caseFile) {
+//                        var caseFile = CaseFile.View.getActiveCaseFile();
+//                        if (caseFile) {
                             rc.Record.title = record.title;
                             rc.Record.type = record.type;
-                        }
+//                        }
                         return rc;
                     }
                     ,updateAction: function(postData, jtParams) {
                         var record = Acm.urlToJson(postData);
                         var rc = AcmEx.Object.JTable.getEmptyRecord();
-                        //var caseFileId = CaseFile.View.getActiveCaseFileId();
-                        var caseFile = CaseFile.View.getActiveCaseFile();
-                        if (caseFile) {
+//                        var caseFile = CaseFile.View.getActiveCaseFile();
+//                        if (caseFile) {
                             rc.Record.title = record.title;
                             rc.Record.type = record.type;
-                        }
+//                        }
                         return rc;
                     }
                     ,deleteAction: function(postData, jtParams) {
@@ -2400,21 +2193,24 @@ CaseFile.View = CaseFile.View || {
                     }
                 }
                 ,recordUpdated : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    //var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var whichRow = AcmEx.Object.JTable.getPagingRow(data);
                     var record = data.record;
                     var caseFileId = CaseFile.View.getActiveCaseFileId();
                     var c = CaseFile.View.getActiveCaseFile();
-                    if (c && Acm.isArray(c.participants)) {
+                    if (CaseFile.Model.Detail.validateCaseFile(c)) {
                         if (0 < c.participants.length && whichRow < c.participants.length) {
                             var participant = c.participants[whichRow];
                             participant.participantLdapId = record.title;
                             participant.participantType = record.type;
                             CaseFile.Controller.viewUpdatedParticipant(caseFileId, participant);
                         }
+
                     }
                 }
                 ,recordDeleted : function (event, data) {
-                    var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    //var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+                    var whichRow = AcmEx.Object.JTable.getPagingRow(data);
                     var record = data.record;
                     var caseFileId = CaseFile.View.getActiveCaseFileId();
                     var c = CaseFile.View.getActiveCaseFile();
@@ -2425,7 +2221,9 @@ CaseFile.View = CaseFile.View || {
                         }
                     }
                 }
-            });
+            }
+            ,sortMap
+            );
         }
     }
 
@@ -2482,7 +2280,9 @@ CaseFile.View = CaseFile.View || {
                     //Record.created    = Acm.getDateFromDatetime(noteList[i].created);
                     Record.created    = Acm.getDateFromDatetime2(noteList[i].created,$.t("common:date.short"));
 
-                    Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(noteList[i].creator));
+                    Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(noteList[i].creator));
+
                     //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                     //Record.parentType = Acm.goodValue(noteList[i].parentType);
                     jtData.Records.push(Record);
@@ -2774,7 +2574,9 @@ CaseFile.View = CaseFile.View || {
                     Record.priority = taskList[i].priority;
                     Record.dueDate  = taskList[i].dueDate;
                     Record.status   = taskList[i].status;
-                    Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
+                    //Record.assignee = Acm.__FixMe__getUserFullName(taskList[i].assignee);
+                    Record.assignee = App.Model.Users.getUserFullName(Acm.goodValue(taskList[i].assignee));
+
                     jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = taskList.length;
@@ -2927,30 +2729,28 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,createJTableReferences: function($jt) {
-            //var sortMap = {};
-            //sortMap["modified"] = "modified";
+            var sortMap = {};
+            sortMap["title"]    = "targetName";
+            sortMap["modified"] = "participantLdapId";
+            sortMap["type"]     = "targetType";
+            sortMap["status"]   = "status";
 
-            AcmEx.Object.JTable.useBasic($jt, {
+            AcmEx.Object.JTable.usePaging($jt, {
                     title: $.t("casefile:references.table.title")
-                    ,paging: true //fix me
-                    ,sorting: true //fix me
-                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: $.t("casefile:references.msg.add-new-record")
                     }
                     ,actions: {
-                        listAction: function(postData, jtParams) {
-                            var caseFileId = CaseFile.View.getActiveCaseFileId();
-                            if (0 >= caseFileId) {
-                                return AcmEx.Object.JTable.getEmptyRecords();
-                            }
+                        pagingListAction: function(postData, jtParams, sortMap) {
+
 
                             var rc = AcmEx.Object.JTable.getEmptyRecords();
                             var c = CaseFile.View.getActiveCaseFile();
-                            if (c && Acm.isArray(c.references)) {
-                                for (var i = 0; i < c.references.length; i++) {
-                                    var reference = c.references[i];
-                                    var record = {};
+                            if (CaseFile.Model.Detail.validateCaseFile(c)) {
+                                var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, c.references, sortMap);
+                                for (var i = 0; i < pagingItems.length; i++) {
+                                    var reference = AcmEx.Object.JTable.getPagingItemData(pagingItems[i]);
+                                    var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
                                     record.id = Acm.goodValue(reference.targetId, 0);
                                     record.title = Acm.goodValue(reference.targetName);
                                     //record.modified = Acm.getDateFromDatetime(reference.modified);
@@ -2963,18 +2763,6 @@ CaseFile.View = CaseFile.View || {
                             }
                             return rc;
                         }
-//unsure the requirement, add/update/delete not implemented
-//                        ,createAction: function(postData, jtParams) {
-//                            var record = Acm.urlToJson(postData);
-//                            var rc = AcmEx.Object.JTable.getEmptyRecord();
-//
-//                            return rc;
-//                        }
-//                        ,deleteAction: function(postData, jtParams) {
-//                            return {
-//                                "Result": "OK"
-//                            };
-//                        }
                     }
 
                     ,fields: {
@@ -3017,49 +2805,13 @@ CaseFile.View = CaseFile.View || {
                         }
                     } //end field
                     ,recordAdded : function (event, data) {
-                        var record = data.record;
-//                        var complaint = Complaint.getComplaint();
-//                        if (complaint) {
-//                            var noteToSave = {};
-//                            //noteToSave.id = record.id;
-//                            noteToSave.note = record.note;
-//                            noteToSave.created = Acm.getCurrentDayInternal(); //record.created;
-//                            noteToSave.creator = record.creator;   //record.creator;
-//                            noteToSave.parentId = complaint.complaintId;
-//                            noteToSave.parentType = App.OBJTYPE_COMPLAINT;
-//                            Complaint.Service.saveNote(noteToSave);
-//                        }
                     }
                     ,recordUpdated: function(event,data){
-                        var whichRow = data.row.prevAll("tr").length;
-                        var record = data.record;
-//                        var complaint = Complaint.getComplaint();
-//                        if(complaint){
-//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
-//                            if (notes) {
-//                                if(notes[whichRow]){
-//                                    var noteToSave;
-//                                    noteToSave = notes[whichRow];
-//                                    noteToSave.note = record.note;
-//                                    Complaint.Service.saveNote(noteToSave);
-//                                }
-//                            }
-//                        }
                     }
                     ,recordDeleted : function (event, data) {
-                        var whichRow = data.row.prevAll("tr").length;  //count prev siblings
-//                        var complaint = Complaint.getComplaint();
-//                        if (complaint) {
-//                            var notes = Complaint.cacheNoteList.get(Complaint.getComplaintId());
-//                            if (notes) {
-//                                var noteToDelete = notes[whichRow];
-//                                var noteId = noteToDelete.id;
-//                                Complaint.Service.deleteNoteById(noteId);
-//                            }
-//                        }
                     }
                 } //end arg
-//                ,sortMap
+                ,sortMap
             );
         }
     }
@@ -3091,7 +2843,8 @@ CaseFile.View = CaseFile.View || {
                         Record.eventType = Acm.goodValue(events[i].eventType);
                         //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
                         Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
-                        Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                         jtData.Records.push(Record);
                     }
                 }
@@ -3115,7 +2868,7 @@ CaseFile.View = CaseFile.View || {
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
-                            var historyCache = CaseFile.Model.History.cacheHistory.get(caseFileId + "." + jtParams.jtStartIndex);
+                            var historyCache = CaseFile.Model.History.cacheHistory.get(caseFileId + "." + jtParams.jtStartIndex + "." + jtParams.jtPageSize);
                             if (CaseFile.Model.History.validateHistory(historyCache)) {
                                 var history = {};
                                 history.events = historyCache.resultPage;
@@ -3154,7 +2907,7 @@ CaseFile.View = CaseFile.View || {
                         }, eventDate: {
                             title: $.t("casefile:history.table.field.date")
                             ,width: '25%'
-                        }, userId: {
+                        }, user: {
                             title: $.t("casefile:history.table.field.user")
                             ,width: '25%'
                         }
@@ -3217,7 +2970,8 @@ CaseFile.View = CaseFile.View || {
                         Record.title = Acm.goodValue(correspondences[i].name);
                         //Record.created = Acm.getDateFromDatetime(correspondences[i].created);
                         Record.created = Acm.getDateFromDatetime2(correspondences[i].created,$.t("common:date.short"));
-                        Record.creator = Acm.__FixMe__getUserFullName(correspondences[i].creator);
+                        //Record.creator = Acm.__FixMe__getUserFullName(correspondences[i].creator);
+                        Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(correspondences[i].creator));
                         jtData.Records.push(Record);
                     }
                 }

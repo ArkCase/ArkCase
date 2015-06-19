@@ -19,8 +19,6 @@
 
         <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
         <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
-        <span itemprop="roiFormUrl">${roiFormUrl}</span>
-        <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
         <span itemprop="formDocuments">${formDocuments}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
     </div>

@@ -78,6 +78,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         String token = ServletRequestUtils.getStringParameter(request, "acm_ticket");
         boolean tokenRequest = token != null;
 
+        // No token, no basic authentication
         if ( ! tokenRequest && ! basicAuthRequest)
         {
             if ( trace )
@@ -88,6 +89,51 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             return;
         }
 
+        // Token authentication
+        if ( tokenRequest )
+        {
+	        try
+	        {
+	            if ( trace )
+	            {
+	                log.trace("starting token auth");
+	            }
+	            Authentication auth;
+	            try
+	            {
+	                auth = getAuthenticationTokenService().getAuthenticationForToken(token);
+	                SecurityContextHolder.getContext().setAuthentication(auth);
+	                onSuccessfulAuthentication(request, response, auth);
+	            }
+	            catch (IllegalArgumentException e)
+	            {
+	                throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
+	            }
+	        }
+	        catch (AuthenticationException failed)
+	        {
+	            SecurityContextHolder.clearContext();
+	            if ( trace )
+	            {
+	                logger.trace("Authentication request failed: " + failed);
+	            }
+	
+	            onUnsuccessfulAuthentication(request, response, failed);
+	
+	            if ( isIgnoreFailure() )
+	            {
+	                chain.doFilter(request, response);
+	            }
+	            else
+	            {
+	                getAuthenticationEntryPoint().commence(request, response, failed);
+	            }
+	
+	            return;
+	        }
+        }
+        
+        // Basic authentication
         if ( basicAuthRequest )
         {
             if ( trace )
@@ -99,50 +145,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             return;
         }
 
-        // if we get here, it's a token request
-        try
-        {
-            if ( trace )
-            {
-                log.trace("starting token auth");
-            }
-            Authentication auth;
-            try
-            {
-                auth = getAuthenticationTokenService().getAuthenticationForToken(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-                onSuccessfulAuthentication(request, response, auth);
-            }
-            catch (IllegalArgumentException e)
-            {
-                throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
-            }
-        }
-        catch (AuthenticationException failed)
-        {
-            SecurityContextHolder.clearContext();
-            if ( trace )
-            {
-                logger.trace("Authentication request failed: " + failed);
-            }
-
-            onUnsuccessfulAuthentication(request, response, failed);
-
-            if ( isIgnoreFailure() )
-            {
-                chain.doFilter(request, response);
-            }
-            else
-            {
-                getAuthenticationEntryPoint().commence(request, response, failed);
-            }
-
-            return;
-        }
-
         chain.doFilter(request, response);
-
-
     }
 
     private boolean isBasicAuthRequest(HttpServletRequest request)
