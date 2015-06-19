@@ -8,16 +8,22 @@ App.Model = {
         if (App.Model.Login.prepare)           {App.Model.Login.prepare();}
         if (App.Model.I18n.prepare)            {App.Model.I18n.prepare();}
         if (App.Model.Config.prepare)          {App.Model.Config.prepare();}
+        if (App.Model.Users.prepare)           {App.Model.Users.prepare();}
+
     }
     ,create : function() {
         if (App.Model.Login.create)            {App.Model.Login.create();}
         if (App.Model.I18n.create)             {App.Model.I18n.create();}
         if (App.Model.Config.create)           {App.Model.Config.create();}
+        if (App.Model.Users.create)            {App.Model.Users.create();}
+
     }
     ,onInitialized: function() {
         if (App.Model.Login.onInitialized)     {App.Model.Login.onInitialized();}
         if (App.Model.I18n.onInitialized)      {App.Model.I18n.onInitialized();}
         if (App.Model.Config.onInitialized)    {App.Model.Config.onInitialized();}
+        if (App.Model.Users.onInitialized)     {App.Model.Users.onInitialized();}
+
     }
 
     ,Storage: {
@@ -29,6 +35,7 @@ App.Model = {
         ,LOCAL_DATA_LOGIN_STATUS            : "AcmLoginStatus"
         ,LOCAL_DATA_LAST_IDLE               : "AcmLastIdle"
         ,LOCAL_DATA_ERROR_COUNT             : "AcmErrorCount"
+        ,LOCAL_DATA_USERS                   : "AcmUsers"
 
         ,LOCAL_DATA_I18N                    : "AcmI18n"
         ,SESSION_DATA_I18N_TRACKER          : "AcmI18nTracker"
@@ -51,6 +58,7 @@ App.Model = {
             localStorage.setItem(this.LOCAL_DATA_LOGIN_STATUS + contextPath, null);
             localStorage.setItem(this.LOCAL_DATA_LAST_IDLE + contextPath, new Date().getTime());
             localStorage.setItem(this.LOCAL_DATA_ERROR_COUNT + contextPath, null);
+            localStorage.setItem(this.LOCAL_DATA_USERS + contextPath, null);
         }
     }
 
@@ -75,7 +83,8 @@ App.Model = {
                         var isLogin = App.Model.Login.isLogin();
                         var sinceIdle = App.Model.Login.getSinceIdle();
                         var errorCount = App.Model.Login.getErrorCount();
-                        if (!isLogin || (autoLogoutIdleLimit < sinceIdle) || (autoLogoutErrorLimit < errorCount)) {
+                        //if (!isLogin || (autoLogoutIdleLimit < sinceIdle) || (autoLogoutErrorLimit < errorCount)) {
+                        if (!isLogin || (autoLogoutIdleLimit < sinceIdle)) {
                             App.Controller.Login.modelDetectedIdle();
                             return false;
 
@@ -425,6 +434,95 @@ App.Model = {
         }
         ,validateConfig: function(data) {
             if (Acm.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    ,Users:{
+        prepare : function() {
+            var contextPath = App.getContextPath();
+            this.users = new Acm.Model.LocalData(App.Model.Storage.LOCAL_DATA_USERS + contextPath);
+        }
+        ,create: function() {}
+        ,onInitialized: function() {
+            if (App.Model.Login.isLogin()) {
+                App.Service.Users.retrieveUsers(App.Model.Users.USER_NAMES_APP);
+            }
+        }
+        ,USER_NAMES_APP : "AcmUsers"
+
+        ,getUsers: function(k) {
+            var v = "";
+            var data = this.users.get();
+            if (Acm.isNotEmpty(data)) {
+                v = Acm.goodValue(data[k]);
+            }
+            return v;
+        }
+
+        ,setUsers: function(k, v) {
+            var data = this.users.get();
+            if (Acm.isEmpty(data)) {
+                data = {};
+            }
+            data[k] = v;
+            this.users.set(data);
+        }
+
+        ,getUser: function(userId){
+            var users = App.Model.Users.getUsers(App.Model.Users.USER_NAMES_APP);
+            if(App.Model.Users.validateUsers(users)){
+                for(var i = 0; i < users.length; i++){
+                    var user = JSON.parse(users[i]);
+                    if(App.Model.Users.validateUser(user)){
+                        if(user.object_id_s == userId){
+                            return user;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        ,getUserFullName: function(userId){
+            Acm.log("Acm.__FixMe__getUserFullName() is phasing out.Using App.Model.Users.getUserFullName() for now till the transition is complete");
+            var fullname = userId;
+            var user = App.Model.Users.getUser(userId);
+            if(App.Model.Users.validateUser(user)){
+                fullname = Acm.goodValue(user.name);
+            }
+            return fullname;
+        }
+
+        ,validateUsers: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (!Acm.isArray(data)) {
+                return false;
+            }
+            return true;
+        }
+
+        ,validateUser: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.name)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.last_name_lcs)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.first_name_lcs)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.object_id_s)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.object_type_s)) {
                 return false;
             }
             return true;

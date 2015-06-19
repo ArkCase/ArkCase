@@ -82,10 +82,12 @@ Topbar.Model = {
                 Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
             }
 
-            Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
-            
-            // Get popup ASN without waiting for the timer when the page is loaded
-            Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+            if (App.Model.Login.isLogin()) {
+                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+
+                // Get popup ASN without waiting for the timer when the page is loaded
+                Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+            }
         }
 
         ,_pullInterval: 16
@@ -94,8 +96,7 @@ Topbar.Model = {
             Acm.Timer.useTimer("AsnWatch"
                 ,interval
                 ,function() {
-                    var isLogin = App.Model.Login.isLogin();
-                    if (!isLogin) {
+                    if (!App.Model.Login.isLogin()) {
                         return false;
                     }
 

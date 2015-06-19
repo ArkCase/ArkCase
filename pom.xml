@@ -7,8 +7,8 @@
     <version>3.0.26-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Armedia Case Management Framework and Default Plugins</name>
-    <description>ACM3 Framework with Default Plugins</description>
+    <name>ArkCase Case Management System</name>
+    <description>Cloud-based case management system with a very nice UI</description>
     <inceptionYear>2014</inceptionYear>
 
     <properties>
@@ -18,7 +18,6 @@
         <java.version>1.8</java.version>
 
         <acm.version>${project.version}</acm.version>
-        <opm-ecms-demo.version>1.0-SNAPSHOT</opm-ecms-demo.version>
         <activemq.version>5.10.0</activemq.version>
         <activiti.version>5.15.1</activiti.version>
         <apache-commons-beanutils.version>1.9.2</apache-commons-beanutils.version>
@@ -50,10 +49,6 @@
         <javax-persistence.version>2.1.0</javax-persistence.version>
         <javax-validation.version>1.1.0.Final</javax-validation.version>
 
-        <jira.resolutionIds>Fixed,Won't Fix,Duplicate,Incomplete,Cannot Reproduce</jira.resolutionIds>
-
-        <jira.statusIds>Resolved,Closed</jira.statusIds>
-
         <joda-time.version>2.3</joda-time.version>
 
         <json-schema-validator.version>2.2.6</json-schema-validator.version>
@@ -63,8 +58,7 @@
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
 
-        <maven.changes.version>2.11</maven.changes.version>
-        <maven.javadoc.version>2.9.1</maven.javadoc.version>
+        <maven.javadoc.version>2.10.3</maven.javadoc.version>
         <maven.project-info-reports.version>2.8</maven.project-info-reports.version>
         <maven.resources.version>2.6</maven.resources.version>
         <maven.site.basedir>${project.basedir}</maven.site.basedir>
@@ -89,6 +83,7 @@
         <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
         <asm.version>5.0.3</asm.version>
         <org.apache.poi.version>3.10.1</org.apache.poi.version>
+        <frevvo.forms.version>6.1</frevvo.forms.version>
     </properties>
 
     <organization>
@@ -100,7 +95,7 @@
         <developer>
             <name>David Miller</name>
             <email>david.miller@armedia.com</email>
-            <id>dmiller</id>
+            <id>david-oc-miller</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -112,7 +107,7 @@
         <developer>
             <name>AJ McClary</name>
             <email>andrew.mcclary@armedia.com</email>
-            <id>amcclary</id>
+            <id>ajmcclary</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -123,7 +118,7 @@
         <developer>
             <name>James Wu</name>
             <email>james.wu@armedia.com</email>
-            <id>jwu</id>
+            <id>jameswu1818</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -134,7 +129,7 @@
         <developer>
             <name>Riste Tutureski</name>
             <email>riste.tutureski@armedia.com</email>
-            <id>riste.tutureski</id>
+            <id>ristetutureski</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -145,7 +140,7 @@
         <developer>
             <name>Marjan Stefanoski</name>
             <email>marjan.stefanoski@armedia.com</email>
-            <id>marjan.stefanoski</id>
+            <id>marjan4jc</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -156,7 +151,7 @@
         <developer>
             <name>Nebojsha Davidovic</name>
             <email>nebojsha.davidovic@armedia.com</email>
-            <id>nebojsha.davidovic</id>
+            <id>neshod</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -167,7 +162,7 @@
         <developer>
             <name>Nikolche Jonovski</name>
             <email>nikolche.jonovski@armedia.com</email>
-            <id>nikolche.jonovski</id>
+            <id>njonovski</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -178,7 +173,18 @@
         <developer>
             <name>Manoj Dhungana</name>
             <email>manoj.dhungana@armedia.com</email>
-            <id>manoj.dhungana</id>
+            <id>mnj11</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Sergey Kolomiets</name>
+            <email>sergey.kolomiets@armedia.com</email>
+            <id>sergeik</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>
             <roles>
@@ -202,17 +208,6 @@
             <timezone>-5</timezone>
         </contributor>
         <contributor>
-            <name>Deja Nichols</name>
-            <email>deja.nichols@armedia.com</email>
-            <organization>Armedia LLC</organization>
-            <organizationUrl>http://www.armedia.com</organizationUrl>
-            <roles>
-                <role>Business Analyst</role>
-            </roles>
-            <timezone>-5</timezone>
-        </contributor>
-
-        <contributor>
             <name>Mark Johnson</name>
             <email>mark.johnson@armedia.com</email>
             <organization>Armedia LLC</organization>
@@ -222,7 +217,6 @@
             </roles>
             <timezone>-5</timezone>
         </contributor>
-
         <contributor>
             <name>Allison Collar</name>
             <email>allison.cotney@armedia.com</email>
@@ -243,7 +237,6 @@
             </roles>
             <timezone>-5</timezone>
         </contributor>
-
         <contributor>
             <name>James Bailey</name>
             <email>james.bailey@armedia.com</email>
@@ -353,12 +346,12 @@
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
 	
-	<!-- needed for Mule since codehaus went belly-up -->
-	<repository>
-	  <id>Camunda</id>
-          <name>Camunda mule deps host</name>
-	  <url>https://app.camunda.com/nexus/content/repositories/public/</url>
-	</repository>
+        <!-- needed for Mule since codehaus went belly-up -->
+        <repository>
+          <id>Camunda</id>
+              <name>Camunda mule deps host</name>
+          <url>https://app.camunda.com/nexus/content/repositories/public/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -481,6 +474,43 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
                     <version>${maven.project-info-reports.version}</version>
+            </plugin>
+
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven.javadoc.version}</version>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <version>${maven.taglist.version}</version>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <tagListOptions>
+                        <tagClasses>
+                            <tagClass>
+                                <displayName>Todo Work</displayName>
+                                <tags>
+                                    <tag>
+                                        <matchString>todo</matchString>
+                                        <matchType>ignoreCase</matchType>
+                                    </tag>
+                                    <tag>
+                                        <matchString>FIXME</matchString>
+                                        <matchType>exact</matchType>
+                                    </tag>
+                                </tags>
+                            </tagClass>
+                        </tagClasses>
+                    </tagListOptions>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -1147,7 +1177,6 @@
 
 
 
-
         </dependencies>
 
     </dependencyManagement>
@@ -1191,38 +1220,11 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changes-plugin</artifactId>
-                <version>${maven.changes.version}</version>
-                <inherited>false</inherited>
-                <configuration>
-                    <jiraUser>${jira.username}</jiraUser>
-                    <jiraPassword>${jira.password}</jiraPassword>
-                    <webUser>${jira.username}</webUser>
-                    <webPassword>${jira.password}</webPassword>
-                    <columnNames>Key,Component,Summary,Status,Resolution,Assignee</columnNames>
-                    <resolutionIds>${jira.resolutionIds}</resolutionIds>
-                    <statusIds>${jira.statusIds}</statusIds>
-                    <useJql>true</useJql>
-                    <sortColumnNames>Key</sortColumnNames>
-                    <useJql>true</useJql>
-                    <password>${jira.password}</password>
-                    <username>${jira.username}</username>
-
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>changes-report</report>
-                            <report>jira-report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${maven.javadoc.version}</version>
+                <configuration>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -1240,53 +1242,8 @@
                 </reportSets>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <version>${maven.taglist.version}</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <tagListOptions>
-                        <tagClasses>
-                            <tagClass>
-                                <displayName>Todo Work</displayName>
-                                <tags>
-                                    <tag>
-                                        <matchString>TODO</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
-                                    <tag>
-                                        <matchString>FIXME</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
-                                </tags>
-                            </tagClass>
-                            <tagClass>
-                                <displayName>Code Debt</displayName>
-                                <tags>
-                                    <tag>
-                                        <matchString>HACK</matchString>
-                                        <matchType>exact</matchType>
-                                    </tag>
-                                </tags>
-                            </tagClass>
-                        </tagClasses>
-                    </tagListOptions>
-                </configuration>
-            </plugin>
+
         </plugins>
     </reporting>
-
-    <profiles>
-        <profile>
-            <id>netbeans-deploy</id>
-            <properties>
-                <skipITs>true</skipITs>
-            </properties>
-        </profile>
-    </profiles>
-
-
-
 
 </project>

@@ -11,7 +11,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Action.create) {CaseFile.Service.Action.create();}
         if (CaseFile.Service.Detail.create) {CaseFile.Service.Detail.create();}
         if (CaseFile.Service.People.create) {CaseFile.Service.People.create();}
-        //if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
+        if (CaseFile.Service.Documents.create) {CaseFile.Service.Documents.create();}
         if (CaseFile.Service.Notes.create) {CaseFile.Service.Notes.create();}
         if (CaseFile.Service.Tasks.create) {CaseFile.Service.Tasks.create();}
         if (CaseFile.Service.Correspondence.create) {CaseFile.Service.Correspondence.create();}
@@ -24,7 +24,7 @@ CaseFile.Service = {
         if (CaseFile.Service.Action.onInitialized) {CaseFile.Service.Action.onInitialized();}
         if (CaseFile.Service.Detail.onInitialized) {CaseFile.Service.Detail.onInitialized();}
         if (CaseFile.Service.People.onInitialized) {CaseFile.Service.People.onInitialized();}
-        //if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
+        if (CaseFile.Service.Documents.onInitialized) {CaseFile.Service.Documents.onInitialized();}
         if (CaseFile.Service.Notes.onInitialized) {CaseFile.Service.Notes.onInitialized();}
         if (CaseFile.Service.Tasks.onInitialized) {CaseFile.Service.Tasks.onInitialized();}
         if (CaseFile.Service.Correspondence.onInitialized) {CaseFile.Service.Correspondence.onInitialized();}
@@ -1133,6 +1133,32 @@ CaseFile.Service = {
             }
         }
     }
+    
+    ,Documents: {
+        create: function() {
+        }
+        ,onInitialized: function() {
+        }
+
+        ,API_RETRIEVE_PLAIN_FORMS      : "/api/latest/plugin/admin/plainforms"
+        	
+    	,retrievePlainForms: function() {
+            var url = App.getContextPath() + CaseFile.Service.Documents.API_RETRIEVE_PLAIN_FORMS + '/' + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                    	CaseFile.Controller.modelDocumentsRetrievedPlainForms(response);
+                    } else {
+                        if (CaseFile.Model.Documents.validatePlainForms(response)) {
+                        	CaseFile.Model.Documents.setPlainForms(response);
+                            CaseFile.Controller.modelDocumentsRetrievedPlainForms(response);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 
     ,Documents_JTable_Retire: {
         create: function() {
@@ -1585,7 +1611,7 @@ CaseFile.Service = {
                     var jtData = AcmEx.Object.jTableGetEmptyRecord();
                     if (CaseFile.Model.History.validateHistory(data)) {
                         var history = data;
-                        CaseFile.Model.History.cacheHistory.put(caseFileId + "." +jtParams.jtStartIndex, history);
+                        CaseFile.Model.History.cacheHistory.put(caseFileId + "." +jtParams.jtStartIndex + "." + jtParams.jtPageSize, history);
                         jtData = callbackSuccess(history);
                     }
                     return jtData;

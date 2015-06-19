@@ -401,5 +401,10 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelMergedCaseFiles: function(targetCaseFile){
         Acm.Dispatcher.fireEvent(this.MODEL_MERGED_CASE_FILES, targetCaseFile);
     }
+    
+    ,MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS : "case-file-model-documents-retrieved-plain-forms"
+    ,modelDocumentsRetrievedPlainForms: function(plainForms){
+        Acm.Dispatcher.fireEvent(this.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, plainForms);
+    }
 };
 
