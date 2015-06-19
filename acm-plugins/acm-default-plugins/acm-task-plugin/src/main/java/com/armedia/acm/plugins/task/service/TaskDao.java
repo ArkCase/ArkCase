@@ -82,4 +82,6 @@ public interface TaskDao
     List<AcmTask> getTasksModifiedSince(Date lastModified, int start, int pageSize);
 
     void createFolderForTaskEvent(AcmTaskEvent event) throws AcmTaskException, AcmCreateObjectFailedException;
+
+    void createFolderForTaskEvent(AcmTask task) throws AcmTaskException, AcmCreateObjectFailedException;
 }
