@@ -64,6 +64,10 @@
             ,"defaultValue": "Error occurred when setting version "
             ,"description": ""
         }
+        ,"node-title": {"value": "(Error!)"
+            ,"defaultValue": "(Error!)"
+            ,"description": ""
+        }
     }
 
     ,"menu": {
