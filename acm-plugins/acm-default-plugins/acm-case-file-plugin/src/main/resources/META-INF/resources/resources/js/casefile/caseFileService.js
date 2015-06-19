@@ -1611,7 +1611,7 @@ CaseFile.Service = {
                     var jtData = AcmEx.Object.jTableGetEmptyRecord();
                     if (CaseFile.Model.History.validateHistory(data)) {
                         var history = data;
-                        CaseFile.Model.History.cacheHistory.put(caseFileId + "." +jtParams.jtStartIndex, history);
+                        CaseFile.Model.History.cacheHistory.put(caseFileId + "." +jtParams.jtStartIndex + "." + jtParams.jtPageSize, history);
                         jtData = callbackSuccess(history);
                     }
                     return jtData;
