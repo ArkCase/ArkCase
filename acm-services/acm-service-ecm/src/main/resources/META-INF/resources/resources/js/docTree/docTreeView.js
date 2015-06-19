@@ -1208,18 +1208,13 @@ DocTree.View = DocTree.View || {
             return nodeData;
         }
         ,lazyLoad: function(event, data) {
-//            var objType = DocTree.Model.getObjType();
-//            var objId   = DocTree.Model.getObjId();
-//            var node = data.node;
-//            var folderId = Acm.goodValue(node.data.objectId, 0);
-//            if (DocTree.View.isTopNode(node)) {
-//                folderId = 0;
-//            }
-//            //zzz
-//            var pageId = Acm.goodValue(node.data.startRow);
-//            var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-
             var folderNode = data.node;
+            var folderId = Acm.goodValue(folderNode.data.objectId, 0);
+            if (0 >= folderId && !DocTree.View.isTopNode(folderNode)) {
+                data.result = [];
+                return;
+            }
+
             var cacheKey = DocTree.View.getCacheKey(folderNode);
             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
             if (DocTree.Model.validateFolderList(folderList)) {
@@ -2389,6 +2384,8 @@ DocTree.View = DocTree.View || {
     ,markNodeError: function(node) {
         if (this.validateFancyTreeNode(node)) {
             $(node.span).addClass("pending");
+            node.title = $.t("doctree:error.node-title");
+            node.renderTitle();
             //node.setStatus("error");
             node.setStatus("ok");
         }
