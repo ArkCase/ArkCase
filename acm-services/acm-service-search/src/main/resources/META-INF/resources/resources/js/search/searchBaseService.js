@@ -21,7 +21,7 @@ SearchBase.Service = {
             ,function() {
                 var url;
                 url =  App.getContextPath() + SearchBase.Service.API_FACET_SEARCH_;
-                url += searchInfo.q;
+                url += searchInfo.q + "*";
 
                 //for test
                 //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
