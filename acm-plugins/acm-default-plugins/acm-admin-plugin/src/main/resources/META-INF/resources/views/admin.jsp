@@ -7,7 +7,8 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="admin.page.title" text="Admin | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">search</span>
+        <span itemprop="resourceNamespace">search,common,admin</span>
+        <span itemprop="plainConfigurationFormUrl">${plainConfigurationFormUrl}</span>
     </div>
     <%--<div id="detailData" itemscope="true" style="display: none">
         <span itemprop="helpUrl">${helpUrl}</span>
@@ -27,6 +28,11 @@
     <!-- JTable -->
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
+
+    <!-- Form validation -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_jquery_validation}/css/${css_jquery_validation}'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_validation}/js/${js_jquery_validation}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jquery_validation}/js/languages/${js_jquery_validation_lang}'/>"></script>
 
     <!-- Fancy Tree -->
     <link href="<c:url value='/resources/vendors/${vd_fancytree}/skin-win8/ui.fancytree.css'/>" rel="stylesheet">
@@ -166,6 +172,70 @@
                                     </section>
                                 </div>
 
+
+                                <%--Create Role/Select Privileges--%>
+                                <div class="row" id="tabRolePrivileges" style="display:none;">
+                                    <section class="row m-b-md">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button class="btn btn-default" data-toggle="modal"
+                                                        data-target="#newRoleDialog">
+                                                    <i class="fa fa-gears text"></i>
+                                                    <span class="text">Create Role</span>
+                                                </button>
+                                                <div class="modal fade" id="newRoleDialog" tabindex="-1" role="dialog"
+                                                     aria-labelledby="myModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close"
+                                                                        data-dismiss="modal">&times;<span
+                                                                        class="sr-only">Close</span></button>
+                                                                <h4 class="modal-title" id="myModalLabel">Create Role</h4>
+                                                            </div>
+                                                            <div class="modal-body"> Enter the role name in the box below.<br/><br/>
+                                                                <label for="newRoleName" class="label">Name</label>
+                                                                <input id="newRoleName" type="text" class="form-control" placeholder="Name">
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button id="createNewRoleBtn" type="button" class="btn btn-primary">Create Role</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3 class="m-b-xs text-black">Create Role/Select Privileges </h3>
+                                        </div>
+                                    </section>
+
+                                    <section class="panel panel-default">
+                                        <div class="wrapper">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="col-xs-3 b-r"><label>Choose Application Role</label>
+                                                        <select id="selectApplicationRoles" size="10" class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnRolePrivilegesGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                    <div class="col-xs-3 b-r"><label>Available Privileges</label>
+                                                        <select id="selectAvailablePrivileges" size="10" multiple class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+                                                        <button id="btnRolePrivilegesMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                        <button id="btnRolePrivilegesMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                    </div>
+                                                    <div class="col-xs-4 b-r"><label>Selected Privileges</label>
+                                                        <select id="selectPrivileges" size="10" multiple  class="form-control">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
                                 <%--Organization hierarchy--%>
                                 <div class="row" id="tOrganization" style="display:none;">
                                     <div class="pull-left m-t-md">
@@ -279,6 +349,17 @@
                                             </section>
                                         </div>
                                     </div>
+
+                                    <div class="row" id="tabLDAPConfiguration" style="display:none;">
+                                        <div class="col-md-12">
+                                            <h3>LDAP Configuration</h3>
+
+                                            <section class="panel panel-default">
+                                                <div id="divLDAPDirectories" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
                                         <%--JTable - Label Configuration --%>
                                     <div class="row" id="tabLabelConfiguration" style="display:none;">
                                         <div class="col-md-12">
@@ -309,7 +390,7 @@
                                                 </div>
                                             </section>
 
-                                            <form class="form-inline">
+                                            <form class="form-inline pull-left">
                                                 <div class="form-group">
                                                     <label>Default language</label>
                                                     <select id="labelConfigurationDefaultLanguage" disabled class="form-control">
@@ -317,6 +398,12 @@
                                                 </div>
                                                 <button id="labelConfigurationApplyDefaultLanguage" disabled class="btn btn-default">Apply</button>
                                             </form>
+
+                                            <div class="pull-right">
+                                                <button id="labelConfigurationResetCurrentResources" disabled class="btn btn-danger">Reset Current Module Resources</button>
+                                                <button id="labelConfigurationResetAllResources" disabled class="btn btn-danger">Reset All Resources</button>
+                                            </div>
+
 
                                         </div>
                                     </div>
@@ -335,6 +422,39 @@
                                             </section>
                                         </div>
                                     </div>
+                                    
+                                    <%--JTable - Forms - START--%>
+                                    <%--So far we have only plain forms configuration, but in future maybe we are going to add more configuration related to forms--%>
+                                    
+                                    <%--JTable - Plain Forms - start--%>
+                                    <div class="row" id="tabPlainForms" style="display:none;">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button id="btnAddPlainForm" class="btn btn-default btn-sm">
+                                                    <i class="fa fa-plus text"></i>
+                                                    <span class="text">Add Plain Form</span>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="pull-right  m-t-md" style="margin-right: 10px">
+                                               <select id="plainFormTarget" class="form-control" style="height: 32px; font-size: 14px;">
+                                               </select>
+                                            </div>
+                                            
+                                            <h3>Plain Forms</h3>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <section class="panel panel-default">
+                                                <div id="divPlainForms" style="width:100%">
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                    <%--JTable - Plain Forms - end--%>
+                                    
+                                    
+                                    <%--JTable - Forms - END--%>
 
                             </section>
                         </section>
@@ -387,7 +507,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Make Active</button>
+                <button id="makeProcessActive" type="button" class="btn btn-primary">Make Active</button>
             </div>
         </div>
     </div>

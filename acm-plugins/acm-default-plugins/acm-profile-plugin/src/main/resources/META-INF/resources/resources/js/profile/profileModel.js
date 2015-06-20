@@ -45,7 +45,7 @@ Profile.Model = {
     }
     ,Info: {
         create: function() {
-            this._profileInfo    = new Acm.Model.SessionData("AcmProfile");
+            this._profileInfo    = new Acm.Model.SessionData(App.Model.Storage.SESSION_DATA_PROFILE);
 
             Acm.Dispatcher.addEventListener(Profile.Controller.MODEL_UPLOADED_PICTURE        ,this.onModelUploadedPicture);
 
@@ -72,6 +72,7 @@ Profile.Model = {
             } else {
                 Profile.Service.Info.retrieveProfileInfo(App.getUserName());
             }
+            Profile.Service.Info.retrieveGroups(App.getUserName());
         }
 
         //,_profileInfo: null
@@ -84,6 +85,15 @@ Profile.Model = {
 
         ,isReadOnly: function() {
             return false;
+        }
+        ,validateGroups: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data.groups_id_ss)) {
+                return false;
+            }
+            return true;
         }
 
 

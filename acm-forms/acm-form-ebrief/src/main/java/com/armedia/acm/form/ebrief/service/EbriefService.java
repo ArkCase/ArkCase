@@ -3,8 +3,6 @@
  */
 package com.armedia.acm.form.ebrief.service;
 
-import java.util.List;
-
 import javax.persistence.PersistenceException;
 
 import org.activiti.engine.RuntimeService;
@@ -17,15 +15,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.form.casefile.service.CaseFileWorkflowListener;
-import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.ebrief.model.EbriefForm;
+import com.armedia.acm.form.ebrief.model.xml.EbriefDetails;
+import com.armedia.acm.form.ebrief.model.xml.EbriefInformation;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.notification.service.NotificationEventPublisher;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
 /**
  * @author riste.tutureski
@@ -41,6 +47,8 @@ public class EbriefService extends FrevvoFormAbstractService {
 	private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 	private RuntimeService activitiRuntimeService;
 	private CaseFile caseFile;
+	private NotificationDao notificationDao;
+	private NotificationEventPublisher notificationEventPublisher;
 	
 	@Override
 	public Object get(String action) 
@@ -54,9 +62,9 @@ public class EbriefService extends FrevvoFormAbstractService {
 				result = initFormData();
 			}
 			
-			if ("init-participants-groups".equals(action)) 
+			if ("init-location-data".equals(action)) 
 			{
-				result = initParticipantsAndGroupsInfo();
+				result = initLocationData();
 			}
 		}
 		
@@ -79,6 +87,9 @@ public class EbriefService extends FrevvoFormAbstractService {
 		form = saveEBrief(form);
 		
 		updateXMLAttachment(attachments, FrevvoFormName.EBRIEF, form);
+		
+		// Change PDF file name
+		attachments = updateFileName(getCaseFile().getTitle(), FrevvoFormConstants.PDF, attachments);
 		
 		// Save Attachments
 		FrevvoUploadedFiles frevvoFiles = saveAttachments(
@@ -124,8 +135,13 @@ public class EbriefService extends FrevvoFormAbstractService {
         }
 		catch (MuleException | PersistenceException e)
         {
-            throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
+            throw new AcmCreateObjectFailedException("eBrief", e.getMessage(), e);
         }
+		
+		if (mode == null || "".equals(mode) || "create".equals(mode))
+		{
+			createNotification(caseFile);
+		}
 		
 		setCaseFile(caseFile);
 		
@@ -136,36 +152,58 @@ public class EbriefService extends FrevvoFormAbstractService {
 	
 	private Object initFormData()
 	{
-		EbriefForm form = new EbriefForm();
+		EbriefInformation information = new EbriefInformation();
 		
-		form.setTypes(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".types"), ","));
+		information.setTypes(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".types"), ","));
 		
-		JSONObject json = createResponse(form);
+		JSONObject json = createResponse(information);
 
 		return json;
 	}
 	
-	private JSONObject initParticipantsAndGroupsInfo()
+	private Object initLocationData()
 	{
-		EbriefForm form = new EbriefForm();
+		EbriefDetails details = new EbriefDetails();
 		
-		// Init Participant types
-		List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".participantTypes"), ",");
-		form.setParticipantsTypeOptions(participantTypes);
+		details.setCourtLocations(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".court.locations"), ","));
 		
-		form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.EBRIEF));
-		
-		// Init Owning Group information
-		String owningGroupType = (String) getProperties().get(FrevvoFormName.EBRIEF + ".owningGroupType");
-		OwningGroupItem owningGroupItem = new OwningGroupItem();
-		owningGroupItem.setType(owningGroupType);
-		
-		form.setOwningGroup(owningGroupItem);
-		form.setOwningGroupOptions(getOwningGroups(owningGroupType, FrevvoFormName.EBRIEF));
-		
-		JSONObject json = createResponse(form);
-		
+		JSONObject json = createResponse(details);
+
 		return json;
+	}
+	
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form)
+	{
+		return getEbriefFactory().asFrevvoEbriefForm((CaseFile) obj, (EbriefForm) form, this);
+	}
+	
+	private void createNotification(CaseFile caseFile)
+	{
+		try
+		{
+			Notification notification = new Notification();
+	
+			notification.setStatus(NotificationConstants.STATUS_NEW);
+			notification.setTitle(caseFile.getTitle());
+			notification.setNote(caseFile.getTitle() + " was submitted.");
+			notification.setData("{\"usr\":\"/plugin/casefile/" + caseFile.getId() + "\"}");
+			notification.setUser(caseFile.getCreator());
+			notification.setParentId(caseFile.getId());
+			notification.setParentType(caseFile.getObjectType());
+			notification.setParentName(caseFile.getCaseNumber());
+			notification.setParentTitle(caseFile.getTitle());
+			notification.setType(NotificationConstants.TYPE_POPUP);
+	
+	        getNotificationDao().save(notification);
+	        
+	        ApplicationNotificationEvent event = new ApplicationNotificationEvent(notification, "notification", true, getUserIpAddress());
+	        getNotificationEventPublisher().publishNotificationEvent(event);
+		}
+		catch(Exception e)
+		{
+			LOG.error("Cannot publish notification ... ", e);
+		}
 	}
 
 	@Override
@@ -222,5 +260,22 @@ public class EbriefService extends FrevvoFormAbstractService {
 
 	public void setCaseFile(CaseFile caseFile) {
 		this.caseFile = caseFile;
+	}
+
+	public NotificationDao getNotificationDao() {
+		return notificationDao;
+	}
+
+	public void setNotificationDao(NotificationDao notificationDao) {
+		this.notificationDao = notificationDao;
+	}
+
+	public NotificationEventPublisher getNotificationEventPublisher() {
+		return notificationEventPublisher;
+	}
+
+	public void setNotificationEventPublisher(
+			NotificationEventPublisher notificationEventPublisher) {
+		this.notificationEventPublisher = notificationEventPublisher;
 	}
 }

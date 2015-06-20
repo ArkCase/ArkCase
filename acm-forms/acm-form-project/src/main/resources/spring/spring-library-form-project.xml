@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+    
+    <bean id="projectFactory" class="com.armedia.acm.form.project.service.ProjectFactory">
+    	<property name="userDao" ref="userJpaDao" />
+    	<property name="acmParticipantDao" ref="acmParticipantDao" />
+    </bean>
+    
+    <bean id="projectService" class="com.armedia.acm.form.project.service.ProjectService">
+    	<property name="projectFactory" ref="projectFactory" />
+    	<property name="ecmFileDao" ref="ecmFileDao" />
+    	<property name="ecmFileService" ref="ecmFileService" />
+    </bean>
+    
+    <bean id="projectUpdatedListener" class="com.armedia.acm.form.project.service.ProjectUpdatedListener">
+    	<property name="properties" ref="acm-forms-properties" />
+    	<property name="projectService" ref="projectService" />
+    </bean>
+
+</beans>

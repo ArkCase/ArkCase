@@ -13,13 +13,12 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.create)                {Complaint.Model.Action.create();}
         if (Complaint.Model.Detail.create)                {Complaint.Model.Detail.create();}
         if (Complaint.Model.People.create)                {Complaint.Model.People.create();}
-        //if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
+        if (Complaint.Model.Documents.create)             {Complaint.Model.Documents.create();}
         if (Complaint.Model.Notes.create)                 {Complaint.Model.Notes.create();}
         if (Complaint.Model.References.create)            {Complaint.Model.References.create();}
         if (Complaint.Model.Tasks.create)                 {Complaint.Model.Tasks.create();}
         if (Complaint.Model.Location.create)              {Complaint.Model.Location.create();}
         if (Complaint.Model.History.create)               {Complaint.Model.History.create();}
-        if (Complaint.Model.OutlookCalendar.create)           {Complaint.Model.OutlookCalendar.create();}
         if (Complaint.Model.Time.create)                  {Complaint.Model.Time.create();}
         if (Complaint.Model.Cost.create)                  {Complaint.Model.Cost.create();}
     }
@@ -32,18 +31,17 @@ Complaint.Model = Complaint.Model || {
 //        if (Complaint.Model.Action.onInitialized)         {Complaint.Model.Action.onInitialized();}
         if (Complaint.Model.Detail.onInitialized)         {Complaint.Model.Detail.onInitialized();}
         if (Complaint.Model.People.onInitialized)         {Complaint.Model.People.onInitialized();}
-        //if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
+        if (Complaint.Model.Documents.onInitialized)      {Complaint.Model.Documents.onInitialized();}
         if (Complaint.Model.Notes.onInitialized)          {Complaint.Model.Notes.onInitialized();}
         if (Complaint.Model.References.onInitialized)     {Complaint.Model.References.onInitialized();}
         if (Complaint.Model.Tasks.onInitialized)          {Complaint.Model.Tasks.onInitialized();}
         if (Complaint.Model.Location.onInitialized)       {Complaint.Model.Location.onInitialized();}
         if (Complaint.Model.History.onInitialized)        {Complaint.Model.History.onInitialized();}
-        if (Complaint.Model.OutlookCalendar.onInitialized)           {Complaint.Model.OutlookCalendar.onInitialized();}
         if (Complaint.Model.Time.onInitialized)           {Complaint.Model.Time.onInitialized();}
         if (Complaint.Model.Cost.onInitialized)           {Complaint.Model.Cost.onInitialized();}
     }
 
-    ,interface: {
+    ,interfaceNavObj: {
         apiListObjects: function() {
             return "/api/latest/plugin/search/COMPLAINT";
         }
@@ -60,11 +58,8 @@ Complaint.Model = Complaint.Model || {
         ,nodeType: function(objSolr) {
             return Complaint.Model.DOC_TYPE_COMPLAINT;
         }
-        ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.title_parseable);
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
+        ,nodeTypeSupported: function(nodeType) {
+            return (Complaint.Model.DOC_TYPE_COMPLAINT == nodeType);
         }
         ,objToSolr: function(objData) {
             var solr = {};
@@ -83,9 +78,6 @@ Complaint.Model = Complaint.Model || {
         }
         ,validateObjData: function(data) {
             return Complaint.Model.Detail.validateComplaint(data);
-        }
-        ,nodeTypeMap: function() {
-            return Complaint.Model.Tree.Key.nodeTypeMap;
         }
     }
 
@@ -135,47 +127,47 @@ Complaint.Model = Complaint.Model || {
 
 
 
-            ,nodeTypeMap: [
-                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
-                    ,tabIds: ["tabAction"
-                        ,"tabDetail"
-                        ,"tabLocation"
-                        ,"tabInitiator"
-                        ,"tabPeople"
-                        ,"tabNotes"
-                        ,"tabDocuments"
-                        ,"tabTasks"
-                        ,"tabRefs"
-//                    ,"tabRefComplaints"
-//                    ,"tabRefCases"
-//                    ,"tabRefTasks"
-//                    ,"tabRefDocuments"
-//                    ,"tabApprovers"
-//                    ,"tabCollaborators"
-//                    ,"tabWatchers"
-                        ,"tabParticipants"
-                        ,"tabHistory"
-                        ,"tabTime"
-                        ,"tabCost"
-                        ,"tabOutlookCalendar"
-                    ]}
-                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
-                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
-                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
-                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
-                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
-                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
-                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
-                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
-                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
-                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
-                ]
+//            ,nodeTypeMap: [
+//                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
+//                    ,tabIds: ["tabAction"
+//                        ,"tabDetail"
+//                        ,"tabLocation"
+//                        ,"tabInitiator"
+//                        ,"tabPeople"
+//                        ,"tabNotes"
+//                        ,"tabDocuments"
+//                        ,"tabTasks"
+//                        ,"tabRefs"
+////                    ,"tabRefComplaints"
+////                    ,"tabRefCases"
+////                    ,"tabRefTasks"
+////                    ,"tabRefDocuments"
+////                    ,"tabApprovers"
+////                    ,"tabCollaborators"
+////                    ,"tabWatchers"
+//                        ,"tabParticipants"
+//                        ,"tabHistory"
+//                        ,"tabTime"
+//                        ,"tabCost"
+//                        ,"tabOutlookCalendar"
+//                    ]}
+//                ,{nodeType: "p/COMPLAINT/det"      ,icon: "",tabIds: ["tabDetail"]}
+//                ,{nodeType: "p/COMPLAINT/loc"      ,icon: "",tabIds: ["tabLocation"]}
+//                //,{nodeType: "p/COMPLAINT/i"      ,icon: "",tabIds: ["tabInitiator"]}
+//                ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "",tabIds: ["tabPeople"]}
+//                ,{nodeType: "p/COMPLAINT/doc"      ,icon: "",tabIds: ["tabDocuments"]}
+//                ,{nodeType: "p/COMPLAINT/task"     ,icon: "",tabIds: ["tabTasks"]}
+//                ,{nodeType: "p/COMPLAINT/note"     ,icon: "",tabIds: ["tabNotes"]}
+//                ,{nodeType: "p/COMPLAINT/part"     ,icon: "",tabIds: ["tabParticipants"]}
+//                ,{nodeType: "p/COMPLAINT/ref"      ,icon: "",tabIds: ["tabRefs"]}
+//                ,{nodeType: "p/COMPLAINT/his"      ,icon: "",tabIds: ["tabHistory"]}
+//                ,{nodeType: "p/COMPLAINT/time"      ,icon: "",tabIds: ["tabTime"]}
+//                ,{nodeType: "p/COMPLAINT/cost"      ,icon: "",tabIds: ["tabCost"]}
+//                ,{nodeType: "p/COMPLAINT/calendar"   ,icon: "",tabIds: ["tabOutlookCalendar"]}
+//                ]
         }
     }
 
@@ -527,6 +519,33 @@ Complaint.Model = Complaint.Model || {
         }
 
     }
+    
+    ,Documents: {
+        create : function() {
+            this.cachePlainForms = new Acm.Model.CacheFifo(1);
+        }
+        ,onInitialized: function() {
+        	Complaint.Service.Documents.retrievePlainForms();
+        }
+        
+        ,validatePlainForms: function(plainForms) {
+            if (Acm.isEmpty(plainForms)) {
+                return false;
+            }
+            if(!Acm.isArray(plainForms)){
+                return false;
+            }
+            return true;
+        }
+        
+        ,getPlainForms: function() {
+        	return Complaint.Model.Documents.cachePlainForms.get("forms.plainforms");
+        }
+        
+        ,setPlainForms: function(plainForms) {
+        	Complaint.Model.Documents.cachePlainForms.put("forms.plainforms", plainForms);
+        }
+    }
 
     ,Documents_JTable_To_Retire: {
         create : function() {
@@ -867,10 +886,10 @@ Complaint.Model = Complaint.Model || {
     ,Lookup: {
         create: function() {
         	this._assignees    =  new Acm.Model.CacheFifo();
-            this._complaintTypes = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_TYPES);
-            this._priorities     = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_PRIORITIES);
+            this._complaintTypes = new Acm.Model.SessionData(ThisApp.SESSION_DATA_COMPLAINT_TYPES);
+            this._priorities     = new Acm.Model.SessionData(ThisApp.SESSION_DATA_COMPLAINT_PRIORITIES);
             this._groups    =  new Acm.Model.CacheFifo();
-            this._users    	 	 = new Acm.Model.SessionData(Application.SESSION_DATA_COMPLAINT_USERS);
+            this._users    	 	 = new Acm.Model.SessionData(ThisApp.SESSION_DATA_COMPLAINT_USERS);
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT           ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
@@ -970,8 +989,9 @@ Complaint.Model = Complaint.Model || {
             return this._personTitles;
         }
 
-        ,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
-            'Email','Instant messenger', 'Social media','Website','Blog']
+        ,_deviceTypes : ['Home phone', 'Work phone', 'Mobile', 'Email','Facebook']
+        /*,_deviceTypes : ['Home phone', 'Office phone', 'Cell phone', 'Pager',
+            'Email','Instant messenger', 'Social media','Website','Blog']*/
         ,getDeviceTypes : function() {
             return this._deviceTypes;
         }
@@ -1023,73 +1043,6 @@ Complaint.Model = Complaint.Model || {
         }
 
     }
-    ,OutlookCalendar: {
-        create : function() {
-            this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
-
-        }
-        ,onInitialized: function() {
-        }
-        ,onModelRetrievedObject: function(objData) {
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
-        }
-        ,onViewSelectedObject: function(nodeType,objId){
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(Complaint.Model.getComplaintId());
-        }
-        ,onViewRefreshedOutlookCalendar: function(complaintId){
-            Complaint.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(complaintId);
-        }
-        ,validateOutlookCalendarItems: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isNotArray(data.items)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.totalItems)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateOutlookCalendarItem: function(data) {
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.id)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.size)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.sent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.allDayEvent)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.cancelled)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.meeting)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.recurring)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.startDate)) {
-                return false;
-            }
-            if (Acm.isEmpty(data.endDate)) {
-                return false;
-            }
-            return true;
-        }
-    }
-
 
     ,Time: {
         create : function() {

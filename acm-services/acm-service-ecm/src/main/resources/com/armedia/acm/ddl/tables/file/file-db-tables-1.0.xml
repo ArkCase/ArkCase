@@ -688,7 +688,7 @@
                     WHERE   c.cm_object_id = ac.cm_complaint_id
                     AND     c.cm_object_type = 'COMPLAINT'
             )
-            WHERE   EXISTS
+            WHERE EXISTS
             (
                     SELECT  1
                     FROM    acm_complaint ac
@@ -760,6 +760,63 @@
 
     <changeSet id="files-36-make-object-title-required" author="dmiller">
         <addNotNullConstraint tableName="acm_container" columnName="cm_object_title"/>
+    </changeSet>
+
+    <changeSet id="files-37-add-calendar-folder-id-case-file-table-new" author="nebojsha.davidovikj" failOnError="false">
+        <addColumn tableName="acm_container">
+            <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
+            <column name="cm_outlook_folder_id" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    
+   	<changeSet id="files-38-add-attachment-folder-id-in-container-table" author="riste.tutureski">
+        <addColumn tableName="acm_container">
+            <column name="cm_attachment_folder_id" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="files-38-update-attachment-folder-id-in-container-table" author="riste.tutureski">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_container" columnName="cm_folder_id"/>
+                <columnExists tableName="acm_container" columnName="cm_attachment_folder_id"/>
+            </and>
+        </preConditions>
+        <sql>
+            UPDATE  acm_container c
+            SET     c.cm_attachment_folder_id = c.cm_folder_id
+            WHERE   c.cm_attachment_folder_id IS NULL
+        </sql>
+    </changeSet>
+
+    <changeSet id="files-38-add-function-based-index" author="marst">
+        <preConditions onFail="MARK_RAN">
+            <dbms type="oracle"/>
+        </preConditions>
+        <createIndex tableName="acm_folder" indexName="idx_folder_name_parent_id" unique="true">
+            <column name="NVL(cm_parent_folder_id, cm_folder_id),upper(cm_folder_name)"></column>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="files-39-add-object-type-in-acm-folder-table" author="dmiller">
+        <addColumn tableName="acm_folder">
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="FOLDER"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_object_type"
+                              defaultNullValue="FOLDER"
+                              tableName="acm_folder"/>
+    </changeSet>
+
+    <changeSet id="files-40-add-folder-status-in-acm-folder-table" author="dmiller">
+        <addColumn tableName="acm_folder">
+            <column name="cm_folder_status" type="VARCHAR(100)" defaultValue="ACTIVE"/>
+        </addColumn>
+        <addNotNullConstraint columnName="cm_folder_status"
+                              defaultNullValue="ACTIVE"
+                              tableName="acm_folder"/>
     </changeSet>
 
 </databaseChangeLog>

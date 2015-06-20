@@ -139,7 +139,7 @@ Timesheet.View = {
                 var editTimesheetFormUrl = Timesheet.View.MicroData.formUrls.editTimesheetFormUrl;
                 if(Timesheet.Model.Detail.validateTimesheet(Timesheet.View.getActiveTimesheet())){
                     var startDate = Acm.goodValue(Timesheet.View.getActiveTimesheet().startDate);
-                    editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getDateFromDatetime(startDate) + "',");
+                    editTimesheetFormUrl = editTimesheetFormUrl.replace("_data=(", "_data=(period:'" + Acm.getFrevvoDateFromDateTime(startDate) + "',");
                     editTimesheetFormUrl = editTimesheetFormUrl.replace("embed", "popupform");
                     Acm.Dialog.openWindow(editTimesheetFormUrl, "", 1060, 700, function() {
                         Timesheet.Controller.viewClosedEditTimesheetWindow(Timesheet.View.getActiveTimesheet());
@@ -191,11 +191,14 @@ Timesheet.View = {
                 Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
             }
             if(Acm.isNotEmpty(timesheet.startDate) && Acm.isNotEmpty(timesheet.endDate)){
-                var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " +  Acm.getDateFromDatetime(timesheet.endDate)
+                //var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " +  Acm.getDateFromDatetime(timesheet.endDate)
+                var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime2(timesheet.startDate,$.t("common:date.short"))
+                    + " - " +  Acm.getDateFromDatetime2(timesheet.endDate,$.t("common:date.short"));
                 Timesheet.View.Detail.setTextTimesheetName(timesheetName);
             }
             if(Acm.isNotEmpty(timesheet.modified)){
-                Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime(timesheet.modified));
+                //Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime(timesheet.modified));
+                Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime2(timesheet.modified,$.t("common:date.short")));
             }
         }
         ,resetDetail: function(timesheet) {
@@ -205,14 +208,14 @@ Timesheet.View = {
         }
 
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("timesheet:detail.label.editing-timesheet-detail"));
+            App.View.Dirty.declare($.t("timesheet:detail.label.editing-timesheet-detail"));
             Timesheet.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Timesheet.View.Detail.saveDivDetail();
             if(Acm.isNotEmpty(htmlDetail)){
                 Timesheet.Controller.viewSavedDetail(Timesheet.View.getActiveTimesheet(), htmlDetail);
-                App.Object.Dirty.clear($.t("timesheet:detail.label.editing-timesheet-detail"));
+                App.View.Dirty.clear($.t("timesheet:detail.label.editing-timesheet-detail"));
             }
         }
         ,getHtmlDivDetail: function() {
@@ -348,8 +351,10 @@ Timesheet.View = {
                         Record.code = Acm.goodValue(timeRecords[i].code);
                         Record.parentType = Acm.goodValue(timeRecords[i].type);
                         Record.hours = Acm.goodValue(timeRecords[i].value);
-                        Record.chargedDate = Acm.getDateFromDatetime(timeRecords[i].date);
-                        Record.modifiedDate = Acm.getDateFromDatetime(timeRecords[i].modified);
+                        //Record.chargedDate = Acm.getDateFromDatetime(timeRecords[i].date);
+                        Record.chargedDate = Acm.getDateFromDatetime2(timeRecords[i].date,$.t("common:date.short"))
+                        //Record.modifiedDate = Acm.getDateFromDatetime(timeRecords[i].modified);
+                        Record.modifiedDate = Acm.getDateFromDatetime2(timeRecords[i].modified,$.t("common:date.short"))
                         jtData.Records.push(Record);
                     }
                 }

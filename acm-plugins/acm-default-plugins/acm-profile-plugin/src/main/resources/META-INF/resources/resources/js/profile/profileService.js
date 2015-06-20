@@ -75,6 +75,7 @@ Profile.Service = {
         ,API_SAVE_PROFILE_INFO               : "/api/latest/plugin/profile/userOrgInfo/set"
         ,API_DOWNLOAD_PICTURE_BEGIN_         : "/api/latest/plugin/ecm/download/byId/"
         ,API_DOWNLOAD_PICTURE_END            : "?inline=true"
+        ,API_RETRIEVE_GROUPS                 : "/api/v1/plugin/search/advancedSearch"
 
         ,getPictureUrl: function(ecmFileId) {
             if (0 >= ecmFileId) {
@@ -138,6 +139,28 @@ Profile.Service = {
                 ,App.getContextPath() + this.API_SAVE_PROFILE_INFO
                 ,JSON.stringify(profileInfo)
             )
+        }
+
+        ,retrieveGroups: function(user) {
+            var url = App.getContextPath() + this.API_RETRIEVE_GROUPS;
+            url+= "?q=" + user;
+            Acm.Service.call({
+                type: "GET"
+                , url: url
+                , callback: function (response) {
+                    if (response.hasError) {
+                        Profile.Controller.modelRetrievedGroups(response);
+                    } else {
+                        if (Acm.Validator.validateSolrData(response)) {
+                            if(Profile.Model.Info.validateGroups(response.response.docs[0])){
+                                var groups = response.response.docs[0].groups_id_ss;
+                                Profile.Controller.modelRetrievedGroups(groups);
+                                return true;
+                            }
+                        }
+                    } //end else
+                }
+            })
         }
         ,_dataWrapper: function(data, value) {
             if (data.hasError) {
@@ -354,7 +377,8 @@ Profile.Service = {
                                 subscription.parentType = Acm.goodValue(response[i].subscriptionObjectType);
                                 subscription.parentTitle = Acm.goodValue(response[i].objectTitle);
                                 subscription.parentName = Acm.goodValue(response[i].objectName);
-                                subscription.created = Acm.getDateFromDatetime(response[i].created);
+                                //subscription.created = Acm.getDateFromDatetime(response[i].created);
+                                subscription.created =  (Acm.getDateFromDatetime2(response[i].created,$.t("common:date.short")));
                                 subscriptions.push(subscription);
                             }
                         }

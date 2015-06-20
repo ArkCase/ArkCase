@@ -3,6 +3,9 @@
  */
 package com.armedia.acm.plugins.person.model.xml;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlElement;
 
 import com.armedia.acm.plugins.person.model.Person;
@@ -11,7 +14,7 @@ import com.armedia.acm.plugins.person.model.Person;
  * @author riste.tutureski
  *
  */
-public class DefendantPerson extends Person {
+public class DefendantPerson extends Person implements FrevvoPerson  {
 
 	private static final long serialVersionUID = 601307053343844821L;
 	
@@ -27,7 +30,8 @@ public class DefendantPerson extends Person {
 		setId(person.getId());
 		setGivenName(person.getGivenName());
 		setFamilyName(person.getFamilyName());
-		
+		setDateOfBirth(person.getDateOfBirth());
+		setPersonIdentification(person.getPersonIdentification());
 	}
 
 	@XmlElement(name="defendantId")
@@ -62,6 +66,17 @@ public class DefendantPerson extends Person {
     public void setFamilyName(String familyName) {
         super.setFamilyName(familyName);
     }
+	
+	@XmlElement(name="defendantDOB")
+	@Override
+	public Date getDateOfBirth() {
+        return super.getDateOfBirth();
+    }
+
+	@Override
+    public void setDateOfBirth(Date dateOfBirth) {
+        super.setDateOfBirth(dateOfBirth);
+    }
 
 	@XmlElement(name="defendantType")
 	public String getType() {
@@ -71,6 +86,11 @@ public class DefendantPerson extends Person {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
+	@Override
+	public List<String> getPersonIdentificationKeys() {
+		return null;
+	}
 
 	@Override
 	public Person returnBase()
@@ -79,10 +99,11 @@ public class DefendantPerson extends Person {
 		
 		person.setId(getId());
 		person.setGivenName(getGivenName());
-		person.setFamilyName(getFamilyName());		
+		person.setFamilyName(getFamilyName());
+		person.setDateOfBirth(getDateOfBirth());
+		person.setPersonIdentification(getPersonIdentification());
 		
 		return person;
-	}
-	
+	}	
 	
 }

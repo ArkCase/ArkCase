@@ -30,7 +30,12 @@ import static org.junit.Assert.*;
         "/spring/spring-library-ecm-file.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-drools-monitor.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT

@@ -1,0 +1,1167 @@
+{
+    "msg": {
+        "no-case-selected": {
+            "defaultValue": "(No case is selected)",
+            "description": "",
+            "value": "(No case is selected)"
+        },
+        "error-retrieving-casefile-data": {
+            "defaultValue": "Error occurred for retrieving casefile data",
+            "description": "",
+            "value": "Error occurred for retrieving casefile data"
+        }
+    },
+    "notes": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Note",
+            "description": "",
+            "value": "Add Note"
+        }},
+        "table": {
+            "field": {
+                "note": {
+                    "defaultValue": "Note",
+                    "description": "",
+                    "value": "Note"
+                },
+                "creator": {
+                    "defaultValue": "Author",
+                    "description": "",
+                    "value": "Author"
+                },
+                "created": {
+                    "defaultValue": "Created",
+                    "description": "",
+                    "value": "Created"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                }
+            },
+            "title": {
+                "defaultValue": "Notes",
+                "description": "",
+                "value": "Notes"
+            }
+        }
+    },
+    "cost": {"table": {
+        "field": {
+            "total-cost": {
+                "defaultValue": "Total Cost",
+                "description": "",
+                "value": "Total Cost"
+            },
+            "modified-date": {
+                "defaultValue": "Modified Date",
+                "description": "",
+                "value": "Modified Date"
+            },
+            "id": {
+                "defaultValue": "ID",
+                "description": "",
+                "value": "ID"
+            },
+            "form-name": {
+                "defaultValue": "Form Name",
+                "description": "",
+                "value": "Form Name"
+            },
+            "username": {
+                "defaultValue": "Username",
+                "description": "",
+                "value": "Username"
+            },
+            "status": {
+                "defaultValue": "Status",
+                "description": "",
+                "value": "Status"
+            }
+        },
+        "label": {"costsheet": {
+            "defaultValue": "Costsheet",
+            "description": "",
+            "value": "Costsheet"
+        }},
+        "title": {
+            "defaultValue": "Cost Tracking",
+            "description": "",
+            "value": "Cost Tracking"
+        }
+    }},
+    "references": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Reference",
+            "description": "",
+            "value": "Add Reference"
+        }},
+        "table": {
+            "field": {
+                "modified": {
+                    "defaultValue": "Modified",
+                    "description": "",
+                    "value": "Modified"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "title": {
+                    "defaultValue": "Title",
+                    "description": "",
+                    "value": "Title"
+                },
+                "reference-type": {
+                    "defaultValue": "Reference Type",
+                    "description": "",
+                    "value": "Reference Type"
+                },
+                "status": {
+                    "defaultValue": "Status",
+                    "description": "",
+                    "value": "Status"
+                }
+            },
+            "title": {
+                "defaultValue": "References",
+                "description": "",
+                "value": "References"
+            }
+        }
+    },
+    "email-documents-dialog": {
+        "btn-cancel": {
+            "defaultValue": "Cancel",
+            "description": "",
+            "value": "Cancel"
+        },
+        "label": {"email-address": {
+            "defaultValue": "Email Address",
+            "description": "",
+            "value": "Email Address"
+        }},
+        "title": {
+            "defaultValue": "Send Email",
+            "description": "",
+            "value": "Send Email"
+        },
+        "body": {
+            "defaultValue": "Where would you like to email this file?",
+            "description": "",
+            "value": "Where would you like to email this file?"
+        },
+        "btn-ok": {
+            "defaultValue": "Send Email",
+            "description": "",
+            "value": "Send Email"
+        },
+        "btn-close": {
+            "defaultValue": "Close",
+            "description": "",
+            "value": "Close"
+        }
+    },
+    "documents": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Document",
+            "description": "",
+            "value": "Add Document"
+        }},
+        "form-document": {
+            "witness-interview-request": {
+                "defaultValue": "Witness Interview Request",
+                "description": "",
+                "value": "Witness Interview Request"
+            },
+            "other": {
+                "defaultValue": "Other",
+                "description": "",
+                "value": "Other"
+            },
+            "medical-release": {
+                "defaultValue": "Medical Release",
+                "description": "",
+                "value": "Medical Release"
+            },
+            "general-release": {
+                "defaultValue": "General Release",
+                "description": "",
+                "value": "General Release"
+            },
+            "e-delivery": {
+                "defaultValue": "eDelivery",
+                "description": "",
+                "value": "eDelivery"
+            },
+            "sf86-signature": {
+                "defaultValue": "SF86 Signature",
+                "description": "",
+                "value": "SF86 Signature"
+            },
+            "notice-of-investigation": {
+                "defaultValue": "Notice of Investigation",
+                "description": "",
+                "value": "Notice of Investigation"
+            },
+            "document-type": {
+                "defaultValue": "Document Type",
+                "description": "",
+                "value": "Document Type"
+            }
+        },
+        "title": {
+            "defaultValue": "Documents",
+            "description": "",
+            "value": "Documents"
+        },
+        "table": {
+            "field": {
+                "added-by": {
+                    "defaultValue": "Creator",
+                    "description": "",
+                    "value": "Creator"
+                },
+                "date-added": {
+                    "defaultValue": "Created",
+                    "description": "",
+                    "value": "Created"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "title": {
+                    "defaultValue": "Title",
+                    "description": "",
+                    "value": "Title"
+                }
+            },
+            "title": {
+                "defaultValue": "Documents",
+                "description": "",
+                "value": "Documents"
+            }
+        }
+    },
+    "page-title": {
+        "defaultValue": "Case Files | ACM | Ark Case Management",
+        "description": "",
+        "value": "Case Files | ACM | Ark Case Management"
+    },
+    "correspondence": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Correspondence",
+            "description": "",
+            "value": "Add Correspondence"
+        }},
+        "form-document": {
+            "witness-interview-request": {
+                "defaultValue": "Witness Interview Request",
+                "description": "",
+                "value": "Witness Interview Request"
+            },
+            "clearance-denied": {
+                "defaultValue": "Clearance Denied",
+                "description": "",
+                "value": "Clearance Denied"
+            },
+            "clearance-granted": {
+                "defaultValue": "Clearance Granted",
+                "description": "",
+                "value": "Clearance Granted"
+            },
+            "medical-release": {
+                "defaultValue": "Medical Release",
+                "description": "",
+                "value": "Medical Release"
+            },
+            "general-release": {
+                "defaultValue": "General Release",
+                "description": "",
+                "value": "General Release"
+            },
+            "notice-of-investigation": {
+                "defaultValue": "Notice of Investigation",
+                "description": "",
+                "value": "Notice of Investigation"
+            }
+        },
+        "table": {
+            "field": {
+                "creator": {
+                    "defaultValue": "Creator",
+                    "description": "",
+                    "value": "Creator"
+                },
+                "created": {
+                    "defaultValue": "Created",
+                    "description": "",
+                    "value": "Created"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "title": {
+                    "defaultValue": "Title",
+                    "description": "",
+                    "value": "Title"
+                }
+            },
+            "title": {
+                "defaultValue": "Correspondence",
+                "description": "",
+                "value": "Correspondence"
+            }
+        }
+    },
+    "history": {"table": {
+        "field": {
+            "date": {
+                "defaultValue": "Date",
+                "description": "",
+                "value": "Date"
+            },
+            "event-name": {
+                "defaultValue": "Event Name",
+                "description": "",
+                "value": "Event Name"
+            },
+            "id": {
+                "defaultValue": "ID",
+                "description": "",
+                "value": "ID"
+            },
+            "user": {
+                "defaultValue": "User",
+                "description": "",
+                "value": "User"
+            }
+        },
+        "title": {
+            "defaultValue": "History",
+            "description": "",
+            "value": "History"
+        }
+    }},
+    "outlook-calendar": {
+        "msg": {"error-occurred": {
+            "defaultValue": "Error occurred while retrieving calendar items.",
+            "description": "",
+            "value": "Error occurred while retrieving calendar items."
+        }},
+        "label": {
+            "calendar": {
+                "defaultValue": "Calendar",
+                "description": "",
+                "value": "Calendar"
+            },
+            "week": {
+                "defaultValue": "Week",
+                "description": "",
+                "value": "Week"
+            },
+            "month": {
+                "defaultValue": "Month",
+                "description": "",
+                "value": "Month"
+            },
+            "start": {
+                "defaultValue": "Start:",
+                "description": "",
+                "value": "Start:"
+            },
+            "refresh": {
+                "defaultValue": "Refresh",
+                "description": "",
+                "value": "Refresh"
+            },
+            "end": {
+                "defaultValue": "End:",
+                "description": "",
+                "value": "End:"
+            },
+            "day": {
+                "defaultValue": "Day",
+                "description": "",
+                "value": "Day"
+            }
+        }
+    },
+    "title": {
+        "defaultValue": "Case",
+        "description": "",
+        "value": "Case"
+    },
+    "case-picker": {
+        "selection-error": {
+            "defaultValue": "Please select a single case",
+            "description": "",
+            "value": "Please select a single case"
+        },
+        "btn-cancel": {
+            "defaultValue": "Cancel",
+            "description": "",
+            "value": "Cancel"
+        },
+        "name": {
+            "defaultValue": "Case",
+            "description": "",
+            "value": "Case"
+        },
+        "btn-search": {
+            "defaultValue": "Go!",
+            "description": "",
+            "value": "Go!"
+        },
+        "title": {
+            "defaultValue": "Choose Target Case",
+            "description": "",
+            "value": "Choose Target Case"
+        },
+        "btn-ok": {
+            "defaultValue": "Merge",
+            "description": "",
+            "value": "Merge"
+        },
+        "prompt": {
+            "defaultValue": "Enter to search for a case",
+            "description": "",
+            "value": "Enter to search for a case"
+        }
+    },
+    "change-case-status-dialog": {
+        "btn-cancel": {
+            "defaultValue": "Cancel",
+            "description": "",
+            "value": "Cancel"
+        },
+        "title": {
+            "defaultValue": "Change Case Status",
+            "description": "",
+            "value": "Change Case Status"
+        },
+        "body": {
+            "defaultValue": "Are you sure you want to change the status for this case?",
+            "description": "",
+            "value": "Are you sure you want to change the status for this case?"
+        },
+        "btn-ok": {
+            "defaultValue": "Change Case Status",
+            "description": "",
+            "value": "Change Case Status"
+        },
+        "btn-close": {
+            "defaultValue": "Close",
+            "description": "",
+            "value": "Close"
+        }
+    },
+    "people": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Person",
+            "description": "",
+            "value": "Add Person"
+        }},
+        "table": {
+            "security-tags": {
+                "msg": {"add-new-record": {
+                    "defaultValue": "Add Device",
+                    "description": "",
+                    "value": "Add Device"
+                }},
+                "table-title": {
+                    "defaultValue": "Security Tags",
+                    "description": "",
+                    "value": "Security Tags"
+                },
+                "addresses": {
+                    "msg": {"add-new-record": {
+                        "defaultValue": "Add Location",
+                        "description": "",
+                        "value": "Add Location"
+                    }},
+                    "table": {
+                        "field": {
+                            "zip": {
+                                "defaultValue": "Zip",
+                                "description": "",
+                                "value": "Zip"
+                            },
+                            "country": {
+                                "defaultValue": "Country",
+                                "description": "",
+                                "value": "Country"
+                            },
+                            "address": {
+                                "defaultValue": "Address",
+                                "description": "",
+                                "value": "Address"
+                            },
+                            "city": {
+                                "defaultValue": "City",
+                                "description": "",
+                                "value": "City"
+                            },
+                            "added-by": {
+                                "defaultValue": "Added By",
+                                "description": "",
+                                "value": "Added By"
+                            },
+                            "date-added": {
+                                "defaultValue": "Date Added",
+                                "description": "",
+                                "value": "Date Added"
+                            },
+                            "state": {
+                                "defaultValue": "State",
+                                "description": "",
+                                "value": "State"
+                            },
+                            "type": {
+                                "defaultValue": "Type",
+                                "description": "",
+                                "value": "Type"
+                            }
+                        },
+                        "title": {
+                            "defaultValue": "Locations",
+                            "description": "",
+                            "value": "Locations"
+                        }
+                    }
+                },
+                "aliases": {
+                    "msg": {"add-new-record": {
+                        "defaultValue": "Add Alias",
+                        "description": "",
+                        "value": "Add Alias"
+                    }},
+                    "table": {
+                        "field": {
+                            "added-by": {
+                                "defaultValue": "Added By",
+                                "description": "",
+                                "value": "Added By"
+                            },
+                            "date-added": {
+                                "defaultValue": "Date Added",
+                                "description": "",
+                                "value": "Date Added"
+                            },
+                            "type": {
+                                "defaultValue": "Type",
+                                "description": "",
+                                "value": "Type"
+                            },
+                            "value": {
+                                "defaultValue": "Value",
+                                "description": "",
+                                "value": "Value"
+                            }
+                        },
+                        "title": {
+                            "defaultValue": "Aliases",
+                            "description": "",
+                            "value": "Aliases"
+                        }
+                    }
+                },
+                "organizations": {
+                    "msg": {"add-new-record": {
+                        "defaultValue": "Add Organization",
+                        "description": "",
+                        "value": "Add Organization"
+                    }},
+                    "table": {
+                        "field": {
+                            "added-by": {
+                                "defaultValue": "Added By",
+                                "description": "",
+                                "value": "Added By"
+                            },
+                            "date-added": {
+                                "defaultValue": "Date Added",
+                                "description": "",
+                                "value": "Date Added"
+                            },
+                            "type": {
+                                "defaultValue": "Type",
+                                "description": "",
+                                "value": "Type"
+                            },
+                            "value": {
+                                "defaultValue": "Value",
+                                "description": "",
+                                "value": "Value"
+                            }
+                        },
+                        "title": {
+                            "defaultValue": "Organizations",
+                            "description": "",
+                            "value": "Organizations"
+                        }
+                    }
+                },
+                "table": {"field": {
+                    "added-by": {
+                        "defaultValue": "Added By",
+                        "description": "",
+                        "value": "Added By"
+                    },
+                    "date-added": {
+                        "defaultValue": "Date Added",
+                        "description": "",
+                        "value": "Date Added"
+                    },
+                    "type": {
+                        "defaultValue": "Type",
+                        "description": "",
+                        "value": "Type"
+                    },
+                    "value": {
+                        "defaultValue": "Value",
+                        "description": "",
+                        "value": "Value"
+                    }
+                }}
+            },
+            "field": {
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "title": {
+                    "defaultValue": "Title",
+                    "description": "",
+                    "value": "Title"
+                },
+                "type": {
+                    "defaultValue": "Type",
+                    "description": "",
+                    "value": "Type"
+                },
+                "first-name": {
+                    "defaultValue": "First Name",
+                    "description": "",
+                    "value": "First Name"
+                },
+                "last-name": {
+                    "defaultValue": "Last Name",
+                    "description": "",
+                    "value": "Last Name"
+                }
+            },
+            "title": {
+                "defaultValue": "People ",
+                "description": "",
+                "value": "People "
+            },
+            "contact-methods": {
+                "msg": {"add-new-record": {
+                    "defaultValue": "Add Device",
+                    "description": "",
+                    "value": "Add Device"
+                }},
+                "table": {
+                    "field": {
+                        "added-by": {
+                            "defaultValue": "Added By",
+                            "description": "",
+                            "value": "Added By"
+                        },
+                        "date-added": {
+                            "defaultValue": "Date Added",
+                            "description": "",
+                            "value": "Date Added"
+                        },
+                        "type": {
+                            "defaultValue": "Type",
+                            "description": "",
+                            "value": "Type"
+                        },
+                        "value": {
+                            "defaultValue": "Value",
+                            "description": "",
+                            "value": "Value"
+                        }
+                    },
+                    "title": {
+                        "defaultValue": "Communication Devices",
+                        "description": "",
+                        "value": "Communication Devices"
+                    }
+                }
+            }
+        }
+    },
+    "navigation": {
+        "search": {
+            "search": {
+                "defaultValue": "Search",
+                "description": "",
+                "value": "Search"
+            },
+            "btn-go": {
+                "defaultValue": "Go!",
+                "description": "",
+                "value": "Go!"
+            }
+        },
+        "leaf-title": {
+            "notes": {
+                "defaultValue": "Notes",
+                "description": "",
+                "value": "Notes"
+            },
+            "cost": {
+                "defaultValue": "Cost",
+                "description": "",
+                "value": "Cost"
+            },
+            "references": {
+                "defaultValue": "References",
+                "description": "",
+                "value": "References"
+            },
+            "documents": {
+                "defaultValue": "Documents",
+                "description": "",
+                "value": "Documents"
+            },
+            "correspondence": {
+                "defaultValue": "Correspondence",
+                "description": "",
+                "value": "Correspondence"
+            },
+            "details": {
+                "defaultValue": "Details",
+                "description": "",
+                "value": "Details"
+            },
+            "history": {
+                "defaultValue": "History",
+                "description": "",
+                "value": "History"
+            },
+            "time": {
+                "defaultValue": "Time",
+                "description": "",
+                "value": "Time"
+            },
+            "people": {
+                "defaultValue": "People",
+                "description": "",
+                "value": "People"
+            },
+            "tasks": {
+                "defaultValue": "Tasks",
+                "description": "",
+                "value": "Tasks"
+            },
+            "participants": {
+                "defaultValue": "Participants",
+                "description": "",
+                "value": "Participants"
+            },
+            "calendar": {
+                "value": "Calendar",
+                "defaultValue": "Calendar",
+                "description": ""
+            }
+        }
+    },
+    "context-menu": {"menu-title": {
+        "sub2": {
+            "defaultValue": "Sub 2",
+            "description": "",
+            "value": "Sub 2"
+        },
+        "edit": {
+            "defaultValue": "Edit",
+            "description": "",
+            "value": "Edit"
+        },
+        "more": {
+            "defaultValue": "More",
+            "description": "",
+            "value": "More"
+        },
+        "sub1": {
+            "defaultValue": "Sub 1",
+            "description": "",
+            "value": "Sub 1"
+        },
+        "copy": {
+            "defaultValue": "Copy",
+            "description": "",
+            "value": "Copy"
+        },
+        "paste": {
+            "defaultValue": "Paste",
+            "description": "",
+            "value": "Paste"
+        },
+        "menu": {
+            "defaultValue": "Menu:",
+            "description": "",
+            "value": "Menu:"
+        },
+        "delete": {
+            "defaultValue": "Delete",
+            "description": "",
+            "value": "Delete"
+        }
+    }},
+    "create-new-folder-dialog": {
+        "btn-cancel": {
+            "defaultValue": "Cancel",
+            "description": "",
+            "value": "Cancel"
+        },
+        "label": {"folder-name": {
+            "defaultValue": "Folder Name",
+            "description": "",
+            "value": "Folder Name"
+        }},
+        "title": {
+            "defaultValue": "Create Folder",
+            "description": "",
+            "value": "Create Folder"
+        },
+        "body": {
+            "defaultValue": "Enter a name for the folder you would like to create:",
+            "description": "",
+            "value": "Enter a name for the folder you would like to create:"
+        },
+        "btn-ok": {
+            "defaultValue": "Create Folder",
+            "description": "",
+            "value": "Create Folder"
+        },
+        "btn-close": {
+            "defaultValue": "Close",
+            "description": "",
+            "value": "Close"
+        }
+    },
+    "header": {
+        "buttons": {
+            "reinvestigate-case-file": {
+                "defaultValue": "Reinvestigate Case File",
+                "description": "",
+                "value": "Reinvestigate Case File"
+            },
+            "change-case-status": {
+                "defaultValue": "Change Case Status",
+                "description": "",
+                "value": "Change Case Status"
+            },
+            "edit": {
+                "defaultValue": "Edit",
+                "description": "",
+                "value": "Edit"
+            },
+            "split-case": {
+                "defaultValue": "Split Case",
+                "description": "",
+                "value": "Split Case"
+            },
+            "subscribe": {
+                "defaultValue": "Subscribe",
+                "description": "",
+                "value": "Subscribe"
+            },
+            "merge": {
+                "defaultValue": "Merge",
+                "description": "",
+                "value": "Merge"
+            },
+            "edit-case-file": {
+                "defaultValue": "Edit Case File",
+                "description": "",
+                "value": "Edit Case File"
+            },
+            "consolidate-case": {
+                "defaultValue": "Merge Case",
+                "description": "",
+                "value": "Merge Case"
+            },
+            "restrict": {
+                "defaultValue": "Restrict ?",
+                "description": "",
+                "value": "Restrict ?"
+            },
+            "reinvestigate": {
+                "defaultValue": "Reinvestigate",
+                "description": "",
+                "value": "Reinvestigate"
+            }
+        },
+        "labels": {
+            "enter-owning-group": {
+                "defaultValue": "Enter Owning Group",
+                "description": "",
+                "value": "Enter Owning Group"
+            },
+            "enter-incident-date": {
+                "defaultValue": "Enter Incident Date",
+                "description": "",
+                "value": "Enter Incident Date"
+            },
+            "case-type": {
+                "defaultValue": "Case Type",
+                "description": "",
+                "value": "Case Type"
+            },
+            "assigned-to": {
+                "defaultValue": "Assigned To",
+                "description": "",
+                "value": "Assigned To"
+            },
+            "owning-group": {
+                "defaultValue": "Owning Group",
+                "description": "",
+                "value": "Owning Group"
+            },
+            "priority-high": {
+                "defaultValue": "High",
+                "description": "",
+                "value": "High"
+            },
+            "priority": {
+                "defaultValue": "Priority",
+                "description": "",
+                "value": "Priority"
+            },
+            "enter-due-date": {
+                "defaultValue": "Enter Due Date",
+                "description": "",
+                "value": "Enter Due Date"
+            },
+            "enter-priority": {
+                "defaultValue": "Enter Priority",
+                "description": "",
+                "value": "Enter Priority"
+            },
+            "enter-assignee": {
+                "defaultValue": "Enter Assignee",
+                "description": "",
+                "value": "Enter Assignee"
+            },
+            "enter-case-title": {
+                "defaultValue": "Enter Case Title",
+                "description": "",
+                "value": "Enter Case Title"
+            },
+            "create-date": {
+                "defaultValue": "Create Date",
+                "description": "",
+                "value": "Create Date"
+            },
+            "due-date": {
+                "defaultValue": "Due Date",
+                "description": "",
+                "value": "Due Date"
+            },
+            "enter-subject-type": {
+                "defaultValue": "Enter Subject Type",
+                "description": "",
+                "value": "Enter Subject Type"
+            },
+            "state": {
+                "defaultValue": "State",
+                "description": "",
+                "value": "State"
+            }
+        }
+    },
+    "wizard": {"title": {
+        "defaultValue": "New Case File",
+        "description": "",
+        "value": "New Case File"
+    }},
+    "detail": {
+        "other-menu-items": {
+            "defaultValue": "Other menu items",
+            "description": "",
+            "value": "Other menu items"
+        },
+        "buttons": {
+            "edit": {
+                "defaultValue": "Edit",
+                "description": "",
+                "value": "Edit"
+            },
+            "save": {
+                "defaultValue": "Save",
+                "description": "",
+                "value": "Save"
+            }
+        },
+        "details": {
+            "defaultValue": "Details",
+            "description": "",
+            "value": "Details"
+        },
+        "error-value": {
+            "defaultValue": "(Error)",
+            "description": "",
+            "value": "(Error)"
+        }
+    },
+    "time": {"table": {
+        "field": {
+            "total-hours": {
+                "defaultValue": "Total Hours",
+                "description": "",
+                "value": "Total Hours"
+            },
+            "modified-date": {
+                "defaultValue": "Modified Date",
+                "description": "",
+                "value": "Modified Date"
+            },
+            "id": {
+                "defaultValue": "ID",
+                "description": "",
+                "value": "ID"
+            },
+            "form-name": {
+                "defaultValue": "Form Name",
+                "description": "",
+                "value": "Form Name"
+            },
+            "username": {
+                "defaultValue": "Username",
+                "description": "",
+                "value": "Username"
+            },
+            "status": {
+                "defaultValue": "Status",
+                "description": "",
+                "value": "Status"
+            }
+        },
+        "label": {"timesheet": {
+            "defaultValue": "Timesheet",
+            "description": "",
+            "value": "Timesheet"
+        }},
+        "title": {
+            "defaultValue": "Time Tracking",
+            "description": "",
+            "value": "Time Tracking"
+        }
+    }},
+    "tasks": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Task",
+            "description": "",
+            "value": "Add Task"
+        }},
+        "buttons": {
+            "complete-task-outcome": {
+                "defaultValue": "Complete Task Outcome",
+                "description": "",
+                "value": "Complete Task Outcome"
+            },
+            "complete": {
+                "defaultValue": "Complete",
+                "description": "",
+                "value": "Complete"
+            },
+            "complete-task": {
+                "defaultValue": "Complete Task",
+                "description": "",
+                "value": "Complete Task"
+            }
+        },
+        "table": {
+            "field": {
+                "created": {
+                    "defaultValue": "Created",
+                    "description": "",
+                    "value": "Created"
+                },
+                "due-date": {
+                    "defaultValue": "Due",
+                    "description": "",
+                    "value": "Due"
+                },
+                "action": {
+                    "defaultValue": "Action",
+                    "description": "",
+                    "value": "Action"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "assignee": {
+                    "defaultValue": "Assignee",
+                    "description": "",
+                    "value": "Assignee"
+                },
+                "title": {
+                    "defaultValue": "Title",
+                    "description": "",
+                    "value": "Title"
+                },
+                "priority": {
+                    "defaultValue": "Priority",
+                    "description": "",
+                    "value": "Priority"
+                },
+                "status": {
+                    "defaultValue": "Status",
+                    "description": "",
+                    "value": "Status"
+                }
+            },
+            "title": {
+                "defaultValue": "Tasks",
+                "description": "",
+                "value": "Tasks"
+            }
+        }
+    },
+    "participants": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Participant",
+            "description": "",
+            "value": "Add Participant"
+        }},
+        "table": {
+            "field": {
+                "name": {
+                    "defaultValue": "Name",
+                    "description": "",
+                    "value": "Name"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "type": {
+                    "defaultValue": "Type",
+                    "description": "",
+                    "value": "Type"
+                }
+            },
+            "title": {
+                "defaultValue": "Participants",
+                "description": "",
+                "value": "Participants"
+            }
+        }
+    }
+}

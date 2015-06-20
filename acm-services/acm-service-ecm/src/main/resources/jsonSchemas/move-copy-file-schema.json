@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ECM Move/Copy File Request Schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "ID of the document to be moved or copied",
+      "minimum": 1
+    },
+    "folderId": {
+      "type": "integer",
+      "description": "ID of the target folder, where the document will be moved or copied to"
+    }
+  },
+  "required": [ "id", "folderId" ]
+}

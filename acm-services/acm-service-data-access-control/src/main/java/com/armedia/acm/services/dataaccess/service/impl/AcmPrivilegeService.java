@@ -71,26 +71,28 @@ public class AcmPrivilegeService
             idx++;
         }
 
+
+
         List<String> participantTypes = participantTypesToList(participantType);
 
         // now we have the desired access, so we can grant it to every participant of the given participant type
         for (AcmParticipant ap : obj.getParticipants())
         {
-            log.trace("checking type '" + ap.getParticipantType() + "', user '" + ap.getParticipantLdapId() + "'");
-            if ( participantTypes.contains((ap.getParticipantType())) )
+            log.debug("checking type '" + ap.getParticipantType() + "', user '" + ap.getParticipantLdapId() + "'");
+            if ( participantTypes.contains((ap.getParticipantType().toLowerCase())) )
             {
                 ap.setModified(new Date());
-                log.trace("participant matches, checking privileges");
+                log.debug("participant matches, checking privileges");
                 boolean found = false;
                 for (AcmParticipantPrivilege priv : ap.getPrivileges())
                 {
-                    log.trace("object action: '" + priv.getObjectAction() + "', rule action: '" + action + "'");
+                    log.debug("object action: '" + priv.getObjectAction() + "', rule action: '" + action + "'");
                     if (action.equals(priv.getObjectAction()))
                     {
                         found = true;
                         priv.setAccessType(mode);
                         priv.setAccessReason(DataAccessControlConstants.ACCESS_REASON_POLICY);
-                        log.trace("updated existing privilege");
+                        log.debug("updated existing privilege");
                         break;
                     }
                 }
@@ -103,7 +105,7 @@ public class AcmPrivilegeService
                     priv.setObjectAction(action);
                     ap.getPrivileges().add(priv);
 
-                    log.trace("added privilege '" + action + "' to '" + ap.getParticipantLdapId() + "'");
+                    log.debug("added privilege '" + action + "' to '" + ap.getParticipantLdapId() + "'");
                 }
             }
         }

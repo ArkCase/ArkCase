@@ -4,13 +4,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
 
-<c:set var="vd_app"                scope="session" value="acm-law-1.0"/>
+<c:set var="vd_this_app"           scope="session" value="acm-law-1.0"/>
 <c:set var="vd_acm"                scope="session" value="acm-3.0"/>
 <c:set var="acm_theme"             scope="session" value="acm-3.0/themes/basic"/>
 
 <c:set var="vd_angular"            scope="session" value="angular-1.2.18"/>
 <c:set var="js_angular_min"        scope="session" value="angular.min.7931140c.js"/>
 <c:set var="js_angular_route_min"  scope="session" value="angular-route.min.7d4fa7e4.js"/>
+<%--TODO: check if this is the same as the moment-2.10.2--%>
 <c:set var="js_angular_moment"     scope="session" value="moment.min.js"/>
 <c:set var="js_angular_table"      scope="session" value="ng-table.js"/>
 
@@ -20,7 +21,7 @@
 <c:set var="vd_bootstrap"          scope="session" value="bootstrap-3.1.1"/>
 <c:set var="js_bootstrap"          scope="session" value="bootstrap.js"/>
 
-<c:set var="vd_calendar"           scope="session" value="calendar"/>
+<c:set var="vd_calendar"           scope="session" value="calendar-1.6.4"/>
 <c:set var="js_calendar"           scope="session" value="bootstrap_calendar.js"/>
 
 <c:set var="vd_charts"             scope="session" value="charts"/>
@@ -51,7 +52,7 @@
 <c:set var="vd_file-input"         scope="session" value="file-input"/>
 <c:set var="js_file-input"         scope="session" value="bootstrap.file-input.js"/>
 
-<c:set var="vd_fullcalendar"       scope="session" value="fullcalendar"/>
+<c:set var="vd_fullcalendar"       scope="session" value="fullcalendar-1.6.4"/>
 <c:set var="js_fullcalendar"       scope="session" value="fullcalendar.min.js"/>
 
 <c:set var="vd_ie"                 scope="session" value="ie"/>
@@ -85,6 +86,11 @@
 
 <c:set var="vd_jtable"             scope="session" value="jtable-2.4.0"/>
 <c:set var="js_jtable"             scope="session" value="jquery.jtable.js"/>
+
+<c:set var="vd_jquery_validation"  scope="session" value="jquery-validation-engine-2.6.2"/>
+<c:set var="css_jquery_validation" scope="session" value="validationEngine.jquery.css"/>
+<c:set var="js_jquery_validation"  scope="session" value="jquery.validationEngine.js"/>
+<c:set var="js_jquery_validation_lang"  scope="session" value="jquery.validationEngine-en.js"/>
 
 <c:set var="vd_jvectormap"         scope="session" value="jvectormap"/>
 <c:set var="js_jvectormap"         scope="session" value="jquery-jvectormap-1.2.2.min.js"/>
@@ -220,5 +226,11 @@
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app.js'/>" ></script>
 <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app.plugin.js'/>" ></script>
 
-<script type="text/javascript" src="<c:url value='/resources/${vd_app}/js/application.js'/>" ></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/app.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appModel.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appView.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appService.js'/>"></script>
+
+<script type="text/javascript" src="<c:url value='/resources/${vd_this_app}/js/thisApp.js'/>" ></script>
 

@@ -16,6 +16,7 @@
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
         <span itemprop="userName">${sessionScope.acm_username}</span>
+        <%--<span itemprop="labelSettings">${sessionScope.acm_application.getSettings().get("labelSettings")}</span>--%>
         <span itemprop="objectTypes">${acm_application.getObjectTypesAsJson()}</span>
     </div>
     <jsp:invoke fragment="endOfHead"/>
@@ -38,24 +39,23 @@
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/typeahead.jquery.js"></script>--%>
 <%--<script type="text/javascript" src="<c:url value='/'/>resources/vendors/${vd_typeahead}/bloodhound.js"></script>--%>
 
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/app.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appModel.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appView.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/app.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appModel.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appView.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>--%>
 
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appObject.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appEvent.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appService.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appCallback.js'/>"></script>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appObject.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appEvent.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appService.js'/>"></script>--%>
+<%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appCallback.js'/>"></script>--%>
 
 
 <jsp:invoke fragment="endOfBody"/>
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        var context = {};
-        context.path = Acm.Object.MicroData.get("contextPath");
-        Application.run(context);
+        var context = App.getPageContext();
+        ThisApp.run(context);
     });
 </script>
 

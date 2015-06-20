@@ -7,13 +7,11 @@ package com.armedia.acm.frevvo.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +28,10 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,16 +45,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.dao.ldap.UserActionDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -82,20 +82,33 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
 	private AcmPluginManager acmPluginManager;
+	private FolderAndFilesUtils folderAndFilesUtils;
+	private AcmFolderService acmFolderService;
 	private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
 
     @Override
 	public Object init() {
-		Object result = "";
+		String result = "";
 		
 		String mode = getRequest().getParameter("mode");
-		String xmlId = getRequest().getParameter("xmlId");
+		String containerIdString = getRequest().getParameter("containerId");
+		String folderIdString = getRequest().getParameter("folderId");
 		
-		if (("edit".equals(mode) || "reinvestigate".equals(mode)) && null != xmlId && !"".equals(xmlId))
+		if (("edit".equals(mode) || "reinvestigate".equals(mode)) && 
+			 null != containerIdString && !"".equals(containerIdString) && 
+			 null != folderIdString && !"".equals(folderIdString))
 		{
-			try{
-				Long id = Long.parseLong(xmlId);
-				result = getEcmFileService().download(id);				
+			Long xmlId = null;
+			try
+			{
+				String fileType = getFormName().toLowerCase() + "_xml";
+				EcmFile ecmFile = getEcmFile(containerIdString, folderIdString, fileType);
+				
+				if (ecmFile != null)
+				{
+					xmlId = ecmFile.getId();
+					result = getEcmFileService().download(xmlId);
+				}
 			}
 			catch(Exception e)
 			{
@@ -110,10 +123,14 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     public JSONObject createResponse(Object object)
     {
     	String jsonString = getGson().toJson(object);
+
+		LOG.debug("returning JSON: " + jsonString);
 		JSONObject json = new JSONObject(jsonString);
 		
 		return json;
     }
+    
+    public abstract Object convertToFrevvoForm(Object obj, Object form);
 
 	@Override
 	public Map<String, Object> getProperties() {
@@ -187,6 +204,52 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         }
 
     }
+    
+    public String findCmisFolderId(Long folderId, AcmContainer container, String objectType, Long objectId)
+    {
+    	String cmisFolderId = null;
+    	if (folderId != null)
+    	{
+    		try
+    		{
+    			AcmFolder folder = getAcmFolderService().findById(folderId);
+    			cmisFolderId = folder.getCmisFolderId();
+    		}
+    		catch(Exception e)
+    		{
+    			LOG.warn("Cannot find folder for provided folderId=" + folderId + ". Will try to find the attachment folder or to create one.");
+    		}
+    	}
+    	
+    	if (cmisFolderId == null)
+    	{
+    		return findFolderIdForAttachments(container, objectType, objectId);
+    	}
+    	
+    	return cmisFolderId;
+    }
+    
+    public String findFolderIdForAttachments(AcmContainer container, String objectType, Long id)
+    {
+        // hopefully the container has it, but sometimes the container isn't set on the parent object
+        if ( container != null )
+        {
+            return container.getAttachmentFolder().getCmisFolderId();
+        }
+
+        AcmContainer found = null;
+        try
+        {
+            found = getEcmFileService().getOrCreateContainer(objectType, id);
+            return found.getAttachmentFolder().getCmisFolderId();
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        {
+            LOG.error("Can not find or create a CMIS folder for '" + objectType + "', id '" + id + "'", e);
+            return null;
+        }
+
+    }
 
     @Override
 	public UserActionDao getUserActionDao() {
@@ -238,13 +301,32 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		return xml;
 	}
 	
-	protected void updateXML(String xml, String formName, Long id, Authentication auth)
+	public void updateXML(AcmContainerEntity entity, Authentication auth, Class<?> c)
+    {
+    	if (entity != null)
+    	{    		
+    		EcmFile ecmFile = getEcmFile(entity, getFormName().toLowerCase());
+    		
+    		Object form = null;
+    		if (ecmFile != null)
+			{
+				form = getExistingForm(ecmFile.getId(), c);
+			}
+    		
+    		form = convertToFrevvoForm(entity, form);
+    		
+    		if (form != null)
+    		{
+    			String xml = convertFromObjectToXML(form);
+    			updateXML(xml, ecmFile, auth);		
+    		}
+    	}
+    }
+	
+	protected void updateXML(String xml, EcmFile ecmFile, Authentication auth)
 	{
-		ObjectAssociation association = getObjectAssociationDao().findChildOfType(formName.toUpperCase(), id, formName.toLowerCase() + "_xml");
-		
-		if (association != null)
+		if (xml != null && ecmFile != null)
 		{
-			EcmFile ecmFile = getEcmFileDao().find(association.getTargetId());
 			AcmMultipartFile file = new AcmMultipartFile();
 			file.setInputStream(new ByteArrayInputStream(xml.getBytes()));
 			
@@ -257,6 +339,30 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 				LOG.error("Failed to update XML file.", e);
 			}    				
 		}
+	}
+	
+	public Object getExistingForm(Long id, Class<?> c)
+	{
+		Object retval = null;
+		
+		if (id != null)
+		{
+			String existingXml = "";
+			try 
+			{
+				// Taking existing XML for the form
+				existingXml = getEcmFileService().download(id);
+				
+				// Creating Frevvo form from the existing XML
+				retval = convertFromXMLToObject(cleanXML(existingXml), c);
+			} 
+			catch (MuleException e) 
+			{
+				LOG.error("Cannot download file with id=" + id);
+			}
+		}
+		
+		return retval;
 	}
 	
 	public void updateXMLAttachment(MultiValueMap<String, MultipartFile> attachments, String formName, Object form) throws Exception
@@ -280,6 +386,58 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
         }
 	}
 	
+	public MultiValueMap<String, MultipartFile> updateFileName(String newName, String type, MultiValueMap<String, MultipartFile> attachments) throws IOException
+	{
+		String key = findAttachmentKey(type, attachments);		
+		
+		if (key != null)
+		{
+			List<MultipartFile> files = attachments.get(key);
+			if (files != null && files.size() == 1)
+        	{
+				MultipartFile originalFile = files.get(0);
+				String fullFileName = newName + "." + type.toLowerCase();
+				AcmMultipartFile updatedFile = new AcmMultipartFile(fullFileName, fullFileName, originalFile.getContentType(), originalFile.isEmpty(), originalFile.getSize(), originalFile.getBytes(), originalFile.getInputStream(), false);
+				
+				// Remove old file
+        		attachments.remove(key);
+        		
+        		// Add updated file
+        		attachments.add(newName, updatedFile);
+        	}
+		}
+		
+		return attachments;
+	}
+	
+	private String findAttachmentKey(String type, MultiValueMap<String, MultipartFile> attachments)
+	{		
+		if (attachments != null)
+		{
+			for (Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet())
+			{
+				if (FrevvoFormConstants.PDF.equalsIgnoreCase(type))
+				{
+					if (!entry.getKey().startsWith("form_") && !entry.getKey().equals("UploadFiles"))
+					{
+						// Then this file is PDF
+						return entry.getKey();
+					}
+				}
+				else if (FrevvoFormConstants.XML.equalsIgnoreCase(type))
+				{
+					if (entry.getKey().startsWith("form_"))
+					{
+						// Then this file is XML
+						return entry.getKey();
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public FrevvoUploadedFiles saveAttachments(
             MultiValueMap<String, MultipartFile> attachments,
             String targetCmisFolderId,
@@ -293,8 +451,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 			for ( Map.Entry<String, List<MultipartFile>> entry : attachments.entrySet() )
 			{
 				String mode = getRequest().getParameter("mode");
-				String xmlId = getRequest().getParameter("xmlId");
-				String pdfId = getRequest().getParameter("pdfId");
+				String containerIdString = getRequest().getParameter("containerId");
+				String folderIdString = getRequest().getParameter("folderId");
 				
                 if ( entry.getKey().startsWith("form_"))
                 {
@@ -307,17 +465,11 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                         EcmFile formXml = null;
                         
                         // Update XML form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) && null != xmlId && !"".equals(xmlId))
+                        if ("edit".equals(mode) && 
+                        	null != containerIdString && !"".equals(containerIdString) &&
+                        	null != folderIdString && !"".equals(folderIdString))
                         {
-                        	EcmFile file = null;
-                        	try{
-                        		Long id = Long.parseLong(xmlId);
-                        		file = getEcmFileDao().find(id);
-                        	}
-                        	catch(Exception e)
-                        	{
-                        		LOG.warn("The file with id=" + xmlId + " is not found. The update will not proceed.");
-                        	}
+            				EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase() + "_xml");
                         	
                         	formXml = getEcmFileService().update(
                         			file,
@@ -346,17 +498,14 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                         EcmFile pdfRendition = null;
                         
                         // Update PDF form if the mode is "edit", otherwise create new
-                        if ("edit".equals(mode) && null != pdfId && !"".equals(pdfId))
+                        if ("edit".equals(mode) && 
+                    		null != containerIdString && !"".equals(containerIdString) &&
+                        	null != folderIdString && !"".equals(folderIdString))
                         {
-                        	EcmFile file = null;
-                        	try{
-                        		Long id = Long.parseLong(pdfId);
-                        		file = getEcmFileDao().find(id);
-                        	}
-                        	catch(Exception e)
-                        	{
-                        		LOG.warn("The file with id=" + pdfId + " is not found. The update will not proceed.");
-                        	}
+                        	EcmFile file = getEcmFile(containerIdString, folderIdString, getFormName().toLowerCase());
+                        	file.setFileName(pdfAttachment.getName());
+                        	getEcmFileDao().save(file);
+                        	
                         	pdfRendition = getEcmFileService().update(
                         			file,
                         			pdfAttachment,
@@ -420,7 +569,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 true);
 
             EcmFile uploaded = getEcmFileService().upload(
-                fileType,
+				attachment.getOriginalFilename(),
+				fileType,
                 file,
                 getAuthentication(),
                 targetCmisFolderId,
@@ -434,6 +584,40 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
             LOG.error("Could not upload file: " + e.getMessage(), e);
             throw new AcmCreateObjectFailedException("file", e.getMessage(), e);
         }
+    }
+    
+    public EcmFile getEcmFile(AcmContainerEntity entity, String formName)
+	{
+		EcmFile ecmFile = null;
+		if (entity != null)
+		{
+			// First find the XML that is already in the system and create Frevvo form
+			Long containerId = entity.getContainer().getId();
+			Long folderId = entity.getContainer().getAttachmentFolder().getId();
+			String fileType = formName + "_xml";
+			
+			ecmFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(containerId, folderId, fileType);
+		}
+		
+		return ecmFile;
+	}
+    
+    private EcmFile getEcmFile(String containerIdString, String folderIdString, String fileType)
+    {
+    	EcmFile ecmFile = null;
+    	
+    	try{
+    		Long containerId = Long.parseLong(containerIdString);
+    		Long folderId = Long.parseLong(folderIdString);
+    		
+    		ecmFile = getEcmFileDao().findForContainerAttachmentFolderAndFileType(containerId, folderId, fileType);
+		}
+		catch(Exception e)
+		{
+			LOG.warn("EcmFile with for containerId=" + containerIdString + " and folderId=" + folderIdString  +" is not found.");
+		}
+		
+		return ecmFile;
     }
 
     public String cleanXML(String xml)
@@ -476,25 +660,8 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		
 		// Set edit mode
 		form.setMode(FrevvoFormConstants.EDIT);
-		
-		if (containerId != null && folderId != null)
-		{
-			// Set xml id
-			EcmFile ecmFileXML = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName + "_xml");
-			
-			if (ecmFileXML != null && ecmFileXML.getId() != null)
-			{
-				form.setXmlId(ecmFileXML.getId().toString());
-			}
-			
-			// Set pdf id
-			EcmFile ecmFilePDF = getEcmFileDao().findForContainerFolderAndFileType(containerId, folderId, formName);
-			
-			if (ecmFilePDF != null && ecmFilePDF.getId() != null)
-			{
-				form.setPdfId(ecmFilePDF.getId().toString());
-			}
-		}
+		form.setContainerId(containerId);
+		form.setFolderId(folderId);
 		
 		return form;
 	}
@@ -741,5 +908,22 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 
 	public void setGson(Gson gson) {
 		this.gson = gson;
-	}	
+	}
+
+	public FolderAndFilesUtils getFolderAndFilesUtils() {
+		return folderAndFilesUtils;
+	}
+
+	public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+		this.folderAndFilesUtils = folderAndFilesUtils;
+	}
+
+	public AcmFolderService getAcmFolderService() {
+		return acmFolderService;
+	}
+
+	public void setAcmFolderService(AcmFolderService acmFolderService) {
+		this.acmFolderService = acmFolderService;
+	}
+	
 }

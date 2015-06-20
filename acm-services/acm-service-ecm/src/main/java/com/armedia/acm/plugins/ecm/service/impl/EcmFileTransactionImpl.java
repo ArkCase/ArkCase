@@ -32,12 +32,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private MuleClient muleClient;
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
     @Override
     public EcmFile addFileTransaction(
+            String originalFileName,
             Authentication authentication,
             String fileType,
             InputStream fileInputStream,
@@ -49,7 +51,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         // by default, files are documents
         String category = "Document";
-        EcmFile retval = addFileTransaction(authentication, fileType, category, fileInputStream, mimeType, fileName,
+        EcmFile retval = addFileTransaction(originalFileName,authentication, fileType, category, fileInputStream, mimeType, fileName,
                 cmisFolderId, container);
 
         return retval;
@@ -57,6 +59,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(
+            String originalFileName,
             Authentication authentication,
             String fileType,
             String fileCategory,
@@ -87,6 +90,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         Document cmisDocument = received.getPayload(Document.class);
         toAdd.setVersionSeriesId(cmisDocument.getVersionSeriesId());
         toAdd.setActiveVersionTag(cmisDocument.getVersionLabel());
+        toAdd.setFileName(originalFileName);
 
         EcmFileVersion version = new EcmFileVersion();
         version.setCmisObjectId(cmisDocument.getId());
@@ -111,7 +115,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", FolderAndFilesUtils.getActiveVersionCmisId(ecmFile));
+        messageProps.put("ecmFileId", getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile));
         messageProps.put("fileName", ecmFile.getFileName());
         messageProps.put("mimeType", ecmFile.getFileMimeType());
         messageProps.put("inputStream", fileInputStream);
@@ -218,4 +222,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.folderDao = folderDao;
     }
 
+    public FolderAndFilesUtils getFolderAndFilesUtils() {
+        return folderAndFilesUtils;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+        this.folderAndFilesUtils = folderAndFilesUtils;
+    }
 }

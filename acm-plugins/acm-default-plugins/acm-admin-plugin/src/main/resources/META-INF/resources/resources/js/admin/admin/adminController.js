@@ -65,6 +65,29 @@ Admin.Controller = Admin.Controller || {
     	
     ,MODEL_FAC_RETRIEVED_SAVE_APPLICATION_ROLES_TO_GROUPS_ERROR             : "functional-access-control-retrieved-error-save-application-roles-to-groups"  // param: errorMsg
 
+
+
+    ,MODEL_RP_RETRIEVED_ROLES                                               : "roles-privileges-retrieved-roles"
+
+    ,MODEL_RP_RETRIEVED_ROLES_ERROR                                         : "roles-privileges-retrieved-roles-error"
+
+    ,MODEL_RP_RETRIEVED_PRIVILEGES                                          : "roles-privileges-retrieved-privileges"
+
+    ,MODEL_RP_RETRIEVED_PRIVILEGES_ERROR                                    : "roles-privileges-retrieved-privileges-error"
+
+    ,MODEL_RP_RETRIEVED_ROLE_PRIVILEGES                                     : "roles-privileges-retrieved-role-privileges"
+
+    ,MODEL_RP_RETRIEVED_ROLE_PRIVILEGES_ERROR                               : "roles-privileges-retrieved-role-privileges-error"
+
+    ,MODEL_RP_SAVED_ROLE_PRIVILEGES                                         : "roles-privileges-saved-role-privileges"
+
+    ,MODEL_RP_SAVED_ROLE_PRIVILEGES_ERROR                                   : "roles-privileges-saved-role-privileges-error"
+
+    ,MODEL_RP_CREATED_ROLE                                                  : "roles-privileges-created-role"
+
+    ,MODEL_RP_CREATED_ROLE_ERROR                                            : "roles-privileges-created-role-error"
+
+
     ,VIEW_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP                   : "reports-configuration-view-saved-reports-to-groups-map"		                // param : reportToGroupsMap
 
     ,MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS                           : "reports-configuration-model-retrieved-reports" 			                    // param : reports
@@ -75,7 +98,13 @@ Admin.Controller = Admin.Controller || {
 
     ,MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP                  : "reports-configuration-model-saved-reports-to-groups-map"		                // param : success
 
-    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_ERROR                             : "reports-configuration-model-error"		                                    // param : errorMsg
+    ,MODEL_REPORT_CONFIGURATION_RETRIEVED_ERROR                             : "reports-configuration-model-error"		
+    	
+    ,MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS                        : "forms-configuration-model-retrieved-plain-forms" 
+    
+    ,MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM                        	: "forms-configuration-model-deleted-plain-form"
+    	
+    ,MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORM_TARGETS                 : "forms-configuration-model-retrieved-plain-form-targets"
 
     ,viewCreatedAdHocGroup: function(group,parentId){
         Acm.Dispatcher.fireEvent(this.VIEW_ORG_HIERARCHY_CREATED_AD_HOC_GROUP, group,parentId);
@@ -189,6 +218,47 @@ Admin.Controller = Admin.Controller || {
     ,modelErrorSavingFunctionalAccessControlApplicationRolesToGroups : function(errorMsg) {
     	Acm.Dispatcher.fireEvent(this.MODEL_FAC_RETRIEVED_SAVE_APPLICATION_ROLES_TO_GROUPS_ERROR, errorMsg);
     }
+
+    ,modelRetrievedRolesPrivilegesApplicationRoles: function(roles) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_RETRIEVED_ROLES, roles);
+    }
+
+    ,modelErrorRetrievedRolesPrivilegesApplicationRoles: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_RETRIEVED_ROLES_ERROR, errorMsg);
+    }
+
+    ,modelRetrievedRolesPrivilegesApplicationPrivileges: function(privileges) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_RETRIEVED_PRIVILEGES, privileges);
+    }
+
+    ,modelErrorRetrievedRolesPrivilegesApplicationPrivileges: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_RETRIEVED_PRIVILEGES_ERROR, errorMsg);
+    }
+
+    ,modelRetrievedRolesPrivilegesApplicationRolePrivileges: function(privileges) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_RETRIEVED_ROLE_PRIVILEGES, rolePrivileges);
+    }
+
+    ,modelErrorRetrievedRolesPrivilegesApplicationRolePrivileges: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_RETRIEVED_ROLE_PRIVILEGES_ERROR, errorMsg);
+    }
+
+    ,modelCreatedRolesPrivilegesApplicationRole: function(role) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_CREATED_ROLE, role);
+    }
+
+    ,modelErrorCreatedRolesPrivilegesApplicationRole: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_CREATED_ROLE_ERROR, errorMsg);
+    }
+
+    ,modelSavedRolesPrivilegesApplicationRolePriveleges: function(rolePrivileges) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_SAVED_ROLE_PRIVILEGES, rolePrivileges);
+    }
+
+    ,modelErrorSavedRolesPrivilegesApplicationRolePriveleges: function(errorMsg) {
+        Acm.Dispatcher.fireEvent(this.MODEL_RP_SAVED_ROLE_PRIVILEGES_ERROR, errorMsg);
+    }
+
     ,viewSavedReportToGroupsMap: function(reportToGroupsMap){
         Acm.Dispatcher.fireEvent(this.VIEW_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, reportToGroupsMap);
     }
@@ -207,5 +277,14 @@ Admin.Controller = Admin.Controller || {
     }
     ,modelReportConfigSavedReportToGroupsMap: function(success){
         Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, success);
+    }
+    ,modelFormsConfigRetrievedPlainForms: function(plainForms){
+        Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS, plainForms);
+    }
+    ,modelFormsConfigDeletedPlainForm: function(plainForm){
+        Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_DELETED_PLAIN_FORM, plainForm);
+    }
+    ,modelFormsConfigRetrievedPlainFormTargets: function(plainFormTargets){
+        Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORM_TARGETS, plainFormTargets);
     }
 }

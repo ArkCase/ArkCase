@@ -28,11 +28,13 @@ Audit.View = Audit.View || {
         }
         ,onClickBtnGenerateReport: function(event,ctrl){
             var auditFieldsValues = Audit.View.AuditCriteria.getFieldsValues();
+            var dateFormat = $.t("common:date.pentaho");
             var pageUrl = Audit.View.MicroData.auditReportUrl
                 + "&startDate=" + auditFieldsValues.startDate
                 + "&endDate=" + auditFieldsValues.endDate
                 + "&objectType=" + auditFieldsValues.objectType
-                + "&objectId=" + auditFieldsValues.objectId;
+                + "&objectId=" + auditFieldsValues.objectId
+                + "&dateFormat=" + encodeURIComponent(dateFormat);
 
             window.open(pageUrl, 'audit_iframe');
         }
@@ -52,8 +54,8 @@ Audit.View = Audit.View || {
             // we need to initialize datepickers once the markup is ready
             //additionally, set default dates to current date
             this.$datePickers = $(".datepicker-input");
-            this.$datePickers.datepicker();
-            this.$datePickers.datepicker("setDate", Acm.getCurrentDay());
+            this.$datePickers.datepicker({dateFormat: $.t("common:date.datepicker")});
+            this.$datePickers.datepicker("setDate", Acm.getPentahoDateFromDateTime(new Date()));
         }
         ,getDate: function(selector) {
             var date = Acm.Object.getValue(selector).replace(/\//g, "-");
@@ -101,7 +103,7 @@ Audit.View = Audit.View || {
             for (var i = 0; i < auditCriteria.length; i++) {
 
                 html += "<div class='col-sm-12 text-center' >"
-                        + "<h3>" + Acm.goodValue(auditCriteria[i].name)
+                        + "<h3>" + Acm.goodValue($.t(auditCriteria[i].name))
                         + "</h3>"
                         + "</div>";
 
@@ -111,29 +113,29 @@ Audit.View = Audit.View || {
 
                         if ("text" == field.type) {
 
-                            html+= "<label class='label col-sm-12'>" + Acm.goodValue(field.label) + "</label>"
+                            html+= "<label class='label col-sm-12'>" + Acm.goodValue($.t(field.label)) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<input type='text' class='form-control"
                             + "' id='" + Acm.goodValue(field.name)
                             + "' value='" + Acm.goodValue(field.value)
-                            + "' placeholder='" + Acm.goodValue(field.desc) + "'>"
+                            + "' placeholder='" + Acm.goodValue($.t(field.desc)) + "'>"
                             +"</div>";
 
                         }
                         else if ("dateRange" == field.type) {
 
-                            html+= "<label class='label col-sm-12'>" + "From" + "</label>"
+                            html+= "<label class='label col-sm-12'>" + $.t("audit:label.date-from") + "</label>"
                             + "<div class='col-sm-12'>"
-                            +"<input class='datepicker-input form-control' type='text' data-date-format='mm-dd-yyyy' placeholder='mm/dd/yyyy"
+                            +"<input class='datepicker-input form-control' type='text' data-i18n='[data-date-format;placeholder]common:date.datepicker'"
                             + "' id='" + Acm.goodValue(field.nameStartDate)
                             + "' value='" + Acm.goodValue(field.value)
                             + "' placeholder='" + Acm.goodValue(Acm.getCurrentDay())
                             + "' >"
                             +"</div>";
 
-                            html+= "<label class='label col-sm-12'>" + "To" + "</label>"
+                            html+= "<label class='label col-sm-12'>" + $.t("audit:label.date-to") + "</label>"
                             + "<div class='col-sm-12'>"
-                            +"<input class='datepicker-input form-control' type='text' data-date-format='mm-dd-yyyy' placeholder='mm/dd/yyyy"
+                            +"<input class='datepicker-input form-control' type='text' data-i18n='[data-date-format;placeholder]common:date.datepicker'"
                             + "' id='" + Acm.goodValue(field.nameEndDate)
                             + "' value='" + Acm.goodValue(field.value)
                             + "' placeholder='" + Acm.goodValue(Acm.getCurrentDay())
@@ -142,12 +144,12 @@ Audit.View = Audit.View || {
                         }
                         else if("select" == field.type) {
 
-                            html += "<label class='label col-sm-12'>" + Acm.goodValue(field.label) + "</label>"
+                            html += "<label class='label col-sm-12'>" + Acm.goodValue($.t(field.label)) + "</label>"
                             + "<div class='col-sm-12'>"
                             + "<select class='form-control"
                             + "' id='" + Acm.goodValue(field.name)
                             + "' value='" + Acm.goodValue(field.value)
-                            + "' placeholder='" + Acm.goodValue(field.desc)
+                            + "' placeholder='" + Acm.goodValue($.t(field.desc))
                             + "' >";
                             if (field.options) {
 
@@ -158,8 +160,8 @@ Audit.View = Audit.View || {
                                         html += " value='" + Acm.goodValue(option.value) + "'";
                                     }
                                     html += ">";
-                                    if (option.text) {
-                                        html += Acm.goodValue(option.text);
+                                    if ($.t(option.text)) {
+                                        html += Acm.goodValue($.t(option.text));
                                     }
                                     html += "</option>";
                                 }

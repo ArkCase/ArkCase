@@ -66,6 +66,7 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
     		folder.setName(name);
     		
     		container.setFolder(folder);
+    		container.setAttachmentFolder(folder);
     	}
     	
     	return container;

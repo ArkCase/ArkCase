@@ -11,9 +11,11 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
     
     <http:endpoint
-            name="pentaho-reports"
+            xml:id="http-pentaho-reports"
+            name="http-pentaho-reports"
     		address="http://#[payload]"
             doc:name="http-pentaho-reports"/>
+
 
     <flow name="getPentahoReports" doc:name="Get Reports from Pentaho server">
 
@@ -27,7 +29,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 
         <http:outbound-endpoint exchange-pattern="request-response" 
                                 method="GET"
-                                doc:name="Get Pentaho Reports" ref="pentaho-reports">
+                                doc:name="Get Pentaho Reports" ref="http-pentaho-reports">
             <response>
                 <object-to-string-transformer/>
             </response>
@@ -39,5 +41,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
         </catch-exception-strategy>
 
     </flow>
+
 
 </mule>

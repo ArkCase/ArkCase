@@ -19,7 +19,7 @@ Topbar.Model = {
 
     ,QuickSearch: {
         create: function() {
-            this._quickSearchTerm = new Acm.Model.SessionData("AcmQuickSearchTerm");
+            this._quickSearchTerm = new Acm.Model.SessionData(App.Model.Storage.SESSION_DATA_QUICK_SEARCH_TERM);
 
             Acm.Dispatcher.addEventListener(Topbar.Controller.QuickSearch.VIEW_CHANGED_QUICK_SEARCH_TERM, this.onViewChangedQuickSearchTerm);
         }
@@ -82,17 +82,26 @@ Topbar.Model = {
                 Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
             }
 
-            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
-            Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+            if (App.Model.Login.isLogin()) {
+                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+
+                // Get popup ASN without waiting for the timer when the page is loaded
+                Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+            }
         }
 
         ,_pullInterval: 16
         ,_rows: 5
         ,_pull: function(interval) {
-            Acm.Timer.registerListener("AsnWatch"
+            Acm.Timer.useTimer("AsnWatch"
                 ,interval
                 ,function() {
+                    if (!App.Model.Login.isLogin()) {
+                        return false;
+                    }
+
                     Topbar.Service.Asn.retrieveAsnList(App.getUserName(),Topbar.Model.Asn._rows);
+                    Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows);
                     return true;
                 }
             );
@@ -109,7 +118,7 @@ Topbar.Model = {
 
         ,OBJECT_TYPE      : "NOTIFICATION"
         ,SORT_ORDER       : "desc"
-        ,SORT_FIELD       : "create_tdt"
+        ,SORT_FIELD       : "create_date_tdt"
         ,STATUS_AUTO     : "Auto"
         ,STATUS_NEW      : "New"
         ,STATUS_UNMARKED : "Unmarked"

@@ -20,6 +20,12 @@
         <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
     </bean>
 
+    <bean id="searchNotificationsAPIController" class="com.armedia.acm.services.search.web.api.SearchNotificationsAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="searchEventPublisher" ref="acmSearchEventPublisher" />
+    </bean>
+
     <bean id="personSearchByNameAndContactMethodAPIController"
           class="com.armedia.acm.services.search.web.api.PersonSearchByNameAndContactMethodAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>

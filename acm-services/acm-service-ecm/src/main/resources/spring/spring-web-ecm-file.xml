@@ -11,11 +11,13 @@
     <bean id="fileDownloadAPIController" class="com.armedia.acm.plugins.ecm.web.api.FileDownloadAPIController">
         <property name="muleClient" ref="muleClient"/>
         <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     </bean>
 
     <bean id="documentUiController" class="com.armedia.acm.plugins.ecm.web.DocumentUiController">
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="fileService" ref="ecmFileService"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
     </bean>
 
     <bean id="folderListAPIController" class="com.armedia.acm.plugins.ecm.web.api.FolderListAPIController">
@@ -90,6 +92,14 @@
     <bean id="copyFolderAPIController" class="com.armedia.acm.plugins.ecm.web.api.CopyFolderAPIController">
         <property name="folderService" ref="acmFolderService"/>
         <property name="folderEventPublisher" ref="folderEventPublisher"/>
+    </bean>
+
+    <bean id="createFolderByPathAPIController" class="com.armedia.acm.plugins.ecm.web.api.CreateFolderByPathAPIController">
+        <property name="folderService" ref="acmFolderService"/>
+        <property name="folderEventPublisher" ref="folderEventPublisher"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="fileEventPublisher" ref="fileEventPublisher"/>
     </bean>
 
 </beans>

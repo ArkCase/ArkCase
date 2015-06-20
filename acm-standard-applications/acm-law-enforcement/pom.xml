@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-standard-applications</artifactId>
-        <version>3.0.25</version>
+        <version>3.0.26</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -221,16 +221,6 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-timesheet</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-costsheet</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-forms</groupId>
             <artifactId>acm-forms-roi</artifactId>
             <version>${acm.version}</version>
@@ -291,6 +281,30 @@
         </dependency>
         
         <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-ebrief</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-project</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-object-change-status</artifactId>
             <version>${acm.version}</version>
@@ -305,6 +319,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
             <artifactId>acm-ms-outlook-plugin</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-config</artifactId>
             <version>${acm.version}</version>
         </dependency>
         

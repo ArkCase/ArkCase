@@ -3,14 +3,22 @@
  */
 package com.armedia.acm.frevvo.config;
 
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.armedia.acm.form.config.FormUrl;
+import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 
 /**
@@ -20,29 +28,31 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 public class FrevvoFormUrl implements FormUrl {
 
 	private Logger LOG = LoggerFactory.getLogger(FrevvoFormUrl.class);
-	
-	public static final String SERVICE = "frevvo.service.baseUrl";
-	public static final String REDIRECT = "frevvo.browser.redirect.baseUrl";
-	public static final String HOST = "frevvo.host";
-	public static final String PORT = "frevvo.port";
-	public static final String URI = "frevvo.uri";
 
 	private Map<String, Object> properties;
+	private Properties plainFormProperties;
 	private AuthenticationTokenService authenticationTokenService;
 	
 	public String getBaseUrl() {
 		String url = "";
+
+		String protocol = getProtocol();
+		String host = getHost();
+		String port = getPort();
 		
-		String host = (String) properties.get(HOST);
-		String port = (String) properties.get(PORT);
+		if (protocol != null && !protocol.isEmpty()) {
+			url = url + protocol + "://";
+		}else {
+			LOG.error("Frevvo Protocol is not defined.");
+		}
 		
-		if (host != null) {
+		if (host != null && !host.isEmpty()) {
 			url = url + host;
 		}else {
 			LOG.error("Frevvo Host is not defined.");
 		}
 		
-		if (port != null && !"".equals(port)) {
+		if (port != null && !port.isEmpty()) {
 			url = url + ":" + port;
 		}else {
 			LOG.warn("Frevvo port number is not defined. Maybe is not needed.");
@@ -77,8 +87,8 @@ public class FrevvoFormUrl implements FormUrl {
 	}
 
 	@Override
-	public String getNewFormUrl(String formName) {
-		String uri = (String) properties.get(URI);
+	public String getNewFormUrl(String formName, boolean plain) {
+		String uri = (String) properties.get(FrevvoFormConstants.URI);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		if (uri == null) {
@@ -86,15 +96,16 @@ public class FrevvoFormUrl implements FormUrl {
 			LOG.error("Frevvo URI is not defined.");
 		}
 		
-		String tenant = (String) properties.get(formName + ".tenant");
-		String user = (String) properties.get(formName + ".user");
-		String applicationId = (String) properties.get(formName + ".application.id");
-		String type = (String) properties.get(formName + ".type");
-		String id = (String) properties.get(formName + ".id");
-		String mode = (String) properties.get(formName + ".mode");
+		String tenant = getTenant();
+		String user = getDesignerUser();
+		String applicationId = getApplicationId();
+		String type = plain == false ? (String) properties.get(formName + ".type") : (String) getPlainFormProperties().get(formName + ".type");
+		String mode = plain == false ? (String) properties.get(formName + ".mode") : (String) getPlainFormProperties().get(formName + ".mode");
 		String token = this.authenticationTokenService.getTokenForAuthentication(authentication);
-		String service = (String) properties.get(SERVICE);
-		String redirect = (String) properties.get(REDIRECT);
+		String service = (String) properties.get(FrevvoFormConstants.SERVICE);
+		String redirect = (String) properties.get(FrevvoFormConstants.REDIRECT);
+		String timezone = (String) properties.get(FrevvoFormConstants.TIMEZONE);
+		String locale = getLocale();
 		
 		if (tenant != null) {
 			uri = uri.replace("{tenant}", tenant);			
@@ -111,10 +122,6 @@ public class FrevvoFormUrl implements FormUrl {
 		if (type != null) {
 			uri = uri.replace("{type}", type);
 		}
-
-		if (id != null) {
-			uri = uri.replace("{id}", id);			
-		}
 		
 		if (mode != null) {
 			uri = uri.replace("{mode}", mode);			
@@ -130,6 +137,14 @@ public class FrevvoFormUrl implements FormUrl {
 		
 		if (redirect != null) {
 			uri = uri.replace("{frevvo_browser_redirect_baseUrl}", redirect);
+		}
+		
+		if (timezone != null) {
+			uri = uri.replace("{frevvo_timezone}", timezone);
+		}
+		
+		if (locale != null) {
+			uri = uri.replace("{frevvo_locale}", locale);
 		}
 		
 		String url = getBaseUrl() + uri; 
@@ -151,6 +166,214 @@ public class FrevvoFormUrl implements FormUrl {
         return enableFrevvoFormEngine;
     }
 	
+	private String getLocale()
+	{
+		String retval = "";
+		
+		String defaultLocale = (String) properties.get(FrevvoFormConstants.LOCALE);
+		String overwriteLocale = (String) properties.get(FrevvoFormConstants.LOCALE + ".overwrite");
+		
+		if (overwriteLocale != null && "true".equalsIgnoreCase(overwriteLocale))
+		{
+			HttpServletRequest request = getCurrentRequest();
+			
+			if (request != null)
+			{
+				Locale locale = request.getLocale();
+				if (locale != null && !"".equals((locale.toString())))
+				{
+					String language = locale.getLanguage() == null ? "" : locale.getLanguage();
+					String country = locale.getCountry() == null ? "" : locale.getCountry();
+					
+					retval = language + "_" + country;		
+				}
+			}
+		}
+
+		if ("".equals(retval) && defaultLocale != null)
+		{
+			retval = defaultLocale;
+		}
+		
+		return retval;
+	}
 	
+	public HttpServletRequest getCurrentRequest()
+	{
+		HttpServletRequest request = null;
+		
+		RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
+		
+		if (attrs instanceof ServletRequestAttributes)
+		{
+			request = ((ServletRequestAttributes) attrs).getRequest();
+		}
+		
+		return request;
+	}
+	
+	public String getTenant()
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.TENANT)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.TENANT);
+		}
+		
+		return null;
+	}
+	
+	public String getAdminUser()
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.ADMIN_USER)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.ADMIN_USER);
+		}
+		
+		return null;
+	}
+	
+	public String getAdminPassword()
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.ADMIN_PASSWORD)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.ADMIN_PASSWORD);
+		}
+		
+		return null;
+	}
+	
+	public String getDesignerUser()
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.DESIGNER_USER)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.DESIGNER_USER);
+		}
+		
+		return null;
+	}
+	
+	public String getApplicationId()
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.APPLICATION_ID)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.APPLICATION_ID);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getProtocol() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.PROTOCOL)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.PROTOCOL);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getHost() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.HOST)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.HOST);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getPort() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.PORT)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.PORT);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Integer getPortAsInteger() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.PORT)) 
+		{
+			String port = (String) getProperties().get(FrevvoFormConstants.PORT);
+			
+			try
+			{
+				return Integer.parseInt(port);
+			}
+			catch (Exception e)
+			{
+				LOG.warn("Cannot parse port=" + port + ". If empty, normal behaviour.");
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public String getInternalProtocol() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_PROTOCOL)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.INTERNAL_PROTOCOL);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getInternalHost() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_HOST)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.INTERNAL_HOST);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getInternalPort() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_PORT)) 
+		{
+			return (String) getProperties().get(FrevvoFormConstants.INTERNAL_PORT);
+		}
+		
+		return null;
+	}
+
+	@Override
+	public Integer getInternalPortAsInteger() 
+	{
+		if (getProperties() != null && getProperties().containsKey(FrevvoFormConstants.INTERNAL_PORT)) 
+		{
+			String port = (String) getProperties().get(FrevvoFormConstants.INTERNAL_PORT);
+			
+			try
+			{
+				return Integer.parseInt(port);
+			}
+			catch (Exception e)
+			{
+				LOG.warn("Cannot parse port=" + port + ". If empty, normal behaviour.");
+			}
+		}
+		
+		return null;
+	}
+
+	public Properties getPlainFormProperties() {
+		return plainFormProperties;
+	}
+
+	public void setPlainFormProperties(Properties plainFormProperties) {
+		this.plainFormProperties = plainFormProperties;
+	}
 
 }

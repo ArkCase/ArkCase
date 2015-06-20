@@ -24,8 +24,10 @@ import com.armedia.acm.plugins.complaint.service.ComplaintFactory;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.dao.PersonIdentificationDao;
@@ -45,12 +47,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.casefile.service.CaseFilePSFactory;
 import com.armedia.acm.form.cost.service.CostFactory;
 import com.armedia.acm.form.ebrief.service.EbriefFactory;
+import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFactory;
+import com.armedia.acm.form.project.service.ProjectFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
+import com.armedia.acm.frevvo.config.FrevvoService;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -58,6 +64,8 @@ import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.notification.dao.NotificationDao;
+import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
@@ -130,6 +138,22 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 	
 	private EbriefFactory ebriefFactory;
 	
+	private ProjectFactory projectFactory;
+	
+	private FolderAndFilesUtils folderAndFilesUtils;
+	private AcmFolderService acmFolderService;
+	
+	private FrevvoService frevvoService;
+	
+	private PlainConfigurationFormFactory plainConfigurationFormFactory;
+	
+	private String plainFormPropertiesLocation;
+	
+	private PropertyFileManager propertyFileManager;
+	
+	private NotificationDao notificationDao;
+	private NotificationEventPublisher notificationEventPublisher;
+	
 	@RequestMapping(value = "/{formName}/init")
     public void doInit(Authentication authentication, 
     		    		@PathVariable("formName") String formName,
@@ -176,7 +200,11 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 					response.getOutputStream().write(((String) result).getBytes(Charset.forName("UTF-8")));
 					response.getOutputStream().flush();			
 				}else if (result instanceof JSONObject){
-					response.addHeader("X-JSON", ((JSONObject) result).toString());
+					response.addHeader("X-JSON", result.toString());
+				}
+				else
+				{
+					LOG.warn("Unknown response type for action '" + action + "', response type is: " + result.getClass().getName());
 				}
 			}else{
 				LOG.warn("Empty response.");
@@ -575,5 +603,79 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
 	public void setEbriefFactory(EbriefFactory ebriefFactory) {
 		this.ebriefFactory = ebriefFactory;
+	}
+
+	public ProjectFactory getProjectFactory() {
+		return projectFactory;
+	}
+
+	public void setProjectFactory(ProjectFactory projectFactory) {
+		this.projectFactory = projectFactory;
+	}
+	
+	public FolderAndFilesUtils getFolderAndFilesUtils() {
+		return folderAndFilesUtils;
+	}
+
+	public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils) {
+		this.folderAndFilesUtils = folderAndFilesUtils;
+	}
+
+	public AcmFolderService getAcmFolderService() {
+		return acmFolderService;
+	}
+
+	public void setAcmFolderService(AcmFolderService acmFolderService) {
+		this.acmFolderService = acmFolderService;
+	}
+	
+	public FrevvoService getFrevvoService() {
+		return frevvoService;
+	}
+
+	public void setFrevvoService(FrevvoService frevvoService) {
+		this.frevvoService = frevvoService;
+	}
+
+	public PlainConfigurationFormFactory getPlainConfigurationFormFactory() {
+		return plainConfigurationFormFactory;
+	}
+
+	public void setPlainConfigurationFormFactory(
+			PlainConfigurationFormFactory plainConfigurationFormFactory) {
+		this.plainConfigurationFormFactory = plainConfigurationFormFactory;
+	}
+
+	public String getPlainFormPropertiesLocation() {
+		return plainFormPropertiesLocation;
+	}
+
+	public void setPlainFormPropertiesLocation(String plainFormPropertiesLocation) {
+		this.plainFormPropertiesLocation = plainFormPropertiesLocation;
+	}
+
+	public PropertyFileManager getPropertyFileManager() {
+		return propertyFileManager;
+	}
+
+	public void setPropertyFileManager(PropertyFileManager propertyFileManager) {
+		this.propertyFileManager = propertyFileManager;
+	}	
+	
+	public NotificationDao getNotificationDao() {
+		return notificationDao;
+	}
+
+	public void setNotificationDao(NotificationDao notificationDao) {
+		this.notificationDao = notificationDao;
+	}
+
+	public NotificationEventPublisher getNotificationEventPublisher() {
+		return notificationEventPublisher;
+	}
+
+	public void setNotificationEventPublisher(
+			NotificationEventPublisher notificationEventPublisher) {
+		this.notificationEventPublisher = notificationEventPublisher;
 	}
 }
