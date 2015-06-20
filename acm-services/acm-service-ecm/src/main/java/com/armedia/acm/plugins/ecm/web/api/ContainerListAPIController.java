@@ -34,6 +34,10 @@ public class ContainerListAPIController
             @PathVariable("objectId") Long objectId
     ) throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
+        /**
+         * This API is documented in ark-document-management.raml.  If you update the API, also update the RAML.
+         */
+
         // just to ensure a folder really exists
         AcmContainer container = getEcmFileService().getOrCreateContainer(objectType, objectId);
 

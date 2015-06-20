@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Delete Folder Results Schema",
+  "type": "object",
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "indicates the results of the delete operation"
+    },
+    "deletedFolderId": {
+      "type": "integer",
+      "description": "Object ID of the folder that was deleted",
+      "minimum": 1
+    }
+  },
+  "required": [ "message", "deletedFolderId" ]
+}

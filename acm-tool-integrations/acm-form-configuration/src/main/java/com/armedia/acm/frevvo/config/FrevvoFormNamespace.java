@@ -62,11 +62,31 @@ public class FrevvoFormNamespace {
 	/**
 	 * This is namespace for EbriefForm object while we creating XML
 	 * 
-	 * The namespace can be found on Frevvo Costsheet form schema. To access the schema,
+	 * The namespace can be found on Frevvo eBrief form schema. To access the schema,
 	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
 	 * press button "Schema" button under "eBrief" form. The "EBrief.xsd" schema will be downloaded.
 	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
 	 */
-	public static final String EBRIEF_NAMESPACE = "http://www.frevvo.com/schemas/_L9-uIO-DEeS84usjR3uNRQ";
+	public static final String EBRIEF_NAMESPACE = "http://www.frevvo.com/schemas/_rb7bAALEEeWyppOohoLd5A";
+	
+	/**
+	 * This is namespace for ProjectForm object while we creating XML
+	 * 
+	 * The namespace can be found on Frevvo Project form schema. To access the schema,
+	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
+	 * press button "Schema" button under "Project" form. The "Project.xsd" schema will be downloaded.
+	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
+	 */
+	public static final String PROJECT_NAMESPACE = "http://www.frevvo.com/schemas/_wrtuYPoYEeSwvupLu0BE2g";
+	
+	/**
+	 * This is namespace for PlainConfigurationForm object while we creating XML
+	 * 
+	 * The namespace can be found on Frevvo Plain Configuration form schema. To access the schema,
+	 * login to Frevvo, press "Edit" button under "ACM - Armedia Case Management" application,
+	 * press button "Schema" button under "Plain Configuration" form. The "PlainConfiguration.xsd" schema will be downloaded.
+	 * Open it and find "targetNamespace" or "xmlns" value in the first tag "<xsd:schema ...>"
+	 */
+	public static final String PLAIN_CONFIGURATION_NAMESPACE = "http://www.frevvo.com/schemas/_e5-gwAkvEeWTa_9lG6es1A";
 	
 }

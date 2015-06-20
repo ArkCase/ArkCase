@@ -397,5 +397,10 @@ Complaint.Controller = Complaint.Controller || {
     ,viewRefreshedOutlookCalendar: function(complaintId){
         Acm.Dispatcher.fireEvent(this.VIEW_REFRESHED_OUTLOOK_CALENDAR, complaintId);
     }
+    
+    ,MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS : "complaint-model-documents-retrieved-plain-forms"
+    ,modelDocumentsRetrievedPlainForms: function(plainForms){
+        Acm.Dispatcher.fireEvent(this.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, plainForms);
+    }
 };
 

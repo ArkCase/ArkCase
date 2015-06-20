@@ -10,5 +10,6 @@ package com.armedia.acm.form.ebrief.model;
 public interface EbriefConstants {
 
 	public static final String EBRIEF = "eBrief";
+	public static final String DEFENDANT = "Defendant";
 	
 }

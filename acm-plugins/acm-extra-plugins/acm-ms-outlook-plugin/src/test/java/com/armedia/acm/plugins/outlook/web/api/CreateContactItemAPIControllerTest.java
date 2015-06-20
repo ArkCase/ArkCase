@@ -1,13 +1,12 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
-import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.OutlookDTO;
+import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.easymock.Capture;
@@ -57,14 +56,14 @@ public class CreateContactItemAPIControllerTest extends EasyMockSupport {
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
     private OutlookService outlookService;
-    private UserOrgDao userOrgDao;
+    private UserOrgService userOrgService;
 
     @Before
     public void setup() {
         outlookService = createMock(OutlookService.class);
-        userOrgDao = createMock(UserOrgDao.class);
+        userOrgService = createMock(UserOrgService.class);
         mockAuthentication = createMock(Authentication.class);
-        createContactItemAPIController.setUserOrgDao(userOrgDao);
+        createContactItemAPIController.setUserOrgService(userOrgService);
         createContactItemAPIController.setOutlookService(outlookService);
         this.mockMvc = MockMvcBuilders.standaloneSetup(createContactItemAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -88,7 +87,7 @@ public class CreateContactItemAPIControllerTest extends EasyMockSupport {
         expect(mockAuthentication.getName()).andReturn("user").times(2);
         OutlookDTO password = new OutlookDTO();
         password.setOutlookPassword("outlookPassword");
-        expect(userOrgDao.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
+        expect(userOrgService.retrieveOutlookPassword(mockAuthentication)).andReturn(password);
         AcmUser user = new AcmUser();
         user.setMail("test@armedia.com");
         session.setAttribute("acm_user", user);

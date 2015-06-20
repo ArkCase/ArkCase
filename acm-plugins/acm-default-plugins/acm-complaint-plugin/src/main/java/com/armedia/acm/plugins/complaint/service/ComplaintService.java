@@ -14,7 +14,6 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -149,24 +148,16 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         
         getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
 
-        complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint);
+        complaint = getComplaintFactory().asFrevvoComplaint(acmComplaint, complaint);
 
         return complaint;
     }
     
-    public void updateXML(Complaint complaint, Authentication auth)
-    {
-    	if (complaint != null)
-    	{
-    		ComplaintForm form = getComplaintFactory().asFrevvoComplaint(complaint);
-    		
-    		if (form != null)
-    		{
-    			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId(), auth);		
-    		}
-    	}
-    }
+    @Override
+	public Object convertToFrevvoForm(Object obj, Object form)
+	{
+    	return getComplaintFactory().asFrevvoComplaint((Complaint) obj, (ComplaintForm) form);
+	}
 	
 	private JSONObject initFormData(){		
 		// Initiator, People and Incident initialization

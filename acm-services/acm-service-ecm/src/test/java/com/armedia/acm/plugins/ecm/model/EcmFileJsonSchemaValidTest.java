@@ -40,6 +40,43 @@ public class EcmFileJsonSchemaValidTest
         validate("/jsonSchemas/folder-list-schema.json");
     }
 
+    @Test
+    public void validateCopyFileDtoSchema() throws Exception
+    {
+        validate("/jsonSchemas/copy-file-dto-schema.json");
+    }
+
+    @Test
+    public void validateFolderSchema() throws Exception
+    {
+        validate("/jsonSchemas/folder-schema.json");
+    }
+
+    @Test
+    public void validateMoveCopyFileRequestSchema() throws Exception
+    {
+        validate("/jsonSchemas/move-copy-file-schema.json");
+    }
+
+    @Test
+    public void validateCopyFolderDtoSchema() throws Exception
+    {
+        validate("/jsonSchemas/copy-folder-dto-schema.json");
+    }
+
+    @Test
+    public void deleteFileResultsSchema() throws Exception
+    {
+        validate("/jsonSchemas/delete-file-results-schema.json");
+    }
+
+    @Test
+    public void deleteFolderResultsSchema() throws Exception
+    {
+        validate("/jsonSchemas/delete-folder-results-schema.json");
+    }
+
+
     private void validate(String path) throws IOException, ProcessingException
     {
         Resource schemaResource = new ClassPathResource(path);

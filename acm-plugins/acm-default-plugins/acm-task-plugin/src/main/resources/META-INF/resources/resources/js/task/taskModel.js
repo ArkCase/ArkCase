@@ -18,6 +18,8 @@ Task.Model = Task.Model || {
         //if (Task.Model.Attachments.create)                          {Task.Model.Attachments.create();}
         if (Task.Model.DocumentUnderReview.create)                  {Task.Model.DocumentUnderReview.create();}
         if (Task.Model.RejectComments.create)                       {Task.Model.RejectComments.create();}
+        if (Task.Model.ElectronicSignature.create)                       {Task.Model.ElectronicSignature.create();}
+
     }
     ,onInitialized: function() {
         if (Task.Service.onInitialized)                             {Task.Service.onInitialized();}
@@ -33,9 +35,11 @@ Task.Model = Task.Model || {
         //if (Task.Model.Attachments.onInitialized)                   {Task.Model.Attachments.onInitialized();}
         if (Task.Model.DocumentUnderReview.onInitialized)           {Task.Model.DocumentUnderReview.onInitialized();}
         if (Task.Model.RejectComments.onInitialized)                {Task.Model.RejectComments.onInitialized();}
-    }
+        if (Task.Model.ElectronicSignature.onInitialized)                       {Task.Model.ElectronicSignature.onInitialized();}
 
-    ,interface: {
+        }
+
+    ,interfaceNavObj: {
         apiListObjects: function() {
             return "/api/latest/plugin/search/TASK";
         }
@@ -52,24 +56,8 @@ Task.Model = Task.Model || {
         ,nodeType: function(objSolr) {
             return (objSolr.adhocTask_b)? Task.Model.DOC_TYPE_ADHOC_TASK : Task.Model.DOC_TYPE_TASK;
         }
-        ,nodeTitle: function(objSolr) {
-            var title;
-            if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s) && Acm.isNotEmpty(objSolr.due_tdt)){
-                title = Acm.getDateFromDatetime(objSolr.due_tdt) + ", " + objSolr.priority_s +", "+ objSolr.name;
-            }
-            else if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s)){
-                title = objSolr.priority_s +", "+ objSolr.name;
-            }
-            else if(Acm.isNotEmpty(objSolr.name)){
-                title = objSolr.name;
-            }
-            else{
-                title = "(No title)";
-            }
-            return title;
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
+        ,nodeTypeSupported: function(nodeType) {
+            return (Task.Model.DOC_TYPE_TASK == nodeType || Task.Model.DOC_TYPE_ADHOC_TASK == nodeType);
         }
         ,objToSolr: function(objData) {
             var solr = {};
@@ -87,9 +75,9 @@ Task.Model = Task.Model || {
         ,validateObjData: function(data) {
             return Task.Model.Detail.validateTask(data);
         }
-        ,nodeTypeMap: function() {
-            return Task.Model.Tree.Key.nodeTypeMap;
-        }
+//        ,nodeTypeMap: function() {
+//            return Task.Model.Tree.Key.nodeTypeMap;
+//        }
     }
 
 
@@ -118,8 +106,8 @@ Task.Model = Task.Model || {
 
     ,Lookup: {
         create: function() {
-            this._assignees    = new Acm.Model.SessionData(Application.SESSION_DATA_TASK_ASSIGNEES);
-            this._priorities   = new Acm.Model.SessionData(Application.SESSION_DATA_TASK_PRIORITIES);
+            this._assignees    = new Acm.Model.SessionData(ThisApp.SESSION_DATA_TASK_ASSIGNEES);
+            this._priorities   = new Acm.Model.SessionData(ThisApp.SESSION_DATA_TASK_PRIORITIES);
         }
         ,onInitialized: function() {
             var assignees = Task.Model.Lookup.getAssignees();
@@ -193,42 +181,49 @@ Task.Model = Task.Model || {
             ,NODE_TYPE_PART_DOCUMENTS    : "doc"
             ,NODE_TYPE_PART_REWORK       : "rewk"
             ,NODE_TYPE_PART_REJECT       : "rej"
+            ,NODE_TYPE_PART_SIGNATURE    : "sig"
 
-            ,nodeTypeMap: [
-                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/TASK"     ,icon: "i i-checkmark"    ,tabIds:
-                    ["tabDetails"
-                        ,"tabDocuments"
-                        ,"tabNotes"
-                        ,"tabHistory"
-                        ,"tabReworkInstructions"
-                        ,"tabWorkflowOverview"
-                        ,"tabAttachments"
-                    ]}
-                ,{nodeType: "p/ADHOC"     ,icon: "i i-checkmark"    ,tabIds:
-                    ["tabDetails"
-                        ,"tabNotes"
-                        ,"tabHistory"
-                        ,"tabRejectComments"
-                        ,"tabWorkflowOverview"
-                        ,"tabAttachments"
-                    ]}
-                ,{nodeType: "p/TASK/det"      ,icon: "",tabIds: ["tabDetails"]}
-                ,{nodeType: "p/TASK/note"     ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/TASK/his"      ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/TASK/wkfl"     ,icon: "",tabIds: ["tabWorkflowOverview"]}
-                ,{nodeType: "p/TASK/att"      ,icon: "",tabIds: ["tabAttachments"]}
-                ,{nodeType: "p/TASK/doc"      ,icon: "",tabIds: ["tabDocuments"]}
-                ,{nodeType: "p/TASK/rewk"     ,icon: "",tabIds: ["tabReworkInstructions"]}
-                ,{nodeType: "p/ADHOC/det"     ,icon: "",tabIds: ["tabDetails"]}
-                ,{nodeType: "p/ADHOC/note"    ,icon: "",tabIds: ["tabNotes"]}
-                ,{nodeType: "p/ADHOC/his"     ,icon: "",tabIds: ["tabHistory"]}
-                ,{nodeType: "p/ADHOC/wkfl"    ,icon: "",tabIds: ["tabWorkflowOverview"]}
-                ,{nodeType: "p/ADHOC/att"     ,icon: "",tabIds: ["tabAttachments"]}
-                ,{nodeType: "p/ADHOC/rej"     ,icon: "",tabIds: ["tabRejectComments"]}
-            ]
+//            ,nodeTypeMap: [
+//                {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
+//                ,{nodeType: "p/TASK"     ,icon: "i i-checkmark"    ,tabIds:
+//                    ["tabDetails"
+//                        ,"tabDocuments"
+//                        ,"tabNotes"
+//                        ,"tabHistory"
+//                        ,"tabReworkInstructions"
+//                        ,"tabWorkflowOverview"
+//                        ,"tabAttachments"
+//                        ,"tabSignature"
+//                    ]}
+//                ,{nodeType: "p/ADHOC"     ,icon: "i i-checkmark"    ,tabIds:
+//                    ["tabDetails"
+//                        ,"tabNotes"
+//                        ,"tabHistory"
+//                        ,"tabRejectComments"
+//                        ,"tabWorkflowOverview"
+//                        ,"tabAttachments"
+//                        ,"tabSignature"
+//
+//                    ]}
+//                ,{nodeType: "p/TASK/det"      ,icon: "",tabIds: ["tabDetails"]}
+//                ,{nodeType: "p/TASK/note"     ,icon: "",tabIds: ["tabNotes"]}
+//                ,{nodeType: "p/TASK/his"      ,icon: "",tabIds: ["tabHistory"]}
+//                ,{nodeType: "p/TASK/wkfl"     ,icon: "",tabIds: ["tabWorkflowOverview"]}
+//                ,{nodeType: "p/TASK/att"      ,icon: "",tabIds: ["tabAttachments"]}
+//                ,{nodeType: "p/TASK/doc"      ,icon: "",tabIds: ["tabDocuments"]}
+//                ,{nodeType: "p/TASK/rewk"     ,icon: "",tabIds: ["tabReworkInstructions"]}
+//                ,{nodeType: "p/TASK/sig"      ,icon: "",tabIds: ["tabSignature"]}
+//                ,{nodeType: "p/ADHOC/det"     ,icon: "",tabIds: ["tabDetails"]}
+//                ,{nodeType: "p/ADHOC/note"    ,icon: "",tabIds: ["tabNotes"]}
+//                ,{nodeType: "p/ADHOC/his"     ,icon: "",tabIds: ["tabHistory"]}
+//                ,{nodeType: "p/ADHOC/wkfl"    ,icon: "",tabIds: ["tabWorkflowOverview"]}
+//                ,{nodeType: "p/ADHOC/att"     ,icon: "",tabIds: ["tabAttachments"]}
+//                ,{nodeType: "p/ADHOC/rej"     ,icon: "",tabIds: ["tabRejectComments"]}
+//                ,{nodeType: "p/ADHOC/sig"     ,icon: "",tabIds: ["tabSignature"]}
+//
+//            ]
         }
     }
 
@@ -390,8 +385,13 @@ Task.Model = Task.Model || {
             Acm.Dispatcher.addEventListener(Task.Controller.VIEW_COMPLETED_TASK                , this.onViewCompletedTask);
             Acm.Dispatcher.addEventListener(Task.Controller.VIEW_DELETED_TASK                  , this.onViewDeletedTask);
             Acm.Dispatcher.addEventListener(Task.Controller.VIEW_RETRIEVED_USERS               , this.onViewRetrievedUsers);
+            Acm.Dispatcher.addEventListener(Task.Controller.VIEW_SIGNED_TASK                   , this.onViewSignedTask);
+
         }
         ,onInitialized: function() {
+        }
+        ,onViewSignedTask: function(taskId, $formSignature){
+            Task.Service.Detail.signTask(taskId, $formSignature);
         }
         ,onViewRetrievedUsers: function(start, n, sortDirection, searchKeyword, exclude){
             Task.Service.Detail.retrieveUsers(start, n, sortDirection, searchKeyword, exclude);
@@ -804,5 +804,43 @@ Task.Model = Task.Model || {
 
     }
 
+    ,ElectronicSignature: {
+        create : function() {
+            this.cacheElectronicSignatures = new Acm.Model.CacheFifo();
+
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
+
+        }
+        ,onInitialized: function() {
+        }
+
+        ,onModelRetrievedObject: function(){
+            Task.Service.ElectronicSignature.retrieveSignatures(ObjNav.Model.getObjectId());
+        }
+        ,validateElectronicSignatures: function(data) {
+            if (Acm.isArrayEmpty(data)) {
+                return false;
+            }
+            return true;
+        }
+        ,validateElectronicSignature: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.objectId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.signatureId)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.signedBy)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.signedDate)) {
+                return false;
+            }
+            return true;
+        }
+    }
 };
 

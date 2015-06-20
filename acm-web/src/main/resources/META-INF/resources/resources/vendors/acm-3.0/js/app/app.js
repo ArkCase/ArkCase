@@ -4,24 +4,44 @@
  * @author jwu
  */
 var App = App || {
-    create : function() {
+    prepare : function() {
+        if (App.Model.prepare)             App.Model.prepare();
+    }
+    ,create : function() {
         if (App.Controller.create)         App.Controller.create();
         if (App.Model.create)              App.Model.create();
         if (App.View.create)               App.View.create();
 
-        this.create_old();
+        //this.create_old();
     }
     ,onInitialized: function() {
         if (App.Controller.onInitialized)  App.Controller.onInitialized();
         if (App.Model.onInitialized)       App.Model.onInitialized();
         if (App.View.onInitialized)        App.View.onInitialized();
     }
+    ,config: function() {
+        App.Model.Config.request();
+    }
+
+    ,_context: null
+    ,getPageContext: function() {
+        if (Acm.isNotEmpty(this._context)) {
+            return this._context;
+        }
+
+        var context = {};
+        context.path = App.getContextPath();
+        context.resourceNamespace = Acm.Object.MicroData.get("resourceNamespace");
+
+        this._context = context;
+        return context;
+    }
 
     ,getContextPath: function() {
-        return App.View.MicroData.contextPath;
+        return Acm.Object.MicroData.get("contextPath");
     }
     ,getUserName: function() {
-        return App.View.MicroData.userName;
+        return Acm.Object.MicroData.get("userName");
     }
 
     ,buildObjectUrl : function(objectType, objectId, defaultUrl) {
@@ -40,67 +60,16 @@ var App = App || {
         window.location.href = App.getContextPath() + url;
     }
 
-
-    ,create_old : function() {
-        App.Object.create();
-        App.Event.create();
-        App.Service.create();
-        App.Callback.create();
-
-        Acm.deferred(App.Event.onPostInit);
-    }
-
-    ,OBJTYPE_CASE:        "CASE_FILE"
-    ,OBJTYPE_COMPLAINT:   "COMPLAINT"
-    ,OBJTYPE_TASK:        "TASK"
-    ,OBJTYPE_DOCUMENT:    "DOCUMENT"
-    ,OBJTYPE_PEOPLE:    "PEOPLE"
-    ,OBJTYPE_PERSON:    "PERSON"
-    ,OBJTYPE_BUSINESS_PROCESS: "BUSINESS_PROCESS"
-    ,OBJTYPE_TIMESHEET:        "TIMESHEET"
-    ,OBJTYPE_COSTSHEET:        "COSTSHEET"
-
-
-    //fix me: make it plugin independent
-    ,getComplaintTreeInfo: function() {
-        var data = sessionStorage.getItem("AcmComplaintTreeInfo");
-        if (Acm.isEmpty(data)) {
-            return null;
+    ,checkConfig: function(context) {
+        var promise = $.when();
+        if (Acm.isEmpty(context.loginPage)) {
+            promise = App.Model.Config.resolveConfig();
         }
-        return JSON.parse(data);
+        return promise;
     }
-    ,setComplaintTreeInfo: function(treeInfo) {
-        var data = (Acm.isEmpty(treeInfo))? null : JSON.stringify(treeInfo);
-        sessionStorage.setItem("AcmComplaintTreeInfo", data);
+    ,initI18n: function(context) {
+        return App.Model.I18n.init(context);
     }
-
-
-    ,getContextPath_old: function() {
-        return App.Object.getContextPath();
-    }
-    ,getUserName_old: function() {
-        return App.Object.getUserName();
-    }
-    ,buildObjectUrl_old : function(objectType, objectId)
-    {
-        var url = App.getContextPath();
-        if (App.OBJTYPE_CASE == objectType) {
-            url += "/plugin/casefile/" + objectId;
-        } else if (App.OBJTYPE_COMPLAINT == objectType) {
-            url += "/plugin/complaint/" + objectId;
-        } else if (App.OBJTYPE_TASK == objectType) {
-            url += "/plugin/task/" + objectId;
-        } else if (App.OBJTYPE_DOCUMENT == objectType) {
-            url += "/plugin/document/" + objectId;
-        } else if (App.OBJTYPE_PEOPLE == objectType) {
-            url += "/plugin/people/" + objectId;
-        }else if (App.OBJTYPE_PERSON == objectType) {
-            url += "/plugin/person/" + objectId;
-        }
-
-        return url;
-    }
-
 
 };
 

@@ -3,7 +3,7 @@ package com.armedia.acm.service.outlook.exception;
 /**
  * Created by nebojsha on 04.05.2015.
  */
-public class AcmOutlookItemNotFoundException extends Exception {
+public class AcmOutlookItemNotFoundException extends AcmOutlookException {
     public AcmOutlookItemNotFoundException() {
     }
 

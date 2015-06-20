@@ -5,16 +5,19 @@ import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +31,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_complaint")
-public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
+public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -481,11 +484,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity
         this.restricted = restricted;
     }
 
+    @Override
     public AcmContainer getContainer()
     {
         return container;
     }
 
+    @Override
     public void setContainer(AcmContainer container)
     {
         if ( container != null )

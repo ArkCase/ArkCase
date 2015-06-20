@@ -183,4 +183,5 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile>
         nextDate = cal.getTime();
         return nextDate;
     }
+
 }

@@ -22,6 +22,7 @@ import java.util.List;
 public interface EcmFileService
 {
     EcmFile upload(
+            String originalFileName,
             String fileType,
             String fileCategory,
             InputStream fileContents,
@@ -45,6 +46,7 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
+            String originalFileName,
             String fileType,
             MultipartFile file,
             Authentication authentication,
@@ -102,6 +104,8 @@ public interface EcmFileService
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
+    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+
     void deleteFile(Long fileId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile renameFile(Long fileId, String newFileName) throws AcmUserActionFailedException, AcmObjectNotFoundException;
@@ -111,4 +115,6 @@ public interface EcmFileService
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
 
     EcmFile setFilesActiveVersion(Long fileId,String versionTag) throws PersistenceException;
+
+    EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 }

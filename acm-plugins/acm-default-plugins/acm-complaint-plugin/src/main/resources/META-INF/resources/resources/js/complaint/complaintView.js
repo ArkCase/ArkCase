@@ -18,7 +18,6 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.create)       {Complaint.View.Participants.create();}
         if (Complaint.View.Location.create)           {Complaint.View.Location.create();}
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
-        if (Complaint.View.OutlookCalendar.create)    {Complaint.View.OutlookCalendar.create();}
         if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
         if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
     }
@@ -36,7 +35,6 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.Participants.onInitialized)   {Complaint.View.Participants.onInitialized();}
         if (Complaint.View.Location.onInitialized)       {Complaint.View.Location.onInitialized();}
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
-        if (Complaint.View.OutlookCalendar.onInitialized) {Complaint.View.OutlookCalendar.onInitialized();}
         if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
         if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
     }
@@ -64,8 +62,6 @@ Complaint.View = Complaint.View || {
             this.formUrls = {};
             this.formUrls.closeComplaintFormUrl          = Acm.Object.MicroData.get("closeComplaintFormUrl");
             this.formUrls.editCloseComplaintFormUrl      = Acm.Object.MicroData.get("editCloseComplaintFormUrl");
-            this.formUrls.roiFormUrl                     = Acm.Object.MicroData.get("roiFormUrl");
-            this.formUrls.electronicCommunicationFormUrl = Acm.Object.MicroData.get("electronicCommunicationFormUrl");
 
             var formDocuments = Acm.Object.MicroData.getJson("formDocuments");
             var mapDocForms = {};
@@ -78,34 +74,22 @@ Complaint.View = Complaint.View || {
                 }
             }
             this.fileTypes = Acm.Object.MicroData.getJson("fileTypes");
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    var form = this.fileTypes[i].form;
-                    if (Acm.isNotEmpty(form)) {
-                        this.fileTypes[i].url = Acm.goodValue(this.formUrls[form]);
-                        var formDocument = mapDocForms[form];
-                        if (formDocument) {
-                            this.fileTypes[i].label = Acm.goodValue(formDocument.label);
-                        }
-                    }
-                }
-            }
-
         }
         ,onInitialized: function() {
+        	
         }
+    }
 
-        ,findFileTypeByType: function(type) {
-            var ft = null;
-            if (Acm.isArray(this.fileTypes)) {
-                for (var i = 0; i < this.fileTypes.length; i++) {
-                    if (type == this.fileTypes[i].type) {
-                        ft = this.fileTypes[i];
-                        break;
-                    }
-                }
-            }
-            return ft;
+
+    ,interfaceNavObj: {
+        nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.title_parseable);
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeTypeMap: function() {
+            return Complaint.View.Navigator.nodeTypeMap;
         }
     }
 
@@ -128,71 +112,107 @@ Complaint.View = Complaint.View || {
             }
         }
 
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"            ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"           ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"                  ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/COMPLAINT"        ,icon: "i i-notice"
+                ,tabIds: ["tabAction"
+                    ,"tabDetail"
+                    ,"tabLocation"
+                    ,"tabInitiator"
+                    ,"tabPeople"
+                    ,"tabNotes"
+                    ,"tabDocuments"
+                    ,"tabTasks"
+                    ,"tabRefs"
+                    ,"tabParticipants"
+                    ,"tabHistory"
+                    ,"tabTime"
+                    ,"tabCost"
+                    ,"tabOutlookCalendar"
+                ]}
+            ,{nodeType: "p/COMPLAINT/det"      ,icon: "" ,res: "complaint:navigation.leaf-title.details"      ,tabIds: ["tabDetail"]}
+            ,{nodeType: "p/COMPLAINT/loc"      ,icon: "" ,res: "complaint:navigation.leaf-title.location"     ,tabIds: ["tabLocation"]}
+            ,{nodeType: "p/COMPLAINT/ppl"      ,icon: "" ,res: "complaint:navigation.leaf-title.people"       ,tabIds: ["tabPeople"]}
+            ,{nodeType: "p/COMPLAINT/doc"      ,icon: "" ,res: "complaint:navigation.leaf-title.documents"    ,tabIds: ["tabDocuments"]}
+            ,{nodeType: "p/COMPLAINT/task"     ,icon: "" ,res: "complaint:navigation.leaf-title.tasks"        ,tabIds: ["tabTasks"]}
+            ,{nodeType: "p/COMPLAINT/note"     ,icon: "" ,res: "complaint:navigation.leaf-title.notes"        ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/COMPLAINT/part"     ,icon: "" ,res: "complaint:navigation.leaf-title.participants" ,tabIds: ["tabParticipants"]}
+            ,{nodeType: "p/COMPLAINT/ref"      ,icon: "" ,res: "complaint:navigation.leaf-title.references"   ,tabIds: ["tabRefs"]}
+            ,{nodeType: "p/COMPLAINT/his"      ,icon: "" ,res: "complaint:navigation.leaf-title.history"      ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/COMPLAINT/calendar" ,icon: "" ,res: "complaint:navigation.leaf-title.calendar"     ,tabIds: ["tabOutlookCalendar"]}
+            ,{nodeType: "p/COMPLAINT/time"     ,icon: "" ,res: "complaint:navigation.leaf-title.time"         ,tabIds: ["tabTime"]}
+            ,{nodeType: "p/COMPLAINT/cost"     ,icon: "" ,res: "complaint:navigation.leaf-title.cost"         ,tabIds: ["tabCost"]}
+        ]
+
         ,getTreeArgs: function() {
             return {
-                lazyLoad: function(event, data) {
-                    Complaint.View.Navigator.lazyLoad(event, data);
-                }
-                ,getContextMenu: function(node) {
+//                lazyLoad: function(event, data) {
+//                    Complaint.View.Navigator.lazyLoad(event, data);
+//                }
+//                ,
+                getContextMenu: function(node) {
                     Complaint.View.Navigator.getContextMenu(node);
                 }
             };
         }
-        ,lazyLoad: function(event, data) {
-            var key = data.node.key;
-            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            switch (nodeType) {
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Complaint.Model.DOC_TYPE_COMPLAINT]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("complaint:navigation.leaf-title.details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_LOCATION
-                            ,title: $.t("complaint:navigation.leaf-title.location")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
-                            ,title: $.t("complaint:navigation.leaf-title.people")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: $.t("complaint:navigation.leaf-title.documents")
-//                            ,folder: true
-//                            ,lazy: true
-//                            ,cache: false
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
-                            ,title: $.t("complaint:navigation.leaf-title.tasks")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("complaint:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
-                            ,title: $.t("complaint:navigation.leaf-title.participants")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
-                            ,title: $.t("complaint:navigation.leaf-title.references")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("complaint:navigation.leaf-title.history")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
-                            ,title: $.t("complaint:navigation.leaf-title.calendar")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
-                            ,title: $.t("complaint:navigation.leaf-title.time")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_COST
-                            ,title: $.t("complaint:navigation.leaf-title.cost")
-                        })
-                        .getTree();
-
-                    break;
-
-                default:
-                    data.result = [];
-                    break;
-            }
-        }
+//retired
+//        ,lazyLoad: function(event, data) {
+//            var key = data.node.key;
+//            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+//            switch (nodeType) {
+//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Complaint.Model.DOC_TYPE_COMPLAINT]):
+//                    data.result = AcmEx.FancyTreeBuilder
+//                        .reset()
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+//                            ,title: $.t("complaint:navigation.leaf-title.details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_LOCATION
+//                            ,title: $.t("complaint:navigation.leaf-title.location")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PEOPLE
+//                            ,title: $.t("complaint:navigation.leaf-title.people")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
+//                            ,title: $.t("complaint:navigation.leaf-title.documents")
+////                            ,folder: true
+////                            ,lazy: true
+////                            ,cache: false
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TASKS
+//                            ,title: $.t("complaint:navigation.leaf-title.tasks")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_NOTES
+//                            ,title: $.t("complaint:navigation.leaf-title.notes")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_PARTICIPANTS
+//                            ,title: $.t("complaint:navigation.leaf-title.participants")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_REFERENCES
+//                            ,title: $.t("complaint:navigation.leaf-title.references")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+//                            ,title: $.t("complaint:navigation.leaf-title.history")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_CALENDAR
+//                            ,title: $.t("complaint:navigation.leaf-title.calendar")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_TIME
+//                            ,title: $.t("complaint:navigation.leaf-title.time")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Complaint.Model.Tree.Key.NODE_TYPE_PART_COST
+//                            ,title: $.t("complaint:navigation.leaf-title.cost")
+//                        })
+//                        .getTree();
+//
+//                    break;
+//
+//                default:
+//                    data.result = [];
+//                    break;
+//            }
+//        }
 
         ,getContextMenu: function(node) {
             var key = node.key;
@@ -480,13 +500,13 @@ Complaint.View = Complaint.View || {
         }
 
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
+            App.View.Dirty.declare($.t("complaint:detail.dirty-editing-detail"));
             Complaint.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Complaint.View.Detail.saveDivDetail();
             Complaint.Controller.viewChangedDetail(Complaint.View.getActiveComplaintId(), htmlDetail);
-            App.Object.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
+            App.View.Dirty.clear($.t("complaint:detail.dirty-editing-detail"));
         }
 
 
@@ -500,7 +520,8 @@ Complaint.View = Complaint.View || {
 
                 this.setTextLnkComplaintTitle(Acm.goodValue(c.complaintTitle));
                 this.setTextLabComplaintNumber(Acm.goodValue(c.complaintNumber));
-                this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                //this.setTextLnkIncidentDate(Acm.getDateFromDatetime(c.incidentDate));
+                this.setTextLnkIncidentDate(Acm.getDateFromDatetime2(c.incidentDate,$.t("common:date.short")));
                 this.setTextLnkComplaintType(Acm.goodValue(c.complaintType));
                 this.setTextLnkPriority(Acm.goodValue(c.priority));
                 this.setTextLnkStatus("  (" + Acm.goodValue(c.status) +")");
@@ -868,7 +889,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(contactMethods[i].id, 0)
                                                 ,type    : Acm.goodValue(contactMethods[i].type)
                                                 ,value   : Acm.goodValue(contactMethods[i].value)
-                                                ,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                //,created : Acm.getDateFromDatetime(contactMethods[i].created)
+                                                ,created : Acm.getDateFromDatetime2(contactMethods[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(contactMethods[i].creator)
                                             });
                                         }
@@ -1033,7 +1055,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(securityTags[i].id, 0)
                                                 ,type    : Acm.goodValue(securityTags[i].type)
                                                 ,value   : Acm.goodValue(securityTags[i].value)
-                                                ,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                //,created : Acm.getDateFromDatetime(securityTags[i].created)
+                                                ,created : Acm.getDateFromDatetime2(securityTags[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(securityTags[i].creator)
                                             });
                                         }
@@ -1190,7 +1213,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(organizations[i].organizationId, 0)
                                                 ,type    : Acm.goodValue(organizations[i].organizationType)
                                                 ,value   : Acm.goodValue(organizations[i].organizationValue)
-                                                ,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                //,created : Acm.getDateFromDatetime(organizations[i].created)
+                                                ,created : Acm.getDateFromDatetime2(organizations[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(organizations[i].creator)
                                             });
                                         }
@@ -1325,7 +1349,7 @@ Complaint.View = Complaint.View || {
                     ,sorting: true //fix me
                     ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
-                        addNewRecord: $.t("complaint:organizations.addresses.msg.add-new-record")
+                        addNewRecord: $.t("complaint:addresses.msg.add-new-record")
                     }
                     ,actions: {
                         listAction: function (postData, jtParams) {
@@ -1349,7 +1373,8 @@ Complaint.View = Complaint.View || {
                                                 ,state         : Acm.goodValue(addresses[i].state)
                                                 ,zip           : Acm.goodValue(addresses[i].zip)
                                                 ,country       : Acm.goodValue(addresses[i].country)
-                                                ,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                //,created       : Acm.getDateFromDatetime(addresses[i].created)
+                                                ,created       : Acm.getDateFromDatetime2(addresses[i].created,$.t("common:date.short"))
                                                 ,creator       : Acm.goodValue(addresses[i].creator)
                                             });
                                         }
@@ -1559,7 +1584,8 @@ Complaint.View = Complaint.View || {
                                                 ,id      : Acm.goodValue(personAliases[i].id, 0)
                                                 ,type    : Acm.goodValue(personAliases[i].aliasType)
                                                 ,value   : Acm.goodValue(personAliases[i].aliasValue)
-                                                ,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                //,created : Acm.getDateFromDatetime(personAliases[i].created)
+                                                ,created : Acm.getDateFromDatetime2(personAliases[i].created,$.t("common:date.short"))
                                                 ,creator : Acm.goodValue(personAliases[i].creator)
                                             });
                                         }
@@ -1661,6 +1687,7 @@ Complaint.View = Complaint.View || {
         create : function() {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
+            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
         }
         ,onInitialized: function() {
         }
@@ -1674,6 +1701,11 @@ Complaint.View = Complaint.View || {
         ,onViewSelectedObject: function(nodeType, nodeId) {
             DocTree.Controller.viewChangedParent(nodeType, nodeId);
         }
+        
+        ,onModelDocumentsRetrievedPlainForms: function() {
+        	DocTree.View.fileTypes = Complaint.View.Documents.getFileTypes();
+        	DocTree.View.refreshDocTree();
+        }
 
         ,uploadForm: function(type, folderId, onCloseForm) {
             var complaintId = Complaint.View.getActiveComplaintId();
@@ -1682,25 +1714,78 @@ Complaint.View = Complaint.View || {
             {
                 //var url = Acm.goodValue(Complaint.View.MicroData.formUrls[report]);
                 var url = null;
-                var fileType = Complaint.View.MicroData.findFileTypeByType(type);
+                var fileType = Complaint.View.Documents.getFileTypeByType(type);
                 if (fileType) {
                     url = Acm.goodValue(fileType.url);
                 }
                 if (Acm.isNotEmpty(url)) {
-                    // an apostrophe in complaint title will make Frevvo throw up.  Need to encode it here, then rules in
-                    // the Frevvo form will decode it.
-                    var complaintTitle = Acm.goodValue(complaint.complaintTitle);
-                    complaintTitle = complaintTitle.replace("'", "_0027_"); // 0027 is the Unicode string for apostrophe
-                    url = url.replace("_data=(", "_data=(type:'complaint'"
-                        + ", complaintId:'" + complaint.complaintId
-                        + "',complaintNumber:'" + Acm.goodValue(complaint.complaintNumber)
-                        + "',complaintTitle:'" + complaintTitle
-                        + "',complaintPriority:'" + Acm.goodValue(complaint.priority)
-                        + "',folderId:'" + folderId
-                        + "',");
+                	var data = "_data=(";
+                    if (fileType && fileType.urlParameters && fileType.urlParameters.length > 0) {
+                    	var urlParameters = fileType.urlParameters;
+                    	var parametersAsString = '';
+                    	for (var i = 0; i < urlParameters.length; i++) {
+                    		var key = urlParameters[i].name;
+                    		var value = '';
+                    		if (Acm.isNotEmpty(urlParameters[i].defaultValue)) {
+                    			value = Acm.silentReplace(urlParameters[i].defaultValue, "'", "_0027_");
+                    		} else if (Acm.isNotEmpty(urlParameters[i].keyValue)) {
+                    			if (Acm.isNotEmpty(complaint[urlParameters[i].keyValue])) {
+                    				value = Acm.silentReplace(complaint[urlParameters[i].keyValue], "'", "_0027_");
+                    			}
+                    		}
+                    		value = encodeURIComponent(value);
+                    		parametersAsString += key + ":'" + Acm.goodValue(value) + "',";
+                    	}
+                    	parametersAsString +="folderId:'" + folderId + "',";
+                    	data += parametersAsString;
+                    }
+                    url = url.replace("_data=(", data);
                     Acm.Dialog.openWindow(url, "", 1060, $(window).height() - 30, onCloseForm);
                 }
             }
+        }
+        
+        ,getFileTypes: function() {
+        	var fileTypes = Complaint.View.MicroData.fileTypes;
+        	var plainForms = Complaint.Model.Documents.getPlainForms();
+        	var plainFormsAsFileTypes = [];
+        	
+        	if (Complaint.Model.Documents.validatePlainForms(plainForms)) {
+        		for (var i = 0; i < plainForms.length; i++) {
+        			if (Acm.isNotEmpty(plainForms[i].key)) {
+        				var fileType = {};
+            			fileType.type = plainForms[i].key;
+            			fileType.label = Acm.goodValue(plainForms[i].name);
+            			fileType.url = Acm.goodValue(plainForms[i].url);
+            			fileType.form = true;
+            			fileType.urlParameters = plainForms[i].urlParameters;
+            			
+            			plainFormsAsFileTypes.push(fileType);
+        			}
+        		}
+        	}
+        	
+        	if (Acm.isArray(fileTypes)) {
+                fileTypes = plainFormsAsFileTypes.concat(fileTypes);
+            }else {
+            	fileTypes = plainFormsAsFileTypes;
+            }
+        	
+        	return fileTypes;
+        }
+        
+        ,getFileTypeByType: function(type) {
+            var ft = null;
+            var _fileTypes = Complaint.View.Documents.getFileTypes();
+            if (Acm.isArray(_fileTypes)) {
+                for (var i = 0; i < _fileTypes.length; i++) {
+                    if (type == _fileTypes[i].type) {
+                        ft = _fileTypes[i];
+                        break;
+                    }
+                }
+            }
+            return ft;
         }
     }
 
@@ -1867,8 +1952,11 @@ Complaint.View = Complaint.View || {
                         var Record = {};
                         Record.id = Acm.goodValue(documents[i].objectId)
                         Record.title = Acm.goodValue(documents[i].name);
-                        Record.created = Acm.getDateFromDatetime(documents[i].created);
-                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        //Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        Record.created = Acm.getDateFromDatetime2(documents[i].created,$.t("common:date.short"));
+                        //Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(documents[i].creator));
+
                         jtData.Records.push(Record);
                     }
                 }
@@ -2015,8 +2103,11 @@ Complaint.View = Complaint.View || {
                         var Record = {};
                         Record.id         = Acm.goodValue(notes[i].id, 0);
                         Record.note       = Acm.goodValue(notes[i].note);
-                        Record.created    = Acm.getDateFromDatetime(notes[i].created);
-                        Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        //Record.created    = Acm.getDateFromDatetime(notes[i].created);
+                        Record.created    = Acm.getDateFromDatetime2(notes[i].created,$.t("common:date.short"));
+                        //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(notes[i].creator));
+
                         //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                         //Record.parentType = Acm.goodValue(noteList[i].parentType);
                         jtData.Records.push(Record);
@@ -2205,8 +2296,11 @@ Complaint.View = Complaint.View || {
                     if(Complaint.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
-                        Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        Record.eventDate = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
+                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.user = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
+
                         jtData.Records.push(Record);
                     }
                 }
@@ -2269,7 +2363,7 @@ Complaint.View = Complaint.View || {
                         }, eventDate: {
                             title: $.t("complaint:history.table.field.date")
                             ,width: '25%'
-                        }, userId: {
+                        }, user: {
                             title: $.t("complaint:history.table.field.user")
                             ,width: '25%'
                         }
@@ -2314,7 +2408,8 @@ Complaint.View = Complaint.View || {
                         var record = {};
                         record.id = Acm.goodValue(documents[i].targetId, 0);
                         record.title = Acm.goodValue(documents[i].targetName);
-                        record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        //record.modified = Acm.getDateFromDatetime(documents[i].modified);
+                        record.modified = Acm.getDateFromDatetime2(documents[i].modified,$.t("common:date.short"));
                         record.type = Acm.goodValue(documents[i].targetType);
                         record.status = Acm.goodValue(documents[i].status);
                         jtData.Records.push(record);
@@ -2429,7 +2524,9 @@ Complaint.View = Complaint.View || {
                     Record.priority = tasks[i].priority;
                     Record.dueDate  = tasks[i].dueDate;
                     Record.status   = tasks[i].status;
-                    Record.assignee = Acm.__FixMe__getUserFullName(tasks[i].assignee);
+                    //Record.assignee = Acm.__FixMe__getUserFullName(tasks[i].assignee);
+                    Record.assignee = App.Model.Users.getUserFullName(Acm.goodValue(tasks[i].assignee));
+
                     jtData.Records.push(Record);
                 }
                 jtData.TotalRecordCount = tasks.length;
@@ -2886,180 +2983,6 @@ Complaint.View = Complaint.View || {
         }
     }
 
-    ,OutlookCalendar: {
-        create: function() {
-            this.$outlookCalendar          = $(".calendar");
-            this.$weekView                 = $("#weekview");
-            this.$monthView                = $("#monthview");
-            this.$dayView                  = $("#dayview");
-            this.$btnRefreshCalendar       = $("#refreshCalendar");
-
-            this.$btnRefreshCalendar.on("click", function(e) {Complaint.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
-
-            this.createOutlookCalendarWidget(this.$outlookCalendar);
-
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
-            Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_RETRIEVED_OUTLOOK_CALENDAR_ITEMS     ,this.onModelRetrievedOutlookCalendarItem);
-        }
-        ,onInitialized: function() {
-        }
-        ,onViewSelectedObject: function(nodeType, nodeId) {
-            Complaint.View.OutlookCalendar.$outlookCalendar.html("");
-            Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
-        }
-        ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
-            if(outlookCalendarItems.hasError){
-                App.View.MessageBoard.show("Error occurred while retrieving calendar items.", outlookCalendarItems.errorMsg);
-            }
-            else{
-                Complaint.View.OutlookCalendar.$outlookCalendar.html("");
-                Complaint.View.OutlookCalendar.createOutlookCalendarWidget(Complaint.View.OutlookCalendar.$outlookCalendar);
-            }
-        }
-        ,onClickbtnRefreshCalendar: function(){
-            Complaint.Controller.viewRefreshedOutlookCalendar(Complaint.View.getActiveComplaintId());
-        }
-        ,createCalendarSource:function(){
-            var calendarSource = [];
-            var outlookCalendarItems = Complaint.Model.OutlookCalendar.cacheOutlookCalendarItems.get(Complaint.View.getActiveComplaintId());
-            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
-                for(var i = 0; i<outlookCalendarItems.items.length; i++){
-                    if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
-                        var outlookCalendarItem = {};
-                        outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
-                        outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
-                        outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
-                        outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
-                        outlookCalendarItem.detail = Complaint.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
-                        outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
-                        outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
-                        calendarSource.push(outlookCalendarItem);
-                    }
-                }
-            }
-            return calendarSource;
-        }
-
-        ,makeDetail: function(calendarItem){
-            if(Complaint.Model.OutlookCalendar.validateOutlookCalendarItem(calendarItem)) {
-                var body = Acm.goodValue(calendarItem.body) + "</br>";
-                var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
-                var startDateTimeWithoutSecond = "Start: " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
-                var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
-                var endDateTimeWithoutSecond = "End: " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
-                var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
-                return detail;
-            }
-        }
-
-        ,createOutlookCalendarWidget: function($s){
-            var calendarSource = this.createCalendarSource();
-            var addDragEvent = function($this){
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-                var eventObject = {
-                    title: $.trim($this.text()), // use the element's text as the event title
-                    className: $this.attr('class').replace('label','')
-                };
-
-                // store the Event Object in the DOM element so we can get to it later
-                $this.data('eventObject', eventObject);
-
-                // make the event draggable using jQuery UI
-                $this.draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-            };
-
-            $s.fullCalendar({
-                header: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next'
-                },
-                timeFormat: 'h(:mm)t {-h(:mm)t}',
-                displayEventEnd : true,
-                editable: true,
-                //disable fullcalendar droppable as it creates conflict with the doctree's.
-                //looks like fullcalendar uses the generic jquery draggable
-                //we might need to add our own external draggable event handlers
-                //tailored for fullcalendar
-                droppable: false, // this allows things to be dropped onto the calendar !!!
-                drop: function(date, allDay) { // this function is called when something is dropped
-
-                    // retrieve the dropped element's stored Event Object
-                    var originalEventObject = $(this).data('eventObject');
-
-                    // we need to copy it, so that multiple events don't have a reference to the same object
-                    var copiedEventObject = $.extend({}, originalEventObject);
-
-                    // assign it the date that was reported
-                    copiedEventObject.start = date;
-                    copiedEventObject.allDay = allDay;
-
-                    // render the event on the calendar
-                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                    this.$outlookCalendar.fullCalendar('renderEvent', copiedEventObject, true);
-
-                    // is the "remove after drop" checkbox checked?
-                    if ($('#drop-remove').is(':checked')) {
-                        // if so, remove the element from the "Draggable Events" list
-                        $(this).remove();
-                    }
-
-                }
-                ,events: calendarSource
-                ,eventRender: function (event, element) {
-                    element.qtip({
-                        content: {
-                            text: Acm.goodValue(event.detail),
-                            title: {
-                                text: Acm.goodValue(event.title)
-                            }
-                        }
-                        ,position: {
-                            my: 'right center',
-                            at: 'left center',
-                            //target: 'mouse',
-                            viewport: $s,
-                            adjust: {
-                                mouse: false,
-                                scroll: false
-                            }
-                        }
-                        ,style: {
-                            classes: "qtip-rounded qtip-shadow"
-                        }
-                        ,show: { solo: true} //, ready: true, when: false
-                        ,hide: { when: 'mouseout', fixed: true}
-                    });
-                }
-            });
-            $('#myEvents').on('change', function(e, item){
-                addDragEvent($(item));
-            });
-
-            $('#myEvents li > div').each(function() {
-                addDragEvent($(this));
-            });
-
-            this.$dayView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaDay')
-            });
-
-            this.$weekView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'agendaWeek')
-            });
-
-            this.$monthView.on('click', function() {
-                $('.calendar').fullCalendar('changeView', 'month')
-            });
-
-        }
-    }
-
     ,Time: {
         create: function() {
             this.$divTime          = $("#divTime");
@@ -3103,12 +3026,14 @@ Complaint.View = Complaint.View || {
                     var timesheet = timesheets[j];
                     var Record = {};
                     Record.id = Acm.goodValue(timesheet.id);
-                    Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    //Record.name = "Timesheet " + Acm.getDateFromDatetime(timesheet.startDate) + " - " + Acm.getDateFromDatetime(timesheet.endDate);
+                    Record.name = $.t("complaint:time.table.label.timesheet") + " " + Acm.getDateFromDatetime2(timesheet.startDate,$.t("common:date.short")) + " - " +  Acm.getDateFromDatetime2(timesheet.endDate,$.t("common:date.short"));
                     Record.type = Complaint.Model.DOC_TYPE_TIMESHEET;
                     Record.status = Acm.goodValue(timesheet.status);
                     Record.username = Acm.goodValue(timesheet.creator);
                     Record.hours = Acm.goodValue(Complaint.View.Time.findTotalHours(timesheet.times));
-                    Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(timesheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(timesheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }
@@ -3215,7 +3140,8 @@ Complaint.View = Complaint.View || {
                     Record.status = Acm.goodValue(costsheet.status);
                     Record.username = Acm.goodValue(costsheet.creator);
                     Record.cost = Acm.goodValue(Complaint.View.Cost.findTotalCost(costsheet.costs));
-                    Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    //Record.modified = Acm.getDateFromDatetime(costsheet.modified);
+                    Record.modified = Acm.getDateFromDatetime2(costsheet.modified,$.t("common:date.short"));
                     jtData.Records.push(Record);
                 }
             }

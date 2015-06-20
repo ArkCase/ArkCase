@@ -8,9 +8,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <%--<%@include file="/WEB-INF/tagf/global.tagf" %>--%>
     <%@include file="/resources/include/global.jspf" %>
-    <title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/app.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_acm}/js/app/appController.js'/>"></script>
+
+    <%--<title><spring:message code="login.page.title" text="ACM | ArkCase" /></title>--%>
+    <title data-i18n="login:page-title">ACM | ArkCase</title>
     <div id="acmData" itemscope="true" style="display: none">
         <span itemprop="contextPath"><%=request.getContextPath()%></span>
+        <span itemprop="resourceNamespace">login</span>
     </div>
 </head>
 <body>
@@ -19,13 +26,13 @@
         <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/resources/vendors/${acm_theme}/images/logo.png'/>" /></a>
         <section class="m-b-lg">
             <header class="wrapper text-center">
-                <strong><spring:message code="login.instruction" text="Enter your username and password." /></strong>
+                <strong data-i18n="login:instruction">Enter your username and password.</strong>
             </header>
             <p/>
             <c:if test="${not empty param.login_error}">
                 <div class="error">
-                    <spring:message code="login.fail.message" text="Your login attempt was not successful, try again." /><br />
-                    <spring:message code="login.fail.reason" text="Reason" />: ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
+                    <span data-i18n="login:fail-message">"Your login attempt was not successful, try again.</span><br />
+                    <span data-i18n="login:fail-reason">Reason</span>: ${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
                 </div>
             </c:if>
 
@@ -35,14 +42,14 @@
                         <c:if test="${not empty param.login_error}">
                             <c:set var="username" value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"/>
                         </c:if>
-                        <input type="text" name="j_username" value="${username}" placeholder="Username" class="form-control no-border"/>
+                        <input type="text" name="j_username" value="${username}" data-i18n="[placeholder]login:placeholder-username" placeholder="Username" class="form-control no-border"/>
                     </div>
                     <div class="list-group-item">
-                        <input type="password" name="j_password" placeholder="Password" class="form-control no-border"/>
+                        <input type="password" name="j_password" data-i18n="[placeholder]login:placeholder-password" placeholder="Password" class="form-control no-border"/>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-lg btn-primary btn-block"><spring:message code="login.button.label" text="Log In" /></button>
-                <div class="text-center m-t m-b"><a href="#"><small><spring:message code="login.forgot.password" text="Forgot password?" /></small></a></div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block" data-i18n="login:login-button">Log In</button>
+                <div class="text-center m-t m-b"><a href="#"><small data-i18n="login:forgot-password">Forgot password?</small></a></div>
 
             </form>
         </section>
@@ -54,7 +61,8 @@
 <footer id="footer">
     <div class="text-center padder">
         <p>
-            <small><spring:message code="login.footer" text="ArkCase <br>&copy; 2014, 2015" /></small>
+            <small><span data-i18n="login:footer">ArkCase</span> <br>&copy; <span data-i18n="login:copy-right">2014, 2015</span></small>
+            <%--<small>ArkCase <br>&copy; 2014, 2015</small>--%>
         </p>
     </div>
 </footer>
@@ -64,10 +72,9 @@
 <%--<script type="text/javascript" src="<c:url value='/resources/js/login/loginView.js'/>"></script>--%>
 <script type="text/javascript">
     jQuery(document).ready(function() {
-//        var context = {};
-//        context.path = Acm.Object.MicroData.get("contextPath");
-//        Application.run(context);
-        Login.create();
+        var context = App.getPageContext();
+        context.loginPage = true;
+        ThisApp.run(context);
     });
 </script>
 </body>

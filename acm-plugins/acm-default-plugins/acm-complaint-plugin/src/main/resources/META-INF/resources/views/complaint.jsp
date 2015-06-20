@@ -6,9 +6,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title><spring:message code="complaint.page.title" text="Complaints | ACM | Armedia Case Management" /></title>
+    <title data-i18n="complaint:page-title">Complaints | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">complaint,subscription,search</span>
+        <span itemprop="resourceNamespace">complaint,subscription,search,doctree,common</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -19,8 +19,6 @@
 
         <span itemprop="closeComplaintFormUrl">${closeComplaintFormUrl}</span>
         <%--<span itemprop="editCloseComplaintFormUrl">${editCloseComplaintFormUrl}</span>--%>
-        <span itemprop="roiFormUrl">${roiFormUrl}</span>
-        <span itemprop="electronicCommunicationFormUrl">${electronicCommunicationFormUrl}</span>
         <span itemprop="formDocuments">${formDocuments}</span>
         <span itemprop="fileTypes">${fileTypes}</span>
     </div>
@@ -44,6 +42,13 @@
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeView.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeController.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/js/docTree/docTreeService.js'/>"></script>
+
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendar.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarModel.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarView.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarController.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/js/calendar/calendarService.js'/>"></script>
+
 
     <script type="text/javascript" src="<c:url value='/resources/js/subscription/subscriptionOp.js'/>"></script>
 
@@ -402,7 +407,7 @@
                                     </div>
 
 
-                                    <div id="tabOutlookCalendar" style="display:none;">
+                                    <div id="tabOutlookCalendar">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
@@ -415,27 +420,12 @@
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
-                                                    <div class="btn-group pull-right" data-toggle="buttons">
-                                                        <label class="btn btn-sm btn-bg btn-default active" id="monthview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="complaint:outlook-calendar.label.month">Month</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="weekview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="complaint:outlook-calendar.label.week">Week</span>
-                                                        </label>
-                                                        <label class="btn btn-sm btn-bg btn-default" id="dayview">
-                                                            <input type="radio" name="options">
-                                                            <span data-i18n="complaint:outlook-calendar.label.day">Day</span>
-                                                        </label>
-                                                    </div>
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
-
                                                     <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="complaint:outlook-calendar.label.calendar">
                                                       Calendar
                                                     </span>
                                                 </header>
-                                                <div class="calendar">
+                                                <div id="calendar">
                                                 </div>
                                             </section>
                                     </div>

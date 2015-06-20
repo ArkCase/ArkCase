@@ -17,6 +17,8 @@ Task.Service = {
         //if (Task.Service.Attachments.create)         {Task.Service.Attachments.create();}
         if (Task.Service.DocumentUnderReview.create) {Task.Service.DocumentUnderReview.create();}
         if (Task.Service.RejectComments.create)      {Task.Service.RejectComments.create();}
+        if (Task.Service.ElectronicSignature.create)      {Task.Service.ElectronicSignature.create();}
+
     }
     ,onInitialized: function() {
         if (Task.Service.Lookup.onInitialized)              {Task.Service.Lookup.onInitialized();}
@@ -29,6 +31,8 @@ Task.Service = {
         //if (Task.Service.Attachments.onInitialized)         {Task.Service.Attachments.onInitialized();}
         if (Task.Service.DocumentUnderReview.onInitialized) {Task.Service.DocumentUnderReview.onInitialized();}
         if (Task.Service.RejectComments.onInitialized)      {Task.Service.RejectComments.onInitialized();}
+        if (Task.Service.ElectronicSignature.onInitialized)      {Task.Service.ElectronicSignature.onInitialized();}
+
     }
 
     ,Lookup: {
@@ -184,10 +188,11 @@ Task.Service = {
         ,API_COMPLETE_TASK         : "/api/latest/plugin/task/completeTask"
         ,API_DELETE_TASK           : "/api/latest/plugin/task/deleteTask/"
         ,API_RETRIEVE_USERS        : "/api/latest/plugin/search/usersSearch"
+        ,API_SIGN_TASK         	   : "/api/latest/plugin/signature/confirm/"
 
         ,saveDetail: function(nodeType, taskId, details) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.details = details;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -199,7 +204,7 @@ Task.Service = {
         }
         ,saveReworkDetails: function(nodeType, taskId, reworkDetails) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.reworkInstructions = reworkDetails;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -211,7 +216,7 @@ Task.Service = {
         }
         ,saveTitle: function(nodeType, taskId, title) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.title = title;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -223,19 +228,19 @@ Task.Service = {
         }
         ,saveStartDate: function(nodeType, taskId, startDate) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
-                task.incidentDate = startDate;
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
+                task.taskStartDate = startDate;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
                     ,function(data) {
-                        Task.Controller.modelSavedStartDate(nodeType, taskId, Acm.Service.responseWrapper(data, data.startDate));
+                        Task.Controller.modelSavedStartDate(nodeType, taskId, Acm.Service.responseWrapper(data, data.taskStartDate));
                     }
                 );
             }
         }
         ,saveAssignee: function(nodeType, taskId, assignee) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.assignee = assignee
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -247,7 +252,7 @@ Task.Service = {
         }
         ,savePercentCompleted: function(nodeType, taskId, percent) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.percentComplete = percent;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -259,7 +264,7 @@ Task.Service = {
         }
         ,savePriority: function(nodeType, taskId, priority) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.priority = priority;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -271,7 +276,7 @@ Task.Service = {
         }
         ,saveDueDate: function(nodeType, taskId, dueDate) {
             var task = Task.Model.findTask(nodeType, taskId);
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 task.dueDate = dueDate;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
@@ -284,7 +289,7 @@ Task.Service = {
         ,completeTask : function(task) {
             var data;
             var url = App.getContextPath() + this.API_COMPLETE_TASK;
-            if (Task.Model.interface.validateObjData(task)) {
+            if (Task.Model.interfaceNavObj.validateObjData(task)) {
                 data = task;
 
             }
@@ -300,7 +305,7 @@ Task.Service = {
                     if (response.hasError) {
                         Task.Controller.modelCompletedTask(response);
                     } else {
-                        if (Task.Model.interface.validateObjData(response)) {
+                        if (Task.Model.interfaceNavObj.validateObjData(response)) {
                             Task.Controller.modelCompletedTask(response);
                         }
                     }
@@ -315,7 +320,7 @@ Task.Service = {
                     if (response.hasError) {
                         Task.Controller.modelDeletedTask(response);
                     } else {
-                        if (Task.Model.interface.validateObjData(response)) {
+                        if (Task.Model.interfaceNavObj.validateObjData(response)) {
                             Task.Controller.modelDeletedTask(response);
                         }
                     }
@@ -336,12 +341,33 @@ Task.Service = {
                         Task.Controller.modelRetrievedUsers(response);
 
                     } else {
-                        //if (Task.Model.interface.validateParentObjData(response)) {
+                        //if (Task.Model.interfaceNavObj.validateParentObjData(response)) {
                         Task.Controller.modelRetrievedUsers(response);
                         //}
                     }
                 }
                 ,url
+            )
+        }
+
+        ,signTask : function(taskId,$formSignature) {
+            var url = App.getContextPath() + this.API_SIGN_TASK + Task.Model.DOC_TYPE_TASK + "/" + taskId;
+            var form = $formSignature
+            Acm.Service.asyncPostForm(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelSignedTask(response);
+                    } else {
+                        if(Task.Model.ElectronicSignature.validateElectronicSignature(response)){
+                            var taskId = response.objectId;
+                            var electronicSignatures = Task.Model.ElectronicSignature.cacheElectronicSignatures.get(taskId);
+                            electronicSignatures.push(response);
+                            Task.Controller.modelSignedTask(response);
+                        }
+                    }
+                }
+                ,url
+                ,form
             )
         }
     }
@@ -638,6 +664,32 @@ Task.Service = {
             )
         }
     }
+    ,ElectronicSignature: {
+        create: function(){
+        }
+        ,onInitialized: function(){
+        }
 
+        ,API_RETRIEVE_ELECTRONIC_SIGNATURE : "/api/latest/plugin/signature/find/"
+
+        ,retrieveSignatures : function(taskId) {
+            var url = App.getContextPath() + this.API_RETRIEVE_ELECTRONIC_SIGNATURE;
+            url+= Task.Model.DOC_TYPE_TASK + "/" + taskId;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        Task.Controller.modelRetrievedElectronicSignatures(response);
+
+                    } else {
+                        if (Task.Model.ElectronicSignature.validateElectronicSignatures(response)) {
+                            Task.Model.ElectronicSignature.cacheElectronicSignatures.put(taskId, response);
+                            Task.Controller.modelRetrievedElectronicSignatures(response);
+                        }
+                    }
+                }
+                ,url
+            )
+        }
+    }
 };
 

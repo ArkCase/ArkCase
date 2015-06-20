@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
 
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 
@@ -17,7 +16,6 @@ import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -111,7 +109,7 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		form = saveReference(form);
 		
 		// Create Frevvo form from CaseFile
-		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), this);
+		form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form, this);
 		
 		updateXMLAttachment(attachments, FrevvoFormName.CASE_FILE, form);
 		
@@ -157,13 +155,11 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		}
 		
 		caseFile = getCaseFileFactory().asAcmCaseFile(form, caseFile);
-		HttpSession session = getRequest().getSession();
-		String ipAddress = (String) session.getAttribute("acm_ip_address");
 		
 		// Save Case file
 		try
         {
-			caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), ipAddress);
+			caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), getUserIpAddress());
         }
 		catch (MuleException | PersistenceException e)
         {
@@ -179,19 +175,11 @@ public class CaseFileService extends FrevvoFormAbstractService {
 		return form;
 	}
 	
-	public void updateXML(CaseFile caseFile, Authentication auth)
-    {
-    	if (caseFile != null)
-    	{    		
-    		CaseFileForm form = getCaseFileFactory().asFrevvoCaseFile(caseFile, this);
-    		
-    		if (form != null)
-    		{
-    			String xml = convertFromObjectToXML(form);
-    			updateXML(xml, FrevvoFormName.CASE_FILE.toUpperCase(), caseFile.getId(), auth);		
-    		}
-    	}
-    }
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form)
+	{
+		return getCaseFileFactory().asFrevvoCaseFile((CaseFile) obj, (CaseFileForm) form, this);
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()

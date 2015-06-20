@@ -207,7 +207,7 @@ public class CostService extends FrevvoFormChargeAbstractService {
 	@Override
 	public String getSolrResponse(String objectType)
 	{
-		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 50,
+		String jsonResults = getCostsheetService().getObjectsFromSolr(objectType, getAuthentication(), 0, 25,
 				SearchConstants.PROPERTY_NAME + " " + SearchConstants.SORT_DESC, null);
 		
 		return jsonResults;
@@ -274,5 +274,11 @@ public class CostService extends FrevvoFormChargeAbstractService {
 
 	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
 		AcmContainerDao = acmContainerDao;
+	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
 	}
 }

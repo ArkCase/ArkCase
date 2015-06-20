@@ -8,10 +8,9 @@
     <bean id="acmPersonAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
     <bean id="acmPersonIdentificationDao" class="com.armedia.acm.plugins.person.dao.PersonIdentificationDao"/>
     <bean id ="acmOrganizationDao" class ="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
-          
-    <bean id="personTypeTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
-        <property name="tableName" value="acm_person_type_lu"/>
-        <property name="description" value="Valid person types."/>
+    
+    <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
+    	<property name="personDao" ref="acmPersonDao" />
     </bean>
     
     <bean id="savePersonTransaction" class="com.armedia.acm.plugins.person.service.SavePersonTransaction">
@@ -46,5 +45,20 @@
             
     <bean id ="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="PersonAssocaition Plugin"/>
+    </bean>
+
+    <bean id="personPluginProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/personPlugin.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="person.types">Complaintant,Subject,Witness,Wrongdoer,Other,Initiator,Primary Victim,Victim,Defendant,Investigating Officer,Police Witness</prop>
+            </props>
+        </property>
     </bean>
 </beans>

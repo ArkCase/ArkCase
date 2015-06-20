@@ -13,28 +13,29 @@ import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 
 /**
  * Created by armdev on 4/20/15.
  */
 public interface OutlookService {
     OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                  boolean sortAscending)
+                                                  boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException;
 
     OutlookResults<OutlookTaskItem> findTaskItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                  boolean sortAscending)
+                                                  boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException;
 
-    OutlookResults<OutlookCalendarItem> findCalendarItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                          boolean sortAscending)
+    OutlookResults<OutlookCalendarItem> findCalendarItems(String folderId, AcmOutlookUser user, int start, int maxItems, String sortField,
+                                                          boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException;
 
     OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-                                                        boolean sortAscending)
+                                                        boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException;
 
-    OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, WellKnownFolderName folderName, OutlookCalendarItem calendarItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException;
+    OutlookCalendarItem createOutlookAppointment(AcmOutlookUser user, OutlookCalendarItem calendarItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException;
 
     OutlookTaskItem createOutlookTaskItem(AcmOutlookUser user, WellKnownFolderName folderName, OutlookTaskItem taskItem) throws AcmOutlookConnectionFailedException, AcmOutlookCreateItemFailedException;
 

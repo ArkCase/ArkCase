@@ -6,9 +6,9 @@
 
 <t:layout>
 <jsp:attribute name="endOfHead">
-    <title><spring:message code="task.page.title" text="Tasks | ACM | Armedia Case Management" /></title>
+    <title data-i18n="task:page-title">Tasks | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">task,search,subscription</span>
+        <span itemprop="resourceNamespace">task,search,subscription,doctree,common</span>
         <span itemprop="objType">TASK</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -172,7 +172,7 @@
                             <div class="btn-group-task">
                                 <!-- TODO: when data-toggle is modal, the tooltip won't come up
                                 -->
-                                <%--<button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>--%>
+                                <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
 
                                 <!-- from the mockup -->
                                 <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
@@ -458,6 +458,15 @@
 
                     <div class="row" id="tabSignature" style="display:none;">
                         <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divElectronicSignature" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
+
+                    <%--<div class="row" id="tabSignature" style="display:none;">
+                        <div class="col-md-12">
                             <section class="panel b-a ">
                                 <div class="panel-heading b-b bg-info">
                                     <ul class="nav nav-pills pull-right">
@@ -478,7 +487,7 @@
                                 </div>
                             </section>
                         </div>
-                    </div>
+                    </div>--%>
 
 
                 </div>

@@ -6,6 +6,9 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="profile.page.title" text="Profile | ACM | Armedia Case Management" /></title>
+     <div id="detailData" itemscope="true" style="display: none">
+         <span itemprop="resourceNamespace">common</span>
+     </div>
 </jsp:attribute>
 
 
@@ -99,7 +102,7 @@
                                                     <%--<small> Agent </small>--%>
 
 
-                                                <h4 id="email"></h4>
+                                                <h4 id="email" class='acm-word-wrap'></h4>
                                                 <small> E-mail Address </small>
                                             </div>
                                         </div>

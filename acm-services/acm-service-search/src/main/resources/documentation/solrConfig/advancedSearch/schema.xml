@@ -239,7 +239,7 @@ a "*" only at the start or the end.  -->
 <dynamicField name="random_*" type="random" />
 
 <!--acm dynamic fields-->
-<dynamicField name="*_lcs" type="string_lowercase" indexed="true" stored="true"/>
+<dynamicField name="*_lcs" type="alpha_numeric_sort" indexed="true" stored="true"/>
 <dynamicField name="*_sdo" type="text_numbersonly" indexed="true" stored="true"/>
 <dynamicField name="*_parseable" type="text_parseable" indexed="true" stored="true"/>
 <dynamicField name="*_no_html_tags_parseable" type="text_no_html_tags_parseable" indexed="true" stored="true"/>
@@ -884,6 +884,37 @@ or to add multiple fields to the same field for easier/faster searching.  -->
         <tokenizer class="solr.KeywordTokenizerFactory"/>
       </analyzer>
     </fieldType>
+    
+    <fieldType name="alpha_numeric_sort" class="solr.TextField" positionIncrementGap="100">
+	  <analyzer>
+	    <!-- KeywordTokenizer does no actual tokenizing, so the entire
+	         input string is preserved as a single token
+	      -->
+	    <tokenizer class="solr.KeywordTokenizerFactory"/>
+	    <!-- The LowerCase TokenFilter does what you expect, which can be
+	         when you want your sorting to be case insensitive
+	      -->
+	    <filter class="solr.LowerCaseFilterFactory" />
+	    <!-- The TrimFilter removes any leading or trailing whitespace -->
+	    <filter class="solr.TrimFilterFactory" />
+	    <!-- Remove leading articles -->
+	    <filter class="solr.PatternReplaceFilterFactory"
+	            pattern="^(a |the |les |la |le |l'|de la |du |des )" replacement="" replace="all"
+	    />
+	    <!-- Left-pad numbers with zeroes -->
+	    <filter class="solr.PatternReplaceFilterFactory"
+	            pattern="(\d+)" replacement="000000000000000$1" replace="all"
+	    />
+	    <!-- Left-trim zeroes to produce 6 digit numbers -->
+	    <filter class="solr.PatternReplaceFilterFactory"
+	            pattern="0*([0-9]{16,})" replacement="$1" replace="all"
+	    />
+	    <!-- Remove all but alphanumeric characters -->
+	    <filter class="solr.PatternReplaceFilterFactory"
+	            pattern="([^a-z0-9])" replacement="" replace="all"
+	    />
+	  </analyzer>
+	</fieldType>
     <!-- end of ACM field types -->
 
    <!-- some examples for different languages (generally ordered by ISO code) -->

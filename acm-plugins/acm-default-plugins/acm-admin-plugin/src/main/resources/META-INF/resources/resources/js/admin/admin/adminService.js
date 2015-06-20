@@ -334,14 +334,189 @@ Admin.Service = {
                 ,url
             )
         }
+    }
 
+    , WorkflowConfiguration: {
+        API_RETRIEVE_WORKFLOWS: "/api/latest/plugin/admin/workflowconfiguration/workflows"
+        ,API_RETRIEVE_HISTORY: "/api/latest/plugin/admin/workflowconfiguration/workflows/{0}/versions/{1}/history"
+        ,API_FILE: "/api/latest/plugin/admin/workflowconfiguration/workflows/{0}/versions/{1}/file"
+        ,API_UPLOAD_FILE: "/api/latest/plugin/admin/workflowconfiguration/files"
+        ,API_MAKE_ACTIVE: "/api/latest/plugin/admin/workflowconfiguration/workflows/{0}/versions/{1}/active"
+
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+
+        }
+        ,retrieveWorkflows : function(start, length, orderBy, isAsc) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_RETRIEVE_WORKFLOWS;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,retrieveHistory : function(key, version) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_RETRIEVE_HISTORY.format(key, version);
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject();
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+
+        makeActive: function(key, version) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_MAKE_ACTIVE.format(key, version);
+
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        },
+
+        getFileLink: function(key, version){
+            return App.getContextPath() + Admin.Service.WorkflowConfiguration.API_FILE.format(key, version)
+        },
+
+        uploadWorkflowFile: function(fd) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.WorkflowConfiguration.API_UPLOAD_FILE;
+            Acm.Service.asyncPostFormData(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject();
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,fd
+            );
+
+            return $dfd.promise();
+        }
 
     }
+
+    , LDAPConfiguration: {
+        API_RETRIEVE_LDAP_DIRECTORIES: "/api/latest/plugin/admin/ldapconfiguration/directories"
+        ,API_CREATE_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories"
+        ,API_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories/{0}"
+
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+
+        }
+
+        ,retrieveDirectories: function(){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_RETRIEVE_LDAP_DIRECTORIES;
+
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,createDirectory: function (data) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_CREATE_LDAP_DIRECTORY;
+
+            Acm.Service.asyncPost(
+                function(response){
+                    if (response.hasError) {
+                        $dfd.reject(response)
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data, null, 4)
+            )
+            return $dfd.promise();
+        }
+
+        ,deleteDirectory: function (dirId) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_LDAP_DIRECTORY.format(dirId);
+            Acm.Service.asyncDelete(
+                function(response){
+                    if (response.hasError) {
+                        $dfd.reject(response)
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+            return $dfd.promise();
+        }
+
+        ,updateDirectory: function (dirId, data) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LDAPConfiguration.API_LDAP_DIRECTORY.format(dirId);
+            Acm.Service.asyncPut(
+                function(response){
+                    if (response.hasError) {
+                        $dfd.reject(response)
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+            return $dfd.promise();
+        }
+
+    }
+
+
     ,LabelConfiguration: {
         API_SETTINGS: "/api/latest/plugin/admin/labelconfiguration/settings"
         ,API_RETRIEVE_NAMESPACES: "/api/latest/plugin/admin/labelconfiguration/namespaces"
         ,API_RETRIEVE_LANGUAGES: "/api/latest/plugin/admin/labelconfiguration/languages"
-        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/resource?lang={0}&ns={1}"
+        ,API_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource?lang={0}&ns={1}"
+        ,API_RESET_RESOURCE:  "/api/latest/plugin/admin/labelconfiguration/admin-resource/reset"
 
 
         ,create: function(){
@@ -358,8 +533,7 @@ Admin.Service = {
                 function(response) {
                     if (response.hasError) {
                         var errorMsg = "Failed to retrieve resource settings:" + response.errorMsg;
-                        Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
-                        $dfd.reject()
+                        $dfd.reject();
                     } else {
                         $dfd.resolve(response);
                     }
@@ -369,6 +543,7 @@ Admin.Service = {
 
             return $dfd.promise();
         },
+
         updateSettings: function(settings){
             var $dfd =jQuery.Deferred();
             var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_SETTINGS;
@@ -449,6 +624,7 @@ Admin.Service = {
 
             return $dfd.promise();
         }
+
         ,updateResource: function(lang, namespace, resource){
             var $dfd =jQuery.Deferred();
             var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESOURCE.format(lang, namespace);
@@ -465,6 +641,32 @@ Admin.Service = {
                 }
                 ,url
                 ,JSON.stringify(resource, null, 4)
+            );
+            return $dfd.promise();
+        }
+
+        ,resetResource: function(langs, namespaces){
+            var $dfd =jQuery.Deferred();
+            var lng = _.isArray(langs) ? langs: [langs];
+            var ns = _.isArray(namespaces) ? namespaces: [namespaces];
+            var url = App.getContextPath() + Admin.Service.LabelConfiguration.API_RESET_RESOURCE.format(lng, ns);
+            var data = {
+                lng: lng,
+                ns: ns
+            }
+            Acm.Service.asyncPost(
+                function(response){
+                    //if (response.hasError) {
+                    //    var errorMsg = "Failed to save labels resource:" + response.errorMsg;
+                    //    Admin.Controller.modelErrorRetrievingFunctionalAccessControlGroups(errorMsg);
+                    //    $dfd.reject()
+                    //} else {
+                    //    $dfd.resolve(response);
+                    //}
+                    $dfd.resolve(response);
+                }
+                ,url,
+                JSON.stringify(data, null, 4)
             );
             return $dfd.promise();
         }
@@ -522,6 +724,129 @@ Admin.Service = {
                     }
                 }
             });
+        }
+    }
+
+    ,RolesPrivileges: {
+        create: function() {
+
+        }
+
+        ,onInitialized: function() {
+
+        }
+
+        ,API_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles"
+        ,API_RETRIEVE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/privileges"
+        ,API_ROLE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges"
+
+        ,retrieveApplicationRoles: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLES;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve application roles: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                        //Admin.Controller.modelErrorRetrievedRolesPrivilegesApplicationRoles(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationRoles(response)) {
+                            $dfd.resolve(response);
+                            //var roles = response;
+                            //Admin.Controller.modelRetrievedRolesPrivilegesApplicationRoles(roles);
+                        }
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+
+        ,createApplicationRole: function(roleName) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLES;
+            var data = {
+                roleName: roleName
+            }
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to create role: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+
+            return $dfd.promise();
+
+        }
+
+        ,retrieveApplicationPrivileges: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_RETRIEVE_PRIVILEGES;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve application privileges: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationPrivileges(response)) {
+                            $dfd.resolve(response);
+                        }
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+
+        ,retrieveApplicationRolePrivileges: function(roleName) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLE_PRIVILEGES.format(roleName);
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve role privileges: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationRolePrivileges(response)) {
+                            $dfd.resolve(response);
+                        }
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+        ,saveApplicationRolePrivileges: function(roleName, privileges) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLE_PRIVILEGES.format(roleName);
+            var data = {
+              privileges: privileges
+            };
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to save role privileges: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        if (Admin.Model.RolesPrivileges.validateApplicationRolePrivileges(response)) {
+                            $dfd.resolve(response);
+                        }
+                    }
+                }
+                ,url
+                , JSON.stringify(data)
+            )
+
+            return $dfd.promise();
         }
     }
 
@@ -705,6 +1030,80 @@ Admin.Service = {
                 ,url
                 ,JSON.stringify(reportToGroupsMap)
             )
+        }
+    }
+
+    ,Forms: {
+    	create: function () {
+    		if (Admin.Service.Forms.PlainForms.create)        	{Admin.Service.Forms.PlainForms.create();}
+        }
+        , onInitialized: function () {
+        	if (Admin.Service.Forms.PlainForms.onInitialized)        	{Admin.Service.Forms.PlainForms.onInitialized();}
+        }
+        
+        ,PlainForms:{
+        	create: function () {
+        		
+            }
+            , onInitialized: function () {
+            	
+            }
+            
+            ,API_RETRIEVE_PLAIN_FORMS: 			  "/api/latest/plugin/admin/plainforms"
+            ,API_DELETE_PLAIN_FORM: 			  "/api/latest/plugin/admin/plainforms"
+            ,API_RETRIEVE_PLAIN_FORM_TARGETS:	  "/api/latest/plugin/admin/plainform/targets"
+            	
+        	,retrievePlainForms: function() {
+                var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_RETRIEVE_PLAIN_FORMS;
+                Acm.Service.asyncGet(
+                    function(response) {
+                        if (response.hasError) {
+                            var errorMsg = "Failed to retrieve plain forms:" + response.errorMsg;
+                            Admin.Controller.modelReportConfigError(errorMsg);
+                        } else {
+                            if (Admin.Model.Forms.PlainForms.validatePlainForms(response)) {
+                                Admin.Model.Forms.PlainForms.setPlainForms(response);
+                                Admin.Controller.modelFormsConfigRetrievedPlainForms(response);
+                            }
+                        }
+                    }
+                    ,url
+                )
+            }
+            
+            ,deletePlainForm: function(key, target) {
+                var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_DELETE_PLAIN_FORM + '/' + key + '/' + target;
+                return Acm.Service.call({type: "DELETE"
+                    ,url: url
+                    ,callback: function(response) {
+                        if (response.hasError) {
+                        	var errorMsg = "Failed to delete plain form:" + response.errorMsg;
+                            Admin.Controller.modelReportConfigError(errorMsg);
+                        } else {
+                        	Admin.Controller.modelFormsConfigDeletedPlainForm(response);
+                            return true;
+                        }
+                    }
+                });
+            }
+            
+            ,retrievePlainFormTargets: function() {
+                var url = App.getContextPath() + Admin.Service.Forms.PlainForms.API_RETRIEVE_PLAIN_FORM_TARGETS;
+                Acm.Service.asyncGet(
+                    function(response) {
+                        if (response.hasError) {
+                            var errorMsg = "Failed to retrieve plain form targets:" + response.errorMsg;
+                            Admin.Controller.modelReportConfigError(errorMsg);
+                        } else {
+                            if (Admin.Model.Forms.PlainForms.validatePlainFormTargets(response)) {
+                                Admin.Model.Forms.PlainForms.setPlainFormTargets(response);
+                                Admin.Controller.modelFormsConfigRetrievedPlainFormTargets(response);
+                            }
+                        }
+                    }
+                    ,url
+                )
+            }
         }
     }
 };

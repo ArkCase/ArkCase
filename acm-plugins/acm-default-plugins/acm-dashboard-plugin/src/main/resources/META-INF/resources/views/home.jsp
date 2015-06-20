@@ -6,6 +6,10 @@
 <t:layout>
 <jsp:attribute name="endOfHead">
     <title><spring:message code="dashboard.page.title" text="Dashboard | ACM | Armedia Case Management" /></title>
+    <div id="detailData" itemscope="true" style="display: none">
+        <span itemprop="resourceNamespace">dashboard</span>
+    </div>
+
 
     <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_angular}/css/sample.test.css'/>" />
 
@@ -44,7 +48,7 @@
     <section class="vbox">
         <section class="scrollable">
 
-            <div class="container" ng-app="sample" style="width:100%">
+            <div id="dashboard-app-container" class="container" style="width:100%">
                 <div ng-view />
             </div>
 

@@ -126,7 +126,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
         }
 		
 		// Save attachments (or update XML form and PDF form if the mode is "edit")
-        String cmisFolderId = findFolderId(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
+        String cmisFolderId = findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
 		FrevvoUploadedFiles uploadedFiles = saveAttachments(
                 attachments,
                 cmisFolderId,
@@ -197,6 +197,12 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService {
 	public void setApplicationEventPublisher(
 			ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
+	}
+
+	@Override
+	public Object convertToFrevvoForm(Object obj, Object form) {
+		// Implementation no needed so far
+		return null;
 	}
 
 }

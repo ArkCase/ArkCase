@@ -48,6 +48,11 @@ document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/ac
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExModel.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExObject.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/ex/acmExService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profile.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileController.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileModel.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileService.js"></script>');
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/libs/profile/profileView.js"></script>');
 
 // Import User Picker Plugin
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBase.js"></script>');
@@ -56,16 +61,19 @@ document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picke
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseService.js"></script>');
 document.writeln('<script type="text/javascript" src="/frevvo/arkcase/user-picker-plugin-v1.0/search/searchBaseView.js"></script>');
 
+// Frevvo Patch
+document.writeln('<script type="text/javascript" src="/frevvo/arkcase/patch/form.pack.js.patch"></script>');
 
 var CustomEventHandlers = {
    setup: function (el) {
+	   var elState = CustomView.getState(el);
        if (CustomView.hasClass(el, 'nextTab')) {
            FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
        } else if (CustomView.hasClass(el, 'previousTab')) {
            FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
        } else if (CustomView.hasClass(el, 'createUserPicker')) {
            this.createUserPicker();
-       } else if (CustomView.hasClass(el, 'userPicker')) {
+       } else if (isSimpleUserPicker(el) || isAdvancedUserPicker(el)) {
            FEvent.observe(el, 'focus', this.showUserPicker.bindAsObserver(this, el));
        }
    },
@@ -89,9 +97,14 @@ var CustomEventHandlers = {
 		
 		SearchBase.create();
 		SearchBase.onInitialized();
+		
+		Profile.create();
+		Profile.onInitialized();
    },
    
    showUserPicker: function(event, element) {
+		this.scrollTop(event, element);
+   
 		var filters = [{key: "Object Type", values: ["USER"]}];
 		
 		var owningGroup = getOwningGroup();
@@ -99,7 +112,7 @@ var CustomEventHandlers = {
 			filters.push({key: "Group", values: [owningGroup]});
 		}
 		
-		SearchBase.Dialog.create({name: "pickUser"
+		SearchBase.showSearchDialog({name: "pickUser"
 			,title: "Add User"
 			,prompt: "Enter to search for users."
 			,btnGoText: "Go!"
@@ -114,39 +127,171 @@ var CustomEventHandlers = {
 			,onClickBtnPrimary : function(event, ctrl) {
 				SearchBase.View.Results.getSelectedRows().each(function () {
 					var record = frevvo_jQuery(this).data('record');
-					if (record && record.id && record.name) {
-						element.value = record.name;
-						var changeEvent_name = document.createEvent("Event");
-						changeEvent_name.initEvent("change", true, true);
-						element.dispatchEvent(changeEvent_name);
-						
-						// Find id filed for this element
-						var ids = document.getElementsBySelector('.' + element.name + '_id input');
-						var elementId = null;
-						
-						if (ids && ids.length == 1) {
-							elementId = ids[0];
-						} else if (ids.length > 1){
-							try{
-								elementId = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + element.name + '_id input')[0];
-							}catch(e) {
-							
-							}
-						}
-						
-						if (elementId != null) {
-							elementId.value = record.id;
-							var changeEvent_id = document.createEvent("Event");
-							changeEvent_id.initEvent("change", true, true);
-							elementId.dispatchEvent(changeEvent_id);
+					if (record && record.id && record.name) {						
+						if (isSimpleUserPicker(element)) {
+							// Simple user picker (fill only user id and full name)
+							doSimpleUserPicker(element, record.id, record.name);
+						} else if (isAdvancedUserPicker(element)){
+							// Advanced user picker (fill user id, full name, first name, last name, location, email, phone ... etc ...)
+							doAdvancedUserPicker(element, record.id);
 						}
 					}
 				});
 			}
-		}).show();
+		});
    }
 }
 
+/**
+ * The logic for populating fields after clicking "Add" button in the user picker when we should fill only simple information, like User Id and Full Name
+ */
+function doSimpleUserPicker(element, userId, value) {
+	updateElement(element, 'fullName', value)
+	updateElement(element, 'id', userId);
+}
+
+/**
+ * The logic for populating fields after clicking "Add" button in the user picker when we should fill multiple fields, like User Id, First Name, Last Name, Location, Email, Phone
+ */
+function doAdvancedUserPicker(element, userId) {
+	var response = Profile.Service.Info.retrieveProfileInfo(userId);				
+	if (response) {
+		var responseObj = JSON.parse(response);
+		if (responseObj) {
+			updateElement(element, 'id', responseObj.userId);
+			updateElement(element, 'location', responseObj.firstAddress);
+			updateElement(element, 'firstName', responseObj.firstName);
+			updateElement(element, 'lastName', responseObj.lastName);
+			updateElement(element, 'email', responseObj.email);
+			updateElement(element, 'phone', responseObj.mobilePhoneNumber);
+		}
+	}
+}
+
+/**
+ * Dispatch change event for the field that we are changing the value. We need to do this because on that way
+ * Frevvo make update on his data model on the backend side
+ */
+function dispatchChangeEvent(element) {
+	var changeEvent = document.createEvent("Event");
+	changeEvent.initEvent("change", true, true);
+	element.dispatchEvent(changeEvent);
+}
+
+/**
+ * Recognizing if the simple user picker logic should be executed - fill single field
+ */
+function isSimpleUserPicker(element) {
+	var elementState = CustomView.getState(element);
+	if((elementState && elementState.cssClass && elementState.cssClass.indexOf('userPickerSimple') != -1)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Recognizing if the advanced user picker logic should be executed - fill multiple fields
+ */
+function isAdvancedUserPicker(element) {
+	var elementState = CustomView.getState(element);
+	if((elementState && elementState.cssClass && elementState.cssClass.indexOf('userPickerAdvanced') != -1)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * Taking CSS class from the element. This CSS class is the class entered in the Frevvo form while designing the form with Frevvo Engine.
+ * It can be "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" - for simple user picker or "userPickerAdvanced_<RECOGNITIONTEXT>_<FIELDNAME>" - for advanced user picer
+ */
+function getCssClass(element) {
+	var elementState = CustomView.getState(element);
+	if(elementState && elementState.cssClass) {
+		return elementState.cssClass;
+	}
+	return null;
+}
+
+/**
+ * The class is in the format: "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" or "userPickerAdvanced_<RECOGNITIONTEXT>_<FIELDNAME>"
+ * For example: userPickerAdvanced_prosecutor_firstName
+ * This method will return: userPickerAdvanced_prosecutor 
+ */
+function getCssClassDivided(element) {
+	var cssClass = getCssClass(element);
+	if (cssClass != null) {
+		var cssClassArray = cssClass.split('_');
+		
+		if (cssClassArray && cssClassArray.length === 3) {
+			return cssClassArray[0] + '_' + cssClassArray[1];
+		}
+	}
+	return null;
+}
+
+/**
+ * This method will find the element for given class name (the class name entered in the Frevvo form while designing the form with Frevvo Engine).
+ * After finding the element (if exist), the value will be changed and dispathed change event (on that way the data model on the Frevvo backend will be updated too)
+ */
+function updateElement(element, fieldName, value) {
+	var cssClassDivided = getCssClassDivided(element);
+	if (cssClassDivided != null) {
+		if (value === null) {
+			value = '';
+		}
+		var elementToUpdate = null;
+		var elements = document.getElementsBySelector('.' + cssClassDivided + '_' + fieldName + ' input');
+		if (elements && elements.length == 1) {
+			elementToUpdate = elements[0];
+		} else if (elements && elements.length > 1){
+			try{
+				elementToUpdate = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + cssClassDivided + '_' + fieldName + ' input')[0];
+			}catch(e) {
+				// Normal behaviour - element is not found
+			}
+		}
+		
+		if (elementToUpdate != null) {
+			elementToUpdate.value = value;
+			dispatchChangeEvent(elementToUpdate);
+		}
+	}
+}
+
+/**
+ * This method will return the value selected in the owning group if exist that kind of element
+ */
+function getOwningGroup() {
+	var owningGroup = null;
+	try{
+		var element = document.getElementsBySelector('.owningGroup input')[0];
+		return element.value;
+	}catch(e) {
+		// Normal behaviour - the element is not found
+	}
+}
+
+/**
+ * This method will return the state if we should add filter by groups while showing the user picker for the first time.
+ * This can be happen if we have picked some group
+ */
+function filterByOwningGroup(element){
+	try{
+		var elementType = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + element.name + '_type input')[0];
+		if (elementType && elementType.value === 'group-user') {
+			return true;
+		}
+	}catch(e) {
+		// Normal behaviour - the element is not found
+	}
+	return false;
+}
+
+/**
+ * UI for the user picker
+ */
 var userPickerString = '<div class="modal fade" id="dlgObjectPicker" tabindex="-1" role="dialog" aria-labelledby="labPoTitle" aria-hidden="true" style="display: none;">' +
 							'<div class="modal-dialog modal-lg">' +
 								'<div class="modal-content">' +
@@ -188,30 +333,6 @@ var userPickerString = '<div class="modal fade" id="dlgObjectPicker" tabindex="-
 								'</div>' +
 							'</div>' +
 						'</div>';
-						
-function getOwningGroup() {
-	var owningGroup = null;
-	
-	try{
-		var element = document.getElementsBySelector('.owningGroup input')[0];
-		return element.value;
-	}catch(e) {
-	
-	}
-}
-
-function filterByOwningGroup(element){
-	try{
-		var elementType = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + element.name + '_type input')[0];
-		if (elementType && elementType.value === 'group-user') {
-			return true;
-		}
-	}catch(e) {
-	
-	}
-	
-	return false;
-}
 
 /* Rich Text Area properties - START */
 var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';

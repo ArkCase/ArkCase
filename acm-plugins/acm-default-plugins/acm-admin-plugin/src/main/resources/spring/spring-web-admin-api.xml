@@ -3,7 +3,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI">
     </bean>
 
@@ -13,11 +12,17 @@
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
+    <!-- Label configuration API -->
     <bean id="labelConfigurationRetrieveResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveResource">
         <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
     </bean>
 
+    <bean id="labelConfigurationRetrieveAdminResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationRetrieveAdminResource">
+        <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings/%s.%s.json"/>
+    </bean>
+
     <bean id="labelConfigurationUpdateResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationUpdateResource">
+        <property name="adminResourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings/%s.%s.json"/>
         <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
     </bean>
 
@@ -37,6 +42,114 @@
         <property name="settingsFileLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings.json"/>
     </bean>
 
-    <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
+    <bean id="labelConfigurationResetResource" class="com.armedia.acm.plugins.admin.web.api.LabelConfigurationResetResource">
+        <property name="adminResourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/settings/%s.%s.json"/>
+        <property name="resourcesFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/labels/%s.%s.json"/>
+    </bean>
 
+    <!-- LDAP configuration API -->
+    <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
+        <property name="ldapConfigurationTemplatesLocation" value="#{ systemProperties ['user.home'] }/.acm/spring/ldap-config-templates/" />
+        <property name="ldapTemplateLoginFile" value="spring-config-ldap-authenticate.xml.ftl"/>
+        <property name="ldapTemplateSignatureFile" value="spring-config-auth.xml.ftl"/>
+        <property name="ldapTemplateSyncFile" value="spring-config-ldap-sync.xml.ftl"/>
+        <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
+
+        <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.acm/spring/"/>
+        <property name="ldapLoginFile" value="spring-config-%s-ldap-authenticate.xml"/>
+        <property name="ldapSignatureFile" value="spring-config-%s-auth.xml"/>
+        <property name="ldapSyncFile" value="spring-config-%s-ldap-sync.xml"/>
+        <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
+        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9]+[-d]ldap.properties$"/>
+    </bean>
+
+    <bean id="ldapConfigurationRetrieveDirectories" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationRetrieveDirectories">
+        <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
+    </bean>
+
+    <bean id="ldapConfigurationCreateDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationCreateDirectory">
+        <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
+    </bean>
+
+    <bean id="ldapConfigurationDeleteDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationDeleteDirectory">
+        <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
+    </bean>
+
+    <bean id="ldapConfigurationUpdateDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationUpdateDirectory">
+        <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
+    </bean>
+
+    <!-- Roles Priveleges API-->
+    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesService">
+        <property name="applicationRolesFile" value="#{ systemProperties ['user.home'] }/.acm/applicationRoles.properties" />
+        <property name="applicationPrivilegesFile" value="#{ systemProperties ['user.home'] }/.acm/applicationPrivileges.properties" />
+        <property name="applicationRolesPrivilegesPropertiesFile" value="#{ systemProperties ['user.home'] }/.acm/applicationRolesPrivileges.properties" />
+        <property name="applicationRolesPrivilegesTemplatesLocation" value="#{ systemProperties ['user.home'] }/.acm/spring/roles-privileges-templates/" />
+        <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl" />
+        <property name="applicationRolesPrivilegesFile" value="#{ systemProperties ['user.home'] }/.acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml" />
+    </bean>
+
+    <bean id="rolesPrivilegesCreateRole" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesCreateRole">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrieveRoles" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRoles">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrievePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrievePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrieveRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesUpdateRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRolePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <!-- Workflow Configuration -->
+    <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationService">
+        <property name="acmBpmnService" ref="processDefinitionManagementService" />
+        <property name="temporaryFolder" value="#{ systemProperties ['user.home'] }/.acm/activiti/temp/" />
+    </bean>
+
+    <bean id="workflowConfigurationRetrieveWorkflows" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveWorkflows">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationRetrieveHistory" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveHistory">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationRetrieveBpmnFile" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveBpmnFile">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationReplaceBpmnFile" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationReplaceBpmnFile">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationMakeActive" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationMakeActive">
+        <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
+    
+    <bean id="getPlainFormsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormsAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    </bean>
+    
+    <bean id="deletePlainFormAPIController" class="com.armedia.acm.plugins.admin.web.api.DeletePlainFormAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    	<property name="plainFormPropertiesLocation" value="#{ systemProperties ['user.home'] }/.acm/acm-forms-plain.properties"/>
+    	<property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+    </bean>
+    
+    <bean id="getPlainFormTargetsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
+    	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+    </bean>
 </beans>

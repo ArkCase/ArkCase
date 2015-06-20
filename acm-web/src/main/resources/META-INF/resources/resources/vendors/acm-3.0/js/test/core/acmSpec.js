@@ -80,7 +80,7 @@ describe("Acm", function()
         expect(Acm.goodValue("some value")).toBe("some value");
         expect(Acm.goodValue("some value",      "should not be")).toBe("some value");
         expect(Acm.goodValue("",                "dont be empty")).toBe("dont be empty");
-        expect(Acm.goodValue("",                ""))             .toBe("");    //empty string really allowed
+        expect(Acm.goodValue("",                ""))             .toBe("");    //empty string allowed
         expect(Acm.goodValue(varNotInitialized, "good value"))   .toBe("good value");
 
         expect(Acm.goodValue(null, "string")).toBe("string");
@@ -92,15 +92,53 @@ describe("Acm", function()
         expect(Acm.goodValue(0,    123))     .toBe(0);      //0 is a valid number
     });
 
-    xit("Test Acm.goodValue() with array", function() {
+    it("Test Acm.goodValue() with array", function() {
         var good = {name:"John", child:{name:"Charlie"}};
         var bad1 = {name:"John", child:{}};
         var bad2 = {name:"John"};
+        var bad3 = {};
+        var bad4 = null;
 
-        expect(Acm.goodValue([good, "child", "name"])).toBe("Charlie");
+        expect(good.child.name).toBe("Charlie");
+        expect(Acm.goodValue([good, "child", "name"])).toBe(good.child.name);
         expect(Acm.goodValue([bad1, "child", "name"])).toBe("");
         expect(Acm.goodValue([bad2, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue([bad3, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue([bad4, "child", "name"], "BadValue")).toBe("BadValue");
 
+        expect(Acm.goodValue([good.child, "name"])  ,"if no need to check null good").toBe(good.child.name);
+        expect(Acm.goodValue([good.child.name])     ,"if no need to check null good and null child").toBe(good.child.name);
+        expect(Acm.goodValue(["hello"])             ,"why used this way? but still work").toBe("hello");
+    });
+
+    it("Test Acm.parseJson() function", function() {
+        expect(Acm.parseJson(null)).toEqual(null);
+
+        expect(Acm.parseJson("")).toEqual({});
+        expect(Acm.parseJson("{}")).toEqual({});
+
+        var s, json;
+        //s = '{"name": "John"}';
+        json = Acm.parseJson('{"name": "John"}');
+        expect(json.name).toBe("John");
+
+        json = Acm.parseJson('["abc", "xyz"]');
+        expect(json.length).toBe(2);
+        expect(json[0]).toBe("abc");
+        expect(json[1]).toBe("xyz");
+
+        json = Acm.parseJson('[{"arrayItem": "John"}, {"arrayItem": "Ann"}]');
+        expect(json.length).toBe(2);
+        expect(json[0].arrayItem).toBe("John");
+        expect(json[1].arrayItem).toBe("Ann");
+
+        var badNameWithoutQuote = '{name: "John"}';
+        expect(Acm.parseJson(badNameWithoutQuote)).toEqual({});
+        expect(Acm.parseJson(badNameWithoutQuote, {"name": "defaultIsUsed"}).name).toEqual("defaultIsUsed");
+
+        var badMissingBracket = '[{"arrayItem": "John"}, {"arrayItem": "Ann"}';
+        expect(Acm.parseJson(badMissingBracket)).toEqual({});
+        expect(Acm.parseJson(badMissingBracket, [])).toEqual([]); //but want to default to a blank array
     });
 
     it("Test Acm.makeNoneCacheUrl() function", function() {

@@ -163,6 +163,9 @@ AcmEx.Object = {
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
+        //
+        // sortMap can be overloaded as hash map, comparator, or paging url builder
+        //
         ,usePaging: function($jt, jtArg, sortMap) {
             jtArg.paging = true;
             if (!jtArg.pageSize) {
@@ -191,10 +194,17 @@ AcmEx.Object = {
                 }
             }
 
+            jtArg.fields._idx = {
+                type: "hidden"
+                ,list: true
+                ,create: false
+                ,edit: false
+            }
+
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
-        ,useChildTable: function($jt, childLinks, arg) {
+        ,useChildTable: function($jt, childLinks, arg, sortMap) {
             var argNew = {fields:{}};
             argNew.fields.subTables = {
                 title: 'Entities'
@@ -224,8 +234,10 @@ AcmEx.Object = {
                     argNew[key] = arg[key];
                 }
             }
-            $jt.jtable(argNew);
-            $jt.jtable('load');
+
+//            $jt.jtable(argNew);
+//            $jt.jtable('load');
+            this.usePaging($jt, argNew, sortMap);
         }
         ,useAsChild: function($jt, $row, arg) {
             $jt.jtable('openChildTable'
@@ -235,10 +247,6 @@ AcmEx.Object = {
                     data.childTable.jtable('load');
                 }
             );
-        }
-        ,clickAddRecordHandler: function($jt, handler) {
-            var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
-            $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
         ,toggleChildTable: function($t, $row, fnOpen, title) {
             var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
@@ -258,25 +266,97 @@ AcmEx.Object = {
                 fnOpen($t, $row);
             }
         }
-
-        //toggleSubJTable is to be retired; use toggleChildTable
-        ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
-            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
-            var curTitle = $childRow.find("div.jtable-title-text").text();
-
-            var toClose;
-            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
-                toClose = (curTitle === title);
-            } else {
-                toClose = false;
-            }
-
-            if (toClose) {
-                fnClose($t, $row);
-            } else {
-                fnOpen($t, $row);
-            }
+        ,clickAddRecordHandler: function($jt, handler) {
+            var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
+            $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
+        ,_hashMapComparator: function(item1, item2, sortBy, sortDir) {
+            var value1 = item1[sortBy];
+            var value2 = item2[sortBy];
+            var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
+            return ("DESC" == sortDir)? -rc : rc;
+//            if ("DESC" == sortDir) {
+//                rc = -rc;
+//            }
+//            return rc;
+        }
+        //
+        // comparator can be overloaded with a sortMap, in that case, a default comparator is used
+        //
+        ,getPagingItems: function(jtParams, arr, comparator) {
+            var pagingItems = [];
+            if (!Acm.isArrayEmpty(arr)) {
+                var sortItems = [];
+                for (var i = 0; i < arr.length; i++) {
+                    var sortItem = {idx: i, item: arr[i]};
+                    sortItems.push(sortItem);
+                }
+
+                if (Acm.isNotEmpty(jtParams.jtSorting)) {
+                    sortItems.sort(function(a, b){
+                        var jtSorting = jtParams.jtSorting;
+                        var sortArr = jtSorting.split(" ");
+                        var sortBy = sortArr[0];
+                        var sortDir = sortArr[1];
+
+                        if (!comparator) {
+                            return 0;
+                        } else if (typeof comparator === "function") {
+                            return comparator(a.item, b.item, sortBy, sortDir);
+                        } else if (typeof comparator === "object") {
+                            var sortMap = comparator;
+                            var itemSortBy = sortMap[sortBy];
+                            return AcmEx.Object.JTable._hashMapComparator(a.item, b.item, itemSortBy, sortDir);
+                        } else {
+                            return 0;
+                        }
+
+                    });
+                }
+
+                var jtPageSize = jtParams.jtPageSize;
+                var jtStartIndex = jtParams.jtStartIndex;
+                for (var i = jtStartIndex; i < jtStartIndex + jtPageSize && i < sortItems.length; i++) {
+                    pagingItems.push(sortItems[i]);
+                }
+            }
+            return pagingItems;
+        }
+        ,getPagingRecord: function(pagingItem) {
+            var record = {};
+            record._idx = pagingItem.idx;
+            return record;
+        }
+        ,getPagingItemData: function(pagingItem) {
+            return pagingItem.item;
+        }
+        ,getPagingRow: function(data) {
+            var record = data.record;
+            return record._idx;
+        }
+        ,getTableRow: function(data) {
+            var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+            return whichRow;
+        }
+
+//        //toggleSubJTable is to be retired; use toggleChildTable
+//        ,toggleSubJTable: function($t, $row, fnOpen, fnClose, title) {
+//            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+//            var curTitle = $childRow.find("div.jtable-title-text").text();
+//
+//            var toClose;
+//            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+//                toClose = (curTitle === title);
+//            } else {
+//                toClose = false;
+//            }
+//
+//            if (toClose) {
+//                fnClose($t, $row);
+//            } else {
+//                fnOpen($t, $row);
+//            }
+//        }
     }
 
 
@@ -322,7 +402,10 @@ AcmEx.Object = {
         ,setDate: function($s, txt) {
             if (txt) {
                 // Apply internal format  'MM/DD/YYYY' to date
-                txt = moment(txt, $.t("common:date.short")).format('MM/DD/YYYY')
+                txt = moment(txt, $.t("common:date.short")).format('MM/DD/YYYY');
+                //jwu:
+                //     no need to i18n "short", it is an internal string
+                //     need to read format from config, but prefer to pass the format as argument, not to mingle with $.t or config functions here
                 $s.editable("setValue", txt, true);  //true = use internal format
             } else {
                 Acm.Object.setText($s, "Unknown");
@@ -353,253 +436,6 @@ AcmEx.Object = {
             return (10 > i) ? "0" + i : "" + i;
         }
     }
-
-//retired
-//    ,Tree: {
-//        useFancyTree: function($tree, arg) {
-//            this._activateHandler = null;
-//            if (arg.activate) {
-//                this._activateHandler = arg.activate;
-//            }
-//            arg.activate = function(event, data) {
-//                AcmEx.Object.Tree._activeKey = data.node.key;
-//                if (AcmEx.Object.Tree._activateHandler) {
-//                    AcmEx.Object.Tree._activateHandler(event, data);
-//                }
-//            };
-//
-//            this._beforeActivateHandler = null;
-//            if (arg.beforeActivate) {
-//                this._beforeActivateHandler = arg.beforeActivate;
-//            }
-//            arg.beforeActivate = function(event, data) {
-//                if (App.Object.Dirty.isDirty()) {
-//                    var node = data.node;
-//                    var key = node.key;
-//                    if (key == AcmEx.Object.Tree._activeKey) {
-//                        if (AcmEx.Object.Tree._beforeActivateHandler) {
-//                            return AcmEx.Object.Tree._beforeActivateHandler(event, data);
-//                        } else {
-//                            return true;
-//                        }
-//                    } else {
-//                        var reason = App.Object.Dirty.getFirst();
-//                        Acm.Dialog.alert("Need to save data first: " + reason);
-//                        return false;
-//                    }
-//                }
-//            };
-//
-//            //dblclick
-//            //focus
-//
-//            if (!arg.renderNode) {
-//                arg.renderNode = function(event, data) {
-//                    AcmEx.Object.Tree.fixNodeIcon(data.node);
-//                };
-//            }
-//
-//            if (!arg.loadError) {
-//                arg.loadError = function(event, data) {
-//                    var error = data.error;
-//                    if (error.status && error.statusText) {
-//                        data.details = "Error status: " + error.statusText + "[" + error.status + "]";
-//                    } else {
-//                        data.details = "Error: " + error;
-//                    }
-//                    //data.message = "Custom error: " + data.message;
-//                };
-//            }
-//
-//            $tree.fancytree(arg);
-//
-//            this.tree = $tree.fancytree("getTree");
-//        }
-//
-//        ,solrSource: function(objList, objKeyMaker, objTitleMaker, objToolTipMaker) {
-//            var builder = AcmEx.FancyTreeBuilder.reset();
-//
-//            var treeInfo = AcmEx.Model.Tree.Config.getTreeInfo();
-//            if ((null == objList) || !Acm.isArray(objList) || 0 >= objList.length) {
-//                return builder.getTree();
-//            }
-//
-//            if (0 < treeInfo.start) {
-//                builder.addLeaf({key: AcmEx.Model.Tree.Key.NODE_TYPE_PART_PREV_PAGE
-//                    ,title: treeInfo.start + " records above..."
-//                    ,tooltip: "Review previous records"
-//                    ,expanded: false
-//                    ,folder: false
-//                });
-//            }
-//
-//            for (var i = 0; i < objList.length; i++) {
-//                var obj = objList[i];
-//                var caseId = parseInt(obj.object_id_s);
-//                builder.addLeaf({key: objKeyMaker(treeInfo, obj)
-//                    ,title          : objTitleMaker(treeInfo, obj)
-//                    ,tooltip        : objToolTipMaker(treeInfo, obj)
-//                    ,expanded: false
-//                    ,folder: true
-//                    ,lazy: true
-//                    ,cache: false
-//                });
-//            } //end for i
-//            builder.makeLast();
-//
-//            if ((0 > treeInfo.total)                                    //unknown size
-//                || (treeInfo.total - treeInfo.n > treeInfo.start)) {   //no more page left
-//                var title = (0 > treeInfo.total)? "More records..."
-//                    : (treeInfo.total - treeInfo.start - treeInfo.n) + " more records...";
-//                builder.addLeafLast({key: AcmEx.Model.Tree.Key.NODE_TYPE_PART_PREV_PAGE
-//                    ,title: title
-//                    ,tooltip: "Load more records"
-//                    ,expanded: false
-//                    ,folder: false
-//                });
-//            }
-//
-//            return builder.getTree();
-//        }
-//        ,fixNodeIcon: function(node) {
-//            var key = node.key;
-//            var nodeType = AcmEx.Model.Tree.Key.getNodeTypeByKey(key);
-//            var acmIcon = AcmEx.Model.Tree.Key.getIconByKey(key);
-//            if (acmIcon) {
-//                var span = node.span;
-//                var $spanIcon = $(span.children[1]);
-//                $spanIcon.removeClass("fancytree-icon");
-////                $spanIcon.html("<i class='i " + acmIcon + "'></i>");
-//                $spanIcon.html("<i class='" + acmIcon + "'></i>");
-//            }
-//        }
-//
-//        ,_activeKey: null
-//        ,getActiveKey: function() {
-//            return this._activeKey;
-//        }
-//        ,getActiveObjId: function() {
-//            var objId = AcmEx.Model.Tree.Key.getObjIdByKey(this._activeKey);
-//            return objId;
-//        }
-//
-//        ,refreshTree: function(key) {
-//            this.tree.reload().done(function(){
-//                if (Acm.isNotEmpty(key)) {
-//                    var parts = key.split(AcmEx.Model.Tree.Key.KEY_SEPARATOR);
-//                    if (parts && 1 < parts.length) {
-//                        var parentKey = parts[0];
-//                        //exclude page ID, so start from 1; expand parents only, not include self, so length-1
-//                        for (var i = 1; i < parts.length-1; i++) {
-//                            parentKey += AcmEx.Model.Tree.Key.KEY_SEPARATOR + parts[i];
-//                            var node = AcmEx.Object.Tree.tree.getNodeByKey(parentKey);
-//                            if (node) {
-//                                if (!node.isExpanded()) {
-//                                    node.setExpanded(true);
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    AcmEx.Object.Tree.tree.activateKey(key);
-//                }
-//            });
-//        }
-//        ,activeTreeNode: function(key) {
-//            this.tree.activateKey(key);
-//        }
-//        ,expandAllTreeNode: function(key) {
-//            var thisNode = this.tree.getNodeByKey(key);
-//            if (thisNode) {
-//                thisNode.setExpanded(true);
-//                thisNode.visit(function(node) {
-//                    node.setExpanded(true);
-//                });
-//            }
-//        }
-//        ,collapseAllTreeNode: function(key) {
-//            var thisNode = this.tree.getNodeByKey(key);
-//            if (thisNode) {
-//                thisNode.setExpanded(false);
-//                thisNode.visit(function(node) {
-//                    node.setExpanded(false);
-//                });
-//            }
-//        }
-//        ,toggleAllTreeNode: function(key) {
-//            var thisNode = this.tree.getNodeByKey(key);
-//            if (thisNode) {
-//                thisNode.toggleExpanded();
-//                thisNode.visit(function(node) {
-//                    node.toggleExpanded();
-//                });
-//            }
-//        }
-//    }
-//
-//    ,TreeModifier: {
-//        defaultFilter: null
-//        ,buildFilter: function($ulFilter, treeFilter, onFilterChanged) {
-//            var html = "";
-//            if (this.validateFilter(treeFilter)) {
-//                for (var i = 0; i < treeFilter.length; i++) {
-//                    if (treeFilter[i].default) {
-//                        this.defaultFilter = Acm.goodValue(treeFilter[i].name);
-//                    }
-//                    html += "<li value='" + Acm.goodValue(treeFilter[i].name)
-//                        +  "'><a href='#'>" + Acm.goodValue(treeFilter[i].desc) + "</a></li>";
-//                }
-//            }
-//
-//            if (Acm.isNotEmpty(html)) {
-//                $ulFilter.html(html);
-//                $ulFilter.find("li").on("click", function(e) {
-//                    var value = $(this).attr("value");
-//                    onFilterChanged(value);
-//                });
-//            }
-//        }
-//        ,validateFilter: function(data) {
-//            if (Acm.isEmpty(data)) {
-//                return false;
-//            }
-//            if (!Acm.isArray(data)) {
-//                return false;
-//            }
-//            return true;
-//        }
-//
-//        ,defaultSort: null
-//        ,buildSort: function($ulSort, treeSort, onSortChanged) {
-//            var html = "";
-//            if (this.validateSort(treeSort)) {
-//                for (var i = 0; i < treeSort.length; i++) {
-//                    if (treeSort[i].default) {
-//                        this.defaultSort = Acm.goodValue(treeSort[i].name);
-//                    }
-//                    html += "<li value='" + Acm.goodValue(treeSort[i].name)
-//                        +  "'><a href='#'>" + Acm.goodValue(treeSort[i].desc) + "</a></li>";
-//                }
-//            }
-//
-//            if (Acm.isNotEmpty(html)) {
-//                $ulSort.html(html);
-//                $ulSort.find("li").on("click", function(e) {
-//                    var value = $(this).attr("value");
-//                    onSortChanged(value);
-//                });
-//            }
-//        }
-//        ,validateSort: function(data) {
-//            if (Acm.isEmpty(data)) {
-//                return false;
-//            }
-//            if (!Acm.isArray(data)) {
-//                return false;
-//            }
-//            return true;
-//        }
-//    }
 
 
     ////////////////// some function ideas for future use

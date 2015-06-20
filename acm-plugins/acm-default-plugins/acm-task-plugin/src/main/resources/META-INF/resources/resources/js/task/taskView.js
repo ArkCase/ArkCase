@@ -18,6 +18,7 @@ Task.View = Task.View || {
         if (Task.View.WorkflowOverview.create)                      {Task.View.WorkflowOverview.create();}
         if (Task.View.Attachments.create)                           {Task.View.Attachments.create();}
         if (Task.View.RejectComments.create)                        {Task.View.RejectComments.create();}
+        if (Task.View.ElectronicSignature.create)                   {Task.View.ElectronicSignature.create();}
 
     }
     ,onInitialized: function() {
@@ -34,6 +35,8 @@ Task.View = Task.View || {
         if (Task.View.WorkflowOverview.onInitialized)               {Task.View.WorkflowOverview.onInitialized();}
         if (Task.View.Attachments.onInitialized)                    {Task.View.Attachments.onInitialized();}
         if (Task.View.RejectComments.onInitialized)                 {Task.View.RejectComments.onInitialized();}
+        if (Task.View.ElectronicSignature.onInitialized)            {Task.View.ElectronicSignature.onInitialized();}
+
     }
 
     ,getActiveTask: function() {
@@ -101,6 +104,33 @@ Task.View = Task.View || {
 
     }
 
+
+    ,interfaceNavObj: {
+        nodeTitle: function(objSolr) {
+            var title;
+            if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s) && Acm.isNotEmpty(objSolr.due_tdt)){
+                //title = Acm.getDateFromDatetime(objSolr.due_tdt) + ", " + objSolr.priority_s +", "+ objSolr.name;
+                title = Acm.getDateFromDatetime2(objSolr.due_tdt,$.t("common:date.short")) + ", " + objSolr.priority_s +", "+ objSolr.name;
+            }
+            else if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s)){
+                title = objSolr.priority_s +", "+ objSolr.name;
+            }
+            else if(Acm.isNotEmpty(objSolr.name)){
+                title = objSolr.name;
+            }
+            else{
+                title = "(No title)";
+            }
+            return title;
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeTypeMap: function() {
+            return Task.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,Navigator: {
         create: function() {
             this.$ulFilter = $("#ulFilter");
@@ -120,78 +150,146 @@ Task.View = Task.View || {
             }
         }
 
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"    ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"   ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"          ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/TASK"     ,icon: "i i-checkmark"    ,tabIds:
+                ["tabDetails"
+                    ,"tabDocuments"
+                    ,"tabNotes"
+                    ,"tabHistory"
+                    ,"tabReworkInstructions"
+                    ,"tabWorkflowOverview"
+                    ,"tabAttachments"
+                    ,"tabSignature"
+                ]}
+            ,{nodeType: "p/ADHOC"     ,icon: "i i-checkmark"    ,tabIds:
+                ["tabDetails"
+                    ,"tabNotes"
+                    ,"tabHistory"
+                    ,"tabRejectComments"
+                    ,"tabWorkflowOverview"
+                    ,"tabAttachments"
+                    ,"tabSignature"
+
+                ]}
+            ,{nodeType: "p/TASK/det"      ,icon: "", res: "task:navigation.leaf-title.task-details"            ,tabIds: ["tabDetails"]}
+            ,{nodeType: "p/TASK/rewk"     ,icon: "", res: "task:navigation.leaf-title.rework-details"          ,tabIds: ["tabReworkInstructions"]}
+            ,{nodeType: "p/TASK/doc"      ,icon: "", res: "task:navigation.leaf-title.documents-under-review"  ,tabIds: ["tabDocuments"]}
+            ,{nodeType: "p/TASK/att"      ,icon: "", res: "task:navigation.leaf-title.attachments"             ,tabIds: ["tabAttachments"]}
+            ,{nodeType: "p/TASK/note"     ,icon: "", res: "task:navigation.leaf-title.notes"                   ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/TASK/wkfl"     ,icon: "", res: "task:navigation.leaf-title.workflow-overview"       ,tabIds: ["tabWorkflowOverview"]}
+            ,{nodeType: "p/TASK/his"      ,icon: "", res: "task:navigation.leaf-title.history"                 ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/TASK/sig"      ,icon: "", res: "task:navigation.leaf-title.electronic-signatures"   ,tabIds: ["tabSignature"]}
+
+            ,{nodeType: "p/ADHOC/det"     ,icon: "", res: "task:navigation.leaf-title.task-details"            ,tabIds: ["tabDetails"]}
+            ,{nodeType: "p/ADHOC/rej"     ,icon: "", res: "task:navigation.leaf-title.reject-comments"         ,tabIds: ["tabRejectComments"]}
+            ,{nodeType: "p/ADHOC/att"     ,icon: "", res: "task:navigation.leaf-title.attachments"             ,tabIds: ["tabAttachments"]}
+            ,{nodeType: "p/ADHOC/note"    ,icon: "", res: "task:navigation.leaf-title.notes"                   ,tabIds: ["tabNotes"]}
+            ,{nodeType: "p/ADHOC/wkfl"    ,icon: "", res: "task:navigation.leaf-title.workflow-overview"       ,tabIds: ["tabWorkflowOverview"]}
+            ,{nodeType: "p/ADHOC/his"     ,icon: "", res: "task:navigation.leaf-title.history"                 ,tabIds: ["tabHistory"]}
+            ,{nodeType: "p/ADHOC/sig"     ,icon: "", res: "task:navigation.leaf-title.electronic-signatures"   ,tabIds: ["tabSignature"]}
+        ]
+
         ,getTreeArgs: function() {
             return {
-                lazyLoad: function(event, data) {
-                    Task.View.Navigator.lazyLoad(event, data);
-                }
-                ,getContextMenu: function(node) {
+//                lazyLoad: function(event, data) {
+//                    Task.View.Navigator.lazyLoad(event, data);
+//                }
+//                ,
+                getContextMenu: function(node) {
                     Task.View.Navigator.getContextMenu(node);
                 }
             };
         }
-        ,lazyLoad: function(event, data) {
-            var key = data.node.key;
-            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
-            switch (nodeType) {
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_TASK]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("task:navigation.leaf-title.task-details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REWORK
-                            ,title: $.t("task:navigation.leaf-title.rework-details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
-                            ,title: $.t("task:navigation.leaf-title.documents-under-review")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
-                            ,title: $.t("task:navigation.leaf-title.attachments")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("task:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
-                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("task:navigation.leaf-title.history")
-                        })
-                        .getTree();
-
-                    break;
-
-                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_ADHOC_TASK]):
-                    data.result = AcmEx.FancyTreeBuilder
-                        .reset()
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
-                            ,title: $.t("task:navigation.leaf-title.details")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REJECT
-                            ,title: $.t("task:navigation.leaf-title.reject-comments")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
-                            ,title: $.t("task:navigation.leaf-title.attachments")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
-                            ,title: $.t("task:navigation.leaf-title.notes")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
-                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
-                        })
-                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
-                            ,title: $.t("task:navigation.leaf-title.history")
-                        })
-                        .getTree();
-
-                    break;
-
-                default:
-                    data.result = [];
-                    break;
-            }
-        }
+//retired
+//        ,lazyLoad: function(event, data) {
+//            var key = data.node.key;
+//            var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
+//            var builder = AcmEx.FancyTreeBuilder.reset();
+//            if (ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_TASK]) == nodeType
+//                || ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_ADHOC]) == nodeType) {
+//                var nodeTypeMap = Task.View.Navigator.nodeTypeMap;
+//                for (var i = 0; i < nodeTypeMap.length; i++) {
+//                    if (0 == nodeTypeMap[i].nodeType.indexOf(nodeType)) {
+//                        var lastSep = nodeTypeMap[i].nodeType.lastIndexOf(ObjNav.Model.Tree.Key.KEY_SEPARATOR);
+//                        if (nodeType.length == lastSep) {
+//                            var subPart = nodeTypeMap[i].nodeType.substring(lastSep);
+//                            builder.addLeaf({key: key + subPart
+//                                ,title: $.t(nodeTypeMap[i].res)
+//                            });
+//                        }
+//                    }
+//                }
+//            }
+//            data.result = builder.getTree(); return;
+//
+//            switch (nodeType) {
+//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_TASK]):
+//                    data.result = AcmEx.FancyTreeBuilder
+//                        .reset()
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+//                            ,title: $.t("task:navigation.leaf-title.task-details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REWORK
+//                            ,title: $.t("task:navigation.leaf-title.rework-details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DOCUMENTS
+//                            ,title: $.t("task:navigation.leaf-title.documents-under-review")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
+//                            ,title: $.t("task:navigation.leaf-title.attachments")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
+//                            ,title: $.t("task:navigation.leaf-title.notes")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
+//                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+//                            ,title: $.t("task:navigation.leaf-title.history")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
+//                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
+//                        })
+//                        .getTree();
+//
+//                    break;
+//
+//                case ObjNav.Model.Tree.Key.makeNodeType([ObjNav.Model.Tree.Key.NODE_TYPE_PART_PAGE, Task.Model.DOC_TYPE_ADHOC_TASK]):
+//                    data.result = AcmEx.FancyTreeBuilder
+//                        .reset()
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_DETAILS
+//                            ,title: $.t("task:navigation.leaf-title.task-details")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_REJECT
+//                            ,title: $.t("task:navigation.leaf-title.reject-comments")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_ATTACHMENTS
+//                            ,title: $.t("task:navigation.leaf-title.attachments")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_NOTES
+//                            ,title: $.t("task:navigation.leaf-title.notes")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_WORKFLOW
+//                            ,title: $.t("task:navigation.leaf-title.workflow-overview")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_HISTORY
+//                            ,title: $.t("task:navigation.leaf-title.history")
+//                        })
+//                        .addLeaf({key: key + ObjNav.Model.Tree.Key.KEY_SEPARATOR + Task.Model.Tree.Key.NODE_TYPE_PART_SIGNATURE
+//                            ,title: $.t("task:navigation.leaf-title.electronic-signatures")
+//                        })
+//                        .getTree();
+//
+//                    break;
+//
+//                default:
+//                    data.result = [];
+//                    break;
+//            }
+//        }
 
         ,getContextMenu: function(node) {
             var key = node.key;
@@ -263,9 +361,11 @@ Task.View = Task.View || {
                     var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
                         this.setTextParentObjTitle(Acm.goodValue(parentObjData.title));
-                        this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
+                        //this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
+                        this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime2(parentObjData.incidentDate,$.t("common:date.short")));
                         this.setTextLnkParentObjPriority(Acm.goodValue(parentObjData.priority));
-                        this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                        //this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
+                        this.setTextLnkParentObjAssigned(App.Model.Users.getUserFullName(Acm.goodValue(parentObjData.assignee)));
                         this.setTextLnkParentObjStatus("  (" + Acm.goodValue(parentObjData.status) +")");
                         this.setTextLnkParentObjSubjectType(Acm.goodValue(parentObjData.subjectType));
                         this.setTextLnkParentObjNumber(Acm.goodValue(parentObjData.number));
@@ -435,6 +535,14 @@ Task.View = Task.View || {
 
             this.$lnkPriority       = $("#priority");
 
+            //electronic signature
+            this.$btnSignature = $("#btnSignature");
+            this.$btnSignConfirm    = $("#signatureConfirmBtn");
+            this.$formSignature     = $("#signatureConfirmForm");
+            this.$modalSignConfirm  = $("#signatureModal");
+            this.$btnSignConfirm.on("click", function(e) {Task.View.Detail.onClickBtnSignConfirm(e,this,Task.View.Detail.$formSignature);});
+
+
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_ASSIGNEES          ,this.onModelRetrievedAssignees);
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_PRIORITIES         ,this.onModelRetrievedPriorities);
 
@@ -452,7 +560,6 @@ Task.View = Task.View || {
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_COMPLETED_TASK              ,this.onModelCompletedTask);
             Acm.Dispatcher.addEventListener(Task.Controller.MODEL_DELETED_NOTE                ,this.onModelDeletedTask);
             //Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_USERS             ,this.onModelRetrievedUsers);
-
 
         }
         ,onInitialized: function() {
@@ -516,6 +623,7 @@ Task.View = Task.View || {
             Task.View.Detail.$btnCompleteTask.hide();
             Task.View.Detail.$btnDeleteTask.hide();
             Task.View.RejectTask.$btnRejectTask.hide();
+            Task.View.Detail.$btnSignature.hide();
         }
 
         ,hideDynamicWorkflowButtons: function(){
@@ -538,11 +646,13 @@ Task.View = Task.View || {
                 if(task.completed != true){
                     Task.View.Detail.$btnCompleteTask.show();
                     Task.View.Detail.$btnDeleteTask.show();
+                    Task.View.Detail.$btnSignature.show();
                 }
 
                 if (Acm.isNotEmpty(task.owner) && Acm.isNotEmpty(task.assignee)) {
                     if((task.owner != task.assignee)){
                         Task.View.RejectTask.$btnRejectTask.show();
+                        Task.View.Detail.$btnSignature.show();
                     }
                 }
             }
@@ -561,6 +671,7 @@ Task.View = Task.View || {
                             Task.View.Detail.$btnGroup.append(html).append(" ");
                             Task.View.Detail.$btnFromAvailableOutcomes = $("#" + availableOutcomes[i].name);
                             Task.View.Detail.$btnFromAvailableOutcomes.show();
+                            Task.View.Detail.$btnSignature.show();
                         }
                     }
                 }
@@ -614,6 +725,13 @@ Task.View = Task.View || {
             Task.Controller.viewCompletedTask();
         }
 
+        //electronic signature
+        ,onClickBtnSignConfirm : function(event,ctrl,$formSignature) {
+            var taskId = ObjNav.View.Navigator.getActiveObjId();
+            Task.View.Detail.$modalSignConfirm.modal('hide');
+            Task.Controller.viewSignedTask(taskId,$formSignature);
+        }
+
         ,onModelCompletedTask: function(task) {
             if (task.hasError) {
                 Acm.Dialog.info(task.errorMsg);
@@ -621,6 +739,7 @@ Task.View = Task.View || {
             else{
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             }
         }
 
@@ -631,6 +750,7 @@ Task.View = Task.View || {
             else{
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             }
         }
 
@@ -708,8 +828,10 @@ Task.View = Task.View || {
         ,populateTaskDetails : function(task){
             this.setTextLnkTaskTitle(Acm.goodValue(task.title));
             this.setTextLnkPercentComplete(Acm.goodValue(task.percentComplete, 0));
-            this.setTextLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
-            this.setTextLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
+            //this.setTextLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
+            this.setTextLnkStartDate(Acm.getDateFromDatetime2(task.taskStartDate,$.t("common:date.short")));
+            //this.setTextLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
+            this.setTextLnkDueDate(Acm.getDateFromDatetime2(task.dueDate,$.t("common:date.short")));
             this.setTextLnkPriority(Acm.goodValue(task.priority));
             //this.setTextLnkTaskOwner(Acm.__FixMe__getUserFullName(task.assignee));
             this.setTextLnkTaskOwner(Acm.goodValue(task.assignee));
@@ -762,13 +884,13 @@ Task.View = Task.View || {
             return AcmEx.Object.SummerNote.save(this.$divDetail);
         }
         ,onClickBtnEditDetail: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("task:task-details.label.dirty-editing-detail"));
+            App.View.Dirty.declare($.t("task:task-details.label.dirty-editing-detail"));
             Task.View.Detail.editDivDetail();
         }
         ,onClickBtnSaveDetail: function(event, ctrl) {
             var htmlDetail = Task.View.Detail.saveDivDetail();
             Task.Controller.viewChangedDetail(ObjNav.View.Navigator.getActiveObjType(), ObjNav.View.Navigator.getActiveObjId(), htmlDetail);
-            App.Object.Dirty.clear($.t("task:task-details.label.dirty-editing-detail"));
+            App.View.Dirty.clear($.t("task:task-details.label.dirty-editing-detail"));
         }
 
         ,getHtmlDivReworkDetails: function() {
@@ -784,13 +906,13 @@ Task.View = Task.View || {
             return AcmEx.Object.SummerNote.save(this.$divReworkDetails);
         }
         ,onClickBtnEditReworkDetails: function(event, ctrl) {
-            App.Object.Dirty.declare($.t("task:task-details.label.editing-rework-detail"));
+            App.View.Dirty.declare($.t("task:task-details.label.editing-rework-detail"));
             Task.View.Detail.editDivReworkDetails();
         }
         ,onClickBtnSaveReworkDetails: function(event, ctrl) {
             var htmlDetail = Task.View.Detail.saveDivReworkDetails();
             Task.Controller.viewChangedReworkDetails(ObjNav.View.Navigator.getActiveObjType(), ObjNav.View.Navigator.getActiveObjId(), htmlDetail);
-            App.Object.Dirty.clear($.t("task:task-details.label.editing-rework-detail"));
+            App.View.Dirty.clear($.t("task:task-details.label.editing-rework-detail"));
         }
     }
 
@@ -1274,8 +1396,10 @@ Task.View = Task.View || {
                         var Record = {};
                         Record.id         = Acm.goodValue(notes[i].id, 0);
                         Record.note       = Acm.goodValue(notes[i].note);
-                        Record.created    = Acm.getDateFromDatetime(notes[i].created);
-                        Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        //Record.created    = Acm.getDateFromDatetime(notes[i].created);
+                        Record.created    = Acm.getDateFromDatetime2(notes[i].created,$.t("common:date.short"));
+                        //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        Record.creator  = App.Model.Users.getUserFullName(Acm.goodValue(notes[i].creator));
                         //Record.parentId   = Acm.goodValue(noteList[i].parentId);
                         //Record.parentType = Acm.goodValue(noteList[i].parentType);
                         jtData.Records.push(Record);
@@ -1466,8 +1590,10 @@ Task.View = Task.View || {
                     if(Task.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
-                        Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
+                        Record.eventDate    = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
+                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.user  = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                         jtData.Records.push(Record);
                     }
                 }
@@ -1533,7 +1659,7 @@ Task.View = Task.View || {
                         }, eventDate: {
                             title: $.t("task:history.table.field.date")
                             ,width: '25%'
-                        }, userId: {
+                        }, user: {
                             title: $.t("task:history.table.field.user")
                             ,width: '25%'
                         }
@@ -1577,8 +1703,10 @@ Task.View = Task.View || {
                     if(Task.Model.WorkflowOverview.validateWorkflowOverviewRecord(workflowOverview[i])){
                         var Record = {};
                         Record.participant = Acm.goodValue(workflowOverview[i].participant);
-                        Record.startDateTime = Acm.getDateFromDatetime(workflowOverview[i].startDate);
-                        Record.endDateTime = Acm.getDateFromDatetime(workflowOverview[i].endDate);
+                        //Record.startDateTime = Acm.getDateFromDatetime(workflowOverview[i].startDate);
+                        Record.startDateTime   = Acm.getDateFromDatetime2(workflowOverview[i].startDate,$.t("common:date.short"));
+                        //Record.endDateTime = Acm.getDateFromDatetime(workflowOverview[i].endDate);
+                        Record.endDateTime   = Acm.getDateFromDatetime2(workflowOverview[i].endDate,$.t("common:date.short"));
                         Record.role = Acm.goodValue(workflowOverview[i].role);
                         Record.status = Acm.goodValue(workflowOverview[i].status);
                         jtData.Records.push(Record);
@@ -1729,8 +1857,10 @@ Task.View = Task.View || {
                         var Record = {};
                         Record.id = Acm.goodValue(documents[i].objectId)
                         Record.title = Acm.goodValue(documents[i].name);
-                        Record.created = Acm.getDateFromDatetime(documents[i].created);
-                        Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        //Record.created = Acm.getDateFromDatetime(documents[i].created);
+                        Record.created   = Acm.getDateFromDatetime2(documents[i].created,$.t("common:date.short"));
+                        //Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        Record.creator  = App.Model.Users.getUserFullName(Acm.goodValue(documents[i].creator));
                         jtData.Records.push(Record);
                     }
                 }
@@ -1957,8 +2087,10 @@ Task.View = Task.View || {
                     var record = {};
                     record.id = Acm.goodValue(documentsUnderReview.fileId, 0);
                     record.title = Acm.goodValue(documentsUnderReview.fileName);
-                    record.created = Acm.getDateFromDatetime(documentsUnderReview.created);
-                    record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    //record.created = Acm.getDateFromDatetime(documentsUnderReview.created);
+                    record.created   = Acm.getDateFromDatetime2(documentsUnderReview.created,$.t("common:date.short"));
+                    //record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    record.author = App.Model.Users.getUserFullName(Acm.goodValue(documentsUnderReview.creator));
                     record.status = Acm.goodValue(documentsUnderReview.status);
                     jtData.Records.push(record);
                 }
@@ -2073,8 +2205,10 @@ Task.View = Task.View || {
                             var record = {};
                             record.id = Acm.goodValue(rejectComments[i].id);
                             record.comment = rejectComments[i].note;
-                            record.created = Acm.getDateFromDatetime(rejectComments[i].created);
-                            record.creator = Acm.__FixMe__getUserFullName(rejectComments[i].creator);
+                            //record.created = Acm.getDateFromDatetime(rejectComments[i].created);
+                            record.created = Acm.getDateFromDatetime2(rejectComments[i].created,$.t("common:date.short"));
+                            //record.creator = Acm.__FixMe__getUserFullName(rejectComments[i].creator);
+                            record.creator = App.Model.Users.getUserFullName(Acm.goodValue(rejectComments[i].creator));
                             record.parentId = Acm.goodValue(rejectComments[i].parentId);
                             record.parentType = rejectComments[i].parentType;
                             jtData.Records.push(record);
@@ -2154,5 +2288,98 @@ Task.View = Task.View || {
             $s.jtable('load');
         }
     }
-};
+
+        ,ElectronicSignature: {
+            create: function() {
+                this.$divElectronicSignature          = $("#divElectronicSignature");
+                this.createJTableElectronicSignature(this.$divElectronicSignature);
+
+                Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+                Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT     ,this.onViewSelectedObject);
+                Acm.Dispatcher.addEventListener(Task.Controller.MODEL_SIGNED_TASK           ,this.onModelSignedTask);
+                Acm.Dispatcher.addEventListener(Task.Controller.MODEL_RETRIEVED_ELECTRONIC_SIGNATURES, this.onModelRetrievedElectronicSignatures);
+
+            }
+            ,onInitialized: function() {
+            }
+
+            ,onViewSelectedObject: function(objType, objId) {
+                AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+            }
+            ,onModelRetrievedObject: function(objData) {
+                AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+            }
+            ,onModelSignedTask: function(electronicSignatures){
+                if(electronicSignatures.hasError){
+                    Acm.MessageBoard.show("Failed to electronically sign task. Incorrect parameters", electronicSignatures.errorMsg);
+                }
+                else{
+                    AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+                }
+            }
+            ,onModelRetrievedElectronicSignatures: function(electronicSignatures){
+                if(electronicSignatures.hasError){
+                    Acm.MessageBoard.show("Failed to retrieve signature list", electronicSignatures.errorMsg);
+                }
+                else{
+                    AcmEx.Object.JTable.load(Task.View.ElectronicSignature.$divElectronicSignature);
+                }
+            }
+            ,_makeJtData: function(electronicSignatures) {
+                var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                if (!Acm.isArrayEmpty(electronicSignatures)) {
+                    for (var i = 0; i < electronicSignatures.length; i++) {
+                        if(Task.Model.ElectronicSignature.validateElectronicSignature(electronicSignatures[i])){
+                            var Record = {};
+                            //Record.signedDate = Acm.getDateFromDatetime(electronicSignatures[i].signedDate)
+                            Record.signedDate = Acm.getDateFromDatetime2(electronicSignatures[i].signedDate,$.t("common:date.short"));
+                            //Record.user = Acm.__FixMe__getUserFullName(electronicSignatures[i].signedBy);
+                            Record.user = App.Model.Users.getUserFullName(Acm.goodValue(electronicSignatures[i].signedBy));
+                            jtData.Records.push(Record);
+                        }
+                    }
+                    jtData.TotalRecordCount = electronicSignatures.length;
+                }
+                return jtData;
+            }
+            , createJTableElectronicSignature: function ($s) {
+                $s.jtable({
+                    title: $.t("task:signature.label.electronic-signatures")
+                    , sorting: true
+                    , actions: {
+                        listAction: function (postData, jtParams) {
+                            var taskId = ObjNav.View.Navigator.getActiveObjId();
+                            var electronicSignatures = Task.Model.ElectronicSignature.cacheElectronicSignatures.get(taskId);
+                            if(Task.Model.ElectronicSignature.validateElectronicSignatures(electronicSignatures)){
+                                return Task.View.ElectronicSignature._makeJtData(electronicSignatures);
+                            }
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
+                    }
+                    , fields: {
+                        id: {
+                            title: $.t("task:signature.table.field.id")
+                            , key: true
+                            , list: false
+                            , create: false
+                            , edit: false
+                        }
+                        , signedDate: {
+                            title: $.t("task:signature.table.field.date")
+                            , edit: false
+                            ,create: false
+                        }
+                        , user: {
+                            title: $.t("task:signature.table.field.signed-by")
+                            , edit: false
+                            , create: false
+                        }
+                    }
+                });
+
+                $s.jtable('load');
+            }
+        }
+
+    };
 

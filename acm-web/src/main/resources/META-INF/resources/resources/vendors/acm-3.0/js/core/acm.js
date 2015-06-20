@@ -4,7 +4,10 @@
  * @author jwu
  */
 var Acm = Acm || {
-    create : function() {
+    prepare: function(context) {
+        Acm.Service.setContextPath(context.path);
+    }
+    ,create : function() {
         Acm.Dialog.create();
         Acm.Dispatcher.create();
         Acm.Ajax.create();
@@ -90,32 +93,46 @@ var Acm = Acm || {
         }
         return left == right;
     }
-    //obj can be a simple value or an array.
-    //When it is an array, only last one is treated as value and the the rest subject to non-empty check
-    //ex)To get good value of grandParent.parent.node.name
-    // Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
-    ,goodValueWantToBe_fixme_: function (obj, replacement)  {
-        var replacedWith = (undefined === replacement) ? "" : replacement;
-        var val = obj;
-        if (Acm.isArray(obj)) {
-            if (2 > obj.length) {
-                return replacement;
-            }
 
-            val = obj[0];
-            for (var i = 1; i < obj.length; i++) {
-                var name = obj[i];
-                val = val[name];
-                if (this.isEmpty(val)) {
-                    return replacement;
-                }
-            }
-        }
-        return this.isEmpty(val) ? replacedWith : val;
-    }
+    //val can be a simple value or an array.
+    //Usage ex)   To get good value of grandParent.parent.node.name
+    //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
     ,goodValue: function (val, replacement)  {
         var replacedWith = (undefined === replacement) ? "" : replacement;
-        return this.isEmpty(val) ? replacedWith : val;
+        if (Acm.isArray(val)) {
+            if (0 >= val.length) {
+                return replacedWith;
+            }
+
+            var v = replacedWith;
+            for (var i = 0; i < val.length; i++) {
+                if (0 == i) {
+                    v = val[0];
+                } else {
+                    var k = val[i];
+                    v = v[k];
+                }
+
+                if (this.isEmpty(v)) {
+                    return replacedWith;
+                }
+            }
+            return v;
+
+        } else {
+            return this.isEmpty(val) ? replacedWith : val;
+        }
+    }
+
+    ,parseJson: function (str, replacement)  {
+        var replacedWith = (undefined === replacement) ? {} : replacement;
+        var json = replacedWith;
+        try {
+            json = JSON.parse(str);
+        } catch (e) {
+            json = replacedWith;
+        }
+        return json;
     }
 
     //append random parameter after a url to avoid undesired cached session variables
@@ -154,18 +171,17 @@ var Acm = Acm || {
         return results[1] || 0;
     }
 
+
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
-        var decodedUrlComponents = decodeURIComponent(param);
 
-        var decoded = decodeURI(decodedUrlComponents)
-            .replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"')
-            .replace(/\n/g,"\\n").replace(/\r/g,"\\r")
-            .replace(/\+/g, " ");
-
-
-
+        var decoded = decodeURIComponent(
+            decodeURI(param)
+                .replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"')
+                .replace(/\n/g,"\\n").replace(/\r/g,"\\r")
+                .replace(/\+/g, " ")
+        );
 
         var parsed = JSON.parse('{"' + decoded + '"}');
 
@@ -211,6 +227,50 @@ var Acm = Acm || {
         //return JSON.parse('{"' + decodeURI(param).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
     }
 
+    ,deferredTimer: function(data, interval) {
+        var dfd = $.Deferred();
+        var t = Acm.goodValue(interval, 200);
+        setTimeout(function() {
+            dfd.resolve(data);
+        }, t);
+        return dfd;
+    }
+
+    ,copyObjectFunction: function(obj, frFn, toFn) {
+        var ext =  $.extend({}, obj);
+        obj[toFn] = ext[frFn];
+        return obj[toFn];
+    }
+
+    ,Promise: {
+        resolvePromises: function(promises) {
+            var resolver = $.Deferred();
+            if (Acm.isArrayEmpty(promises)) {
+                resolver.resolve();
+
+            } else {
+                $.when.apply(null, promises).then(function(data) {
+                        resolver.resolve();
+                    }, function(e) {
+                        resolver.reject();
+                    }
+                );
+            }
+            return resolver;
+        }
+        ,donePromise: function(data) {
+            var resolver = $.Deferred();
+            resolver.resolve(data);
+            return resolver;
+        }
+        ,failPromise: function(data) {
+            var resolver = $.Deferred();
+            resolver.reject(data);
+            return resolver;
+        }
+
+    }
+
     ,deferred: function(fn) {
         setTimeout(fn, 200);
     }
@@ -226,18 +286,50 @@ var Acm = Acm || {
     }
 
     //Get date part from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime: function(dt) {
+    ,getDateFromDatetime2: function(dt, format) {
+        Acm.log("Acm.getDateFromDatetime() is phasing out.Using Acm.getDateFromDatetime2() for now till the transition is complete");
         var d = "";
-        if (Acm.isNotEmpty(dt)) {
+        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
+            d = moment(dt).format(format)
+        }
+        return d;
+    }
+    ,getDateFromDatetime: function(dt, format) {
+        var d = "";
+        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format($.t("common:date.short"))
         }
         return d;
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
+    ,getDateTimeFromDatetime2: function(dt, format) {
+        Acm.log("Acm.getDateTimeFromDatetime() is phasing out.Using Acm.getDateTimeFromDatetime2() for now till the transition is complete");
+        var d = "";
+        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
+            d = moment(dt).format(format)
+        }
+        return d;
+    }
     ,getDateTimeFromDatetime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
             d = moment(dt).format($.t("common:date.full"));
+        }
+        return d;
+    }
+
+    //////////////////////////////////////////
+    ,getFrevvoDateFromDateTime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            d = moment(dt).format($.t("common:date.frevvo"))
+        }
+        return d;
+    }
+    ,getPentahoDateFromDateTime: function(dt) {
+        var d = "";
+        if (Acm.isNotEmpty(dt)) {
+            d = moment(dt).format($.t("common:date.pentaho"))
         }
         return d;
     }
@@ -452,6 +544,11 @@ var Acm = Acm || {
                 }
             } //for i
         }
+
+        ,useTimer: function(name, count, callback) {
+            Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
+            Acm.Timer.registerListener(name, count, callback);
+        }
     }
 
     ,log: function(msg) {
@@ -526,6 +623,13 @@ var Acm = Acm || {
         }
         
         return restrict;
+    }
+    
+    ,silentReplace: function(value, replace, replacement) {
+    	if (Acm.isNotEmpty(value) && value.replace) {
+    		value = value.replace(replace, replacement);
+    	}
+    	return value;
     }
 
 };
