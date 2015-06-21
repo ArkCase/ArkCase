@@ -2868,7 +2868,7 @@ CaseFile.View = CaseFile.View || {
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
-                            var historyCache = CaseFile.Model.History.cacheHistory.get(caseFileId + "." + jtParams.jtStartIndex);
+                            var historyCache = CaseFile.Model.History.cacheHistory.get(caseFileId + "." + jtParams.jtStartIndex + "." + jtParams.jtPageSize);
                             if (CaseFile.Model.History.validateHistory(historyCache)) {
                                 var history = {};
                                 history.events = historyCache.resultPage;
