@@ -746,6 +746,17 @@ class ActivitiTaskDao implements TaskDao
 
         AcmTask task = getTaskExtractor().fromEvent(event);
 
+        createFolderForTaskEvent(task);
+    }
+
+    @Override
+    public void createFolderForTaskEvent(AcmTask task) throws AcmTaskException, AcmCreateObjectFailedException
+    {
+        log.info("Creating folder for task with ID: " + task.getId());
+
+        if (task.getContainer() != null && task.getContainer().getFolder() != null)
+            return;
+
         task = getTaskBusinessRule().applyRules(task);
 
         // if the task doesn't have a container folder, the rules will set the EcmFolderPath.  If it does have
@@ -769,7 +780,6 @@ class ActivitiTaskDao implements TaskDao
 
             log.info("Created folder id '" + folderId + "' for task with ID " + task.getTaskId());
         }
-
 
     }
 

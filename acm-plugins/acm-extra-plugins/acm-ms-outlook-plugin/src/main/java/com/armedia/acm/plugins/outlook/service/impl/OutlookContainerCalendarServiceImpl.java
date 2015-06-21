@@ -19,6 +19,7 @@ import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     private List<String> participantsTypesForOutlookFolder;
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public OutlookFolder createFolder(
                                       String folderName,
                                       AcmContainer container,
