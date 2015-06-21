@@ -28,42 +28,42 @@ DocTree.Service = {
     ,API_SEND_EMAIL_                  : "/api/latest/service/notification/email"
     ,API_LODGE_DOCUMENT               : "/api/latest/service/ecm/createFolderByPath"             //  ?targetObjectType={objType}&targetObjectId={objId}&newPath={fullPath}
 
-//
-//    ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
-//        var setting = DocTree.Model.Config.getSetting();
-//        var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
-//        //var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
-//        if (0 < folderId) {
-//            url += "/" + folderId;
-//        }
-//        url += "?start=" + pageId;
-//        url += "&n=" + DocTree.Model.Config.getMaxRows();
-//        if (Acm.isNotEmpty(setting.sortBy) && Acm.isNotEmpty(setting.sortDirection)) {
-//            url += "&s=" + setting.sortBy + "&dir=" + setting.sortDirection;
-//        }
-//
-//        return Acm.Service.call({type: "GET"
-//            ,url: url
-//            ,callback: function(data) {
-//                var folderList = null;
-//                if (DocTree.Model.validateFolderList(data)) {
-//                    folderList = data;
-//                    var setting = DocTree.Model.Config.getSetting();
-//                    setting.maxRows = Acm.goodValue(folderList.maxRows, 0);
-//                    setting.sortBy = Acm.goodValue(folderList.sortBy);
-//                    setting.sortDirection = Acm.goodValue(folderList.sortDirection);
-//
-//                    var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-//                    DocTree.Model.cacheFolderList.put(cacheKey, folderList);
-//                }
-//
-//                var rc = callbackSuccess(folderList);
-//                DocTree.Controller.modelRetrievedFolderList(folderList, objType, objId, folderId, pageId, callerData);
-//                return rc;
-//            }
-//        });
-//
-//    }
+
+    ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
+        var setting = DocTree.Model.Config.getSetting();
+        var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        //var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        if (0 < folderId) {
+            url += "/" + folderId;
+        }
+        url += "?start=" + pageId;
+        url += "&n=" + DocTree.Model.Config.getMaxRows();
+        if (Acm.isNotEmpty(setting.sortBy) && Acm.isNotEmpty(setting.sortDirection)) {
+            url += "&s=" + setting.sortBy + "&dir=" + setting.sortDirection;
+        }
+
+        return Acm.Service.call({type: "GET"
+            ,url: url
+            ,callback: function(data) {
+                var folderList = null;
+                if (DocTree.Model.validateFolderList(data)) {
+                    folderList = data;
+                    var setting = DocTree.Model.Config.getSetting();
+                    setting.maxRows = Acm.goodValue(folderList.maxRows, 0);
+                    setting.sortBy = Acm.goodValue(folderList.sortBy);
+                    setting.sortDirection = Acm.goodValue(folderList.sortDirection);
+
+                    var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
+                    DocTree.Model.cacheFolderList.put(cacheKey, folderList);
+                }
+
+                var rc = callbackSuccess(folderList);
+                DocTree.Controller.modelRetrievedFolderList(folderList, objType, objId, folderId, pageId, callerData);
+                return rc;
+            }
+        });
+
+    }
 
 
     //
