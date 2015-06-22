@@ -144,7 +144,7 @@ public class NotificationDao extends AcmAbstractDao<Notification>
 			notification.setUserEmail((String) obj[8]);
 			notification.setStatus(NotificationConstants.STATUS_NEW);
 			notification.setAction(NotificationConstants.ACTION_DEFAULT);
-			notification.setData("{\"usr\":\"/plugin/" + ((String) obj[5]).toLowerCase() + "/" + ((Long) obj[4]) + "\"}");
+			notification.setData("{\"usr\":\"/plugin/" + ((String) obj[5]).toLowerCase() + "/" + obj[4] + "\"}");
 			
 			retval.add(notification);
 		}

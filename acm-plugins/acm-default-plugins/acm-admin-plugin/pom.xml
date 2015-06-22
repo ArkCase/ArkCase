@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.26-SNAPSHOT</version>
+        <version>3.0.31-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -89,6 +89,11 @@
         <dependency>
             <groupId>com.armedia.acm</groupId>
             <artifactId>acm-web</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-form</groupId>
+            <artifactId>acm-form-plain-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

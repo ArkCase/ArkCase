@@ -229,11 +229,11 @@ Task.Service = {
         ,saveStartDate: function(nodeType, taskId, startDate) {
             var task = Task.Model.findTask(nodeType, taskId);
             if (Task.Model.interfaceNavObj.validateObjData(task)) {
-                task.incidentDate = startDate;
+                task.taskStartDate = startDate;
                 ObjNav.Service.Detail.saveObject(nodeType, taskId
                     ,task
                     ,function(data) {
-                        Task.Controller.modelSavedStartDate(nodeType, taskId, Acm.Service.responseWrapper(data, data.startDate));
+                        Task.Controller.modelSavedStartDate(nodeType, taskId, Acm.Service.responseWrapper(data, data.taskStartDate));
                     }
                 );
             }

@@ -6,11 +6,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +29,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     @Override
     public SolrAdvancedSearchDocument toContentFileIndex(EcmFile in) {
+
+        // NOTE!!!! For EcmFile, if you need to add a field to the Solr content model, you must take an extra
+        // step!!!  Update the contentFileToSolrFlow.xml to also include the new field!!!
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
@@ -57,6 +58,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setPublic_doc_b(true);
         solr.setProtected_object_b(false);
+
+        solr.setHidden_b(isHidden(in));
 
         return solr;
     }

@@ -590,7 +590,8 @@ DocTree.View = DocTree.View || {
                     $tdList.eq(3).text(node.data.type);
                     //$tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
                     $tdList.eq(4).text(Acm.getDateFromDatetime2(node.data.created,$.t("common:date.short")));
-                    $tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
+                    //$tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
+                    $tdList.eq(5).text(App.Model.Users.getUserFullName(Acm.goodValue(node.data.creator)));
 
 
                     var $td6 = $("<td/>");
@@ -682,8 +683,14 @@ DocTree.View = DocTree.View || {
                 ,save: function(event, data){
                     var parent = data.node.getParent();
                     if (parent) {
-                        //var cacheKey = DocTree.View.getCacheKey(parent);
                         var name = data.input.val();
+
+                        if (DocTree.View.findSiblingNodeByName(data.node, name)) {
+                            Acm.Dialog.alert($.t("doctree:error.duplicate-name"));
+                            data.node.remove();
+                            return false;
+                        }
+
                         if (data.isNew) {
                             if (DocTree.View.isFolderNode(data.node)) {
                                  DocTree.View.Op.createFolder(data.node, name);
@@ -783,7 +790,7 @@ DocTree.View = DocTree.View || {
 
         this.tree = $tree.fancytree("getTree");
         var $treeBody = $tree.find("tbody");
-        DocTree.View.Menu.useContextMenu($treeBody);
+        DocTree.View.Menu.useContextMenu($treeBody, false);
         DocTree.View.ExternalDnd.useExternalDnd($treeBody);
 
         $treeBody.delegate("select.docversion", "change", DocTree.View.onChangeVersion);
@@ -792,6 +799,12 @@ DocTree.View = DocTree.View || {
         var $treeHead = $tree.find("thead");
         $treeHead.find("input:checkbox").on("click", function(e) {DocTree.View.onClickBtnChkAllDocument(e, this);});
 
+    }
+    
+    ,refreshDocTree: function() {
+    	var $tree = this.$tree;
+    	var $treeBody = $tree.find("tbody");
+    	DocTree.View.Menu.useContextMenu($treeBody, true);
     }
 
     ,ExternalDnd: {
@@ -886,8 +899,8 @@ DocTree.View = DocTree.View || {
     }
 
     ,Menu: {
-        useContextMenu: function($s) {
-            if (!this.docSubMenu) {
+        useContextMenu: function($s, refresh) {
+            if (!this.docSubMenu || refresh) {
                 this.docSubMenu = this.makeDocSubMenu(DocTree.View.fileTypes);
             }
 
@@ -1201,18 +1214,13 @@ DocTree.View = DocTree.View || {
             return nodeData;
         }
         ,lazyLoad: function(event, data) {
-//            var objType = DocTree.Model.getObjType();
-//            var objId   = DocTree.Model.getObjId();
-//            var node = data.node;
-//            var folderId = Acm.goodValue(node.data.objectId, 0);
-//            if (DocTree.View.isTopNode(node)) {
-//                folderId = 0;
-//            }
-//            //zzz
-//            var pageId = Acm.goodValue(node.data.startRow);
-//            var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
-
             var folderNode = data.node;
+            var folderId = Acm.goodValue(folderNode.data.objectId, 0);
+            if (0 >= folderId && !DocTree.View.isTopNode(folderNode)) {
+                data.result = [];
+                return;
+            }
+
             var cacheKey = DocTree.View.getCacheKey(folderNode);
             var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
             if (DocTree.Model.validateFolderList(folderList)) {
@@ -2108,6 +2116,23 @@ DocTree.View = DocTree.View || {
         }
         return found;
     }
+    ,findSiblingNodeByName: function(node, name) {
+        var found = null;
+        var parentNode = node.getParent();
+        if (DocTree.View.validateFancyTreeNode(parentNode)) {
+            if (!Acm.isArrayEmpty(parentNode.children)) {
+                for (var i = 0; i < parentNode.children.length; i++) {
+                    if (parentNode.children[i].title == name) {
+                        if (node.key != parentNode.children[i]) {   //cannot be self
+                            found = parentNode.children[i];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return found;
+    }
     ,findChildNodeById: function(parentNode, id) {
         var found = null;
         for (var j = parentNode.children.length - 1; 0 <= j; j--) {
@@ -2368,20 +2393,22 @@ DocTree.View = DocTree.View || {
 
 
     ,markNodePending: function(node) {
-        if (this.validateNode(node)) {
+        if (this.validateFancyTreeNode(node)) {
             $(node.span).addClass("pending");
             node.setStatus("loading");
         }
     }
     ,markNodeOk: function(node) {
-        if (this.validateNode(node)) {
+        if (this.validateFancyTreeNode(node)) {
             $(node.span).removeClass("pending");
             node.setStatus("ok");
         }
     }
     ,markNodeError: function(node) {
-        if (this.validateNode(node)) {
+        if (this.validateFancyTreeNode(node)) {
             $(node.span).addClass("pending");
+            node.title = $.t("doctree:error.node-title");
+            node.renderTitle();
             //node.setStatus("error");
             node.setStatus("ok");
         }
