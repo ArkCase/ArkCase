@@ -987,43 +987,6 @@
         }
     }
 }, "outlook-calendar": {
-    "label": {
-        "month": {
-            "value": "Month",
-            "defaultValue": "Month",
-            "description": ""
-        },
-        "week": {
-            "value": "Week",
-            "defaultValue": "Week",
-            "description": ""
-        },
-        "day": {
-            "value": "Day",
-            "defaultValue": "Day",
-            "description": ""
-        },
-        "calendar": {
-            "value": "Calendar",
-            "defaultValue": "Calendar",
-            "description": ""
-        },
-        "start": {
-            "value": "Start:",
-            "defaultValue": "Start:",
-            "description": ""
-        },
-        "end": {
-            "value": "End:",
-            "defaultValue": "End:",
-            "description": ""
-        },
-        "refresh": {
-            "value": "Refresh",
-            "defaultValue": "Refresh",
-            "description": ""
-        }
-    },
     "msg": {
         "error-occurred": {
             "value": "Error occurred while retrieving calendar items.",
