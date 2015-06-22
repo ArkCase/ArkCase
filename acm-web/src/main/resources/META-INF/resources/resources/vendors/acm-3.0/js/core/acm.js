@@ -93,32 +93,35 @@ var Acm = Acm || {
         }
         return left == right;
     }
-    //obj can be a simple value or an array.
-    //When it is an array, only last one is treated as value and the the rest subject to non-empty check
-    //ex)To get good value of grandParent.parent.node.name
-    // Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
-    ,goodValueWantToBe_fixme_: function (obj, replacement)  {
-        var replacedWith = (undefined === replacement) ? "" : replacement;
-        var val = obj;
-        if (Acm.isArray(obj)) {
-            if (2 > obj.length) {
-                return replacement;
-            }
 
-            val = obj[0];
-            for (var i = 1; i < obj.length; i++) {
-                var name = obj[i];
-                val = val[name];
-                if (this.isEmpty(val)) {
-                    return replacement;
-                }
-            }
-        }
-        return this.isEmpty(val) ? replacedWith : val;
-    }
+    //val can be a simple value or an array.
+    //Usage ex)   To get good value of grandParent.parent.node.name
+    //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
     ,goodValue: function (val, replacement)  {
         var replacedWith = (undefined === replacement) ? "" : replacement;
-        return this.isEmpty(val) ? replacedWith : val;
+        if (Acm.isArray(val)) {
+            if (0 >= val.length) {
+                return replacedWith;
+            }
+
+            var v = replacedWith;
+            for (var i = 0; i < val.length; i++) {
+                if (0 == i) {
+                    v = val[0];
+                } else {
+                    var k = val[i];
+                    v = v[k];
+                }
+
+                if (this.isEmpty(v)) {
+                    return replacedWith;
+                }
+            }
+            return v;
+
+        } else {
+            return this.isEmpty(val) ? replacedWith : val;
+        }
     }
 
     ,parseJson: function (str, replacement)  {
@@ -300,6 +303,7 @@ var Acm = Acm || {
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
     ,getDateTimeFromDatetime2: function(dt, format) {
+        Acm.log("Acm.getDateTimeFromDatetime() is phasing out.Using Acm.getDateTimeFromDatetime2() for now till the transition is complete");
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format(format)
@@ -619,6 +623,13 @@ var Acm = Acm || {
         }
         
         return restrict;
+    }
+    
+    ,silentReplace: function(value, replace, replacement) {
+    	if (Acm.isNotEmpty(value) && value.replace) {
+    		value = value.replace(replace, replacement);
+    	}
+    	return value;
     }
 
 };
