@@ -298,9 +298,75 @@ DocTree.View = DocTree.View || {
         var promiseAddNode = DocTree.View._addingFileNodes(folderNode, names, fileType);
 
         setTimeout(function(){
-            var promiseUploadFile = DocTree.Service.checkUploadForm(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderNode.data.objectId, folderNode.data.startRow, folderNode, fileType);
-            $.when(promiseUploadFile, promiseAddNode).done(function(uploadedFiles, fileNodes){
-                if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateNodes(fileNodes)) {
+            //var promiseRetrieveLatest = DocTree.Service.checkUploadForm(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderNode.data.objectId, folderNode.data.startRow, folderNode, fileType);
+
+            //yyyy
+            var promiseRetrieveLatest = DocTree.View.Op.retrieveFolderList(folderNode
+                ,function(folderListLatest) {
+                    var mock = {};
+                    var i = folderListLatest.children.length - 1;
+                    mock.objectId   = folderListLatest.children[i].objectId + 1001;
+                    mock.objectType = folderListLatest.children[i].objectType;
+                    mock.created    = folderListLatest.children[i].created;
+                    mock.creator    = folderListLatest.children[i].creator;
+                    mock.modified   = folderListLatest.children[i].modified;
+                    mock.modifier   = folderListLatest.children[i].modifier;
+                    mock.name       = "Mock";
+                    mock.type       = fileType;
+                    mock.status     = folderListLatest.children[i].status;
+                    mock.category   = folderListLatest.children[i].category;
+                    mock.version    = "1.1";
+                    mock.versionList  = [{versionTag:"1.0"},{versionTag:"1.1"}];
+                    folderListLatest.children.push(mock);
+                    folderListLatest.totalChildren++;
+                    mock = {};
+                    i = folderListLatest.children.length - 1;
+                    mock.objectId   = folderListLatest.children[i].objectId + 1002;
+                    mock.objectType = folderListLatest.children[i].objectType;
+                    mock.created    = folderListLatest.children[i].created;
+                    mock.creator    = folderListLatest.children[i].creator;
+                    mock.modified   = folderListLatest.children[i].modified;
+                    mock.modifier   = folderListLatest.children[i].modifier;
+                    mock.name       = "Mock2";
+                    mock.type       = fileType;
+                    mock.status     = folderListLatest.children[i].status;
+                    mock.category   = folderListLatest.children[i].category;
+                    mock.version    = "1.2";
+                    mock.versionList  = [{versionTag:"1.0"}, {versionTag:"1.1"}, {versionTag:"1.2"}];
+                    folderListLatest.children.push(mock);
+                    folderListLatest.totalChildren++;
+
+                    var uploadedFiles = null;
+                    if (DocTree.Model.validateFolderList(folderListLatest)) {
+                        var newChildren = [];
+                        for (var i = folderListLatest.children.length - 1; 0 <= i; i--) {
+                            if (folderListLatest.children[i].type == fileType) {
+                                if (!DocTree.View.findChildNodeById(folderNode, folderListLatest.children[i].objectId)) { //not found in the tree node, must be newly created
+                                    newChildren.push(folderListLatest.children[i]);
+                                }
+                            }
+                        }
+                        if (!Acm.isArrayEmpty(newChildren)) {
+                            //var cacheKey = DocTree.Model.getCacheKey(folderId, pageId);
+                            var cacheKey = DocTree.View.getCacheKey(folderNode);
+                            var folderList = DocTree.Model.cacheFolderList.get(cacheKey);
+                            if (DocTree.Model.validateFolderList(folderList)) {
+                                uploadedFiles = [];
+                                for (var i = 0; i < newChildren.length; i++) {
+                                    var uploadedFile = DocTree.Model.fileToSolrData(newChildren[i]);
+                                    uploadedFiles.push(uploadedFile);
+                                    //folderList.children.push(uploadedFile);
+                                    //folderList.totalChildren++;
+                                }
+                            } //end if validateFolderList
+                        } //end if (!Acm.isArrayEmpty(newChildren))
+                    }
+                    return uploadedFiles;
+                }
+            );
+
+            $.when(promiseRetrieveLatest, promiseAddNode).done(function(uploadedFiles, fileNodes){
+                if (!Acm.isArrayEmpty(uploadedFiles) && DocTree.View.validateFancyTreeNodes(fileNodes)) {
                     for (var i = 0; i < uploadedFiles.length; i++) {
                         var uploadedFile = uploadedFiles[i];
                         var emptyNode = null;
@@ -463,7 +529,7 @@ DocTree.View = DocTree.View || {
     ,onViewChangedParent: function(objType, objId) {
         DocTree.View.switchObject(objType, objId);
     }
-    //yyyy
+
 //    ,onModelRetrievedFolderList: function(folderList, objType, objId, folderId, pageId, folderNode) {
 //        if (folderList.hasError) {
 //            App.View.MessageBoard.show($.t("doctree:error.retrieve-folder-list"), Acm.goodValue(uploadInfo.errorMsg));
@@ -1511,8 +1577,6 @@ DocTree.View = DocTree.View || {
     }
 
     ,Op: {
-        //xxxx   retrieveFolderList: function(folderId, pageId, callerData, callbackSuccess) {
-
         retrieveFolderList: function(folderNode, callbackSuccess) {
             var $dfd = $.Deferred();
             if (!DocTree.View.isFolderNode(folderNode)) {
