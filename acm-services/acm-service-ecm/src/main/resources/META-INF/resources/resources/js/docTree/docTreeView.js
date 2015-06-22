@@ -99,6 +99,7 @@ DocTree.View = DocTree.View || {
             DocTree.View.$fileInput.click();
         }
     }
+
     ,Email:{
         _isDlgComponentsCreated: false
         ,isDlgComponentsCreated: function() {
@@ -124,7 +125,10 @@ DocTree.View = DocTree.View || {
                     }
                     else{
                         var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
-                        DocTree.Controller.viewSentEmail(emailNotifications);
+                        //DocTree.Controller.viewSentEmail(emailNotifications);
+                        DocTree.Model.sendEmail(emailNotifications).fail(function(failed){
+                            Acm.MessageBoard.show($.t("doctree:error.email-delivery")) + failed + "\n" + $.t("doctree:error.email-retry");
+                        });
                     }
                 }
             }
