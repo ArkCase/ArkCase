@@ -8,7 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title data-i18n="complaint:page-title">Complaints | ACM | Ark Case Management</title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">complaint,subscription,search,doctree,common</span>
+        <span itemprop="resourceNamespace">complaint,subscription,search,doctree,common,outlookcalendar</span>
         <span itemprop="objType">COMPLAINT</span>
         <span itemprop="objId">${objId}</span>
         <span itemprop="treeFilter">${treeFilter}</span>
@@ -421,7 +421,7 @@
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
                                                     <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
-                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" data-i18n="complaint:outlook-calendar.label.calendar">
+                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" id="calendarTabTitle" data-i18n="complaint:outlook-calendar.label.calendar">
                                                       Calendar
                                                     </span>
                                                 </header>

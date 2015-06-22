@@ -1,0 +1,44 @@
+{
+        "msg": {"error-occurred": {
+            "defaultValue": "(Entries unavailable)",
+            "description": "",
+            "value": "(Entries unavailable)"
+        }},
+        "label": {
+            "calendar": {
+                "defaultValue": "Calendar",
+                "description": "",
+                "value": "Calendar"
+            },
+            "week": {
+                "defaultValue": "Week",
+                "description": "",
+                "value": "Week"
+            },
+            "month": {
+                "defaultValue": "Month",
+                "description": "",
+                "value": "Month"
+            },
+            "start": {
+                "defaultValue": "Start:",
+                "description": "",
+                "value": "Start:"
+            },
+            "refresh": {
+                "defaultValue": "Refresh",
+                "description": "",
+                "value": "Refresh"
+            },
+            "end": {
+                "defaultValue": "End:",
+                "description": "",
+                "value": "End:"
+            },
+            "day": {
+                "defaultValue": "Day",
+                "description": "",
+                "value": "Day"
+            }
+        }
+    }
