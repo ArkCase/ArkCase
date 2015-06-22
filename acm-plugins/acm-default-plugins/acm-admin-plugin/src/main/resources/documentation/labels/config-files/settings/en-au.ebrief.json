@@ -248,5 +248,13 @@
         ,"description": ""
         }
     }
+    ,"outlook-calendar": {
+        "msg": {"error-occurred": {
+            "defaultValue": "Calendar (Entries not available for this brief)",
+            "description": "",
+            "value": "Calendar (Entries not available for this brief)"
+    }}
+}
+
 
 }

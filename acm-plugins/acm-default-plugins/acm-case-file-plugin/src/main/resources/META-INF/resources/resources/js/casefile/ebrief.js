@@ -774,7 +774,7 @@ CaseFile.prepare = function() {
     //Calendar = {};
 
     CaseFile.View.Calendar.displayError = function() {
-        Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("ebrief:outlook-calendar.label.calendar") + " " +  $.t("ebrief:outlook-calendar.msg.error-occurred"));
+        Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("ebrief:outlook-calendar.msg.error-occurred"));
     }
 
     CaseFile.Model.Config.requestOrig = Acm.copyObjectFunction(CaseFile.Model.Config, "request", "requestOrig");
