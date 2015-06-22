@@ -248,5 +248,48 @@
         ,"description": ""
         }
     }
-
+    ,"outlook-calendar": {
+        "msg": {"error-occurred": {
+            "defaultValue": "(Calendar entries not available for this brief)",
+            "description": "",
+            "value": "(Calendar entries not available for this brief)"
+        }},
+        "label": {
+            "calendar": {
+                "defaultValue": "Calendar",
+                "description": "",
+                "value": "Calendar"
+            },
+            "week": {
+                "defaultValue": "Week",
+                "description": "",
+                "value": "Week"
+            },
+            "month": {
+                "defaultValue": "Month",
+                "description": "",
+                "value": "Month"
+            },
+            "start": {
+                "defaultValue": "Start:",
+                "description": "",
+                "value": "Start:"
+            },
+            "refresh": {
+                "defaultValue": "Refresh",
+                "description": "",
+                "value": "Refresh"
+            },
+            "end": {
+                "defaultValue": "End:",
+                "description": "",
+                "value": "End:"
+            },
+            "day": {
+                "defaultValue": "Day",
+                "description": "",
+                "value": "Day"
+            }
+        }
+    }
 }

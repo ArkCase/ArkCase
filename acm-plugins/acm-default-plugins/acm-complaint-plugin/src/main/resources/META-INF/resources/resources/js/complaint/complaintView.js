@@ -20,6 +20,7 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.History.create)            {Complaint.View.History.create();}
         if (Complaint.View.Time.create)               {Complaint.View.Time.create();}
         if (Complaint.View.Cost.create)               {Complaint.View.Cost.create();}
+        if (Complaint.View.Calendar.create)           {Complaint.View.Calendar.create();}
     }
     ,onInitialized: function() {
         if (Complaint.View.MicroData.onInitialized)      {Complaint.View.MicroData.onInitialized();}
@@ -37,6 +38,8 @@ Complaint.View = Complaint.View || {
         if (Complaint.View.History.onInitialized)        {Complaint.View.History.onInitialized();}
         if (Complaint.View.Time.onInitialized)           {Complaint.View.Time.onInitialized();}
         if (Complaint.View.Cost.onInitialized)           {Complaint.View.Cost.onInitialized();}
+        if (Complaint.View.Calendar.onInitialized)       {Complaint.View.Calendar.onInitialized();}
+
     }
 
     ,getActiveComplaintId: function() {
@@ -3196,5 +3199,15 @@ Complaint.View = Complaint.View || {
             );
         }
     }
+    ,Calendar: {
+        create: function () {
+        }
+        , onInitialized: function () {
+        }
+        ,displayError: function() {
+            Acm.View.MessageBoard.show($.t("complaint:outlook-calendar.label.calendar") + " " +  $.t("complaint:outlook-calendar.msg.error-occurred"));
+        }
+    }
+
 };
 
