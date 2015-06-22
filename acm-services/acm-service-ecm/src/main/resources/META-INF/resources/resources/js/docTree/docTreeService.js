@@ -11,22 +11,22 @@ DocTree.Service = {
     ,onInitialized: function() {
     }
 
-    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"                        //  {objectType}/{objectId}/{folderId}
-    ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
-    ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
-    ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
-    ,API_REPLACE_FILE_                : "/api/latest/service/ecm/replace/"                       //  {fileToBeReplacedId}
-    ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
-    ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
-    ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
-    ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
-    ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
-    ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
-    ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
-    ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"                   //  {folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}
-    ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          //  {fileId}?versionTag=x.y"
-    ,API_SEND_EMAIL_                  : "/api/latest/service/notification/email"
-    ,API_LODGE_DOCUMENT               : "/api/latest/service/ecm/createFolderByPath"             //  ?targetObjectType={objType}&targetObjectId={objId}&newPath={fullPath}
+//    ,API_RETRIEVE_FOLDER_LIST_        : "/api/latest/service/ecm/folder/"                        //  {objectType}/{objectId}/{folderId}
+//    ,API_CREATE_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
+//    ,API_DELETE_FOLDER_               : "/api/latest/service/ecm/folder/"
+//    ,API_UPLOAD_FILE                  : "/api/latest/service/ecm/upload"
+//    ,API_REPLACE_FILE_                : "/api/latest/service/ecm/replace/"                       //  {fileToBeReplacedId}
+//    ,API_DOWNLOAD_DOCUMENT_           : "/api/v1/plugin/ecm/download/byId/"
+//    ,API_DELETE_FILE_                 : "/api/latest/service/ecm/id/"
+//    ,API_RENAME_FOLDER_               : "/api/latest/service/ecm/folder/"                        //  {folderId}/{newFolderName}
+//    ,API_RENAME_FILE_                 : "/api/latest/service/ecm/file/"                          //  {objectId}/{newName}/{extension}
+//    ,API_MOVE_FILE_                   : "/api/latest/service/ecm/moveToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+//    ,API_COPY_FILE_                   : "/api/latest/service/ecm/copyToAnotherContainer/"        //  {targetObjectType}/{targetObjectId}
+//    ,API_MOVE_FOLDER_                 : "/api/latest/service/ecm/folder/move/"                   //  {folderToMoveId}/{dstFolderId}
+//    ,API_COPY_FOLDER_                 : "/api/latest/service/ecm/folder/copy/"                   //  {folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}
+//    ,API_SET_ACTIVE_VERSION_          : "/api/latest/service/ecm/file/"                          //  {fileId}?versionTag=x.y"
+//    ,API_SEND_EMAIL_                  : "/api/latest/service/notification/email"
+//    ,API_LODGE_DOCUMENT               : "/api/latest/service/ecm/createFolderByPath"             //  ?targetObjectType={objType}&targetObjectId={objId}&newPath={fullPath}
 
 
 //    ,retrieveFolderListDeferred: function(objType, objId, folderId, pageId, callerData, callbackSuccess) {
@@ -134,28 +134,28 @@ DocTree.Service = {
 //    }
 
 
-    ,sendEmail: function(emailNotifications) {
-        var url = App.getContextPath() + this.API_SEND_EMAIL_;
-        return Acm.Service.call({type: "POST"
-            ,url: url
-            ,data: JSON.stringify(emailNotifications)
-            ,callback: function(response) {
-                if(Acm.isArray(response)){
-                    var failed;
-                    for(var i = 0; i < response.length; i++){
-                        if (DocTree.Model.validateSentEmail(response[i])) {
-                            if("NOT_SENT" == response[i].state){
-                                failed += response[i].userEmail + ";";
-                            }
-                        }
-                    }
-                    if(Acm.isNotEmpty(failed)){
-                        //jwu: missed it at the code review. We do not want to have UI code in model/service
-                        Acm.MessageBoard.show("Email delivery failed to :  ") + failed + "\n" + "Please check provided email addresses and try again";
-                    }
-                }
-            }
-        })
-    }
+//    ,sendEmail: function(emailNotifications) {
+//        var url = App.getContextPath() + this.API_SEND_EMAIL_;
+//        return Acm.Service.call({type: "POST"
+//            ,url: url
+//            ,data: JSON.stringify(emailNotifications)
+//            ,callback: function(response) {
+//                if(Acm.isArray(response)){
+//                    var failed;
+//                    for(var i = 0; i < response.length; i++){
+//                        if (DocTree.Model.validateSentEmail(response[i])) {
+//                            if("NOT_SENT" == response[i].state){
+//                                failed += response[i].userEmail + ";";
+//                            }
+//                        }
+//                    }
+//                    if(Acm.isNotEmpty(failed)){
+//                        //jwu: missed it at the code review. We do not want to have UI code in model/service
+//                        Acm.MessageBoard.show("Email delivery failed to :  ") + failed + "\n" + "Please check provided email addresses and try again";
+//                    }
+//                }
+//            }
+//        })
+//    }
 };
 
