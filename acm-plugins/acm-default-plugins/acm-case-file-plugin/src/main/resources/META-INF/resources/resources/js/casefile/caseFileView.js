@@ -3302,7 +3302,7 @@ CaseFile.View = CaseFile.View || {
         , onInitialized: function () {
         }
         ,displayError: function() {
-            Acm.View.MessageBoard.show($.t("casefile:outlook-calendar.label.calendar") + " " +  $.t("casefile:outlook-calendar.msg.error-occurred"));
+            Acm.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"));
         }
     }
 

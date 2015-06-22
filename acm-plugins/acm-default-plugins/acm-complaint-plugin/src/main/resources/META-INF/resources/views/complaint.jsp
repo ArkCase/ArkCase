@@ -420,8 +420,8 @@
 
                                             <section class="panel no-border bg-light">
                                                 <header class="panel-heading bg-info clearfix">
-                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="complaint:outlook-calendar.label.refresh">Refresh</button>
-                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" id="calendarTabTitle" data-i18n="complaint:outlook-calendar.label.calendar">
+                                                    <button class="btn btn-sm btn-bg btn-default pull-right" id="refreshCalendar" data-i18n="outlookcalendar:label.refresh">Refresh</button>
+                                                    <span class="m-t-xs inline acm-fullCalendarTitleText" id="calendarTabTitle" data-i18n="outlookcalendar:label.calendar">
                                                       Calendar
                                                     </span>
                                                 </header>
