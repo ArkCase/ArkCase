@@ -156,6 +156,11 @@
             ,"defaultValue": "Cannot reject documents outside Court Brief folder"
             ,"description": ""
         }
+        ,"need-parent-folder": {
+            "value": "Please select a parent folder for the new folder"
+            ,"defaultValue": "Please select a parent folder for the new folder"
+            ,"description": ""
+        }
         ,"dialog": {
             "lodge-title": {
                 "value": "Lodge Documents"
