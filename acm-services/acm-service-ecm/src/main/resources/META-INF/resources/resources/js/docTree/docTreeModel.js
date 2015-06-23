@@ -47,7 +47,7 @@ DocTree.Model = DocTree.Model || {
     }
 
     ,onViewSentEmail: function(emailData){
-        DocTree.Service.sendEmail(emailData);
+        DocTree.Model.sendEmail(emailData);
     }
 
     ,NODE_TYPE_PREV: "prev"
