@@ -127,7 +127,7 @@ DocTree.View = DocTree.View || {
                         var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes);
                         //DocTree.Controller.viewSentEmail(emailNotifications);
                         DocTree.Model.sendEmail(emailNotifications).fail(function(failed){
-                            Acm.MessageBoard.show($.t("doctree:error.email-delivery")) + failed + "\n" + $.t("doctree:error.email-retry");
+                            Acm.MessageBoard.show($.t("doctree:error.email-delivery") + failed + "\n" + $.t("doctree:error.email-retry"));
                         });
                     }
                 }

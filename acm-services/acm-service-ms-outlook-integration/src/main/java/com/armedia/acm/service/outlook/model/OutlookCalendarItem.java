@@ -3,6 +3,8 @@ package com.armedia.acm.service.outlook.model;
 import java.util.Date;
 import java.util.TimeZone;
 
+import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
+
 /**
  * Created by armdev on 4/20/15.
  */
@@ -18,6 +20,8 @@ public class OutlookCalendarItem extends OutlookItem
     private Date endDate;
     private Date recurringEndDate;
     private String folderId;
+    private ExtendedPropertyDefinition extendedPropertyDefinition;
+    private Object extendedPropertyValue;
 
     public void setAllDayEvent(Boolean allDayEvent)
     {
@@ -111,7 +115,24 @@ public class OutlookCalendarItem extends OutlookItem
         this.folderId = folderId;
     }
 
-    @Override
+	public ExtendedPropertyDefinition getExtendedPropertyDefinition() {
+		return extendedPropertyDefinition;
+	}
+
+	public void setExtendedPropertyDefinition(
+			ExtendedPropertyDefinition extendedPropertyDefinition) {
+		this.extendedPropertyDefinition = extendedPropertyDefinition;
+	}
+
+	public Object getExtendedPropertyValue() {
+		return extendedPropertyValue;
+	}
+
+	public void setExtendedPropertyValue(Object extendedPropertyValue) {
+		this.extendedPropertyValue = extendedPropertyValue;
+	}
+
+	@Override
     public String toString()
     {
         return "OutlookCalendarItem{" +
