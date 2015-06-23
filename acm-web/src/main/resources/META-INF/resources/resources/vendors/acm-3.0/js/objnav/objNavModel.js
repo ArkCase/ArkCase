@@ -92,6 +92,7 @@ ObjNav.Model = {
                 ,sort           : null
                 ,filter         : null
                 ,q              : null
+                ,searchQuery	: null
                 ,key            : null
                 ,objId          : 0
                 ,objType        : null
@@ -107,6 +108,12 @@ ObjNav.Model = {
             }
             ,setName: function(name) {
                 this._treeInfo.name = name;
+            }
+            ,getSearchQuery: function() {
+                return this._treeInfo.searchQuery;
+            }
+            ,setSearchQuery: function(searchQuery) {
+                this._treeInfo.searchQuery = searchQuery;
             }
 
             ,validateTreeInfo: function(data) {
@@ -140,6 +147,7 @@ ObjNav.Model = {
                         ti.sort    = Acm.goodValue(tiInit.sort, null);
                         ti.filter  = Acm.goodValue(tiInit.filter, null);
                         ti.q       = Acm.goodValue(tiInit.q, null);
+                        ti.searchQuery = Acm.goodValue(tiInit.searchQuery, null);
                         ti.key     = Acm.goodValue(tiInit.key, null);
                         ti.objId   = Acm.goodValue(tiInit.objId, 0);
                         ti.objType = Acm.goodValue(tiInit.objType, 0);
@@ -399,6 +407,7 @@ ObjNav.Model = {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_CLICKED_NEXT_PAGE      ,this.onViewNextPageClicked);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_CHANGED_TREE_FILTER    ,this.onViewChangedTreeFilter);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_CHANGED_TREE_SORT      ,this.onViewChangedTreeSort);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_CHANGED_SEARCH_QUERY   ,this.onViewChangedSearchQuery);
         }
         ,onInitialized: function() {
         }
@@ -445,6 +454,17 @@ ObjNav.Model = {
                 ObjNav.Model.setObjectType(null);
                 treeInfo.start = 0;
                 treeInfo.sort = sort;
+                ObjNav.Service.List.retrieveObjectList(treeInfo);
+            }
+        }
+        ,onViewChangedSearchQuery: function(searchQuery) {
+            var treeInfo = ObjNav.Model.Tree.Config.getTreeInfo();
+            if (!Acm.compare(treeInfo.searchQuery, searchQuery)) {
+                ObjNav.Model.setObjectId(0);
+                ObjNav.Model.setObjectType(null);
+                ObjNav.Model.Tree.Config.setSearchQuery(searchQuery);
+                treeInfo.start = 0;
+                treeInfo.searchQuery = searchQuery;
                 ObjNav.Service.List.retrieveObjectList(treeInfo);
             }
         }
