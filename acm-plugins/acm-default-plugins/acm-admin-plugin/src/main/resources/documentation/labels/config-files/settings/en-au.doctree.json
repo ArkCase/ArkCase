@@ -72,6 +72,14 @@
             ,"defaultValue": "Same name exists"
             ,"description": ""
         }
+        ,"email-delivery": {"value": "Email delivery failed to :  "
+            ,"defaultValue": "Email delivery failed to :  "
+            ,"description": ""
+        }
+        ,"email-retry": {"value": "Please check provided email addresses and try again"
+            ,"defaultValue": "Please check provided email addresses and try again"
+            ,"description": ""
+        }
     }
 
     ,"menu": {
