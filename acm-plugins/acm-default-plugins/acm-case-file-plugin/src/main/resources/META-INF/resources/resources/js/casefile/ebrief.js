@@ -779,7 +779,6 @@ CaseFile.prepare = function() {
         Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("ebrief:outlook-calendar.msg.error-occurred"));
     }
 
-
     DocTree.View.Menu.getBatchMenu = function(nodes) {
         var menu = [{title: $.t("doctree:menu.title-no-op"), cmd: "noop", uiIcon: "" }];
         if (DocTree.View.validateNodes(nodes)) {
