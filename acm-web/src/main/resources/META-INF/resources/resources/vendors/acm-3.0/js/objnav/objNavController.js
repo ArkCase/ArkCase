@@ -58,7 +58,10 @@ ObjNav.Controller = {
     ,viewChangedTreeSort: function(sort) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TREE_SORT, sort);
     }
-
+    ,VIEW_CHANGED_SEARCH_QUERY             : "objnav-view-changed-search-query"
+    ,viewChangedSearchQuery: function(searchQuery) {
+        Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_SEARCH_QUERY, searchQuery);
+    }
 };
 
 
