@@ -606,7 +606,7 @@ DocTree.View = DocTree.View || {
         if (this.tree) {
             var selNodes = this.tree.getSelectedNodes();
             var node = this.tree.getActiveNode();
-            nodes= (Acm.isArrayEmpty(selNodes))? [node] : selNodes;
+            nodes= (!Acm.isArrayEmpty(selNodes))? selNodes : ((Acm.isNotEmpty(node))? [] : [node]);
         }
         return nodes;
     }
@@ -1031,7 +1031,7 @@ DocTree.View = DocTree.View || {
         }
 
         ,getBatchMenu: function(nodes) {
-            var menu = [];
+            var menu = [{title: $.t("doctree:menu.title-no-op"), cmd: "noop", uiIcon: "" }];
             if (DocTree.View.validateNodes(nodes)) {
                 var countFolder = 0;
                 var countFile = 0;
@@ -1066,7 +1066,7 @@ DocTree.View = DocTree.View || {
             return menu;
         }
         ,getContextMenu: function(node) {
-            var menu = [];
+            var menu = [{title: $.t("doctree:menu.title-no-op"), cmd: "noop", uiIcon: "" }];
             if (node) {
                 if (DocTree.View.isTopNode(node)) {
                     menu = [{title: $.t("doctree:menu.title-new-folder"), cmd: "newFolder", uiIcon: "ui-icon-plus" }
@@ -2302,7 +2302,7 @@ DocTree.View = DocTree.View || {
     }
 
     ,_doDownload: function(node) {
-        DocTree.View.$formDownloadDoc.attr("action", App.getContextPath() + DocTree.Service.API_DOWNLOAD_DOCUMENT_ + node.data.objectId);
+        DocTree.View.$formDownloadDoc.attr("action", App.getContextPath() + DocTree.Model.API_DOWNLOAD_DOCUMENT_ + node.data.objectId);
         DocTree.View.$formDownloadDoc.submit();
     }
 
@@ -2340,9 +2340,9 @@ DocTree.View = DocTree.View || {
         return topMostNodes;
     }
 
-    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
-        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
-    }
+//    ,onViewCopiedFile: function(fileId, folderId, toCacheKey, node) {
+//        DocTree.Service.copyFile(DocTree.Model.getObjType(), DocTree.Model.getObjId(), folderId, fileId, toCacheKey, node);
+//    }
     ,onDblClick: function(event, data) {
         var tree = $(this).fancytree("getTree"),
             node = tree.getActiveNode();
