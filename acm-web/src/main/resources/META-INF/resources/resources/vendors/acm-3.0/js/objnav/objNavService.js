@@ -28,7 +28,7 @@ ObjNav.Service = {
             var n      = treeInfo.n;
             var sort   = treeInfo.sort;
             var filter = treeInfo.filter;
-            var q      = treeInfo.q;
+            var searchQuery = treeInfo.searchQuery;
 
             var url = ObjNav.Model.interface.apiListObjects();
             if (0 <= treeInfo.start) {
@@ -42,6 +42,9 @@ ObjNav.Service = {
             }
             if (Acm.isNotEmpty(treeInfo.filter)) {
                 url += "&filters=" + treeInfo.filter;
+            }
+            if (Acm.isNotEmpty(searchQuery)) {
+                url += "&searchQuery=" + searchQuery;
             }
 
             return Acm.Service.call({type: "GET"

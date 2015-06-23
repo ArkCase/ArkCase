@@ -40,6 +40,14 @@ ObjNav.View = {
                 );
             }
 
+            this.$searchQuery = $("#searchQuery");
+            if (this.$searchQuery) {
+            	this.$searchQuery.on("keyup", function(e) {ObjNav.View.Navigator.onKeyUpSearchQuery(e);});            	
+            }
+            this.$btnSearchQuery = $("#btnSearchQuery");
+            if (this.$btnSearchQuery) {
+            	this.$btnSearchQuery.on("click", function(e) {ObjNav.View.Navigator.onClickSearchQuery(e);});            	
+            }
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_LIST, this.onModelRetrievedObjectList);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_LIST_ERROR, this.onModelRetrievedObjectListError);
@@ -94,6 +102,21 @@ ObjNav.View = {
             }
 
             ObjNav.Controller.viewSelectedTreeNode(node.key);
+        }
+        
+        ,onKeyUpSearchQuery: function(e) {
+        	if (e.keyCode == 13) {
+        		ObjNav.View.Navigator.doSearchQuery();
+        	}
+        }
+        
+        ,onClickSearchQuery: function(e) {
+        	ObjNav.View.Navigator.doSearchQuery();
+        }
+        
+        ,doSearchQuery: function() {
+        	var searchQuery = ObjNav.View.Navigator.$searchQuery.val();
+    		ObjNav.Controller.viewChangedSearchQuery(searchQuery);
         }
 
 
