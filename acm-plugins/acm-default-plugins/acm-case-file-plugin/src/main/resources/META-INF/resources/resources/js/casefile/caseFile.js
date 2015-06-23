@@ -32,12 +32,9 @@ var CaseFile = CaseFile || {
         }
 
         if (Calendar.create) {
-            Calendar.create({name: "caseFile"
-                ,getObjectInfo: function() {
-                    return {
-                        objectType: CaseFile.Model.DOC_TYPE_CASE_FILE
-                    };
-                }
+            Calendar.create({name: "caseFile",
+                objectType: CaseFile.Model.DOC_TYPE_CASE_FILE
+                ,displayError: CaseFile.View.Calendar.displayError
             });
         }
 
