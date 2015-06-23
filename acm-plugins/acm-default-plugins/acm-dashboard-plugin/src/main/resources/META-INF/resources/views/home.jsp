@@ -7,7 +7,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="dashboard.page.title" text="Dashboard | ACM | Armedia Case Management" /></title>
     <div id="detailData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">dashboard</span>
+        <span itemprop="resourceNamespace">dashboard,common</span>
     </div>
 
 
