@@ -169,8 +169,7 @@ DocTree.Model = DocTree.Model || {
         var objType = DocTree.Model.getObjType();
         var objId = DocTree.Model.getObjId();
         var setting = DocTree.Model.Config.getSetting();
-        var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
-        //var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        var url = DocTree.Model.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
         if (0 < folderId) {
             url += "/" + folderId;
         }
@@ -230,7 +229,7 @@ DocTree.Model = DocTree.Model || {
     }
     ,uploadFiles: function(formData, cacheKey) {
         return Acm.Service.call({type: 'POST'
-            ,url: DocTree.Service.API_UPLOAD_FILE
+            ,url: DocTree.Model.API_UPLOAD_FILE
             ,data: formData
             ,processData: false
             ,contentType: false
@@ -590,7 +589,7 @@ DocTree.Model = DocTree.Model || {
     }
     ,sendEmail: function(emailNotifications) {
         var url = this.API_SEND_EMAIL_;
-        var failed;
+        var failed = "";
         return Acm.Service.call({type: "POST"
             ,url: url
             ,data: JSON.stringify(emailNotifications)

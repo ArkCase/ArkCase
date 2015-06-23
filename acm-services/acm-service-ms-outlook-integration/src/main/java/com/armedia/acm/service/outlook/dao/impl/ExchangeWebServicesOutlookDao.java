@@ -15,6 +15,7 @@ import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -45,12 +46,14 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.Recurrence;
 import microsoft.exchange.webservices.data.property.complex.time.OlsonTimeZoneDefinition;
+import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.FolderView;
 import microsoft.exchange.webservices.data.search.ItemView;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,7 @@ import org.springframework.cache.annotation.Cacheable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -232,7 +236,11 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             appointment.setStart(calendarItem.getStartDate());
             appointment.setEnd(calendarItem.getEndDate());
 
-
+            // Adding extended property to the appointment if there is extended property in the provided item
+            if (calendarItem.getExtendedPropertyDefinition() != null)
+            {
+            	appointment.setExtendedProperty(calendarItem.getExtendedPropertyDefinition(), calendarItem.getExtendedPropertyValue());
+            }
 
             if (calendarItem.getAllDayEvent() != null && calendarItem.getAllDayEvent())
                 appointment.setIsAllDayEvent(calendarItem.getAllDayEvent());

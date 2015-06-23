@@ -121,7 +121,7 @@
                                 <div class="input-group">
                                     <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
                 <span class="input-group-btn">
-                <button class="btn btn-sm btn-default" type="button">Go!</button>
+                <button class="btn btn-sm btn-default" id="btnSearchQuery" type="button">Go!</button>
                 </span> </div>
                             </div>
                             <div class="row m-b">
