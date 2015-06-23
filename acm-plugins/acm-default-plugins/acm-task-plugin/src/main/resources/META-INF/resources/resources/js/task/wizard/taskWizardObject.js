@@ -114,7 +114,7 @@ TaskWizard.Object = {
 	 * Get the start date field value
 	 */
     ,getValueEdtStartDate: function() {
-        return Acm.getISODateFromDate(Acm.Object.getPlaceHolderInput(this.$edtStartDate));
+        return Acm.getISODateFromDate(Acm.Object.getPlaceHolderInput(this.$edtStartDate),$.t("common:date.short"));
     }
 
     /**
@@ -128,7 +128,7 @@ TaskWizard.Object = {
      * Get the due date field value
      */
     ,getValueEdtDueDate: function() {
-        return Acm.getISODateFromDate(Acm.Object.getPlaceHolderInput(this.$edtDueDate));
+        return Acm.getISODateFromDate(Acm.Object.getPlaceHolderInput(this.$edtDueDate),$.t("common:date.short"));
     }
 
     /**
