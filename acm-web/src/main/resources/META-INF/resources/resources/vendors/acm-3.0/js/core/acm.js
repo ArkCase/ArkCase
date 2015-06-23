@@ -340,7 +340,7 @@ var Acm = Acm || {
     ,getCurrentMoment:function(format){
         return moment().format(format);
     }
-    ,getISODateFromDate: function(dt, format){
+    ,getIsoDateFromDate: function(dt, format){
         var mo = moment(dt,format);
         var dtiso = moment(mo).format();
         return dtiso;
