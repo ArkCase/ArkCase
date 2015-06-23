@@ -337,6 +337,9 @@ var Acm = Acm || {
         var d = new Date();
         return this.dateToString(d);
     }
+    ,getCurrentMoment:function(format){
+        return moment().format(format);
+    }
     //get day string in "yyyy-mm-dd" format
     //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
     ,dateToString: function(d) {
