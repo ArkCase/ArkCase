@@ -114,17 +114,7 @@ TaskWizard.Object = {
 	 * Get the start date field value
 	 */
     ,getValueEdtStartDate: function() {
-        //this is in mm/dd/yyyy format
-        var startDate = Acm.Object.getPlaceHolderInput(this.$edtStartDate);
-        //convert to yyyy-mm-dd format
-        var startDateArr = startDate.split("/");
-        var month = startDateArr[0];
-        var day = startDateArr[1];
-        var year = startDateArr[2];
-        var newStartDate = year + "-" + month + "-" + day;
-        //var newStartDate = startDate.split("/").reverse().join("-");
-        return newStartDate;
-        //return Acm.Object.getPlaceHolderInput(this.$edtStartDate);
+        return Acm.getISODateFromDate(Acm.Object.getPlaceHolderInput(this.$edtStartDate));
     }
 
     /**
@@ -138,17 +128,7 @@ TaskWizard.Object = {
      * Get the due date field value
      */
     ,getValueEdtDueDate: function() {
-        //this is in mm/dd/yyyy format
-        var dueDate = Acm.Object.getPlaceHolderInput(this.$edtDueDate);
-        //convert to yyyy-mm-dd format
-        var dueDateArr = dueDate.split("/");
-        var month = dueDateArr[0];
-        var day = dueDateArr[1];
-        var year = dueDateArr[2];
-        var newDueDate = year + "-" + month + "-" + day;
-        //var newDueDate = dueDate.split("/").reverse().join("-");
-        return newDueDate;
-        //return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+        return Acm.getISODateFromDate(Acm.Object.getPlaceHolderInput(this.$edtDueDate));
     }
 
     /**

@@ -340,6 +340,11 @@ var Acm = Acm || {
     ,getCurrentMoment:function(format){
         return moment().format(format);
     }
+    ,getISODateFromDate: function(dt){
+        var mo = moment(dt,$.t("common:date.short"));
+        var dtiso = moment(mo).format();
+        return dtiso;
+    }
     //get day string in "yyyy-mm-dd" format
     //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
     ,dateToString: function(d) {
