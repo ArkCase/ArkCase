@@ -37,7 +37,11 @@ import static org.junit.Assert.*;
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-ms-outlook-plugin.xml",
         "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-profile.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-task.xml",
+        "/spring/spring-library-event.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class CaseFileDaoIT
