@@ -5063,7 +5063,7 @@ var _initDashboard = function () {
                     dataT = _.map(rawData, function (row) {
                         row = _.clone(row)
                         //row.due=moment(row.dueDate, "YYYY MM D").toDate()
-                        row.due = moment(row.dueDate).format('MM/DD/YYYY');
+                        row.due = moment(row.dueDate).format($.t("common:date.short"));
                         row.id = parseInt(row.taskId)
                         if (row.attachedToObjectId != null) {
                         	if (row.attachedToObjectType && row.attachedToObjectType.toLowerCase() == "case_file") {
@@ -5172,7 +5172,7 @@ var _initDashboard = function () {
                     dataC = _.map(rawData, function (row) {
                         row = _.clone(row)
                         //row.due=moment(row.dueDate, "YYYY MM D").toDate()
-                        row.complaintCreated = moment(row.created).format('MM/DD/YYYY');
+                        row.complaintCreated = moment(row.created).format($.t("common:date.short"));
                         row.id = parseInt(row.complaintId);
                         row.complaintUrl = App.getContextPath() + "/plugin/complaint/";
                         return row
