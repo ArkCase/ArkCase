@@ -596,7 +596,7 @@ DocTree.Model = DocTree.Model || {
             ,callback: function(response) {
                 if (DocTree.Model.validateSentEmails(response)) {
                     for(var i = 0; i < response.length; i++){
-                        if("SENT" == response[i].state){
+                        if("NOT_SENT" == response[i].state){
                             failed += response[i].userEmail + ";";
                         }
                     }
