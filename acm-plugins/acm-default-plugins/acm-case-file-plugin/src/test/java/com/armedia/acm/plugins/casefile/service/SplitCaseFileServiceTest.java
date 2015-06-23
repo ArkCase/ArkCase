@@ -93,7 +93,6 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         splitCaseService.setSaveCaseService(saveCaseService);
         splitCaseService.setCaseFileDao(caseFileDao);
         splitCaseService.setAcmFolderService(acmFolderService);
-        splitCaseService.setEcmFileService(ecmFileService);
         createSourceFolderStructure();
     }
 

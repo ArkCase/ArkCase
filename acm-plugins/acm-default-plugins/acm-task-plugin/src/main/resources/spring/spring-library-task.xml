@@ -244,4 +244,13 @@
     <bean id="taskBusinessRule" class="com.armedia.acm.plugins.task.service.impl.TaskBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-task-rules.xlsx"/>
     </bean>
+
+    <bean id="acmTaskService" class="com.armedia.acm.plugins.task.service.impl.AcmTaskServiceImpl">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="acmContainerDao" ref="acmContainerFolderDao"/>
+        <property name="taskDao" ref="taskDao"/>
+        <property name="taskEventPublisher" ref="taskEventPublisher"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="noteDao" ref="noteDao"/>
+    </bean>
 </beans>
