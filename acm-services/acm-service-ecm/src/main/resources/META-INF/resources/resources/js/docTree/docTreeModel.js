@@ -588,6 +588,29 @@ DocTree.Model = DocTree.Model || {
             }
         });
     }
+    ,sendEmail: function(emailNotifications) {
+        var url = this.API_SEND_EMAIL_;
+        var failed;
+        return Acm.Service.call({type: "POST"
+            ,url: url
+            ,data: JSON.stringify(emailNotifications)
+            ,callback: function(response) {
+                if (DocTree.Model.validateSentEmails(response)) {
+                    for(var i = 0; i < response.length; i++){
+                        if("NOT_SENT" == response[i].state){
+                            failed += response[i].userEmail + ";";
+                        }
+                    }
+                    if(Acm.isEmpty(failed)){
+                        return response;
+                    }
+                }
+            }
+            ,invalid: function(response) {
+                return failed;
+            }
+        })
+    }
 
     ,validateFolderList: function(data) {
         if (Acm.isEmpty(data)) {
@@ -765,6 +788,20 @@ DocTree.Model = DocTree.Model || {
         }
         if (Acm.isEmpty(data.activeVersionTag)) {
             return false;
+        }
+        return true;
+    }
+    ,validateSentEmails: function(data){
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isNotArray(data)) {
+            return false;
+        }
+        for (var i = 0; i < data.length; i++) {
+            if (!this.validateSentEmail(data[i])) {
+                return false;
+            }
         }
         return true;
     }
