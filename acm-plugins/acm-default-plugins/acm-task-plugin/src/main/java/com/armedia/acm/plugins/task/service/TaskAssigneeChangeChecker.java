@@ -87,18 +87,13 @@ public class TaskAssigneeChangeChecker extends AcmAssigneeChangeChacker implemen
 			{
 				nameArray.add(formatter.format(task.getDueDate()));
 			}
-			
-			if (task.getPriority() != null)
+
+			if (task.getId() != null)
 			{
-				nameArray.add(task.getPriority());
+				nameArray.add(task.getId().toString());
 			}
 			
-			if (task.getTitle() != null)
-			{
-				nameArray.add(task.getTitle());
-			}
-			
-			return StringUtils.join(nameArray, ",");
+			return StringUtils.join(nameArray, "_");
 		}
 		
 		return null;
