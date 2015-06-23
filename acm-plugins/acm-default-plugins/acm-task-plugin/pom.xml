@@ -120,7 +120,11 @@
             <artifactId>acm-service-costsheet</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-note</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>
