@@ -71,6 +71,7 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-profile.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-task.xml",
+        "/spring/spring-library-note.xml",
         "/spring/spring-library-event.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
@@ -96,13 +97,9 @@ public class SplitCaseFileServiceIT extends EasyMock {
     @Autowired
     EcmFileDao ecmFileDao;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
-    private Long savedCaseFileId;
     private Authentication auth;
     private String ipAddress;
     private Long sourceId;
@@ -131,6 +128,8 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertNotNull(splitCaseService);
 
         expect(auth.getName()).andReturn("ann-acm").anyTimes();
+        expect(auth.getCredentials()).andReturn("AcMd3v$").anyTimes();
+
         expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
         replay(auth);
         //create source case file
