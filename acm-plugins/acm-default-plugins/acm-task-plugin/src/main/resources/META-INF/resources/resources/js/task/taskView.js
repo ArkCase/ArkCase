@@ -515,7 +515,15 @@ Task.View = Task.View || {
             this.$perCompleted		= $("#percentageCompleted");
             AcmEx.Object.XEditable.useEditable(this.$perCompleted, {
                 success: function(response, newValue) {
-                    Task.Controller.viewChangedPercentCompleted(ObjNav.View.Navigator.getActiveObjType(),ObjNav.Model.getObjectId(), newValue);
+                    if(!(newValue >= 0 && newValue <= 100))
+                    {
+                        setTimeout(function(){
+                            Task.View.Detail.setTextLnkPercentComplete($.t("task:task-details.error-value-percent-complete"));
+                        },100);
+                    }
+                    else{
+                        Task.Controller.viewChangedPercentCompleted(ObjNav.View.Navigator.getActiveObjType(),ObjNav.Model.getObjectId(), newValue);
+                    }
                 }
             });
 

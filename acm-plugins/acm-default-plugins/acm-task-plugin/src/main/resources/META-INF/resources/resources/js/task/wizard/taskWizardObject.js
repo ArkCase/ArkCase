@@ -8,7 +8,10 @@
 TaskWizard.Object = {
     create : function() {
         //access data from jsp page
-    	var items = $(document).items();
+        this.$datePickers = $(".datepicker-input");
+        this.$datePickers.datepicker('option', 'dateFormat', $.t("common:date.datepicker"));
+
+        var items = $(document).items();
         var parentType = items.properties("parentType").itemValue();
         var reference = items.properties("reference").itemValue();
         if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(reference) ) {
@@ -16,7 +19,7 @@ TaskWizard.Object = {
             t.attachedToObjectType = parentType;
             t.attachedToObjectId = reference;
         }
-        
+
         //jsp object definitions
         this.$btnSave          = $("#saveBtn");
         this.$btnSave.click(function(e) {TaskWizard.Event.onClickBtnSave(e);});
@@ -28,13 +31,13 @@ TaskWizard.Object = {
 
         this.$edtSubject       = $("#subject");
 
-        this.$edtStartDate     = $("#startDate");;
-        this.setValueEdtStartDate(Acm.getCurrentDay());
+        this.$edtStartDate     = $("#startDate");
+        this.setValueEdtStartDate(Acm.getCurrentMoment($.t("common:date.short")));
 
         this.$selStatus        = $("#statusSel");
 
         this.$edtDueDate       = $("#dueDate");
-        this.setValueEdtDueDate(Acm.getCurrentDay());
+        this.setValueEdtDueDate(Acm.getCurrentMoment($.t("common:date.short")));
 
         this.$prioritySel      = $("#prioritySel");
         this.$completedStatus  = $("#completedStatus");
