@@ -511,10 +511,12 @@ CaseFile.prepare = function() {
 
         ,onClickBtnNewFolder: function(event, ctrl) {
             var nodes = DocTree.View.getEffectiveNodes();
-            if (!Acm.isArrayEmpty(nodes)) {
+            if (Acm.isArrayEmpty(nodes)) {
+                Acm.Dialog.alert("Please select a parent folder for the new folder");
+            } else {
                 nodes[0].setActive();
+                DocTree.View.Command.trigger("newFolder");
             }
-            DocTree.View.Command.trigger("newFolder");
 
             //var topNode = DocTree.View.getTopNode();
             //DocTree.View.Op.createFolder(topNode, "hahahaha");
@@ -772,6 +774,114 @@ CaseFile.prepare = function() {
     CaseFile.View.Time = {};
     CaseFile.View.Cost = {};
     //Calendar = {};
+
+
+
+    ///////////////////////////////////////////////////////       xxx
+//    DocTree.View.Menu.getBatchMenu = function(nodes) {
+//        var menu = [];
+//        if (DocTree.View.validateNodes(nodes)) {
+//            var countFolder = 0;
+//            var countFile = 0;
+//            var countProsecutionBrief = 0;
+//            var countCourtBrief = 0;
+//            for (var i = 0; i < nodes.length; i++) {
+//                var pathNames = DocTree.View.getNodePathNames(nodes[i]);
+//                if (!Acm.isArrayEmpty(pathNames)) {
+//                    if (2 < pathNames.length) {
+//                        if (CaseFile.View.Documents.FOLDER_PROSECUTION_BRIEF == pathNames[1]) {
+//                            countProsecutionBrief++;
+//                        } else if (CaseFile.View.Documents.FOLDER_COURT_BRIEF == pathNames[1]) {
+//                            countCourtBrief++;
+//                        }
+//                    }
+//                }
+//
+//                if (DocTree.View.isFolderNode(nodes[i])) {
+//                    countFolder++;
+//                } else if (DocTree.View.isFileNode(nodes[i])) {
+//                    countFile++;
+//                }
+//            }
+//
+//            if (0 < countFile && 0 >= countFolder) {              //file only menu
+//                menu = [{title: $.t("doctree:menu.title-email"),  cmd: "email", uiIcon: "ui-icon-mail-closed" }
+//                    ,{title: $.t("doctree:menu.title-print"),     cmd: "print", uiIcon: "ui-icon-print" }
+//                    ,{title: $.t("doctree:menu.title-separator") }
+//                    ,{title: $.t("doctree:menu.title-cut"),       cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                    ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
+//                    ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+//                ];
+//            } else if (0 >= countFile || 0 < countFolder) {       //folder only menu
+//                menu = [{title: $.t("doctree:menu.title-cut"),    cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                    ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
+//                    ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+//                ];
+//            } else if (0 < countFile || 0 < countFolder) {        //mix file and folder menu
+//                menu = [{title: $.t("doctree:menu.title-cut"),    cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                    ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
+//                    ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+//                ];
+//            }
+//        }
+//        return menu;
+//    };
+//    DocTree.View.Menu.getContextMenu = function(node) {
+//        var menu = [];
+//        if (node) {
+//            var countProsecutionBrief = 0;
+//            var countCourtBrief = 0;
+//            var pathNames = DocTree.View.getNodePathNames(node);
+//            if (!Acm.isArrayEmpty(pathNames)) {
+//                if (2 < pathNames.length) {
+//                    if (CaseFile.View.Documents.FOLDER_PROSECUTION_BRIEF == pathNames[1]) {
+//                        countProsecutionBrief++;
+//                    } else if (CaseFile.View.Documents.FOLDER_COURT_BRIEF == pathNames[1]) {
+//                        countCourtBrief++;
+//                    }
+//                }
+//            }
+//
+//            if (DocTree.View.isTopNode(node)) {
+//                menu = [{title: $.t("doctree:menu.title-no-op"), cmd: "noop", uiIcon: "" }
+//                ];
+//            } else if (DocTree.View.isFolderNode(node)) {
+//                if (0 < countProsecutionBrief) {
+//
+//                }
+//                menu = [{title: $.t("doctree:menu.title-new-folder"), cmd: "newFolder", uiIcon: "ui-icon-plus" }
+//                    ,{title: $.t("doctree:menu.title-new-file"),      children: DocTree.View.Menu.docSubMenu}
+//                    ,{title: $.t("doctree:menu.title-separator") }
+//                    ,{title: $.t("doctree:menu.title-cut"),           cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                    ,{title: $.t("doctree:menu.title-copy"),          cmd: "copy", uiIcon: "ui-icon-copy" }
+//                    ,{title: $.t("doctree:menu.title-paste"),         cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+//                    ,{title: $.t("doctree:menu.title-separator") }
+//                    ,{title: $.t("doctree:menu.title-rename"),        cmd: "rename", uiIcon: "ui-icon-pencil" }
+//                    ,{title: $.t("doctree:menu.title-delete"),        cmd: "remove", uiIcon: "ui-icon-trash" }
+//                ];
+//            } else if (DocTree.View.isFileNode(node)) {
+//                menu = [{title: $.t("doctree:menu.title-open"),       cmd: "open", uiIcon: "ui-icon-folder-open" }
+//                    ,{title: $.t("doctree:menu.title-edit"),          cmd: "edit", uiIcon: "ui-icon-pencil" }
+//                    ,{title: $.t("doctree:menu.title-email"),         cmd: "email", uiIcon: "ui-icon-mail-closed" }
+//                    ,{title: $.t("doctree:menu.title-print"),         cmd: "print", uiIcon: "ui-icon-print" }
+//                    ,{title: $.t("doctree:menu.title-separator") }
+//                    ,{title: $.t("doctree:menu.title-cut"),           cmd: "cut", uiIcon: "ui-icon-scissors" }
+//                    ,{title: $.t("doctree:menu.title-copy"),          cmd: "copy", uiIcon: "ui-icon-copy" }
+//                    ,{title: $.t("doctree:menu.title-paste"),         cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+//                    ,{title: $.t("doctree:menu.title-separator") }
+//                    ,{title: $.t("doctree:menu.title-rename"),        cmd: "rename", uiIcon: "ui-icon-pencil" }
+//                    ,{title: $.t("doctree:menu.title-delete"),        cmd: "remove", uiIcon: "ui-icon-trash" }
+//                    ,{title: $.t("doctree:menu.title-separator") }
+//                    ,{title: $.t("doctree:menu.title-download"),      cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
+//                    ,{title: $.t("doctree:menu.title-replace"),       cmd: "replace", uiIcon: "" }
+//                ];
+//            }
+//        }
+//        return menu;
+//    };
+    ///////////////////////////////////////////////////////
+
+
 
     CaseFile.Model.Config.requestOrig = Acm.copyObjectFunction(CaseFile.Model.Config, "request", "requestOrig");
     CaseFile.Model.Config.request = function() {

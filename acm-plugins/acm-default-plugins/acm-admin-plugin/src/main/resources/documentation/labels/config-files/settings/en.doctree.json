@@ -88,10 +88,14 @@
             ,"defaultValue": "----"
             ,"description": ""
             }
+        ,"title-no-op": {"value": "(No Item Applicable)"
+            ,"defaultValue": "(No Item Applicable)"
+            ,"description": ""
+        }
         ,"title-new-folder": {"value": "New Folder <kbd>Ctrl+N</kbd>"
             ,"defaultValue": "New Folder <kbd>Ctrl+N</kbd>"
             ,"description": ""
-            }
+        }
         ,"title-new-file": {"value": "New Document"
             ,"defaultValue": "New Document"
             ,"description": ""
