@@ -178,23 +178,14 @@ public class SaveCaseServiceImpl implements SaveCaseService
     		OutlookDTO outlookDTO = getUserOrgService().retrieveOutlookPassword(auth);
     		AcmOutlookUser outlookUser = new AcmOutlookUser(auth.getName(), user.getMail(), outlookDTO.getOutlookPassword());
     		
-    		// Adding extended property definition and value to the appointment. With this extended property, we can search to find it
-    		// and delete correct appointment while updating case file. Here is created extended property for next court date. After
-    		// updating next court date in the case file, we should find the current appointment for it, delete it and create new one with correct date.
-    		ExtendedPropertyDefinition extendedPropertyDefinition = new ExtendedPropertyDefinition(DefaultExtendedPropertySet.PublicStrings, CaseFileConstants.NEXT_COURT_HEARING_DATE_CALENDAR_ID, MapiPropertyType.String);
-    		Object extendedPropertyValue = CaseFileConstants.NEXT_COURT_HEARING_DATE_CALENDAR_ID + caseFile.getObjectType() + caseFile.getId();
+    		OutlookCalendarItem item = createNextCourtHearingDateItem(caseFile);
     		
-    		OutlookCalendarItem item = createNextCourtHearingDateItem(caseFile, extendedPropertyDefinition, extendedPropertyValue);
+    		if (!newCase)
+    		{
+    			getOutlookService().deleteAllItemsFoundByExtendedProperty(item.getFolderId(), outlookUser, item.getExtendedPropertyDefinition(), item.getExtendedPropertyValue());
+    		}
     		
-    		if (newCase)
-    		{
-    			getOutlookService().createOutlookAppointment(outlookUser, item);
-    		}
-    		else
-    		{
-    			getOutlookService().deleteAllItemsFoundByExtendedProperty(item.getFolderId(), outlookUser, extendedPropertyDefinition, extendedPropertyValue);
-    			getOutlookService().createOutlookAppointment(outlookUser, item);
-    		}
+    		getOutlookService().createOutlookAppointment(outlookUser, item);
     	}
     	catch (Exception e)
     	{
@@ -202,8 +193,23 @@ public class SaveCaseServiceImpl implements SaveCaseService
     	}
     }
     
-    private OutlookCalendarItem createNextCourtHearingDateItem(CaseFile caseFile, ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue)
+    private OutlookCalendarItem createNextCourtHearingDateItem(CaseFile caseFile)
     {
+    	// Adding extended property definition and value to the appointment. With this extended property, we can search to find it
+		// and delete correct appointment while updating case file. Here is created extended property for next court date. After
+		// updating next court date in the case file, we should find the current appointment for it, delete it and create new one with correct date.
+		ExtendedPropertyDefinition extendedPropertyDefinition = null;
+		Object extendedPropertyValue = null;
+		try 
+		{
+			extendedPropertyDefinition = new ExtendedPropertyDefinition(DefaultExtendedPropertySet.PublicStrings, CaseFileConstants.NEXT_COURT_HEARING_DATE_CALENDAR_ID, MapiPropertyType.String);
+			extendedPropertyValue = CaseFileConstants.NEXT_COURT_HEARING_DATE_CALENDAR_ID + caseFile.getObjectType() + caseFile.getId();
+		}
+		catch (Exception e) 
+		{
+			log.error("Cannot create extended property definition and value.", e);
+		}
+    	
     	OutlookCalendarItem item = new OutlookCalendarItem();
     	
 		item.setSubject(getNextCourtHearingDateCalendarSubject());
