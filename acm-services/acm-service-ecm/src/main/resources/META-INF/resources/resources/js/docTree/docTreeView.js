@@ -606,7 +606,7 @@ DocTree.View = DocTree.View || {
         if (this.tree) {
             var selNodes = this.tree.getSelectedNodes();
             var node = this.tree.getActiveNode();
-            nodes= (!Acm.isArrayEmpty(selNodes))? selNodes : ((Acm.isNotEmpty(node))? [] : [node]);
+            nodes= (!Acm.isArrayEmpty(selNodes))? selNodes : ((Acm.isNotEmpty(node))? [node] : []);
         }
         return nodes;
     }
