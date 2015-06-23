@@ -18,6 +18,7 @@ import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
@@ -38,8 +39,10 @@ import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
 import microsoft.exchange.webservices.data.exception.ServiceLocalException;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
+import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -343,6 +346,35 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         ExchangeService service = connect(user);
         getDao().deleteItem(service, itemId, deleteMode);
     }
+    
+    @Override
+	public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user, ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue) 
+    {
+    	try
+    	{
+	    	SearchFilter filter = new SearchFilter.IsEqualTo(extendedPropertyDefinition, extendedPropertyValue);
+			
+			OutlookResults<OutlookCalendarItem> results;
+			// In case there are more than one, remove all (this cannot be the case, only one will exist, but do this to be 100% sure)
+			do 
+			{
+				// This code always will remove the items if found. For that reason "start" and "maxItems" are set to 0 and 50.
+				// There is no sense to change "start" index in the next iteration because the next iteration some of them will be removed
+				results = findCalendarItems(folderId, user, 0, 50, null, false, filter);	
+				
+				if (results != null && results.getItems() != null)
+				{
+					results.getItems().stream().forEach(element -> deleteItem(user, element.getId(), DeleteMode.HardDelete));
+				}
+			} 
+			while (results != null && results.getItems() != null && results.getItems().size() > 0);
+    	}
+    	catch (Exception e) 
+    	{
+    		log.error("Error while removeing all items found by extended property.", e);
+		}
+		
+	}
 
     @Override
     public void deleteAppointmentItem(AcmOutlookUser user, String appointmentId, Boolean recurring, DeleteMode deleteMode) {

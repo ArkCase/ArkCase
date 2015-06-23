@@ -17,6 +17,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
@@ -63,7 +64,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private EcmFileService fileService;
     private FolderAndFilesUtils folderAndFilesUtils;
     private Properties ecmFileServiceProperties;
-
+    private AcmParticipantDao participantDao;
 
     @Override
     public AcmFolder addNewFolder(Long parentFolderId, String newFolderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException {
@@ -282,7 +283,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             folderForMoving.setCmisFolderId(newFolderId);
             folderForMoving.setParentFolderId(dstFolder.getId());
-            folderForMoving.getParticipants().clear();
+            getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE,folderForMoving.getId(), new ArrayList<AcmParticipant>());
             folderForMoving.setParentFolderParticipants(dstFolder.getParticipants());
             movedFolder = getFolderDao().save(folderForMoving);
         } catch ( PersistenceException | MuleException e ) {
@@ -878,5 +879,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     public void setEcmFileServiceProperties(Properties ecmFileServiceProperties) {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
+    }
+
+    public AcmParticipantDao getParticipantDao() {
+        return participantDao;
+    }
+
+    public void setParticipantDao(AcmParticipantDao participantDao) {
+        this.participantDao = participantDao;
     }
 }
