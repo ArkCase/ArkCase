@@ -2,6 +2,8 @@ package com.armedia.acm.services.search.model.solr;
 
 import java.util.Date;
 import java.util.List;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class SolrDocument implements SolrBaseDocument {
     private String id;
@@ -9,8 +11,11 @@ public class SolrDocument implements SolrBaseDocument {
     private String author;
     private String author_s;
     private String modifier_s;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date last_modified_tdt;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date create_tdt;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date due_tdt;
     private String title_t;
     private String name;
@@ -44,7 +49,9 @@ public class SolrDocument implements SolrBaseDocument {
     private String disposition_type_s;
     
     ////////////////// for Timesheet and other objects that have start/end date //////////////////////////////////////
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date startDate_s;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date endDate_s;
     private Long folder_id_i;
     private String folder_name_s;
