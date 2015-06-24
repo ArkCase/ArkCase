@@ -1,11 +1,13 @@
 package com.armedia.acm.services.search.model.solr;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Property names must be identical to the desired SOLR field names.
@@ -20,8 +22,10 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String object_type_s;
     private String object_sub_type_s;
     private String name;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
     private String creator_lcs;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date modified_date_tdt;
     private String modifier_lcs;
 
@@ -42,9 +46,11 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
 
     /////////////////// for docs with an incident date ////////////
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date incident_date_tdt;
 
     /////////////////// for docs with a due date////////////////////
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date dueDate_tdt;
 
     /////////////////// for docs with a priority ////////////

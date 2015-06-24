@@ -40,8 +40,6 @@
     <script src="<c:url value='/resources/vendors/${vd_contextmenu}/${js_contextmenu}'/>"></script>
     <script src="<c:url value='/resources/vendors/${vd_fancytree}/jquery.fancytree.table.js'/>"></script>
 
-
-
     <!-- Dashboard -->
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_angular}/js/angular-resource.min.js'/>"></script>
@@ -55,6 +53,15 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_x_editable}/css/bootstrap-editable.css'/>" type="text/css"/>
     <script src="<c:url value='/resources/vendors/${vd_x_editable}/js/${js_x_editable}'/>"></script>
 
+    <!-- Hands on table -->
+    <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_handsontable}/dist/${css_handsontable}'/>" type="text/css"/>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_handsontable}/dist/${js_handsontable}'/>"></script>
+
+    <!-- Ace editor-->
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace_mode_css}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace_worker_css}'/>"></script>
+    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_ace}/build/src/${js_ace_theme_chrome}'/>"></script>
 
     /////////////////////////////////////////////////////////////////////
     <style>
@@ -85,6 +92,11 @@
             float:left;
             width:80%;
             min-height:100px;
+        }
+
+        #customCssTextArea {
+            height: 500px;
+            position: relative;
         }
 
     </style>
@@ -360,7 +372,29 @@
                                         </div>
                                     </div>
 
-                                        <%--JTable - Label Configuration --%>
+                                    <div class="row" id="tabLinkFormsWorkflows" style="display:none;">
+                                        <div class="col-sm-12">
+                                            <div class="pull-right  m-t-md">
+                                                <button id="btnLinkFormsWorkflowsUndo" class="btn btn-default btn-sm">
+                                                    <i class="fa fa-undo"></i>
+                                                    <span class="text">Undo</span>
+                                                </button>
+
+                                                <button id="btnLinkFormsWorkflowsSave" class="btn btn-default btn-sm">
+                                                    <i class="fa fa-save"></i>
+                                                    <span class="text">Save Changes</span>
+                                                </button>
+                                            </div>
+                                            <h3>Link Forms/Workflows</h3>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <section class="panel panel-default">
+                                                <div id="divLinkFormsWorkflowsSpreadSheet" style="width:100%"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+
+                                    <%--JTable - Label Configuration --%>
                                     <div class="row" id="tabLabelConfiguration" style="display:none;">
                                         <div class="col-md-12">
 
@@ -408,6 +442,61 @@
                                         </div>
                                     </div>
 
+                                    <%-- Logo Branding --%>
+                                    <div class="row" id="tabLogo" style="display:none">
+                                        <section class="row m-b-md">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-b-xs text-black">Logo</h3>
+                                            </div>
+                                        </section>
+                                        <section class="panel panel-body bg-light">
+                                            <div class="row m-b-lg ">
+                                                <div class="col-lg-6">
+                                                    <h3>Header</h3>
+                                                    <img id="imgCustomHeaderLogo" src="<c:url value='/branding/headerlogo'/>" />
+                                                </div>
+                                                <div class="col-lg-6 text-center">
+                                                    <br/><br/>
+                                                    <label for="customHeaderLogo">Upload New</label>
+                                                    <input id="customHeaderLogo" name="customHeaderLogo" type="file" accept="image/png"/>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row m-b-lg ">
+                                                <div class="col-lg-6">
+                                                    <h3>Login Page</h3>
+                                                    <img id="imgCustomLoginLogo" src="<c:url value='/branding/loginlogo'/>" />
+                                                </div>
+                                                <div class="col-lg-6 text-center">
+                                                    <br/><br/>
+                                                    <label for="customLoginLogo">Upload New</label>
+                                                    <input id="customLoginLogo" name="customLoginLogo" type="file" accept="image/png"/>
+                                                </div>
+                                            </div>
+                                            <button id="btnUploadLogos" class="btn btn-s-md btn-primary">Save</button>
+
+                                        </section>
+                                    </div>
+
+                                    <%-- Custom CSS --%>
+                                    <div class="row" id="tabCustomCss" style="display:none">
+                                        <form>
+                                            <section class="row m-b-md">
+                                                <div class="col-sm-12">
+                                                    <h3 class="m-b-xs text-black">Custom CSS</h3>
+                                                </div>
+                                            </section>
+                                            <section class="panel panel-body">
+                                                <div id="customCssTextArea" class="form-control" class="custom-css-textarea"></div>
+                                                <br>
+                                                <button id="btnSaveCustomCss" class="btn btn-s-md btn-primary">Save</button>
+                                            </section>
+                                        </form>
+                                    </div>
+
+
+
 
                                     <%--JTable - Correspondence--%>
                                     <div class="row" id="tabCorrespondenceTemplates" style="display:none;">
@@ -416,7 +505,7 @@
                                             <section class="panel panel-default">
                                                 <div id="divCorrespondenceTemplates" style="width:100%">
                                                     <form id="formAddNewTemplate" style="display:none;">
-                                                        <input id="addNewTemplate" type="file" name="files[]" multiple/>
+                                                        <input id="addNewTemplate" type="file" name="files[]"/>
                                                     </form>
                                                 </div>
                                             </section>

@@ -47,6 +47,11 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
 
 
     @Override
+    public List<AcmProcessDefinition> list(String orderBy, boolean isAsc) {
+        return acmBpmnDao.list(orderBy, isAsc);
+    }
+
+    @Override
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc) {
         return acmBpmnDao.listPage(start, length, orderBy, isAsc);
     }
