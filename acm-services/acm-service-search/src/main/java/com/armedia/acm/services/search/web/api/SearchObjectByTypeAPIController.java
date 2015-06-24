@@ -53,6 +53,7 @@ public class SearchObjectByTypeAPIController {
             @RequestParam(value = "assignee", required = false, defaultValue = "") String assignee,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "true") boolean activeOnly,
             @RequestParam(value = "filters", required = false, defaultValue = "") String filters,
+            @RequestParam(value = "searchQuery", required = false, defaultValue = "") String searchQuery,
             Authentication authentication,
             HttpSession httpSession
     ) throws MuleException {
@@ -96,6 +97,11 @@ public class SearchObjectByTypeAPIController {
 
         if (!StringUtils.isBlank(sort)){
           sortParams = findSortValuesAndCreateSotrString(objectType, sort);
+        }
+        
+        if (!StringUtils.isBlank(searchQuery)) {
+        	String[] searchQueryProperties = findSearchQueryProperties(objectType);
+        	params = addSearchQueryPropertiesToParams(searchQuery, searchQueryProperties, params);
         }
 
         // try what the user sent, if no sort properties were found
@@ -289,6 +295,62 @@ public class SearchObjectByTypeAPIController {
             }
         }
         return filters;
+    }
+    
+    private String[] findSearchQueryProperties(String objectType) {
+        Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
+        List<String> suportedObjectTypes = null;
+        for( AcmPlugin plugin: plugins ) {
+            if( plugin.getSuportedObjectTypesNames()!=null ) {
+                suportedObjectTypes = plugin.getSuportedObjectTypesNames();
+            } else {
+                continue;
+            }
+            for ( String objectTypeName : suportedObjectTypes ) {
+                if ( objectType.equals(objectTypeName) ) {
+                	String searchQueryPropertiesAsString = (String) plugin.getPluginProperties().get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
+                	
+                	if (StringUtils.isNotEmpty(searchQueryPropertiesAsString)) {
+                		return searchQueryPropertiesAsString.split(",");
+                	}
+                }
+            }
+        }
+        return null;
+    }
+    
+    private String addSearchQueryPropertiesToParams(String searchQuery, String[] searchQueryProperties, String params)
+    {
+    	if (searchQueryProperties != null && searchQueryProperties.length > 0 && StringUtils.isNotEmpty(searchQuery)) {
+    		String searchQueryBuilded = "fq=";
+    		int index = 0;
+    		for (String searchQueryProperty : searchQueryProperties) {
+    			String separator = "";
+    			if (index > 0)
+    			{
+    				separator = " " + SearchConstants.OPERATOR_OR + " ";
+    			}
+    			
+    			// If the search keywords contains empty space, search for that particular phrase, otherwise find any objects that
+    			// contains the characters in the searched properties
+    			String value = searchQuery;
+    			if (searchQuery.contains(" ") || searchQuery.contains("_"))
+    			{
+    				value = "\"" + value + "\"";
+    			}
+    			searchQueryBuilded += separator + searchQueryProperty.trim() + ":" + value;
+    			index++;
+    		}
+    		
+    		String splitter = "";
+    		if (StringUtils.isNotEmpty(params))
+			{
+				splitter = SearchConstants.AND_SPLITTER;
+			}
+    		params += splitter + searchQueryBuilded;
+    	}
+    	
+    	return params;
     }
 
     public AcmPluginManager getAcmPluginManager() {

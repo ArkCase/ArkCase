@@ -63,8 +63,8 @@ public class TaskAssigneeChangeCheckerTest extends EasyMockSupport {
 		Long objectId = 1234L;
 		String priority = "Low"; 
 		String objectTitle = "Title";
-		String dueDate = "2/12/2015";
-		String objectName = dueDate + "," + priority + "," + objectTitle;
+		String dueDate = "20150212";
+		String objectName = dueDate + "_" + objectId;
 		String objectType = "TASK";
 		String newAssignee = "user-one";
 		String oldAssignee = "user-two";

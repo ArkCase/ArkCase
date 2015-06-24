@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.casefile.service;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -11,12 +10,14 @@ import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
+import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by nebojsha on 01.06.2015.
@@ -37,8 +38,9 @@ public class SplitCaseServiceImpl implements SplitCaseService {
 
     private SaveCaseService saveCaseService;
     private CaseFileDao caseFileDao;
-    private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
+    private Set<String> typesToCopy = new HashSet<>();
+    private AcmTaskService acmTaskService;
 
     @Override
     @Transactional
@@ -56,8 +58,6 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         copyCaseFile.setNextCourtDate(original.getNextCourtDate());
         copyCaseFile.setResponsibleOrganization(original.getResponsibleOrganization());
 
-        // do not set title, so the rules will get us a new title
-        // copyCaseFile.setTitle(original.getTitle());
         copyCaseFile.setDetails(original.getDetails());
         copyCaseFile.setStatus(original.getStatus());
 
@@ -70,6 +70,9 @@ public class SplitCaseServiceImpl implements SplitCaseService {
             copyCaseFile.setParticipants(new ArrayList<>());
         copyCaseFile.getParticipants().add(participant);
 
+        if (typesToCopy.contains("participants"))
+            copyParticipants(original, copyCaseFile, auth);
+
 
         ObjectAssociation childObjectCopy = new ObjectAssociation();
         childObjectCopy.setAssociationType("REFERENCE");
@@ -78,6 +81,10 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         childObjectCopy.setTargetType(original.getObjectType());
         childObjectCopy.setTargetName(original.getCaseNumber());
         copyCaseFile.addChildObject(childObjectCopy);
+
+
+        if (typesToCopy.contains("people"))
+            copyPeople(original, copyCaseFile);
 
         copyCaseFile = saveCaseService.saveCase(copyCaseFile, auth, ipAddress);
 
@@ -90,21 +97,62 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         original.addChildObject(childObjectOriginal);
         saveCaseService.saveCase(original, auth, ipAddress);
 
-        splitDocumentsAndFolders(copyCaseFile, splitCaseOptions);
+        if (typesToCopy.contains("tasks")) {
+            try {
+                copyTasks(original, copyCaseFile, auth, ipAddress);
+            } catch (AcmTaskException e) {
+                log.error("Couldn't copy tasks.", e);
+            }
+        }
+        copyDocumentsAndFolders(copyCaseFile, splitCaseOptions);
         return copyCaseFile;
     }
 
-    private void splitDocumentsAndFolders(CaseFile saved, SplitCaseOptions options) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException {
-        Map<Long, AcmFolder> folderMap = new HashMap<>();
+    private void copyParticipants(CaseFile original, CaseFile copyCaseFile, Authentication auth) {
+        //all participants are copied and assigned as followers, except current user is exist is not copied
+        if (original.getParticipants() == null || original.getParticipants().isEmpty())
+            return;
+        if (copyCaseFile.getParticipants() == null)
+            copyCaseFile.setParticipants(new ArrayList<>());
+        for (AcmParticipant participant : original.getParticipants()) {
+            if (participant.getParticipantLdapId().equals(auth.getName()))
+                continue;
+            if (ParticipantTypes.ASSIGNEE.equals(participant.getParticipantType())
+                    || ParticipantTypes.FOLLOWER.equals(participant.getParticipantType())) {
+                AcmParticipant copyParticipant = new AcmParticipant();
+                copyParticipant.setParticipantType(ParticipantTypes.FOLLOWER);
+                copyParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+                copyCaseFile.getParticipants().add(copyParticipant);
+            }
+        }
+    }
+
+    private void copyPeople(CaseFile original, CaseFile copyCaseFile) {
+        if (original.getPersonAssociations() == null || original.getPersonAssociations().isEmpty())
+            return;
+        if (copyCaseFile.getPersonAssociations() == null)
+            copyCaseFile.setPersonAssociations(new ArrayList<>());
+        for (PersonAssociation person : original.getPersonAssociations()) {
+            PersonAssociation copyPerson = new PersonAssociation();
+            copyPerson.setPersonType(person.getPersonType());
+            copyPerson.setPerson(person.getPerson());
+            copyPerson.setNotes(person.getNotes());
+            copyPerson.setPersonDescription(person.getPersonDescription());
+            copyPerson.setTags(person.getTags());
+            copyCaseFile.getPersonAssociations().add(copyPerson);
+        }
+    }
+
+    private void copyDocumentsAndFolders(CaseFile saved, SplitCaseOptions options) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException {
         for (SplitCaseOptions.AttachmentDTO attachmentDTO : options.getAttachments()) {
             AcmContainer containerOfCopy = saved.getContainer();
             AcmFolder containerFolderOfCopy = containerOfCopy.getFolder();
             switch (attachmentDTO.getType()) {
                 case "folder":
-                    copyFolder(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
+                    acmFolderService.copyFolderStructure(attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
                     break;
                 case "document":
-                    copyDocument(options, folderMap, attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
+                    acmFolderService.copyDocumentStructure(attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
                     break;
                 default:
                     log.warn("Invalid type({}) for for splitting attachments", attachmentDTO.getType());
@@ -113,107 +161,16 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         }
     }
 
-    private void copyFolder(SplitCaseOptions options,
-                            Map<Long, AcmFolder> folderMap,
-                            Long folderId,
-                            AcmContainer containerOfCopy,
-                            AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmFolderException {
 
-        if (options.isPreserveFolderStructure()) {
-            AcmFolder folderForCopying = acmFolderService.findById(folderId);
-            String folderPath = acmFolderService.getFolderPath(folderForCopying);
-
-            AcmFolder alreadyHandledFolder = folderMap.get(folderId);
-            //check if folder path exists in the copy
-            if (alreadyHandledFolder != null || folderForCopying.getParentFolderId() == null || acmFolderService.folderPathExists(folderPath, containerOfCopy)) {
-                //copy the folder children (folders documents) into existing folder of the copy case file
-                //this should create or return existing path, but path already exists so it should return existing folder
-
-                List<AcmObject> folderChildren = acmFolderService.getFolderChildren(folderForCopying.getId());
-                for (AcmObject obj : folderChildren) {
-                    if (obj.getObjectType() == null)
-                        continue;
-                    if ("FILE".equals(obj.getObjectType().toUpperCase())) {
-                        copyDocument(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
-                    } else if ("FOLDER".equals(obj.getObjectType().toUpperCase())) {
-                        copyFolder(options, folderMap, obj.getId(), containerOfCopy, rootFolderOfCopy);
-                    }
-                }
-            } else {
-                if (folderForCopying.getParentFolderId() == null)
-                    return;
-                //just copy the folder to new parent
-                AcmFolder parentInSource = acmFolderService.findById(folderForCopying.getParentFolderId());
-                String folderPathParentInSource = acmFolderService.getFolderPath(parentInSource);
-
-                //this folder will be created if doesn't exits
-                AcmFolder createdParentFolderInCopy = acmFolderService.addNewFolderByPath(
-                        containerOfCopy.getContainerObjectType(),
-                        containerOfCopy.getContainerObjectId(),
-                        folderPathParentInSource);
-                AcmFolder copiedFolder = acmFolderService.copyFolder(folderForCopying,
-                        createdParentFolderInCopy,
-                        containerOfCopy.getContainerObjectId(),
-                        containerOfCopy.getContainerObjectType());
-                folderMap.put(folderForCopying.getId(), copiedFolder);
-            }
-        }
-
+    private void copyTasks(CaseFile original, CaseFile copyCaseFile, Authentication auth, String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException {
+        acmTaskService.copyTasks(original.getId(),
+                original.getObjectType(),
+                copyCaseFile.getId(),
+                copyCaseFile.getObjectType(),
+                copyCaseFile.getTitle(),
+                auth,
+                ipAddress);
     }
-
-    private void copyDocument(SplitCaseOptions options,
-                              Map<Long, AcmFolder> folderMap,
-                              Long documentId,
-                              AcmContainer containerOfCopy,
-                              AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
-        EcmFile fileForCopying = ecmFileService.findById(documentId);
-
-        if (folderMap.containsKey(fileForCopying.getFolder().getId())) {
-            //we have already created that folder
-            AcmFolder foundFolder = folderMap.get(fileForCopying.getFolder().getId());
-            ecmFileService.copyFile(documentId, foundFolder, containerOfCopy);
-
-            // file is copied, we are done
-            return;
-        }
-
-        AcmFolder documentFolder = fileForCopying.getFolder();
-        if (documentFolder.getParentFolderId() == null || !options.isPreserveFolderStructure()) {
-            //recreate folder structure as on source
-            //document is under root folder, no need to create additional folders
-            ecmFileService.copyFile(documentId, rootFolderOfCopy, containerOfCopy);
-        } else {
-            //create folder structure in saved case file same as in source for the document
-            String folderPath = acmFolderService.getFolderPath(fileForCopying.getFolder());
-            log.debug("folder path = '{}' for folder(id={}, name={})", folderPath, fileForCopying.getFolder().getId(), fileForCopying.getFolder().getName());
-            try {
-                AcmFolder createdFolder = acmFolderService.addNewFolderByPath(
-                        containerOfCopy.getContainerObjectType(),
-                        containerOfCopy.getContainerObjectId(),
-                        folderPath);
-                ecmFileService.copyFile(documentId, createdFolder,containerOfCopy );
-                folderMap.put(fileForCopying.getFolder().getId(), createdFolder);
-            } catch (Exception e) {
-                log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be copied.", e);
-            }
-        }
-    }
-
-    private AcmFolder createFolderStructure(AcmFolder folder, AcmFolder rootFolder, Map<Long, AcmFolder> folderMap) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException {
-        if (folderMap.containsKey(folder.getId()))
-            return folderMap.get(folder.getId());
-        if (folder.getParentFolderId() != null) {
-            AcmFolder createdParent = createFolderStructure(acmFolderService.findById(folder.getParentFolderId()), rootFolder, folderMap);
-            AcmFolder foundByName = acmFolderService.findByNameAndParent(folder.getName(), createdParent);
-            AcmFolder newFolder = foundByName != null ? foundByName : acmFolderService.addNewFolder(createdParent.getId(), folder.getName());
-            folderMap.put(folder.getId(), newFolder);
-            return newFolder;
-        } else {
-            folderMap.put(folder.getId(), rootFolder);
-            return rootFolder;
-        }
-    }
-
 
     public void setSaveCaseService(SaveCaseService saveCaseService) {
         this.saveCaseService = saveCaseService;
@@ -223,11 +180,16 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         this.caseFileDao = caseFileDao;
     }
 
-    public void setEcmFileService(EcmFileService ecmFileService) {
-        this.ecmFileService = ecmFileService;
-    }
-
     public void setAcmFolderService(AcmFolderService acmFolderService) {
         this.acmFolderService = acmFolderService;
+    }
+
+    public void setTypesToCopy(String typesToCopyStr) {
+        if (!StringUtils.isEmpty(typesToCopyStr))
+            this.typesToCopy.addAll(Arrays.asList(typesToCopyStr.trim().replaceAll(",[\\s]*", ",").split(",")));
+    }
+
+    public void setAcmTaskService(AcmTaskService acmTaskService) {
+        this.acmTaskService = acmTaskService;
     }
 }

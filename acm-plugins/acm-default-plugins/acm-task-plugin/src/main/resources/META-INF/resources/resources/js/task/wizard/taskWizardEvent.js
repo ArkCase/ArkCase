@@ -14,6 +14,10 @@ TaskWizard.Event = {
         if(Acm.isEmpty(data.title)){
             Acm.Dialog.info($.t("task:wizard.msg.please-enter-subject"));
         }
+        else if(!(data.percentComplete >= 0 && data.percentComplete <= 100))
+        {
+            Acm.Dialog.info($.t("task:wizard.msg.please-check-percent-complete"));
+        }
         else{
             TaskWizard.Service.createAdhocTask(data);
             e.preventDefault();
