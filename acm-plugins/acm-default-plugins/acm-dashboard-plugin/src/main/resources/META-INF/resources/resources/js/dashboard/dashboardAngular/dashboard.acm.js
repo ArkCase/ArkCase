@@ -4388,7 +4388,7 @@ var _initDashboard = function () {
                 },
                 compile: function (scope) {
                     var model = scope.adfModel;
-                    console.log(model);
+                    $log.debug(model);
                     return {
                         pre: preLink,
                         post: postLink
@@ -4735,8 +4735,8 @@ var _initDashboard = function () {
                 return page === currentRoute || new RegExp(page).test(currentRoute) ? "active" : ""
             }
         }
-    ]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model", "widgetsPerRoles", "$rootScope",
-        function ($scope, $http, localStorageService, model, widgetsPerRoles, $rootScope) {
+    ]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "$log", "localStorageService", "model", "widgetsPerRoles", "$rootScope",
+        function ($scope, $http, $log, localStorageService, model, widgetsPerRoles, $rootScope) {
 
 
             $scope.widgetFilter = function (widget, type) {
@@ -4748,7 +4748,7 @@ var _initDashboard = function () {
                 });
                 return result;
             };
-            console.log(widgetsPerRoles);
+            $log.debug(widgetsPerRoles);
 
             var modelForChecking = angular.fromJson(model);
             var renderWidget = false;
