@@ -1286,8 +1286,8 @@ Admin.View = Admin.View || {
         }
 
         ,clearPrivilegesLists: function(){
-            this.$selectPrivileges.remove('option');
-            this.$selectAvailablePrivileges.remove('option');
+            this.$selectPrivileges.children().remove('option');
+            this.$selectAvailablePrivileges.children().remove('option');
         }
 
         ,saveRolePrivileges: function() {
