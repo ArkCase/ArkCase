@@ -91,6 +91,7 @@ Topbar.Model = {
         }
 
         ,_pullInterval: 16
+        ,_pullIntervalMax: 1024
         ,_rows: 5
         ,_pull: function(interval) {
             Acm.Timer.useTimer("AsnWatch"
@@ -108,8 +109,10 @@ Topbar.Model = {
         }
         ,onModelRetrievedAsnList: function(asnList) {
             if (asnList.hasError) {
-                Topbar.Model.Asn._pullInterval *= 2;
-                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+                if (Topbar.Model.Asn._pullInterval < Topbar.Model.Asn._pullIntervalMax) {  //temporary fix. need better solution
+                    Topbar.Model.Asn._pullInterval *= 2;
+                    Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+                }
             } else {
                 Topbar.Model.Asn._pullInterval = 16;
                 Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
