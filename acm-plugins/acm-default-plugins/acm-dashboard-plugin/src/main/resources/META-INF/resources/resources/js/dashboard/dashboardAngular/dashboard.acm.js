@@ -11696,5 +11696,5 @@ var _initDashboard = function () {
 
 $(document).on('i18n-ready', $.proxy(function(){
     _initDashboard.call(this);
-    angular.bootstrap(document, ['sample']);
+    angular.bootstrap(document.querySelector("#dashboard-app-container"), ['sample']);
 }, this));
