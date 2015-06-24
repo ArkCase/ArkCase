@@ -21,6 +21,7 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Correspondence.create)  {CaseFile.View.Correspondence.create();}
         if (CaseFile.View.Time.create)            {CaseFile.View.Time.create();}
         if (CaseFile.View.Cost.create)            {CaseFile.View.Cost.create();}
+        if (CaseFile.View.Calendar.create)        {CaseFile.View.Calendar.create();}
 
         // uncomment to override default jtable
         // popups and use ArkCase messageboard:
@@ -43,6 +44,8 @@ CaseFile.View = CaseFile.View || {
         if (CaseFile.View.Correspondence.onInitialized)  {CaseFile.View.Correspondence.onInitialized();}
         if (CaseFile.View.Time.onInitialized)            {CaseFile.View.Time.onInitialized();}
         if (CaseFile.View.Cost.onInitialized)            {CaseFile.View.Cost.onInitialized();}
+        if (CaseFile.View.Calendar.onInitialized)        {CaseFile.View.Calendar.onInitialized();}
+
     }
 
     ,getActiveCaseFileId: function() {
@@ -2868,7 +2871,7 @@ CaseFile.View = CaseFile.View || {
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
-                            var historyCache = CaseFile.Model.History.cacheHistory.get(caseFileId + "." + jtParams.jtStartIndex);
+                            var historyCache = CaseFile.Model.History.cacheHistory.get(caseFileId + "." + jtParams.jtStartIndex + "." + jtParams.jtPageSize);
                             if (CaseFile.Model.History.validateHistory(historyCache)) {
                                 var history = {};
                                 history.events = historyCache.resultPage;
@@ -3290,6 +3293,16 @@ CaseFile.View = CaseFile.View || {
                     } //end field
                 } //end arg
             );
+        }
+    }
+
+    ,Calendar: {
+        create: function () {
+        }
+        , onInitialized: function () {
+        }
+        ,displayError: function() {
+            Acm.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"));
         }
     }
 

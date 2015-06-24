@@ -102,7 +102,7 @@
                     <div class="input-group">
                         <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]task:header.search.search" placeholder="Search">
                             <span class="input-group-btn">
-                              <button class="btn btn-sm btn-default" type="button" data-i18n="task:header.search.btn-go">Go!</button>
+                              <button class="btn btn-sm btn-default" id="btnSearchQuery" type="button" data-i18n="task:header.search.btn-go">Go!</button>
                             </span></div>
                 </div>
                 <div class="row m-b">

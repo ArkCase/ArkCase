@@ -1,11 +1,13 @@
 package com.armedia.acm.services.search.model.solr;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Property names must be identical to the desired SOLR field names.
@@ -20,8 +22,10 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
     private String object_type_s;
     private String object_sub_type_s;
     private String name;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
     private String creator_lcs;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date modified_date_tdt;
     private String modifier_lcs;
 
@@ -42,9 +46,11 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
 
     /////////////////// for docs with an incident date ////////////
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date incident_date_tdt;
 
     /////////////////// for docs with a due date////////////////////
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern=SearchConstants.SOLR_DATE_FORMAT, timezone=SearchConstants.TIME_ZONE_UTC)
     private Date dueDate_tdt;
 
     /////////////////// for docs with a priority ////////////
@@ -124,6 +130,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
 
 
     private String parent_ref_s;
+    private boolean hidden_b;
 
     @JsonIgnore
     public String getEcmFileId() {
@@ -713,6 +720,16 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
         return parent_ref_s;
     }
 
+    public void setHidden_b(boolean hidden_b)
+    {
+        this.hidden_b = hidden_b;
+    }
+
+    public boolean isHidden_b()
+    {
+        return hidden_b;
+    }
+
     @Override
     public String toString()
     {
@@ -742,6 +759,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", assignee_last_name_lcs='" + assignee_last_name_lcs + '\'' +
                 ", assignee_full_name_lcs='" + assignee_full_name_lcs + '\'' +
                 ", incident_type_lcs='" + incident_type_lcs + '\'' +
+                ", tag_token_lcs='" + tag_token_lcs + '\'' +
                 ", status_lcs='" + status_lcs + '\'' +
                 ", person_title_lcs='" + person_title_lcs + '\'' +
                 ", first_name_lcs='" + first_name_lcs + '\'' +
@@ -778,6 +796,7 @@ public class SolrAdvancedSearchDocument implements SolrBaseDocument, Serializabl
                 ", action_lcs='" + action_lcs + '\'' +
                 ", notification_type_lcs='" + notification_type_lcs + '\'' +
                 ", parent_ref_s='" + parent_ref_s + '\'' +
+                ", hidden_b=" + hidden_b +
                 '}';
     }
 }
