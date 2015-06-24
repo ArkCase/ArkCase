@@ -93,6 +93,10 @@
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
+    <bean id="rolesPrivilegesUpdateRole" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRole">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
     <bean id="rolesPrivilegesRetrieveRoles" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRoles">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
