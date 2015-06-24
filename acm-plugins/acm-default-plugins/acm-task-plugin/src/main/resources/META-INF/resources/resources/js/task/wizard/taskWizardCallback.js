@@ -35,7 +35,9 @@ TaskWizard.Callback = {
                     }
                     url += attachedToObjectId;
                 }
-                App.gotoPage(url);
+                setTimeout(function(){
+                    App.gotoPage(url);
+                },3000);
             }
         }
     }
