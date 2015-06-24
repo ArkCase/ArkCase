@@ -104,6 +104,33 @@ public class RolesPrivilegesService {
         }
     }
 
+    public void updateRole(String roleName, String newRoleName) throws AcmRolesPrivilegesException {
+        List<String> roles = loadRoles();
+        // Check if new role presents in roles file
+        int presentRoleIndex = -1;
+        for (int i = 0; i < roles.size(); i++) {
+            if (roles.get(i).equals(roleName)) {
+                presentRoleIndex = i;
+                break;
+            }
+        }
+        if (presentRoleIndex == -1) {
+            throw new AcmRolesPrivilegesException(String.format("Role '%s' doesn't exist", roleName));
+        } else {
+            roles.set(presentRoleIndex, newRoleName);
+            saveRoles(roles);
+            Map<String, String> rolesPrivileges = loadRolesPrivileges();
+
+            // Replace old Role name to the new Role
+            String value = rolesPrivileges.get(roleName);
+            if (value != null) {
+                rolesPrivileges.remove(roleName);
+                rolesPrivileges.put(newRoleName, value);
+                saveRolesPrivileges(rolesPrivileges);
+            }
+        }
+    }
+
     /**
      * Load roles list form file
      * @return roles list
@@ -159,22 +186,44 @@ public class RolesPrivilegesService {
      * @throws AcmRolesPrivilegesException
      */
     private void saveRoles(List<String> roles) throws AcmRolesPrivilegesException {
+        FileOutputStream fos = null;
         try {
             Properties props = new Properties();
             String propRoles = String.join(",", roles);
             props.setProperty(PROP_APPLICATION_ROLES, propRoles);
-            FileOutputStream fos =  FileUtils.openOutputStream(new File(applicationRolesFile));
+            fos =  FileUtils.openOutputStream(new File(applicationRolesFile));
             try {
                 props.store(fos, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
             } finally {
-                fos.flush();
-                fos.close();
+                if (fos != null) {
+                    fos.flush();
+                    fos.close();
+                }
             }
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Can't save info into the roles file", e);
             }
             throw new AcmRolesPrivilegesException("Can't save info into the roles file", e);
+        }
+    }
+
+    private Map<String, String> loadRolesPrivileges() throws AcmRolesPrivilegesException {
+        try {
+            Map<String, String> result = new HashMap();
+            Properties props = new Properties();
+            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+            for (Object keyIter: props.keySet()) {
+                String key = (String) keyIter;
+                result.put(key, props.getProperty(key));
+            }
+            return result;
+
+        } catch(Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Can't save info into the roles file", e);
+            }
+            throw new AcmRolesPrivilegesException("Can't load roles privileges file", e);
         }
     }
 
@@ -239,6 +288,28 @@ public class RolesPrivilegesService {
                 log.error(String.format("Can't save role '%s' privileges to file", roleName), e);
             }
             throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' privileges to file", roleName), e);
+        }
+    }
+
+    private void saveRolesPrivileges(Map<String, String> rolesPrivileges) throws AcmRolesPrivilegesException {
+        FileOutputStream fos = null;
+        try {
+            fos =  FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile));
+            Properties props = new Properties();
+            props.putAll(rolesPrivileges);
+            try {
+                props.store(fos,String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
+            } finally {
+                if (fos != null) {
+                    fos.flush();
+                    fos.close();
+                }
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Can't save roles privileges to file", e);
+            }
+            throw new AcmRolesPrivilegesException("Can't save roles privileges to file", e);
         }
     }
 

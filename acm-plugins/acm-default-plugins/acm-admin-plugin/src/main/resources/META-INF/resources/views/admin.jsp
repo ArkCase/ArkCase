@@ -190,11 +190,41 @@
                                     <section class="row m-b-md">
                                         <div class="col-sm-12">
                                             <div class="pull-right  m-t-md">
+                                                <button id="editRoleBtn" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#editRoleDialog" disabled>
+                                                    <i class="fa fa-edit text"></i>
+                                                    <span class="text">Edit Role</span>
+                                                </button>
+
                                                 <button class="btn btn-default" data-toggle="modal"
                                                         data-target="#newRoleDialog">
                                                     <i class="fa fa-gears text"></i>
                                                     <span class="text">Create Role</span>
                                                 </button>
+
+                                                <div class="modal fade" id="editRoleDialog" tabindex="-1" role="dialog"
+                                                     aria-labelledby="modalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close"
+                                                                        data-dismiss="modal">&times;<span
+                                                                        class="sr-only">Close</span></button>
+                                                                <h4 class="modal-title">Edit Role</h4>
+                                                            </div>
+                                                            <div class="modal-body"> Enter the role name in the box below.<br/><br/>
+                                                                <label for="editRoleName" class="label">Name</label>
+                                                                <input id="editRoleName" type="text" class="form-control" placeholder="Name">
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                                <button id="applyChangeRoleBtn" type="button" class="btn btn-primary">Apply Changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
                                                 <div class="modal fade" id="newRoleDialog" tabindex="-1" role="dialog"
                                                      aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">

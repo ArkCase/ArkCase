@@ -1167,11 +1167,15 @@ Admin.View = Admin.View || {
     ,RolesPrivileges: {
         create: function() {
             // Initialize select HTML elements for roles, not authorized and authorized groups
+            this.$editRoleBtn = $("#editRoleBtn");
             this.$selectRoles = $("#selectApplicationRoles");
             this.$selectAvailablePrivileges = $("#selectAvailablePrivileges");
             this.$selectPrivileges = $("#selectPrivileges");
             this.$createNewRoleBtn = $("#createNewRoleBtn");
+            this.$editRoleName = $("#editRoleName");
             this.$newRoleName = $("#newRoleName");
+            this.$editRoleDialog = $("#editRoleDialog");
+            this.$applyChangeRoleBtn = $("#applyChangeRoleBtn");
 
             // Initialize buttons
             this.$btnRolePrivilegesGo = $("#btnRolePrivilegesGo");
@@ -1183,17 +1187,24 @@ Admin.View = Admin.View || {
             this.$btnRolePrivilegesMoveRight.click($.proxy(Admin.View.RolesPrivileges.onClickBtnMoveRight, this));
             this.$btnRolePrivilegesMoveLeft.click($.proxy(Admin.View.RolesPrivileges.onClickBtnMoveLeft, this));
             this.$createNewRoleBtn.click($.proxy(Admin.View.RolesPrivileges.onCreateNewRole, this));
+            this.$applyChangeRoleBtn.click($.proxy(Admin.View.RolesPrivileges.onApplyChangesRole, this));
             this.$selectRoles.change($.proxy(Admin.View.RolesPrivileges.onChangeSelectRoles, this));
 
+
+            this.$editRoleDialog.on("show.bs.modal", $.proxy(Admin.View.RolesPrivileges.onEditRoleDialogShow, this));
         }
         ,onInitialized: function () {
             // Load roles
             Admin.View.RolesPrivileges.loadRoles();
             Admin.View.RolesPrivileges.loadPrivileges();
         }
+
+        ,onEditRoleDialogShow: function(e){
+            this.$editRoleName.val(this.$selectRoles.val());
+        }
+
         ,onClickBtnGo: function(event){
             Admin.View.RolesPrivileges.updatePrivilegesLists();
-
         }
         ,onClickBtnMoveRight: function(event) {
             // Move Privileges from all privileges to role privileges
@@ -1238,7 +1249,7 @@ Admin.View = Admin.View || {
 
         onChangeSelectRoles: function(event) {
             Admin.View.RolesPrivileges.clearPrivilegesLists();
-
+            this.$editRoleBtn.attr('disabled', false);
         }
 
         ,onModelError: function(errorMsg) {
@@ -1251,6 +1262,21 @@ Admin.View = Admin.View || {
             Admin.Service.RolesPrivileges.createApplicationRole(newRoleName)
                 .done(function(){
                     $('#newRoleDialog').modal('hide');
+                    context.loadRoles();
+                    context.clearPrivilegesLists();
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+
+        ,onApplyChangesRole: function() {
+            var context = this;
+            var oldRoleName = this.$selectRoles.val();
+            var newRoleName = this.$editRoleName.val();
+            Admin.Service.RolesPrivileges.updateApplicationRole(oldRoleName, newRoleName)
+                .done(function(){
+                    $('#editRoleDialog').modal('hide');
                     context.loadRoles();
                     context.clearPrivilegesLists();
                 })
@@ -1298,6 +1324,7 @@ Admin.View = Admin.View || {
         }
 
         ,loadRoles: function (){
+            this.$editRoleBtn.attr('disabled', true);
             var context = this;
             Admin.Service.RolesPrivileges.retrieveApplicationRoles()
                 .done(function(roles){
