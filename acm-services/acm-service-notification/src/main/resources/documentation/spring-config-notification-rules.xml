@@ -15,8 +15,8 @@
 				<![CDATA[
 					SELECT 
 					  a.newAssignee AS user,
-					  CONCAT(a.objectType, ' ', a.objectName, ' assigned to ', u.fullName, ' on ', a.created) AS title,
-					  CONCAT(a.objectType, ' ', a.objectName, ' assigned to ', u.fullName, ' on ', a.created) AS note,
+					  CONCAT('${objectTypeLabel} ', a.objectName, ' assigned to ', u.fullName, ' on ', a.created) AS title,
+					  CONCAT('${objectTypeLabel} ', a.objectName, ' was assigned to ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
 					  'user' AS notificationType,
 					  a.objectId AS objectId,
 					  a.objectType AS objectType,
@@ -47,8 +47,8 @@
 				<![CDATA[
 					SELECT 	
 					  a.oldAssignee AS user,
-					  CONCAT(a.objectType, ' ', a.objectName, ' unassigned from ', u.fullName, ' on ', a.created) AS title, 
-					  CONCAT(a.objectType, ' ', a.objectName, ' unassigned from ', u.fullName, ' on ', a.created) AS note,
+					  CONCAT('${objectTypeLabel} ', a.objectName, ' unassigned from ', u.fullName, ' on ', a.created) AS title,
+					  CONCAT('${objectTypeLabel} ', a.objectName, ' was unassigned from ', u.fullName, ' on ', a.created, '.  Click here to view: ${urlanchor}') AS note,
 					  'user' AS notificationType,
 					  a.objectId AS objectId,
 					  a.objectType AS objectType,
@@ -90,7 +90,16 @@
 		</property>
     </bean>
 	
-
+        <!-- Senders Definition -->
+        <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
+                <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+                <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+                <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
+                <property name="muleClient" ref="muleClient" />
+        </bean>
+	
 	<!-- Task Scheduler -->
 	<task:scheduler id="notificationTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="notificationTaskScheduler">

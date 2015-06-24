@@ -55,6 +55,7 @@ public class FacetedSearchAPIController {
         String sort= "";
         String query = SearchConstants.CATCH_ALL_QUERY + q;
         query = updateQueryWithExcludedObjects(query, rowQueryParametars);
+        query += buildHiddenDocumentsFilter();
         query = URLEncoder.encode(query, "UTF-8");
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
@@ -62,6 +63,11 @@ public class FacetedSearchAPIController {
 
         return results;
 
+    }
+
+    private String buildHiddenDocumentsFilter()
+    {
+        return " " + SearchConstants.OPERATOR_AND + " hidden_b:false";
     }
 
     private String buildSolrQuery( String filters ) {

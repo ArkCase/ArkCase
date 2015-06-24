@@ -82,20 +82,22 @@ Topbar.Model = {
                 Topbar.Controller.Asn.modelRetrievedAsnList(asnList);
             }
 
-            Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
-            
-            // Get popup ASN without waiting for the timer when the page is loaded
-            Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+            if (App.Model.Login.isLogin()) {
+                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+
+                // Get popup ASN without waiting for the timer when the page is loaded
+                Topbar.Service.Asn.retrievePopUpAsnList(App.getUserName(),Topbar.Model.Asn._rows, 'popup');
+            }
         }
 
         ,_pullInterval: 16
+        ,_pullIntervalMax: 1024
         ,_rows: 5
         ,_pull: function(interval) {
             Acm.Timer.useTimer("AsnWatch"
                 ,interval
                 ,function() {
-                    var isLogin = App.Model.Login.isLogin();
-                    if (!isLogin) {
+                    if (!App.Model.Login.isLogin()) {
                         return false;
                     }
 
@@ -107,8 +109,10 @@ Topbar.Model = {
         }
         ,onModelRetrievedAsnList: function(asnList) {
             if (asnList.hasError) {
-                Topbar.Model.Asn._pullInterval *= 2;
-                Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+                if (Topbar.Model.Asn._pullInterval < Topbar.Model.Asn._pullIntervalMax) {  //temporary fix. need better solution
+                    Topbar.Model.Asn._pullInterval *= 2;
+                    Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
+                }
             } else {
                 Topbar.Model.Asn._pullInterval = 16;
                 Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);

@@ -8,7 +8,10 @@
 TaskWizard.Object = {
     create : function() {
         //access data from jsp page
-    	var items = $(document).items();
+        this.$datePickers = $(".datepicker-input");
+        this.$datePickers.datepicker('option', 'dateFormat', $.t("common:date.datepicker"));
+
+        var items = $(document).items();
         var parentType = items.properties("parentType").itemValue();
         var reference = items.properties("reference").itemValue();
         if (Acm.isNotEmpty(parentType) && Acm.isNotEmpty(reference) ) {
@@ -16,7 +19,7 @@ TaskWizard.Object = {
             t.attachedToObjectType = parentType;
             t.attachedToObjectId = reference;
         }
-        
+
         //jsp object definitions
         this.$btnSave          = $("#saveBtn");
         this.$btnSave.click(function(e) {TaskWizard.Event.onClickBtnSave(e);});
@@ -28,13 +31,13 @@ TaskWizard.Object = {
 
         this.$edtSubject       = $("#subject");
 
-        this.$edtStartDate     = $("#startDate");;
-        this.setValueEdtStartDate(Acm.getCurrentDay());
+        this.$edtStartDate     = $("#startDate");
+        this.setValueEdtStartDate(Acm.getCurrentMoment($.t("common:date.short")));
 
         this.$selStatus        = $("#statusSel");
 
         this.$edtDueDate       = $("#dueDate");
-        this.setValueEdtDueDate(Acm.getCurrentDay());
+        this.setValueEdtDueDate(Acm.getCurrentMoment($.t("common:date.short")));
 
         this.$prioritySel      = $("#prioritySel");
         this.$completedStatus  = $("#completedStatus");
@@ -111,17 +114,7 @@ TaskWizard.Object = {
 	 * Get the start date field value
 	 */
     ,getValueEdtStartDate: function() {
-        //this is in mm/dd/yyyy format
-        var startDate = Acm.Object.getPlaceHolderInput(this.$edtStartDate);
-        //convert to yyyy-mm-dd format
-        var startDateArr = startDate.split("/");
-        var month = startDateArr[0];
-        var day = startDateArr[1];
-        var year = startDateArr[2];
-        var newStartDate = year + "-" + month + "-" + day;
-        //var newStartDate = startDate.split("/").reverse().join("-");
-        return newStartDate;
-        //return Acm.Object.getPlaceHolderInput(this.$edtStartDate);
+        return Acm.getIsoDateFromDate(Acm.Object.getPlaceHolderInput(this.$edtStartDate),$.t("common:date.short"));
     }
 
     /**
@@ -135,17 +128,7 @@ TaskWizard.Object = {
      * Get the due date field value
      */
     ,getValueEdtDueDate: function() {
-        //this is in mm/dd/yyyy format
-        var dueDate = Acm.Object.getPlaceHolderInput(this.$edtDueDate);
-        //convert to yyyy-mm-dd format
-        var dueDateArr = dueDate.split("/");
-        var month = dueDateArr[0];
-        var day = dueDateArr[1];
-        var year = dueDateArr[2];
-        var newDueDate = year + "-" + month + "-" + day;
-        //var newDueDate = dueDate.split("/").reverse().join("-");
-        return newDueDate;
-        //return Acm.Object.getPlaceHolderInput(this.$edtDueDate);
+        return Acm.getIsoDateFromDate(Acm.Object.getPlaceHolderInput(this.$edtDueDate),$.t("common:date.short"));
     }
 
     /**

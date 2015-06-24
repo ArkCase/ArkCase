@@ -71,4 +71,12 @@ public interface SearchConstants
      */
     String OPERATOR_AND = "AND";
     String OPERATOR_OR = "OR";
+    
+    /**
+     * Key in the properties file that hold name of the Solr properties for search objects by query
+     */
+    String SEARCH_QUERY_PROPERTIES_KEY = "search.tree.searchQuery";
+    
+    String TIME_ZONE_UTC = "UTC";
+    
 }

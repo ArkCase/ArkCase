@@ -8,7 +8,7 @@
 <jsp:attribute name="endOfHead">
     <title><spring:message code="taskNew.page.title" text="Task | ACM | Armedia Case Management" /></title>
     <div id="wizardData" itemscope="true" style="display: none">
-        <span itemprop="resourceNamespace">task,search</span>
+        <span itemprop="resourceNamespace">common,task,search</span>
         <span itemprop="parentType">${parentType}</span>
         <span itemprop="reference">${reference}</span>
     </div>
@@ -36,7 +36,7 @@
     <link rel="stylesheet" href="<c:url value='/resources/vendors/${vd_acm}/themes/basic/${vd_jtable}/blue/jtable.css'/>" type="text/css"/>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_jtable}/${js_jtable}'/>"></script>
 
-    <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_datepicker}/${js_datepicker}'/>"></script>
+    <%--<script type="text/javascript" src="<c:url value='/resources/vendors/${vd_datepicker}/${js_datepicker}'/>"></script>--%>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_slimscroll}/${js_slimscroll}'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_parsley}/${js_parsley}'/>"></script>
     <script type="text/javascript" src="<c:url value='/resources/vendors/${vd_wizard}/${js_wizard_bootstrap}'/>"></script>
@@ -103,8 +103,7 @@
                 <div class="row wrapper">
                     <div class="col-sm-4">
                         <label class="label" data-i18n="task:wizard.label.start-date">Start Date</label>
-                        <input class="datepicker-input form-control" type="text" value="" data-date-format="mm/dd/yyyy" placeholder="mm/dd/yyyy" id="startDate">
-
+                        <input class="datepicker-input form-control" type="text" id = "startDate" data-i18n="[data-date-format]common:date.datepicker">
                     </div>
                     <div class="col-sm-8">
                         <label class="label" data-i18n="task:wizard.label.status">Status</label>
@@ -119,9 +118,7 @@
                 <div class="row wrapper">
                     <div class="col-sm-4">
                         <label class="label" data-i18n="task:wizard.label.due-date">Due Date</label>
-
-                        <input class="datepicker-input form-control"  type="text" value="" data-date-format="mm/dd/yyyy" placeholder="mm/dd/yyyy" id="dueDate">
-
+                        <input class="datepicker-input form-control" type="text" id = "dueDate" data-i18n="[data-date-format]common:date.datepicker">
                     </div>
                     <div class="col-sm-4">
                         <label class="label" data-i18n="task:wizard.label.priority">Priority</label>
