@@ -15,6 +15,8 @@ Calendar.View = Calendar.View || {
         create: function(args) {
             this.$outlookCalendar = (args.$outlookCalendar)? args.$outlookCalendar : $("#calendar");
             this.$btnRefreshCalendar  = (args.$btnRefreshCalendar)? args.$btnRefreshCalendar : $("#refreshCalendar");
+            this.$calendarTabTitle  = (args.$calendarTabTitle)? args.$calendarTabTitle : $("#calendarTabTitle");
+            this.displayError = args.displayError;
 
             this.$btnRefreshCalendar.on("click", function(e) {Calendar.View.OutlookCalendar.onClickbtnRefreshCalendar(e, this);});
 
@@ -47,7 +49,7 @@ Calendar.View = Calendar.View || {
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
-                App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"), outlookCalendarItems.errorMsg);
+                Calendar.View.OutlookCalendar.displayError();
             }
             else{
                 Calendar.View.OutlookCalendar.$outlookCalendar.html("");
@@ -89,10 +91,10 @@ Calendar.View = Calendar.View || {
                 var body = Acm.goodValue(calendarItem.body) + "</br>";
                 //var startDateTime = Acm.getDateTimeFromDatetime(calendarItem.startDate);
                 var startDateTime = Acm.getDateTimeFromDatetime2(calendarItem.startDate,$.t("common:date.full"));
-                var startDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.start") + " " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
+                var startDateTimeWithoutSecond = $.t("outlookcalendar:label.start") + " " + startDateTime.substring(0,startDateTime.lastIndexOf(":"))+ "</br>";
                 //var endDateTime = Acm.getDateTimeFromDatetime(calendarItem.endDate);
                 var endDateTime = Acm.getDateTimeFromDatetime2(calendarItem.endDate,$.t("common:date.full"));
-                var endDateTimeWithoutSecond = $.t("casefile:outlook-calendar.label.end") + " " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
+                var endDateTimeWithoutSecond = $.t("outlookcalendar:label.end") + " " + endDateTime.substring(0,endDateTime.lastIndexOf(":"))+ "</br>";
                 var detail = body + startDateTimeWithoutSecond + endDateTimeWithoutSecond
                 return detail;
             }

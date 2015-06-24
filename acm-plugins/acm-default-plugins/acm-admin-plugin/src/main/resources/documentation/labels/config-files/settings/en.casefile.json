@@ -354,44 +354,7 @@
             "defaultValue": "Error occurred while retrieving calendar items.",
             "description": "",
             "value": "Error occurred while retrieving calendar items."
-        }},
-        "label": {
-            "calendar": {
-                "defaultValue": "Calendar",
-                "description": "",
-                "value": "Calendar"
-            },
-            "week": {
-                "defaultValue": "Week",
-                "description": "",
-                "value": "Week"
-            },
-            "month": {
-                "defaultValue": "Month",
-                "description": "",
-                "value": "Month"
-            },
-            "start": {
-                "defaultValue": "Start:",
-                "description": "",
-                "value": "Start:"
-            },
-            "refresh": {
-                "defaultValue": "Refresh",
-                "description": "",
-                "value": "Refresh"
-            },
-            "end": {
-                "defaultValue": "End:",
-                "description": "",
-                "value": "End:"
-            },
-            "day": {
-                "defaultValue": "Day",
-                "description": "",
-                "value": "Day"
-            }
-        }
+        }}
     },
     "title": {
         "defaultValue": "Case",
