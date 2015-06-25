@@ -16,9 +16,7 @@ import java.util.*;
 /**
  * Created by admin on 6/3/15.
  */
-public class RolesPrivilegesService {
-    private static final String PROP_APPLICATION_ROLES = "application.roles";
-
+public class RolesPrivilegesService implements RolePrivilegesConstants{
     private Logger log = LoggerFactory.getLogger(getClass());
     private String applicationRolesFile;
     private String applicationPrivilegesFile;

@@ -20,18 +20,6 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
     private Logger log = LoggerFactory.getLogger(getClass());
     private PropertyFileManager propertyFileManager;
 
-    private final String PROP_FILE_TYPES = "fileTypes";
-    private final String PROP_TYPE = "type";
-    private final String PROP_FORM = "form";
-    private final String PROP_LABEL = "label";
-
-    private final String PROP_FORM_NAME_TPL = "%s.name";
-    private final String PROP_FORM_TYPE_TPL = "%s.type";
-    private final String PROP_FORM_MODE_TPL = "%s.mode";
-
-
-
-
     private String propertiesLocation;
     private List<String> propertyFiles;
     private String acmFormsAcmPropertiesFile;
@@ -73,7 +61,7 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
     private Set<String> getFormsFromAcmFormsPropertiesFile() throws AcmFileTypesException {
         try {
             Set<String> forms = new HashSet();
-            // Load information about form types from acm-forms-plain.properties file
+            // Load information about form types from acm-forms.properties file
             Properties formsProps = new Properties();
             formsProps.load(FileUtils.openInputStream(new File(propertiesLocation + acmFormsAcmPropertiesFile)));
 
