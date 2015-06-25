@@ -1891,6 +1891,7 @@ Admin.View = Admin.View || {
 
     ,LinkFormsWorkflows: {
         create:  function() {
+            this.COLUMN_MULTIPLE_COEF = 2.5;
             this.$spreadsheetDiv = $("#divLinkFormsWorkflowsSpreadSheet");
             this.createSpreadSheet(this.$spreadsheetDiv);
             this.spreadSheet = null;
@@ -1959,16 +1960,24 @@ Admin.View = Admin.View || {
                         }
                     };
 
+                    // Set Column Width
+                    var columnsWidths = [];
+                    for (var i = 0; i < data.columnsWidths.length; i++) {
+                        columnsWidths[i] = data.columnsWidths[i] * Admin.View.LinkFormsWorkflows.COLUMN_MULTIPLE_COEF;
+                    }
+
+
                     Admin.View.LinkFormsWorkflows.spreadSheet = new Handsontable($s[0], {
                         data: cells,
                         height: 750,
-                        colWidths: data.columnsWidths,
+                        colWidths: columnsWidths,
                         colHeaders: true,
                         rowHeaders: true,
                         stretchH: 'all',
                         fillHandle: false,
                         columnSorting: false,
                         contextMenu: false,
+                        manualColumnResize: true,
                         cells: function(row, col, prop) {
                             var cellProperties = {};
                             var cellType = data.cells[row][col].type;
@@ -1984,7 +1993,6 @@ Admin.View = Admin.View || {
                                     callback((value >= 0) && (value <= 100) && (value % 1 === 0));
                                 }
                             }
-
 
                             cellProperties.renderer = cellRenderer;
                             return cellProperties;
