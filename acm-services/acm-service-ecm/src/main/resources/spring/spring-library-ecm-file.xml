@@ -129,12 +129,12 @@
 
         <property name="propertiesLocation" value="${user.home}/.acm/"></property>
         <property name="acmFormsPlainPropertiesFile" value="acm-forms-plain.properties"></property>
+        <property name="acmFormsAcmPropertiesFile" value="acm-forms.properties"></property>
         <property name="propertyFiles">
             <list>
                 <value>caseFilePlugin.properties</value>
                 <value>complaintPlugin.properties</value>
                 <value>taskPlugin.properties</value>
-                <value>acm-forms.properties</value>
             </list>
         </property>
     </bean>
