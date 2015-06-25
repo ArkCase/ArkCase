@@ -861,6 +861,7 @@ Admin.Service = {
         }
 
         ,API_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles"
+        ,API_UPDATE_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}"
         ,API_RETRIEVE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/privileges"
         ,API_ROLE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges"
 
@@ -907,7 +908,28 @@ Admin.Service = {
             )
 
             return $dfd.promise();
+        }
 
+        ,updateApplicationRole: function(oldRoleName, newRoleName) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_UPDATE_ROLES.format(oldRoleName);
+            var data = {
+                roleName: newRoleName
+            }
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to update role: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+
+            return $dfd.promise();
         }
 
         ,retrieveApplicationPrivileges: function() {

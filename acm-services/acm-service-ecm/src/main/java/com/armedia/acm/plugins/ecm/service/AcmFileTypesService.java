@@ -5,12 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by admin on 6/12/15.
  */
 public interface AcmFileTypesService {
 
-    List<String> getFileTypes() throws AcmFileTypesException;
-    List<String> getForms() throws AcmFileTypesException;
+    Set<String> getFileTypes() throws AcmFileTypesException;
+    Set<String> getForms() throws AcmFileTypesException;
 }
