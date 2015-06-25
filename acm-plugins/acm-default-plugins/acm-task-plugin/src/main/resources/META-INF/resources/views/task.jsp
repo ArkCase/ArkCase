@@ -737,7 +737,7 @@
 		<div class="modal-content">
   			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:reject-dialog.button.close">Close</span></button>
-                <h4 class="modal-title" id="rejectModalLabel" data-i18n="task:">Reject Task</h4>
+                <h4 class="modal-title" id="rejectModalLabel" data-i18n="task:reject-dialog.title">Reject Task</h4>
             </div>
   			<div class="modal-body">
   				<p data-i18n="task:reject-dialog.label.sure-to-reject">Are you sure you want to reject this task?</p>
