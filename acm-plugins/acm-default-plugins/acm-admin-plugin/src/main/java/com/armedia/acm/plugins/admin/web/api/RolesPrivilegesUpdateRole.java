@@ -16,8 +16,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesUpdateRole {
-    private final String PROP_ROLE_NAME = "roleName";
+public class RolesPrivilegesUpdateRole implements RolePrivilegesConstants{
     private Logger log = LoggerFactory.getLogger(getClass());
     private RolesPrivilegesService rolesPrivilegesService;
 
@@ -28,7 +27,7 @@ public class RolesPrivilegesUpdateRole {
     @ResponseBody
     public String createRole(
             @RequestBody String resource,
-            @PathVariable("roleName") String roleName,
+            @PathVariable(PROP_ROLE_NAME) String roleName,
             HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
 
         try {
