@@ -3,8 +3,10 @@ package com.armedia.acm.drools;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
+import org.kie.api.KieBase;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.KnowledgeBase;
 import org.kie.internal.builder.DecisionTableConfiguration;
@@ -33,11 +35,19 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
-    private KnowledgeBase knowledgeBase;
+    private KieBase kieBase;
 
 
 
-    public T applyRules(T businessObject)
+    public KieBase getKieBase() {
+		return kieBase;
+	}
+
+	public void setKieBase(KieBase kieBase) {
+		this.kieBase = kieBase;
+	}
+
+	public T applyRules(T businessObject)
     {
         if ( log.isTraceEnabled() )
         {
@@ -46,7 +56,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
         try
         {
-            getKnowledgeBase().newStatelessKnowledgeSession().execute(businessObject);
+            getKieBase().newStatelessKieSession().execute(businessObject);
         }
         catch (NullPointerException e)
         {
@@ -110,9 +120,9 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
                 throw new RuntimeException("Could not build rules from " + configFile.getAbsolutePath());
             }
 
-            KnowledgeBase base = kbuilder.newKnowledgeBase();
+            KieBase base = kbuilder.newKnowledgeBase();
 
-            setKnowledgeBase(base);
+            setKieBase(base);
 
             if ( log.isDebugEnabled() )
             {
@@ -135,15 +145,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         this.ruleSpreadsheetFilename = ruleSpreadsheetFilename;
     }
 
-    public KnowledgeBase getKnowledgeBase()
-    {
-        return knowledgeBase;
-    }
-
-    public void setKnowledgeBase(KnowledgeBase knowledgeBase)
-    {
-        this.knowledgeBase = knowledgeBase;
-    }
 
 
 }
