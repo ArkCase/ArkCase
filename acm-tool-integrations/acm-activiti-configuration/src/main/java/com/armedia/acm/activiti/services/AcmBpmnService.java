@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface AcmBpmnService {
 
+    public List<AcmProcessDefinition> list(String orderBy, boolean isAsc);
 
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc);
 

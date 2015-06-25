@@ -6,7 +6,7 @@
 Admin.View = Admin.View || {
     create: function() {
         if (Admin.View.Correspondence.create)       	{Admin.View.Correspondence.create();}
-        if (Admin.View.LDAPConfiguration.create)       {Admin.View.LDAPConfiguration.create();}
+        if (Admin.View.LDAPConfiguration.create)        {Admin.View.LDAPConfiguration.create();}
         if (Admin.View.LabelConfiguration.create)       {Admin.View.LabelConfiguration.create();}
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
@@ -14,6 +14,9 @@ Admin.View = Admin.View || {
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
         if (Admin.View.Forms.create)    				{Admin.View.Forms.create();}
+        if (Admin.View.LinkFormsWorkflows.create)       {Admin.View.LinkFormsWorkflows.create();}
+        if (Admin.View.Logo.create)                     {Admin.View.Logo.create();}
+        if (Admin.View.CustomCss.create)                {Admin.View.CustomCss.create();}
 
 
         if (Admin.View.Tree.create)                 	{Admin.View.Tree.create();}
@@ -26,6 +29,9 @@ Admin.View = Admin.View || {
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
+        if (Admin.View.LinkFormsWorkflows.onInitialized)        {Admin.View.LinkFormsWorkflows.onInitialized();}
+        if (Admin.View.Logo.onInitialized)                      {Admin.View.Logo.onInitialized();}
+        if (Admin.View.CustomCss.onInitialized)                 {Admin.View.CustomCss.onInitialized();}
         if (Admin.View.WorkflowConfiguration.onInitialized)     {Admin.View.WorkflowConfiguration.onInitialized();}
         if (Admin.View.Forms.onInitialized)    					{Admin.View.Forms.onInitialized();}
 
@@ -961,6 +967,103 @@ Admin.View = Admin.View || {
         }
     }
 
+    ,Logo: {
+        create: function() {
+            $('#btnUploadLogos').click($.proxy(this.uploadLogos, this));
+            this.$headerLogo = $('#customHeaderLogo');
+            this.$loginLogo = $('#customLoginLogo');
+        }
+        ,onInitialized : function(){
+
+        },
+
+        uploadLogos: function(e) {
+            var isValid = false;
+            var fd = new FormData();
+            if (this.$headerLogo[0].files.length > 0) {
+                fd.append('headerLogo', this.$headerLogo[0].files[0]);
+                isValid = true;
+            }
+
+            if (this.$loginLogo[0].files.length > 0) {
+                fd.append('loginLogo', this.$loginLogo[0].files[0]);
+                isValid = true;
+            }
+
+            // Show error message and return if no images selected
+            if (!isValid) {
+                Acm.Dialog.error('Select image to upload');
+                return;
+            }
+
+
+
+
+            var context = this;
+            Admin.Service.Logo.uploadLogos(fd)
+                .done(function(){
+                    // clear form values and update images
+                    context.$headerLogo.val('');
+                    context.$loginLogo.val('');
+                    var headerLogoSrc = $('#imgCustomHeaderLogo').attr('src');
+                    var d = (new Date()).getTime();
+                    if (headerLogoSrc.indexOf('?') != -1) {
+                        headerLogoSrc = headerLogoSrc.slice(0, headerLogoSrc.indexOf('?'));
+                    }
+
+                    headerLogoSrc += '?d=' + d;
+                    $('#imgCustomHeaderLogo').attr('src', headerLogoSrc);
+
+                    var loginLogoSrc = $('#imgCustomLoginLogo').attr('src');
+                    if (loginLogoSrc.indexOf('?') != -1) {
+                        loginLogoSrc = loginLogoSrc.slice(0, loginLogoSrc.indexOf('?'));
+                    }
+                    loginLogoSrc += '?d=' + d;
+                    $('#imgCustomLoginLogo').attr('src', loginLogoSrc);
+
+                    Acm.Dialog.info("Custom logo files updated. Refresh browser page to see result.");
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+    }
+
+    ,CustomCss: {
+        create: function() {
+            this.cssEditor = ace.edit("customCssTextArea");
+            this.cssEditor.setTheme("ace/theme/chrome");
+            this.cssEditor.getSession().setMode("ace/mode/css");
+
+            $('#btnSaveCustomCss').click($.proxy(this.updateCustomCss, this));
+
+            // Load Custom Css
+            var context = this;
+            Admin.Service.CustomCss.retrieveCustomCss()
+                .done(function(cssText){
+                    context.cssEditor.setValue(cssText);
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+        ,onInitialized : function() {
+        }
+
+        ,updateCustomCss: function(e) {
+            e.preventDefault();
+
+            var cssText = this.cssEditor.getValue();
+            Admin.Service.CustomCss.updateCustomCss(cssText)
+                .done(function(){
+                    Acm.Dialog.info("Custom CSS updated. Refresh browser page to see result.");
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+    }
+
     ,Correspondence : {
         create: function () {
 
@@ -1758,6 +1861,115 @@ Admin.View = Admin.View || {
             $s.jtable('load');
         }
     }
+
+    ,LinkFormsWorkflows: {
+        create:  function() {
+            this.$spreadsheetDiv = $("#divLinkFormsWorkflowsSpreadSheet");
+            this.createSpreadSheet(this.$spreadsheetDiv);
+            this.spreadSheet = null;
+
+            $('#btnLinkFormsWorkflowsSave').click($.proxy(this.onSaveSpreadSheet, this));
+            $('#btnLinkFormsWorkflowsUndo').click($.proxy(this.onUndoEdit, this));
+        }
+
+        ,onInitialized: function(){
+        }
+
+        ,onSaveSpreadSheet: function (e) {
+            var data = this.spreadSheet.getData();
+            Admin.Service.LinkFormsWorkflows.updateConfiguration(data)
+                .done(function(){
+                    Acm.Dialog.info("Link Forms/Workflows configuration saved successfully");
+                })
+                .fail(function(err){
+                    Acm.Dialog.error("Can't save Link Forms/Workflows configuration: " + err);
+                });
+        }
+
+        ,onUndoEdit: function (e) {
+            if (this.spreadSheet) {
+                this.spreadSheet.undo();
+            }
+        }
+
+        ,createSpreadSheet: function($s){
+
+            Admin.Service.LinkFormsWorkflows.retrieveConfiguration()
+                .done(function(data){
+
+                    // Get cells values
+                    var cells = [];
+                    for(var i = 0; i < data.cells.length; i++) {
+                        var rowValues = _.pluck(data.cells[i], 'value');
+                        cells.push(rowValues);
+                    }
+
+
+                    // Apply styles to cells
+                    var cellRenderer = function(instance, td, row, col, prop, value, cellProperties){
+                        Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+                        var cellInfo = data.cells[row][col];
+                        if (cellInfo) {
+
+                            td.style.wordWrap = 'break-word';
+
+                            if (cellInfo.bgColor) {
+                                td.style.background = cellInfo.bgColor;
+                            }
+
+                            if (cellInfo.color ){
+                                td.style.color = cellInfo.color;
+                            }
+
+                            if (cellInfo.readonly) {
+                                cellProperties.readOnly = true;
+                            }
+
+                            if (cellInfo.fontSize) {
+                                td.style.fontSize = cellInfo.fontSize + "px";
+                            }
+                        }
+                    };
+
+                    Admin.View.LinkFormsWorkflows.spreadSheet = new Handsontable($s[0], {
+                        data: cells,
+                        height: 750,
+                        colWidths: data.columnsWidths,
+                        colHeaders: true,
+                        rowHeaders: true,
+                        stretchH: 'all',
+                        fillHandle: false,
+                        columnSorting: false,
+                        contextMenu: false,
+                        cells: function(row, col, prop) {
+                            var cellProperties = {};
+                            var cellType = data.cells[row][col].type;
+
+                            // Add data for dropdown control if required
+                            if (cellType && data.meta[cellType]) {
+                                cellProperties.type = 'dropdown';
+                                cellProperties.source = data.meta[cellType];
+                            } else if (cellType == 'priority') {
+                                cellProperties.type = 'numeric'
+                                cellProperties.allowInvalid = false;
+                                cellProperties.validator = function (value, callback){
+                                    callback((value >= 0) && (value <= 100) && (value % 1 === 0));
+                                }
+                            }
+
+
+                            cellProperties.renderer = cellRenderer;
+                            return cellProperties;
+                        }
+                    });
+
+                })
+                .fail(function(){
+                    Acm.Dialog.error('Can\'t retrieve link forms workflows configuration');
+                });
+        }
+    }
     
     ,Forms:{
         create: function () {
@@ -2098,6 +2310,22 @@ Admin.View = Admin.View || {
                     ,title: "Label Configuration"
                     ,tooltip: "Label Configuration"
                 })
+
+                .addBranch({key: "br"                                                           //level 4.4.1: /Forms/Form Configuration/Form/Application Labels
+                    ,title: "Branding"
+                    ,tooltip: "Branding"
+                    ,folder : true
+                    ,expanded: true
+                })
+                .addLeaf({key: "brl"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
+                    ,title: "Logo"
+                    ,tooltip: "Logo"
+                })
+                .addLeafLast({key: "brcss"                                                                 //level 4.4.1.1: /Forms/Form Configuration/Form/Application Labels/Label Configuration
+                    ,title: "Custom CSS"
+                    ,tooltip: "Custom CSS"
+                })
+
                 .addBranchLast({key: "cm"                                                           //level 4.5.1: /Forms/Form Configuration/Form/Correspondence Management
                     ,title: "Correspondence Management"
                     ,tooltip: "Correspondence Management"

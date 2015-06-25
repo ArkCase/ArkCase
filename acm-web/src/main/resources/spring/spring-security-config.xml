@@ -23,7 +23,7 @@
     <http security="none" pattern="/resources/styles/**"/>
     <http security="none" pattern="/resources/styles/acm/**"/>
     <http security="none" pattern="/resources/styles/blueprint/**"/>
-
+    <http security="none" pattern="/branding/**"/>
     <!-- acmAuthenticationManager, acmLogoutSuccessHandler, and acmAuthenticationDetailsFactory are defined
          in spring-library-user-login.xml -->
 

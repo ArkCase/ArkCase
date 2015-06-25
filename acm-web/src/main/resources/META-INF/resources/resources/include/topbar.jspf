@@ -3,7 +3,7 @@
     <c:forEach var="navTab" items="${acm_application.navigatorTabs}">
             <c:if test="${navTab.actionName == 'Dashboard'}">
                 <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a>
-                <a href="<c:url value='${navTab.url}' />" class="navbar-brand"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/armedia.png" class="m-r-sm"></a></div>
+                <a href="<c:url value='${navTab.url}' />" class="navbar-brand"><img src="<c:url value='/'/>branding/headerlogo" class="m-r-sm"></a></div>
             </c:if>
     </c:forEach>
     <ul class="nav navbar-nav hidden-xs">
