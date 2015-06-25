@@ -26,6 +26,13 @@ public class AcmBpmnDao extends AcmAbstractDao<AcmProcessDefinition> {
         return count;
     }
 
+    public List<AcmProcessDefinition> list(String orderBy, boolean isAsc) {
+        String queryText =
+                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MIN(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");
+        Query query = getEm().createQuery(queryText);
+        return query.getResultList();
+    }
+
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc) {
         String queryText =
                 "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MIN(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");

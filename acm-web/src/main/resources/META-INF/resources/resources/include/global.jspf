@@ -71,10 +71,10 @@
 <c:set var="vd_i18next"            scope="session" value="i18next-1.8.1"/>
 <c:set var="js_i18next"            scope="session" value="i18next-1.8.1.js"/>
 
-<c:set var="vd_moment"            scope="session" value="moment-2.10.2"/>
-<c:set var="js_moment"            scope="session" value="moment.js"/>
+<c:set var="vd_moment"             scope="session" value="moment-2.10.2"/>
+<c:set var="js_moment"             scope="session" value="moment.js"/>
 
-<c:set var="vd_jquery_qtip"       scope="session" value="jquery-qtip-2.2.1"/>
+<c:set var="vd_jquery_qtip"        scope="session" value="jquery-qtip-2.2.1"/>
 <c:set var="css_jquery_qtip"       scope="session" value="jquery.qtip.min.css"/>
 <c:set var="js_jquery_qtip"        scope="session" value="jquery.qtip.min.js"/>
 
@@ -86,6 +86,12 @@
 
 <c:set var="vd_jtable"             scope="session" value="jtable-2.4.0"/>
 <c:set var="js_jtable"             scope="session" value="jquery.jtable.js"/>
+
+
+<c:set var="vd_handsontable"       scope="session" value="handsontable-0.15.0-beta6"/>
+<c:set var="css_handsontable"      scope="session" value="handsontable.full.css"/>
+<c:set var="js_handsontable"       scope="session" value="handsontable.full.js"/>
+
 
 <c:set var="vd_jquery_validation"  scope="session" value="jquery-validation-engine-2.6.2"/>
 <c:set var="css_jquery_validation" scope="session" value="validationEngine.jquery.css"/>
@@ -168,6 +174,12 @@
 <c:set var="vd_numberformatter"    scope="session" value="numberformatter-1.2.4"/>
 <c:set var="js_numberformatter"    scope="session" value="jquery.numberformatter-1.2.4.js"/>
 
+<c:set var="vd_ace"                scope="session" value="ace"/>
+<c:set var="js_ace"                scope="session" value="ace.js"/>
+<c:set var="js_ace_mode_css"       scope="session" value="mode-css.js"/>
+<c:set var="js_ace_worker_css"     scope="session" value="worker-css.js"/>
+<c:set var="js_ace_theme_chrome"   scope="session" value="theme-chrome.js"/>
+
 
 <!-- Bootstrap http://getbootstrap.com -->
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_jquery_ui}/css/ui-lightness/${css_jquery_ui}'/>" type="text/css"/>
@@ -183,6 +195,9 @@
 <!--[if lt IE 8]>
 <link rel="stylesheet" media="screen" href="<c:url value='/resources/vendors/${vd_ie}/css/ie.css'/>" />
 <![endif]-->
+
+<!-- Custom  CSS file -->
+<link rel="stylesheet" media="screen" href="<c:url value='/branding/customcss'/>"/>
 
 <!-- from http://getbootstrap.com/getting-started:  -->
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
