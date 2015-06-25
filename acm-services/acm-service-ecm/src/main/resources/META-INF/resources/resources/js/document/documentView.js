@@ -797,11 +797,12 @@ AcmDocument.View = AcmDocument.View || {
 
         ,onModelChangedActiveVersion:function(documentId, documentDetail){
             if(AcmDocument.Model.VersionHistory.validateDocumentDetail(documentDetail)){
-                App.View.MessageBoard.show("Active file version changed successfully.");
+                App.View.MessageBoard.show($.t("docdetail:version-history.msg.change-active-version-success"));
+                location.reload(true);
                 AcmDocument.View.VersionHistory.buildVersionHistoryTable(documentDetail.versions);
             }
             else if (documentDetail.hasError) {
-                App.View.MessageBoard.show("Error setting active file version", documentDetail.errorMsg);
+                App.View.MessageBoard.show($.t("docdetail:version-history.msg.change-active-version-fail"), documentDetail.errorMsg);
             }
 
         }
