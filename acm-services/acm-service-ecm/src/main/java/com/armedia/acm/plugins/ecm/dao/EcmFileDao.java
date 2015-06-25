@@ -4,13 +4,16 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,6 +94,10 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         {
         	LOG.error("Cannot find EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType, e);
         }
+        catch (NonUniqueResultException e1) 
+        {
+        	LOG.error("Cannot find unique EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType + ". Multiple files found ...", e1);
+		}
 
         return result;
     }

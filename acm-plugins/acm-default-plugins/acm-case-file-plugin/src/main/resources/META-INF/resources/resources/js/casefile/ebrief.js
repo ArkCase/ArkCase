@@ -225,9 +225,9 @@ CaseFile.prepare = function() {
                     }
                     else if (response.hasError)  {
                         var profile = {};
-                        profile.organisation = "N/A";
-                        profile.email = "N/A";
-                        profile.phone = "N/A";
+                        profile.organisation = "";
+                        profile.email = "";
+                        profile.phone = "";
                         CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
                         return profile;
                     }//end else
@@ -244,6 +244,8 @@ CaseFile.prepare = function() {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_ASSIGNEE    ,this.onModelSavedAssignee);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_SAVED_GROUP	    ,this.onModelSavedGroup);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_ADDED_PARTICIPANT	,this.onModelAddedParticipant);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_UPDATED_PARTICIPANT ,this.onModelUpdatedParticipant);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
         }
         ,onInitialized: function() {
@@ -288,6 +290,12 @@ CaseFile.prepare = function() {
                 CaseFile.Service.Lookup.retrieveAssignees();
             }
         }
+        ,onModelAddedParticipant: function(caseFileId, participant) {
+        	CaseFile.View.Participants.reloadParticipants();
+        }
+        ,onModelUpdatedParticipant: function(caseFileId, participant) {
+        	CaseFile.View.Participants.reloadParticipants();
+        }
         ,onViewSelectedObject: function(objType, objId) {
             CaseFile.View.Participants.reloadParticipants();
         }
@@ -322,9 +330,9 @@ CaseFile.prepare = function() {
                                             record.phone = Acm.goodValue(profile.phone);
                                         }
                                         else{
-                                            record.organisation = "N/A";
-                                            record.email = "N/A";
-                                            record.phone = "N/A";
+                                            record.organisation = "";
+                                            record.email = "";
+                                            record.phone = "";
                                         }
 
                                         rc.Records.push(record);
@@ -407,14 +415,20 @@ CaseFile.prepare = function() {
                         ,organisation: {
                             title: $.t("ebrief:participants.table.field.organisation")
                             ,width: '20%'
+                            ,create: false
+                            ,edit: false
                         }
                         ,email: {
                             title: $.t("ebrief:participants.table.field.email")
                             ,width: '20%'
+                            ,create: false
+                            ,edit: false
                         }
                         ,phone: {
                             title: $.t("ebrief:participants.table.field.phone")
                             ,width: '15%'
+                            ,create: false
+                            ,edit: false
                         }
                     }
                     ,recordAdded : function (event, data) {
