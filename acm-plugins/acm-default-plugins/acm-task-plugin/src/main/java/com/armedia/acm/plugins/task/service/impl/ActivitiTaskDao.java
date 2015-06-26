@@ -280,6 +280,8 @@ class ActivitiTaskDao implements TaskDao
             retval.setTaskFinishedDate(hti.getEndTime());
             retval.setTaskDurationInMillis(hti.getDurationInMillis());
             retval.setCompleted(true);
+            String status = findTaskStatus(hti);
+            retval.setStatus(status);
 
             return retval;
         }
@@ -330,6 +332,8 @@ class ActivitiTaskDao implements TaskDao
             retval.setTaskFinishedDate(hti.getEndTime());
             retval.setTaskDurationInMillis(hti.getDurationInMillis());
             retval.setCompleted(true);
+            String status = findTaskStatus(hti);
+            retval.setStatus(status);
 
             return retval;
         }
