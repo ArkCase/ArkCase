@@ -12,38 +12,38 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by sergey.kolomiets  on 6/2/15.
+ * Created by sergey.kolomiets  on 6/24/15.
  */
 @Controller
 @RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesCreateRole implements RolePrivilegesConstants{
+public class RolesPrivilegesUpdateRole implements RolePrivilegesConstants{
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private RolesPrivilegesService rolesPrivilegesService;
 
-    @RequestMapping(value = "/rolesprivileges/roles", method = RequestMethod.POST, produces = {
+    @RequestMapping(value = "/rolesprivileges/roles/{roleName}", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
 
     @ResponseBody
     public String createRole(
             @RequestBody String resource,
+            @PathVariable(PROP_ROLE_NAME) String roleName,
             HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
 
         try {
             JSONObject newRoleObject = new JSONObject(resource);
-            String roleName = newRoleObject.getString(PROP_ROLE_NAME);
-            if (roleName == null) {
+            String newRoleName = newRoleObject.getString(PROP_ROLE_NAME);
+            if (newRoleName == null) {
                 throw new AcmRolesPrivilegesException("Role name is undefined");
             }
-            rolesPrivilegesService.createRole(roleName);
+            rolesPrivilegesService.updateRole(roleName, newRoleName);
 
             return "{}";
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
-                log.error("Can't create role", e);
+                log.error("Can't update role", e);
             }
-            throw new AcmRolesPrivilegesException("Can't create role", e);
+            throw new AcmRolesPrivilegesException("Can't update role", e);
         }
     }
 

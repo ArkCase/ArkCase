@@ -648,7 +648,11 @@ Task.View = Task.View || {
 //                Task.View.Detail.$lnkEditComplaintClose.hide();
 //                Task.View.Detail.$lnkChangeCaseStatus.show();
 //            }
-            if(task.adhocTask){
+            if(Acm.isNotEmpty(task.assignee) && (App.getUserName() != Acm.goodValue(task.assignee))){
+                Task.View.Detail.hideAllWorkflowButtons();
+                Task.View.Detail.hideDynamicWorkflowButtons();
+            }
+            else if(task.adhocTask){
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
                 if(task.completed != true){

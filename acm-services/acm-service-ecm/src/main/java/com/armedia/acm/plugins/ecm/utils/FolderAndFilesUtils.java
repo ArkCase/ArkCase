@@ -40,8 +40,22 @@ public class FolderAndFilesUtils {
         if ( versions == null ) {
             return ecmFile.getVersionSeriesId();
         }
-        return versions.stream().filter(fv -> fv.getVersionTag().equals(ecmFile.getActiveVersionTag())).
-                map(EcmFileVersion::getCmisObjectId).findFirst().orElse(ecmFile.getVersionSeriesId());
+        String cmisId = null;
+
+        //follow this way for now till we figure out
+        //why stream code below is not working
+        for(EcmFileVersion version : versions){
+            if(version.getVersionTag().equals(ecmFile.getActiveVersionTag())){
+                cmisId = version.getCmisObjectId();
+            }
+        }
+        if(cmisId == null){
+            cmisId = ecmFile.getVersionSeriesId();
+        }
+        /*cmisId = versions.stream().filter(fv -> (fv.getVersionTag()).equals(ecmFile.getActiveVersionTag())).
+                map(EcmFileVersion::getCmisObjectId).findFirst().orElse(ecmFile.getVersionSeriesId());*/
+
+        return cmisId;
     }
 
     public String createUniqueIdentificator(String input)

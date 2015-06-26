@@ -19,6 +19,7 @@ TaskWizard.Event = {
             Acm.Dialog.info($.t("task:wizard.msg.please-check-percent-complete"));
         }
         else{
+            TaskWizard.Object.$btnSave.prop("disabled",true);
             TaskWizard.Service.createAdhocTask(data);
             e.preventDefault();
         }
