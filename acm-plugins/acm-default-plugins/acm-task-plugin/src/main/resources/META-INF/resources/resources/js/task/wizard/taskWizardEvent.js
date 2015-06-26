@@ -9,29 +9,19 @@ TaskWizard.Event = {
     create : function() {
     }
 
-    ,_isBtnSaveClicked: false
-    ,isBtnSaveClicked: function(){
-        return this._isBtnSaveClicked;
-    }
-    ,setBtnSaveClicked: function(isBtnSaveClicked){
-        this._isBtnSaveClicked = isBtnSaveClicked;
-    }
-
     ,onClickBtnSave : function(e) {
-        if(!this.isBtnSaveClicked()){
-            var data = TaskWizard.Object.getTaskData();
-            if(Acm.isEmpty(data.title)){
-                Acm.Dialog.info($.t("task:wizard.msg.please-enter-subject"));
-            }
-            else if(!(data.percentComplete >= 0 && data.percentComplete <= 100))
-            {
-                Acm.Dialog.info($.t("task:wizard.msg.please-check-percent-complete"));
-            }
-            else{
-                TaskWizard.Service.createAdhocTask(data);
-                e.preventDefault();
-            }
-            TaskWizard.Event.setBtnSaveClicked(true);
+        var data = TaskWizard.Object.getTaskData();
+        if(Acm.isEmpty(data.title)){
+            Acm.Dialog.info($.t("task:wizard.msg.please-enter-subject"));
+        }
+        else if(!(data.percentComplete >= 0 && data.percentComplete <= 100))
+        {
+            Acm.Dialog.info($.t("task:wizard.msg.please-check-percent-complete"));
+        }
+        else{
+            TaskWizard.Object.$btnSave.prop("disabled",true);
+            TaskWizard.Service.createAdhocTask(data);
+            e.preventDefault();
         }
     }
 
