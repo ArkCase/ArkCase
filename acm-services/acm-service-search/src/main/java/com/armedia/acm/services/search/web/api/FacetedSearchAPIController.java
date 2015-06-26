@@ -45,6 +45,7 @@ public class FacetedSearchAPIController {
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
             @RequestParam(value = "filters", required = false, defaultValue="") String filters,
+            @RequestParam(value = "s", required = false, defaultValue = "create_date_tdt DESC") String sortSpec,
             Authentication authentication
     ) throws MuleException, UnsupportedEncodingException {
         if ( log.isDebugEnabled() ) {
@@ -52,7 +53,7 @@ public class FacetedSearchAPIController {
         }
 
         String rowQueryParametars = buildSolrQuery(filters);
-        String sort= "";
+        String sort= sortSpec == null ? "" : sortSpec.trim();
         String query = SearchConstants.CATCH_ALL_QUERY + q;
         query = updateQueryWithExcludedObjects(query, rowQueryParametars);
         query += buildHiddenDocumentsFilter();
