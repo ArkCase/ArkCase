@@ -8,9 +8,8 @@
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
-    <bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter">
-        <property name="auditPlugin" ref="auditPlugin"/>
-    </bean>
+    <bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter"/>
+
 
     <bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"
             destroy-method="closeBean">
