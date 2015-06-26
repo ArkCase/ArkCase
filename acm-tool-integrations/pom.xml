@@ -31,6 +31,7 @@
     	<module>acm-object-converter</module>
         <module>acm-object-change-status</module>
         <module>acm-encryption</module>
-  </modules>
+        <module>acm-email</module>
+    </modules>
 
 </project>
