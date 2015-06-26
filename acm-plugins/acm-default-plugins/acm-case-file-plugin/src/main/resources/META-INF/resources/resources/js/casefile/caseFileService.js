@@ -1141,7 +1141,7 @@ CaseFile.Service = {
         }
 
         ,API_RETRIEVE_PLAIN_FORMS      : "/api/latest/plugin/admin/plainforms"
-        ,API_RECORD_EVENT              : "/api/latest/plugin/event"
+        ,API_RECORD_EVENT              : "/api/latest/service/event"
         	
     	,retrievePlainForms: function() {
             var url = App.getContextPath() + CaseFile.Service.Documents.API_RETRIEVE_PLAIN_FORMS + '/' + CaseFile.Model.DOC_TYPE_CASE_FILE;
