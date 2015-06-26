@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-integration-case-file-test.xml", "classpath:/spring/spring-library-property-file-manager.xml"})
-public class CaseFileMailFilterTest extends EasyMockSupport {
+public class CaseFileMailFilterIT extends EasyMockSupport {
     private Message messageMock;
 
     @Autowired
