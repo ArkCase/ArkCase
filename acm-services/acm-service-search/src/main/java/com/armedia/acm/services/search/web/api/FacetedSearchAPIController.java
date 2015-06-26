@@ -356,8 +356,14 @@ public class FacetedSearchAPIController {
     private String replaceEventTypeName(String solrResult){
         Map<String,Object> propertyMap = getPluginEventType().getPluginProperties();
         for ( Map.Entry<String, Object> e : propertyMap.entrySet() ){
-            if( solrResult.contains("\""+e.getKey()+"\"") ){
-                solrResult = solrResult.replaceAll("\""+e.getKey()+"\"", "\""+(String) e.getValue()+"\"");
+            String key;
+            if (e.getKey().contains(SearchConstants.EVENT_TYPE)) {
+                key = e.getKey().split(SearchConstants.EVENT_TYPE)[1];
+            } else {
+                continue;
+            }
+            if( solrResult.contains("\"" + key.trim() + "\"") ){
+                solrResult = solrResult.replaceAll("\""+key+"\"", "\""+(String) e.getValue()+"\"");
             }
         }
         return solrResult;
