@@ -73,6 +73,18 @@
             "description": "",
             "value": "Version History"
         }
+    },
+    "msg":{
+        "change-active-version-success":{
+            "defaultValue": "Request submitted.Fetching the correct document.",
+            "description": "",
+            "value": "Request submitted.Fetching the correct document."
+        },
+        "change-active-version-fail":{
+            "defaultValue": "Error setting active file version. Please try again.",
+            "description": "",
+            "value": "Error setting active file version. Please try again."
+        }
     }},
     "event-history": {"table": {
         "field": {

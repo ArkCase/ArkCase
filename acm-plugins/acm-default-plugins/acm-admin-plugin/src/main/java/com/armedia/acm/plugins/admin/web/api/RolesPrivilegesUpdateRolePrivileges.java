@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesUpdateRolePrivileges {
+public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConstants {
     private final String PROP_PRIVILEGES = "privileges";
     private Logger log = LoggerFactory.getLogger(getClass());
     private RolesPrivilegesService rolesPrivilegesService;
@@ -31,7 +31,7 @@ public class RolesPrivilegesUpdateRolePrivileges {
     @ResponseBody
     public String updateRolePrivileges(
             @RequestBody String resource,
-            @PathVariable("roleName") String roleName,
+            @PathVariable(PROP_ROLE_NAME) String roleName,
             HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
 
         try {

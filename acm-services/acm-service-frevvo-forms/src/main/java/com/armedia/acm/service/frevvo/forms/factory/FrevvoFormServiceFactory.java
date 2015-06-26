@@ -41,6 +41,8 @@ public class FrevvoFormServiceFactory {
 			
 			PlainFormService service = new PlainFormService();
 			
+			service.setFormName(name);
+			
 			service.setEcmFileService(frevvoFormController.getEcmFileService());
             service.setServletContextPath(contextPath);
             service.setProperties(frevvoFormController.getProperties());
