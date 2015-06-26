@@ -55,7 +55,12 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
 
         if ( changelist != null )
         {
-            getApplicationEventPublisher().publishEvent(new AcmDatabaseChangesEvent(changelist));
+            boolean raiseEvent = !changelist.getAddedObjects().isEmpty() || !changelist.getDeletedObjects().isEmpty()
+                    || !changelist.getUpdatedObjects().isEmpty();
+            if ( raiseEvent )
+            {
+                getApplicationEventPublisher().publishEvent(new AcmDatabaseChangesEvent(changelist));
+            }
         }
     }
 

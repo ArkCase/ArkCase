@@ -117,7 +117,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants{
                     processNames.add(processDefinitionIter.getKey());
                 }
 
-                List<String> fileTypes = new ArrayList();
+                Set<String> fileTypes = new HashSet();
                 fileTypes.add("");
                 // Add file types
                 fileTypes.addAll(acmFileTypesService.getFileTypes());
@@ -125,9 +125,13 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants{
                 // Add forms list
                 fileTypes.addAll(acmFileTypesService.getForms());
 
+                List<String> sortedFileTypes = new LinkedList();
+                sortedFileTypes.addAll(fileTypes);
+                Collections.sort(sortedFileTypes);
+
                 // Add metadata (available values or some columns)
                 JSONObject metaObject = new JSONObject();
-                metaObject.put(COL_TYPE_FILE_TYPE, fileTypes);
+                metaObject.put(COL_TYPE_FILE_TYPE, sortedFileTypes);
                 metaObject.put(COL_TYPE_PROCESS_NAME, processNames);
                 metaObject.put(COL_TYPE_START_PROCESS, START_PROCESS_VALUES);
 

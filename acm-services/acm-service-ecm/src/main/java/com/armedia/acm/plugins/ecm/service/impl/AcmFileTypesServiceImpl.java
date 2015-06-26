@@ -5,16 +5,13 @@ import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Created by admin on 6/12/15.
@@ -23,20 +20,15 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
     private Logger log = LoggerFactory.getLogger(getClass());
     private PropertyFileManager propertyFileManager;
 
-    private final String PROP_FILE_TYPES = "fileTypes";
-    private final String PROP_TYPE = "type";
-    private final String PROP_FORM = "form";
-    private final String PROP_LABEL = "label";
-
-
     private String propertiesLocation;
     private List<String> propertyFiles;
+    private String acmFormsAcmPropertiesFile;
     private String acmFormsPlainPropertiesFile;
 
     @Override
-    public List<String> getFileTypes() throws AcmFileTypesException {
+    public Set<String> getFileTypes() throws AcmFileTypesException {
         try {
-            List<String> fileTypes = new ArrayList();
+            Set<String> fileTypes = new HashSet();
             // Load properties file and get fileTypes property
             for (String fileName : propertyFiles) {
                 String fileTypesStr = propertyFileManager.load(propertiesLocation + fileName, PROP_FILE_TYPES, "[]");
@@ -59,9 +51,43 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
     }
 
     @Override
-    public List<String> getForms() throws AcmFileTypesException {
+    public Set<String> getForms() throws AcmFileTypesException {
+        Set<String> forms = new HashSet();
+        forms.addAll(getFormsFromAcmFormsPropertiesFile());
+        forms.addAll(getFormsFromPlainFormsPropertiesFile());
+        return forms;
+    }
+
+    private Set<String> getFormsFromAcmFormsPropertiesFile() throws AcmFileTypesException {
         try {
-            List<String> forms = new ArrayList();
+            Set<String> forms = new HashSet();
+            // Load information about form types from acm-forms.properties file
+            Properties formsProps = new Properties();
+            formsProps.load(FileUtils.openInputStream(new File(propertiesLocation + acmFormsAcmPropertiesFile)));
+
+            for (Object propKey : formsProps.keySet()) {
+                int dotIndex = ((String) propKey).indexOf('.');
+                if (dotIndex > 0) {
+                    String propName = ((String) propKey).substring(0, dotIndex);
+                    // Be sure that selected properties are related to forms
+                    // Forms properties have name, type and mode properties.
+                    if (!forms.contains(propName) && isFormProperty(propName, formsProps)) {
+                        forms.add(propName);
+                    }
+                }
+            }
+            return forms;
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Can't get forms info from properties files", e);
+            }
+            throw new AcmFileTypesException("Can't get forms info from properties files", e);
+        }
+    }
+
+    private Set<String> getFormsFromPlainFormsPropertiesFile() throws AcmFileTypesException {
+        try {
+            Set<String> forms = new HashSet<>();
             // Load information about form types from acm-forms-plain.properties file
             Properties formsProps = new Properties();
             formsProps.load(FileUtils.openInputStream(new File(propertiesLocation + acmFormsPlainPropertiesFile)));
@@ -86,12 +112,24 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService {
     }
 
 
+    private boolean isFormProperty(String propName, Properties props) {
+        boolean result =
+                props.containsKey(String.format(PROP_FORM_NAME_TPL, propName))
+                        && props.containsKey(String.format(PROP_FORM_MODE_TPL, propName))
+                        && props.containsKey(String.format(PROP_FORM_TYPE_TPL, propName));
+        return result;
+    }
+
     public void setPropertyFiles(List<String> propertyFiles) {
         this.propertyFiles = propertyFiles;
     }
 
     public void setPropertiesLocation(String propertiesLocation) {
         this.propertiesLocation = propertiesLocation;
+    }
+
+    public void setAcmFormsAcmPropertiesFile(String acmFormsAcmPropertiesFile) {
+        this.acmFormsAcmPropertiesFile = acmFormsAcmPropertiesFile;
     }
 
     public void setAcmFormsPlainPropertiesFile(String acmFormsPlainPropertiesFile) {

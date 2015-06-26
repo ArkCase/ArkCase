@@ -69,7 +69,8 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-profile.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-task.xml",
-        "/spring/spring-library-event.xml"
+        "/spring/spring-library-event.xml",
+        "/spring/spring-library-note.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT extends EasyMock {
