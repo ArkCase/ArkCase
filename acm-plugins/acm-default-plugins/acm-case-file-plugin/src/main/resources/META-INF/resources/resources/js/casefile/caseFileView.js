@@ -1120,7 +1120,8 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.contact-methods.table.title") + "'><i class='fa fa-phone'></i></a>");
+                //var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.contact-methods.table.title") + "'><i class='fa fa-phone'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' title='" + $.t("casefile:people.table.contact-methods.table.title") + "'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, $.t("casefile:people.table.contact-methods.table.title"));
                     e.preventDefault();
@@ -1285,7 +1286,8 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                //var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show'><i class='fa fa-phone'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs'><i class='fa fa-phone'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.ContactMethods.onOpen, $.t("casefile:people.table.security-tags.table-title"));
                     e.preventDefault();
@@ -1442,7 +1444,8 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='"+ $.t("casefile:people.table.security-tags.organizations.table.title") +"'><i class='fa fa-book'></i></a>");
+                //var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='"+ $.t("casefile:people.table.security-tags.organizations.table.title") +"'><i class='fa fa-book'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' title='"+ $.t("casefile:people.table.security-tags.organizations.table.title") +"'><i class='fa fa-book'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Organizations.onOpen, $.t("casefile:people.table.security-tags.organizations.table.title"));
                     e.preventDefault();
@@ -1597,7 +1600,8 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.addresses.table.title") + "'><i class='fa fa-map-marker'></i></a>");
+                //var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.addresses.table.title") + "'><i class='fa fa-map-marker'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' title='" + $.t("casefile:people.table.security-tags.addresses.table.title") + "'><i class='fa fa-map-marker'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Addresses.onOpen, $.t("casefile:people.table.security-tags.addresses.table.title"));
                     e.preventDefault();
@@ -1811,7 +1815,8 @@ CaseFile.View = CaseFile.View || {
             }
 
             ,createLink: function($jt) {
-                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.aliases.table.title") + "'><i class='fa fa-users'></i></a>");
+                //var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' data-toggle='class:show' title='" + $.t("casefile:people.table.security-tags.aliases.table.title") + "'><i class='fa fa-users'></i></a>");
+                var $link = $("<a href='#' class='inline animated btn btn-default btn-xs' title='" + $.t("casefile:people.table.security-tags.aliases.table.title") + "'><i class='fa fa-users'></i></a>");
                 $link.click(function (e) {
                     AcmEx.Object.JTable.toggleChildTable($jt, $link, CaseFile.View.People.Aliases.onOpen, $.t("casefile:people.table.security-tags.aliases.table.title"));
                     e.preventDefault();
@@ -2081,18 +2086,23 @@ CaseFile.View = CaseFile.View || {
             AcmEx.Object.JTable.load(CaseFile.View.Participants.$divParticipants);
         }
 
-        ,createJTableParticipants: function($s) {
-            var sortMap = {};
-            sortMap["type"]  = "participantType";
-            sortMap["title"] = "participantLdapId";
+        ,createJTableParticipants: function($jt) {
+//            var sortMap = {};
+//            sortMap["type"]  = "participantType";
+//            sortMap["title"] = "participantLdapId";
 
-            AcmEx.Object.JTable.usePaging($s, {
-                title: $.t("casefile:participants.table.title")
+            AcmEx.Object.JTable.usePaging_new({$jt: $jt
+                ,sortMap: {
+                    "type": "participantType"
+                    ,"title": "participantLdapId"
+                }
+
+                ,title: $.t("casefile:participants.table.title")
                 ,messages: {
                     addNewRecord: $.t("casefile:participants.msg.add-new-record")
                 }
                 ,actions: {
-                    pagingListAction: function(postData, jtParams, sortMap) {
+                    pagingListAction_new: function(postData, jtParams, sortMap) {
                         var rc = AcmEx.Object.JTable.getEmptyRecords();
                         //var caseFileId = CaseFile.View.getActiveCaseFileId();
                         var c = CaseFile.View.getActiveCaseFile();
@@ -2224,9 +2234,7 @@ CaseFile.View = CaseFile.View || {
                         }
                     }
                 }
-            }
-            ,sortMap
-            );
+            });
         }
     }
 
@@ -2468,7 +2476,7 @@ CaseFile.View = CaseFile.View || {
             this.createJTableTasks(this.$divTasks);
             AcmEx.Object.JTable.clickAddRecordHandler(this.$divTasks, CaseFile.View.Tasks.onClickSpanAddTask);
 
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_TASKS    ,this.onModelRetrievedTasks);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_RETRIEVED_TASKS    ,this.onModelRetrievedTasks);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT    ,this.onModelRetrievedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT      ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_COMPLETED_TASK      ,this.onModelCompletedTask);
@@ -2487,13 +2495,13 @@ CaseFile.View = CaseFile.View || {
         ,onViewSelectedObject: function(objType, objId) {
             AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
         }
-        ,onModelRetrievedTasks: function(tasks) {
-            if (tasks.hasError) {
-                //empty table?
-            } else {
-                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
-            }
-        }
+//        ,onModelRetrievedTasks: function(tasks) {
+//            if (tasks.hasError) {
+//                //empty table?
+//            } else {
+//                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+//            }
+//        }
         ,onModelCompletedTask: function(task) {
             if (task.hasError) {
                 //empty table?
@@ -2590,119 +2598,115 @@ CaseFile.View = CaseFile.View || {
         }
 
         ,createJTableTasks: function($jt) {
-            var sortMap = {};
-            sortMap["title"] = "title_parseable";
+//            var sortMap = {};
+//            sortMap["title"] = "title_parseable";
 
             AcmEx.Object.JTable.usePaging_new({$jt: $jt
-                ,sortMap: sortMap
+                ,sortMap: {title: "title_parseable"}
                 ,dataMaker: CaseFile.View.Tasks._makeJtData
                 //,keyGetter: keyGetter
-                ,jtArg: {
-                    title: $.t("casefile:tasks.table.title")
-                    ,multiselect: false
-                    ,selecting: false
-                    ,selectingCheckboxes: false
-//                    ,paging: true
-//                    ,sorting: true //fix me
-//                    ,pageSize: 10 //Set page size (default: 10)
-                    ,messages: {
-                        addNewRecord: $.t("casefile:tasks.msg.add-new-record")
-                    }
-                    ,actions: {
-                        pagingListAction_new: function (postData, jtParams, sortMap, dataMaker, keyGetter) {
-                            var caseFileId = CaseFile.View.getActiveCaseFileId();
-                            if (0 >= caseFileId) {
-                                return AcmEx.Object.JTable.getEmptyRecords();
-                            }
 
-                            //var cacheKey = AcmEx.Model.JTable.defaultIdCacheKey(caseFileId, jtParams);
-                            var cacheKey = keyGetter(caseFileId, jtParams);
-                            var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
-                            if (taskList) {
-                                //return CaseFile.View.Tasks._makeJtData(taskList);
-                                return dataMaker(taskList);
+                ,title: $.t("casefile:tasks.table.title")
+                ,multiselect: false
+                ,selecting: false
+                ,selectingCheckboxes: false
+                ,messages: {
+                    addNewRecord: $.t("casefile:tasks.msg.add-new-record")
+                }
+                ,actions: {
+                    pagingListAction_new: function (postData, jtParams, sortMap, dataMaker, keyGetter) {
+                        var caseFileId = CaseFile.View.getActiveCaseFileId();
+                        if (0 >= caseFileId) {
+                            return AcmEx.Object.JTable.getEmptyRecords();
+                        }
 
-                            } else {
-                                return CaseFile.Model.Tasks.retrieveTaskList(caseFileId
-                                    ,postData
-                                    ,jtParams
-                                    ,sortMap
-                                    ,dataMaker
-                                    ,keyGetter
+                        //var cacheKey = AcmEx.Model.JTable.defaultIdCacheKey(caseFileId, jtParams);
+                        var cacheKey = keyGetter(caseFileId, jtParams);
+                        var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
+                        if (taskList) {
+                            //return CaseFile.View.Tasks._makeJtData(taskList);
+                            return dataMaker(taskList);
+
+                        } else {
+                            return CaseFile.Model.Tasks.retrieveTaskList(caseFileId
+                                ,postData
+                                ,jtParams
+                                ,sortMap
+                                ,dataMaker
+                                ,keyGetter
 //                                    ,function(data) {
 //                                        var taskList = data;
 //                                        return CaseFile.View.Tasks._makeJtData(taskList);
 //                                    }
-                                ).failed(function(response) {
-                                    //yyyy
-                                });
-                            }  //end else
-                        }
-
-                        ,createAction: function(postData, jtParams) {
-                            return AcmEx.Object.JTable.getEmptyRecord();
-                        }
+                            ).fail(function(response) {
+                                //yyyy
+                            });
+                        }  //end else
                     }
 
-                    ,fields: {
-                        id: {
-                            title: $.t("casefile:tasks.table.field.id")
-                            ,key: true
-                            ,list: true
-                            ,create: false
-                            ,edit: false
-                            ,display: function (commData) {
-                                var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
-                                    + ((0 >= commData.record.id)? "#" : commData.record.id)
-                                    + "'>" + commData.record.id + "</a>";
-                                return $(a);
-                            }
+                    ,createAction: function(postData, jtParams) {
+                        return AcmEx.Object.JTable.getEmptyRecord();
+                    }
+                }
+
+                ,fields: {
+                    id: {
+                        title: $.t("casefile:tasks.table.field.id")
+                        ,key: true
+                        ,list: true
+                        ,create: false
+                        ,edit: false
+                        ,display: function (commData) {
+                            var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
+                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                + "'>" + commData.record.id + "</a>";
+                            return $(a);
                         }
-                        ,title: {
-                            title: $.t("casefile:tasks.table.field.title")
-                            ,width: '30%'
-                            ,display: function (commData) {
-                                var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
-                                    + ((0 >= commData.record.id)? "#" : commData.record.id)
-                                    + "'>" + commData.record.title + "</a>";
-                                return $(a);
-                            }
+                    }
+                    ,title: {
+                        title: $.t("casefile:tasks.table.field.title")
+                        ,width: '30%'
+                        ,display: function (commData) {
+                            var a = "<a href='" + App.getContextPath() + '/plugin/task/' +
+                                + ((0 >= commData.record.id)? "#" : commData.record.id)
+                                + "'>" + commData.record.title + "</a>";
+                            return $(a);
                         }
-                        ,assignee: {
-                            title: $.t("casefile:tasks.table.field.assignee")
-                            ,sorting: false
-                            ,width: '25'
+                    }
+                    ,assignee: {
+                        title: $.t("casefile:tasks.table.field.assignee")
+                        ,sorting: false
+                        ,width: '25'
+                    }
+                    ,created: {
+                        title: $.t("casefile:tasks.table.field.created")
+                        ,width: '15%'
+                    }
+                    ,priority: {
+                        title: $.t("casefile:tasks.table.field.priority")
+                        ,width: '10%'
+                    }
+                    ,dueDate: {
+                        title: $.t("casefile:tasks.table.field.due-date")
+                        ,width: '15%'
+                    }
+                    ,status: {
+                        title: $.t("casefile:tasks.table.field.status")
+                        ,width: '10%'
+                    }
+                    ,description: {
+                        title: $.t("casefile:tasks.table.field.action")
+                        ,width: '10%'
+                        ,edit: false
+                        ,create: false
+                        ,display: function (commData) {
+                            var $a = CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id);
+                            $a.on("click", ".businessProcess", function(e) {CaseFile.View.Tasks.onClickBtnTaskWithOutcome(e.target.id,commData.record.id);$a.hide();});
+                            $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnCompleteTask(commData.record.id);$a.hide();});
+                            return $a;
                         }
-                        ,created: {
-                            title: $.t("casefile:tasks.table.field.created")
-                            ,width: '15%'
-                        }
-                        ,priority: {
-                            title: $.t("casefile:tasks.table.field.priority")
-                            ,width: '10%'
-                        }
-                        ,dueDate: {
-                            title: $.t("casefile:tasks.table.field.due-date")
-                            ,width: '15%'
-                        }
-                        ,status: {
-                            title: $.t("casefile:tasks.table.field.status")
-                            ,width: '10%'
-                        }
-                        ,description: {
-                            title: $.t("casefile:tasks.table.field.action")
-                            ,width: '10%'
-                            ,edit: false
-                            ,create: false
-                            ,display: function (commData) {
-                                var $a = CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id);
-                                $a.on("click", ".businessProcess", function(e) {CaseFile.View.Tasks.onClickBtnTaskWithOutcome(e.target.id,commData.record.id);$a.hide();});
-                                $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnCompleteTask(commData.record.id);$a.hide();});
-                                return $a;
-                            }
-                        }
-                    } //end field
-                } //end arg
+                    }
+                } //end field
             });
         }
     }
