@@ -10,6 +10,7 @@
 
     <bean id="auditWriter" class="com.armedia.acm.audit.AuditWriter"/>
 
+
     <bean id="auditConfigurer" class="com.armedia.acm.audit.AuditConfigurer"
             destroy-method="closeBean">
         <property name="auditConfigFilename" value="/audit.xml"/>
@@ -42,6 +43,10 @@
         </property>
     </bean>
 
+    <bean id="auditPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
+        <property name="pluginName" value="Audit Plugin"/>
+        <property name="pluginProperties" ref="auditPluginProperties"/>
+    </bean>
 
     <!-- Task Scheduler - once a day -->
 	<task:scheduler id="auditTaskScheduler" pool-size="1"/>
