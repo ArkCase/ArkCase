@@ -190,11 +190,6 @@
                 </bean>
 
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/branding/headerlogo"/>
-                </bean>
-
-                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/admin/branding/customlogos"/>
                     <property name="requiredPrivilege" ref="adminPrivilege"/>

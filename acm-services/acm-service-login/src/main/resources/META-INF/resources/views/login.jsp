@@ -23,7 +23,7 @@
 <body>
 <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
     <div class="container aside-xl ">
-        <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/branding/loginlogo'/>" /></a>
+        <a class="navbar-brand block" href="portal.html"><img src="<c:url value='/branding/loginlogo.png'/>" /></a>
         <section class="m-b-lg">
             <header class="wrapper text-center">
                 <strong data-i18n="login:instruction">Enter your username and password.</strong>
