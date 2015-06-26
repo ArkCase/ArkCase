@@ -6,14 +6,15 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
+import org.kie.api.KieBase;
 import org.kie.api.io.ResourceType;
+import org.kie.internal.KnowledgeBase;
 import org.kie.internal.builder.DecisionTableConfiguration;
 import org.kie.internal.builder.DecisionTableInputType;
 import org.kie.internal.builder.KnowledgeBuilder;
 import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.kie.internal.runtime.StatelessKnowledgeSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -34,22 +35,38 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
+    private KieBase kieBase;
 
 
-    private StatelessKnowledgeSession rulesSession;
 
-    public T applyRules(T businessObject)
+    public KieBase getKieBase() {
+		return kieBase;
+	}
+
+	public void setKieBase(KieBase kieBase) {
+		this.kieBase = kieBase;
+	}
+
+	public T applyRules(T businessObject)
     {
-        if ( log.isDebugEnabled() )
+        if ( log.isTraceEnabled() )
         {
-            log.debug("Applying rules: " + businessObject);
+            log.trace("Applying rules: " + businessObject);
         }
 
-        getRulesSession().execute(businessObject);
-
-        if ( log.isDebugEnabled() )
+        try
         {
-            log.debug("Done applying rules: " + businessObject);
+            getKieBase().newStatelessKieSession().execute(businessObject);
+        }
+        catch (NullPointerException e)
+        {
+            log.error("Assign Rules NPE: " + e.getMessage(), e);
+        }
+
+
+        if ( log.isTraceEnabled() )
+        {
+            log.trace("Done applying rules: " + businessObject);
         }
 
         return businessObject;
@@ -103,9 +120,9 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
                 throw new RuntimeException("Could not build rules from " + configFile.getAbsolutePath());
             }
 
-            StatelessKnowledgeSession workingMemory = kbuilder.newKnowledgeBase().newStatelessKnowledgeSession();
+            KieBase base = kbuilder.newKnowledgeBase();
 
-            setRulesSession(workingMemory);
+            setKieBase(base);
 
             if ( log.isDebugEnabled() )
             {
@@ -128,14 +145,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         this.ruleSpreadsheetFilename = ruleSpreadsheetFilename;
     }
 
-    public StatelessKnowledgeSession getRulesSession()
-    {
-        return rulesSession;
-    }
 
-    public void setRulesSession(StatelessKnowledgeSession rulesSession)
-    {
-        this.rulesSession = rulesSession;
-    }
 
 }

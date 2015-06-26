@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesRetrieveRolePrivileges  {
+public class RolesPrivilegesRetrieveRolePrivileges implements RolePrivilegesConstants {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;
@@ -29,7 +29,7 @@ public class RolesPrivilegesRetrieveRolePrivileges  {
     @ResponseBody
     public String retrieveRolePrivileges(
             @RequestBody String resource,
-            @PathVariable("roleName") String roleName,
+            @PathVariable(PROP_ROLE_NAME) String roleName,
             HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
 
         try {

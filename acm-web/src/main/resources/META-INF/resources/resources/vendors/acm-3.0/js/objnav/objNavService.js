@@ -86,9 +86,8 @@ ObjNav.Service = {
                                 ObjNav.Model.setObjectId(objId);
                                 ObjNav.Model.setObjectType(objType);
                             }
-                            if (Acm.isNotEmpty(key)) {
-                                ObjNav.Controller.modelRetrievedObjectList(key);
-                            }
+                            
+                            ObjNav.Controller.modelRetrievedObjectList(key);
                         }
                         return key;
                     }
