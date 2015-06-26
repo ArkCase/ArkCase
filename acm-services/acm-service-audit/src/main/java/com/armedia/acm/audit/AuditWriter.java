@@ -2,7 +2,6 @@ package com.armedia.acm.audit;
 
 
 import com.armedia.acm.event.AcmEvent;
-import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.commons.audit.AuditActivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
