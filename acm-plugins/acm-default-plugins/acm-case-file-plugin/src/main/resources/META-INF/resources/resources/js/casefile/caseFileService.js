@@ -1141,6 +1141,7 @@ CaseFile.Service = {
         }
 
         ,API_RETRIEVE_PLAIN_FORMS      : "/api/latest/plugin/admin/plainforms"
+        ,API_RECORD_EVENT              : "/api/latest/plugin/event"
         	
     	,retrievePlainForms: function() {
             var url = App.getContextPath() + CaseFile.Service.Documents.API_RETRIEVE_PLAIN_FORMS + '/' + CaseFile.Model.DOC_TYPE_CASE_FILE;
@@ -1155,6 +1156,16 @@ CaseFile.Service = {
                         }
                     }
                 }
+                ,url
+            )
+        }
+
+        ,auditDocuments: function(caseFileId, docIds, auditEventKey)
+        {
+            var url = App.getContextPath() + CaseFile.Service.Documents.API_RECORD_EVENT + "?";
+            url += "eventKey=" + auditEventKey + "&objectType=CASE_FILE&objectId=" + caseFileId  + "&docIds=" + docIds.join(",");
+            Acm.Service.asyncPut(
+                function(response) {}
                 ,url
             )
         }
