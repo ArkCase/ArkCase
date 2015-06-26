@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:/spring/spring-integration-case-file-test.xml", "classpath:/spring/spring-library-property-file-manager.xml"})
-public class CaseFileMailHandlerTest extends EasyMockSupport {
+public class CaseFileMailHandlerIT extends EasyMockSupport {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private Message messageMock;
