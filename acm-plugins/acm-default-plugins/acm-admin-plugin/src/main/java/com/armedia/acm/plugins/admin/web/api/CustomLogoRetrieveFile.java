@@ -21,7 +21,7 @@ public class CustomLogoRetrieveFile {
     private Logger log = LoggerFactory.getLogger(getClass());
     private CustomLogoService customLogoService;
 
-    @RequestMapping(value = "/headerlogo", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    @RequestMapping(value = "/headerlogo.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public byte[] retrieveHeaderLogo(
             HttpServletResponse response) throws IOException, CustomCssException {
@@ -37,7 +37,7 @@ public class CustomLogoRetrieveFile {
         }
     }
 
-    @RequestMapping(value = "/loginlogo", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    @RequestMapping(value = "/loginlogo.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public byte[] retrieveLoginLogo(
             HttpServletResponse response) throws IOException, CustomCssException {

@@ -483,7 +483,7 @@
                                             <div class="row m-b-lg ">
                                                 <div class="col-lg-6">
                                                     <h3>Header</h3>
-                                                    <img id="imgCustomHeaderLogo" src="<c:url value='/branding/headerlogo'/>" />
+                                                    <img id="imgCustomHeaderLogo" src="<c:url value='/branding/headerlogo.png'/>" />
                                                 </div>
                                                 <div class="col-lg-6 text-center">
                                                     <br/><br/>
@@ -496,7 +496,7 @@
                                             <div class="row m-b-lg ">
                                                 <div class="col-lg-6">
                                                     <h3>Login Page</h3>
-                                                    <img id="imgCustomLoginLogo" src="<c:url value='/branding/loginlogo'/>" />
+                                                    <img id="imgCustomLoginLogo" src="<c:url value='/branding/loginlogo.png'/>" />
                                                 </div>
                                                 <div class="col-lg-6 text-center">
                                                     <br/><br/>
