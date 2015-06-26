@@ -218,7 +218,7 @@ CaseFile.prepare = function() {
                             var profile = {};
                             profile.organisation = Acm.goodValue(profileInfo.companyName);
                             profile.email = Acm.goodValue(profileInfo.email);
-                            profile.phone = Acm.goodValue(profileInfo.phone);
+                            profile.phone = Acm.goodValue(profileInfo.mainOfficePhone);
                             CaseFile.Model.Participants.cacheParticipantProfile.put(user, profile);
                             return profile;
                         }
