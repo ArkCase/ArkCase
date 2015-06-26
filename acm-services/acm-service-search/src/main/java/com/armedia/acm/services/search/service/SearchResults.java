@@ -93,4 +93,22 @@ public class SearchResults
         }
         return null;
     }
+    
+    public List<String> extractStringList(JSONObject doc, String arrayField)
+    {
+    	if ( doc.has(arrayField))
+        {
+    		JSONArray jsonArray = doc.getJSONArray(arrayField);
+    		if (jsonArray != null)
+    		{
+    			List<String> extractedList = new ArrayList<String>();
+    			for (int i = 0; i < jsonArray.length(); i++)
+    			{
+    				extractedList.add(jsonArray.getString(i));
+    			}
+    			return extractedList;
+    		}
+        }
+        return null;
+    }
 }
