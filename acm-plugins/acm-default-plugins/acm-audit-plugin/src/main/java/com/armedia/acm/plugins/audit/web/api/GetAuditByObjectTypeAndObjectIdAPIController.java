@@ -5,6 +5,7 @@ import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 
+import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +27,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     
     private AuditDao auditDao;
+    private ReplaceEventTypeNames replaceEventTypeNames;
     
     @RequestMapping(value = "/{objectType}/{objectId}",method = RequestMethod.GET,produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
@@ -48,7 +51,14 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
         retval.setMaxRows(maxRows);
         retval.setTotalCount(totalCount);
         retval.setResultPage(pagedResult);
+        List<AuditEvent> eventList = eventList= new ArrayList<>();
+        List<AuditEvent> auditEvents = retval.getResultPage();
+        for (AuditEvent event : auditEvents){
 
+            event.setFullEventType(getReplaceEventTypeNames().replaceNameInAcmEvent(event).getFullEventType());
+            eventList.add(event);
+        }
+        retval.setResultPage(eventList);
         return retval;
     }
 
@@ -59,6 +69,14 @@ public class GetAuditByObjectTypeAndObjectIdAPIController {
     public void setAuditDao(AuditDao dao)
     {
         this.auditDao = dao;
+    }
+
+    public ReplaceEventTypeNames getReplaceEventTypeNames() {
+        return replaceEventTypeNames;
+    }
+
+    public void setReplaceEventTypeNames(ReplaceEventTypeNames replaceEventTypeNames) {
+        this.replaceEventTypeNames = replaceEventTypeNames;
     }
 }
 
