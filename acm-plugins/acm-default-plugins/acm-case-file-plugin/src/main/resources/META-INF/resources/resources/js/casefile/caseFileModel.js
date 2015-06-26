@@ -659,7 +659,7 @@ CaseFile.Model = CaseFile.Model || {
                     return;
                 }
 
-                CaseFile.Service.Documents.auditDocuments(caseFileId, docIds, "com.armedia.acm.");
+                CaseFile.Service.Documents.auditDocuments(caseFileId, docIds, "file.lodged");
 
         }
 
@@ -673,7 +673,7 @@ CaseFile.Model = CaseFile.Model || {
                     return;
                 }
 
-                CaseFile.Service.Documents.auditDocuments(caseFileId, docIds, "rejected");
+                CaseFile.Service.Documents.auditDocuments(caseFileId, docIds, "file.rejected");
 
         }
     }
