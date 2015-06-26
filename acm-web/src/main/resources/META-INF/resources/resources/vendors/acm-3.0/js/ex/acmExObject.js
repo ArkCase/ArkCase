@@ -163,65 +163,67 @@ AcmEx.Object = {
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
+
         //
         // sortMap can be overloaded as hash map, comparator, or paging url decorator
         //
-
         ,usePaging: function($jt, jtArg, sortMap) {
-            this.usePaging_new({$jt: $jt, jtArg: jtArg, sortMap: sortMap});
+            jtArg.$jt = $jt;
+            jtArg.sortMap = sortMap;
+            this.usePaging_new(jtArg);
         }
         ,usePaging_new: function(arg) {
             var $jt        = arg.$jt;
-            var jtArg      = arg.jtArg;
+            //var jtArg      = arg.jtArg;
             var sortMap    = arg.sortMap;
             var dataMaker  = arg.dataMaker;
             var keyGetter  = arg.keyGetter;
 
 
-            jtArg.paging = true;
-            if (!jtArg.pageSize) {
-                jtArg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
+            arg.paging = true;
+            if (!arg.pageSize) {
+                arg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
             }
-            if (!jtArg.recordAdded) {
-                jtArg.recordAdded = function(event, data){
+            if (!arg.recordAdded) {
+                arg.recordAdded = function(event, data){
                     $jt.jtable('load');
                 }
             }
-            if (!jtArg.recordUpdated) {
-                jtArg.recordUpdated = function(event, data){
+            if (!arg.recordUpdated) {
+                arg.recordUpdated = function(event, data){
                     $jt.jtable('load');
                 }
             }
 
             if (sortMap) {
-                jtArg.sorting = true;
-            } else if (!jtArg.sorting) {
-                jtArg.sorting = false;
+                arg.sorting = true;
+            } else if (!arg.sorting) {
+                arg.sorting = false;
             }
 
             if (!keyGetter) {
-                keyGetter = AcmEx.Object.JTable.defaultIdCacheKey;
+                keyGetter = AcmEx.Model.JTable.defaultIdCacheKey;
             }
 
-            if (jtArg.actions.pagingListAction){
-                jtArg.actions.listAction = function(postData, jtParams) {
-                    return jtArg.actions.pagingListAction(postData, jtParams, sortMap);
+            if (arg.actions.pagingListAction){
+                arg.actions.listAction = function(postData, jtParams) {
+                    return arg.actions.pagingListAction(postData, jtParams, sortMap);
                 }
             }
-            if (jtArg.actions.pagingListAction_new){
-                jtArg.actions.listAction = function(postData, jtParams) {
-                    return jtArg.actions.pagingListAction_new(postData, jtParams, sortMap, dataMaker, keyGetter);
+            if (arg.actions.pagingListAction_new){
+                arg.actions.listAction = function(postData, jtParams) {
+                    return arg.actions.pagingListAction_new(postData, jtParams, sortMap, dataMaker, keyGetter);
                 }
             }
 
-            jtArg.fields._idx = {
+            arg.fields._idx = {
                 type: "hidden"
                 ,list: true
                 ,create: false
                 ,edit: false
             }
 
-            $jt.jtable(jtArg);
+            $jt.jtable(arg);
             $jt.jtable('load');
         }
         ,useChildTable: function($jt, childLinks, arg, sortMap) {
@@ -268,7 +270,10 @@ AcmEx.Object = {
                 }
             );
         }
-        ,toggleChildTable: function($t, $row, fnOpen, title) {
+        ,toggleChildTable: function($t, $row, fnOpen, title) {      //show active
+            var a = $row;
+            var a2 = $row.siblings();
+
             var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
             var curTitle = $childRow.find("div.jtable-title-text").text();
 
@@ -282,8 +287,35 @@ AcmEx.Object = {
             if (toClose) {
                 //fnClose($t, $row);
                 $t.jtable('closeChildTable', $row.closest('tr'));
+                $row.removeClass("show active");
             } else {
                 fnOpen($t, $row);
+                $row.addClass("show active");
+                $row.siblings().removeClass("show active");
+            }
+        }
+        ,toggleChildTable2: function($t, $row, title) {      //show active
+            var a = $row;
+            var a2 = $row.siblings();
+
+            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+            var curTitle = $childRow.find("div.jtable-title-text").text();
+
+            var toClose;
+            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+                toClose = (curTitle === title);
+            } else {
+                toClose = false;
+            }
+
+            if (toClose) {
+                ////fnClose($t, $row);
+                //$t.jtable('closeChildTable', $row.closest('tr'));
+                $row.removeClass("show active");
+            } else {
+                //fnOpen($t, $row);
+                $row.addClass("show active");
+                $row.siblings().removeClass("show active");
             }
         }
         ,clickAddRecordHandler: function($jt, handler) {

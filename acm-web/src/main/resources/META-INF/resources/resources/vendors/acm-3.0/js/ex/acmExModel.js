@@ -12,7 +12,7 @@ AcmEx.Model = {
     }
 
     ,JTable: {
-        pagingListAction: function(url, postData, jtParams, dataMaker, sortMap, keyGetter) {
+        pagingListAction: function(url, postData, jtParams, sortMap, dataMaker, keyGetter) {
             var pagingUrl = AcmEx.Model.JTable.decorateUrl(url, jtParams, sortMap);
             if (Acm.isEmpty(pagingUrl)) {
                 return AcmEx.Object.JTable.getEmptyRecords();
@@ -22,16 +22,11 @@ AcmEx.Model = {
                 ,url: pagingUrl
                 ,data: postData
                 ,callback: function(response) {
-                    if (!data.hasError) {
+                    if (!response.hasError) {
                         return dataMaker(response);
                     }
                 }
             });
-        }
-
-        ,getIdCacheKey: function(id, jtParams) {
-            var key = id;
-            return key;
         }
 
         ,_addNextParam: function(url) {
@@ -98,6 +93,11 @@ AcmEx.Model = {
             }
             return url;
         }
+
+//        ,getIdCacheKey: function(id, jtParams) {
+//            var key = id;
+//            return key;
+//        }
 
         ,defaultIdCacheKey: function(id, jtParams) {
             var pagingParam = AcmEx.Model.JTable._getPagingParam(jtParams);
