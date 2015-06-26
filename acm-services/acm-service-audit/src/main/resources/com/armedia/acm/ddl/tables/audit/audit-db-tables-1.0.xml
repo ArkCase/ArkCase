@@ -86,8 +86,11 @@
                         primaryKey="true"
                         primaryKeyName="pk_audit_event_type"/>
             </column>
+            <column name="cm_key" type="VARCHAR(1024)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_key"/>
+            </column>
             <column name="cm_value" type="VARCHAR(4000)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_value"/>
+                <constraints nullable="false" unique="false"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_order"/>
