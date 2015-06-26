@@ -141,19 +141,25 @@ describe("Acm", function()
         expect(Acm.parseJson(badMissingBracket, [])).toEqual([]); //but want to default to a blank array
     });
 
-    it("Test Acm.makeNoneCacheUrl() function", function() {
-        expect(Acm.makeNoneCacheUrl("some.com/some/path")).toBeginWith("some.com/some/path?rand=");
-        expect(Acm.makeNoneCacheUrl("some.com/some/path/")).toBeginWith("some.com/some/path/?rand=");
-        expect(Acm.makeNoneCacheUrl("some.com/some/path?var=abc")).toBeginWith("some.com/some/path?var=abc&rand=");
+    it("Test Acm.Url.makeNoneCacheUrl() function", function() {
+        expect(Acm.Url.makeNoneCacheUrl("some.com/some/path")).toBeginWith("some.com/some/path?rand=");
+        expect(Acm.Url.makeNoneCacheUrl("some.com/some/path/")).toBeginWith("some.com/some/path/?rand=");
+        expect(Acm.Url.makeNoneCacheUrl("some.com/some/path?var=abc")).toBeginWith("some.com/some/path?var=abc&rand=");
 
-        var first  = Acm.makeNoneCacheUrl("some.com/some/path");
-        var second = Acm.makeNoneCacheUrl("some.com/some/path");
+        var first  = Acm.Url.makeNoneCacheUrl("some.com/some/path");
+        var second = Acm.Url.makeNoneCacheUrl("some.com/some/path");
         expect(second).not.toBe(first);
     });
 
-//    it("Test Acm.getUrlParameter() function", function() {
-//        //don't have a good way to test
-//    });
+    it("Test Acm.Url.getUrlParameter() function", function() {
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this", "abc")).toEqual("this");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that", "abc")).toEqual("this");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123", "xyz")).toEqual("that");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123", "name")).toEqual("123");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123", "nosuch")).toEqual("");
+
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123#", "name")).toEqual("123");
+    });
 
     it("Test Acm.urlToJson() function", function() {
         expect(Acm.urlToJson("abc=foo&xyz=5&foo=bar&yes=true"))

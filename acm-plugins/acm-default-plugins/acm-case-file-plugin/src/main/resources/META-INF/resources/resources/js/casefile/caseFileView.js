@@ -2568,7 +2568,8 @@ CaseFile.View = CaseFile.View || {
 
         ,_makeJtData: function(taskList) {
             var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (taskList) {
+            if (!Acm.isArrayEmpty(taskList)) {
+            //if (taskList) {
                 for (var i = 0; i < taskList.length; i++) {
                     var Record = {};
                     Record.id       = taskList[i].id;
@@ -2582,49 +2583,59 @@ CaseFile.View = CaseFile.View || {
 
                     jtData.Records.push(Record);
                 }
-                jtData.TotalRecordCount = taskList.length;
+                //jtData.TotalRecordCount = taskList.length;
+                jtData.TotalRecordCount = taskList[0].numFound;
             }
             return jtData;
         }
+
         ,createJTableTasks: function($jt) {
             var sortMap = {};
             sortMap["title"] = "title_parseable";
 
-            AcmEx.Object.JTable.usePaging($jt
-                ,{
+            AcmEx.Object.JTable.usePaging_new({$jt: $jt
+                ,sortMap: sortMap
+                ,dataMaker: CaseFile.View.Tasks._makeJtData
+                //,keyGetter: keyGetter
+                ,jtArg: {
                     title: $.t("casefile:tasks.table.title")
                     ,multiselect: false
                     ,selecting: false
                     ,selectingCheckboxes: false
-                    ,paging: true
-                    ,sorting: true //fix me
-                    ,pageSize: 10 //Set page size (default: 10)
+//                    ,paging: true
+//                    ,sorting: true //fix me
+//                    ,pageSize: 10 //Set page size (default: 10)
                     ,messages: {
                         addNewRecord: $.t("casefile:tasks.msg.add-new-record")
                     }
                     ,actions: {
-                        pagingListAction: function (postData, jtParams, sortMap) {
+                        pagingListAction_new: function (postData, jtParams, sortMap, dataMaker, keyGetter) {
                             var caseFileId = CaseFile.View.getActiveCaseFileId();
                             if (0 >= caseFileId) {
                                 return AcmEx.Object.JTable.getEmptyRecords();
                             }
 
-                            var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(caseFileId);
+                            //var cacheKey = AcmEx.Model.JTable.defaultIdCacheKey(caseFileId, jtParams);
+                            var cacheKey = keyGetter(caseFileId, jtParams);
+                            var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
                             if (taskList) {
-                                return CaseFile.View.Tasks._makeJtData(taskList);
+                                //return CaseFile.View.Tasks._makeJtData(taskList);
+                                return dataMaker(taskList);
 
                             } else {
-                                return CaseFile.Service.Tasks.retrieveTaskListDeferred(caseFileId
+                                return CaseFile.Model.Tasks.retrieveTaskList(caseFileId
                                     ,postData
                                     ,jtParams
                                     ,sortMap
-                                    ,function(data) {
-                                        var taskList = data;
-                                        return CaseFile.View.Tasks._makeJtData(taskList);
-                                    }
-                                    ,function(error) {
-                                    }
-                                );
+                                    ,dataMaker
+                                    ,keyGetter
+//                                    ,function(data) {
+//                                        var taskList = data;
+//                                        return CaseFile.View.Tasks._makeJtData(taskList);
+//                                    }
+                                ).failed(function(response) {
+                                    //yyyy
+                                });
                             }  //end else
                         }
 
@@ -2692,8 +2703,7 @@ CaseFile.View = CaseFile.View || {
                         }
                     } //end field
                 } //end arg
-                ,sortMap
-            );
+            });
         }
     }
 
@@ -3302,7 +3312,7 @@ CaseFile.View = CaseFile.View || {
         , onInitialized: function () {
         }
         ,displayError: function() {
-            Acm.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"));
+            App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"));
         }
     }
 

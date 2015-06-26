@@ -82,7 +82,7 @@ App.Model = {
                     ,function() {
                         var isLogin = App.Model.Login.isLogin();
                         var sinceIdle = App.Model.Login.getSinceIdle();
-                        var errorCount = App.Model.Login.getErrorCount();
+                        //var errorCount = App.Model.Login.getErrorCount();
                         //if (!isLogin || (autoLogoutIdleLimit < sinceIdle) || (autoLogoutErrorLimit < errorCount)) {
                         if (!isLogin || (autoLogoutIdleLimit < sinceIdle)) {
                             App.Controller.Login.modelDetectedIdle();

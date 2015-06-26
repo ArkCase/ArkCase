@@ -20,6 +20,7 @@ AcmNotification.View = {
                     ,create: false
                     ,edit: false
                     ,sorting: false
+                    ,defaultSorting: 'modified DESC'
                 }
                 ,name: {
                     title: $.t("notification:table.field.name")

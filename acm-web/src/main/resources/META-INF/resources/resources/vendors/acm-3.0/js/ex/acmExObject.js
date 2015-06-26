@@ -164,9 +164,20 @@ AcmEx.Object = {
             $jt.jtable('load');
         }
         //
-        // sortMap can be overloaded as hash map, comparator, or paging url builder
+        // sortMap can be overloaded as hash map, comparator, or paging url decorator
         //
+
         ,usePaging: function($jt, jtArg, sortMap) {
+            this.usePaging_new({$jt: $jt, jtArg: jtArg, sortMap: sortMap});
+        }
+        ,usePaging_new: function(arg) {
+            var $jt        = arg.$jt;
+            var jtArg      = arg.jtArg;
+            var sortMap    = arg.sortMap;
+            var dataMaker  = arg.dataMaker;
+            var keyGetter  = arg.keyGetter;
+
+
             jtArg.paging = true;
             if (!jtArg.pageSize) {
                 jtArg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
@@ -188,9 +199,18 @@ AcmEx.Object = {
                 jtArg.sorting = false;
             }
 
+            if (!keyGetter) {
+                keyGetter = AcmEx.Object.JTable.defaultIdCacheKey;
+            }
+
             if (jtArg.actions.pagingListAction){
                 jtArg.actions.listAction = function(postData, jtParams) {
                     return jtArg.actions.pagingListAction(postData, jtParams, sortMap);
+                }
+            }
+            if (jtArg.actions.pagingListAction_new){
+                jtArg.actions.listAction = function(postData, jtParams) {
+                    return jtArg.actions.pagingListAction_new(postData, jtParams, sortMap, dataMaker, keyGetter);
                 }
             }
 
@@ -275,11 +295,8 @@ AcmEx.Object = {
             var value2 = item2[sortBy];
             var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
             return ("DESC" == sortDir)? -rc : rc;
-//            if ("DESC" == sortDir) {
-//                rc = -rc;
-//            }
-//            return rc;
         }
+
         //
         // comparator can be overloaded with a sortMap, in that case, a default comparator is used
         //
@@ -294,19 +311,20 @@ AcmEx.Object = {
 
                 if (Acm.isNotEmpty(jtParams.jtSorting)) {
                     sortItems.sort(function(a, b){
-                        var jtSorting = jtParams.jtSorting;
-                        var sortArr = jtSorting.split(" ");
-                        var sortBy = sortArr[0];
-                        var sortDir = sortArr[1];
+//                        var jtSorting = jtParams.jtSorting;
+//                        var sortArr = jtSorting.split(" ");
+//                        var sortBy = sortArr[0];
+//                        var sortDir = sortArr[1];
+                        var pagingParam = AcmEx.Model.JTable._getPagingParam(jtParams);
 
                         if (!comparator) {
                             return 0;
-                        } else if (typeof comparator === "function") {
-                            return comparator(a.item, b.item, sortBy, sortDir);
-                        } else if (typeof comparator === "object") {
+                        } else if ("function" === typeof comparator) {
+                            return comparator(a.item, b.item, pagingParam.sortBy, pagingParam.sortDir);
+                        } else if ("object" === typeof comparator) {
                             var sortMap = comparator;
-                            var itemSortBy = sortMap[sortBy];
-                            return AcmEx.Object.JTable._hashMapComparator(a.item, b.item, itemSortBy, sortDir);
+                            var itemSortBy = sortMap[pagingParam.sortBy];
+                            return AcmEx.Object.JTable._hashMapComparator(a.item, b.item, itemSortBy, pagingParam.sortDir);
                         } else {
                             return 0;
                         }

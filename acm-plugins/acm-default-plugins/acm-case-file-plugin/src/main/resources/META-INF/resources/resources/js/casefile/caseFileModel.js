@@ -619,6 +619,46 @@ CaseFile.Model = CaseFile.Model || {
         ,onInitialized: function() {
             CaseFile.Service.Tasks.retrieveTask();
         }
+        ,retrieveTaskList : function(caseFileId, postData, jtParams, sortMap, dataMaker, keyGetter) {
+            var url;
+            url =  CaseFile.Service.Tasks.API_RETRIEVE_TASKS_SOLR;
+            url += caseFileId;
+
+            return AcmEx.Model.JTable.pagingListAction(url, postData, jtParams, sortMap
+                ,function(data) {
+                    if (Acm.Validator.validateSolrData(data)) {
+                        var responseHeader = data.responseHeader;
+                        if (0 == responseHeader.status) {
+                            //response.start should match to jtParams.jtStartIndex
+                            //response.docs.length should be <= jtParams.jtPageSize
+
+                            var response = data.response;
+                            var taskList = [];
+                            for (var i = 0; i < response.docs.length; i++) {
+                                var doc = response.docs[i];
+                                var task = {};
+                                task.id = doc.object_id_s;
+                                task.title = Acm.goodValue(response.docs[i].name); //title_parseable ?? //title_t ?
+                                //task.created = Acm.getDateFromDatetime(doc.create_tdt);
+                                task.created = (Acm.getDateFromDatetime2(doc.create_tdt,$.t("common:date.short")));
+                                task.priority = Acm.goodValue(doc.priority_s);
+                                //task.dueDate = Acm.getDateFromDatetime(doc.due_tdt); // from date_td to date_tdt
+                                task.dueDate = (Acm.getDateFromDatetime2(doc.due_tdt,$.t("common:date.short")));
+                                task.status = Acm.goodValue(doc.status_s);
+                                task.assignee = Acm.goodValue(doc.assignee_s);
+                                taskList.push(task);
+                            }
+                            var cacheKey = keyGetter(caseFileId, jtParams);
+                            CaseFile.Model.Tasks.cacheTaskSolr.put(cacheKey, taskList);
+
+                            jtData = dataMaker(taskList);
+                            return jtData;
+                        }
+                    }
+                }
+            );
+        }
+
     }
 
     ,Documents: {
