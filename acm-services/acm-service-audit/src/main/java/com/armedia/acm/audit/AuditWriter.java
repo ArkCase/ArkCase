@@ -14,7 +14,6 @@ import java.util.Map;
 public class AuditWriter implements ApplicationListener<AcmEvent>
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private AcmPlugin auditPlugin;
 
 
     @Override
@@ -64,13 +63,5 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
                 acmEvent.getEventDate() != null &&
                 acmEvent.getEventType() != null;
 
-    }
-
-    public AcmPlugin getAuditPlugin() {
-        return auditPlugin;
-    }
-
-    public void setAuditPlugin(AcmPlugin auditPlugin) {
-        this.auditPlugin = auditPlugin;
     }
 }
