@@ -5,9 +5,6 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.audit.dao.AuditLookupDao;
 import com.armedia.acm.plugins.audit.model.AcmAuditLookup;
-import com.armedia.acm.plugins.dashboard.dao.DashboardDao;
-import com.armedia.acm.plugins.dashboard.exception.AcmDashboardException;
-import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -39,16 +36,11 @@ public class InsertEventTypeNames implements ApplicationContextAware {
             if(log.isErrorEnabled()) {
               log.error("Audit msgs was not inserted successfully"+e.getMessage(),e);
             }
-
-        } catch (AcmDashboardException e) {
-            e.printStackTrace();
-        } catch (AcmObjectNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
 
-    public void updateEventTypeNamesInTheDb() throws SQLException, AcmObjectNotFoundException, AcmDashboardException {
+    public void updateEventTypeNamesInTheDb() throws SQLException {
         Map<String, Object> props = getPluginEventType().getPluginProperties();
         boolean isForUpdate = false;
         if (props.containsKey(AuditConstants.AUDIT_UPDATE)){
