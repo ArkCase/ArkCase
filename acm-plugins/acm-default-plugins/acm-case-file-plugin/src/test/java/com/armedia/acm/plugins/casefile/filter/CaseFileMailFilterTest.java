@@ -3,14 +3,24 @@ package com.armedia.acm.plugins.casefile.filter;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.mail.Message;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/spring/spring-integration-case-file-test.xml", "classpath:/spring/spring-library-property-file-manager.xml"})
 public class CaseFileMailFilterTest extends EasyMockSupport {
     private Message messageMock;
+
+    @Autowired
+    CaseFileMailFilter filter;
+
 
     @Test
     public void testAcceptTrue() throws Exception {
@@ -20,7 +30,6 @@ public class CaseFileMailFilterTest extends EasyMockSupport {
 
         replayAll();
 
-        CaseFileMailFilter filter = new CaseFileMailFilter();
         assertTrue(filter.accept(messageMock));
         verifyAll();
     }
@@ -33,7 +42,6 @@ public class CaseFileMailFilterTest extends EasyMockSupport {
 
         replayAll();
 
-        CaseFileMailFilter filter = new CaseFileMailFilter();
         assertFalse(filter.accept(messageMock));
         verifyAll();
     }
