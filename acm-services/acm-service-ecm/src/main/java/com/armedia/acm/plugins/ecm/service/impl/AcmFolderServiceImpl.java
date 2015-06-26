@@ -746,6 +746,76 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         return true;
     }
 
+    @Override
+    public void copyFolderStructure(Long folderId,
+                                    AcmContainer containerOfCopy,
+                                    AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmFolderException {
+
+        AcmFolder folderForCopying = findById(folderId);
+        String folderPath = getFolderPath(folderForCopying);
+
+        //check if folder path exists in the copy
+        if (folderForCopying.getParentFolderId() == null || folderPathExists(folderPath, containerOfCopy)) {
+            //copy the folder children (folders documents) into existing folder of the copy case file
+            //this should create or return existing path, but path already exists so it should return existing folder
+
+            List<AcmObject> folderChildren = getFolderChildren(folderForCopying.getId());
+            for (AcmObject obj : folderChildren) {
+                if (obj.getObjectType() == null)
+                    continue;
+                if ("FILE".equals(obj.getObjectType().toUpperCase())) {
+                    copyDocumentStructure(obj.getId(), containerOfCopy, rootFolderOfCopy);
+                } else if ("FOLDER".equals(obj.getObjectType().toUpperCase())) {
+                    copyFolderStructure(obj.getId(), containerOfCopy, rootFolderOfCopy);
+                }
+            }
+        } else {
+            if (folderForCopying.getParentFolderId() == null)
+                return;
+            //just copy the folder to new parent
+            AcmFolder parentInSource = findById(folderForCopying.getParentFolderId());
+            String folderPathParentInSource = getFolderPath(parentInSource);
+
+            //this folder will be created if doesn't exits
+            AcmFolder createdParentFolderInCopy = addNewFolderByPath(
+                    containerOfCopy.getContainerObjectType(),
+                    containerOfCopy.getContainerObjectId(),
+                    folderPathParentInSource);
+            AcmFolder copiedFolder = copyFolder(folderForCopying,
+                    createdParentFolderInCopy,
+                    containerOfCopy.getContainerObjectId(),
+                    containerOfCopy.getContainerObjectType());
+        }
+    }
+
+    @Override
+    public void copyDocumentStructure(Long documentId,
+                                      AcmContainer containerOfCopy,
+                                      AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException {
+        EcmFile fileForCopying = fileService.findById(documentId);
+
+        AcmFolder documentFolder = fileForCopying.getFolder();
+        if (documentFolder.getParentFolderId() == null) {
+            //recreate folder structure as on source
+            //document is under root folder, no need to create additional folders
+            fileService.copyFile(documentId, rootFolderOfCopy, containerOfCopy);
+        } else {
+            //create folder structure in saved case file same as in source for the document
+            String folderPath = getFolderPath(fileForCopying.getFolder());
+            log.debug("folder path = '{}' for folder(id={}, name={})", folderPath, fileForCopying.getFolder().getId(), fileForCopying.getFolder().getName());
+            try {
+                AcmFolder createdFolder = addNewFolderByPath(
+                        containerOfCopy.getContainerObjectType(),
+                        containerOfCopy.getContainerObjectId(),
+                        folderPath);
+                fileService.copyFile(documentId, createdFolder, containerOfCopy);
+            } catch (Exception e) {
+                log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be copied.", e);
+            }
+        }
+    }
+
+
     public EcmFileDao getFileDao() {
         return fileDao;
     }

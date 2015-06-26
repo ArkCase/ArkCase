@@ -515,7 +515,15 @@ Task.View = Task.View || {
             this.$perCompleted		= $("#percentageCompleted");
             AcmEx.Object.XEditable.useEditable(this.$perCompleted, {
                 success: function(response, newValue) {
-                    Task.Controller.viewChangedPercentCompleted(ObjNav.View.Navigator.getActiveObjType(),ObjNav.Model.getObjectId(), newValue);
+                    if(!(newValue >= 0 && newValue <= 100))
+                    {
+                        setTimeout(function(){
+                            Task.View.Detail.setTextLnkPercentComplete($.t("task:task-details.error-value-percent-complete"));
+                        },100);
+                    }
+                    else{
+                        Task.Controller.viewChangedPercentCompleted(ObjNav.View.Navigator.getActiveObjType(),ObjNav.Model.getObjectId(), newValue);
+                    }
                 }
             });
 
@@ -640,7 +648,11 @@ Task.View = Task.View || {
 //                Task.View.Detail.$lnkEditComplaintClose.hide();
 //                Task.View.Detail.$lnkChangeCaseStatus.show();
 //            }
-            if(task.adhocTask){
+            if(Acm.isNotEmpty(task.assignee) && (App.getUserName() != Acm.goodValue(task.assignee))){
+                Task.View.Detail.hideAllWorkflowButtons();
+                Task.View.Detail.hideDynamicWorkflowButtons();
+            }
+            else if(task.adhocTask){
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
                 if(task.completed != true){

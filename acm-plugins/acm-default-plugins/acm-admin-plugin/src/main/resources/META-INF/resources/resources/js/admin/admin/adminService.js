@@ -427,6 +427,51 @@ Admin.Service = {
 
     }
 
+    , LinkFormsWorkflows: {
+        API_CONFIGURATION: "/api/latest/plugin/admin/linkformsworkflows/configuration"
+        ,create: function(){
+
+        }
+        ,onInitialized: function() {
+
+        }
+
+        ,retrieveConfiguration: function(){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LinkFormsWorkflows.API_CONFIGURATION;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                , url
+            );
+
+            return $dfd.promise();
+        }
+
+        ,updateConfiguration: function(data) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.LinkFormsWorkflows.API_CONFIGURATION;
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject()
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                , url
+                ,JSON.stringify(data)
+            );
+
+            return $dfd.promise();
+        }
+    }
+
     , LDAPConfiguration: {
         API_RETRIEVE_LDAP_DIRECTORIES: "/api/latest/plugin/admin/ldapconfiguration/directories"
         ,API_CREATE_LDAP_DIRECTORY: "/api/latest/plugin/admin/ldapconfiguration/directories"
@@ -451,7 +496,7 @@ Admin.Service = {
                         $dfd.resolve(response);
                     }
                 }
-                ,url
+                , url
             );
 
             return $dfd.promise();
@@ -672,6 +717,85 @@ Admin.Service = {
         }
     }
 
+    ,Logo: {
+        API_UPLOAD_LOGOS: '/api/latest/plugin/admin/branding/customlogos'
+
+        ,create: function() {
+        }
+
+        ,onInitialized: function() {
+        }
+
+        ,uploadLogos: function(fd) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.Logo.API_UPLOAD_LOGOS;
+            Acm.Service.asyncPostFormData(
+                function(response) {
+                    if (response.hasError) {
+                        $dfd.reject("Can't upload custom logos:" + response.errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,fd
+            );
+
+            return $dfd.promise();
+
+        }
+    }
+
+    ,CustomCss: {
+        API_RETRIEVE_CUSTOM_CSS: '/branding/customcss'
+        ,API_UPDATE_CUSTOM_CSS: '/api/latest/plugin/admin/branding/customcss'
+
+        ,create: function() {
+        }
+
+        ,onInitialized: function() {
+        }
+
+        ,retrieveCustomCss: function(){
+            var url = App.getContextPath() + Admin.Service.CustomCss.API_RETRIEVE_CUSTOM_CSS;
+            var $dfd = jQuery.Deferred();
+
+            $.ajax({
+                url: url,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Accept', 'text/css');
+                },
+                type: 'GET'
+            })
+                .done(function(response) {
+                    $dfd.resolve(response);
+                })
+                .fail(function(){
+                    $dfd.reject('Can\'t retrieve custom CSS file');
+                });
+
+            return $dfd.promise();
+        }
+
+        ,updateCustomCss: function(customCss){
+            var url = App.getContextPath() + Admin.Service.CustomCss.API_UPDATE_CUSTOM_CSS;
+            var $dfd = jQuery.Deferred();
+
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to update custom CSS:" + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,customCss
+            );
+            return $dfd.promise();
+        }
+    }
 
     ,Correspondence : {
 
@@ -737,6 +861,7 @@ Admin.Service = {
         }
 
         ,API_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles"
+        ,API_UPDATE_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}"
         ,API_RETRIEVE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/privileges"
         ,API_ROLE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges"
 
@@ -783,7 +908,28 @@ Admin.Service = {
             )
 
             return $dfd.promise();
+        }
 
+        ,updateApplicationRole: function(oldRoleName, newRoleName) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_UPDATE_ROLES.format(oldRoleName);
+            var data = {
+                roleName: newRoleName
+            }
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to update role: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(data)
+            )
+
+            return $dfd.promise();
         }
 
         ,retrieveApplicationPrivileges: function() {

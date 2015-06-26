@@ -67,7 +67,12 @@ import static org.junit.Assert.assertTrue;
         "/spring/spring-library-object-history.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-person.xml",
-        "/spring/spring-library-property-file-manager.xml"
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-profile.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-task.xml",
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-event.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceIT extends EasyMock {
@@ -92,13 +97,9 @@ public class SplitCaseFileServiceIT extends EasyMock {
     @Autowired
     EcmFileDao ecmFileDao;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
 
-    private Long savedCaseFileId;
     private Authentication auth;
     private String ipAddress;
     private Long sourceId;
@@ -127,6 +128,8 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertNotNull(splitCaseService);
 
         expect(auth.getName()).andReturn("ann-acm").anyTimes();
+        expect(auth.getCredentials()).andReturn("AcMd3v$").anyTimes();
+
         expect((List<AcmGrantedAuthority>) auth.getAuthorities()).andReturn(Arrays.asList(authority)).atLeastOnce();
         replay(auth);
         //create source case file
@@ -228,7 +231,7 @@ public class SplitCaseFileServiceIT extends EasyMock {
         assertNotNull(copyOa);
         assertNotNull(copyOa.getTargetId());
         assertEquals(copyOa.getTargetId().longValue(), originalCase.getId().longValue());
-        assertEquals(3, copyCaseFile.getParticipants().size());
+        assertTrue(copyCaseFile.getParticipants().size() >= 3);
         AcmParticipant assignee = null;
         for (AcmParticipant ap : copyCaseFile.getParticipants()) {
             if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType())) {

@@ -13,7 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -36,9 +36,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -55,11 +56,9 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
 
     private SaveCaseService saveCaseService;
     private CaseFileDao caseFileDao;
-    private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
+    private AcmTaskService acmTaskService;
 
-
-    private Long savedCaseFileId;
     private Authentication auth;
     AcmFolder sourceFolder;
     private String ipAddress;
@@ -67,7 +66,6 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
     AcmFolder copiedFolder;
     private Map<Long, AcmFolder> folderMap = new HashMap<>();
     private Map<Long, EcmFile> documentMap = new HashMap<>();
-    private long generated;
 
 
     @Before
@@ -76,24 +74,21 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         ipAddress = "127.0.0.1";
 
         sourceId = 1L;
-        generated = 10l;
         //create mocks
         saveCaseService = createMock(SaveCaseService.class);
         caseFileDao = createMock(CaseFileDao.class);
-        ecmFileService = createMock(EcmFileService.class);
         acmFolderService = createMock(AcmFolderService.class);
+        acmTaskService = createMock(AcmTaskService.class);
 
         sourceFolder = new AcmFolder();
         sourceFolder.setId(100l);
         sourceFolder.setName("ROOT");
         addToFolderMap(sourceFolder);
 
-        AcmFolder copiedFolder = null;
-
         splitCaseService.setSaveCaseService(saveCaseService);
         splitCaseService.setCaseFileDao(caseFileDao);
         splitCaseService.setAcmFolderService(acmFolderService);
-        splitCaseService.setEcmFileService(ecmFileService);
+        splitCaseService.setAcmTaskService(acmTaskService);
         createSourceFolderStructure();
     }
 
@@ -137,118 +132,29 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         EasyMock.expect(saveCaseService.saveCase(eq(sourceCaseFile), eq(auth), eq(ipAddress))).andReturn(sourceCaseFile);
 
 
-        Capture<Long> fileIdCapture = new Capture<>();
-        Capture<AcmFolder> targetFolderCapture = new Capture<>();
-        Capture<AcmContainer> targetContainerCapture = new Capture<>();
-        EasyMock.expect(ecmFileService.copyFile(capture(fileIdCapture),
-                capture(targetFolderCapture),
-                capture(targetContainerCapture))).andAnswer(new IAnswer<EcmFile>() {
-            public EcmFile answer() throws Throwable {
-                EcmFile copydFile = new EcmFile();
-                //we will keep same id's
-                copydFile.setFileId(fileIdCapture.getValue());
-                copydFile.setFolder(targetFolderCapture.getValue());
-                documentMap.put(copydFile.getId(), copydFile);
-                return copydFile;
-            }
-        }).anyTimes();
-
-        EasyMock.expect(acmFolderService.folderPathExists(anyObject(), anyObject())).andReturn(false).anyTimes();
-
-
-        Capture<Long> findFileIdCapture = new Capture<>();
-        EasyMock.expect(ecmFileService.findById(capture(findFileIdCapture))).andAnswer(new IAnswer<EcmFile>() {
-            public EcmFile answer() throws Throwable {
-                return documentMap.get(findFileIdCapture.getValue());
-            }
-        }).anyTimes();
-
-
-        Capture<AcmFolder> sFolderCapture = new Capture<>();
+        Capture<Long> folderIdCapture = new Capture<>();
+        Capture<AcmContainer> tContainerCapture = new Capture<>();
         Capture<AcmFolder> tFolderCapture = new Capture<>();
-        Capture<Long> objectIdCapture = new Capture<>();
-        Capture<String> objectTypeCapture = new Capture<>();
-        EasyMock.expect(acmFolderService.copyFolder(capture(sFolderCapture)
-                , capture(tFolderCapture), capture(objectIdCapture), capture(objectTypeCapture))).andAnswer(new IAnswer<AcmFolder>() {
-            public AcmFolder answer() throws Throwable {
-                sFolderCapture.getValue().setParentFolderId(tFolderCapture.getValue().getId());
-                return sFolderCapture.getValue();
+        acmFolderService.copyFolderStructure(capture(folderIdCapture), capture(tContainerCapture), capture(tFolderCapture));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
+            public Object answer() throws Throwable {
+                log.info("folder Id = {}, tContainer = {}, tFolder = {}", folderIdCapture.getValue().toString(), tContainerCapture.getValue(), tFolderCapture.getValue());
+                return null; // required to be null for a void method
             }
         }).anyTimes();
 
-        objectIdCapture = new Capture<>();
-        objectTypeCapture = new Capture<>();
-        Capture<String> folderPathCapture = new Capture<>();
-
-        EasyMock.expect(acmFolderService.addNewFolderByPath(capture(objectTypeCapture)
-                , capture(objectIdCapture), capture(folderPathCapture))).andAnswer(new IAnswer<AcmFolder>() {
-            public AcmFolder answer() throws Throwable {
-                AcmFolder folder = new AcmFolder();
-                switch (folderPathCapture.getValue()) {
-                    case "":
-                        folder = folderMap.get(200l);
-                        break;
-                    case "/F2/F4":
-                        folder.setId(44l);
-                        folder.setName("F4");
-                        folder.setParentFolderId(22l);
-                        //create parent as well
-
-                        AcmFolder parentF2 = new AcmFolder();
-                        parentF2.setId(22l);
-                        parentF2.setName("F2");
-                        parentF2.setParentFolderId(200l);
-                        addToFolderMap(parentF2);
-                        break;
-                    case "/F2":
-                        folder.setId(22l);
-                        folder.setName("F2");
-                        folder.setParentFolderId(200l);
-                        break;
-                    case "/F3":
-                        folder.setId(33l);
-                        folder.setName("F3");
-                        folder.setParentFolderId(200l);
-                        break;
-                }
-                addToFolderMap(folder);
-                return folder;
+        Capture<Long> documentIdCapture = new Capture<>();
+        Capture<AcmContainer> ttContainerCapture = new Capture<>();
+        Capture<AcmFolder> ttFolderCapture = new Capture<>();
+        acmFolderService.copyDocumentStructure(capture(documentIdCapture), capture(ttContainerCapture), capture(ttFolderCapture));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            @Override
+            public Object answer() throws Throwable {
+                log.info("documentId = {}, ttContainer = {}, ttFolder = {}", documentIdCapture.getValue().toString(), ttContainerCapture.getValue(), ttFolderCapture.getValue());
+                return null; // required to be null for a void method
             }
         }).anyTimes();
-
-        Capture<AcmFolder> folderGetPathCapture = new Capture<>();
-
-
-        EasyMock.expect(acmFolderService.getFolderPath(capture(folderGetPathCapture)
-        )).andAnswer(new IAnswer<String>() {
-            public String answer() throws Throwable {
-                switch (folderGetPathCapture.getValue().getId().intValue()) {
-                    case 2:
-                        return "/F2";
-                    case 3:
-                        return "/F3";
-                    case 4:
-                        return "/F2/F4";
-                    default:
-                        return "";
-                }
-
-            }
-        }).anyTimes();
-
-
-        Capture<Long> findFolderByIdCapture = new Capture<>();
-        EasyMock.expect(acmFolderService.findById(capture(findFolderByIdCapture)
-        )).andAnswer(new IAnswer<AcmFolder>() {
-            public AcmFolder answer() throws Throwable {
-                return folderMap.get(findFolderByIdCapture.getValue());
-            }
-        }).anyTimes();
-
-
-        AcmFolder someFolder = new AcmFolder();
-        EasyMock.expect(acmFolderService.addNewFolder(1l, String.format("%s(%s)", "Source", "55435345435_2133"))).andReturn(someFolder);
-
 
         replayAll();
 
@@ -277,110 +183,9 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
          */
         splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
 
-
-        verifyDocuments();
-        verifyFolders();
-        if (splitCaseOptions.isPreserveFolderStructure())
-            verifyFolderAndDocumentStructureIsPreserved();
-    }
-
-    private Long getNextGeneratedFolderId() {
-        return generated += 10l;
-    }
-
-    private void verifyDocuments() {
-        //verify that documents are located under correct ROOT folder
-
-        //d1, d2, d4 should be copyd to the copied case file
-        EcmFile d1 = documentMap.get(1l);
-        AcmFolder folder = d1.getFolder();
-        while (folder.getParentFolderId() != null) {
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("d1 should have ROOT " + copiedFolder.getId(), copiedFolder.getId(), folder.getId());
-
-        //check if ROOT folder is same
-        EcmFile d2 = documentMap.get(2l);
-        folder = d2.getFolder();
-        while (folder.getParentFolderId() != null) {
-            log.debug("folder info {}", folder);
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("d2 should have ROOT " + copiedFolder.getId(), copiedFolder.getId(), folder.getId());
-
-        //check if ROOT folder is same
-        EcmFile d4 = documentMap.get(4l);
-        log.debug("checking file d4  {}", d4);
-        folder = d4.getFolder();
-        while (folder.getParentFolderId() != null) {
-            log.debug("folder info {}", folder);
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("d4 should have ROOT " + copiedFolder.getId(), copiedFolder.getId(), folder.getId());
-
-
-        //d3 should stay at source case file
-        EcmFile d3 = documentMap.get(3l);
-        folder = d3.getFolder();
-        while (folder.getParentFolderId() != null) {
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("d3 should have ROOT " + sourceFolder.getId(), sourceFolder.getId(), folder.getId());
-
-    }
-
-    private void verifyFolders() {
-        //verify that folders are located under correct ROOT folder
-
-        //F2 and F4 should stay at source case file ROOT folder
-        AcmFolder folder = folderMap.get(2l);
-        while (folder.getParentFolderId() != null) {
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("Folder F2 should have ROOT " + sourceFolder.getId(), sourceFolder.getId(), folder.getId());
-
-        folder = folderMap.get(4l);
-        while (folder.getParentFolderId() != null) {
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("Folder F4 should have ROOT " + sourceFolder.getId(), sourceFolder.getId(), folder.getId());
-
-
-        //F3 should be copyd to copied case file ROOT folder
-        folder = folderMap.get(3l);
-        while (folder.getParentFolderId() != null) {
-            folder = folderMap.get(folder.getParentFolderId());
-        }
-        assertEquals("Folder F3 should have ROOT " + copiedFolder.getId(), copiedFolder.getId(), folder.getId());
-    }
-
-    private void verifyFolderAndDocumentStructureIsPreserved() {
-        //verify source case file folder and document structure
-        EcmFile d3 = documentMap.get(3l);
-        assertEquals(folderMap.get(4l).getId(), d3.getFolder().getId());
-        AcmFolder f4 = folderMap.get(4l);
-        AcmFolder f2 = folderMap.get(2l);
-        assertEquals(f4.getParentFolderId(), f2.getId());
-        assertEquals(f2.getParentFolderId(), sourceFolder.getId());
-
-        //verify copied case file folder and document structure
-        EcmFile d1 = documentMap.get(1l);
-        assertEquals(d1.getFolder().getId(), copiedFolder.getId());
-
-        EcmFile d4 = documentMap.get(4l);
-        AcmFolder f3 = folderMap.get(3l);
-        assertEquals(d4.getFolder().getId(), f3.getId());
-        assertEquals(f3.getParentFolderId(), copiedFolder.getId());
-
-        //verify created new folders to match like on source
-        EcmFile d2 = documentMap.get(2l);
-        AcmFolder f4Copy = folderMap.get(d2.getFolder().getId());
-        assertEquals("F4", f4Copy.getName());
-        assertNotEquals(f4Copy.getId(), f4.getId());
-        AcmFolder f2Copy = folderMap.get(f4Copy.getParentFolderId());
-        assertEquals("F2", f2Copy.getName());
-        assertNotEquals(f2Copy.getId(), f2.getId());
-        assertEquals(f2Copy.getParentFolderId(), copiedFolder.getId());
+        assertEquals(200l, tFolderCapture.getValue().getId().longValue());
+        assertEquals(200l, ttFolderCapture.getValue().getId().longValue());
+        verifyAll();
 
     }
 
