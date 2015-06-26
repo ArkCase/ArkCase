@@ -16,9 +16,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesCreateRole {
-    private final String PROP_ROLE_NAME = "roleName";
-
+public class RolesPrivilegesCreateRole implements RolePrivilegesConstants{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;

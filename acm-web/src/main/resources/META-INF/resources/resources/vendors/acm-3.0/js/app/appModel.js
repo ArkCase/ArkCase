@@ -361,12 +361,15 @@ App.Model = {
                 if (Acm.isNotEmpty(cfg)) {
                     var myCfg = App.Model.Config.getMyConfig();
                     var settings = cfg.settings;
-                    if (Acm.isNotEmpty(settings)) {
-                        myCfg.settings = {};
-                        myCfg.settings.autoLogoutIdleLimit = Acm.goodValue(settings.autoLogoutIdleLimit, 1200000);  //1200000 == 20x60x1000ms = 20min
-                        myCfg.settings.autoLogoutErrorLimit = Acm.goodValue(settings.autoLogoutErrorLimit, 6);
-                        myCfg.settings.issueCollectorFlag = Acm.goodValue(settings.issueCollectorFlag, false);
+                    if (Acm.isEmpty(settings)) {
+                    	// If "settings" object is null, make sure that is empty object. On this way, below the default values will be
+                    	// taken if "settings" is null
+                    	settings = {};
                     }
+                    myCfg.settings = {};
+                    myCfg.settings.autoLogoutIdleLimit = Acm.goodValue(settings.autoLogoutIdleLimit, 1200000);  //1200000 == 20x60x1000ms = 20min
+                    myCfg.settings.autoLogoutErrorLimit = Acm.goodValue(settings.autoLogoutErrorLimit, 6);
+                    myCfg.settings.issueCollectorFlag = Acm.goodValue(settings.issueCollectorFlag, false);
                 }
                 var z = 1;
             });
