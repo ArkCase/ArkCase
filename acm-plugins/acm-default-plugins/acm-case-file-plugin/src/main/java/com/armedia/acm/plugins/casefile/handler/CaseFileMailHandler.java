@@ -38,6 +38,7 @@ public class CaseFileMailHandler {
     private AcmFolderService acmFolderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private boolean enabled;
+    private String caseNumberRegexPattern;
 
     @Transactional
     public void handle(Message message) throws MessagingException {
@@ -85,7 +86,7 @@ public class CaseFileMailHandler {
         String subject = message.getSubject();
         if (subject == null || subject.length() < 1)
             return null;
-        Pattern pattern = Pattern.compile(CaseFileConstants.CASE_FILE_NUMBER_REGEX_PATTERN);
+        Pattern pattern = Pattern.compile(caseNumberRegexPattern);
         Matcher matcher = pattern.matcher(subject);
         if (matcher.find()) {
             return subject.substring(matcher.start(), matcher.end());
@@ -115,5 +116,9 @@ public class CaseFileMailHandler {
 
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public void setCaseNumberRegexPattern(String caseNumberRegexPattern) {
+        this.caseNumberRegexPattern = caseNumberRegexPattern;
     }
 }
