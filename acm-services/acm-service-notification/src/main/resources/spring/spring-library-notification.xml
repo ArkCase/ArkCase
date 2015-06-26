@@ -62,6 +62,7 @@
     <bean id="purgeExecutor" class="com.armedia.acm.services.notification.service.PurgeExecutor">
     	<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
+    <bean id="noopExecutor" class="com.armedia.acm.services.notification.service.NoopExecutor"/>
 
     <bean id="acmNotificationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Save Notification Service Plugin"/>
