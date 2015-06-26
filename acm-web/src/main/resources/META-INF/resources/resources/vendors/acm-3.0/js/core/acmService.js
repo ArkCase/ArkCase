@@ -36,6 +36,8 @@ Acm.Service = {
             }
         }
 
+        arg.url = Acm.Url.makeNoneCacheUrl(arg.url);
+
         if (Acm.isNotEmpty(arg.data)) {
             if (Acm.isEmpty(arg.contentType)) {
                 arg.contentType = "application/json; charset=utf-8";

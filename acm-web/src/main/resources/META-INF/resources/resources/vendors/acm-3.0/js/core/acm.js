@@ -135,43 +135,59 @@ var Acm = Acm || {
         return json;
     }
 
-    //append random parameter after a url to avoid undesired cached session variables
-    //This function handles input url in following sample cases:
-    //  some.com/some/path
-    //  some.com/some/path/
-    //  some.com/some/path?var=abc
-    ,makeNoneCacheUrl: function(url) {
-        var lastChar = url.slice(-1);
-        var hasQmark = (-1 !== url.indexOf('?'));
 
-        if (hasQmark) {
-            url += '&'
-        } else {
-            url += '?';
-        }
-        url += 'rand=' + Math.floor((Math.random()*10000000000));
-        return url;
-    }
+//    ,getUrlParameter : function(param) {
+//        var url = window.location.search.substring(1);
+//        var urlVariables = url.split('&');
+//        for (var i = 0; i < urlVariables.length; i++)
+//        {
+//            var paramName = urlVariables[i].split('=');
+//            if (paramName[0] == param)
+//            {
+//                return paramName[1];
+//            }
+//        }
+//    }
+//
+//    ,getUrlParameter2: function(name){
+//        var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+//        return results[1] || 0;
+//    }
 
-    ,getUrlParameter : function(param) {
-        var url = window.location.search.substring(1);
-        var urlVariables = url.split('&');
-        for (var i = 0; i < urlVariables.length; i++)
-        {
-            var paramName = urlVariables[i].split('=');
-            if (paramName[0] == param)
-            {
-                return paramName[1];
+    ,Url: {
+        //append random parameter after a url to avoid undesired cached session variables
+        //This function handles input url in following sample cases:
+        //  some.com/some/path
+        //  some.com/some/path/
+        //  some.com/some/path?var=abc
+        makeNoneCacheUrl: function(url) {
+            var lastChar = url.slice(-1);
+            var hasQmark = (-1 !== url.indexOf('?'));
+
+            if (hasQmark) {
+                url += '&'
+            } else {
+                url += '?';
             }
+            url += 'rand=' + Math.floor((Math.random()*10000000000));
+            return url;
+        }
+
+        ,getUrlParameter: function(url, name){
+            //var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+            //var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(url); //do not know why not working when value include 'a'
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url); //do not know why not working when value include 'a'
+            if (!Acm.isArrayEmpty(results)) {
+                if (1 < results.length) {
+                    return results[1];
+                }
+            }
+            return "";
         }
     }
 
-    ,getUrlParameter2: function(name){
-        var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
-        return results[1] || 0;
-    }
 
-
+    //todo: only jTable is using this, move to AcmEx.JTable
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
