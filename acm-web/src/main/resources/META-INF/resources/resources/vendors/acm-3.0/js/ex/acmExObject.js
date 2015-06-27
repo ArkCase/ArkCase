@@ -248,7 +248,7 @@ AcmEx.Object = {
                 }
             );
         }
-        ,toggleChildTable: function($t, $row, fnOpen, title) {
+        /*,toggleChildTable: function($t, $row, fnOpen, title) {
             var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
             var curTitle = $childRow.find("div.jtable-title-text").text();
 
@@ -264,6 +264,26 @@ AcmEx.Object = {
                 $t.jtable('closeChildTable', $row.closest('tr'));
             } else {
                 fnOpen($t, $row);
+            }
+        }*/
+        ,toggleChildTable: function($t, $row, fnOpen, title) {
+            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+            var curTitle = $childRow.find("div.jtable-title-text").text();
+
+            var toClose;
+            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+                toClose = (curTitle === title);
+            } else {
+                toClose = false;
+            }
+
+            if (toClose) {
+                $t.jtable('closeChildTable', $row.closest('tr'));
+                $row.removeClass("show active");
+            } else {
+                fnOpen($t, $row);
+                $row.addClass("show active");
+                $row.siblings().removeClass("show active");
             }
         }
         ,clickAddRecordHandler: function($jt, handler) {
