@@ -624,6 +624,8 @@ CaseFile.Model = CaseFile.Model || {
     ,Documents: {
         create : function() {
             this.cachePlainForms = new Acm.Model.CacheFifo(1);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_LODGED_DOCUMENTS      , this.onViewLodgedDocuments);
+            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_REJECTED_DOCUMENTS    , this.onViewRejectedDocuments);
         }
         ,onInitialized: function() {
         	CaseFile.Service.Documents.retrievePlainForms();
@@ -645,6 +647,34 @@ CaseFile.Model = CaseFile.Model || {
 
         ,setPlainForms: function(plainForms) {
         	 CaseFile.Model.Documents.cachePlainForms.put("forms.plainforms", plainForms);
+        }
+
+        ,onViewLodgedDocuments: function(caseFileId, docIds) {
+                if ( Acm.isEmpty(caseFileId) )
+                {
+                    return;
+                }
+
+                if ( !Acm.isArray(docIds) ) {
+                    return;
+                }
+
+                CaseFile.Service.Documents.auditDocuments(caseFileId, docIds, "file.lodged");
+
+        }
+
+        ,onViewRejectedDocuments: function(caseFileId, docIds) {
+                if ( Acm.isEmpty(caseFileId) )
+                {
+                    return;
+                }
+
+                if ( !Acm.isArray(docIds) ) {
+                    return;
+                }
+
+                CaseFile.Service.Documents.auditDocuments(caseFileId, docIds, "file.rejected");
+
         }
     }
 
