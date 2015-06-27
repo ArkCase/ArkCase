@@ -26,6 +26,7 @@
     <bean id="insertEventTypeNames" class="com.armedia.acm.plugins.audit.service.InsertEventTypeNames">
         <property name="pluginEventType" ref="pluginEventType"/>
         <property name="auditLookupDao" ref="auditLookupDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
 
