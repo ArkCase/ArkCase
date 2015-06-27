@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.audit.service;
 
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.audit.dao.AuditLookupDao;
 import com.armedia.acm.plugins.audit.model.AcmAuditLookup;
@@ -27,8 +28,12 @@ public class InsertEventTypeNames implements ApplicationContextAware {
     private AuditLookupDao auditLookupDao;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+
+        getAuditPropertyEntityAdapter().setUserId("audit-lookup");
 
         try {
             updateEventTypeNamesInTheDb();
@@ -118,5 +123,15 @@ public class InsertEventTypeNames implements ApplicationContextAware {
 
     public void setAuditLookupDao(AuditLookupDao auditLookupDao) {
         this.auditLookupDao = auditLookupDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
