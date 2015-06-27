@@ -17,8 +17,6 @@ public class CaseFileMailFilter {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     public boolean accept(Message message) throws MessagingException {
-        log.debug("The pattern is: '" + caseNumberRegexPattern + "'");
-        log.debug("Incoming message - subject: " + message.getSubject());
 
         String subject = message.getSubject();
         if (subject == null || subject.length() < 1)
@@ -28,7 +26,11 @@ public class CaseFileMailFilter {
 
         boolean matchesCaseFilter = matcher.find();
 
-        log.debug("Message with subject '" + message.getSubject() + "' matches a case number: " + matchesCaseFilter);
+        if ( log.isDebugEnabled())
+        {
+            log.debug("Message with subject '{}' matches a case number: {}", message.getSubject(), matchesCaseFilter);
+        }
+
         return matchesCaseFilter;
     }
 
