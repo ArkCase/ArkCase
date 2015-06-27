@@ -862,8 +862,11 @@ Admin.Service = {
 
         ,API_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles"
         ,API_UPDATE_ROLES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}"
+        ,API_ADD_ROLES_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges/{1}"
+        ,API_REMOVE_ROLES_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges/{1}"
         ,API_RETRIEVE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/privileges"
         ,API_ROLE_PRIVILEGES: "/api/latest/plugin/admin/rolesprivileges/roles/{0}/privileges"
+        ,API_ROLES_BY_PRIVILEGE: "/api/latest/plugin/admin/rolesprivileges/privileges/{0}/roles"
 
         ,retrieveApplicationRoles: function() {
             var $dfd = jQuery.Deferred();
@@ -947,6 +950,23 @@ Admin.Service = {
                     }
                 }
                 ,url
+            );
+            return $dfd.promise();
+        }
+
+        ,retrieveApplicationRolesByPrivilege: function(privilege) {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLES_BY_PRIVILEGE.format(privilege);
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve privilege's roles: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
             )
 
             return $dfd.promise();
@@ -971,6 +991,7 @@ Admin.Service = {
 
             return $dfd.promise();
         }
+
         ,saveApplicationRolePrivileges: function(roleName, privileges) {
             var $dfd = jQuery.Deferred();
             var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ROLE_PRIVILEGES.format(roleName);
@@ -993,6 +1014,74 @@ Admin.Service = {
             )
 
             return $dfd.promise();
+        }
+
+        ,removeRolesPrivileges: function(roles, privileges){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_REMOVE_ROLES_PRIVILEGES.format(roles.join(','), privileges.join(','));
+            Acm.Service.asyncDelete(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to remove role privelege: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+
+        }
+
+        ,addRolesPrivileges :function(roles, privileges){
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.RolesPrivileges.API_ADD_ROLES_PRIVILEGES.format(roles.join(','), privileges.join(','));
+            Acm.Service.asyncPut(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to add role privilege: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+        }
+    }
+
+    ,ModuleConfiguration: {
+        API_RETRIEVE_MODULES: "/api/latest/plugin/admin/moduleconfiguration/modules"
+
+        ,create: function() {
+
+        }
+
+        ,onInitialized: function() {
+
+        }
+
+        ,retrieveApplicationModules: function() {
+            var $dfd = jQuery.Deferred();
+            var url = App.getContextPath() + Admin.Service.ModuleConfiguration.API_RETRIEVE_MODULES;
+            Acm.Service.asyncGet(
+                function(response) {
+                    if (response.hasError) {
+                        var errorMsg = "Failed to retrieve application modules: " + response.errorMsg;
+                        $dfd.reject(errorMsg);
+                    } else {
+                        $dfd.resolve(response);
+                    }
+                }
+                ,url
+            )
+
+            return $dfd.promise();
+
         }
     }
 

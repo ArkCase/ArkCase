@@ -278,6 +278,34 @@
                                     </section>
                                 </div>
 
+                                <div class="row" id="tabModuleConfiguration" style="display: none">
+                                    <section class="panel panel-default">
+                                        <div class="wrapper">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="col-xs-3 b-r"><label>Choose Application Module</label>
+                                                        <select id="selectApplicationModule" size="10" class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnModuleConfigurationGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
+                                                    <div class="col-xs-3 b-r"><label>Not Authorized Roles</label>
+                                                        <select id="selectAvailableRoles" size="10" multiple class="form-control">
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
+                                                        <button id="btnModuleConfigurationMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                        <button id="btnModuleConfigurationMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                    </div>
+                                                    <div class="col-xs-4 b-r"><label>Authorized Roles</label>
+                                                        <select id="selectAuthorizedRoles" size="10" multiple  class="form-control">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
                                 <%--Organization hierarchy--%>
                                 <div class="row" id="tOrganization" style="display:none;">
                                     <div class="pull-left m-t-md">
