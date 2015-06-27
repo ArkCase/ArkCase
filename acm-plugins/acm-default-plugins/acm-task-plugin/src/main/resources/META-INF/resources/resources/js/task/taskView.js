@@ -1034,7 +1034,9 @@ Task.View = Task.View || {
                     element.append(tr);
                 }
 
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);});
+                $('input[name=returnToUser]:radio').change(function(e) {
+                    Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);
+                });
             }
         }
         ,buildDlgRejectTaskUsers: function(element, results) {
@@ -1061,7 +1063,9 @@ Task.View = Task.View || {
                     element.append(tr);
                 }
 
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);});
+                $('input[name=returnToUser]:radio').change(function(e) {
+                    Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);
+                });
             }
         }
         ,buildDlgRejectTaskMutedText: function(element, from, to, total) {
@@ -1272,7 +1276,14 @@ Task.View = Task.View || {
                         Task.Controller.viewAddedNote(noteToSave);
                     }
                 }
+                Task.View.Detail.hideAllWorkflowButtons();
+                Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             });
+        }
+        ,onSaveAssignee : function(value) {
+            var task = Task.View.getActiveTask();
+            Task.Controller.viewChangedAssignee(ObjNav.View.Navigator.getActiveObjType(), task.taskId, value);
         }
         ,onClickDlgRejectTaskSortableColumn: function(event,ctrl) {
             var sortDirection = Task.View.RejectTask.getDlgRejectTaskSortDirection();
@@ -1353,6 +1364,11 @@ Task.View = Task.View || {
         }
         ,onChangeDlgRejectTaskSelected: function(event,ctrl) {
             Task.View.RejectTask.setDlgRejectTaskSelected($(event.target).val());
+            if (Task.View.RejectTask.getDlgRejectTaskSelected() == null) {
+                Task.View.RejectTask.$btnSubmitRejectTask.addClass('disabled');
+            } else {
+                Task.View.RejectTask.$btnSubmitRejectTask.removeClass('disabled');
+            }
         }
         // end of Reject ------------------------------------------
 
