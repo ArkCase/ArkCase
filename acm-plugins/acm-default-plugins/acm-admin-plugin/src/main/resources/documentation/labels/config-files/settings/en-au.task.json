@@ -67,7 +67,7 @@
         },
         "electronic-signatures": {
             "value": "dSignatures",
-            "defaultValue": "eSignatures",
+            "defaultValue": "dSignatures",
             "description": ""
         }
     }
@@ -269,6 +269,11 @@
         "value": "(Error)",
         "defaultValue": "(Error)",
         "description": ""
+    },
+    "error-value-percent-complete": {
+        "defaultValue": "(Not a percentage)",
+        "description": "",
+        "value": "(Not a percentage)"
     },
     "button": {
         "edit": {
@@ -1016,8 +1021,8 @@
     }
 }, "reject-dialog": {
     "title": {
-        "value": "Rejet Task",
-        "defaultValue": "Rejet Task",
+        "value": "Reject Task",
+        "defaultValue": "Reject Task",
         "description": ""
     },
     "label": {
@@ -1254,6 +1259,11 @@
             "value": "Please enter a subject",
             "defaultValue": "Please enter a subject",
             "description": ""
+        },
+        "please-check-percent-complete": {
+            "defaultValue": "Percent complete must be between 0 and 100",
+            "description": "",
+            "value": "Percent complete must be between 0 and 100"
         }
     }
 }}

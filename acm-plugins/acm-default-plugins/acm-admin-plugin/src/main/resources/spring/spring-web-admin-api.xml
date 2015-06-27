@@ -93,6 +93,10 @@
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
+    <bean id="rolesPrivilegesUpdateRole" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRole">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
     <bean id="rolesPrivilegesRetrieveRoles" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRoles">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
@@ -135,6 +139,54 @@
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
+    <!-- Link forms Workflows -->
+    <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsService">
+        <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.acm/rules/" />
+        <property name="configurationFile" value="drools-form-business-process-rules.xlsx" />
+        <property name="configurationFileBackupTemplate" value="drools-form-business-process-rules.xlsx.%s.backup"/>
+        <property name="configurationFileBackupRegex" value="^drools[-d]form[-d]business[-d]process[-d]rules.xlsx.[0-9]+.backup$"/>
+
+        <property name="acmBpmnService" ref="processDefinitionManagementService" />
+        <property name="acmFileTypesService" ref="acmFileTypesService" />
+    </bean>
+
+    <bean id="linkFormsWorkflowsRetrieveConfiguration" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
+        <property name="linkFormsWorkflowsService"  ref="linkFormsWorkflowsService" />
+    </bean>
+
+    <bean id="linkFormsWorkflowsUpdateConfiguration" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsUpdateConfiguration">
+        <property name="linkFormsWorkflowsService"  ref="linkFormsWorkflowsService" />
+    </bean>
+
+    <!-- Custom CSS -->
+    <bean id="customCssService" class="com.armedia.acm.plugins.admin.web.api.CustomCssService">
+        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.acm/branding/custom.css"/>
+    </bean>
+
+    <bean id="customCssRetrieveFile" class="com.armedia.acm.plugins.admin.web.api.CustomCssRetrieveFile">
+        <property name="customCssService" ref="customCssService"/>
+    </bean>
+
+    <bean id="customCssUpdateFile" class="com.armedia.acm.plugins.admin.web.api.CustomCssUpdateFile">
+        <property name="customCssService" ref="customCssService"/>
+    </bean>
+
+    <!-- Custom Logo -->
+    <bean id="customLogoService" class="com.armedia.acm.plugins.admin.web.api.CustomLogoService">
+        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.acm/branding/"/>
+        <property name="headerLogoFile" value="header-logo.png"/>
+        <property name="loginLogoFile" value="login-logo.png"/>
+    </bean>
+
+    <bean id="customLogoRetrieveFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoRetrieveFile">
+        <property name="customLogoService" ref="customLogoService"/>
+    </bean>
+
+    <bean id="customLogoUploadFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoUploadFile">
+        <property name="customLogoService" ref="customLogoService"/>
+    </bean>
+
+
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
     
     <bean id="getPlainFormsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormsAPIController">
@@ -148,7 +200,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
     </bean>
-    
+
     <bean id="getPlainFormTargetsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
     	<property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
     </bean>

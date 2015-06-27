@@ -5002,9 +5002,13 @@ angular.module("ui.bootstrap", ["ui.bootstrap.transition", "ui.bootstrap.collaps
                 row.due=moment(row.dueDate).format('MM/DD/YYYY');
                 row.id=parseInt(row.taskId)
                 if(row.attachedToObjectId != null){
-                    if(row.attachedToObjectType.toLowerCase() == "case_file"){
+                    if(row.attachedToObjectType && row.attachedToObjectType.toLowerCase() == "case_file"){
                         row.parentObject = "casefile";
-                    }else{row.parentObject = row.attachedToObjectType.toLowerCase();}
+                    }else{
+                    	if(row.attachedToObjectType){
+                    		row.parentObject = row.attachedToObjectType.toLowerCase();                    		
+                    	}
+                	}
                     row.parentNumber = row.attachedToObjectName;
                     row.parentID = row.attachedToObjectId;
                 }

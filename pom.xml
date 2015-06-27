@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.26</version>
+    <version>3.0.31</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -84,6 +84,8 @@
         <asm.version>5.0.3</asm.version>
         <org.apache.poi.version>3.10.1</org.apache.poi.version>
         <frevvo.forms.version>6.1</frevvo.forms.version>
+        <java.mail.version>1.5.4</java.mail.version>
+        <spring.integration.version>2.2.3.RELEASE</spring.integration.version>
     </properties>
 
     <organization>
@@ -149,8 +151,8 @@
             <timezone>+1</timezone>
         </developer>
         <developer>
-            <name>Nebojsha Davidovic</name>
-            <email>nebojsha.davidovic@armedia.com</email>
+            <name>Nebojsha Davidovikj</name>
+            <email>nebojsha.davidovikj@armedia.com</email>
             <id>neshod</id>
             <organization>Armedia LLC</organization>
             <organizationUrl>http://www.armedia.com</organizationUrl>

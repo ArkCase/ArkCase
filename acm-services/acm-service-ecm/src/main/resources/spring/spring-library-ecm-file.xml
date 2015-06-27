@@ -107,7 +107,10 @@
         <property name="fileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="participantDao" ref="acmParticipantDao"/>
     </bean>
+
+    <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
 
@@ -118,5 +121,24 @@
     <bean id="ecmFilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="ECM File Plugin"/>
     </bean>
-    
+
+    <bean id="acmFileTypesService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFileTypesServiceImpl">
+        <property name="propertyFileManager">
+            <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
+        </property>
+
+        <property name="propertiesLocation" value="${user.home}/.acm/"></property>
+        <property name="acmFormsPlainPropertiesFile" value="acm-forms-plain.properties"></property>
+        <property name="acmFormsAcmPropertiesFile" value="acm-forms.properties"></property>
+        <property name="propertyFiles">
+            <list>
+                <value>caseFilePlugin.properties</value>
+                <value>complaintPlugin.properties</value>
+                <value>taskPlugin.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+
 </beans>

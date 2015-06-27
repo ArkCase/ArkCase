@@ -11,8 +11,10 @@ import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+
 import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.WellKnownFolderName;
+import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 
 /**
@@ -43,5 +45,7 @@ public interface OutlookService {
 
     void deleteItem(AcmOutlookUser user, String itemId, DeleteMode deleteMode) throws AcmOutlookException, AcmOutlookItemNotFoundException;
 
+    void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user, ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue);
+    
     void deleteAppointmentItem(AcmOutlookUser user, String itemId, Boolean recurring, DeleteMode deleteMode);
 }

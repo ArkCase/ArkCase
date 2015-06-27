@@ -515,7 +515,15 @@ Task.View = Task.View || {
             this.$perCompleted		= $("#percentageCompleted");
             AcmEx.Object.XEditable.useEditable(this.$perCompleted, {
                 success: function(response, newValue) {
-                    Task.Controller.viewChangedPercentCompleted(ObjNav.View.Navigator.getActiveObjType(),ObjNav.Model.getObjectId(), newValue);
+                    if(!(newValue >= 0 && newValue <= 100))
+                    {
+                        setTimeout(function(){
+                            Task.View.Detail.setTextLnkPercentComplete($.t("task:task-details.error-value-percent-complete"));
+                        },100);
+                    }
+                    else{
+                        Task.Controller.viewChangedPercentCompleted(ObjNav.View.Navigator.getActiveObjType(),ObjNav.Model.getObjectId(), newValue);
+                    }
                 }
             });
 
@@ -640,7 +648,11 @@ Task.View = Task.View || {
 //                Task.View.Detail.$lnkEditComplaintClose.hide();
 //                Task.View.Detail.$lnkChangeCaseStatus.show();
 //            }
-            if(task.adhocTask){
+            if(Acm.isNotEmpty(task.assignee) && (App.getUserName() != Acm.goodValue(task.assignee))){
+                Task.View.Detail.hideAllWorkflowButtons();
+                Task.View.Detail.hideDynamicWorkflowButtons();
+            }
+            else if(task.adhocTask){
                 Task.View.Detail.hideAllWorkflowButtons();
                 Task.View.Detail.hideDynamicWorkflowButtons();
                 if(task.completed != true){
@@ -1022,7 +1034,9 @@ Task.View = Task.View || {
                     element.append(tr);
                 }
 
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);});
+                $('input[name=returnToUser]:radio').change(function(e) {
+                    Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);
+                });
             }
         }
         ,buildDlgRejectTaskUsers: function(element, results) {
@@ -1049,7 +1063,9 @@ Task.View = Task.View || {
                     element.append(tr);
                 }
 
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);});
+                $('input[name=returnToUser]:radio').change(function(e) {
+                    Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);
+                });
             }
         }
         ,buildDlgRejectTaskMutedText: function(element, from, to, total) {
@@ -1260,7 +1276,14 @@ Task.View = Task.View || {
                         Task.Controller.viewAddedNote(noteToSave);
                     }
                 }
+                Task.View.Detail.hideAllWorkflowButtons();
+                Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             });
+        }
+        ,onSaveAssignee : function(value) {
+            var task = Task.View.getActiveTask();
+            Task.Controller.viewChangedAssignee(ObjNav.View.Navigator.getActiveObjType(), task.taskId, value);
         }
         ,onClickDlgRejectTaskSortableColumn: function(event,ctrl) {
             var sortDirection = Task.View.RejectTask.getDlgRejectTaskSortDirection();
@@ -1341,6 +1364,11 @@ Task.View = Task.View || {
         }
         ,onChangeDlgRejectTaskSelected: function(event,ctrl) {
             Task.View.RejectTask.setDlgRejectTaskSelected($(event.target).val());
+            if (Task.View.RejectTask.getDlgRejectTaskSelected() == null) {
+                Task.View.RejectTask.$btnSubmitRejectTask.addClass('disabled');
+            } else {
+                Task.View.RejectTask.$btnSubmitRejectTask.removeClass('disabled');
+            }
         }
         // end of Reject ------------------------------------------
 
