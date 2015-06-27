@@ -50,4 +50,12 @@ public interface AcmFolderService {
     String getFolderPath(AcmFolder folder) throws AcmObjectNotFoundException;
 
     boolean folderPathExists(String folderPath, AcmContainer container) throws AcmFolderException;
+
+    void copyFolderStructure(Long folderId,
+                             AcmContainer containerOfCopy,
+                             AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmFolderException;
+
+    void copyDocumentStructure(Long documentId,
+                               AcmContainer containerOfCopy,
+                               AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 }

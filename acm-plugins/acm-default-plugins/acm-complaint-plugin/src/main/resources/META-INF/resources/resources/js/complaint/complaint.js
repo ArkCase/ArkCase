@@ -40,12 +40,9 @@ var Complaint = Complaint || {
         }
 
         if (Calendar.create) {
-            Calendar.create({name: "complaint"
-                ,getObjectInfo: function() {
-                    return {
-                        objectType: Complaint.Model.DOC_TYPE_COMPLAINT
-                    };
-                }
+            Calendar.create({name: "complaint",
+                objectType: Complaint.Model.DOC_TYPE_COMPLAINT
+                ,displayError: Complaint.View.Calendar.displayError()
             });
         }
 

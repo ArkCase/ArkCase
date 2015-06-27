@@ -4388,7 +4388,7 @@ var _initDashboard = function () {
                 },
                 compile: function (scope) {
                     var model = scope.adfModel;
-                    console.log(model);
+                    $log.debug(model);
                     return {
                         pre: preLink,
                         post: postLink
@@ -4735,8 +4735,8 @@ var _initDashboard = function () {
                 return page === currentRoute || new RegExp(page).test(currentRoute) ? "active" : ""
             }
         }
-    ]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "localStorageService", "model", "widgetsPerRoles", "$rootScope",
-        function ($scope, $http, localStorageService, model, widgetsPerRoles, $rootScope) {
+    ]), angular.module("sample-01", ["adf", "LocalStorageModule"]).controller("sample01Ctrl", ["$scope", "$http", "$log", "localStorageService", "model", "widgetsPerRoles", "$rootScope",
+        function ($scope, $http, $log, localStorageService, model, widgetsPerRoles, $rootScope) {
 
 
             $scope.widgetFilter = function (widget, type) {
@@ -4748,7 +4748,7 @@ var _initDashboard = function () {
                 });
                 return result;
             };
-            console.log(widgetsPerRoles);
+            $log.debug(widgetsPerRoles);
 
             var modelForChecking = angular.fromJson(model);
             var renderWidget = false;
@@ -5063,13 +5063,15 @@ var _initDashboard = function () {
                     dataT = _.map(rawData, function (row) {
                         row = _.clone(row)
                         //row.due=moment(row.dueDate, "YYYY MM D").toDate()
-                        row.due = moment(row.dueDate).format('MM/DD/YYYY');
+                        row.due = moment(row.dueDate).format($.t("common:date.short"));
                         row.id = parseInt(row.taskId)
                         if (row.attachedToObjectId != null) {
-                            if (row.attachedToObjectType.toLowerCase() == "case_file") {
+                        	if (row.attachedToObjectType && row.attachedToObjectType.toLowerCase() == "case_file") {
                                 row.parentObject = "casefile";
                             } else {
-                                row.parentObject = row.attachedToObjectType.toLowerCase();
+                                if(row.attachedToObjectType){
+                                    row.parentObject = row.attachedToObjectType.toLowerCase();
+                                }
                             }
                             row.parentNumber = row.attachedToObjectName;
                             row.parentID = row.attachedToObjectId;
@@ -5170,7 +5172,7 @@ var _initDashboard = function () {
                     dataC = _.map(rawData, function (row) {
                         row = _.clone(row)
                         //row.due=moment(row.dueDate, "YYYY MM D").toDate()
-                        row.complaintCreated = moment(row.created).format('MM/DD/YYYY');
+                        row.complaintCreated = moment(row.created).format($.t("common:date.short"));
                         row.id = parseInt(row.complaintId);
                         row.complaintUrl = App.getContextPath() + "/plugin/complaint/";
                         return row
@@ -11694,5 +11696,5 @@ var _initDashboard = function () {
 
 $(document).on('i18n-ready', $.proxy(function(){
     _initDashboard.call(this);
-    angular.bootstrap(document, ['sample']);
+    angular.bootstrap(document.querySelector("#dashboard-app-container"), ['sample']);
 }, this));

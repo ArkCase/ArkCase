@@ -1,0 +1,348 @@
+{
+    "notes": {
+        "msg": {"add-new-record": {
+            "defaultValue": "Add Note",
+            "description": "",
+            "value": "Add Note"
+        }},
+        "table": {
+            "field": {
+                "note": {
+                    "defaultValue": "Note",
+                    "description": "",
+                    "value": "Note"
+                },
+                "creator": {
+                    "defaultValue": "Author",
+                    "description": "",
+                    "value": "Author"
+                },
+                "created": {
+                    "defaultValue": "Created",
+                    "description": "",
+                    "value": "Created"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                }
+            },
+            "title": {
+                "defaultValue": "Notes",
+                "description": "",
+                "value": "Notes"
+            }
+        }
+    },
+    "version-history": {"table": {
+        "button": {"make-active": {
+            "defaultValue": "Make Active",
+            "description": "",
+            "value": "Make Active"
+        }},
+        "field": {
+            "date": {
+                "defaultValue": "Date",
+                "description": "",
+                "value": "Date"
+            },
+            "action": {
+                "defaultValue": "Action",
+                "description": "",
+                "value": "Action"
+            },
+            "id": {
+                "defaultValue": "ID",
+                "description": "",
+                "value": "ID"
+            },
+            "version": {
+                "defaultValue": "Version",
+                "description": "",
+                "value": "Version"
+            },
+            "user": {
+                "defaultValue": "User",
+                "description": "",
+                "value": "User"
+            }
+        },
+        "title": {
+            "defaultValue": "Version History",
+            "description": "",
+            "value": "Version History"
+        }
+    },
+        "msg":{
+            "change-active-version-success":{
+                "defaultValue": "Request submitted.Fetching the correct document.",
+                "description": "",
+                "value": "Request submitted.Fetching the correct document."
+            },
+            "change-active-version-fail":{
+                "defaultValue": "Error setting active file version. Please try again.",
+                "description": "",
+                "value": "Error setting active file version. Please try again."
+            }
+        }},
+    "event-history": {"table": {
+        "field": {
+            "date": {
+                "defaultValue": "Date",
+                "description": "",
+                "value": "Date"
+            },
+            "event-name": {
+                "defaultValue": "Event Name",
+                "description": "",
+                "value": "Event Name"
+            },
+            "id": {
+                "defaultValue": "ID",
+                "description": "",
+                "value": "ID"
+            },
+            "user": {
+                "defaultValue": "User",
+                "description": "",
+                "value": "User"
+            }
+        },
+        "title": {
+            "defaultValue": "Event History",
+            "description": "",
+            "value": "Event History"
+        }
+    }},
+    "header": {"labels": {
+        "owner": {
+            "defaultValue": "Owner",
+            "description": "",
+            "value": "Owner"
+        },
+        "create-date": {
+            "defaultValue": "Create Date",
+            "description": "",
+            "value": "Create Date"
+        },
+        "assigned-to": {
+            "defaultValue": "Assigned To",
+            "description": "",
+            "value": "Assigned To"
+        },
+        "state": {
+            "defaultValue": "State",
+            "description": "",
+            "value": "State"
+        },
+        "type": {
+            "defaultValue": "Type",
+            "description": "",
+            "value": "Type"
+        }
+    }},
+    "title": {
+        "defaultValue": "Document Detail",
+        "description": "",
+        "value": "Document Detail"
+    },
+    "tags": {
+        "newtag": {
+            "button": {
+                "cancel": {
+                    "defaultValue": "Cancel",
+                    "description": "",
+                    "value": "Cancel"
+                },
+                "add-tag": {
+                    "defaultValue": "Add Tag",
+                    "description": "",
+                    "value": "Add Tag"
+                }
+            },
+            "name": {
+                "defaultValue": "Name*",
+                "description": "",
+                "value": "Name*"
+            },
+            "description": {
+                "defaultValue": "Description*",
+                "description": "",
+                "value": "Description*"
+            },
+            "text": {
+                "defaultValue": "Text*",
+                "description": "",
+                "value": "Text*"
+            },
+            "title": {
+                "defaultValue": "New Tag",
+                "description": "",
+                "value": "New Tag"
+            }
+        },
+        "table": {
+            "button": {
+                "new": {
+                    "defaultValue": "New",
+                    "description": "",
+                    "value": "New"
+                },
+                "remove": {
+                    "defaultValue": "Remove",
+                    "description": "",
+                    "value": "Remove"
+                }
+            },
+            "field": {
+                "action": {
+                    "defaultValue": "Action",
+                    "description": "",
+                    "value": "Action"
+                },
+                "tag": {
+                    "defaultValue": "Tag",
+                    "description": "",
+                    "value": "Tag"
+                }
+            },
+            "title": {
+                "defaultValue": "Tags",
+                "description": "",
+                "value": "Tags"
+            }
+        }
+    },
+    "participants": {
+        "msg": {"participant-and-type-empty": {
+            "defaultValue": "Please select both participant and participant type.",
+            "description": "",
+            "value": "Please select both participant and participant type."
+        }},
+        "role": {
+            "button": {
+                "cancel": {
+                    "defaultValue": "Cancel",
+                    "description": "",
+                    "value": "Cancel"
+                },
+                "change-role": {
+                    "defaultValue": "Change Role",
+                    "description": "",
+                    "value": "Change Role"
+                },
+                "close": {
+                    "defaultValue": "Close",
+                    "description": "",
+                    "value": "Close"
+                }
+            },
+            "labels": {
+                "select-role": {
+                    "defaultValue": "Select Participant Role",
+                    "description": "",
+                    "value": "Select Participant Role"
+                },
+                "change-role": {
+                    "defaultValue": "Change Participant Role",
+                    "description": "",
+                    "value": "Change Participant Role"
+                },
+                "available-roles": {
+                    "defaultValue": "Available Roles",
+                    "description": "",
+                    "value": "Available Roles"
+                },
+                "instruction-select-role": {
+                    "defaultValue": "Please select a role :",
+                    "description": "",
+                    "value": "Please select a role :"
+                }
+            }
+        },
+        "picker": {
+            "btnTextOk": {
+                "defaultValue": "Select",
+                "description": "",
+                "value": "Select"
+            },
+            "participant-type": {
+                "defaultValue": "Participant Type",
+                "description": "",
+                "value": "Participant Type"
+            },
+            "btnTextGo": {
+                "defaultValue": "Go!",
+                "description": "",
+                "value": "Go!"
+            },
+            "btnTextCancel": {
+                "defaultValue": "Cancel",
+                "description": "",
+                "value": "Cancel"
+            },
+            "name": {
+                "defaultValue": "New Participant",
+                "description": "",
+                "value": "New Participant"
+            },
+            "select-participant-type": {
+                "defaultValue": "Select Participant Type",
+                "description": "",
+                "value": "Select Participant Type"
+            },
+            "title": {
+                "defaultValue": "Add New Participant",
+                "description": "",
+                "value": "Add New Participant"
+            },
+            "prompt": {
+                "defaultValue": "Enter to search for a participant",
+                "description": "",
+                "value": "Enter to search for a participant"
+            }
+        },
+        "table": {
+            "button": {
+                "new": {
+                    "defaultValue": "New",
+                    "description": "",
+                    "value": "New"
+                },
+                "change-role": {
+                    "defaultValue": "Change Role",
+                    "description": "",
+                    "value": "Change Role"
+                },
+                "remove": {
+                    "defaultValue": "Remove",
+                    "description": "",
+                    "value": "Remove"
+                }
+            },
+            "field": {
+                "name": {
+                    "defaultValue": "Name",
+                    "description": "",
+                    "value": "Name"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "type": {
+                    "defaultValue": "Type",
+                    "description": "",
+                    "value": "Type"
+                }
+            },
+            "title": {
+                "defaultValue": "Participants",
+                "description": "",
+                "value": "Participants"
+            }
+        }
+    }
+}

@@ -102,7 +102,7 @@
                     <div class="input-group">
                         <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]task:header.search.search" placeholder="Search">
                             <span class="input-group-btn">
-                              <button class="btn btn-sm btn-default" type="button" data-i18n="task:header.search.btn-go">Go!</button>
+                              <button class="btn btn-sm btn-default" id="btnSearchQuery" type="button" data-i18n="task:header.search.btn-go">Go!</button>
                             </span></div>
                 </div>
                 <div class="row m-b">
@@ -737,7 +737,7 @@
 		<div class="modal-content">
   			<div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;<span class="sr-only" data-i18n="task:reject-dialog.button.close">Close</span></button>
-                <h4 class="modal-title" id="rejectModalLabel" data-i18n="task:">Reject Task</h4>
+                <h4 class="modal-title" id="rejectModalLabel" data-i18n="task:reject-dialog.title">Reject Task</h4>
             </div>
   			<div class="modal-body">
   				<p data-i18n="task:reject-dialog.label.sure-to-reject">Are you sure you want to reject this task?</p>
@@ -760,7 +760,7 @@
 						</table>
 					</div>
 				</section>
-				<p data-i18n="task:">Or select some other people from below:</p>
+				<p data-i18n="task:select-people">Or select some other people from below:</p>
 				<section class="panel panel-default">
 					<div class="row wrapper">
 						<div class="col-sm-12">

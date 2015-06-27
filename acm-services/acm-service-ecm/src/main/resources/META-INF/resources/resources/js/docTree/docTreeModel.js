@@ -47,7 +47,7 @@ DocTree.Model = DocTree.Model || {
     }
 
     ,onViewSentEmail: function(emailData){
-        DocTree.Service.sendEmail(emailData);
+        DocTree.Model.sendEmail(emailData);
     }
 
     ,NODE_TYPE_PREV: "prev"
@@ -169,8 +169,7 @@ DocTree.Model = DocTree.Model || {
         var objType = DocTree.Model.getObjType();
         var objId = DocTree.Model.getObjId();
         var setting = DocTree.Model.Config.getSetting();
-        var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
-        //var url = DocTree.Service.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
+        var url = DocTree.Model.API_RETRIEVE_FOLDER_LIST_ + objType + "/" + objId;
         if (0 < folderId) {
             url += "/" + folderId;
         }
@@ -230,7 +229,7 @@ DocTree.Model = DocTree.Model || {
     }
     ,uploadFiles: function(formData, cacheKey) {
         return Acm.Service.call({type: 'POST'
-            ,url: DocTree.Service.API_UPLOAD_FILE
+            ,url: DocTree.Model.API_UPLOAD_FILE
             ,data: formData
             ,processData: false
             ,contentType: false
@@ -588,6 +587,29 @@ DocTree.Model = DocTree.Model || {
             }
         });
     }
+    ,sendEmail: function(emailNotifications) {
+        var url = this.API_SEND_EMAIL_;
+        var failed = "";
+        return Acm.Service.call({type: "POST"
+            ,url: url
+            ,data: JSON.stringify(emailNotifications)
+            ,callback: function(response) {
+                if (DocTree.Model.validateSentEmails(response)) {
+                    for(var i = 0; i < response.length; i++){
+                        if("NOT_SENT" == response[i].state){
+                            failed += response[i].userEmail + ";";
+                        }
+                    }
+                    if(Acm.isEmpty(failed)){
+                        return response;
+                    }
+                }
+            }
+            ,invalid: function(response) {
+                return failed;
+            }
+        })
+    }
 
     ,validateFolderList: function(data) {
         if (Acm.isEmpty(data)) {
@@ -765,6 +787,20 @@ DocTree.Model = DocTree.Model || {
         }
         if (Acm.isEmpty(data.activeVersionTag)) {
             return false;
+        }
+        return true;
+    }
+    ,validateSentEmails: function(data){
+        if (Acm.isEmpty(data)) {
+            return false;
+        }
+        if (Acm.isNotArray(data)) {
+            return false;
+        }
+        for (var i = 0; i < data.length; i++) {
+            if (!this.validateSentEmail(data[i])) {
+                return false;
+            }
         }
         return true;
     }
