@@ -32,6 +32,7 @@ public class GetDashboardConfigAPIController {
 
     private UserDao userDao;
     private AcmPlugin dashboardPlugin;
+    private AcmPlugin eventTypePlugin;
     private DashboardDao dashboardDao;
     private WidgetDao widgetDao;
     private DashboardEventPublisher eventPublisher;

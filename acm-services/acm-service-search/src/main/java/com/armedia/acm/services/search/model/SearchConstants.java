@@ -78,5 +78,7 @@ public interface SearchConstants
     String SEARCH_QUERY_PROPERTIES_KEY = "search.tree.searchQuery";
     
     String TIME_ZONE_UTC = "UTC";
+
+    String EVENT_TYPE = "eventType.";
     
 }
