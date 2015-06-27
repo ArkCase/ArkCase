@@ -1022,8 +1022,8 @@
     }
 }, "reject-dialog": {
     "title": {
-        "value": "Rejet Task",
-        "defaultValue": "Rejet Task",
+        "value": "Reject Task",
+        "defaultValue": "Reject Task",
         "description": ""
     },
     "label": {
