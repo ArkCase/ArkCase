@@ -48,6 +48,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 	private SpringContextHolder mockSpringContextHolder;
 	private SendExecutor sendExecutor;
 	private PurgeExecutor purgeExecutor;
+	private NotificationFormatter mockNotificationFormatter;
 	
 	@Before
 	public void setUp() throws Exception 
@@ -67,6 +68,8 @@ public class NotificationServiceTest extends EasyMockSupport {
 		
 		purgeExecutor = new PurgeExecutor();
 		purgeExecutor.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
+
+		mockNotificationFormatter = createMock(NotificationFormatter.class);
 		
 		notificationService.setNotificationDao(mockNotificationDao);
 		notificationService.setPropertyFileManager(mockPropertyFileManager);
@@ -76,6 +79,8 @@ public class NotificationServiceTest extends EasyMockSupport {
 		notificationService.setBatchRun(true);
 		notificationService.setBatchSize(10);
 		notificationService.setPurgeDays(30);
+		notificationService.setNotificationFormatter(mockNotificationFormatter);
+		notificationService.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
 	}
 
 	@Test
@@ -187,7 +192,9 @@ public class NotificationServiceTest extends EasyMockSupport {
 		mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
 		expectLastCall().anyTimes();
 		expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), eq("query"), eq(QueryType.CREATE))).andReturn(new ArrayList<Notification>()).anyTimes();
-		
+		expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
+		expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
+
 		replayAll();
 		
 		notificationService.run();
@@ -286,6 +293,9 @@ public class NotificationServiceTest extends EasyMockSupport {
 		expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.user"), capture(stringCapture))).andReturn("user").anyTimes();
 		expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.password"), capture(stringCapture))).andReturn("password").anyTimes();
 		expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture))).andReturn("from").anyTimes();
+
+		expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
+		expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
 		try 
 		{
 			expect(mockMuleClient.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
@@ -381,6 +391,8 @@ public class NotificationServiceTest extends EasyMockSupport {
 		mockNotificationEventPublisher.publishNotificationEvent(capture(capturedEvent));
 		expectLastCall().anyTimes();
 		expect(mockNotificationDao.executeQuery(capture(propertiesCapture), eq(10), eq(10), eq("query"), eq(QueryType.SELECT))).andReturn(new ArrayList<Notification>()).anyTimes();
+
+		expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
 		
 		replayAll();
 		
