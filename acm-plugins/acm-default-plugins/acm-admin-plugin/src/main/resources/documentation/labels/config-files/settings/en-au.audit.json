@@ -60,7 +60,7 @@
 }, "object-id": {
     "label": {
         "value": "Brief # ...",
-        "defaultValue": "Brief #...",
+        "defaultValue": "Brief # ...",
         "description": ""
     },
     "desc": {
