@@ -760,7 +760,7 @@
 						</table>
 					</div>
 				</section>
-				<p data-i18n="task:">Or select some other people from below:</p>
+				<p data-i18n="task:select-people">Or select some other people from below:</p>
 				<section class="panel panel-default">
 					<div class="row wrapper">
 						<div class="col-sm-12">
