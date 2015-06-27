@@ -67,7 +67,7 @@
         },
         "electronic-signatures": {
             "value": "dSignatures",
-            "defaultValue": "eSignatures",
+            "defaultValue": "dSignatures",
             "description": ""
         }
     }
