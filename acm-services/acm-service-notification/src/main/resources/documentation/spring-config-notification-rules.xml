@@ -5,6 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
+	<import resource="file:${user.home}/.acm/app-config.xml"/>
+
 	<!-- Rules definitions -->
     <bean id="assignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
@@ -182,6 +184,10 @@
     </task:scheduled-tasks>
     
 	<!-- Service Definition -->
+	<bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
+		<property name="notificationProperties" ref="notificationProperties"/>
+		<property name="acmAppConfiguration" ref="acmApplication"/>
+	</bean>
     <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
     	<property name="batchRun" ref="notificationUserBatchRun" />
     	<property name="batchSize" ref="notificationUserBatchSize" />
@@ -193,7 +199,9 @@
         <property name="notificationDao" ref="notificationDao" />
         <property name="muleClient" ref="muleClient" />
 		<property name="notificationEventPublisher" ref="notificationEventPublisher" />
-		<property name="springContextHolder" ref="acmContextHolder"/> 
+		<property name="springContextHolder" ref="acmContextHolder"/>
+		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+		<property name="notificationFormatter" ref="notificationFormatter"/>
     </bean>
 
 </beans>
