@@ -18,7 +18,7 @@
     </bean>
 
     <!--Audit Plugin-->
-    <bean id="auditModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <bean id="acmAuditModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
         <property name="privilegeName" value="acm-audit-module"/>
         <property name="applicationRolesWithPrivilege">
             <list>

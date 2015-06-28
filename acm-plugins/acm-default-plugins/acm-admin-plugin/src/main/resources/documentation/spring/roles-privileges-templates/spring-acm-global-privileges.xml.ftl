@@ -18,12 +18,12 @@
 </bean>
 
 <!--Audit Plugin-->
-<bean id="auditModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+<bean id="acmAuditModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-audit-module"/>
     <property name="applicationRolesWithPrivilege">
         <list>
-        <#if auditModulePrivilege?? >
-            <#list auditModulePrivilege as role>
+        <#if acmAuditModulePrivilege?? >
+            <#list acmAuditModulePrivilege as role>
                 <value>${role}</value>
             </#list>
         </#if>
