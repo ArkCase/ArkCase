@@ -184,6 +184,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants{
                 rolesPrivileges.put(role, String.join(",", privileges));
             }
             saveRolesPrivileges(rolesPrivileges);
+            updateRolesPrivilegesConfig();
         } catch (Exception e){
             if (log.isErrorEnabled()) {
                 log.error("Can't add roles to privileges", e);
@@ -219,6 +220,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants{
                 rolesPrivileges.put(role, String.join(",", privileges));
             }
             saveRolesPrivileges(rolesPrivileges);
+            updateRolesPrivilegesConfig();
         } catch (Exception e){
             if (log.isErrorEnabled()) {
                 log.error("Can't remove privileges from roles", e);
