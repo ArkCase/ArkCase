@@ -7,6 +7,7 @@
         <property name="pluginName" value="Subscription Plugin"/>
         <property name="privileges">
             <list>
+                <ref bean="acmSubscriptionModulePrivilege"/>
                 <ref bean="subscribePrivilege"/>
             </list>
         </property>

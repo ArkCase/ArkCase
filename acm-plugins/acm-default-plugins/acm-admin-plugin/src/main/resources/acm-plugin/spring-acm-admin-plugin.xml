@@ -8,6 +8,7 @@
         <property name="privileges">
             <list>
                 <ref bean="adminPrivilege"/>
+                <ref bean="acmAdminModulePrivilege"/>
                 <ref bean="acmGlobalAllowPrivilege"/>
             </list>
         </property>
