@@ -5,7 +5,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 
 public class EcmFileMovedEvent extends EcmFilePersistenceEvent{
 
-    private static final String EVENT_TYPE = "com.armedia.acm.file.moved";
+    private static final String EVENT_TYPE = "com.armedia.acm.ecm.file.moved";
 
     public EcmFileMovedEvent(EcmFile source, String userId, String ipAddress) {
         super(source,userId,ipAddress);
