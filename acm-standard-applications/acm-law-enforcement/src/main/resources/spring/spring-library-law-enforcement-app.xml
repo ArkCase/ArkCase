@@ -48,6 +48,9 @@
 								<ref bean="acm-roles-properties"/>
 								<ref bean="applicationRoleToUserGroupProperties"/>
 								<ref bean="plainFormProperties"/>
+								<ref bean="reportPluginProperties"/>
+								<ref bean="reportToGroupsMapProperties"/>
+								<ref bean="reportServerConfigurationProperties"/>
 							</list>
 						</property>
 					</bean>
