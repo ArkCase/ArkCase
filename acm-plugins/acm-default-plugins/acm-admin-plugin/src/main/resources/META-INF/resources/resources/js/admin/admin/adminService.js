@@ -1099,6 +1099,7 @@ Admin.Service = {
         ,API_RETRIEVE_GROUPS: 			  "/api/latest/users/groups/get"
         ,API_RETRIEVE_REPORT_TO_GROUPS_MAP:  "/api/latest/plugin/report/reporttogroupsmap"
         ,API_SAVE_REPORT_TO_GROUPS_MAP:      "/api/latest/plugin/report/reporttogroupsmap"
+        ,API_SAVE_REPORTS:      "/api/latest/plugin/report/save"
 
         ,retrieveReports : function() {
             var url = App.getContextPath() + Admin.Service.ReportsConfiguration.API_RETRIEVE_REPORTS;
@@ -1109,9 +1110,9 @@ Admin.Service = {
                         Admin.Controller.modelReportConfigError(errorMsg);
                     } else {
                         if (Admin.Model.ReportsConfiguration.validateReports(response)) {
-                            var reports = [];
+                            var reports = {};
                             for(var i = 0; i < response.length; i++){
-                                reports.push(response[i].title);
+                            	reports[response[i].propertyName] = response[i];
                             }
                             Admin.Model.ReportsConfiguration.cacheReports.put("reports", reports);
                             Admin.Controller.modelReportConfigRetrievedReports(reports);
@@ -1175,6 +1176,23 @@ Admin.Service = {
                 }
                 ,url
                 ,JSON.stringify(reportToGroupsMap)
+            )
+        }
+        
+        ,saveReports : function(reports){
+            var url = App.getContextPath() + Admin.Service.ReportsConfiguration.API_SAVE_REPORTS;
+            Acm.Service.asyncPost(
+                function(response) {
+                    if (false == response) {
+                        var errorMsg = "Failed to save reports";
+                        Admin.Controller.modelReportConfigError(errorMsg);
+                    }
+                    else if(true == response){
+                        Admin.Controller.modelReportConfigSavedReports(response);
+                    }
+                }
+                ,url
+                ,JSON.stringify(reports)
             )
         }
     }
