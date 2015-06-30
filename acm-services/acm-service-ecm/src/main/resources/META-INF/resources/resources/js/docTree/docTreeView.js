@@ -667,9 +667,7 @@ DocTree.View = DocTree.View || {
                     ;
                 } else if (DocTree.View.isFileNode(node)) {
                     $tdList.eq(3).text(node.data.type);
-                    //$tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created));
-                    $tdList.eq(4).text(Acm.getDateFromDatetime2(node.data.created,$.t("common:date.short")));
-                    //$tdList.eq(5).text(Acm.__FixMe__getUserFullName(node.data.creator));
+                    $tdList.eq(4).text(Acm.getDateFromDatetime(node.data.created,$.t("common:date.short")));
                     $tdList.eq(5).text(App.Model.Users.getUserFullName(Acm.goodValue(node.data.creator)));
 
 

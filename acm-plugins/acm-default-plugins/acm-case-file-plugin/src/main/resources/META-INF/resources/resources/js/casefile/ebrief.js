@@ -160,7 +160,7 @@ CaseFile.prepare = function() {
                 //this.setTextLabCaseNumber(Acm.goodValue(c.caseNumber));
                 this.setTextLnkCaseTitle(Acm.goodValue(c.title));
                 this.setTextLnkCourt(Acm.goodValue(c.courtroomName));
-                this.setTextLnkHearingDate(Acm.getDateFromDatetime2(c.nextCourtDate, $.t("common:date.short")));
+                this.setTextLnkHearingDate(Acm.getDateFromDatetime(c.nextCourtDate, $.t("common:date.short")));
                 this.setTextLnkOrganisation(Acm.goodValue(c.responsibleOrganization));
 
                 var assignee = CaseFile.Model.Detail.getAssignee(c);

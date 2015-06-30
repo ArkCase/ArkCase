@@ -377,8 +377,7 @@ Profile.Service = {
                                 subscription.parentType = Acm.goodValue(response[i].subscriptionObjectType);
                                 subscription.parentTitle = Acm.goodValue(response[i].objectTitle);
                                 subscription.parentName = Acm.goodValue(response[i].objectName);
-                                //subscription.created = Acm.getDateFromDatetime(response[i].created);
-                                subscription.created =  (Acm.getDateFromDatetime2(response[i].created,$.t("common:date.short")));
+                                subscription.created =  (Acm.getDateFromDatetime(response[i].created,$.t("common:date.short")));
                                 subscriptions.push(subscription);
                             }
                         }
