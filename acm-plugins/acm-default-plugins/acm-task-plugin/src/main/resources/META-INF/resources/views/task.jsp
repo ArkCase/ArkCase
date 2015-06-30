@@ -100,6 +100,7 @@
                 </header>
                 <div class="wrapper">
                     <div class="input-group">
+                    <label for="searchQuery" style="display:none;'">Search Tasks</label>
                         <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]task:header.search.search" placeholder="Search">
                             <span class="input-group-btn">
                               <button class="btn btn-sm btn-default" type="button" data-i18n="task:header.search.btn-go">Go!</button>
@@ -131,7 +132,7 @@
                                     <div class=" clearfix">
                                             <div class="row">
                                                 <div class="col-xs-6 b-r">
-                                                    <h4><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-parent-title" data-title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></h4>
+                                                    <h4><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-parent-title" data-title="Enter Parent Title" title="Enter Parent Title"></a><a href="#" id="parentObjStatus" ></a></h4>
                                                 </div>
                                                 <div class="col-xs-6 text-right">
                                                     <h4><a href="#" id="parentObjNumber"></a></h4>
@@ -139,25 +140,25 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-i18n="[data-title]task:header.label.enter-subject-type" data-title="Enter Subject Type"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-i18n="[data-title]task:header.label.enter-subject-type" data-title="Enter Subject Type" title="Enter Subject Type"></a></div>
                                                     <small class="text-muted" data-i18n="task:header.label.subject-type">Subject Type</small>
                                                 </div>
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-incident-date" data-title="Enter Incident Date"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-incident-date" data-title="Enter Incident Date" title="Enter Incident Date"></a></div>
                                                     <small class="text-muted" data-i18n="task:header.label.incident-date">Incident Date</small>
                                                 </div>
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-priority" data-title="Enter Priority"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-priority" data-title="Enter Priority" title="Enter Priority"></a></div>
                                                     <small class="text-muted" data-i18n="task:header.label.priority">Priority</small>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-xs-4 b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-i18n="[data-title]task:header.label.enter-assignee" data-title="Enter Assignee"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjAssigned" data-type="select" data-pk="1"  data-i18n="[data-title]task:header.label.enter-assignee" data-title="Enter Assignee" title="Enter Assignee"></a></div>
                                                     <small class="text-muted" data-i18n="task:header.label.assigned-to">Assigned To</small>
                                                 </div>
                                                 <div class="col-xs-4  b-r">
-                                                    <div class="h4 font-bold"><a href="#" id="parentObjOwningGroup" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-owning-group" data-title="Enter Owning Group"></a></div>
+                                                    <div class="h4 font-bold"><a href="#" id="parentObjOwningGroup" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-owning-group" data-title="Enter Owning Group" title="Enter Owning Group"></a></div>
                                                     <small class="text-muted" data-i18n="task:header.label.owning-group">Owning Group</small>
                                                 </div>
                                             </div>
@@ -172,18 +173,18 @@
                             <div class="btn-group-task">
                                 <!-- TODO: when data-toggle is modal, the tooltip won't come up
                                 -->
-                                <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i></button>
+                                <button class="btn btn-default btn-sm" id="btnSignature" data-toggle="modal" data-title="Sign" title="Sign" data-target="#signatureModal"><i class="fa fa-certificate"></i> Sign</button>
 
                                 <!-- from the mockup -->
                                 <%--<button class="btn btn-info btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" title="Reject Task">Reject</button>--%>
-                                <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-i18n="[title]task:header.button.reject-task;task:header.button.reject" title="Reject Task">Reject</button>
-                                <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-i18n="[title]task:header.button.delete-task;task:header.button.delete" title="Delete Task">Delete</button>
-                                <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-i18n="[title]task:header.button.complete-task;task:header.button.complete" title="Complete Task">Complete</button>
+                                <button class="btn btn-default btn-sm" id="btnReject" data-toggle="modal" data-target="#reject" data-i18n="[title]task:header.button.reject-task;task:header.button.reject" title="Reject Task"><i class="fa fa-reply"></i> Reject</button>
+                                <button class="btn btn-default btn-sm" id="btnDelete" data-toggle="modal" data-i18n="[title]task:header.button.delete-task;task:header.button.delete" title="Delete Task"><i class="fa fa-times"></i> Delete</button>
+                                <button class="btn btn-default btn-sm" id="btnComplete" data-toggle="modal" data-i18n="[title]task:header.button.complete-task;task:header.button.complete" title="Complete Task"><i class="fa fa-check"></i> Complete</button>
 
 
                                 <%--<button class="btn btn-default btn-sm businessProcess" id="btnReassign" data-title="Reassign Task"><i class="fa fa-share"></i> Reassign</button>
                                 <button class="btn btn-default btn-sm businessProcess" id="btnUnassign" data-title="Unassign Task"><i class="fa fa-circle-o"></i> Unassign</button>--%>
-                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]task:header.button.subscribe"><i class="fa fa-bullhorn"></i>
+                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]task:header.button.subscribe" title="Subscribe"><i class="fa fa-bullhorn"></i>
                                 </button>
                             </div>
 
@@ -191,7 +192,7 @@
                             <%--
                                             <h4 class="m-n"> <a href="#" id="caseTitle" data-type="text" data-title="Enter Case Title"></a></h4>
                             --%>
-                        <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-task-subject" data-title="Enter Task Subject"></a></h4>
+                        <h4 class="m-n"> <a href="#" id="taskSubject" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-task-subject" data-title="Enter Task Subject" title="Enter Task Subject"></a></h4>
                         <%--<small class="text-muted"><a href="#" id="parentNumber" >2014-03-12321</a></small></div>--%>
 
                     <hr/>
@@ -200,22 +201,22 @@
                                 <div class="">
                                     <div class=" clearfix">
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-completion-percent" data-title="Enter % of Completion"></a></div>
+                                            <div class="h4 font-bold"><a href="#" id="percentageCompleted" data-type="text" data-pk="1" data-i18n="[data-title]task:header.label.enter-completion-percent" data-title="Enter % of Completion" title="Enter % of Completion"></a></div>
                                             <small class="text-muted" data-i18n="task:header.label.completion-percent">% of Completion</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-owner" data-title="Enter Owner"></a></div>
+                                            <div class="h4 font-bold"><a href="#" id="taskOwner" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-owner" data-title="Enter Owner" title="Enter Owner"></a></div>
                                             <small class="text-muted" data-i18n="task:header.label.assignee">Assignee</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-priority" data-title="Enter Priority"></a></div>
+                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]task:header.label.enter-priority" data-title="Enter Priority" title="Enter Priority"></a></div>
                                             <small class="text-muted" data-i18n="task:header.label.priority">Priority</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-start-date" data-title="Enter Start Date"></a></div>
+                                            <div class="h4 font-bold"><a href="#" id="startDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-start-date" data-title="Enter Start Date" title="Enter Start Date"></a></div>
                                             <small class="text-muted" data-i18n="task:header.label.start-date">Start Date</small></div>
                                         <div class="col-xs-2 b-r">
-                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-due-date" data-title="Enter Due Date"></a></div>
+                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]task:header.label.enter-due-date" data-title="Enter Due Date" title="Enter Due Date"></a></div>
                                             <small class="text-muted" data-i18n="task:header.label.due-date">Due Date</small></div>
                                         <div class="col-xs-2">
-                                            <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-i18n="[data-title]task:header.label.enter-task-state" data-title="Enter Task State"></a></div>
+                                            <div class="h4 font-bold"><a href="#" id="status" data-type="text" data-i18n="[data-title]task:header.label.enter-task-state" data-title="Enter Task State" title="Enter Task State"></a></div>
                                             <small class="text-muted" data-i18n="task:header.label.state">State</small></div>
                                     </div>
                                 </div>
@@ -240,8 +241,8 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li>
                                             <div class="btn-group padder-v2">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:task-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:task-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:task-details.button.edit" data-title="Edit" title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:task-details.button.save" data-title="Save" title="Save"><i class="fa fa-save"></i></button>
                                                 <ul class="dropdown-menu pull-right">
                                                     <li><a href="#" data-i18n="task:task-details.label.other-menu-items">Other menu items</a></li>
                                                 </ul>
@@ -264,8 +265,8 @@
                                     <ul class="nav nav-pills pull-right">
                                         <li>
                                             <div class="btn-group padder-v2">
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.edit" data-title="Edit" title="Edit"><i class="fa fa-pencil"></i></button>
+                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]task:rework-details.button.save" data-title="Save" title="Save"><i class="fa fa-save"></i></button>
                                                 <ul class="dropdown-menu pull-right">
                                                     <li><a href="#" data-i18n="task:rework-details.label.other-menu-items">Other menu items</a></li>
                                                 </ul>
@@ -380,27 +381,27 @@
                                 <table id="treeDoc" class="table table-striped th-sortable table-hover">
                                     <thead>
                                     <tr>
-                                        <th width2="6%"><span class='fancytree-checkbox'></span></th>
-                                        <th width2="4%" data-i18n="task:attachments.table.field.id" >ID</th>
-                                        <th width="35%" data-i18n="task:attachments.table.field.title">Title</th>
-                                        <th width="12%" data-i18n="task:attachments.table.field.type">Type</th>
-                                        <th width="10%" data-i18n="task:attachments.table.field.created">Created</th>
-                                        <th width="16%" data-i18n="task:attachments.table.field.author">Author</th>
-                                        <th width="6%" data-i18n="task:attachments.table.field.version">Version</th>
-                                        <th width="8%" data-i18n="task:attachments.table.field.status">Status</th>
+                                        <th id="docCheckboxTasks" width2="6%"><span class='fancytree-checkbox'></span></th>
+                                        <th id="docIDTasks" width2="4%" data-i18n="task:attachments.table.field.id" >ID</th>
+                                        <th id="docTitleTasks" width="35%" data-i18n="task:attachments.table.field.title">Title</th>
+                                        <th id="docTypeTasks" width="12%" data-i18n="task:attachments.table.field.type">Type</th>
+                                        <th id="docCreatedTasks" width="10%" data-i18n="task:attachments.table.field.created">Created</th>
+                                        <th id="docAuthorTasks" width="16%" data-i18n="task:attachments.table.field.author">Author</th>
+                                        <th id="docVersionTakss" width="6%" data-i18n="task:attachments.table.field.version">Version</th>
+                                        <th id="docStatusTasks" width="8%" data-i18n="task:attachments.table.field.status">Status</th>
                                             <%--<th width2="6%" colspan="2"></th>--%>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td headers="docCheckboxTasks"></td>
+                                        <td headers="docIDTasks"></td>
+                                        <td headers="docTitleTasks"></td>
+                                        <td headers="docTypeTasks"></td>
+                                        <td headers="docCreatedTasks"></td>
+                                        <td headers="docAuthorTasks"></td>
+                                        <td headers="docVersionTakss"></td>
+                                        <td headers="docStatusTasks"></td>
                                             <%--<td></td>--%>
                                     </tr>
                                     </tbody>

@@ -75,6 +75,7 @@
 
                                 <div class="wrapper">
                                     <div class="input-group">
+                                    <label for="searchQuery" style="display:none;'">Search Timesheets</label>
                                         <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]timesheet:label.search" placeholder="Search">
                                         <span class="input-group-btn">
                                             <button class="btn btn-sm btn-default" type="button" data-i18n="timesheet:button.go">Go!</button>
@@ -101,7 +102,7 @@
                                         <div class="col-xs-12">
                                             <div class="">
                                                 <div class=" clearfix">
-                                                    <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-i18n="[data-title]timesheet:label.timesheet-name" data-title="Timesheet Name"></a> </div>
+                                                    <div class="h4 font-bold"><a href="#" id="timesheetName" data-type="text" data-pk="1" data-i18n="[data-title]timesheet:label.timesheet-name" data-title="Timesheet Name" title="Timesheet Name"></a> </div>
                                                     <small class="text-muted"><a href="#" id="timesheetModifiedDate" ></a></small></div>
                                                 </div>
                                             </div>
@@ -121,8 +122,8 @@
                                             <div class="col-md-12">
                                                 <div class="pull-right inline">
                                                     <div class="btn-group">
-                                                        <button class="btn btn-default btn-sm" id = "btnNewTimesheetForm" data-i18n="timesheet:button.new-timesheet"> New Timesheet </button>
-                                                        <button class="btn btn-default btn-sm" id = "btnEditTimesheetForm" data-i18n="timesheet:button.edit-timesheet"> Edit Timesheet </button>
+                                                        <button class="btn btn-default btn-sm" id="btnNewTimesheetForm" data-i18n="timesheet:button.new-timesheet"><i class="fa fa-pencil"></i> New Timesheet </button>
+                                                        <button class="btn btn-default btn-sm" id="btnEditTimesheetForm" data-i18n="timesheet:button.edit-timesheet"><i class="fa fa-save"></i> Edit Timesheet </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -139,14 +140,14 @@
                                                         <ul class="nav nav-pills pull-right">
                                                             <li>
                                                                 <div class="btn-group padder-v2">
-                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]timesheet:label.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]timesheet:label.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]timesheet:label.edit" data-title="Edit" title="Edit"><i class="fa fa-file"></i></button>
+                                                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]timesheet:label.save" data-title="Save" title="Save"><i class="fa fa-pencil-square-o"></i></button>
                                                                     <ul class="dropdown-menu pull-right">
                                                                         <li><a href="#" data-i18n="timesheet:label.other-menu-items">Other menu items</a></li>
                                                                     </ul>
                                                                 </div>
                                                             </li>
-                                                            <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
+                                                            <li> <a href="#" class="panel-toggle text-muted" title="Edit Details"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                                         </ul>
                                                         </span> <a href="#" class="font-bold" data-i18n="timesheet:label.details">Details</a> </div>
                                                     <div class="panel-body">
