@@ -1589,9 +1589,16 @@ Admin.View = Admin.View || {
         ,onModelReportConfigRetrievedReports: function() {
             // Get reports from cached data
             var reports = Admin.Model.ReportsConfiguration.cacheReports.get("reports");
+            
+            var reportsAsOptions = {};
+            if (reports) {
+            	for (var key in reports) {
+            		reportsAsOptions[key] = reports[key].title;
+            	}
+            }
 
             // Show reports on the view
-            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectReport, reports);
+            Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectReport, reportsAsOptions);
         }
 
         ,onModelReportConfigError: function(errorMsg) {
@@ -1600,6 +1607,9 @@ Admin.View = Admin.View || {
 
         ,onModelReportConfigSavedReportToGroupsMap:function(success){
             if(true == success){
+            	// Save autherized reports and remove not atherized from properties file
+            	Admin.View.ReportsConfiguration.updateReports();
+            	
                 // Refresh not authorized and authorized groups on the screen
                 Admin.View.ReportsConfiguration.refresh();
             }
@@ -1642,6 +1652,29 @@ Admin.View = Admin.View || {
             // Show authorized and not authorized groups on the screen
             Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectAuthorized, authGroups);
             Acm.Object.createOptions(Admin.View.ReportsConfiguration.$selectNotAuthorized, notAuthGroups);
+        }
+        
+        ,updateReports: function() {
+        	var reports = Admin.Model.ReportsConfiguration.cacheReports.get("reports");
+        	var reportsToGroup = Admin.Model.ReportsConfiguration.cacheReportToGroupsMap.get("reportToGroupsMap");
+        	var toSave = [];
+        	
+        	if (reports && reportsToGroup) {
+        		for (var key1 in reports) {
+        			for (var key2 in reportsToGroup) {
+        				if (key1 === key2) {
+        					var injected = reportsToGroup[key2].length === 0 ? false : true;
+        					reports[key1].injected = injected;
+        					toSave.push(reports[key1]);
+        					break;
+        				}
+        			}
+        		}
+        		
+        		if (toSave && toSave.length > 0) {
+        			Admin.Service.ReportsConfiguration.saveReports(toSave);
+        		}
+        	}
         }
     }
 
