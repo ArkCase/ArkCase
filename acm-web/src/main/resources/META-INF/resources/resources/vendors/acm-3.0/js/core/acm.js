@@ -324,14 +324,11 @@ var Acm = Acm || {
     }
     ,getDateFromDatetime: function(dt, format) {
         var d = "";
+        if (Acm.isEmpty(format)) {           //remove this if block after
+            format = $.t("common:date.short");
+        }
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format(format);
-
-            if (Acm.isEmpty(format)) {
-                //Acm.log("Acm.getDateTimeFromDatetime() needs format argument. Default format will be phase out");
-                format = $.t("common:date.short");
-            }
-            d = moment(dt).format();
         }
         return d;
     }
