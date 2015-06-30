@@ -178,6 +178,8 @@ public class ReportServiceImpl implements ReportService{
 	
 	private boolean checkReportAuthorization(Report report, String userId)
 	{
+		boolean authorized = false;
+		
 		Map<String, List<String>> reportsToGroupsMap =  getReportToGroupsMap();
 		
 		if (report != null && reportsToGroupsMap != null && !reportsToGroupsMap.isEmpty())
@@ -188,19 +190,24 @@ public class ReportServiceImpl implements ReportService{
 				List<String> userGroups = getUserGroups(userId);
 				if (reportToGroups != null && userGroups != null)
 				{
-					List<String> founds = reportToGroups.stream()
-														.filter(reportGroup -> userGroups.contains(reportGroup))
-														.collect(Collectors.toList());
-					
-					if (founds != null && !founds.isEmpty())
+					try
 					{
-						return true;
+						Optional<String> optional = reportToGroups.stream()
+															.filter(reportGroup -> userGroups.contains(reportGroup))
+															.findAny();
+						
+						authorized = optional.isPresent();
+					}
+					catch(Exception e)
+					{
+						LOG.warn("Element found is null. Proceed with execution.");
 					}
 				}
 			}
 		}
 		
-		return false;
+		LOG.debug("Report authorization: " + authorized);
+		return authorized;
 	}
 	
 	private List<String> getUserGroups(String userId)

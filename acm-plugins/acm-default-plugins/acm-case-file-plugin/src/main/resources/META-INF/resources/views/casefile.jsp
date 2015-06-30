@@ -334,6 +334,16 @@
 
                                         <section class="panel b-a">
                                             <div class="panel-heading b-b bg-info">
+
+                                                <ul class="nav nav-pills pull-right">
+                                                    <li style="margin-right:5px"></li>
+                                                    <li>
+                                                        <div class="btn-group padder-v2">
+                                                            <button class="btn btn-default btn-sm" id="btnRefreshDocs" data-i18n="doctree:btn-refresh"><i class="fa fa-share"></i>Refresh</button>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+
                                                 <a href="#" class="font-bold"><div class="casefile:documents.title">Documents</div> </a>
                                             </div>
 
