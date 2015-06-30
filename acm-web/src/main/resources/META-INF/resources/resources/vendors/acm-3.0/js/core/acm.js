@@ -20,26 +20,7 @@ var Acm = Acm || {
         if (Acm.Model.onInitialized) {Acm.Model.onInitialized();}
     }
 
-    ,__FixMe__getUserFullName: function(user) {
-        var fullName;
-        if ("albert-acm" == user) {
-            fullName = "Albert Analyst";
-        } else if ("ann-acm" == user || "Ann-acm" == user) {
-            fullName = "Ann Administrator";
-        } else if ("charles-acm" == user) {
-            fullName = "Charles Call Center";
-        } else if ("ian-acm" == user) {
-            fullName = "Ian Investigator";
-        } else if ("samuel-acm" == user) {
-            fullName = "Samuel Supervisor";
-        } else if ("sally-acm" == user) {
-            fullName = "Sally Supervisor";
-        } else {
-            fullName = user;
-        }
-        return fullName;
-    }
-
+    
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
 //            return true;
@@ -286,34 +267,18 @@ var Acm = Acm || {
     }
 
     //Get date part from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime2: function(dt, format) {
-        Acm.log("Acm.getDateFromDatetime() is phasing out.Using Acm.getDateFromDatetime2() for now till the transition is complete");
-        var d = "";
-        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format(format)
-        }
-        return d;
-    }
     ,getDateFromDatetime: function(dt, format) {
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format($.t("common:date.short"))
+            d = moment(dt).format(format)
         }
         return d;
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateTimeFromDatetime2: function(dt, format) {
-        Acm.log("Acm.getDateTimeFromDatetime() is phasing out.Using Acm.getDateTimeFromDatetime2() for now till the transition is complete");
+    ,getDateTimeFromDatetime: function(dt, format) {
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format(format)
-        }
-        return d;
-    }
-    ,getDateTimeFromDatetime: function(dt) {
-        var d = "";
-        if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.full"));
         }
         return d;
     }
