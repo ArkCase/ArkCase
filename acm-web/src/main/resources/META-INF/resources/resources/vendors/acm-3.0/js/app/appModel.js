@@ -460,7 +460,7 @@ App.Model = {
             var v = "";
             var data = this.users.get();
             if (Acm.isNotEmpty(data)) {
-                v = Acm.goodValue(data[k]);
+                v = data[k];
             }
             return v;
         }
@@ -490,7 +490,6 @@ App.Model = {
         }
 
         ,getUserFullName: function(userId){
-            Acm.log("Acm.__FixMe__getUserFullName() is phasing out.Using App.Model.Users.getUserFullName() for now till the transition is complete");
             var fullname = userId;
             var user = App.Model.Users.getUser(userId);
             if(App.Model.Users.validateUser(user)){
