@@ -9,7 +9,7 @@ package com.armedia.acm.plugins.casefile.model;
  */
 public interface CaseFileConstants {
 
-	String OBJECT_TYPE = "CASE_FILE";
+    String OBJECT_TYPE = "CASE_FILE";
 	
 	String ACTIVE_CASE_FORM_KEY = "active.case.form";
 	

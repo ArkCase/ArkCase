@@ -586,6 +586,9 @@ CaseFile.prepare = function() {
                     var z = 1;
                 });
 
+                var caseFileId = CaseFile.View.getActiveCaseFileId();
+                CaseFile.Controller.viewLodgedDocuments(caseFileId, entry.docIds);
+
             });
         }
         ,onClickBtnRejectDocs: function(event, ctrl) {
@@ -631,6 +634,13 @@ CaseFile.prepare = function() {
 //                    var emailNotifications = DocTree.View.Email.makeEmailData(emailAddresses, nodes, reason);
 
                 DocTree.View.Command.trigger("remove");
+
+                var caseFileId = CaseFile.View.getActiveCaseFileId();
+                var docIds = [];
+                for (var i = 0; i < nodes.length; i++) {
+                    docIds.push(nodes[i].data.objectId);
+                }
+                CaseFile.Controller.viewRejectedDocuments(caseFileId, docIds);
             });
         }
         ,getCurrentUserEmailAddress: function(){

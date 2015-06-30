@@ -8,4 +8,6 @@
         <property name="pluginProperties" ref="auditPluginProperties"/>
     </bean>
 
+    <bean id="auditLookupDao" class="com.armedia.acm.plugins.audit.dao.AuditLookupDao"/>
+
 </beans>

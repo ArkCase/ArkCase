@@ -45,6 +45,7 @@ public interface SearchConstants
     String PROPERTY_CMIS_VERSION_SERIES_ID = "cmis_version_series_id_s";
     String PROPERTY_MIME_TYPE = "mime_type_s";
     String PROPERTY_STATUS = "status_s";
+    String PROPERTY_GROUPS_ID_SS = "groups_id_ss";
 
     String USER = "${user}";
     /**
@@ -78,5 +79,7 @@ public interface SearchConstants
     String SEARCH_QUERY_PROPERTIES_KEY = "search.tree.searchQuery";
     
     String TIME_ZONE_UTC = "UTC";
+
+    String EVENT_TYPE = "eventType.";
     
 }

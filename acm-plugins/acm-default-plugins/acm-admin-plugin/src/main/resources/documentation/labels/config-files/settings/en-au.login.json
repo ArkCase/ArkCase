@@ -1,6 +1,6 @@
 {
-    "page-title": {"value": "ACM | ArkCase"
-        ,"defaultValue": "ACM | ArkCase"
+    "page-title": {"value": "eBrief"
+        ,"defaultValue": "eBrief"
         ,"description": ""
     }
     ,"title": {"value": "Login"
@@ -35,8 +35,8 @@
         ,"defaultValue": "Forgot password?"
         ,"description": ""
     }
-    ,"footer": {"value": "ArkCase"
-        ,"defaultValue": "ArkCase"
+    ,"footer": {"value": "eBrief"
+        ,"defaultValue": "eBrief"
         ,"description": ""
     }
     ,"copy-right": {"value": "2014, 2015"

@@ -37,6 +37,7 @@ public class FacetedSearchAPIController {
     private ExecuteSolrQuery executeSolrQuery;
 
     private AcmPlugin pluginSearch;
+    private AcmPlugin pluginEventType;
 
     @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -61,8 +62,8 @@ public class FacetedSearchAPIController {
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                 query, startRow, maxRows, sort, rowQueryParametars);
-
-        return results;
+        String res = replaceEventTypeName(results);
+        return res;
 
     }
 
@@ -351,6 +352,23 @@ public class FacetedSearchAPIController {
     	return subQuery;
     }
 
+
+    private String replaceEventTypeName(String solrResult){
+        Map<String,Object> propertyMap = getPluginEventType().getPluginProperties();
+        for ( Map.Entry<String, Object> e : propertyMap.entrySet() ){
+            String key;
+            if (e.getKey().contains(SearchConstants.EVENT_TYPE)) {
+                key = e.getKey().split(SearchConstants.EVENT_TYPE)[1];
+            } else {
+                continue;
+            }
+            if( solrResult.contains("\"" + key.trim() + "\"") ){
+                solrResult = solrResult.replaceAll("\""+key+"\"", "\""+(String) e.getValue()+"\"");
+            }
+        }
+        return solrResult;
+    }
+
     public AcmPlugin getPluginSearch() {
         return pluginSearch;
     }
@@ -367,5 +385,13 @@ public class FacetedSearchAPIController {
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public AcmPlugin getPluginEventType() {
+        return pluginEventType;
+    }
+
+    public void setPluginEventType(AcmPlugin pluginEventType) {
+        this.pluginEventType = pluginEventType;
     }
 }
