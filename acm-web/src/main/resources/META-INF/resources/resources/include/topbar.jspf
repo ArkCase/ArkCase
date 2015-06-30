@@ -3,7 +3,7 @@
     <c:forEach var="navTab" items="${acm_application.navigatorTabs}">
             <c:if test="${navTab.actionName == 'Dashboard'}">
                 <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav"> <i class="fa fa-bars"></i> </a>
-                <a href="<c:url value='${navTab.url}' />" class="navbar-brand"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/armedia.png" class="m-r-sm"></a></div>
+                <a href="<c:url value='${navTab.url}' />" class="navbar-brand"><img src="<c:url value='/'/>resources/vendors/${acm_theme}/images/armedia.png" alt="Return to Dashboard." class="m-r-sm"></a></div>
             </c:if>
     </c:forEach>
     <ul class="nav navbar-nav hidden-xs">
@@ -36,8 +36,8 @@
           </span>
                 <%--<input type="text" class="form-control input-sm no-border" placeholder="Search complaints, cases..." id="edtSearch" data-provide="typeahead" autocomplete="off" data-source='["arizona","alaska"]'>--%>
                 <%--<input type="text" name="acmQuickSearch" id="acmQuickSearch" class="form-control input-sm no-border typeahead" placeholder="Search complaints, cases..." />--%>
-
-                <input type="text" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" data-i18n="[placeholder]common:top-bar.label.search" placeholder="Search complaints, cases...">
+				<label for="searchboxtop" style="display:none;">Search ArkCase</label>
+                <input type="text" id="searchboxtop" class="form-control input-sm no-border typeahead" autocomplete="off" data-provide="typeahead" data-i18n="[placeholder]common:top-bar.label.search" placeholder="Search complaints, cases...">
                 <input type="hidden" class="span1" title="ctrId" id="ctrId" value="" />
             </div>
         </div>
@@ -45,7 +45,7 @@
     <div class="asn">
         <ul class="nav navbar-nav navbar-right m-n hidden-xs nav-user user">
             <%--<li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up bg-danger count">0</span> </a>--%>
-            <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="i i-chat3"></i> <span class="badge badge-sm up count">0</span> </a>
+            <li class="hidden-xs"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Notification Alerts"> <i class="i i-chat3"></i> <span class="badge badge-sm up count">0</span> </a>
                 <section class="dropdown-menu aside-xl animated flipInY">
                     <section class="panel bg-white">
                         <%--<header class="panel-heading b-light bg-light"> <strong>You have <span class="count">0</span> notifications</strong> </header>--%>
