@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -12,11 +14,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,6 +30,10 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
+import com.armedia.acm.services.search.model.SearchConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.SearchResults;
 
 public class ReportServiceImpl implements ReportService{
 
@@ -32,11 +41,14 @@ public class ReportServiceImpl implements ReportService{
 
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
+    private String reportServerConfigPropertiesFileLocation;
     private Map<String, String> reportToGroupsMapProperties;
     private Map<String, String> reportPluginProperties;
 	private MuleClient muleClient;
 	private PropertyFileManager propertyFileManager;
 	private PentahoReportUrl reportUrl;
+	private ExecuteSolrQuery executeSolrQuery;
+	private SearchResults searchResults;
 	
 	private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
 	private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
@@ -50,9 +62,8 @@ public class ReportServiceImpl implements ReportService{
 	{
 		Reports reports = null;
 
-		String serverFormUser = getReportPluginProperties().get(PENTAHO_SERVER_USER);
-		String serverFormPassword = getReportPluginProperties().get(PENTAHO_SERVER_PASSWORD);
-
+		String serverFormUser = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER, PENTAHO_SERVER_USER_DEFAULT);
+		String serverFormPassword = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD, PENTAHO_SERVER_PASSWORD_DEFAULT);
 
 		String fullReportUrl = getReportUrl().getReportsUrl();
 		String reportListUrl = fullReportUrl.replace("http://", "").replace("https://", "");
@@ -93,9 +104,134 @@ public class ReportServiceImpl implements ReportService{
 	}
 
 	@Override
-	public List<Report> getAcmReports() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Report> getAcmReports() 
+	{
+		List<Report> reports = new ArrayList<Report>();
+		if (getReportPluginProperties() != null)
+		{
+			for (Entry<String, String> entry : getReportPluginProperties().entrySet())
+			{
+				Report report = new Report();
+				report.setPropertyName(entry.getKey());
+				report.setPropertyPath(entry.getValue());
+				report.setTitle(createReportTitleFromKey(entry.getKey()));
+				
+				reports.add(report);
+			}
+		}
+		
+		return reports;
+	}
+	
+	private String createReportTitleFromKey(String key)
+	{
+		String retval = "";
+		
+		if (key != null && !key.isEmpty())
+		{
+			String[] keyArray = key.split("_");
+			if (keyArray != null)
+			{
+				List<String> keyList = Arrays.asList(keyArray);
+				retval = keyList.stream()
+								.map(element -> StringUtils.capitalize(element.toLowerCase()))
+								.collect(Collectors.joining(" "));
+			}
+		}
+		
+		return retval;
+	}
+	
+	@Override
+	public List<Report> getAcmReports(String userId) 
+	{
+		List<Report> userReports = new ArrayList<Report>();
+		if (userId != null && !userId.isEmpty())
+		{
+			List<Report> reports = getAcmReports();
+			
+			if (reports != null)
+			{
+				userReports = reports.stream()
+									 .filter(report -> checkReportAuthorization(report, userId))
+									 .collect(Collectors.toList());
+			}
+		}
+		
+		return userReports;
+	}
+	
+	@Override
+	public Map<String, String> getAcmReportsAsMap(List<Report> reports) 
+	{
+		Map<String, String> retval = new HashMap<String, String>();
+		
+		if (reports != null)
+		{
+			reports.stream().forEach(report -> {
+				retval.put(report.getTitle(), getReportUrl().getReportUrlPath(report.getPropertyName()));
+			});
+		}
+		
+		return retval;
+	}
+	
+	private boolean checkReportAuthorization(Report report, String userId)
+	{
+		Map<String, List<String>> reportsToGroupsMap =  getReportToGroupsMap();
+		
+		if (report != null && reportsToGroupsMap != null && !reportsToGroupsMap.isEmpty())
+		{
+			if (reportsToGroupsMap.containsKey(report.getPropertyName()))
+			{
+				List<String> reportToGroups = reportsToGroupsMap.get(report.getPropertyName());
+				List<String> userGroups = getUserGroups(userId);
+				if (reportToGroups != null && userGroups != null)
+				{
+					List<String> founds = reportToGroups.stream()
+														.filter(reportGroup -> userGroups.contains(reportGroup))
+														.collect(Collectors.toList());
+					
+					if (founds != null && !founds.isEmpty())
+					{
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	private List<String> getUserGroups(String userId)
+	{
+		List<String> retval = new ArrayList<String>();
+		
+		try
+		{
+			String query = "object_id_s:" + userId + " AND object_type_s:USER AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+			
+			Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
+			String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
+
+	        LOG.debug("Response: " + response);
+	        
+	        if (response != null && getSearchResults().getNumFound(response) > 0)
+	        {
+        		JSONArray docs = getSearchResults().getDocuments(response);
+        		if (docs != null && docs.length() > 0)
+        		{
+        			JSONObject doc = docs.getJSONObject(0);
+        			retval = getSearchResults().extractStringList(doc, SearchConstants.PROPERTY_GROUPS_ID_SS);
+        		}
+	        }
+		}
+		catch (Exception e)
+		{
+			LOG.error("Cannot retrieve User informatio from Solr for userId=" + userId, e);
+		}
+		
+		return retval;
 	}
 
     @Override
@@ -152,9 +288,9 @@ public class ReportServiceImpl implements ReportService{
 	
 	private String createPentahoReportUri(String path)
 	{
-		String url = getPropertyFileManager().load(getReportsPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE, PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
-		String user = getPropertyFileManager().load(getReportsPropertiesFileLocation(), PENTAHO_SERVER_USER, PENTAHO_SERVER_USER_DEFAULT);
-		String password = getPropertyFileManager().load(getReportsPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD, PENTAHO_SERVER_PASSWORD_DEFAULT);
+		String url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE, PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
+		String user = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER, PENTAHO_SERVER_USER_DEFAULT);
+		String password = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD, PENTAHO_SERVER_PASSWORD_DEFAULT);
 		
 		if (url != null)
 		{
@@ -260,7 +396,16 @@ public class ReportServiceImpl implements ReportService{
         this.reportToGroupsMapPropertiesFileLocation = reportToGroupsMapPropertiesFileLocation;
     }
 
-    public Map<String, String> getReportToGroupsMapProperties() {
+    public String getReportServerConfigPropertiesFileLocation() {
+		return reportServerConfigPropertiesFileLocation;
+	}
+
+	public void setReportServerConfigPropertiesFileLocation(
+			String reportServerConfigPropertiesFileLocation) {
+		this.reportServerConfigPropertiesFileLocation = reportServerConfigPropertiesFileLocation;
+	}
+
+	public Map<String, String> getReportToGroupsMapProperties() {
         return reportToGroupsMapProperties;
     }
 
@@ -275,4 +420,20 @@ public class ReportServiceImpl implements ReportService{
     public void setReportPluginProperties(Map<String, String> reportPluginProperties) {
         this.reportPluginProperties = reportPluginProperties;
     }
+
+	public ExecuteSolrQuery getExecuteSolrQuery() {
+		return executeSolrQuery;
+	}
+
+	public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery) {
+		this.executeSolrQuery = executeSolrQuery;
+	}
+
+	public SearchResults getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(SearchResults searchResults) {
+		this.searchResults = searchResults;
+	}
 }
