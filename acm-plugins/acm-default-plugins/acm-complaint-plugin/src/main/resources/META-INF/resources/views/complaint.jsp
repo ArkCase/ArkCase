@@ -114,6 +114,7 @@
                             </header>
                             <div class="wrapper">
                                 <div class="input-group">
+                                <label for="searchQuery" style="display:none;'">Search Complaints</label>
                                     <input type="text" class="input-sm form-control" id="searchQuery" placeholder="Search">
                 <span class="input-group-btn">
                 <button class="btn btn-sm btn-default" type="button">Go!</button>
@@ -139,7 +140,7 @@
                                                 <div class="wrapper dk  clearfix">
                                                     <div class="row">
                                                         <div class="col-xs-6  b-r">
-                                                            <h4><a href="#" id="complaintTitle" data-i18n="[data-title]complaint:header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title"></a><a href="#" id="status" ></a></h4>
+                                                            <h4><a href="#" id="complaintTitle" data-i18n="[data-title]complaint:header.labels.enter-complaint-title" data-type="text" data-pk="1" data-title="Enter Complaint Title" title="Enter Complaint Title"></a><a href="#" id="status" ></a></h4>
                                                         </div>
                                                         <div class="col-xs-6  b-r text-right">
                                                             <h4><a href="#" id="complaintNum"></a></h4>
@@ -147,25 +148,25 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint:header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="type" data-i18n="[data-title]complaint:header.labels.enter-incident-category" data-type="select" data-pk="1" data-title="Enter Incident Category" title="Enter Incident Category"></a></div>
                                                             <small class="text-muted" data-i18n="complaint:header.labels.incident-category">Incident Category</small>
                                                         </div>
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint:header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="incident" data-i18n="[data-title]complaint:header.labels.enter-incident-date" data-type="date" data-pk="1" data-title="Enter Incident Date" title="Enter Incident Date"></a></div>
                                                             <small class="text-muted" data-i18n="complaint:header.labels.incident-date">Incident Date</small>
                                                         </div>
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint:header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="priority" data-i18n="[data-title]complaint:header.labels.enter-priority" data-type="select" data-pk="1" data-title="Enter Priority" title="Enter Priority"></a></div>
                                                             <small class="text-muted" data-i18n="complaint:header.labels.priority">Priority</small>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint:header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-i18n="[data-title]complaint:header.labels.enter-assignee" data-type="select" data-pk="1" data-title="Enter Assignee" title="Enter Assignee"></a></div>
                                                             <small class="text-muted" data-i18n="complaint:header.labels.assigned-to">Assigned To</small>
                                                         </div>
                                                         <div class="col-xs-4  b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint:header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="group"  data-i18n="[data-title]complaint:header.labels.enter-owning-group"  data-type="select" data-pk="1" data-title="Enter Owning Group" title="Enter Owning Group"></a></div>
                                                             <small class="text-muted" data-i18n="complaint:header.labels.owning-group">Owning Group</small>
                                                         </div>
                                                     </div>
@@ -192,10 +193,10 @@
                                         <div class="col-md-12">
                                             <div class="pull-right inline">
                                                 <div class="btn-group">
-                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id = "closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.close-complaint" data-toggle="tooltip" id="closeComplaint" data-title="Close Complaint"><i class="fa fa-archive"></i> <span data-i18n="complaint:header.buttons.close-complaint">Close Complaint</span></button>
                                                     <%--<input id="closeComplaintFormUrl" type="hidden" value="${closeComplaintFormUrl}" />--%>
 
-                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe"><i class="fa fa-bullhorn"></i>
+                                                    <button class="btn btn-default btn-sm" data-i18n="[data-title]complaint:header.buttons.subscribe" id="btnSubscribe" data-toggle="tooltip" data-title="Subscribe"><i class="fa fa-bullhorn"></i>
                                                     </button>
                                                 </div>
                                             </div>
@@ -203,7 +204,7 @@
                                             <div class="pull-left inline">
                                                 <div class="btn-group">
                                                     <label class="checkbox-inline">
-                                                        <input type="checkbox" id="restrict"> <span data-i18n="complaint:header.buttons.restrict">Restrict ?</span>
+                                                        <input type="checkbox" id="restrict"> <span data-i18n="complaint:header.buttons.restrict">Mark Restricted</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -220,8 +221,8 @@
                                                     <ul class="nav nav-pills pull-right">
                                                         <li>
                                                             <div class="btn-group padder-v2">
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.edit" data-title="Edit" title="Edit Details"><i class="fa fa-pencil"></i></button>
+                                                                <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]complaint:detail.buttons.save" data-title="Save" title="Save Details"><i class="fa fa-save"></i></button>
                                                                 <ul class="dropdown-menu pull-right">
                                                                     <li><a href="#" data-i18n="complaint:detail.buttons.other">Other menu items</a></li>
                                                                 </ul>
@@ -312,26 +313,26 @@
                                             <thead>
                                             <tr>
                                                 <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
-                                                <th width2="6%"><input type="checkbox"/></th>
-                                                <th width2="4%" data-i18n="complaint:documents-to-retire.tree.field.id">ID</th>
-                                                <th width="35%" data-i18n="complaint:documents-to-retire.tree.field.title">Title</th>
-                                                <th width="12%" data-i18n="complaint:documents-to-retire.tree.field.type">Type</th>
-                                                <th width="10%" data-i18n="complaint:documents-to-retire.tree.field.created">Created</th>
-                                                <th width="16%" data-i18n="complaint:documents-to-retire.tree.field.author">Author</th>
-                                                <th width="6%" data-i18n="complaint:documents-to-retire.tree.field.version">Version</th>
-                                                <th width="8%" data-i18n="complaint:documents-to-retire.tree.field.status">Status</th>
+                                                <th id="selectDoc" width2="6%"><input type="checkbox"/></th>
+                                                <th id="docID" width2="4%" data-i18n="complaint:documents-to-retire.tree.field.id">ID</th>
+                                                <th id="docTitle" width="35%" data-i18n="complaint:documents-to-retire.tree.field.title">Title</th>
+                                                <th id="docType" width="12%" data-i18n="complaint:documents-to-retire.tree.field.type">Type</th>
+                                                <th id="docCreated" width="10%" data-i18n="complaint:documents-to-retire.tree.field.created">Created</th>
+                                                <th id="docAuthor" width="16%" data-i18n="complaint:documents-to-retire.tree.field.author">Author</th>
+                                                <th id="docVersion" width="6%" data-i18n="complaint:documents-to-retire.tree.field.version">Version</th>
+                                                <th id="docStatus" width="8%" data-i18n="complaint:documents-to-retire.tree.field.status">Status</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td headers="selectDoc"></td>
+                                                <td headers="docID"></td>
+                                                <td headers="docTitle"></td>
+                                                <td headers="docType"></td>
+                                                <td headers="docCreated"></td>
+                                                <td headers="docAuthor"></td>
+                                                <td headers="docVersion"></td>
+                                                <td headers="docStatus"></td>
                                             </tr>
                                             </tbody>
                                         </table>
