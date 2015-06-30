@@ -323,13 +323,14 @@ THE SOFTWARE.
                 .addClass('jtable-column-header')
                 .addClass(field.listClass)
                 .css('width', field.width)
+                .attr('id', fieldName)
                 .data('fieldName', fieldName)
                 .append($headerContainerDiv);
 
             this._jqueryuiThemeAddClass($th, 'ui-state-default');
 
             return $th;
-        },
+        }, 
 
         /* Creates an empty header cell that can be used as command column headers.
         *************************************************************************/
@@ -537,6 +538,7 @@ THE SOFTWARE.
         _createCellForRecordField: function (record, fieldName) {
             return $('<td></td>')
                 .addClass(this.options.fields[fieldName].listClass)
+                .attr('headers', this._getDisplayTextForRecordField(record, fieldName))
                 .append((this._getDisplayTextForRecordField(record, fieldName)));
         },
 
@@ -4768,7 +4770,7 @@ THE SOFTWARE.
 
             //Calculate width of each column
             var columnWidhts = {};
-            var availableWidthInPercent = 100.0 - commandColumnHeaders.length;
+            var availableWidthInPercent = 100.0 - commafndColumnHeaders.length;
             headerCells.each(function () {
                 var $cell = $(this);
                 if ($cell.is(':visible')) {
