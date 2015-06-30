@@ -12,7 +12,8 @@ AcmEx.Model = {
     }
 
     ,JTable: {
-        pagingListAction: function(url, postData, jtParams, sortMap, dataMaker, keyGetter) {
+        //pagingListAction: function(url, postData, jtParams, sortMap, dataMaker, keyGetter) {
+        serviceListAction: function(url, postData, jtParams, sortMap, handler) {
             var pagingUrl = AcmEx.Model.JTable.decorateUrl(url, jtParams, sortMap);
             if (Acm.isEmpty(pagingUrl)) {
                 return AcmEx.Object.JTable.getEmptyRecords();
@@ -23,7 +24,7 @@ AcmEx.Model = {
                 ,data: postData
                 ,callback: function(response) {
                     if (!response.hasError) {
-                        return dataMaker(response);
+                        return handler(response);
                     }
                 }
             });
@@ -33,7 +34,7 @@ AcmEx.Model = {
             return (0 < url.indexOf('?'))? "&" : "?";
         }
 
-        ,_hashMapUrlDecorator: function(baseUrl, pageStart, pageSize, sortBy, sortDir) {
+        ,hashMapUrlDecorator: function(baseUrl, pageStart, pageSize, sortBy, sortDir, sortMap) {
             var url = baseUrl;
             if (Acm.isNotEmpty(baseUrl)) {
                 if (Acm.isNotEmpty(pageStart)) {
@@ -42,12 +43,38 @@ AcmEx.Model = {
                 if (Acm.isNotEmpty(pageSize)) {
                     url += this._addNextParam(url) + "n=" + pageSize;
                 }
-                if (Acm.isNotEmpty(sortBy)) {
+                var itemSortBy = Acm.goodValue(sortMap[sortBy]);
+                if (Acm.isNotEmpty(itemSortBy)) {
                     if ("DESC" == Acm.goodValue(sortDir)) {
-                        url += this._addNextParam(url) + "s=" + sortBy  + "%20DESC";
+                        url += this._addNextParam(url) + "s=" + itemSortBy  + "%20DESC";
                     } else {
-                        url += this._addNextParam(url) + "s=" + sortBy  + "%20ASC";
+                        url += this._addNextParam(url) + "s=" + itemSortBy  + "%20ASC";
                     }
+                }
+            }
+            return url;
+        }
+        ,hashMapUrlDecoratorDir: function(baseUrl, pageStart, pageSize, sortBy, sortDir, sortMap) {
+            var url = baseUrl;
+            if (Acm.isNotEmpty(baseUrl)) {
+                if (Acm.isNotEmpty(pageStart)) {
+                    url += this._addNextParam(url) + "start=" + pageStart;
+                }
+                if (Acm.isNotEmpty(pageSize)) {
+                    url += this._addNextParam(url) + "n=" + pageSize;
+                }
+                var itemSortBy = Acm.goodValue(sortMap[sortBy]);
+                if (Acm.isNotEmpty(itemSortBy)) {
+                    if ("DESC" == Acm.goodValue(sortDir)) {
+                        url += this._addNextParam(url) + "s=" + itemSortBy  + "%20DESC";
+                    } else {
+                        url += this._addNextParam(url) + "s=" + itemSortBy  + "%20ASC";
+                    }
+                }
+                if ("DESC" == Acm.goodValue(sortDir)) {
+                    url += this._addNextParam(url) + "dir=DESC";
+                } else if ("ASC" == Acm.goodValue(sortDir)) {
+                    url += this._addNextParam(url) + "dir=ASC";
                 }
             }
             return url;
@@ -59,7 +86,7 @@ AcmEx.Model = {
             pagingParam.pageSize = Acm.goodValue(jtParams.jtPageSize, 0);
             pagingParam.sortBy = "";
             pagingParam.sortDir = "";
-            var jtSorting = Acm.goodValue(jtParams.jtSorting, "");
+            var jtSorting = Acm.goodValue(jtParams.jtSorting);
             var sortArr = jtSorting.split(" ");
             if (!Acm.isArrayEmpty(sortArr) && 2 == sortArr.length) {
                 pagingParam.sortBy = sortArr[0];
@@ -73,22 +100,14 @@ AcmEx.Model = {
         //
         ,decorateUrl: function(baseUrl, jtParams, urlDecorator) {
             var url = baseUrl;
-            if (Acm.isNotEmpty(jtParams.jtSorting) && Acm.isNotEmpty(urlDecorator)) {
-//                var jtSorting = jtParams.jtSorting;
-//                var sortArr = jtSorting.split(" ");
-//                var sortBy = sortArr[0];
-//                var sortDir = sortArr[1];
-//                var pageStart = jtParams.jtStartIndex;
-//                var pageSize = jtParams.jtPageSize;
-
+            if (Acm.isNotEmpty(jtParams) && Acm.isNotEmpty(urlDecorator)) {
                 var pagingParam = AcmEx.Model.JTable._getPagingParam(jtParams);
 
                 if ("function" === typeof urlDecorator) {
                     return urlDecorator(baseUrl, pagingParam.pageStart, pagingParam.pageSize, pagingParam.sortBy, pagingParam.sortDir);
                 } else if ("object" === typeof urlDecorator) {
                     var sortMap = urlDecorator;
-                    var itemSortBy = sortMap[pagingParam.sortBy];
-                    return AcmEx.Object.JTable._hashMapUrlDecorator(baseUrl, pagingParam.pageStart, pagingParam.pageSize, itemSortBy, pagingParam.sortDir);
+                    return AcmEx.Model.JTable.hashMapUrlDecorator(baseUrl, pagingParam.pageStart, pagingParam.pageSize, pagingParam.sortBy, pagingParam.sortDir, sortMap);
                 }
             }
             return url;

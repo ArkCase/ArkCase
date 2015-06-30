@@ -75,24 +75,30 @@ Acm.Dispatcher = {
             var len = listeners.length;
             while ( len-- ) {
                 if (this.PRIORITY_HIGH == listeners[len].priority) {
-                    if (listeners[len].callback.apply(this, args)) {
-                        responseCount++;
+                    if (listeners[len].callback) {
+                        if (listeners[len].callback.apply(this, args)) {
+                            responseCount++;
+                        }
                     }
                 }
             }
             var len = listeners.length;
             while ( len-- ) {
                 if (this.PRIORITY_NORMAL == listeners[len].priority) {
-                    if (listeners[len].callback.apply(this, args)) {
-                        responseCount++;
+                    if (listeners[len].callback) {
+                        if (listeners[len].callback.apply(this, args)) {
+                            responseCount++;
+                        }
                     }
                 }
             }
             var len = listeners.length;
             while ( len-- ) {
                 if (this.PRIORITY_LOW == listeners[len].priority) {
-                    if (listeners[len].callback.apply(this, args)) {
-                        responseCount++;
+                    if (listeners[len].callback) {
+                        if (listeners[len].callback.apply(this, args)) {
+                            responseCount++;
+                        }
                     }
                 }
             }
