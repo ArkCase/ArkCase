@@ -150,7 +150,7 @@ AcmEx.Object = {
     }
 
     ,JTable: {
-        JTABLE_DEFAULT_PAGE_SIZE: 8
+        JTABLE_DEFAULT_PAGE_SIZE: 10
         ,getEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
         ,getEmptyRecord: function() { return {"Result": "OK","Record": {}};}
         ,setTitle: function($jt, title) {
@@ -210,9 +210,9 @@ AcmEx.Object = {
                     return arg.actions.pagingListAction(postData, jtParams, sortMap);
                 }
             }
-            if (arg.actions.pagingListAction_new){
+            if (arg.actions.serviceListAction){
                 arg.actions.listAction = function(postData, jtParams) {
-                    return arg.actions.pagingListAction_new(postData, jtParams, sortMap, dataMaker, keyGetter);
+                    return arg.actions.serviceListAction(postData, jtParams, sortMap, dataMaker, keyGetter);
                 }
             }
 
@@ -226,7 +226,17 @@ AcmEx.Object = {
             $jt.jtable(arg);
             $jt.jtable('load');
         }
-        ,useChildTable: function($jt, childLinks, arg, sortMap) {
+        ,useChildTable: function($jt, childLinks, jtArg, sortMap) {
+            jtArg.$jt = $jt;
+            jtArg.childLinks = childLinks;
+            jtArg.sortMap = sortMap;
+            this.useChildTable_new(jtArg);
+        }
+        ,useChildTable_new: function(arg) {
+            var $jt        = arg.$jt;
+            var childLinks = arg.childLinks;
+            var sortMap    = arg.sortMap;
+
             var argNew = {fields:{}};
             argNew.fields.subTables = {
                 title: 'Entities'
@@ -257,74 +267,53 @@ AcmEx.Object = {
                 }
             }
 
-//            $jt.jtable(argNew);
-//            $jt.jtable('load');
             this.usePaging($jt, argNew, sortMap);
         }
-        ,useAsChild: function($jt, $row, arg) {
+        ,useAsChild: function($jt, $link, arg) {
+            arg.$jt   = $jt;
+            arg.$link = $link;
+            this.useAsChild_new(arg);
+        }
+        ,useAsChild_new: function(arg) {
+            var $jt    = arg.$jt;
+            var $link  = arg.$link;
+
             $jt.jtable('openChildTable'
-                ,$row.closest('tr')
+                ,$link.closest('tr')
                 ,arg
                 ,function (data) { //opened handler
                     data.childTable.jtable('load');
                 }
             );
         }
-        ,toggleChildTable: function($t, $row, fnOpen, title) {      //show active
-            var a = $row;
-            var a2 = $row.siblings();
-
-            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+        ,toggleChildTable: function($t, $link, fnOpen, title) {
+            var $childRow = $t.jtable('getChildRow', $link.closest('tr'));
             var curTitle = $childRow.find("div.jtable-title-text").text();
 
             var toClose;
-            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+            if ($t.jtable('isChildRowOpen', $link.closest('tr'))) {
                 toClose = (curTitle === title);
             } else {
                 toClose = false;
             }
 
             if (toClose) {
-                //fnClose($t, $row);
-                $t.jtable('closeChildTable', $row.closest('tr'));
-                $row.removeClass("show active");
+                $t.jtable('closeChildTable', $link.closest('tr'));
+                $link.removeClass("show active");
             } else {
-                fnOpen($t, $row);
-                $row.addClass("show active");
-                $row.siblings().removeClass("show active");
-            }
-        }
-        ,toggleChildTable2: function($t, $row, title) {      //show active
-            var a = $row;
-            var a2 = $row.siblings();
-
-            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
-            var curTitle = $childRow.find("div.jtable-title-text").text();
-
-            var toClose;
-            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
-                toClose = (curTitle === title);
-            } else {
-                toClose = false;
-            }
-
-            if (toClose) {
-                ////fnClose($t, $row);
-                //$t.jtable('closeChildTable', $row.closest('tr'));
-                $row.removeClass("show active");
-            } else {
-                //fnOpen($t, $row);
-                $row.addClass("show active");
-                $row.siblings().removeClass("show active");
+                fnOpen($t, $link);
+                $link.addClass("show active");
+                $link.siblings().removeClass("show active");
             }
         }
         ,clickAddRecordHandler: function($jt, handler) {
             var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
             $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
-        ,_hashMapComparator: function(item1, item2, sortBy, sortDir) {
-            var value1 = item1[sortBy];
-            var value2 = item2[sortBy];
+        ,hashMapComparator: function(item1, item2, sortBy, sortDir, sortMap) {
+            var itemSortBy = sortMap[sortBy];
+            var value1 = item1[itemSortBy];
+            var value2 = item2[itemSortBy];
             var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
             return ("DESC" == sortDir)? -rc : rc;
         }
@@ -355,8 +344,7 @@ AcmEx.Object = {
                             return comparator(a.item, b.item, pagingParam.sortBy, pagingParam.sortDir);
                         } else if ("object" === typeof comparator) {
                             var sortMap = comparator;
-                            var itemSortBy = sortMap[pagingParam.sortBy];
-                            return AcmEx.Object.JTable._hashMapComparator(a.item, b.item, itemSortBy, pagingParam.sortDir);
+                            return AcmEx.Object.JTable.hashMapComparator(a.item, b.item, pagingParam.sortBy, pagingParam.sortDir, sortMap);
                         } else {
                             return 0;
                         }
@@ -385,7 +373,10 @@ AcmEx.Object = {
             return record._idx;
         }
         ,getTableRow: function(data) {
-            var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+            var whichRow = -1;
+            if (data.row) {
+                whichRow = data.row.prevAll("tr").length;  //count prev siblings
+            }
             return whichRow;
         }
 

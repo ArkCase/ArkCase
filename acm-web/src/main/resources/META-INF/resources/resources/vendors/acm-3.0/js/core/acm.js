@@ -87,6 +87,18 @@ var Acm = Acm || {
         }
         return false;
     }
+    ,findIndexInArray: function(arr, attr, value) {
+        var found = -1;
+        if (Acm.isArray(arr)) {
+            for (var i = 0; i < arr.length; i++) {
+                if (value == arr[i][attr]) {
+                    found = i;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
     ,compare: function(left, right) {  //equals() name is taken, so use compare()
         if (Acm.isEmpty(left)) {
             return Acm.isEmpty(right);
@@ -306,23 +318,28 @@ var Acm = Acm || {
         Acm.log("Acm.getDateFromDatetime() is phasing out.Using Acm.getDateFromDatetime2() for now till the transition is complete");
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format(format)
+            d = moment(dt).format(format);
         }
         return d;
     }
     ,getDateFromDatetime: function(dt, format) {
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format($.t("common:date.short"))
+            d = moment(dt).format(format);
+
+            if (Acm.isEmpty(format)) {
+                //Acm.log("Acm.getDateTimeFromDatetime() needs format argument. Default format will be phase out");
+                format = $.t("common:date.short");
+            }
+            d = moment(dt).format();
         }
         return d;
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
     ,getDateTimeFromDatetime2: function(dt, format) {
-        Acm.log("Acm.getDateTimeFromDatetime() is phasing out.Using Acm.getDateTimeFromDatetime2() for now till the transition is complete");
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format(format)
+            d = moment(dt).format(format);
         }
         return d;
     }
@@ -338,14 +355,14 @@ var Acm = Acm || {
     ,getFrevvoDateFromDateTime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.frevvo"))
+            d = moment(dt).format($.t("common:date.frevvo"));
         }
         return d;
     }
     ,getPentahoDateFromDateTime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.pentaho"))
+            d = moment(dt).format($.t("common:date.pentaho"));
         }
         return d;
     }

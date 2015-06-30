@@ -75,6 +75,26 @@ describe("Acm", function()
         expect(Acm.isNotEmpty(varJQuery)).toBe(true);
     });
 
+    it("Test Acm.findIndexInArray() function", function() {
+        var arr = [{key: "first"}, {key: "second"}, {key: "third"}];
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(0);
+        expect(Acm.findIndexInArray(arr, "key", "second")) .toBe(1);
+        expect(Acm.findIndexInArray(arr, "key", "third"))  .toBe(2);
+        expect(Acm.findIndexInArray(arr, "key", "fourth")) .toBe(-1);
+
+        arr = [{key: "first"}, {id: "second"}, {key: "third"}];
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(0);
+        expect(Acm.findIndexInArray(arr, "key", "second")) .toBe(-1);
+        expect(Acm.findIndexInArray(arr, "key", "third"))  .toBe(2);
+
+        arr = [];
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(-1);
+
+        arr = null;
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(-1);
+
+    });
+
     it("Test Acm.goodValue() function", function() {
         var varNotInitialized;
         expect(Acm.goodValue("some value")).toBe("some value");

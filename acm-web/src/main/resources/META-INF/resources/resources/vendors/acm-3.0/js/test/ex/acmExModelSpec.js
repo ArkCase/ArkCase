@@ -9,7 +9,7 @@ describe("AcmExModel", function()
     beforeEach(function() {
     });
 
-    it("jTable: parse jtParam: abnormal test", function() {
+    it("jTable: parse jtParam: normal test", function() {
         var jtParams;
         var pagingParam;
 
@@ -70,13 +70,6 @@ describe("AcmExModel", function()
         expect(pagingParam.sortDir).toEqual("ASC");
 
         jtParams = {};
-        pagingParam = AcmEx.Model.JTable._getPagingParam(jtParams);
-        expect(pagingParam.pageStart).toEqual(0);
-        expect(pagingParam.pageSize).toEqual(0);
-        expect(pagingParam.sortBy).toEqual("");
-        expect(pagingParam.sortDir).toEqual("");
-
-        jtParams = null;
         pagingParam = AcmEx.Model.JTable._getPagingParam(jtParams);
         expect(pagingParam.pageStart).toEqual(0);
         expect(pagingParam.pageSize).toEqual(0);
