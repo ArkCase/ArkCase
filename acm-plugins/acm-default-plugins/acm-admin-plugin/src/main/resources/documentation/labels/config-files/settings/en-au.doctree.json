@@ -3,6 +3,11 @@
         ,"defaultValue": "New Folder"
         ,"description": ""
     }
+    ,"btn-refresh": {
+        "value": "Refresh"
+      ,"defaultValue": "Refresh"
+      ,"description": ""
+    }
     ,"wait-upload": {"value": "Uploading"
         ,"defaultValue": "Uploading"
         ,"description": ""
