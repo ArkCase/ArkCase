@@ -128,7 +128,7 @@
                             <option value="Low" data-i18n="task:wizard.label.low">Low</option>
                             <option value="Medium" data-i18n="task:wizard.label.medium">Medium</option>
                             <option value="High" data-i18n="task:wizard.label.high">High</option>
-                            <option value="Expedited" data-i18n="task:wizard.label.expedited">Expedited</option>
+                            <option value="Expedite" data-i18n="task:wizard.label.expedite">Expedite</option>
                         </select>
                     </div>
                     <div class="col-sm-4">

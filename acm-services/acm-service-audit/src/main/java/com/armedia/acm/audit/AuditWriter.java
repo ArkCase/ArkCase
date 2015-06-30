@@ -63,6 +63,4 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
                 acmEvent.getEventType() != null;
 
     }
-
-
 }

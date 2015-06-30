@@ -490,7 +490,6 @@ App.Model = {
         }
 
         ,getUserFullName: function(userId){
-            Acm.log("Acm.__FixMe__getUserFullName() is phasing out.Using App.Model.Users.getUserFullName() for now till the transition is complete");
             var fullname = userId;
             var user = App.Model.Users.getUser(userId);
             if(App.Model.Users.validateUser(user)){

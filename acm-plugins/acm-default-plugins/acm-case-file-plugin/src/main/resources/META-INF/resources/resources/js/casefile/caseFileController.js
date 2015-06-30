@@ -406,5 +406,15 @@ CaseFile.Controller = CaseFile.Controller || {
     ,modelDocumentsRetrievedPlainForms: function(plainForms){
         Acm.Dispatcher.fireEvent(this.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, plainForms);
     }
+
+    // lodge / reject
+    ,VIEW_LODGED_DOCUMENTS : "case-file-view-lodged-documents"
+    ,viewLodgedDocuments : function(caseFileId, docIds) {
+            Acm.Dispatcher.fireEvent(this.VIEW_LODGED_DOCUMENTS, caseFileId, docIds);
+    }
+    ,VIEW_REJECTED_DOCUMENTS : "case-file-view-rejected-documents"
+    ,viewRejectedDocuments : function(caseFileId, docIds) {
+        Acm.Dispatcher.fireEvent(this.VIEW_REJECTED_DOCUMENTS, caseFileId, docIds);
+    }
 };
 

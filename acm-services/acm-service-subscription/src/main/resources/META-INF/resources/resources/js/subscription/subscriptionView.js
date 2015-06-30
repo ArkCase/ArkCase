@@ -89,8 +89,7 @@ Subscription.View = {
                 Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
                 Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
                 Record.owner      = Acm.goodValue(result.docs[i].owner_lcs);
-                //Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt);
-                Record.modified   = Acm.getDateTimeFromDatetime2(result.docs[i].modified_date_tdt,$.t("common:date.full"));
+                Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt,$.t("common:date.full"));
                 jtData.Records.push(Record);
             }
 

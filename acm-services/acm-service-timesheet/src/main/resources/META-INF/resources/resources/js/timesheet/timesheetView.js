@@ -191,14 +191,12 @@ Timesheet.View = {
                 Timesheet.View.Detail.setHtmlDivDetail(timesheet.details);
             }
             if(Acm.isNotEmpty(timesheet.startDate) && Acm.isNotEmpty(timesheet.endDate)){
-                //var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate) + " - " +  Acm.getDateFromDatetime(timesheet.endDate)
-                var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime2(timesheet.startDate,$.t("common:date.short"))
-                    + " - " +  Acm.getDateFromDatetime2(timesheet.endDate,$.t("common:date.short"));
+                var timesheetName = Timesheet.Model.DOC_TYPE_TIMESHEET + " " + Acm.getDateFromDatetime(timesheet.startDate,$.t("common:date.short"))
+                    + " - " +  Acm.getDateFromDatetime(timesheet.endDate,$.t("common:date.short"));
                 Timesheet.View.Detail.setTextTimesheetName(timesheetName);
             }
             if(Acm.isNotEmpty(timesheet.modified)){
-                //Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime(timesheet.modified));
-                Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime2(timesheet.modified,$.t("common:date.short")));
+                Timesheet.View.Detail.setTextTimesheetModifiedDate($.t("timesheet:detail.label.last-modified") + " " + Acm.getDateFromDatetime(timesheet.modified,$.t("common:date.short")));
             }
         }
         ,resetDetail: function(timesheet) {
@@ -351,10 +349,8 @@ Timesheet.View = {
                         Record.code = Acm.goodValue(timeRecords[i].code);
                         Record.parentType = Acm.goodValue(timeRecords[i].type);
                         Record.hours = Acm.goodValue(timeRecords[i].value);
-                        //Record.chargedDate = Acm.getDateFromDatetime(timeRecords[i].date);
-                        Record.chargedDate = Acm.getDateFromDatetime2(timeRecords[i].date,$.t("common:date.short"))
-                        //Record.modifiedDate = Acm.getDateFromDatetime(timeRecords[i].modified);
-                        Record.modifiedDate = Acm.getDateFromDatetime2(timeRecords[i].modified,$.t("common:date.short"))
+                        Record.chargedDate = Acm.getDateFromDatetime(timeRecords[i].date,$.t("common:date.short"))
+                        Record.modifiedDate = Acm.getDateFromDatetime(timeRecords[i].modified,$.t("common:date.short"))
                         jtData.Records.push(Record);
                     }
                 }

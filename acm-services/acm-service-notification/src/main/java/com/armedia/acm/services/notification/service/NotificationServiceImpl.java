@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,8 @@ public class NotificationServiceImpl implements NotificationService {
     private MuleClient muleClient;
     private NotificationEventPublisher notificationEventPublisher;
     private SpringContextHolder springContextHolder;
+	private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+	private NotificationFormatter notificationFormatter;
 	
     /**
      * This method is called by scheduled task
@@ -51,6 +54,8 @@ public class NotificationServiceImpl implements NotificationService {
 		{
 			return;
 		}
+
+		getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
 		
 		String lastRunDate = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.SOLR_LAST_RUN_DATE_PROPERTY_KEY, NotificationConstants.DEFAULT_LAST_RUN_DATE);
 		
@@ -99,7 +104,8 @@ public class NotificationServiceImpl implements NotificationService {
 				firstResult += maxResult;
 				
 				notifications.stream()
-				             .map(element -> rule.getExecutor().execute(element))
+						     .map(element -> getNotificationFormatter().replaceFormatPlaceholders(element))
+						     .map(element -> rule.getExecutor().execute(element))
 				             .map(element -> getNotificationDao().save(element))
 				             .forEach(element -> {
 				            	 ApplicationNotificationEvent event = new ApplicationNotificationEvent(element, NotificationConstants.OBJECT_TYPE.toLowerCase(), true, null);
@@ -251,5 +257,25 @@ public class NotificationServiceImpl implements NotificationService {
 
 	public void setSpringContextHolder(SpringContextHolder springContextHolder) {
 		this.springContextHolder = springContextHolder;
+	}
+
+	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+	{
+		return auditPropertyEntityAdapter;
+	}
+
+	public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+	{
+		this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+	}
+
+	public NotificationFormatter getNotificationFormatter()
+	{
+		return notificationFormatter;
+	}
+
+	public void setNotificationFormatter(NotificationFormatter notificationFormatter)
+	{
+		this.notificationFormatter = notificationFormatter;
 	}
 }
