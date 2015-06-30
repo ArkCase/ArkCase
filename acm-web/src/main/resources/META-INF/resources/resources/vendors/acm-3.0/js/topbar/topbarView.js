@@ -106,7 +106,7 @@ Topbar.View = {
                             + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
                             + '<div class="author">By ' + ctr.author_s  + ' on '
                             //+ Acm.getDateTimeFromDatetime(ctr.last_modified_tdt) + '</div>'
-                            + Acm.getDateTimeFromDatetime2(ctr.last_modified_tdt,$.t("common:date.full")) + '</div>'
+                            + Acm.getDateTimeFromDatetime(ctr.last_modified_tdt,$.t("common:date.full")) + '</div>'
                         html += '</div>';
                     }
                     return html;
