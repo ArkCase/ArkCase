@@ -1958,6 +1958,9 @@ CaseFile.View = CaseFile.View || {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
+
+            this.$btnRefreshDocs = $("#btnRefreshDocs").on("click", function(e) {CaseFile.View.Documents.onClickBtnRefreshDocs(e, this);});
+
         }
         ,onInitialized: function() {
         }
@@ -1975,6 +1978,10 @@ CaseFile.View = CaseFile.View || {
         ,onModelDocumentsRetrievedPlainForms: function() {
         	DocTree.View.fileTypes = CaseFile.View.Documents.getFileTypes();
         	DocTree.View.refreshDocTree();
+        }
+
+        ,onClickBtnRefreshDocs: function(event,ctrl){
+            DocTree.View.refreshTree();
         }
 
         ,uploadForm: function(type, folderId, onCloseForm) {
