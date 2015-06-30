@@ -1113,14 +1113,11 @@ Admin.View = Admin.View || {
                             for (var i = 0; i < templates.length; i++) {
                                 var template = templates[i];
                                 var record = {};
-                                //record.id = Acm.goodValue(template.id, 0);
                                 record.title = Acm.goodValue(template.name);
-                                //record.created = Acm.getDateFromDatetime(template.created);
-                                record.created =  (Acm.getDateFromDatetime2(template.created,$.t("common:date.short")));
+                                record.created =  (Acm.getDateFromDatetime(template.created,$.t("common:date.short")));
                                 record.creator = Acm.goodValue(template.creator);
                                 record.path = Acm.goodValue(template.path);
-                                //record.modified = Acm.getDateFromDatetime(template.modified);
-                                record.modified =  (Acm.getDateFromDatetime2(template.modified,$.t("common:date.short")));
+                                record.modified =  (Acm.getDateFromDatetime(template.modified,$.t("common:date.short")));
                                 rc.Records.push(record);
                             }
                         }
@@ -1827,8 +1824,7 @@ Admin.View = Admin.View || {
                             , width: '15%'
                             , edit: false
                             , display: function(data){
-                                return (Acm.getDateFromDatetime2(data.record.modified,$.t("common:date.short")));
-                                //return Acm.getDateFromDatetime(data.record.modified)
+                                return (Acm.getDateFromDatetime(data.record.modified,$.t("common:date.short")));
                             }
                         }, creator: {
                             title: 'Author'
@@ -1896,8 +1892,7 @@ Admin.View = Admin.View || {
                         , width: '15%'
                         , edit: false
                         , display: function(data){
-                            return (Acm.getDateFromDatetime2(data.record.modified,$.t("common:date.short")));
-                            //return Acm.getDateFromDatetime(data.record.modified)
+                            return (Acm.getDateFromDatetime(data.record.modified,$.t("common:date.short")));
                         }
                     }, creator: {
                         title: 'Author'
