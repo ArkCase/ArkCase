@@ -34,7 +34,7 @@
             </section>
         </aside>
         <aside>
-            <iframe src="" name="audit_iframe" style="width:100%; height:100%;" frameborder="0"></iframe>
+            <iframe src="" name="audit_iframe" style="width:100%; height:100%;" frameborder="0">ArkCase requires you use a browser that supports iFrames.</iframe>
         </aside>
     </section>
 </jsp:body>
