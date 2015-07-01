@@ -138,6 +138,7 @@
                                 </header>
                                 <div class="wrapper">
                                     <div class="input-group">
+                                    <label for="searchQuery" style="display:none;'">Search Cases</label>
                                         <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]casefile:navigation.search.search" placeholder="Search">
                         <span class="input-group-btn">
                         <button class="btn btn-sm btn-default" id="btnSearchQuery" type="button" data-i18n="casefile:navigation.search.btn-go">Go!</button>
@@ -162,7 +163,7 @@
 
                                                     <div class="row">
                                                         <div class="col-xs-6  b-r">
-                                                            <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"></a><a href="#" id="status" ></a></h4>
+                                                            <h4><a href="#" id="caseTitle" data-type="text" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-case-title"  data-title="Enter Case Title"   title="Enter Case Title"></a><a href="#" id="status" ></a></h4>
                                                         </div>
                                                         <div class="col-xs-6  b-r text-right">
                                                             <h4><a href="#" id="caseNumber"></a></h4>
@@ -170,26 +171,26 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-subject-type" data-title="Enter Subject Type"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="type" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-subject-type" data-title="Enter Subject Type" title="Enter Subject Type"></a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.case-type">Case Type</small> </div>
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-incident-date" data-title="Enter Incident Date"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="incident" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-incident-date" data-title="Enter Incident Date" title="Enter Incident Date"></a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.create-date">Create Date</small></div>
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-priority;priority-high" data-title="Enter Priority">High</a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="priority" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-priority;priority-high" data-title="Enter Priority" title="Enter Priority">High</a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.priority">Priority</small> </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-4 b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-assignee" data-title="Enter Assignee"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="assigned" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-assignee" data-title="Enter Assignee" title="Enter Assignee"></a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.assigned-to">Assigned To</small>
                                                         </div>
                                                         <div class="col-xs-4  b-r">
-                                                            <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-owning-group" data-title="Enter Owning Group"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="group" data-type="select" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-owning-group" data-title="Enter Owning Group" title="Enter Owning Group"></a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.owning-group">Owning Group</small>
                                                         </div>
                                                         <div class="col-xs-4 b-r ">
-                                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-due-date" data-title="Enter Due Date"></a></div>
+                                                            <div class="h4 font-bold"><a href="#" id="dueDate" data-type="date" data-pk="1" data-i18n="[data-title]casefile:header.labels.enter-due-date" data-title="Enter Due Date" title="Enter Due Date"></a></div>
                                                             <small class="text-muted" data-18n="casefile:header.labels.due-date">Due Date</small>
                                                         </div>
                                                     </div>
@@ -224,22 +225,22 @@
 
                                         <div class="pull-right inline">
                                             <div class="btn-group">
-                                                <button class="btn btn-default btn-sm" id="btnEditCaseFile" data-i18n="[data-title]casefile:header.buttons.edit-case-file" data-title="Edit Case File"><i class="fa fa-edit"></i>
+                                                <button class="btn btn-default btn-sm" id="btnEditCaseFile" data-i18n="[data-title]casefile:header.buttons.edit-case-file" data-title="Edit Case File" title="Edit Case File"><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.edit">Edit</span>
                                                 </button>
                                                     <%--<button class="btn btn-default btn-sm" data-title="Change Case Status"  data-toggle="modal" data-target="#closeCase"><i class="fa fa-archive"></i> Close</button>--%>
-                                                <button class="btn btn-default btn-sm" id="btnChangeCaseStatus" data-i18n="[data-title]casefile:header.buttons.change-case-status"data-title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
+                                                <button class="btn btn-default btn-sm" id="btnChangeCaseStatus" data-i18n="[data-title]casefile:header.buttons.change-case-status" data-title="Change Case Status" title="Change Case Status" style="display: none" ><i class="fa fa-edit"></i>
                                                     <span data-i18n="casefile:header.buttons.change-case-status">Change Case Status</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnReinvestigate" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File"><i class="fa fa-reply"></i>
+                                                <button class="btn btn-default btn-sm" id="btnReinvestigate" data-i18n="[data-title]casefile:header.buttons.reinvestigte-case-file" data-title="Reinvestigate Case File" title="Reinvestigate Case File"><i class="fa fa-reply"></i>
                                                     <span data-i18n="casefile:header.buttons.reinvestigate">Reinvestigate</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe"><i class="fa fa-bullhorn"></i>
+                                                <button class="btn btn-default btn-sm" id="btnSubscribe" data-i18n="[data-title]casefile:header.buttons.subscribe" title="Subscribe"><i class="fa fa-bullhorn"></i>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnMergeCase" data-i18n="[data-title]casefile:header.buttons.merge-case" data-title="Merge Case"><i class="fa fa-random"></i>
+                                                <button class="btn btn-default btn-sm" id="btnMergeCase" data-i18n="[data-title]casefile:header.buttons.merge-case" data-title="Merge Case" title="Merge Case"><i class="fa fa-random"></i>
                                                     <span data-i18n="casefile:header.buttons.merge">Merge</span>
                                                 </button>
-                                                <button class="btn btn-default btn-sm" id="btnSplitCase" data-i18n="[data-title]casefile:header.buttons.split-case"data-title="Split Case"><i class="fa fa-code-fork"></i>
+                                                <button class="btn btn-default btn-sm" id="btnSplitCase" data-i18n="[data-title]casefile:header.buttons.split-case" data-title="Split Case" title="Split Case"><i class="fa fa-code-fork"></i>
                                                     <span data-i18n="casefile:header.buttons.split-case">Split Case</span>
                                                 </button>
                                                 <!-- Modal -->
@@ -299,8 +300,8 @@
                                                 <ul class="nav nav-pills pull-right">
                                                     <li>
                                                         <div class="btn-group padder-v2">
-                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit"><i class="fa fa-pencil"></i></button>
-                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save"><i class="fa fa-save"></i></button>
+                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.edit" data-title="Edit" title="Edit"><i class="fa fa-pencil"></i></button>
+                                                            <button class="btn btn-default btn-sm" data-toggle="tooltip" data-i18n="[data-title]casefile:detail.buttons.save" data-title="Save" title="Save"><i class="fa fa-save"></i></button>
                                                             <ul class="dropdown-menu pull-right">
                                                                 <li><a href="#" data-i18n="casefile:detail.other-menu-items">Other menu items</a></li>
                                                             </ul>
@@ -352,26 +353,26 @@
                                                 <thead>
                                                 <tr>
                                                     <%--<th width2="6%"><span class='fancytree-checkbox'></span></th>--%>
-                                                    <th width2="6%"><input type="checkbox"/></th>
-                                                    <th width2="4%" data-i18n="casefile:documents.table.field.id">ID</th>
-                                                    <th width="35%" data-i18n="casefile:documents.table.field.title">Title</th>
-                                                    <th width="12%" data-i18n="casefile:documents.table.field.type">Type</th>
-                                                    <th width="10%" data-i18n="casefile:documents.table.field.created">Created</th>
-                                                    <th width="16%" data-i18n="casefile:documents.table.field.author">Author</th>
-                                                    <th width="6%" data-i18n="casefile:documents.table.field.version">Version</th>
-                                                    <th width="8%" data-i18n="casefile:documents.table.field.status">Status</th>
+                                                    <th id="docCheckboxCase" width2="6%"><input type="checkbox"/></th>
+                                                    <th id="docCaseFile" width2="4%" data-i18n="casefile:documents.table.field.id">ID</th>
+                                                    <th id="docTitleCase" width="35%" data-i18n="casefile:documents.table.field.title">Title</th>
+                                                    <th id="docTypeCase" width="12%" data-i18n="casefile:documents.table.field.type">Type</th>
+                                                    <th id="docCreatedCase" width="10%" data-i18n="casefile:documents.table.field.created">Created</th>
+                                                    <th id="docAuthorCase" width="16%" data-i18n="casefile:documents.table.field.author">Author</th>
+                                                    <th id="docVersionCase" width="6%" data-i18n="casefile:documents.table.field.version">Version</th>
+                                                    <th id="docStatusCase" width="8%" data-i18n="casefile:documents.table.field.status">Status</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td headers="docCheckboxCase"></td>
+                                                    <td headers=docCaseFile""></td>
+                                                    <td headers="docTitleCase"></td>
+                                                    <td headers="docTypeCase"></td>
+                                                    <td headers="docCreatedCase"></td>
+                                                    <td headers="docAuthorCase"></td>
+                                                    <td headers="docVersionCase"></td>
+                                                    <td headers="docStatusCase"></td>
                                                 </tr>
                                                 </tbody>
                                             </table>
@@ -429,7 +430,7 @@
                                     </div>
 
 
-                                    <div class="col-md-12"  id="tabOutlookCalendar">
+                                    <div class="col-md-12"  id="tabOutlookCalendar" style="display:none;">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">
