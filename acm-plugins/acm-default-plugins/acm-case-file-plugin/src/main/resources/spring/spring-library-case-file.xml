@@ -56,6 +56,10 @@
         <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
     </bean>
 
+    <bean id="splitCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinesRule">
+        <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
+    </bean>
+
     <bean id="saveCaseService" class="com.armedia.acm.plugins.casefile.service.SaveCaseServiceImpl">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
@@ -93,6 +97,7 @@
         <property name="acmTaskService" ref="acmTaskService"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="typesToCopy" value="${casefile.split.typesToCopy}"/>
+        <property name="splitCaseFileBusinessRule" ref="splitCaseFileBusinessRule"/>
     </bean>
 
     <bean id="changeCaseStatusProcessEndListener" class="com.armedia.acm.plugins.casefile.service.ChangeCaseStatusProcessEndListener">
