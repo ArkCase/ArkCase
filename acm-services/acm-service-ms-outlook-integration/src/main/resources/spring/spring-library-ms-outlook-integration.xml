@@ -46,6 +46,7 @@
         <property name="autodiscoveryEnabled" value="${outlook.exchange.enable.autodiscovery}"/>
         <property name="clientAccessServer" value="${outlook.exchange.client-access-server}"/>
         <property name="outlookUserConnectionCache" ref="outlookUserConnectionCache"/>
+        <property name="defaultAccess" value="${outlook.exchange.default_access}"/>
         <property name="sortFields">
             <map>
                 <entry key="subject" value-ref="propertyDefinitionSubject"/>

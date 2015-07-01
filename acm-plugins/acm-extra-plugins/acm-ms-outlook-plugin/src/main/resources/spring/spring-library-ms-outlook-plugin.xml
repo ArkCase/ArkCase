@@ -15,6 +15,11 @@
             <property name="systemUserEmail" value="${outlook.exchange.system_user_email}"/>
             <property name="systemUserEmailPassword" value="${outlook.exchange.system_user_email_password}"/>
             <property name="systemUserId" value="${outlook.exchange.system_user_id}"/>
+            <property name="defaultAccess" value="${outlook.exchange.default_access}"/>
+            <property name="approverAccess" value="${outlook.exchange.approver_access}"/>
+            <property name="followerAccess" value="${outlook.exchange.follower_access}"/>
+            <property name="assigneeAccess" value="${outlook.exchange.assignee_access}"/>
+
             <property name="userDao" ref="userJpaDao"/>
             <property name="acmContainerDao" ref="acmContainerFolderDao"/>
             <property name="outlookFolderService" ref="outlookService" />
