@@ -231,11 +231,7 @@
                                                 <div class="col-xs-6">
                                                     <h4><a href="#" class='acm-word-wrap' id="mainphone" data-type="text" data-pk="1" data-title="Enter Main Office Phone" title="Enter Main Office Phone"></a></h4>
                                                     <small> Main Office Phone </small>
-<<<<<<< HEAD
                                                     <h4><a href="#" class='acm-word-wrap' id="fax" data-type="text" data-pk="1" data-title="Enter Fax Number" title="Enter Fax Number"></a></h4>
-=======
-                                                    <h4><a href="#" class='acm-word-wrap' id="fax" data-type="text" data-pk="1" data-title="Enter Main Office Phone" title="Enter Main Office Phone"></a></h4>
->>>>>>> 5a810e6537d28e7f7e09897772afb2d836c14141
                                                     <small> Fax </small>
                                                     <h4><a href="#" class='acm-word-wrap' id="website" data-type="text" data-pk="1" data-title="Enter Website Address" title="Enter Website Address"></a></h4>
                                                     <small> Website </small> </div>
