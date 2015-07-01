@@ -568,7 +568,7 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Notes: {
         create : function() {
-            this.cacheNoteList = new Acm.Model.CacheFifo();
+            this.cacheNoteList = new Acm.Model.CacheFifo(16);
 
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_ADDED_NOTE     , this.onViewAddedNote);
             Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_UPDATED_NOTE   , this.onViewUpdatedNote);
@@ -577,6 +577,113 @@ CaseFile.Model = CaseFile.Model || {
         ,onInitialized: function() {
         }
 
+        ,API_LIST_NOTES              : "/api/latest/plugin/note/"
+        ,API_SAVE_NOTE               : "/api/latest/plugin/note"
+        ,API_DELETE_NOTE_            : "/api/latest/plugin/note/"
+
+
+//keep this for future service paging support
+//        ,noteListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
+//            var noteListData = CaseFile.Model.Notes.cacheNoteList.get(cacheKey);
+//            if (noteListData) {
+//                return Acm.Promise.donePromise(dataMaker(noteListData)).promise();
+//            }
+//
+//            var url =  CaseFile.Model.Notes.API_LIST_NOTES + CaseFile.Model.DOC_TYPE_CASE_FILE + "/";
+//            url += caseFileId;
+//
+//            return AcmEx.Model.JTable.serviceListAction(url, postData, jtParams, sortMap
+//                ,function(data) {
+//                    if (CaseFile.Model.Notes.validateNotes(data)) {
+//                        var noteList = data;
+//
+//                        var noteListData = {};
+//                        noteListData.total = noteList.length;  //fix me: need service returns total count
+//                        noteListData.list = noteList;
+//                        CaseFile.Model.Notes.cacheNoteList.put(cacheKey, noteListData);
+//                        return dataMaker(noteListData);
+//                    }
+//                }
+//            );
+//        }
+        ,getNoteList : function(caseFileId, cacheKey) {
+            var noteListData = CaseFile.Model.Notes.cacheNoteList.get(cacheKey);
+            if (noteListData) {
+                return Acm.Promise.donePromise(noteListData).promise();
+            }
+
+            var url =  CaseFile.Model.Notes.API_LIST_NOTES + CaseFile.Model.DOC_TYPE_CASE_FILE + "/";
+            url += caseFileId;
+
+            return Acm.Service.call({type: "GET"
+                ,url: url
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Model.Notes.validateNotes(response)) {
+                            var noteList = response;
+
+                            var noteListData = {};
+                            noteListData.total = noteList.length;  //fix me: need service returns total count
+                            noteListData.list = noteList;
+                            CaseFile.Model.Notes.cacheNoteList.put(cacheKey, noteListData);
+                            return noteListData;
+                        }
+                    }
+                }
+            });
+        }
+        ,saveNote : function(data, cacheKey) {
+            return Acm.Service.call({type: "POST"
+                ,url: this.API_SAVE_NOTE
+                ,data: JSON.stringify(data)
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Model.Notes.validateNote(response)) {
+                            var note = response;
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            if (caseFileId == note.parentId) {
+                                var noteListData = CaseFile.Model.Notes.cacheNoteList.get(cacheKey);
+                                var noteList = noteListData.list;
+                                var found = Acm.findIndexInArray(noteList, "id", note.id);
+                                if (0 > found) {                //add new note
+                                    noteList.push(note);
+                                    noteListData.total++;
+                                } else {                        // update existing note
+                                    noteList[found] = note;
+                                }
+                                CaseFile.Model.Notes.cacheNoteList.put(cacheKey, noteListData);
+                                return note;
+                            }
+                        }//end validate
+                    }
+                }
+            });
+        }
+        ,deleteNote : function(noteId, cacheKey) {
+            return Acm.Service.call({type: "DELETE"
+                ,url: this.API_DELETE_NOTE_ + noteId
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Model.Notes.validateDeletedNote(response)) {
+                            var caseFileId = CaseFile.Model.getCaseFileId();
+                            if (response.deletedNoteId == noteId) {
+                                var noteListData = CaseFile.Model.Notes.cacheNoteList.get(cacheKey);
+                                var noteList = noteListData.list;
+                                for (var i = 0; i < noteList.length; i++) {
+                                    if (noteId == noteList[i].id) {
+                                        noteList.splice(i, 1);
+                                        noteListData.total--;
+                                        CaseFile.Model.Notes.cacheNoteList.put(cacheKey, noteListData);
+                                        //CaseFile.Controller.modelDeletedNote(Acm.Service.responseWrapper(response, noteId));
+                                        return noteId;
+                                    }
+                                }
+                            }
+                        }//end validate
+                    }
+                }
+            });
+        }
 
         ,onViewAddedNote: function(note) {
             CaseFile.Service.Notes.addNote(note);
@@ -609,16 +716,162 @@ CaseFile.Model = CaseFile.Model || {
             }
             return true;
         }
+        ,validateDeletedNote: function(data) {
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isEmpty(data.deletedNoteId)) {
+                return false;
+            }
+            return true;
+        }
     }
 
     ,Tasks: {
         create : function() {
-            this.cacheTaskSolr = new Acm.Model.CacheFifo();
-            this.cacheTasks = new Acm.Model.CacheFifo(4);
+            this.cacheTaskSolr = new Acm.Model.CacheFifo(16);
+            this.cacheMyTasks = new Acm.Model.CacheFifo();
         }
         ,onInitialized: function() {
-            CaseFile.Service.Tasks.retrieveTask();
+            CaseFile.Model.Tasks.retrieveMyTasks();
         }
+
+        ,API_RETRIEVE_TASKS_SOLR         : "/api/latest/plugin/search/children?parentType=CASE_FILE&childType=TASK&parentId="
+        ,API_RETRIEVE_MY_TASKS           : "/api/latest/plugin/task/forUser/"
+        ,API_COMPLETE_TASK               : "/api/latest/plugin/task/completeTask/"
+        ,API_COMPLETE_TASK_WITH_OUTCOME  : "/api/latest/plugin/task/completeTask"
+
+        ,taskListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
+            var taskListData = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
+            if (taskListData) {
+                return Acm.Promise.donePromise(dataMaker(taskListData)).promise();
+            }
+
+            var url =  CaseFile.Model.Tasks.API_RETRIEVE_TASKS_SOLR;
+            url += caseFileId;
+
+            return AcmEx.Model.JTable.serviceListAction(url, postData, jtParams, sortMap
+                ,function(data) {
+                    if (Acm.Validator.validateSolrData(data)) {
+                        var responseHeader = data.responseHeader;
+                        if (0 == responseHeader.status) {
+                            //response.start should match to jtParams.jtStartIndex
+                            //response.docs.length should be <= jtParams.jtPageSize
+
+                            var response = data.response;
+                            var taskListData = {};
+                            taskListData.total = Acm.goodValue(response.numFound, 0);
+
+                            var taskList = [];
+                            for (var i = 0; i < response.docs.length; i++) {
+                                var doc = response.docs[i];
+                                var task = {};
+                                task.id = doc.object_id_s;
+                                task.title = Acm.goodValue(doc.name); //title_parseable ?? //title_t ?
+                                task.created = (Acm.getDateFromDatetime(doc.create_tdt,$.t("common:date.short")));
+                                task.priority = Acm.goodValue(doc.priority_s);
+                                task.dueDate = (Acm.getDateFromDatetime(doc.due_tdt,$.t("common:date.short")));
+                                task.status = Acm.goodValue(doc.status_s);
+                                task.assignee = Acm.goodValue(doc.assignee_s);
+                                taskList.push(task);
+                            }
+                            taskListData.list = taskList;
+                            CaseFile.Model.Tasks.cacheTaskSolr.put(cacheKey, taskListData);
+
+                            return dataMaker(taskListData);
+                        }
+                    }
+                }
+            );
+        }
+
+        ,retrieveMyTasks : function() {
+            var url = this.API_RETRIEVE_MY_TASKS + App.getUserName();
+            return Acm.Service.call({type: "GET"
+                ,url: url
+                ,callback: function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelRetrievedTasks(response);
+
+                    } else {
+                        //if (CaseFile.Model.Detail.validateCaseFile(response)) {
+                            var myTasks = response;
+                            CaseFile.Model.Tasks.cacheMyTasks.put(App.getUserName(), myTasks);
+                            CaseFile.Controller.modelRetrievedMyTasks(myTasks);
+                            return myTasks;
+                        //}
+                    }
+                }
+            });
+        }
+        ,completeTask : function(taskId, cacheKey) {
+            var url = this.API_COMPLETE_TASK + taskId;
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data: "{}"
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        //if (CaseFile.Model.Detail.validateCaseFile(response)) {
+                        var task = response;
+                        //var caseFileId = CaseFile.Model.getCaseFileId();
+                        var myTasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
+                        var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
+                        for(var i = 0; i < myTasks.length; i++){
+                            if(task.taskId ==  myTasks[i].taskId){
+                                myTasks[i] = task;
+                            }
+                        }
+                        for(var i = 0; i < taskList.length; i++){
+                            if(task.taskId ==  taskList[i].id){
+                                taskList[i].status = 'COMPLETE';
+                            }
+                        }
+                        CaseFile.Model.Tasks.cacheMyTasks.put(App.getUserName(),myTasks);
+                        CaseFile.Model.Tasks.cacheTaskSolr.put(cacheKey,taskList);
+
+                        // CaseFile.Model.Tasks.cacheTaskSolr.reset();
+                        CaseFile.Controller.modelCompletedTask(task);
+                        return task;
+                        //}
+                    }
+                }
+            });
+        }
+        ,completeTaskWithOutcome : function(task, cacheKey) {
+            var url = this.API_COMPLETE_TASK_WITH_OUTCOME;
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data: JSON.stringify(task)
+                ,callback: function(response) {
+                    if (response.hasError) {
+                        CaseFile.Controller.modelCompletedTask(response);
+
+                    } else {
+                        //if (CaseFile.Model.Detail.validateCaseFile(response)) {
+                        var task = response;
+                        var caseFileId = CaseFile.Model.getCaseFileId();
+                        var myTasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
+                        var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
+                        for(var i = 0; i < myTasks.length; i++){
+                            if(task.taskId ==  myTasks[i].taskId){
+                                myTasks[i] = task;
+                            }
+                        }
+                        for(var i = 0; i < taskList.length; i++){
+                            if(task.taskId ==  taskList[i].id){
+                                taskList[i].status = 'COMPLETE';
+                            }
+                        }
+                        CaseFile.Model.Tasks.cacheMyTasks.put(App.getUserName(),myTasks);
+                        CaseFile.Model.Tasks.cacheTaskSolr.put(cacheKey,taskList);
+                        //CaseFile.Controller.modelCompletedTask(task);
+                        return task;
+                        //}
+                    }
+                }
+            });
+        }
+
     }
 
     ,Documents: {
@@ -680,17 +933,74 @@ CaseFile.Model = CaseFile.Model || {
 
     ,Correspondence: {
         create : function() {
-            this.cacheCorrespondences = new Acm.Model.CacheFifo();
-            Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_ADD_CORRESPONDENCE, this.onViewClickedAddCorrespondence);
+            this.cacheCorrespondences = new Acm.Model.CacheFifo(16);
+            //Acm.Dispatcher.addEventListener(CaseFile.Controller.VIEW_CLICKED_ADD_CORRESPONDENCE, this.onViewClickedAddCorrespondence);
         }
         ,onInitialized: function() {
         }
-        ,onViewClickedAddCorrespondence: function(caseFileId, templateName) {
-            //var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
-            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
-            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
-                CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
+//        ,onViewClickedAddCorrespondence: function(caseFileId, templateName) {
+//            //var caseFile = CaseFile.Model.Detail.getCaseFile(caseFileId);
+//            var caseFile = CaseFile.Model.Detail.getCacheCaseFile(caseFileId);
+//            if (CaseFile.Model.Detail.validateCaseFile(caseFile)) {
+//                CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
+//            }
+//        }
+        ,API_RETRIEVE_CORRESPONDENCE      : "/api/latest/service/ecm/folder/"
+        ,API_CREATE_CORRESPONDENCE        : "/api/latest/service/correspondence"
+
+        ,correspondenceListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
+            var correspondencesData = CaseFile.Model.Correspondence.cacheCorrespondences.get(cacheKey);
+            if (CaseFile.Model.Correspondence.validateCorrespondences(correspondencesData)) {
+                return Acm.Promise.donePromise(dataMaker(correspondencesData)).promise();
             }
+
+            var url =  this.API_RETRIEVE_CORRESPONDENCE + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            url += "/" + caseFileId + "?category=" + CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM;
+
+            return AcmEx.Model.JTable.serviceListAction(url, postData, jtParams, sortMap
+                ,function(data) {
+                    if (CaseFile.Model.Correspondence.validateCorrespondences(data)) {
+                        var correspondences = data;
+                        CaseFile.Model.Correspondence.cacheCorrespondences.put(cacheKey, correspondences);
+                        return dataMaker(correspondences);
+                    }
+                }
+            );
+        }
+        ,createCorrespondence : function(caseFile, templateName, cacheKey) {
+            var url = this.API_CREATE_CORRESPONDENCE
+                + "?templateName=" + templateName
+                + "&parentObjectType=" + CaseFile.Model.DOC_TYPE_CASE_FILE
+                + "&parentObjectId=" + caseFile.id
+                + "&targetCmisFolderId=" + caseFile.container.folder.cmisFolderId;
+
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Model.Correspondence.validateNewCorrespondence(response)) {
+                            var newCorrespondence = response;
+
+                            //add to the top of the cache
+                            var correspondenceData = CaseFile.Model.Correspondence.cacheCorrespondences.get(cacheKey);
+                            if(CaseFile.Model.Correspondence.validateCorrespondences(correspondenceData)) {
+                                var correspondences = correspondenceData.children;
+                                var correspondence = {};
+                                correspondence.objectId = Acm.goodValue(newCorrespondence.fileId);
+                                correspondence.name = Acm.goodValue(newCorrespondence.fileName);
+                                correspondence.creator = Acm.goodValue(newCorrespondence.creator);
+                                correspondence.created = Acm.goodValue(newCorrespondence.created);
+                                correspondence.objectType = CaseFile.Model.DOC_TYPE_FILE_SM;
+                                correspondence.category = CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM;
+                                correspondenceData.children.unshift(correspondence);
+                                correspondenceData.totalChildren++;
+                                return newCorrespondence;
+                            }
+                            //CaseFile.Controller.modelCreatedCorrespondence(response);
+                        }
+                    }
+                }
+            });
         }
 
         ,validateCorrespondences:function(data){
@@ -711,6 +1021,11 @@ CaseFile.Model = CaseFile.Model || {
             }
             if (Acm.isNotArray(data.children)) {
                 return false;
+            }
+            for (var i = 0; i < data.children.length; i++) {
+                if (!this.validateCorrespondence(data.children[i])) {
+                    return false;
+                }
             }
             if (!Acm.compare(data.category,CaseFile.Model.DOC_CATEGORY_CORRESPONDENCE_SM)) {
                 return false;
@@ -782,19 +1097,46 @@ CaseFile.Model = CaseFile.Model || {
 
     ,History: {
         create : function() {
-            this.cacheHistory = new Acm.Model.CacheFifo();
+            this.cacheHistory = new Acm.Model.CacheFifo(16);
         }
         ,onInitialized: function() {
         }
+
+        ,API_CASE_FILE_HISTORY : "/api/latest/plugin/audit"
+
+        ,historyListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
+            var history = CaseFile.Model.History.cacheHistory.get(cacheKey);
+            if (CaseFile.Model.History.validateHistory(history)) {
+                return Acm.Promise.donePromise(CaseFile.View.History._makeJtData(history)).promise();
+            }
+
+            var url;
+            url =  CaseFile.Model.History.API_CASE_FILE_HISTORY;
+            url += '/' + CaseFile.Model.DOC_TYPE_CASE_FILE + '/';
+            url += caseFileId;
+
+            return AcmEx.Model.JTable.serviceListAction(url, postData, jtParams, sortMap
+                ,function(data) {
+                    if (CaseFile.Model.History.validateHistory(data)) {
+                        var history = data;
+                        CaseFile.Model.Tasks.cacheTaskSolr.put(cacheKey, history);
+                        return dataMaker(history);
+                    }
+                }
+            );
+        }
+
         ,validateHistory: function(data) {
             if (Acm.isEmpty(data)) {
                 return false;
             }
-            if (Acm.isEmpty(data.resultPage)) {
-                return false;
-            }
             if (Acm.isNotArray(data.resultPage)) {
                 return false;
+            }
+            for (var i = 0; i < data.resultPage.length; i++) {
+                if (!this.validateEvent(data.resultPage[i])) {
+                    return false;
+                }
             }
             if (Acm.isEmpty(data.totalCount)) {
                 return false;
@@ -1015,13 +1357,39 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheTimesheets = new Acm.Model.CacheFifo();
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
         }
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedObject: function(objData) {
-            CaseFile.Service.Time.retrieveTimesheets(CaseFile.Model.getCaseFileId());
+//        ,onModelRetrievedObject: function(objData) {
+//            CaseFile.Service.Time.retrieveTimesheets(CaseFile.Model.getCaseFileId());
+//        }
+
+        , API_RETRIEVE_TIMESHEETS: "/api/v1/service/timesheet/"
+
+        ,getTimesheets : function(caseFileId) {
+            var timesheets = CaseFile.Model.Time.cacheTimesheets.get(caseFileId);
+            if (timesheets) {
+                return Acm.Promise.donePromise(timesheets).promise();
+            }
+
+            var url = this.API_RETRIEVE_TIMESHEETS;
+            url += "objectId/" + caseFileId + "/";
+            url += "objectType/" + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            return Acm.Service.call({TYPE: "GET"
+                ,url: url
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Model.Time.validateTimesheets(response)) {
+                            var timesheets = response;
+                            CaseFile.Model.Time.cacheTimesheets.put(caseFileId, timesheets);
+                            //CaseFile.Controller.modelRetrievedTimesheets(timesheets);
+                            return timesheets;
+                        }
+                    }
+                }
+            });
         }
 
         ,validateTimesheet: function(data) {
@@ -1058,6 +1426,20 @@ CaseFile.Model = CaseFile.Model || {
 
             return true;
         }
+        ,validateTimesheets: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateTimesheet(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
         ,validateTimeRecord: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
@@ -1088,15 +1470,6 @@ CaseFile.Model = CaseFile.Model || {
             }
             return true;
         }
-        ,validateTimesheets: function(data){
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isNotArray(data)) {
-                return false;
-            }
-            return true;
-        }
     }
 
     ,Participants: {
@@ -1110,13 +1483,39 @@ CaseFile.Model = CaseFile.Model || {
         create : function() {
             this.cacheCostsheets = new Acm.Model.CacheFifo();
 
-            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
+            //Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
         }
         ,onInitialized: function() {
         }
 
-        ,onModelRetrievedObject: function(objData) {
-            CaseFile.Service.Cost.retrieveCostsheets(CaseFile.Model.getCaseFileId());
+//        ,onModelRetrievedObject: function(objData) {
+//            CaseFile.Service.Cost.retrieveCostsheets(CaseFile.Model.getCaseFileId());
+//        }
+
+        , API_RETRIEVE_COSTSHEETS: "/api/v1/service/costsheet/"
+
+        ,retrieveCostsheets : function(caseFileId) {
+            var costsheets = CaseFile.Model.Time.cacheTimesheets.get(caseFileId);
+            if (costsheets) {
+                return Acm.Promise.donePromise(costsheets).donePromise();
+            }
+
+            var url = this.API_RETRIEVE_COSTSHEETS;
+            url += "objectId/" + caseFileId + "/";
+            url += "objectType/" + CaseFile.Model.DOC_TYPE_CASE_FILE;
+            return Acm.Service.call({type: "GET"
+                ,url: url
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        if (CaseFile.Model.Cost.validateCostsheets(response)) {
+                            var costsheets = response;
+                            CaseFile.Model.Cost.cacheCostsheets.put(caseFileId, costsheets);
+                            //CaseFile.Controller.modelRetrievedCostsheets(costsheets);
+                            return costsheets;
+                        }
+                    }
+                }
+            });
         }
 
         ,validateCostsheet: function(data) {
@@ -1152,6 +1551,20 @@ CaseFile.Model = CaseFile.Model || {
             }
             return true;
         }
+        ,validateCostsheets: function(data){
+            if (Acm.isEmpty(data)) {
+                return false;
+            }
+            if (Acm.isNotArray(data)) {
+                return false;
+            }
+            for (var i = 0; i < data.length; i++) {
+                if (!this.validateCostsheet(data[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
         ,validateCostRecord: function(data){
             if (Acm.isEmpty(data)) {
                 return false;
@@ -1175,15 +1588,6 @@ CaseFile.Model = CaseFile.Model || {
                 return false;
             }
             if (Acm.isEmpty(data.modified)) {
-                return false;
-            }
-            return true;
-        }
-        ,validateCostsheets: function(data){
-            if (Acm.isEmpty(data)) {
-                return false;
-            }
-            if (Acm.isNotArray(data)) {
                 return false;
             }
             return true;
