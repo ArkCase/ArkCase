@@ -20,26 +20,6 @@ var Acm = Acm || {
         if (Acm.Model.onInitialized) {Acm.Model.onInitialized();}
     }
 
-    ,__FixMe__getUserFullName: function(user) {
-        var fullName;
-        if ("albert-acm" == user) {
-            fullName = "Albert Analyst";
-        } else if ("ann-acm" == user || "Ann-acm" == user) {
-            fullName = "Ann Administrator";
-        } else if ("charles-acm" == user) {
-            fullName = "Charles Call Center";
-        } else if ("ian-acm" == user) {
-            fullName = "Ian Investigator";
-        } else if ("samuel-acm" == user) {
-            fullName = "Samuel Supervisor";
-        } else if ("sally-acm" == user) {
-            fullName = "Sally Supervisor";
-        } else {
-            fullName = user;
-        }
-        return fullName;
-    }
-
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
 //            return true;
@@ -106,22 +86,26 @@ var Acm = Acm || {
         return left == right;
     }
 
-    //val can be a simple value or an array.
-    //Usage ex)   To get good value of grandParent.parent.node.name
-    //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
     ,goodValue: function (val, replacement)  {
         var replacedWith = (undefined === replacement) ? "" : replacement;
-        if (Acm.isArray(val)) {
-            if (0 >= val.length) {
+        return this.isEmpty(val) ? replacedWith : val;
+    }
+
+    //Usage ex)   To get good value of grandParent.parent.node.name
+    //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
+    ,goodValue2: function (arr, replacement)  {
+        var replacedWith = (undefined === replacement) ? "" : replacement;
+        if (Acm.isArray(arr)) {
+            if (0 >= arr.length) {
                 return replacedWith;
             }
 
             var v = replacedWith;
-            for (var i = 0; i < val.length; i++) {
+            for (var i = 0; i < arr.length; i++) {
                 if (0 == i) {
-                    v = val[0];
+                    v = arr[0];
                 } else {
-                    var k = val[i];
+                    var k = arr[i];
                     v = v[k];
                 }
 
@@ -132,7 +116,7 @@ var Acm = Acm || {
             return v;
 
         } else {
-            return this.isEmpty(val) ? replacedWith : val;
+            return replacedWith;
         }
     }
 
@@ -146,25 +130,6 @@ var Acm = Acm || {
         }
         return json;
     }
-
-
-//    ,getUrlParameter : function(param) {
-//        var url = window.location.search.substring(1);
-//        var urlVariables = url.split('&');
-//        for (var i = 0; i < urlVariables.length; i++)
-//        {
-//            var paramName = urlVariables[i].split('=');
-//            if (paramName[0] == param)
-//            {
-//                return paramName[1];
-//            }
-//        }
-//    }
-//
-//    ,getUrlParameter2: function(name){
-//        var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
-//        return results[1] || 0;
-//    }
 
     ,Url: {
         //append random parameter after a url to avoid undesired cached session variables
@@ -314,39 +279,25 @@ var Acm = Acm || {
     }
 
     //Get date part from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime2: function(dt, format) {
-        Acm.log("Acm.getDateFromDatetime() is phasing out.Using Acm.getDateFromDatetime2() for now till the transition is complete");
-        var d = "";
-        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format(format);
-        }
-        return d;
-    }
     ,getDateFromDatetime: function(dt, format) {
         var d = "";
-        if (Acm.isEmpty(format)) {           //remove this if block after
-            format = $.t("common:date.short");
-        }
+//        if (Acm.isEmpty(format)) {           //remove this if block after
+//            format = $.t("common:date.short");
+//        }
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format(format);
         }
         return d;
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateTimeFromDatetime2: function(dt, format) {
+    ,getDateTimeFromDatetime: function(dt, format) {
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
             d = moment(dt).format(format);
         }
         return d;
     }
-    ,getDateTimeFromDatetime: function(dt) {
-        var d = "";
-        if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.full"));
-        }
-        return d;
-    }
+
 
     //////////////////////////////////////////
     ,getFrevvoDateFromDateTime: function(dt) {

@@ -13,7 +13,7 @@ Dashboard.Page = {
         Dashboard.Object.resetTableMyTasks();
         var urlBase = App.getContextPath() + "/plugin/task/";
         $.each(data, function(idx, val) {
-            var dueDate =  Acm.getDateFromDatetime(val.dueDate);
+            var dueDate =  Acm.getDateFromDatetime(val.dueDate,$.t("common:date.short"));
             var status = (val.completed == true)? "Completed": "Active";
             var row = "<tr>"
                 + "<td><a href='" + urlBase + val.taskId + "'>" + val.taskId  + "</a></td>"

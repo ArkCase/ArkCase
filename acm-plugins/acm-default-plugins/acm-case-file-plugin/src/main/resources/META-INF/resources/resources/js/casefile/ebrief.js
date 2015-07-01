@@ -307,23 +307,23 @@ CaseFile.prepare = function() {
                     var value2 = "";
 
                     if ("title" == sortBy) {
-                        value1 = Acm.goodValue([participant1, "participantLdapId"]);
-                        value2 = Acm.goodValue([participant2, "participantLdapId"]);
+                        value1 = Acm.goodValue2([participant1, "participantLdapId"]);
+                        value2 = Acm.goodValue2([participant2, "participantLdapId"]);
                     } else if ("type" == sortBy) {
-                        value1 = Acm.goodValue([participant1, "participantType"]);
-                        value2 = Acm.goodValue([participant2, "participantType"]);
+                        value1 = Acm.goodValue2([participant1, "participantType"]);
+                        value2 = Acm.goodValue2([participant2, "participantType"]);
                     } else {
                         var profile1 = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant1.participantLdapId));
                         var profile2 = CaseFile.Model.Participants.cacheParticipantProfile.get(Acm.goodValue(participant2.participantLdapId));
                         if ("organisation" == sortBy) {
-                            value1 = Acm.goodValue([profile1, "organisation"]);
-                            value2 = Acm.goodValue([profile2, "organisation"]);
+                            value1 = Acm.goodValue2([profile1, "organisation"]);
+                            value2 = Acm.goodValue2([profile2, "organisation"]);
                         } else if ("email" == sortBy) {
-                            value1 = Acm.goodValue([profile1, "email"]);
-                            value2 = Acm.goodValue([profile2, "email"]);
+                            value1 = Acm.goodValue2([profile1, "email"]);
+                            value2 = Acm.goodValue2([profile2, "email"]);
                         } else if ("phone" == sortBy) {
-                            value1 = Acm.goodValue([profile1, "phone"]);
-                            value2 = Acm.goodValue([profile2, "phone"]);
+                            value1 = Acm.goodValue2([profile1, "phone"]);
+                            value2 = Acm.goodValue2([profile2, "phone"]);
                         }
                     }
                     var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));

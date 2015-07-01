@@ -460,7 +460,7 @@ App.Model = {
             var v = "";
             var data = this.users.get();
             if (Acm.isNotEmpty(data)) {
-                v = Acm.goodValue(data[k]);
+                v = Acm.goodValue(data[k], []);
             }
             return v;
         }
