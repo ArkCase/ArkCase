@@ -73,6 +73,7 @@
 
                                 <div class="wrapper">
                                     <div class="input-group">
+                                    <label for="searchQuery" style="display:none;'">Search Costsheets</label>
                                         <input type="text" class="input-sm form-control" id="searchQuery" data-i18n="[placeholder]costsheet:label.search" placeholder="Search">
                                         <span class="input-group-btn">
                                             <button class="btn btn-sm btn-default" type="button" data-i18n="costsheet:button.go">Go!</button>
@@ -102,19 +103,19 @@
                                                     <div class="">
                                                         <div class=" clearfix">
                                                             <div class="col-xs-4 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Title"></a></div>
+                                                                <div class="h4 font-bold"><a href="#" id="parentObjTitle" data-type="text" data-pk="1" data-title="Title" title="Title"></a></div>
                                                                 <small class="text-muted"><a href="#" id="parentObjNumber" ></a></small></div>
                                                             <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Incident Date"></a></div>
+                                                                <div class="h4 font-bold"><a href="#" id="parentObjIncidentDate" data-type="date" data-pk="1" data-title="Incident Date" title="Incident Date"></a></div>
                                                                 <small class="text-muted">Incident Date</small></div>
                                                             <div class="col-xs-1 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Priority"></a></div>
+                                                                <div class="h4 font-bold"><a href="#" id="parentObjPriority" data-type="select" data-pk="1" data-title="Priority" title="Priority"></a></div>
                                                                 <small class="text-muted">Priority</small></div>
                                                             <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="parentObjAssignee" data-type="select" data-pk="1"  data-title="Assignee"></a></div>
+                                                                <div class="h4 font-bold"><a href="#" id="parentObjAssignee" data-type="select" data-pk="1"  data-title="Assignee" title="Assignee"></a></div>
                                                                 <small class="text-muted">Assigned To</small></div>
                                                             <div class="col-xs-2 b-r">
-                                                                <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Subject Type"></a></div>
+                                                                <div class="h4 font-bold"><a href="#" id="parentObjSubjectType" data-type="select" data-pk="1"  data-title="Subject Type" title="Subject Type"></a></div>
                                                                 <small class="text-muted">Subject Type</small></div>
                                                             <div class="col-xs-1">
                                                                 <div class="h4 font-bold"><a href="#" id="parentObjStatus" ></a></div>
@@ -139,8 +140,8 @@
                                             <div class="col-md-12">
                                                 <div class="pull-right inline">
                                                     <div class="btn-group">
-                                                        <button class="btn btn-default btn-sm" id = "btnNewCostsheetForm" data-i18n="costsheet:button.new-costsheet"> New Costsheet </button>
-                                                        <button class="btn btn-default btn-sm" id = "btnEditCostsheetForm" data-i18n="costsheet:button.edit-costsheet"> Edit Costsheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnNewCostsheetForm" data-i18n="costsheet:button.new-costsheet"><i class="fa fa-pencil"></i> New Costsheet </button>
+                                                        <button class="btn btn-default btn-sm" id = "btnEditCostsheetForm" data-i18n="costsheet:button.edit-costsheet"><i class="fa fa-save"></i> Edit Costsheet </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,7 +167,7 @@
                                                             </li>
                                                             <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
                                                         </ul>
-                                                        </span> <a href="#" class="font-bold" data-i18n="costsheet:label.details">Details</a> </div>
+                                                        </span> <a href="#" class="font-bold" data-i18n="costsheet:label.details" title="Edit Details">Details</a> </div>
                                                     <div class="panel-body">
                                                         <div class="divDetail"></div>
                                                     </div>

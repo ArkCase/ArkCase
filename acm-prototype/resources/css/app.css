@@ -158,6 +158,7 @@ a:hover .caret-white {
 }
 .form-control:focus {
   border-color: #177bbb;
+  outline: 1px solid #eee;
 }
 .input-s-sm {
   width: 120px;
