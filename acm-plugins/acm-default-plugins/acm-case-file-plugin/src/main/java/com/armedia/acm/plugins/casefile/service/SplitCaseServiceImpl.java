@@ -26,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,6 +43,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
     private AcmFolderService acmFolderService;
     private Set<String> typesToCopy = new HashSet<>();
     private AcmTaskService acmTaskService;
+    private SplitCaseFileBusinesRule splitCaseFileBusinessRule;
 
     @Override
     @Transactional
@@ -53,13 +56,11 @@ public class SplitCaseServiceImpl implements SplitCaseService {
 
 
         CaseFile copyCaseFile = new CaseFile();
-        copyCaseFile.setCaseType(original.getCaseType());
-        copyCaseFile.setCourtroomName(original.getCourtroomName());
-        copyCaseFile.setNextCourtDate(original.getNextCourtDate());
-        copyCaseFile.setResponsibleOrganization(original.getResponsibleOrganization());
 
-        copyCaseFile.setDetails(original.getDetails());
-        copyCaseFile.setStatus(original.getStatus());
+        Map<String, CaseFile> caseFiles = new HashMap<>();
+        caseFiles.put("source", original);
+        caseFiles.put("copy", copyCaseFile);
+        getSplitCaseFileBusinessRule().applyRules(caseFiles);
 
         //add assignee to new case
         AcmParticipant participant = new AcmParticipant();
@@ -191,5 +192,15 @@ public class SplitCaseServiceImpl implements SplitCaseService {
 
     public void setAcmTaskService(AcmTaskService acmTaskService) {
         this.acmTaskService = acmTaskService;
+    }
+
+    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinesRule splitCaseFileBusinessRule)
+    {
+        this.splitCaseFileBusinessRule = splitCaseFileBusinessRule;
+    }
+
+    public SplitCaseFileBusinesRule getSplitCaseFileBusinessRule()
+    {
+        return splitCaseFileBusinessRule;
     }
 }
