@@ -20,7 +20,7 @@
                             <span class="arrow top hidden-nav-xs"></span>
                             <li> <a href="<c:url value='/plugin/profile'/>">My Profile</a> </li>
                             <%--<li> <a href="#">Switch User</a> </li>--%>
-                            <li> <a href="<c:url value='http://www.arkcase.com/docs/pages/listpages-dirview.action?key=ARK'/>" target="_blank">Help</a> </li>
+                            <li> <a href="<c:url value='http://www.arkcase.com/docs/'/>" target="_blank">Help</a> </li>
                             <li class="divider"></li>
                             <li> <a href="<c:url value='/logout'/>">Logout</a> </li>
                         </ul>
