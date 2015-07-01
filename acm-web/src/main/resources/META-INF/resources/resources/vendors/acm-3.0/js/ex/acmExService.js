@@ -8,15 +8,7 @@ AcmEx.Service = {
     }
 
     ,JTable: {
-        _catNextParam: function(url) {
-            return (0 < url.indexOf('?'))? "&" : "?";
-        }
-        ,deferredPagingListAction: function(postData, jtParams, sortMap, urlEvealuator, responseHandler) {
-//            if (Acm.isEmpty(App.getContextPath())) {
-//                return AcmEx.Object.JTable.getEmptyRecords();
-//            }
-
-            var url = urlEvealuator();
+        deferredPagingListAction: function(url, postData, jtParams, sortMap, responseHandler) {
             if (Acm.isEmpty(url)) {
                 return AcmEx.Object.JTable.getEmptyRecords();
             }
@@ -40,9 +32,9 @@ AcmEx.Service = {
             return Acm.Service.call({type: "GET"
                 ,url: url
                 ,data: postData
-                ,callback: function(data) {
+                ,callback: function(response) {
                     if (!data.hasError) {
-                        return responseHandler(data);
+                        return responseHandler(response);
                     }
                 }
             });

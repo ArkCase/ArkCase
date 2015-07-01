@@ -397,6 +397,7 @@ SearchBase.View = {
 
             var sortMap = {};
             sortMap["title"] = "title_parseable";
+            sortMap["modified"] = "modified_date_tdt";
 
             AcmEx.Object.JTable.usePaging(this.$divResults, jtArgsToUse, sortMap);
 

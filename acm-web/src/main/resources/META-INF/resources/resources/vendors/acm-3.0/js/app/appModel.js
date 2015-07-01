@@ -82,7 +82,7 @@ App.Model = {
                     ,function() {
                         var isLogin = App.Model.Login.isLogin();
                         var sinceIdle = App.Model.Login.getSinceIdle();
-                        var errorCount = App.Model.Login.getErrorCount();
+                        //var errorCount = App.Model.Login.getErrorCount();
                         //if (!isLogin || (autoLogoutIdleLimit < sinceIdle) || (autoLogoutErrorLimit < errorCount)) {
                         if (!isLogin || (autoLogoutIdleLimit < sinceIdle)) {
                             App.Controller.Login.modelDetectedIdle();
@@ -460,7 +460,7 @@ App.Model = {
             var v = "";
             var data = this.users.get();
             if (Acm.isNotEmpty(data)) {
-                v = data[k];
+                v = Acm.goodValue(data[k], []);
             }
             return v;
         }
