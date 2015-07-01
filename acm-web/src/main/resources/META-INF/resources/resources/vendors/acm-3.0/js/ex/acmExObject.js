@@ -150,7 +150,7 @@ AcmEx.Object = {
     }
 
     ,JTable: {
-        JTABLE_DEFAULT_PAGE_SIZE: 8
+        JTABLE_DEFAULT_PAGE_SIZE: 10
         ,getEmptyRecords: function() { return {"Result": "OK","Records": [],"TotalRecordCount": 0};}
         ,getEmptyRecord: function() { return {"Result": "OK","Record": {}};}
         ,setTitle: function($jt, title) {
@@ -163,48 +163,80 @@ AcmEx.Object = {
             $jt.jtable(jtArg);
             $jt.jtable('load');
         }
+
         //
-        // sortMap can be overloaded as hash map, comparator, or paging url builder
+        // sortMap can be overloaded as hash map, comparator, or paging url decorator
         //
         ,usePaging: function($jt, jtArg, sortMap) {
-            jtArg.paging = true;
-            if (!jtArg.pageSize) {
-                jtArg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
+            jtArg.$jt = $jt;
+            jtArg.sortMap = sortMap;
+            this.usePaging_new(jtArg);
+        }
+        ,usePaging_new: function(arg) {
+            var $jt        = arg.$jt;
+            //var jtArg      = arg.jtArg;
+            var sortMap    = arg.sortMap;
+            var dataMaker  = arg.dataMaker;
+            var keyGetter  = arg.keyGetter;
+
+
+            arg.paging = true;
+            if (!arg.pageSize) {
+                arg.pageSize = AcmEx.Object.JTable.JTABLE_DEFAULT_PAGE_SIZE;
             }
-            if (!jtArg.recordAdded) {
-                jtArg.recordAdded = function(event, data){
+            if (!arg.recordAdded) {
+                arg.recordAdded = function(event, data){
                     $jt.jtable('load');
                 }
             }
-            if (!jtArg.recordUpdated) {
-                jtArg.recordUpdated = function(event, data){
+            if (!arg.recordUpdated) {
+                arg.recordUpdated = function(event, data){
                     $jt.jtable('load');
                 }
             }
 
             if (sortMap) {
-                jtArg.sorting = true;
-            } else if (!jtArg.sorting) {
-                jtArg.sorting = false;
+                arg.sorting = true;
+            } else if (!arg.sorting) {
+                arg.sorting = false;
             }
 
-            if (jtArg.actions.pagingListAction){
-                jtArg.actions.listAction = function(postData, jtParams) {
-                    return jtArg.actions.pagingListAction(postData, jtParams, sortMap);
+            if (!keyGetter) {
+                keyGetter = AcmEx.Model.JTable.defaultIdCacheKey;
+            }
+
+            if (arg.actions.pagingListAction){
+                arg.actions.listAction = function(postData, jtParams) {
+                    return arg.actions.pagingListAction(postData, jtParams, sortMap);
+                }
+            }
+            if (arg.actions.serviceListAction){
+                arg.actions.listAction = function(postData, jtParams) {
+                    return arg.actions.serviceListAction(postData, jtParams, sortMap, dataMaker, keyGetter);
                 }
             }
 
-            jtArg.fields._idx = {
+            arg.fields._idx = {
                 type: "hidden"
                 ,list: true
                 ,create: false
                 ,edit: false
             }
 
-            $jt.jtable(jtArg);
+            $jt.jtable(arg);
             $jt.jtable('load');
         }
-        ,useChildTable: function($jt, childLinks, arg, sortMap) {
+        ,useChildTable: function($jt, childLinks, jtArg, sortMap) {
+            jtArg.$jt = $jt;
+            jtArg.childLinks = childLinks;
+            jtArg.sortMap = sortMap;
+            this.useChildTable_new(jtArg);
+        }
+        ,useChildTable_new: function(arg) {
+            var $jt        = arg.$jt;
+            var childLinks = arg.childLinks;
+            var sortMap    = arg.sortMap;
+
             var argNew = {fields:{}};
             argNew.fields.subTables = {
                 title: 'Entities'
@@ -235,71 +267,57 @@ AcmEx.Object = {
                 }
             }
 
-//            $jt.jtable(argNew);
-//            $jt.jtable('load');
             this.usePaging($jt, argNew, sortMap);
         }
-        ,useAsChild: function($jt, $row, arg) {
+        ,useAsChild: function($jt, $link, arg) {
+            arg.$jt   = $jt;
+            arg.$link = $link;
+            this.useAsChild_new(arg);
+        }
+        ,useAsChild_new: function(arg) {
+            var $jt    = arg.$jt;
+            var $link  = arg.$link;
+
             $jt.jtable('openChildTable'
-                ,$row.closest('tr')
+                ,$link.closest('tr')
                 ,arg
                 ,function (data) { //opened handler
                     data.childTable.jtable('load');
                 }
             );
         }
-        /*,toggleChildTable: function($t, $row, fnOpen, title) {
-            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
+        ,toggleChildTable: function($t, $link, fnOpen, title) {
+            var $childRow = $t.jtable('getChildRow', $link.closest('tr'));
             var curTitle = $childRow.find("div.jtable-title-text").text();
 
             var toClose;
-            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
+            if ($t.jtable('isChildRowOpen', $link.closest('tr'))) {
                 toClose = (curTitle === title);
             } else {
                 toClose = false;
             }
 
             if (toClose) {
-                //fnClose($t, $row);
-                $t.jtable('closeChildTable', $row.closest('tr'));
+                $t.jtable('closeChildTable', $link.closest('tr'));
+                $link.removeClass("show active");
             } else {
-                fnOpen($t, $row);
-            }
-        }*/
-        ,toggleChildTable: function($t, $row, fnOpen, title) {
-            var $childRow = $t.jtable('getChildRow', $row.closest('tr'));
-            var curTitle = $childRow.find("div.jtable-title-text").text();
-
-            var toClose;
-            if ($t.jtable('isChildRowOpen', $row.closest('tr'))) {
-                toClose = (curTitle === title);
-            } else {
-                toClose = false;
-            }
-
-            if (toClose) {
-                $t.jtable('closeChildTable', $row.closest('tr'));
-                $row.removeClass("show active");
-            } else {
-                fnOpen($t, $row);
-                $row.addClass("show active");
-                $row.siblings().removeClass("show active");
+                fnOpen($t, $link);
+                $link.addClass("show active");
+                $link.siblings().removeClass("show active");
             }
         }
         ,clickAddRecordHandler: function($jt, handler) {
             var $spanAddRecord = $jt.find(".jtable-toolbar-item-add-record");
             $spanAddRecord.unbind("click").on("click", function(e){handler(e, this);});
         }
-        ,_hashMapComparator: function(item1, item2, sortBy, sortDir) {
-            var value1 = item1[sortBy];
-            var value2 = item2[sortBy];
+        ,hashMapComparator: function(item1, item2, sortBy, sortDir, sortMap) {
+            var itemSortBy = sortMap[sortBy];
+            var value1 = item1[itemSortBy];
+            var value2 = item2[itemSortBy];
             var rc = ((value1 < value2) ? -1 : ((value1 > value2) ? 1 : 0));
             return ("DESC" == sortDir)? -rc : rc;
-//            if ("DESC" == sortDir) {
-//                rc = -rc;
-//            }
-//            return rc;
         }
+
         //
         // comparator can be overloaded with a sortMap, in that case, a default comparator is used
         //
@@ -314,19 +332,19 @@ AcmEx.Object = {
 
                 if (Acm.isNotEmpty(jtParams.jtSorting)) {
                     sortItems.sort(function(a, b){
-                        var jtSorting = jtParams.jtSorting;
-                        var sortArr = jtSorting.split(" ");
-                        var sortBy = sortArr[0];
-                        var sortDir = sortArr[1];
+//                        var jtSorting = jtParams.jtSorting;
+//                        var sortArr = jtSorting.split(" ");
+//                        var sortBy = sortArr[0];
+//                        var sortDir = sortArr[1];
+                        var pagingParam = AcmEx.Model.JTable._getPagingParam(jtParams);
 
                         if (!comparator) {
                             return 0;
-                        } else if (typeof comparator === "function") {
-                            return comparator(a.item, b.item, sortBy, sortDir);
-                        } else if (typeof comparator === "object") {
+                        } else if ("function" === typeof comparator) {
+                            return comparator(a.item, b.item, pagingParam.sortBy, pagingParam.sortDir);
+                        } else if ("object" === typeof comparator) {
                             var sortMap = comparator;
-                            var itemSortBy = sortMap[sortBy];
-                            return AcmEx.Object.JTable._hashMapComparator(a.item, b.item, itemSortBy, sortDir);
+                            return AcmEx.Object.JTable.hashMapComparator(a.item, b.item, pagingParam.sortBy, pagingParam.sortDir, sortMap);
                         } else {
                             return 0;
                         }
@@ -355,7 +373,10 @@ AcmEx.Object = {
             return record._idx;
         }
         ,getTableRow: function(data) {
-            var whichRow = data.row.prevAll("tr").length;  //count prev siblings
+            var whichRow = -1;
+            if (data.row) {
+                whichRow = data.row.prevAll("tr").length;  //count prev siblings
+            }
             return whichRow;
         }
 
