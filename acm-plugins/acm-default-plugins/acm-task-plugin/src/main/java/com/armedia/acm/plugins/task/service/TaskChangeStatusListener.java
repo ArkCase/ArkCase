@@ -1,16 +1,18 @@
 package com.armedia.acm.plugins.task.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
-import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -26,10 +28,21 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
 	
 	private AcmFolderService acmFolderService;
 	private AcmContainerDao acmContainerDao;
+	private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+	private MuleClient muleClient;
 	
+	
+	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
+		return auditPropertyEntityAdapter;
+	}
+
+	public void setAuditPropertyEntityAdapter(
+			AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
+		this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+	}
+
 	@Override
 	public void onApplicationEvent(AcmApplicationTaskEvent event) {
-		LOG.debug("Task event raised. Start coppieng folder to the parent folder ...");
 		
 		if (event != null){
 			
@@ -37,31 +50,22 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
 			
 			if (execute){
 				
-				AcmTask task = (AcmTask) event.getSource();
+				
+				
 				try {
-
-					if(null != task.getParentObjectType() && null != task.getParentObjectId()){
-
-						AcmContainer container = task.getContainer() != null ? task.getContainer() : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
-						
-						AcmFolder folderToBeCoppied = container.getFolder();
-						
-						AcmContainer targetContainer = getAcmContainerDao().findFolderByObjectTypeAndId(task.getParentObjectType(), task.getParentObjectId());
-
-						AcmFolder targetFolder = getAcmFolderService().addNewFolderByPath(task.getParentObjectType(), 
-								task.getParentObjectId(), 
-								"/" + String.format("Task %d%n %s", task.getId(), task.getTitle()));
-						
-						getAcmFolderService().copyFolderStructure(folderToBeCoppied.getId(), targetContainer, targetFolder);
-
+					// call Mule flow to create the Alfresco folder
+					Map<String, Object> messageProps = new HashMap<>();
+					messageProps.put("acmUser", new UsernamePasswordAuthenticationToken(event.getUserId(), ""));
+					messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
+					MuleMessage msg = getMuleClient().send("jms://copyTaskFilesAndFoldersToParent.in", event.getAcmTask(), messageProps);
 					
-					}
-					
-				} catch (AcmFolderException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e) {
-					
-					LOG.error("Could not coppy folder for task id = " + task.getId(), e);
-					
-				} 
+					MuleException e = msg.getInboundProperty("executionException");
+
+				} catch (MuleException e) {
+					throw new RuntimeException("Error while copying Task documents.", e);
+				}
+				
+
 
 			}
 		}
@@ -69,12 +73,8 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
 	
 	private boolean checkExecution(String eventType)
 	{		
-		if ("com.armedia.acm.app.task.complete".equals(eventType))
-		{
-			return true;
-		}
 		
-		return false;
+		return "com.armedia.acm.app.task.complete".equals(eventType) || "com.armedia.acm.activiti.task.complete".equals(eventType);
 	}
 
 	public AcmFolderService getAcmFolderService() {
@@ -92,6 +92,15 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
 	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
 		this.acmContainerDao = acmContainerDao;
 	}
+
+	public MuleClient getMuleClient() {
+		return muleClient;
+	}
+
+	public void setMuleClient(MuleClient muleClient) {
+		this.muleClient = muleClient;
+	}
+	
 
 	
 
