@@ -8,6 +8,6 @@ import java.util.Map;
 /**
  * Created by armdev on 7/1/15.
  */
-public class SplitCaseFileBusinesRule extends SimpleStatelessSingleObjectRuleManager<Map<String, CaseFile>>
+public class SplitCaseFileBusinessRule extends SimpleStatelessSingleObjectRuleManager<Map<String, CaseFile>>
 {
 }

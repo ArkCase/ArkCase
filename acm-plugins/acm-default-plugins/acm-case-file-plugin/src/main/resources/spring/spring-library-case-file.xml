@@ -56,7 +56,7 @@
         <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
     </bean>
 
-    <bean id="splitCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinesRule">
+    <bean id="splitCaseFileBusinessRule" class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinessRule">
         <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
     </bean>
 

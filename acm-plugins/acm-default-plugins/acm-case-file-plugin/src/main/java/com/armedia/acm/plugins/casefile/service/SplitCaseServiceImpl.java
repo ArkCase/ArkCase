@@ -43,7 +43,7 @@ public class SplitCaseServiceImpl implements SplitCaseService {
     private AcmFolderService acmFolderService;
     private Set<String> typesToCopy = new HashSet<>();
     private AcmTaskService acmTaskService;
-    private SplitCaseFileBusinesRule splitCaseFileBusinessRule;
+    private SplitCaseFileBusinessRule splitCaseFileBusinessRule;
 
     @Override
     @Transactional
@@ -194,12 +194,12 @@ public class SplitCaseServiceImpl implements SplitCaseService {
         this.acmTaskService = acmTaskService;
     }
 
-    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinesRule splitCaseFileBusinessRule)
+    public void setSplitCaseFileBusinessRule(SplitCaseFileBusinessRule splitCaseFileBusinessRule)
     {
         this.splitCaseFileBusinessRule = splitCaseFileBusinessRule;
     }
 
-    public SplitCaseFileBusinesRule getSplitCaseFileBusinessRule()
+    public SplitCaseFileBusinessRule getSplitCaseFileBusinessRule()
     {
         return splitCaseFileBusinessRule;
     }

@@ -58,7 +58,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
     private CaseFileDao caseFileDao;
     private AcmFolderService acmFolderService;
     private AcmTaskService acmTaskService;
-    private SplitCaseFileBusinesRule mockSplitCaseFileBusinesRule;
+    private SplitCaseFileBusinessRule mockSplitCaseFileBusinessRule;
 
     private Authentication auth;
     AcmFolder sourceFolder;
@@ -80,7 +80,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         caseFileDao = createMock(CaseFileDao.class);
         acmFolderService = createMock(AcmFolderService.class);
         acmTaskService = createMock(AcmTaskService.class);
-        mockSplitCaseFileBusinesRule = createMock(SplitCaseFileBusinesRule.class);
+        mockSplitCaseFileBusinessRule = createMock(SplitCaseFileBusinessRule.class);
 
         sourceFolder = new AcmFolder();
         sourceFolder.setId(100l);
@@ -91,7 +91,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         splitCaseService.setCaseFileDao(caseFileDao);
         splitCaseService.setAcmFolderService(acmFolderService);
         splitCaseService.setAcmTaskService(acmTaskService);
-        splitCaseService.setSplitCaseFileBusinessRule(mockSplitCaseFileBusinesRule);
+        splitCaseService.setSplitCaseFileBusinessRule(mockSplitCaseFileBusinessRule);
         createSourceFolderStructure();
     }
 
@@ -115,7 +115,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         Capture<Map<String,CaseFile>> toSplitCaseRulesCapture = new Capture<>();
 
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile).anyTimes();
-        EasyMock.expect(mockSplitCaseFileBusinesRule.applyRules(capture(toSplitCaseRulesCapture))).andReturn(null);
+        EasyMock.expect(mockSplitCaseFileBusinessRule.applyRules(capture(toSplitCaseRulesCapture))).andReturn(null);
         EasyMock.expect(saveCaseService.saveCase(capture(caseFileCapture), eq(auth), eq(ipAddress))).andAnswer(new IAnswer<CaseFile>() {
             public CaseFile answer() throws Throwable {
                 CaseFile copiedCaseFile = caseFileCapture.getValue();
