@@ -1,57 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-	  xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
       xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
-      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
       version="CE-3.5.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
-http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
-http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
-    <flow name="copyTaskFilesAndFoldersToParent" processingStrategy="asynchronous">
-        <jms:inbound-endpoint address="jms://copyTaskFilesAndFoldersToParent.in" exchange-pattern="one-way"/>
+    <flow name="jmsCopyTaskFilesAndFoldersToParentFlow">
+        <jms:inbound-endpoint
+                queue="copyTaskFilesAndFoldersToParent.in"
+                exchange-pattern="request-response"
+                connector-ref="ActiveMQ-ACM"
+                doc:name="JMS copy task files" />
+        <logger level="DEBUG" category="com.armedia.plugins.task.service" />
 
-        <set-property propertyName="copyMethod" value="copyTaskFilesAndFoldersToParent"/>
-        <vm:outbound-endpoint address="vm://acmTaskService.in" exchange-pattern="request-response"/>
+        <scripting:transformer name="transformerCopyTaskFiles">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+
+                        // ensure we set the right modifier and creator for any objects we end up inserting or updating
+                        registry.auditPropertyEntityAdapter.setUserId(message.payload.getUserId());
+
+                        registry.acmTaskService.copyTaskFilesAndFoldersToParent(message.payload.getAcmTask());
+
+                        return payload;
+                        ]]>
+                </scripting:text>
+            </scripting:script>
+        </scripting:transformer>
+
+
 
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.task.service" message="Exception executing: #[exception.message]"/>
             <set-property propertyName="executionException" value="#[exception]"/>
         </catch-exception-strategy>
-    </flow>
-    
-    <flow name="acmTaskServiceFlow" processingStrategy="synchronous">
-        <vm:inbound-endpoint address="vm://acmTaskService.in" exchange-pattern="request-response"/>
-
-        <scripting:transformer name="copyTaskFilesAndFoldersToParentTransformer">
-            <scripting:script engine="groovy">
-                <scripting:text><![CDATA[
-                    String user = message.getInboundProperty("acmUser") == null ? null :
-                        message.getInboundProperty("acmUser").name;
-                    if ( user != null )
-                    {
-                        message.getInboundProperty("auditAdapter").setUserId(user);
-                    }
-                    return payload;
-                    ]]>
-                </scripting:text>
-            </scripting:script>
-
-        </scripting:transformer>
-
-        <logger level="TRACE" category="com.armedia.acm.plugins.task.service" message="Calling Task Service"/>
-
-        <component doc:name="Task Service">
-            <property-entry-point-resolver property="copyMethod"/>
-            <spring-object bean="acmTaskService"/>
-        </component>
-
     </flow>
 
 </mule>

@@ -54,12 +54,15 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
 				
 				try {
 					// call Mule flow to create the Alfresco folder
-					Map<String, Object> messageProps = new HashMap<>();
-					messageProps.put("acmUser", new UsernamePasswordAuthenticationToken(event.getUserId(), ""));
-					messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-					MuleMessage msg = getMuleClient().send("jms://copyTaskFilesAndFoldersToParent.in", event.getAcmTask(), messageProps);
+					LOG.debug("Calling to use app registry");
+					MuleMessage msg = getMuleClient().send("jms://copyTaskFilesAndFoldersToParent.in", event, null);
 					
 					MuleException e = msg.getInboundProperty("executionException");
+
+					if ( e != null )
+					{
+						throw e;
+					}
 
 				} catch (MuleException e) {
 					throw new RuntimeException("Error while copying Task documents.", e);
