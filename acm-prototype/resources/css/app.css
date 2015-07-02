@@ -39,6 +39,9 @@ a:focus {
   color: #181a1c;
   text-decoration: none;
 }
+
+
+
 label {
   font-weight: normal;
 }
@@ -261,6 +264,10 @@ a.list-group-item:focus {
 }
 .panel.panel-default {
   border-color: #eaeef1;
+}
+
+#wizardform div.panel.panel-default {
+	border: none;
 }
 .panel.panel-default > .panel-heading,
 .panel.panel-default > .panel-footer {
@@ -1011,7 +1018,11 @@ body.container {
 }
 
 
-
+#content section.vbox section.scrollable section.hbox.stretch aside.aside-lg.bg-light.lt section.vbox.animated.fadeInLeft section.scrollable header.dk.header h3.m-b-xs.text-black.pull-left {
+	width: 185px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 
 ul.fancytree-container {
@@ -1607,8 +1618,7 @@ ul.nav.nav-main li.active {
     display: none !important;
   }
   .nav-xs .scrollable {
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: scroll;
   }
   .nav-xs .nav-primary > ul > li > a {
     position: relative;
@@ -1624,7 +1634,6 @@ ul.nav.nav-main li.active {
     vertical-align: middle;
     height: 50px;
     width: 70px;
-    display:none;
   }
   .nav-xs .nav-primary > ul > li > a span.pull-right {
     display: none !important;
@@ -1632,7 +1641,7 @@ ul.nav.nav-main li.active {
   .nav-xs .nav-primary > ul > li > a i {
     width: auto;
     float: none;
-    display: inline;
+    display: block;
     font-size: 16px;
     margin: 0;
     line-height: 50px;
@@ -3989,6 +3998,10 @@ div.panel-body.no-padder table {
 .m-b-sm {
   margin-bottom: 10px;
 }
+
+#wizardform div.panel.panel-default div.panel-body.no-padder div.tab-content ul.pager.wizard.m-b-sm {
+	padding: 10px;
+}
 .m-b {
   margin-bottom: 15px;
 }
@@ -4318,66 +4331,14 @@ h3.m-b-xs.text-black {
 #cloud { padding: 2px; line-height: 3em; text-align: center; } #cloud a { padding: 0px; }
 #cloud { margin: 0; } #cloud li { display: inline; }
 
-/* for ui-contextmenu */
-.ui-menu {
-    /*width: 180px;*/
-    /*font-size: 63%;*/
-    width: 240px;
-    font-size: 100%;
-}
-.ui-menu kbd {
-    float: right;
-}
-
-.acm-word-wrap{
-  word-wrap: break-word;
-}
-.acm-message {
-  color:#000000;
-  font-weight: bold;
-  margin:0px;
-  text-align: left
-}
-
-#acm-messageBoardContainer {
-  background-color:lightyellow;
-  position: absolute;
-  width:100%;
-  height:auto;
-  opacity:0.9;
-  display: none;
-  z-index:1;
-}
-
-#acm-labelMessageDetail {
-  position:relative;
-  left:40px;
-  color:#000000;
-  font-weight: bold;
-}
-
-/* external file drag and drop to doc tree hilite */
-tr.dragover {
-    border: 2px solid #0B85A1;
-}
-
-
-/* document detail page - notes table
- prevent overflow of notes from the notes column*/
-#acm-docDetailLongNote{
-  width:180px;
-  overflow:auto;
-}
-
-/* email dialog box component classes */
-.acm-emailFormGroup{
+input.fancycheckbox {
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
   display: inline-block;
-  width: 100%;
-  text-align: left
-}
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: left;
+  background-position: 0px 0px;
 
-/*fullcalendar title text */
-.acm-fullCalendarTitleText{
-  font-weight: bold;
-  color: #fff;
 }
