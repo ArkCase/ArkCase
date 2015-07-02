@@ -58,6 +58,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
     private CaseFileDao caseFileDao;
     private AcmFolderService acmFolderService;
     private AcmTaskService acmTaskService;
+    private SplitCaseFileBusinessRule mockSplitCaseFileBusinessRule;
 
     private Authentication auth;
     AcmFolder sourceFolder;
@@ -79,6 +80,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         caseFileDao = createMock(CaseFileDao.class);
         acmFolderService = createMock(AcmFolderService.class);
         acmTaskService = createMock(AcmTaskService.class);
+        mockSplitCaseFileBusinessRule = createMock(SplitCaseFileBusinessRule.class);
 
         sourceFolder = new AcmFolder();
         sourceFolder.setId(100l);
@@ -89,6 +91,7 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         splitCaseService.setCaseFileDao(caseFileDao);
         splitCaseService.setAcmFolderService(acmFolderService);
         splitCaseService.setAcmTaskService(acmTaskService);
+        splitCaseService.setSplitCaseFileBusinessRule(mockSplitCaseFileBusinessRule);
         createSourceFolderStructure();
     }
 
@@ -109,7 +112,10 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         EasyMock.expect(auth.getName()).andReturn("ann-acm").anyTimes();
 
         Capture<CaseFile> caseFileCapture = new Capture<>();
+        Capture<Map<String,CaseFile>> toSplitCaseRulesCapture = new Capture<>();
+
         EasyMock.expect(caseFileDao.find(sourceId)).andReturn(sourceCaseFile).anyTimes();
+        EasyMock.expect(mockSplitCaseFileBusinessRule.applyRules(capture(toSplitCaseRulesCapture))).andReturn(null);
         EasyMock.expect(saveCaseService.saveCase(capture(caseFileCapture), eq(auth), eq(ipAddress))).andAnswer(new IAnswer<CaseFile>() {
             public CaseFile answer() throws Throwable {
                 CaseFile copiedCaseFile = caseFileCapture.getValue();
@@ -186,6 +192,10 @@ public class SplitCaseFileServiceTest extends EasyMockSupport {
         assertEquals(200l, tFolderCapture.getValue().getId().longValue());
         assertEquals(200l, ttFolderCapture.getValue().getId().longValue());
         verifyAll();
+
+        Map<String, CaseFile> sentToSplitCaseRule = toSplitCaseRulesCapture.getValue();
+        assertEquals(sourceCaseFile.getTitle(), sentToSplitCaseRule.get("source").getTitle());
+        assertNotNull(sentToSplitCaseRule.get("copy"));
 
     }
 
