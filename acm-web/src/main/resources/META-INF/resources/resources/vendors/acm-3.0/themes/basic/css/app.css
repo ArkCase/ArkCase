@@ -1006,7 +1006,11 @@ body.container {
 	
 }
 
-
+#content section.vbox section.scrollable section.hbox.stretch aside.aside-lg.bg-light.lt section.vbox.animated.fadeInLeft section.scrollable header.dk.header h3.m-b-xs.text-black.pull-left {
+	width: 185px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 
 
