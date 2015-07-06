@@ -36,27 +36,29 @@ Calendar.View = Calendar.View || {
         ,setParentId: function(parentId){
             this._parentId = parentId;
         }
-        ,reloadOutlookCalendar : function(objId){
-            Calendar.View.OutlookCalendar.setParentId(objId);
+        ,reloadOutlookCalendar : function(){
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("outlookcalendar:label.calendar"));
             Calendar.View.OutlookCalendar.$outlookCalendar.html("");
             Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
         }
         ,onModelRetrievedObject: function(objData){
-            Calendar.View.OutlookCalendar.reloadOutlookCalendar(Acm.goodValue(objData.id));
+            Calendar.View.OutlookCalendar.setParentId(Acm.goodValue(objData.id));
+            Calendar.View.OutlookCalendar.reloadOutlookCalendar();
         }
         ,onViewSelectedObject: function(nodeType, nodeId) {
-            Calendar.View.OutlookCalendar.reloadOutlookCalendar(nodeId);
+            Calendar.View.OutlookCalendar.setParentId(Acm.goodValue(nodeId));
+            Calendar.View.OutlookCalendar.reloadOutlookCalendar();
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
                 Calendar.View.OutlookCalendar.displayError();
             }
             else{
-                Calendar.View.OutlookCalendar.$outlookCalendar.html("");
-                Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
+                Calendar.View.OutlookCalendar.reloadOutlookCalendar();
             }
         }
         ,onClickbtnRefreshCalendar: function(){
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("outlookcalendar:label.calendar"));
             Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.getParentId());
         }
         ,createCalendarSource:function(){
