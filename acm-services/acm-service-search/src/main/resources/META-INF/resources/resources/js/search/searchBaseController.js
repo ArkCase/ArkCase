@@ -7,7 +7,7 @@ SearchBase.Controller = {
     create : function(args) {
         var name = Acm.goodValue(args.name, "search");
         this.MODEL_CHANGED_RESULT          = name + "-search-changed-result";                   //param: result
-        this.MODEL_CHANGED_FACET           = name + "-search-changed-facet";                    //param: facet
+//        this.MODEL_CHANGED_FACET           = name + "-search-changed-facet";                    //param: facet
         this.VIEW_SUBMITTED_QUERY          = name + "-search-view-submitted-query";             //param: term
         this.VIEW_CHANGED_FACET_SELECTION  = name + "-search-view-changed-facet-selection";     //param: selected
     }
