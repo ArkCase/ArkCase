@@ -3185,7 +3185,9 @@ Complaint.View = Complaint.View || {
         , onInitialized: function () {
         }
         ,displayError: function() {
-            App.View.MessageBoard.show($.t("complaint:outlook-calendar.msg.error-occurred"));
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("complaint:outlook-calendar.msg.error-occurred"));
+
+            //App.View.MessageBoard.show($.t("complaint:outlook-calendar.msg.error-occurred"));
         }
     }
 

@@ -57,6 +57,7 @@ Calendar.View = Calendar.View || {
             }
         }
         ,onClickbtnRefreshCalendar: function(){
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("outlookcalendar:label.calendar"));
             Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.getParentId());
         }
         ,createCalendarSource:function(){
