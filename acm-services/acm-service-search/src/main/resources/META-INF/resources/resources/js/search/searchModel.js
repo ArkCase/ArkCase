@@ -5,10 +5,10 @@
  */
 Search.Model = {
     create : function() {
-        if (Search.Service.create)    {Search.Service.create();}
+        //if (Search.Service.create)    {Search.Service.create();}
     }
     ,onInitialized: function() {
-        if (Search.Service.onInitialized)    {Search.Service.onInitialized();}
+        //if (Search.Service.onInitialized)    {Search.Service.onInitialized();}
     }
 
 };
