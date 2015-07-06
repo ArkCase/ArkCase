@@ -2,7 +2,7 @@
 <html lang="en" class="app">
 <head>
 <meta charset="utf-8" />
-<title>Search | ACM | Armedia Case Management</title>
+<title>Social Media | ACM | Armedia Case Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <link rel="stylesheet" href="resources/css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/animate.css" type="text/css" />
@@ -87,9 +87,9 @@
                   <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span> </a> </li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span> </a> </li>
                   <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li> <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
-<li class=""> <a href="socialmedia.html" class="auto"> <i class="fa fa-link icon"> </i> <span class="font-bold">Social Media</span> </a> </li>
+<li class="active"> <a href="socialmedia.html" class="auto"> <i class="fa fa-link icon"> </i> <span class="font-bold">Social Media</span> </a> </li>
 <li class=""> <a href="contacts.html" class="auto"> <i class="fa fa-users icon"> </i> <span class="font-bold">Directory</span> </a> </li>
-                  <li class="active"> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
+                  <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li>
 <li class=""> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
@@ -102,93 +102,179 @@
       </aside>
       <!-- /.aside -->
       <section id="content">
-        <header class="header bg-gradient b-b clearfix">
-          <div class="row m-t-sm">
-            <div class="col-md-12 m-b-sm">
-              <div class="input-group">
-                <input type="text" class="input-md form-control" id="searchQuery" placeholder="Type in your search query to find complaints, cases, tasks, and documents.">
-                <span class="input-group-btn">
-                <button class="btn btn-md btn-default" type="button">Go!</button>
-                </span> </div>
-            </div>
-          </div>
-        </header>
+      
+       <header class="header bg-gradient b-b clearfix">
+                <div class="row m-t-sm">
+                  <div class="col-md-12 m-b-sm">
+                    <div class="input-group">
+                      <input type="text" class="input-md form-control" id="searchQuery" placeholder="Type in your search query to search social media.">
+                      <span class="input-group-btn">
+                      <button class="btn btn-md btn-default" type="button">Go!</button>
+                      </span> </div>
+                  </div>
+                </div>
+              </header>
+              
         <section class="hbox stretchSearch">
           <aside class="aside-md bg-light dker b-r" id="subNav">
             <section class="vbox">
               <section class="scrollable">
-                <div class="wrapper facets">
-                  <h6>Create User</h6>
-                  <div class="list-group ">
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">5</span> sally-acm </label>
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">2</span> ann-acm </label>
-                  </div>
-                  <h6>Person, Organization Type</h6>
-                  <div class="list-group auto">
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">2</span> initiator </label>
-                  </div>
-                  <h6>Object Type</h6>
-                  <div class="list-group auto">
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">6</span> TASK </label>
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">2</span> PERSON-ASSOCIATION </label>
-                  </div>
-                  <h6>Assignee Full Name</h6>
-                  <div class="list-group auto">
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">6</span> sally supervisor </label>
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">2</span> ann administrator </label>
-                  </div>
-                  <h6>Priority</h6>
-                  <div class="list-group ">
-                    <label class="list-group-item">
-                      <input type="checkbox" />
-                      <span class="badge bg-info">6</span> medium </label>
-                  </div>
+                
+                
+                
+                <header class="header bg-white b-b b-light">
+                  <p class="badge pull-right">12</p>
+                  <p>Twitter</p>
+                </header>
+                <div class="wrapper">
+                  <label class="label" for="exactPhrase">Exact Phrase</label>
+                  <input type="text" id="exactPhrase" class="form-control" placeholder="Filter Exact Phrase">
+                  
+                  
+                  <label class="label" for="anyWords">Any of These Words</label>
+                  <input type="text" id="anyWords" class="form-control" placeholder="Filter Any of These Words">
+                  
+                   <label class="label" for="noneWords">None of These Words</label>
+                  <input type="text" id="noneWords" class="form-control" placeholder="Filter None of These Words">
+                  
+                  
+                   <label class="label" for="theseHashtags">Hashtags</label>
+                  <input type="text" id="theseHashtags" class="form-control" placeholder="Filter Hashtags">
+                  
+                   <label for="writtenIn"  class="label">Written In</label>
+                  
+                  <select class="form-control" id="writtenIn" name="lang" multiple>
+            <option value="all" selected="selected">Any Language</option>
+              <option value="am">Amharic (አማርኛ)</option>
+              <option value="ar">Arabic (العربية)</option>
+              <option value="bg">Bulgarian (Български)</option>
+              <option value="bn">Bengali (বাংলা)</option>
+              <option value="bo">Tibetan (བོད་སྐད)</option>
+              <option value="chr">Cherokee (ᏣᎳᎩ)</option>
+              <option value="da">Danish (Dansk)</option>
+              <option value="de">German (Deutsch)</option>
+              <option value="dv">Maldivian (ދިވެހި)</option>
+              <option value="el">Greek (Ελληνικά)</option>
+              <option value="en">English (English)</option>
+              <option value="es">Spanish (Español)</option>
+              <option value="fa">Persian (فارسی)</option>
+              <option value="fi">Finnish (Suomi)</option>
+              <option value="fr">French (Français)</option>
+              <option value="gu">Gujarati (ગુજરાતી)</option>
+              <option value="iw">Hebrew (עברית)</option>
+              <option value="hi">Hindi (हिंदी)</option>
+              <option value="hu">Hungarian (Magyar)</option>
+              <option value="hy">Armenian (Հայերեն)</option>
+              <option value="in">Indonesian (Bahasa Indonesia)</option>
+              <option value="is">Icelandic (Íslenska)</option>
+              <option value="it">Italian (Italiano)</option>
+              <option value="iu">Inuktitut (ᐃᓄᒃᑎᑐᑦ)</option>
+              <option value="ja">Japanese (日本語)</option>
+              <option value="ka">Georgian (ქართული)</option>
+              <option value="km">Khmer (ខ្មែរ)</option>
+              <option value="kn">Kannada (ಕನ್ನಡ)</option>
+              <option value="ko">Korean (한국어)</option>
+              <option value="lo">Lao (ລາວ)</option>
+              <option value="lt">Lithuanian (Lietuvių)</option>
+              <option value="ml">Malayalam (മലയാളം)</option>
+              <option value="my">Myanmar (မြန်မာဘာသာ)</option>
+              <option value="ne">Nepali (नेपाली)</option>
+              <option value="nl">Dutch (Nederlands)</option>
+              <option value="no">Norwegian (Norsk)</option>
+              <option value="or">Oriya (ଓଡ଼ିଆ)</option>
+              <option value="pa">Panjabi (ਪੰਜਾਬੀ)</option>
+              <option value="pl">Polish (Polski)</option>
+              <option value="pt">Portuguese (Português)</option>
+              <option value="ru">Russian (Русский)</option>
+              <option value="si">Sinhala (සිංහල)</option>
+              <option value="sv">Swedish (Svenska)</option>
+              <option value="ta">Tamil (தமிழ்)</option>
+              <option value="te">Telugu (తెలుగు)</option>
+              <option value="th">Thai (ไทย)</option>
+              <option value="tl">Tagalog (Tagalog)</option>
+              <option value="tr">Turkish (Türkçe)</option>
+              <option value="ur">Urdu (ﺍﺭﺩﻭ)</option>
+              <option value="vi">Vietnamese (Tiếng Việt)</option>
+              <option value="zh">Chinese (中文)</option>
+          </select>
+                  
+                  
+                    <label class="label" for="fromtheseAccounts">From These Accounts</label>
+                  <input type="text" id="fromtheseAccounts" class="form-control" placeholder="Filter From These Accounts">
+                  
+                    <label class="label" for="totheseAccounts">To These Accounts</label>
+                  <input type="text" id="totheseAccounts" class="form-control" placeholder="Filter To These Accounts">
+                  
+                  <label class="label" for="mentioningtheseAccounts">Mentioning These Accounts</label>
+                  <input type="text" id="mentioningtheseAccounts" class="form-control" placeholder="Filter Mentioning These Accounts">
+                  
+                  <label class="label" for="locationa">Location</label>
+                  <input type="text" id="locationa" class="form-control" placeholder="Filter Location">
+                  
+                  
+                  <label class="label" for="complaintIncidentDate">Date Range</label>
+                      <div class="clear"></div>
+                      <label class="label col-xs-2"  for="complaintIncidentDate">From</label>
+                      <div class="col-xs-10">
+                        <input class="datepicker-input form-control"  id="complaintIncidentDate" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                      </div>
+                      <label class="label col-xs-2" for="complaintIncidentDateTo">To</label>
+                      <div class="col-xs-10">
+                        <input class="datepicker-input form-control" id="complaintIncidentDateTo" type="text" value="12-02-2013" data-date-format="dd-mm-yyyy" >
+                      </div>
+                      <div class="clear"></div>
+                
+                 
+                  <label class="label"><input type="checkbox" /> Positive :)</label>
+                  <label class="label"><input type="checkbox" /> Negative :(</label>
+                  <label class="label"><input type="checkbox" /> Question ? </label>
                 </div>
+                
+              
+                
+                
+                  
+              
+                
+                
+                <footer class="footer bg-white b-t navbar text-center">
+                <a href="#" class="btn btn-s-sm btn-primary">Filter</a>  <a href="#" class="btn btn-s-sm btn-default">Clear</a>
+                </footer>
+                
+                
+                
+                
               </section>
             </section>
           </aside>
           <aside>
             <section class="vbox">
+             
               <section class="scrollable wrapper w-f">
                 <section class="panel panel-default">
                   <div class="row wrapper">
                     <div class="col-md-10">
                       <p>Showing 1-14 of 34,835 results for "Search Query"</p>
                     </div>
-                    <div class="col-md-2 text-right"> <a href="#" class="btn btn-primary">Export</a> </div>
+                    <div class="col-md-2 text-right"> <a href="#" class="btn btn-primary">Add To Case</a> </div>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped b-t b-light">
                       <thead>
                         <tr>
-                          <th class="th-sortable" data-toggle="class">Type <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                          <th class="th-sortable" data-toggle="class">ID <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                          <th class="th-sortable" data-toggle="class">Title <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                          <th class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
-                          <th class="th-sortable" data-toggle="class">Status <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i> </span> </th>
+                          <th width="25"><input type="checkbox" /></th>
+                          <th class="th-sortable" data-toggle="class">Media <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                         
+                          <th width="200" class="th-sortable" data-toggle="class">Created <span class="th-sort"> <i class="fa fa-sort-down text"></i> <i class="fa fa-sort-up text-active"></i> <i class="fa fa-sort"></i></span></th>
+                         
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td>[Type]</td>
-                          <td>[ID]</td>
-                          <td>[Title]</td>
-                          <td>[Created]</td>
-                          <td>[Status]</td>
+                          <td><input type="checkbox" /></td>
+                          <td><blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">Map: A month later it&#39;s clear the scope of the Baltimore riots is wider than suspected. <a href="http://t.co/Zzn7d8JZ0H">http://t.co/Zzn7d8JZ0H</a> <a href="http://t.co/Gw3wayJ0ys">pic.twitter.com/Gw3wayJ0ys</a></p>&mdash; The Baltimore Sun (@baltimoresun) <a href="https://twitter.com/baltimoresun/status/604795692104548352">May 30, 2015</a></blockquote> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></td>
+                         
+                          <td>5/30/2015 7:45pm</td>
                         </tr>
                       </tbody>
                     </table>
