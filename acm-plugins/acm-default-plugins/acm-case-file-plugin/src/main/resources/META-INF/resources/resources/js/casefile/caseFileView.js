@@ -2590,7 +2590,6 @@ CaseFile.View = CaseFile.View || {
                     }
                     return jtData;
                 }
-                //,keyGetter: keyGetter
 
                 ,title: $.t("casefile:tasks.table.title")
                 ,multiselect: false
@@ -2614,7 +2613,7 @@ CaseFile.View = CaseFile.View || {
                             ,dataMaker
                             ,CaseFile.View.Tasks.currentKey
                         ).fail(function(response) {
-                            Acm.Log("Task list error");
+                            Acm.log("Task list error");
                         });
                     }
 
@@ -2865,7 +2864,7 @@ CaseFile.View = CaseFile.View || {
                                 ,dataMaker
                                 ,cacheKey
                             ).fail(function(response) {
-                                Acm.Log("History event list error");
+                                Acm.log("History event list error");
                             });
                     }
                 }
@@ -3011,7 +3010,7 @@ CaseFile.View = CaseFile.View || {
                                 ,dataMaker
                                 ,cacheKey
                             ).fail(function(response) {
-                                Acm.Log("Correspondence list error");
+                                Acm.log("Correspondence list error");
                             });
                     }
                     ,createAction: function(postData, jtParams) {

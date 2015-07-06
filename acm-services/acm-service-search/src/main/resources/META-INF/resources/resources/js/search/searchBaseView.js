@@ -57,7 +57,8 @@ SearchBase.View = {
             this.$divFacets = (args.$divFacets)? args.$divFacets : $("#divFacets");
             this.topFacets = args.topFacets;
 
-            Acm.Dispatcher.replaceEventListener(SearchBase.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
+            //Acm.Dispatcher.replaceEventListener(SearchBase.Controller.MODEL_CHANGED_FACET  ,this.onModelChangedFacet);
+            Acm.Dispatcher.replaceEventListener(SearchBase.Controller.MODEL_CHANGED_RESULT  ,this.onModelChangedResult);
         }
         ,onInitialized: function() {
             SearchBase.View.Facet.initFacetPanel();
@@ -81,11 +82,20 @@ SearchBase.View = {
             SearchBase.Controller.viewChangedFacetSelection(selected);
         }
 
-        ,onModelChangedFacet: function(facet) {
-            if (facet.hasError) {
-                //alert("View: onModelChangedFacet, hasError, errorMsg:" + facet.errorMsg);
+//        ,onModelChangedFacet: function(facet) {
+//            if (facet.hasError) {
+//                //alert("View: onModelChangedFacet, hasError, errorMsg:" + facet.errorMsg);
+//            }
+//            SearchBase.View.Facet.buildFacetPanel(facet);
+//        }
+        ,onModelChangedResult: function(data) {
+            if (data) {
+                if (!SearchBase.Model.isFacetUpToDate()) {
+                    SearchBase.Model.setFacetUpToDate(true);
+                    var facet = SearchBase.Model.makeFacet(data);
+                    SearchBase.View.Facet.buildFacetPanel(facet);
+                }
             }
-            SearchBase.View.Facet.buildFacetPanel(facet);
         }
 
         ,_getFacetDisplay: function(label, key) {
@@ -227,8 +237,10 @@ SearchBase.View = {
             this.jtDataMaker = (args.jtDataMaker)? args.jtDataMaker : this._jtDataMakerDefault;
             SearchBase.View.Results._useJTable(args.jtArgs);
 
-            Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
-            Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
+            //Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
+            Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery);
+            //Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection ,Acm.Dispatcher.PRIORITY_LOW);
+            Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_CHANGED_FACET_SELECTION ,this.onViewChangedFacetSelection);
         }
         ,onInitialized: function() {
         }
@@ -236,36 +248,17 @@ SearchBase.View = {
             return this.$divResults.jtable('selectedRows');
         }
         ,onViewSubmittedQuery: function(term) {
-            AcmEx.Object.JTable.load(SearchBase.View.Results.$divResults);
+            if (SearchBase.Model.submittedQuery(term)) {
+                AcmEx.Object.JTable.load(SearchBase.View.Results.$divResults);
+            }
         }
         ,onViewChangedFacetSelection: function(selected) {
-            //todo: compare selected with si.filters, do nothing if same
-
-            AcmEx.Object.JTable.load(SearchBase.View.Results.$divResults);
-        }
-
-        ,_jtDataMakerDefault: function(result) {
-            var jtData = AcmEx.Object.JTable.getEmptyRecords();
-            if (result) {
-                for (var i = 0; i < result.docs.length; i++) {
-                    var Record = {};
-                    Record.id         = Acm.goodValue(result.docs[i].object_id_s);
-                    Record.name       = Acm.goodValue(result.docs[i].name);
-                    Record.type       = Acm.goodValue(result.docs[i].object_type_s);
-                    Record.title      = Acm.goodValue(result.docs[i].title_parseable);
-                    Record.parentId   = Acm.goodValue(result.docs[i].parent_id_s);
-                    Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
-                    Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
-                    Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
-                    Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt,$.t("common:date.full"));
-                    Record.email      = Acm.goodValue(result.docs[i].email_lcs);
-                    jtData.Records.push(Record);
-                }
-
-                jtData.TotalRecordCount = result.numFound;
+            if (SearchBase.Model.changedFacetSelection(selected)) {
+                AcmEx.Object.JTable.load(SearchBase.View.Results.$divResults);
             }
-            return jtData;
+
         }
+
         ,displayName: function(data) {
             var url = App.buildObjectUrl(Acm.goodValue(data.record.type), Acm.goodValue(data.record.id), "#");
             var $lnk = $("<a href='" + url + "'>" + Acm.goodValue(data.record.name) + "</a>");
@@ -279,52 +272,74 @@ SearchBase.View = {
         }
         ,_getDefaultJtArgs: function() {
             return {
-                title: $.t("search:table.title")
+                $jt: this.$divResults
+                ,sortMap: {name  : "name"
+                    ,title       : "title_parseable"
+                    ,modified    : "modified_date_tdt"
+                }
+                ,dataMaker: function(result) {
+                    var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                    if (result && Acm.isArray(result.docs)) {
+                        for (var i = 0; i < result.docs.length; i++) {
+                            var Record = {};
+                            Record.id         = Acm.goodValue(result.docs[i].object_id_s);
+                            Record.name       = Acm.goodValue(result.docs[i].name);
+                            Record.type       = Acm.goodValue(result.docs[i].object_type_s);
+                            Record.title      = Acm.goodValue(result.docs[i].title_parseable);
+                            Record.parentId   = Acm.goodValue(result.docs[i].parent_id_s);
+                            Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
+                            Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
+                            Record.owner      = Acm.goodValue(result.docs[i].assignee_full_name_lcs); //owner_s
+                            Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt,$.t("common:date.full"));
+                            Record.email      = Acm.goodValue(result.docs[i].email_lcs);
+                            jtData.Records.push(Record);
+                        }
+
+                        jtData.TotalRecordCount = Acm.goodValue(result.numFound, 0);
+                    }
+                    return jtData;
+                }
+                ,keyGetter: function(si, jtParams) {
+                    var comboKey = Acm.goodValue(si.q) + "." + JSON.stringify(Acm.goodValue(si.filters, []));
+                    return AcmEx.Model.JTable.defaultIdCacheKey(comboKey, jtParams);
+                }
+
+                ,title: $.t("search:table.title")
                 ,multiselect: false
                 ,selecting: false
                 ,selectingCheckboxes: false
-                ,pageSize: 16
-                ,paging: true
-                ,sorting: true
+                ,pageSize: 20
                 ,actions: {
-                    pagingListAction: function (postData, jtParams, sortMap) {
+                    serviceListAction: function (postData, jtParams, sortMap, dataMaker, keyGetter) {
                         var si = SearchBase.Model.getSearchInfo();
                         if (Acm.isEmpty(si.q)) {
                             return AcmEx.Object.JTable.getEmptyRecords();
                         }
+
                         si.start = Acm.goodValue(jtParams.jtStartIndex, 0);
+                        si.n = Acm.goodValue(jtParams.jtPageSize, 0);
+                        si.s = Acm.goodValue(jtParams.jtSorting);
 
-                        if (SearchBase.Model.isFacetUpToDate()) {
-                            //var page = si.start;
-                            //var result = SearchBase.Model.cacheResult.get(page);
-                            var result = SearchBase.Model.getCachedResult(si);
-                            if (result) {
-                                return SearchBase.View.Results.jtDataMaker(result);
-                            }
-                        }
-
-                        return SearchBase.Service.facetSearchDeferred(si
-                            ,postData
-                            ,jtParams
-                            ,sortMap
-                            ,function(data) {
-                                var result = data;
+                        var cacheKey = keyGetter(si, jtParams);
+                        return SearchBase.Model.facetSearchListAction(si
+                                ,postData
+                                ,jtParams
+                                ,sortMap
+                                ,dataMaker
+                                ,cacheKey
+                            ).done(function(result) {
                                 var title;
                                 if(si.q == "*"){
                                     title = si.total + ' results';
-                                }
-                                else{
+                                } else{
                                     title = si.total + ' results of "' + si.q + '"';
                                 }
                                 AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, title);
 
-                                return SearchBase.View.Results.jtDataMaker(result);
-                            }
-                            ,function(error) {
+                            }).fail(function(response) {
                                 AcmEx.Object.JTable.setTitle(SearchBase.View.Results.$divResults, "Error occurred");
-                            }
-                        );
-
+                            })
+                        ;
                     }
                 }  //end actions
                 ,fields: {
@@ -383,7 +398,6 @@ SearchBase.View = {
                         title: $.t("search:table.field.modified")
                         ,type: 'textarea'
                         ,width: '20%'
-                        ,sorting: false
                     }
                 } //end field
             };
@@ -395,12 +409,7 @@ SearchBase.View = {
                     jtArgsToUse[arg] = jtArgs[arg];
                 }
 
-            var sortMap = {};
-            sortMap["title"] = "title_parseable";
-            sortMap["modified"] = "modified_date_tdt";
-
-            AcmEx.Object.JTable.usePaging(this.$divResults, jtArgsToUse, sortMap);
-
+            AcmEx.Object.JTable.usePaging_new(jtArgsToUse);
         }
     }
 
