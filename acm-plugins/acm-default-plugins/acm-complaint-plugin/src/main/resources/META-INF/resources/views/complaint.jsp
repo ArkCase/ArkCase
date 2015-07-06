@@ -408,7 +408,7 @@
                                     </div>
 
 
-                                    <div id="tabOutlookCalendar">
+                                    <div id="tabOutlookCalendar" style="display:none;">
                                                 <%--<div class="pull-right inline">
                                                     <div class="dropdown">
                                                         <div class="btn-group">

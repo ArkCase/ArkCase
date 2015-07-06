@@ -3364,7 +3364,9 @@ CaseFile.View = CaseFile.View || {
         , onInitialized: function () {
         }
         ,displayError: function() {
-            App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"));
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("casefile:outlook-calendar.msg.error-occurred"));
+
+            //App.View.MessageBoard.show($.t("casefile:outlook-calendar.msg.error-occurred"));
         }
     }
 
