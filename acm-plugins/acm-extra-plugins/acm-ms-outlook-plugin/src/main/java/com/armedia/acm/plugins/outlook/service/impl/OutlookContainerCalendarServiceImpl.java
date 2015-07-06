@@ -42,6 +42,10 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     private String systemUserEmailPassword;
     private String systemUserId;
     private List<String> participantsTypesForOutlookFolder;
+    private String defaultAccess;
+    private String approverAccess;
+    private String assigneeAccess;
+    private String followerAccess;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -99,17 +103,41 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                     outlookFolderPermission.setEmail(user.getMail());
                     switch (ap.getParticipantType()) {
                         case "follower":
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
-                            break;
+                            if(getFollowerAccess() != null){
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
+                                break;
+                            }
+                            else{
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.PublishingEditor);
+                                break;
+                            }
                         case "assignee":
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
-                            break;
+                            if(getAssigneeAccess() != null){
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
+                                break;
+                            }
+                            else{
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
+                                break;
+                            }
                         case "approver":
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
-                            break;
+                            if(getApproverAccess() != null){
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
+                                break;
+                            }
+                            else{
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
+                                break;
+                            }
                         default:
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.None);
-                            break;
+                            if(getDefaultAccess() != null){
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
+                                break;
+                            }
+                            else{
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.None);
+                                break;
+                            }
                     }
                     folderPermissionsToBeAdded.add(outlookFolderPermission);
                 }
@@ -150,5 +178,37 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     public void setSystemUserId(String systemUserId) {
         this.systemUserId = systemUserId;
+    }
+
+    public String getDefaultAccess() {
+        return defaultAccess;
+    }
+
+    public void setDefaultAccess(String defaultAccess) {
+        this.defaultAccess = defaultAccess;
+    }
+
+    public String getApproverAccess() {
+        return approverAccess;
+    }
+
+    public void setApproverAccess(String approverAccess) {
+        this.approverAccess = approverAccess;
+    }
+
+    public String getAssigneeAccess() {
+        return assigneeAccess;
+    }
+
+    public void setAssigneeAccess(String assigneeAccess) {
+        this.assigneeAccess = assigneeAccess;
+    }
+
+    public String getFollowerAccess() {
+        return followerAccess;
+    }
+
+    public void setFollowerAccess(String followerAccess) {
+        this.followerAccess = followerAccess;
     }
 }
