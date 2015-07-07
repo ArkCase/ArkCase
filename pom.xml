@@ -67,7 +67,7 @@
         <maven.taglist.version>2.4</maven.taglist.version>
         <maven-jgitflow-plugin.version>1.0-m4.3</maven-jgitflow-plugin.version>
 
-        <mule.version>3.5.0-bighorn</mule.version>
+        <mule.version>3.7.0</mule.version>
         <mule-cmis-connector.version>1.14.1</mule-cmis-connector.version>
         <!--<mule-cmis-connector.version>2.0.0</mule-cmis-connector.version>-->
         <oracle.jdbc.version>6</oracle.jdbc.version>
@@ -78,7 +78,7 @@
         <sonar.version>2.3.1</sonar.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
-        <spring.version>3.2.13.RELEASE</spring.version>
+        <spring.version>4.1.6.RELEASE</spring.version>
         <springframework-addons.version>0.1</springframework-addons.version>
         <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
         <asm.version>5.0.3</asm.version>
@@ -86,6 +86,7 @@
         <frevvo.forms.version>6.1</frevvo.forms.version>
         <java.mail.version>1.5.4</java.mail.version>
         <spring.integration.version>2.2.3.RELEASE</spring.integration.version>
+        <com.google.guava.version>18.0</com.google.guava.version>
     </properties>
 
     <organization>
@@ -317,7 +318,7 @@
         </repository>
         <repository>
             <id>codehaus</id>
-            <url>http://repository.codehaus.org</url>
+            <url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
         </repository>
 
         <!-- The Activiti repository -->
@@ -330,7 +331,7 @@
         <repository>
             <id>mulesoft-releases</id>
             <name>MuleSoft Releases Repository</name>
-            <url>http://repository.mulesoft.org/releases/</url>
+            <url>http://repository.mulesoft.org/nexus/content/repositories/releases/</url>
             <layout>default</layout>
         </repository>
 
@@ -1177,7 +1178,12 @@
 
             <!-- end of testing -->
 
-
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${com.google.guava.version}</version>
+			</dependency>
+			
 
         </dependencies>
 
