@@ -13,7 +13,35 @@ Subscription.View = {
 
     ,getJtArgs: function() {
         return {
-            fields: {
+            sortMap: {
+                title       : "title_parseable"
+                ,parentName  : "parent_number_lcs"
+                ,parentType  : "parent_type_s"
+                ,modified    : "modified_date_tdt"
+            }
+            ,dataMaker: function(result) {
+                var jtData = AcmEx.Object.JTable.getEmptyRecords();
+                if (result && Acm.isArray(result.docs)) {
+                    for (var i = 0; i < result.docs.length; i++) {
+                        var Record = {};
+                        Record.id         = Acm.goodValue(result.docs[i].object_id_s);
+                        Record.name       = Acm.goodValue(result.docs[i].name);
+                        Record.type       = Acm.goodValue(result.docs[i].object_type_s);
+                        Record.title      = Acm.goodValue(result.docs[i].title_parseable);
+                        Record.parentId   = Acm.goodValue(result.docs[i].parent_id_s);
+                        Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
+                        Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
+                        Record.owner      = Acm.goodValue(result.docs[i].owner_lcs);
+                        Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt,$.t("common:date.full"));
+                        jtData.Records.push(Record);
+                    }
+
+                    jtData.TotalRecordCount = Acm.goodValue(result.numFound, 0);
+                }
+                return jtData;
+            }
+
+            ,fields: {
                 id: {
                     title: $.t("subscription:table.field.id")
                     ,key: true
@@ -51,14 +79,14 @@ Subscription.View = {
                 ,parentName: {
                     title: $.t("subscription:table.field.parent-name")
                     ,width: '15%'
-                    ,sorting: false
+                    //,sorting: false
                     ,display: function(data) {
                         return SearchBase.View.Results.displayParent(data);
                     }
                 }
                 ,parentType: {
                     title: $.t("subscription:table.field.parent-type")
-                    ,sorting: false
+                    //,sorting: false
                 }
                 ,owner: {
                     title: $.t("subscription:table.field.owner")
@@ -70,33 +98,33 @@ Subscription.View = {
                     title: $.t("subscription:table.field.modified")
                     ,type: 'textarea'
                     ,width: '20%'
-                    ,sorting: false
+                    //,sorting: false
                 }
             }
         }; //end args
     }
 
-    ,jtDataMaker: function(result) {
-        var jtData = AcmEx.Object.JTable.getEmptyRecords();
-        if (result) {
-            for (var i = 0; i < result.docs.length; i++) {
-                var Record = {};
-                Record.id         = Acm.goodValue(result.docs[i].object_id_s);
-                Record.name       = Acm.goodValue(result.docs[i].name);
-                Record.type       = Acm.goodValue(result.docs[i].object_type_s);
-                Record.title      = Acm.goodValue(result.docs[i].title_parseable);
-                Record.parentId   = Acm.goodValue(result.docs[i].parent_id_s);
-                Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
-                Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
-                Record.owner      = Acm.goodValue(result.docs[i].owner_lcs);
-                Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt,$.t("common:date.full"));
-                jtData.Records.push(Record);
-            }
-
-            jtData.TotalRecordCount = result.numFound;
-        }
-        return jtData;
-    }
+//    ,jtDataMaker: function(result) {
+//        var jtData = AcmEx.Object.JTable.getEmptyRecords();
+//        if (result) {
+//            for (var i = 0; i < result.docs.length; i++) {
+//                var Record = {};
+//                Record.id         = Acm.goodValue(result.docs[i].object_id_s);
+//                Record.name       = Acm.goodValue(result.docs[i].name);
+//                Record.type       = Acm.goodValue(result.docs[i].object_type_s);
+//                Record.title      = Acm.goodValue(result.docs[i].title_parseable);
+//                Record.parentId   = Acm.goodValue(result.docs[i].parent_id_s);
+//                Record.parentName = Acm.goodValue(result.docs[i].parent_number_lcs);
+//                Record.parentType = Acm.goodValue(result.docs[i].parent_type_s);
+//                Record.owner      = Acm.goodValue(result.docs[i].owner_lcs);
+//                Record.modified   = Acm.getDateTimeFromDatetime(result.docs[i].modified_date_tdt,$.t("common:date.full"));
+//                jtData.Records.push(Record);
+//            }
+//
+//            jtData.TotalRecordCount = result.numFound;
+//        }
+//        return jtData;
+//    }
 
 };
 

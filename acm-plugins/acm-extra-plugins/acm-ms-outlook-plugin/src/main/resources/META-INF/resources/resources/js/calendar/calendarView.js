@@ -29,56 +29,57 @@ Calendar.View = Calendar.View || {
         }
         ,onInitialized: function() {
         }
-        ,_parentId: 0
-        ,getParentId: function(){
-            return this._parentId;
+
+        ,getActiveParentObjectId: function() {
+            return ObjNav.View.Navigator.getActiveObjId();
         }
-        ,setParentId: function(parentId){
-            this._parentId = parentId;
+        ,getActiveParentObject: function(nodeType, nodeId) {
+            var parentObj = null;
+            if (Acm.isNotEmpty(objId)) {
+                parentObj = ObjNav.Model.Detail.getCacheObject(nodeType, nodeId);
+            }
+            return parentObj;
         }
-        ,reloadOutlookCalendar : function(objId){
-            Calendar.View.OutlookCalendar.setParentId(objId);
+        ,reloadOutlookCalendar : function(){
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("outlookcalendar:label.calendar"));
             Calendar.View.OutlookCalendar.$outlookCalendar.html("");
             Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
         }
         ,onModelRetrievedObject: function(objData){
-            Calendar.View.OutlookCalendar.reloadOutlookCalendar(Acm.goodValue(objData.id));
+            Calendar.View.OutlookCalendar.reloadOutlookCalendar();
         }
         ,onViewSelectedObject: function(nodeType, nodeId) {
-            Calendar.View.OutlookCalendar.reloadOutlookCalendar(nodeId);
+            Calendar.View.OutlookCalendar.reloadOutlookCalendar();
         }
         ,onModelRetrievedOutlookCalendarItem: function(outlookCalendarItems){
             if(outlookCalendarItems.hasError){
                 Calendar.View.OutlookCalendar.displayError();
             }
             else{
-                Calendar.View.OutlookCalendar.$outlookCalendar.html("");
-                Calendar.View.OutlookCalendar.createOutlookCalendarWidget(Calendar.View.OutlookCalendar.$outlookCalendar);
+                Calendar.View.OutlookCalendar.reloadOutlookCalendar();
             }
         }
         ,onClickbtnRefreshCalendar: function(){
-            Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.getParentId());
+            Calendar.View.OutlookCalendar.$calendarTabTitle.text($.t("outlookcalendar:label.calendar"));
+            Calendar.Controller.viewRefreshedOutlookCalendar(Calendar.View.OutlookCalendar.getActiveParentObjectId());
         }
         ,createCalendarSource:function(){
             var calendarSource = [];
-            var parentId = Calendar.View.OutlookCalendar.getParentId();
+            var parentId = Calendar.View.OutlookCalendar.getActiveParentObjectId();
             if(Acm.isNotEmpty(parentId)){
-                var parentObject = Calendar.Model.OutlookCalendar.cacheParentObject.get(parentId);
-                if(Acm.isNotEmpty(parentObject)){
-                    var outlookCalendarItems = Calendar.Model.OutlookCalendar.cacheOutlookCalendarItems.get(parentId);
-                    if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
-                        for(var i = 0; i<outlookCalendarItems.items.length; i++){
-                            if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
-                                var outlookCalendarItem = {};
-                                outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
-                                outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
-                                outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
-                                outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
-                                outlookCalendarItem.detail = Calendar.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
-                                outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
-                                outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
-                                calendarSource.push(outlookCalendarItem);
-                            }
+                var outlookCalendarItems = Calendar.Model.OutlookCalendar.cacheOutlookCalendarItems.get(parentId);
+                if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                    for(var i = 0; i<outlookCalendarItems.items.length; i++){
+                        if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItem(outlookCalendarItems.items[i])) {
+                            var outlookCalendarItem = {};
+                            outlookCalendarItem.id = Acm.goodValue(outlookCalendarItems.items[i].id);
+                            outlookCalendarItem.title = Acm.goodValue(outlookCalendarItems.items[i].subject);
+                            outlookCalendarItem.start = Acm.goodValue(outlookCalendarItems.items[i].startDate);
+                            outlookCalendarItem.end = Acm.goodValue(outlookCalendarItems.items[i].endDate);
+                            outlookCalendarItem.detail = Calendar.View.OutlookCalendar.makeDetail(outlookCalendarItems.items[i]);
+                            outlookCalendarItem.className = Acm.goodValue("b-l b-2x b-info");
+                            outlookCalendarItem.allDay = Acm.goodValue(outlookCalendarItems.items[i].allDayEvent);
+                            calendarSource.push(outlookCalendarItem);
                         }
                     }
                 }

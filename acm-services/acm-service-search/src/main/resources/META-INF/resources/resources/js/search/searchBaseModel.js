@@ -511,7 +511,7 @@ SearchBase.Model = {
         }
 
         var url = SearchBase.Model.API_FACET_SEARCH;
-        url += searchInfo.q + "*";
+        url += searchInfo.q + "*";              //search results start with q. If q is wildcard, it still works
 
         //for test
         //url = App.getContextPath() + "/resources/facetSearch.json?q=xyz";
