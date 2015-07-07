@@ -234,7 +234,7 @@ SearchBase.View = {
             this.$divResults = (args.$divResults)? args.$divResults : $("#divResults");
             AcmEx.Object.JTable.setTitle(this.$divResults, "Search Results");
 
-            this.jtDataMaker = (args.jtDataMaker)? args.jtDataMaker : this._jtDataMakerDefault;
+            //this.jtDataMaker = (args.jtDataMaker)? args.jtDataMaker : this._jtDataMakerDefault;
             SearchBase.View.Results._useJTable(args.jtArgs);
 
             //Acm.Dispatcher.replaceEventListener(SearchBase.Controller.VIEW_SUBMITTED_QUERY         ,this.onViewSubmittedQuery        ,Acm.Dispatcher.PRIORITY_LOW);
@@ -274,7 +274,12 @@ SearchBase.View = {
             return {
                 $jt: this.$divResults
                 ,sortMap: {name  : "name"
+                    ,type        : "object_type_s"
                     ,title       : "title_parseable"
+                    ,parentId    : "parent_id_s"
+                    ,parentName  : "parent_number_lcs"
+                    ,parentType  : "parent_type_s"
+                    ,owner       : "assignee_full_name_lcs"
                     ,modified    : "modified_date_tdt"
                 }
                 ,dataMaker: function(result) {
@@ -354,7 +359,7 @@ SearchBase.View = {
                     ,name: {
                         title: $.t("search:table.field.name")
                         ,width: '15%'
-                        ,sorting: false
+                        //,sorting: false
                         ,display: function(data) {
                             return SearchBase.View.Results.displayName(data);
                         }
@@ -362,7 +367,7 @@ SearchBase.View = {
                     ,type: {
                         title: $.t("search:table.field.type")
                         //,options: [App.OBJTYPE_CASE, App.OBJTYPE_COMPLAINT, App.OBJTYPE_TASK, App.OBJTYPE_DOCUMENT]
-                        ,sorting: false
+                        //,sorting: false
                     }
                     ,title: {
                         title: $.t("search:table.field.title")
@@ -374,25 +379,25 @@ SearchBase.View = {
                         ,list: false
                         ,create: false
                         ,edit: false
-                        ,sorting: false
+                        //,sorting: false
                     }
                     ,parentName: {
                         title: $.t("search:table.field.parent-name")
                         ,width: '15%'
-                        ,sorting: false
+                        //,sorting: false
                         ,display: function(data) {
                             return SearchBase.View.Results.displayParent(data);
                         }
                     }
                     ,parentType: {
                         title: $.t("search:table.field.parent-type")
-                        ,sorting: false
+                        //,sorting: false
                         ,list: false
                     }
                     ,owner: {
                         title: $.t("search:table.field.owner")
                         ,width: '15%'
-                        ,sorting: false
+                        //,sorting: false
                     }
                     ,modified: {
                         title: $.t("search:table.field.modified")

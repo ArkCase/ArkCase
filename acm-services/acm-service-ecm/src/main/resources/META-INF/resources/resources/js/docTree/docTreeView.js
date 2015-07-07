@@ -385,6 +385,10 @@ DocTree.View = DocTree.View || {
                             fileNode.renderTitle();
                         }
                     }
+                } else { // most likely the Frevvo form was canceled or closed, remove previously created nodes (identified with spinner icon)
+                    for (var i = 0; i < fileNodes.length; i++) {
+                        folderNode.removeChild(fileNodes[i]);
+                    }
                 }
             });
         }, 5000);
