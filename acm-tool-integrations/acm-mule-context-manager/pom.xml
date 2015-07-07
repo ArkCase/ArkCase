@@ -44,6 +44,12 @@
             <artifactId>commons-lang</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+        
     </dependencies>
 
 
