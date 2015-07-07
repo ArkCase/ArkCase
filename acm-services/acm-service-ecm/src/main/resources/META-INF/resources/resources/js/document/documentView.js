@@ -775,13 +775,10 @@ AcmDocument.View = AcmDocument.View || {
 
     ,VersionHistory: {
         create: function() {
-            this.$tabVersionHistory = $("#tabVersionHistory")
-
-            this.$tabVersionHistory.on("click", ".makeActiveVersion", function(e) {AcmDocument.View.VersionHistory.onClickBtnMakeActiveVersion(e, this);});
-
+            this.$divVersionHistory = $("#divVersionHistory")
+            this.createJTableVersionHistory(this.$divVersionHistory);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_RETRIEVED_DOCUMENT_DETAIL           ,this.onModelRetrievedDocumentDetail);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.MODEL_CHANGED_ACTIVE_FILE_VERSION           ,this.onModelChangedActiveVersion);
-
         }
         ,onInitialized: function() {
         }
@@ -790,7 +787,7 @@ AcmDocument.View = AcmDocument.View || {
             if(AcmDocument.Model.VersionHistory.validateDocumentDetail(documentDetail)){
                 App.View.MessageBoard.show($.t("docdetail:version-history.msg.change-active-version-success"));
                 location.reload(true);
-                AcmDocument.View.VersionHistory.buildVersionHistoryTable(documentDetail.versions);
+                AcmEx.Object.JTable.load(AcmDocument.View.VersionHistory.$divVersionHistory);
             }
             else if (documentDetail.hasError) {
                 App.View.MessageBoard.show($.t("docdetail:version-history.msg.change-active-version-fail"), documentDetail.errorMsg);
@@ -799,48 +796,86 @@ AcmDocument.View = AcmDocument.View || {
         }
         ,onModelRetrievedDocumentDetail:function(documentDetail){
             if(AcmDocument.Model.VersionHistory.validateDocumentDetail(documentDetail)){
-                AcmDocument.View.VersionHistory.buildVersionHistoryTable(documentDetail.versions);
+                AcmEx.Object.JTable.load(AcmDocument.View.VersionHistory.$divVersionHistory);
             }
         }
-        ,onClickBtnMakeActiveVersion:function(event,ctrl){
+
+        ,onClickBtnMakeActiveVersion:function(event,versionTag){
             event.preventDefault();
-            //find version name and id
-            var id = $(event.target).closest('td').siblings(':first-child').attr('id');
-            var versionTag = $(event.target).closest('td').siblings(':first-child').text();
             var documentId = AcmDocument.View.MicroData.documentId;
             AcmDocument.Controller.viewChangedActiveFileVersion(documentId,versionTag);
         }
-        ,clearHtmlTabVersionHistory: function(val) {
-                AcmDocument.View.VersionHistory.$tabVersionHistory.find("td").remove();
-        }
-        ,setHtmlTabVersionHistory: function(val) {
-            //$(val).appendTo(this.$tabVersionHistory);
-            AcmDocument.View.VersionHistory.$tabVersionHistory.append(val);
-        }
-        ,buildVersionHistoryTable: function(versionHistoryList) {
-            if(AcmDocument.Model.VersionHistory.validateVersionHistoryList(versionHistoryList)){
-                AcmDocument.View.VersionHistory.clearHtmlTabVersionHistory();
-                var html = "";
-                for (var i = 0; i < versionHistoryList.length; i++) {
-                    if(AcmDocument.Model.VersionHistory.validateVersionHistory(versionHistoryList[i])){
-                        html+= "<tr>"
-                            +"<td id='" + Acm.goodValue(versionHistoryList[i].id) + "'>" + Acm.goodValue(versionHistoryList[i].versionTag) + "</td>"
-                            +"<td>" + Acm.getDateFromDatetime(versionHistoryList[i].created,$.t("common:date.short")) + "</td>"
-                            +"<td>" + Acm.goodValue(versionHistoryList[i].creator) +  "</td>"
-                            +"<td>"
-                            +"<div class='btn-group pull-right'>"
 
-                            +"<button type='button' class='dropdown-toggle' data-toggle='dropdown'> <i class='fa fa-cog'></i></button>"
-                            +"<ul class='dropdown-menu'>"
-                            +"<li><a href='#' class='makeActiveVersion'>" + $.t("docdetail:version-history.table.button.make-active") + "</a></li>"
-                            +"</ul></div></td>"
-                            +"</tr>"
+        ,createJTableVersionHistory: function($jt) {
+            AcmEx.Object.JTable.usePaging_new({$jt: $jt
+                ,sortMap: {
+                    "versionTag": "versionTag"
+                    ,"creator": "creator"
+                    ,"created": "created"
+                }
+
+                ,title: $.t("docdetail:version-history.table.title")
+                ,pageList: 'minimal'
+                ,defaultSorting: 'created ASC'
+                ,actions: {
+                    pagingListAction: function(postData, jtParams, sortMap) {
+                        var rc = AcmEx.Object.JTable.getEmptyRecords();
+                        var documentDetail = AcmDocument.Model.Detail.cacheDocumentDetail.get(AcmDocument.View.MicroData.documentId);
+                        if(AcmDocument.Model.Detail.validateDocumentDetail(documentDetail)){
+                            var versionHistoryList = documentDetail.versions;
+                            if(AcmDocument.Model.VersionHistory.validateVersionHistoryList(versionHistoryList)){
+                                var pagingItems = AcmEx.Object.JTable.getPagingItems(jtParams, versionHistoryList, sortMap);
+                                for (var i = 0; i < pagingItems.length; i++) {
+                                    var versionHistory = AcmEx.Object.JTable.getPagingItemData(pagingItems[i]);
+                                    var record = AcmEx.Object.JTable.getPagingRecord(pagingItems[i]);
+                                    record.id = Acm.goodValue(versionHistory.id, 0);
+                                    record.versionTag = Acm.goodValue(versionHistory.versionTag);
+                                    record.creator = App.Model.Users.getUserFullName(Acm.goodValue(versionHistory.creator));
+                                    record.created = Acm.getDateFromDatetime(versionHistory.created,$.t("common:date.short"))
+                                    rc.Records.push(record);
+                                }
+                                rc.TotalRecordCount = versionHistoryList.length;
+                            }
+                        }
+                        return rc;
                     }
                 }
-            }
-            this.setHtmlTabVersionHistory(html);
+                ,fields: {
+                    id: {
+                        title: $.t("docdetail:version-history.table.title")
+                        ,key: true
+                        ,list: false
+                        ,create: false
+                        ,edit: false
+                    }
+                    ,versionTag: {
+                        title: $.t("docdetail:version-history.table.field.version")
+                        ,width: '20%'
+                    }
+                    ,creator: {
+                        title: $.t("docdetail:version-history.table.field.user")
+                        ,width: '70%'
+                    }
+                    ,created: {
+                        title: $.t("docdetail:version-history.table.field.date")
+                        ,width: '10%'
+                    }
+                    ,actions: {
+                        title: $.t("docdetail:version-history.table.field.action")
+                        ,edit: false
+                        ,create: false
+                        ,sorting: false
+                        ,display: function (data) {
+                            var $btnMakeActiveVersion = $("<button type='button' class='btn btn-xs center-block'><i class='fa fa-cogs' data-i18n='[title]docdetail:version-history.table.button.make-active' title='Make Active'></i></button>");
+                            $btnMakeActiveVersion.on("click", function(e) {AcmDocument.View.VersionHistory.onClickBtnMakeActiveVersion(e,Acm.goodValue(data.record.versionTag));});
+                            return $btnMakeActiveVersion;
+                        }
+                    }
+                }
+            });
         }
     }
+
 
     ,EventHistory: {
             create: function() {

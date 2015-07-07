@@ -214,7 +214,7 @@
                         </table>
                     </section>
 
-                    <section class="panel panel-default portlet-item">
+                    <%--<section class="panel panel-default portlet-item">
                         <header class="panel-heading acm-DocDetailTitleText" data-i18n="docdetail:version-history.table.title">
                             <ul class="nav nav-pills pull-right">
                                 <li> <a href="#" class="panel-toggle text-muted"><i class="fa fa-caret-down text-active"></i><i class="fa fa-caret-up text"></i></a> </li>
@@ -237,6 +237,15 @@
                             </tbody>
                         </table>
                     </section>
+--%>
+                    <div class="row" id="tabVersionHistory">
+                        <div class="col-md-12">
+                            <section class="panel b-a">
+                                <div id="divVersionHistory" style="width:100%"></div>
+                            </section>
+                        </div>
+                    </div>
+
 
                     <div class="row" id="tabEventHistory">
                         <div class="col-md-12">
