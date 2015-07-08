@@ -1010,6 +1010,7 @@ body.container {
 	width: 185px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	position: absolute;
 }
 
 
