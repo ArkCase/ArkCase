@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecordFolder;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
@@ -14,13 +15,17 @@ import org.springframework.context.ApplicationListener;
 public class AcmComplaintFolderListener implements ApplicationListener<ComplaintCreatedEvent>
 {
     private transient Logger log = LoggerFactory.getLogger(getClass());
+    private AlfrescoRecordsService alfrescoRecordsService;
+    private MuleClient muleClient;
 
     @Override
     public void onApplicationEvent(ComplaintCreatedEvent complaintCreatedEvent)
     {
-        if ( log.isTraceEnabled() )
+        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY);
+
+        if ( !proceed )
         {
-            log.trace("Got a complaint created event; complaint id: '" + complaintCreatedEvent.getObjectId() + "'");
+            return;
         }
 
         if ( ! complaintCreatedEvent.isSucceeded() )
@@ -43,7 +48,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
             {
                 log.trace("sending JMS message.");
             }
-            getMuleClient().dispatch("jms://rmaFolder.in", folder, null);
+            getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, null);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
@@ -58,8 +63,23 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 
     public MuleClient getMuleClient()
     {
-        return null;  // this method should be overridden by Spring method injection
+        return muleClient;
+        // this method should be overridden by Spring method injection
     }
 
+    // this method used for unit testing.
+    protected void setMuleClient(MuleClient muleClient)
+    {
+        this.muleClient = muleClient;
+    }
 
+    public AlfrescoRecordsService getAlfrescoRecordsService()
+    {
+        return alfrescoRecordsService;
+    }
+
+    public void setAlfrescoRecordsService(AlfrescoRecordsService alfrescoRecordsService)
+    {
+        this.alfrescoRecordsService = alfrescoRecordsService;
+    }
 }

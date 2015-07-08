@@ -90,6 +90,26 @@ public class AlfrescoRecordsService
         }
     }
 
+    public boolean checkIntegrationEnabled(String integrationPointKey)
+    {
+        String integrationEnabledKey = "alfresco.rma.integration.enabled";
+
+        Properties rmaProps = getAlfrescoRmaProperties();
+
+        if ( !rmaProps.containsKey(integrationEnabledKey) )
+        {
+            return true;
+        }
+
+        if ( !rmaProps.containsKey(integrationPointKey) )
+        {
+            return true;
+        }
+
+        return "true".equals(rmaProps.getProperty(integrationEnabledKey)) &&
+                "true".equals(rmaProps.getProperty(integrationPointKey));
+    }
+
     public EcmFileService getEcmFileService()
     {
         return ecmFileService;

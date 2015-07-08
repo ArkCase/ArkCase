@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
@@ -17,13 +18,17 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
 {
 
     private transient Logger log = LoggerFactory.getLogger(getClass());
+    private AlfrescoRecordsService alfrescoRecordsService;
+    private MuleClient muleClient;
 
     @Override
     public void onApplicationEvent(EcmFileAddedEvent ecmFileAddedEvent)
     {
-        if ( log.isTraceEnabled() )
+        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.FILE_INTEGRATION_KEY);
+
+        if ( !proceed )
         {
-            log.trace("Got a file created event; file id: '" + ecmFileAddedEvent.getObjectId() + "'");
+            return;
         }
 
         if ( ! ecmFileAddedEvent.isSucceeded() )
@@ -39,9 +44,18 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
         AcmRecord record = new AcmRecord();
         record.setEcmFileId(ecmFileAddedEvent.getEcmFileId());
 
-        //TODO: parameterize these two
-        record.setCategoryFolder("Complaints");
-        record.setOriginatorOrg("Armedia LLC");
+        String containerType = ecmFileAddedEvent.getSource().getContainer().getContainerObjectType();
+        String categoryFolder = getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(
+                AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + containerType);
+        if ( categoryFolder == null )
+        {
+            log.error("Cannot declare record for this file since the container object type {} is unknown", containerType);
+            return;
+        }
+
+        record.setCategoryFolder(categoryFolder);
+        record.setOriginatorOrg(getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(
+                AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG));
 
         record.setOriginator(ecmFileAddedEvent.getUserId());
         record.setPublishedDate(new Date());
@@ -55,7 +69,7 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
             {
                 log.trace("sending JMS message.");
             }
-            getMuleClient().dispatch("jms://rmaRecord.in", record, null);
+            getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, null);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
@@ -70,6 +84,23 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
 
     public MuleClient getMuleClient()
     {
-        return null;  // this method should be overridden by Spring method injection
+        return muleClient;
+        // this method should be overridden by Spring method injection
+    }
+
+    // this method used for unit testing.
+    protected void setMuleClient(MuleClient muleClient)
+    {
+        this.muleClient = muleClient;
+    }
+
+    public AlfrescoRecordsService getAlfrescoRecordsService()
+    {
+        return alfrescoRecordsService;
+    }
+
+    public void setAlfrescoRecordsService(AlfrescoRecordsService alfrescoRecordsService)
+    {
+        this.alfrescoRecordsService = alfrescoRecordsService;
     }
 }
