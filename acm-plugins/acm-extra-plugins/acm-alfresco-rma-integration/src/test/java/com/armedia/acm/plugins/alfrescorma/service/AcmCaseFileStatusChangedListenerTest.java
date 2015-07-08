@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import java.util.Date;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 
 public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
 {
@@ -66,15 +68,20 @@ public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
         CaseFile caseFile = new CaseFile();
         caseFile.setContainer(new AcmContainer());
         caseFile.setCaseNumber("caseNumber");
+        String user = "user";
+
+        Capture<Authentication> captureAuth = new Capture<>();
 
         expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
         mockService.declareAllContainerFilesAsRecords(
-                eq(mockAuthentication),
+                capture(captureAuth),
                 eq(caseFile.getContainer()),
                 anyObject(Date.class),
                 eq(caseFile.getCaseNumber()));
 
-        CaseEvent caseEvent = new CaseEvent(caseFile, "ipAddress", "user",
+
+
+        CaseEvent caseEvent = new CaseEvent(caseFile, "ipAddress", user,
                 AlfrescoRmaPluginConstants.CASE_CLOSED_EVENT, new Date(), true, mockAuthentication);
 
         replayAll();
@@ -82,6 +89,10 @@ public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
         unit.onApplicationEvent(caseEvent);
 
         verifyAll();
+
+        Authentication actual = captureAuth.getValue();
+
+        assertEquals(user, actual.getName());
     }
 
 }

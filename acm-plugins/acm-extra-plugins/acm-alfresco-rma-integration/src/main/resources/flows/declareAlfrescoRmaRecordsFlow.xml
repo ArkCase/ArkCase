@@ -160,7 +160,17 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <set-variable variableName="alfStore" value="#[idx=org.mule.util.StringUtils.indexOf(message.payload.ecmFileId, &quot;://&quot;); org.mule.util.StringUtils.substring(message.payload.ecmFileId, idx + 3)]" doc:name="Alf Store"/>
         <set-variable variableName="alfNamespace" value="#[idx=org.mule.util.StringUtils.indexOf(message.payload.ecmFileId, &quot;://&quot;); org.mule.util.StringUtils.substring(message.payload.ecmFileId, 0, idx)]" doc:name="Alf UUID"/>
         <set-variable variableName="ecmFileId" value="#[message.payload.ecmFileId]" doc:name="ECM File Id"/>
-        <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_rma_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_rma_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_rma_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_rma_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
+
+        <logger level="DEBUG" message="Alfresco version: #[message.inboundProperties['alfresco_rma_module_version']]"/>
+        <choice doc:name="Set RMA properties based on RMA module version">
+            <when expression="message.inboundProperties['alfresco_rma_module_version'] == '2.3'">
+                <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_dod_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_dod_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_dod_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_dod_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
+            </when>
+            <otherwise>
+                <!-- by default use the old alfresco 4.2 (rma 2.1) property names -->
+                <set-variable variableName="alf-set-data-msg" value="{ &quot;prop_rma_publicationDate&quot;: &quot;#[flowVars['alf-rma-publication-date']]&quot;, &quot;prop_rma_originator&quot;: &quot;#[flowVars['alf-originator']]&quot;, &quot;prop_rma_originatingOrganization&quot;: &quot;#[flowVars['alf-origin-org']]&quot;, &quot;prop_rma_dateReceived&quot;: &quot;#[flowVars['alf-rma-date-received']]&quot; }" doc:name="Data JSON"/>
+            </otherwise>
+        </choice>
         <logger level="DEBUG" message="object store: #[flowVars['alfStore']]" doc:name="Logger"/>
         <logger level="DEBUG" message="object namespace: #[flowVars['alfNamespace']]" doc:name="Logger"/>
         <logger level="DEBUG" message="category folder: #[flowVars['category-folder-name']]" doc:name="Logger"/>

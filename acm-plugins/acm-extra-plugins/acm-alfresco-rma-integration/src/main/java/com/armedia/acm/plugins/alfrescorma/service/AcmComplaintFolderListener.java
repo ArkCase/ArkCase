@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.Map;
+
 /**
  * Created by armdev on 5/1/14.
  */
@@ -42,13 +44,15 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
         folder.setFolderType("COMPLAINT");
         folder.setFolderName(complaintCreatedEvent.getComplaintNumber());
 
+        Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
+
         try
         {
             if ( log.isTraceEnabled() )
             {
                 log.trace("sending JMS message.");
             }
-            getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, null);
+            getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");

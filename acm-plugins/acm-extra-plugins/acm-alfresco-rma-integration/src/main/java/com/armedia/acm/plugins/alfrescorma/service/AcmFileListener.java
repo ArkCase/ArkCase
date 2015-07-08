@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by armdev on 5/1/14.
@@ -62,6 +63,8 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
         record.setReceivedDate(ecmFileAddedEvent.getEventDate());
         record.setRecordFolder(ecmFileAddedEvent.getParentObjectName());
 
+        Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
+
 
         try
         {
@@ -69,7 +72,7 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
             {
                 log.trace("sending JMS message.");
             }
-            getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, null);
+            getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
