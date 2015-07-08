@@ -16,10 +16,12 @@
 
     <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
         <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
     <bean id="acmFileListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFileListener">
         <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
     <bean id="alfrescoRecordsService" class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoRecordsService">
