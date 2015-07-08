@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 
+import java.util.Collections;
 import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
@@ -77,10 +78,12 @@ public class AcmFileListenerTest extends EasyMockSupport
 
         expect(mockService.getAlfrescoRmaProperties()).andReturn(p).atLeastOnce();
 
+        expect(mockService.getRmaMessageProperties()).andReturn(Collections.emptyMap());
+
         mockMuleClient.dispatch(
                 eq(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT),
                 capture(captureRecord),
-                eq(null));
+                eq(Collections.emptyMap()));
 
         replayAll();
 

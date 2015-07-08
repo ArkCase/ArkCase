@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public class AcmCaseFileStatusChangedListener implements ApplicationListener<CaseEvent>
 {
@@ -29,7 +30,9 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
 
             if (null != caseFile)
             {
-                getAlfrescoRecordsService().declareAllContainerFilesAsRecords(event.getEventUser(), caseFile.getContainer(),
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
+                getAlfrescoRecordsService().declareAllContainerFilesAsRecords(auth, caseFile.getContainer(),
                         event.getEventDate(), caseFile.getCaseNumber());
 
             }

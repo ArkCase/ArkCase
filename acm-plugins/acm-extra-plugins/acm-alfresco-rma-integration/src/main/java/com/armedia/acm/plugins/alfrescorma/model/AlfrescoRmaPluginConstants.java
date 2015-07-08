@@ -5,6 +5,8 @@ package com.armedia.acm.plugins.alfrescorma.model;
  */
 public interface AlfrescoRmaPluginConstants
 {
+    String RMA_MODULE_VERSION_KEY = "alfresco.rma.rma-module-version";
+
     String CATEGORY_FOLDER_PROPERTY_KEY_PREFIX = "rma.categoryFolder.";
 
     String PROPERTY_ORIGINATOR_ORG = "rma.default.originator.org";

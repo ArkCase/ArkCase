@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mule.api.client.MuleClient;
 
+import java.util.Collections;
+
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
@@ -54,10 +56,13 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
         Capture<AcmRecordFolder> captureFolder = new Capture<>();
 
         expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+
+        expect(mockService.getRmaMessageProperties()).andReturn(Collections.emptyMap());
+
         mockMuleClient.dispatch(
                 eq(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT),
                 capture(captureFolder),
-                eq(null));
+                eq(Collections.emptyMap()));
 
         ComplaintCreatedEvent event = new ComplaintCreatedEvent(new Complaint());
         event.setSucceeded(true);
