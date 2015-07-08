@@ -174,7 +174,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
                 makeActive(acmProcessDefinition);
             }
             return acmProcessDefinition;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             //this should not happen
             AcmBpmnException runtimeException = new AcmBpmnException("Internal application error", e);
             log.error("Error deploying file!");
