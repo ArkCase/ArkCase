@@ -2509,10 +2509,17 @@ CaseFile.View = CaseFile.View || {
                 App.gotoPage(url);
             }
         }
-        ,onClickBtnCompleteTask : function(taskId) {
-            CaseFile.Model.Tasks.completeTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
-                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
-            });
+        ,onClickBtnAdHocTaskAction: function(action, taskId){
+            if("COMPLETE" == action){
+                CaseFile.Model.Tasks.completeTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
+                    AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+                });
+            }
+            else if("DELETE" == action){
+                CaseFile.Model.Tasks.deleteTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
+                    AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+                });
+            }
         }
         ,onClickBtnTaskWithOutcome : function(outcome,taskId) {
             var tasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
@@ -2531,32 +2538,28 @@ CaseFile.View = CaseFile.View || {
             if(task.taskOutcome){
                 CaseFile.Model.Tasks.completeTaskWithOutcome(task, CaseFile.View.Tasks.currentKey);
             }
-
-            //alert("task with outcome");
-
         }
         ,retrieveTaskOutcome : function(taskId){
             var myTasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
-            var $a = $("");
+            var html = "";
             if(myTasks){
                 for(var i = 0; i < myTasks.length; i++){
                     if(myTasks[i].taskId == taskId){
                         var task = myTasks[i];
                         if(task.adhocTask == true && task.completed == false){
-                            $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>");
+                            html = "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>";
+                            html += "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='DELETE' title='" + $.t("casefile:tasks.buttons.delete-task") + "'>"+ $.t("casefile:tasks.buttons.delete") +"</button></div>";
                         }
                         else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
                             var availableOutcomes = task.availableOutcomes;
                             for(var j = 0; j < availableOutcomes.length; j++ ){
-                                if(availableOutcomes[j].name == 'COMPLETE'){
-                                    $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task-outcome") + "'>" + $.t("casefile:tasks.buttons.complete") + "</button></div>");
-                                }
+                                html += "<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='" + availableOutcomes[j].name + "' title='" + availableOutcomes[j].description + "'>" + availableOutcomes[j].description + "</button></div>";
                             }
                         }
                     }
                 }
             }
-            return $a;
+            return html;
         }
 
         ,createJTableTasks: function($jt) {
@@ -2673,9 +2676,9 @@ CaseFile.View = CaseFile.View || {
                         ,create: false
                         ,sorting: false
                         ,display: function (commData) {
-                            var $a = CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id);
+                            var $a = $(CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id));
                             $a.on("click", ".businessProcess", function(e) {CaseFile.View.Tasks.onClickBtnTaskWithOutcome(e.target.id,commData.record.id);$a.hide();});
-                            $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnCompleteTask(commData.record.id);$a.hide();});
+                            $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnAdHocTaskAction(e.target.id,commData.record.id);$a.hide();});
                             return $a;
                         }
                     }
