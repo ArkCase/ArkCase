@@ -1685,6 +1685,9 @@ Complaint.View = Complaint.View || {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
+
+            this.$btnRefreshDocs = $("#btnRefreshDocs").on("click", function(e) {Complaint.View.Documents.onClickBtnRefreshDocs(e, this);});
+
         }
         ,onInitialized: function() {
         }
@@ -1702,6 +1705,9 @@ Complaint.View = Complaint.View || {
         ,onModelDocumentsRetrievedPlainForms: function() {
         	DocTree.View.fileTypes = Complaint.View.Documents.getFileTypes();
         	DocTree.View.refreshDocTree();
+        }
+        ,onClickBtnRefreshDocs: function(event,ctrl){
+            DocTree.View.refreshTree();
         }
 
         ,uploadForm: function(type, folderId, onCloseForm) {
