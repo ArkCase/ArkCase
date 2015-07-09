@@ -158,7 +158,7 @@ CaseFile.Controller = CaseFile.Controller || {
 
     ,MODEL_RETRIEVED_MY_TASKS              : "case-model-my-task-retrieved"               //param: taskId
     ,MODEL_COMPLETED_TASK                 : "case-model-task-completed"               //param: task
-
+    ,MODEL_DELETED_TASK                     :"case-model-task-deleted"                  //param: task
 
     ,VIEW_CHANGED_CASE_FILE               : "case-view-changed-case-file"
     ,viewChangedCaseFile: function(caseFileId) {
@@ -288,6 +288,9 @@ CaseFile.Controller = CaseFile.Controller || {
     }
     ,modelCompletedTask: function(task) {
         Acm.Dispatcher.fireEvent(this.MODEL_COMPLETED_TASK, task);
+    }
+    ,modelDeletedTask: function(task) {
+        Acm.Dispatcher.fireEvent(this.MODEL_DELETED_TASK, task);
     }
     ,viewChangedTreeFilter: function(filter) {
         Acm.Dispatcher.fireEvent(this.VIEW_CHANGED_TREE_FILTER, filter);
