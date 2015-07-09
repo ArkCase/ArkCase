@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+<<<<<<< Updated upstream
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+=======
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+>>>>>>> Stashed changes
+
+    <bean id="outlookSpringConfiguration" class="com.armedia.acm.service.outlook.config.OutlookSpringConfiguration"/>
+
+    <bean id="msOutlookIntegrationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.acm/msOutlookIntegration.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+                <prop key="outlook.integration.enabled">true</prop>
+                <prop key="outlook.exchange.server.version">Exchange2010_SP2</prop>
+                <prop key="outlook.exchange.enable.autodiscovery">false</prop>
+                <prop key="outlook.exchange.client-access-server">***REMOVED***</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
+        <property name="dao" ref="exchangeWebServicesOutlookDao"/>
+    </bean>
+
+    <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="outlookUserConnectionEhCache"/>
+    </bean>
+
+    <bean id="outlookUserConnectionEhCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:/ehcache/outlookUserConnectionCacheConfig.xml"/>
+        <property name="cacheManagerName" value="acm-service-ms-outlook-integration"/>
+        <property name="shared" value="true"/>
+    </bean>
+
+    <bean id="outlookUserConnectionCache" factory-bean="outlookCacheManager" factory-method="getCache">
+        <constructor-arg value="outlook_user_connection_cache"/>
+    </bean>
+
+    <bean id="exchangeWebServicesOutlookDao"
+          class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
+        <property name="exchangeVersion" value="${outlook.exchange.server.version}"/>
+        <property name="autodiscoveryEnabled" value="${outlook.exchange.enable.autodiscovery}"/>
+        <property name="clientAccessServer" value="${outlook.exchange.client-access-server}"/>
+        <property name="outlookUserConnectionCache" ref="outlookUserConnectionCache"/>
+        <property name="defaultAccess" value="${outlook.exchange.default_access}"/>
+        <property name="sortFields">
+            <map>
+                <entry key="subject" value-ref="propertyDefinitionSubject"/>
+                <entry key="dateTimeCreated" value-ref="propertyDefinitionDateTimeCreated"/>
+                <entry key="dateTimeReceived" value-ref="propertyDefinitionDateTimeReceived"/>
+                <entry key="dateTimeSent" value-ref="propertyDefinitionDateTimeSent"/>
+                <entry key="hasAttachments" value-ref="propertyDefinitionHasAttachments"/>
+                <entry key="displayTo" value-ref="propertyDefinitionDisplayTo"/>
+                <entry key="size" value-ref="propertyDefinitionSize"/>
+                <entry key="dateTimeStart" value-ref="propertyDefinitionStart"/>
+            </map>
+        </property>
+    </bean>
+
+    <util:constant id="propertyDefinitionSubject"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
+    <util:constant id="propertyDefinitionDateTimeCreated"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeCreated"/>
+    <util:constant id="propertyDefinitionDateTimeReceived"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeReceived"/>
+    <util:constant id="propertyDefinitionDateTimeSent"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DateTimeSent"/>
+    <util:constant id="propertyDefinitionHasAttachments"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.HasAttachments"/>
+    <util:constant id="propertyDefinitionDisplayTo"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.DisplayTo"/>
+    <util:constant id="propertyDefinitionSize"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Size"/>
+    <util:constant id="propertyDefinitionStart"
+                   static-field="microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema.Start"/>
+</beans>

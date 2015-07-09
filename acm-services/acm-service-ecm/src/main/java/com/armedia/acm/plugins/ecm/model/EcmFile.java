@@ -70,7 +70,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private String category = "Document";
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy ="file")
-    @OrderBy("versionTag ASC")
+    @OrderBy("created ASC")
     private List<EcmFileVersion> versions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
