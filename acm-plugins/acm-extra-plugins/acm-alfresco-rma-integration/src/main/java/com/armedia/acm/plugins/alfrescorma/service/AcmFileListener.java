@@ -87,8 +87,10 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
 
     public MuleClient getMuleClient()
     {
+        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
+        // when this class is used as a Spring bean.  But, when used as a non-Spring POJO, i.e. in unit tests,
+        // then this is how the test gets to inject a mock client.
         return muleClient;
-        // this method should be overridden by Spring method injection
     }
 
     // this method used for unit testing.

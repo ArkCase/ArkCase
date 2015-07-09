@@ -106,18 +106,8 @@ public class AlfrescoRecordsService
 
         Properties rmaProps = getAlfrescoRmaProperties();
 
-        if ( !rmaProps.containsKey(integrationEnabledKey) )
-        {
-            return true;
-        }
-
-        if ( !rmaProps.containsKey(integrationPointKey) )
-        {
-            return true;
-        }
-
-        return "true".equals(rmaProps.getProperty(integrationEnabledKey)) &&
-                "true".equals(rmaProps.getProperty(integrationPointKey));
+        return "true".equals(rmaProps.getProperty(integrationEnabledKey, "true")) &&
+                "true".equals(rmaProps.getProperty(integrationPointKey, "true"));
     }
 
     public EcmFileService getEcmFileService()
@@ -132,7 +122,8 @@ public class AlfrescoRecordsService
 
     public MuleClient getMuleClient()
     {
-        // implemented in Spring config as a method injection
+        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
+        // when this class is used as a Spring bean
         return null;
     }
 
