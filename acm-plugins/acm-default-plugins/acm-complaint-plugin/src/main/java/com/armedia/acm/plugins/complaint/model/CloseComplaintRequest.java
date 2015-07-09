@@ -35,7 +35,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = CloseComplaintRequestConstants.OBJECT_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
