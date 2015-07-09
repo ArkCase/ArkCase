@@ -14,7 +14,7 @@ var AcmNotification = AcmNotification || {
         if (SearchBase.create) {
             SearchBase.create({name: AcmNotification.Model.MicroData.searchName
                 ,jtArgs     : AcmNotification.View.getJtArgs()
-                ,jtDataMaker: AcmNotification.View.jtDataMaker
+                //,jtDataMaker: AcmNotification.View.jtDataMaker
                 ,filters    : AcmNotification.Model.MicroData.getSearchFilters()
             });
         }
