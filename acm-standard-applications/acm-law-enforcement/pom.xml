@@ -328,6 +328,12 @@
             <version>${acm.version}</version>
         </dependency>
         
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-reload-properties</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -343,6 +349,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
     </dependencies>
 
 

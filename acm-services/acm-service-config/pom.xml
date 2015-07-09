@@ -98,14 +98,6 @@
             <artifactId>javax.el-api</artifactId>
         </dependency>
 
-        <!-- preconditions -->
-        <!--<dependency>-->
-            <!--<groupId>com.google.collections</groupId>-->
-            <!--<artifactId>google-collections</artifactId>-->
-            <!--<version>${google-collections.version}</version>-->
-        <!--</dependency>-->
-
-
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
