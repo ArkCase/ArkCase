@@ -50,7 +50,7 @@ public class AcmParticipant implements Serializable, AcmEntity
     @Column(name = "cm_participant_modifier")
     private String modifier;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "participant", fetch = FetchType.EAGER, orphanRemoval=true)
     private List<AcmParticipantPrivilege> privileges = new ArrayList<>();
 
     @PrePersist
