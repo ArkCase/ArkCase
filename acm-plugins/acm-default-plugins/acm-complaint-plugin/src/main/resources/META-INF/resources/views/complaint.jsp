@@ -288,25 +288,15 @@
                                     <div class="col-md-12">
                                     <section class="panel b-a">
                                         <div class="panel-heading b-b bg-info">
-                                            <%--<ul class="nav nav-pills pull-right">--%>
-                                                <%--<li style="margin-right:5px"></li>--%>
-                                                <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                        <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#dlgDocTreeDnd"><i class="fa fa-folder"></i> New Folder</button>--%>
-                                                    <%--</div>--%>
-                                                <%--</li>--%>
-                                                <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                        <%--<button class="btn btn-default btn-sm" data-toggle="modal" data-target="#emailDocs"><i class="fa fa-share"></i> <span data-i18n="complaint:documents-to-retire.buttons.email">Email</span></button>--%>
-                                                    <%--</div>--%>
-                                                <%--</li>--%>
-                                                <%--<li>--%>
-                                                    <%--<div class="btn-group padder-v2">--%>
-                                                        <%--<button class="btn btn-default btn-sm" onClick="window.open('documents.html', '_blank');"><i class="fa fa-print"></i> <span data-i18n="complaint:documents-to-retire.buttons.print">Print</span></button>--%>
-                                                    <%--</div>--%>
-                                                <%--</li>--%>
-                                                <%--<li> </li>--%>
-                                            <%--</ul>--%>
+
+                                            <ul class="nav nav-pills pull-right">
+                                                <li style="margin-right:5px"></li>
+                                                <li>
+                                                    <div class="btn-group padder-v2">
+                                                        <button class="btn btn-default btn-sm" id="btnRefreshDocs" data-i18n="doctree:btn-refresh"><i class="fa fa-share"></i>Refresh</button>
+                                                    </div>
+                                                </li>
+                                            </ul>
 
                                             <a href="#" class="font-bold"><div data-i18n="complaint:documents-to-retire.title">Documents</div> </a>
                                         </div>
