@@ -49,11 +49,17 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         </scripting:transformer>
 
-        <!-- Tell mule to call the save method ( DAO ). The property must go in the inbound scope.  The only way to do it is to set an outbound
-             property, then call an outbound endpoint (thereby starting a new flow).
-        -->
-        <set-property propertyName="daoMethod" value="save"/>
-        <vm:outbound-endpoint address="vm://personDao.in" exchange-pattern="request-response"/>
+        <scripting:transformer name="savePerson_savePersonFlowTransformer">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+
+                        registry.acmPersonDao.save(message.payload);
+
+                        return payload;
+                        ]]>
+                </scripting:text>
+            </scripting:script>
+        </scripting:transformer>
 
 
         <catch-exception-strategy>
@@ -61,17 +67,6 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <set-property propertyName="saveException" value="#[exception]"/>
         </catch-exception-strategy>
 
-    </flow>
-
-    <flow name="personDao" processingStrategy="synchronous">
-        <vm:inbound-endpoint address="vm://personDao.in" exchange-pattern="request-response"/>
-
-        <logger level="TRACE" category="com.armedia.acm.plugins.person" message="Calling Person DAO"/>
-
-        <component doc:name="Person DAO">
-            <property-entry-point-resolver property="daoMethod"/>
-            <spring-object bean="acmPersonDao"/>
-        </component>
     </flow>
 
 </mule>
