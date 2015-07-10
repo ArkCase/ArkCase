@@ -693,8 +693,8 @@ Task.View = Task.View || {
         ,onClickBtnOutcome : function(event,ctrl) {
             var clicked = event.target.id;
             if (clicked == "SEND_FOR_REWORK") {
-                var reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
-                if (reworkInstructions == null || reworkInstructions == "") {
+                var reworkInstructions = AcmEx.Object.SummerNote.getText(Task.View.Detail.$divReworkDetails);
+                if (Acm.isEmpty(reworkInstructions)) {
                     Acm.Dialog.info($.t("task:task-details.label.must-enter-details"));
                 }
                 else {
