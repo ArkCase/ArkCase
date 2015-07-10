@@ -13,6 +13,7 @@
                 <value>/flows/addFileFlow.xml</value>
                 <value>/flows/addNewFolderFlow.xml</value>
                 <value>/flows/getFolderFlow.xml</value>
+                <value>/flows/moveFolderFlow.xml</value>
             </list>
         </property>
     </bean>

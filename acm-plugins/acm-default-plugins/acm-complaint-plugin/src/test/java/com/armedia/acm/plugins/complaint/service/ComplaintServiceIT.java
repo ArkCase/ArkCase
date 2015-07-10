@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,27 +33,40 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations =
-        {
-				"/spring/spring-library-object-history.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-object-association-plugin.xml",
-                "/spring/spring-library-complaint-plugin-test.xml",
-                "/spring/spring-library-complaint.xml",
-                "/spring/spring-library-complaint-plugin-test-mule.xml",
-                "/spring/spring-library-activiti-actions.xml",
-                "/spring/spring-library-activiti-configuration.xml",
-                "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-drools-monitor.xml",
-                "/spring/spring-library-user-service.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-search.xml",
-                "/spring/spring-library-ecm-file.xml",
-                "/spring/spring-library-particpants.xml",
-                "/spring/spring-library-activemq.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-person.xml"
+@ContextHierarchy({
+        @ContextConfiguration(
+                name = "mule",
+                locations = {"/spring/spring-library-complaint-plugin-test-mule.xml",}
+        ),
+        @ContextConfiguration(name = "spring",
+                locations = {
+                        "/spring/spring-library-object-history.xml",
+                        "/spring/spring-library-data-source.xml",
+                        "/spring/spring-library-object-association-plugin.xml",
+                        "/spring/spring-library-complaint-plugin-test.xml",
+                        "/spring/spring-library-complaint.xml",
+                        "/spring/spring-library-activiti-actions.xml",
+                        "/spring/spring-library-activiti-configuration.xml",
+                        "/spring/spring-library-folder-watcher.xml",
+                        "/spring/spring-library-drools-monitor.xml",
+                        "/spring/spring-library-user-service.xml",
+                        "/spring/spring-library-context-holder.xml",
+                        "/spring/spring-library-data-access-control.xml",
+                        "/spring/spring-library-search.xml",
+                        "/spring/spring-library-ecm-file.xml",
+                        "/spring/spring-library-particpants.xml",
+                        "/spring/spring-library-activemq.xml",
+                        "/spring/spring-library-property-file-manager.xml",
+                        "/spring/spring-library-person.xml",
+                        "/spring/spring-library-case-file.xml",
+                        "/spring/spring-library-ms-outlook-integration.xml",
+                        "/spring/spring-library-ms-outlook-plugin.xml",
+                        "/spring/spring-library-profile.xml",
+                        "/spring/spring-library-acm-encryption.xml",
+                        "/spring/spring-library-task.xml",
+                        "/spring/spring-library-note.xml",
+                        "/spring/spring-library-event.xml"
+                })
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
