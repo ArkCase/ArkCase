@@ -826,7 +826,7 @@ Complaint.View = Complaint.View || {
                 rc.Record.type = Acm.goodValue(record.type);
                 rc.Record.value = Acm.goodValue(record.value);
                 rc.Record.created = Acm.getCurrentDay(); //record.created;
-                rc.Record.creator = App.getUserName();   //record.creator;
+                rc.Record.creator = App.Model.Users.getUserFullName(App.getUserName());   //record.creator;
             }
             return rc;
         }
@@ -892,7 +892,7 @@ Complaint.View = Complaint.View || {
                                                 ,type    : Acm.goodValue(contactMethods[i].type)
                                                 ,value   : Acm.goodValue(contactMethods[i].value)
                                                 ,created : Acm.getDateFromDatetime(contactMethods[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(contactMethods[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(contactMethods[i].creator))
                                             });
                                         }
                                     }
@@ -955,7 +955,7 @@ Complaint.View = Complaint.View || {
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
                         contactMethod.created = Acm.getCurrentDayInternal();
-                        contactMethod.creator = Acm.goodValue(record.creator);
+                        contactMethod.creator = App.getUserName();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -974,7 +974,7 @@ Complaint.View = Complaint.View || {
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
                         contactMethod.created = Acm.getCurrentDayInternal();
-                        contactMethod.creator = Acm.goodValue(record.creator);
+                        contactMethod.creator = App.getUserName();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < contactMethod.id) {
@@ -1057,7 +1057,7 @@ Complaint.View = Complaint.View || {
                                                 ,type    : Acm.goodValue(securityTags[i].type)
                                                 ,value   : Acm.goodValue(securityTags[i].value)
                                                 ,created : Acm.getDateFromDatetime(securityTags[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(securityTags[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(securityTags[i].creator))
                                             });
                                         }
                                     }
@@ -1117,7 +1117,7 @@ Complaint.View = Complaint.View || {
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
                         securityTag.created = Acm.getCurrentDayInternal();
-                        securityTag.creator = Acm.goodValue(record.creator);
+                        securityTag.creator = App.getUserName();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -1132,7 +1132,7 @@ Complaint.View = Complaint.View || {
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
                         securityTag.created = Acm.getCurrentDayInternal();
-                        securityTag.creator = Acm.goodValue(record.creator);
+                        securityTag.creator = App.getUserName();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < securityTag.id) {
@@ -1214,7 +1214,7 @@ Complaint.View = Complaint.View || {
                                                 ,type    : Acm.goodValue(organizations[i].organizationType)
                                                 ,value   : Acm.goodValue(organizations[i].organizationValue)
                                                 ,created : Acm.getDateFromDatetime(organizations[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(organizations[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(organizations[i].creator))
                                             });
                                         }
                                     }
@@ -1272,7 +1272,7 @@ Complaint.View = Complaint.View || {
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
                         organization.created = Acm.getCurrentDayInternal();
-                        organization.creator = Acm.goodValue(record.creator);
+                        organization.creator = App.getUserName();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId) {
@@ -1287,7 +1287,7 @@ Complaint.View = Complaint.View || {
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
                         organization.created = Acm.getCurrentDayInternal();
-                        organization.creator = Acm.goodValue(record.creator);
+                        organization.creator = App.getUserName();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
                         if (0 < complaintId && 0 < assocId && 0 < organization.organizationId) {
@@ -1373,7 +1373,7 @@ Complaint.View = Complaint.View || {
                                                 ,zip           : Acm.goodValue(addresses[i].zip)
                                                 ,country       : Acm.goodValue(addresses[i].country)
                                                 ,created       : Acm.getDateFromDatetime(addresses[i].created,$.t("common:date.short"))
-                                                ,creator       : Acm.goodValue(addresses[i].creator)
+                                                ,creator       : App.Model.Users.getUserFullName(Acm.goodValue(addresses[i].creator))
                                             });
                                         }
                                     }
@@ -1395,7 +1395,7 @@ Complaint.View = Complaint.View || {
                                 rc.Record.zip           = Acm.goodValue(record.zip);
                                 rc.Record.country       = Acm.goodValue(record.country);
                                 rc.Record.created       = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator       = App.getUserName();   //record.creator;
+                                rc.Record.creator       = App.Model.Users.getUserFullName(App.getUserName());   //record.creator;
                             }
                             return rc;
                         }
@@ -1413,7 +1413,7 @@ Complaint.View = Complaint.View || {
                                 rc.Record.zip           = Acm.goodValue(record.zip);
                                 rc.Record.country       = Acm.goodValue(record.country);
                                 rc.Record.created       = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator       = App.getUserName();   //record.creator;
+                                rc.Record.creator       = App.Model.Users.getUserFullName(App.getUserName());   //record.creator;
                             }
                             return rc;
                         }
@@ -1481,7 +1481,7 @@ Complaint.View = Complaint.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
-                        address.creator       = Acm.goodValue(record.creator);
+                        address.creator       = App.getUserName();
                         address.created       = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
@@ -1500,7 +1500,7 @@ Complaint.View = Complaint.View || {
                         address.state         = Acm.goodValue(record.state);
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
-                        address.creator       = Acm.goodValue(record.creator);
+                        address.creator       = App.getUserName();
                         address.created       = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
@@ -1583,7 +1583,7 @@ Complaint.View = Complaint.View || {
                                                 ,type    : Acm.goodValue(personAliases[i].aliasType)
                                                 ,value   : Acm.goodValue(personAliases[i].aliasValue)
                                                 ,created : Acm.getDateFromDatetime(personAliases[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(personAliases[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(personAliases[i].creator))
                                             });
                                         }
                                     }
@@ -1642,7 +1642,7 @@ Complaint.View = Complaint.View || {
                         var assocId = record.assocId;
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
-                        personAlias.creator  = Acm.goodValue(record.creator);
+                        personAlias.creator  = App.getUserName();
                         personAlias.created = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
@@ -1657,7 +1657,7 @@ Complaint.View = Complaint.View || {
                         personAlias.id         = Acm.goodValue(record.id, 0);
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
-                        personAlias.creator  = Acm.goodValue(record.creator);
+                        personAlias.creator  = App.getUserName();
                         personAlias.created = Acm.getCurrentDayInternal();
                         var complaintId = Complaint.View.getActiveComplaintId();
 
@@ -1685,6 +1685,9 @@ Complaint.View = Complaint.View || {
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT           ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE        ,this.onViewSelectedTreeNode);
             Acm.Dispatcher.addEventListener(Complaint.Controller.MODEL_DOCUMENTS_RETRIEVED_PLAIN_FORMS, this.onModelDocumentsRetrievedPlainForms);
+
+            this.$btnRefreshDocs = $("#btnRefreshDocs").on("click", function(e) {Complaint.View.Documents.onClickBtnRefreshDocs(e, this);});
+
         }
         ,onInitialized: function() {
         }
@@ -1702,6 +1705,9 @@ Complaint.View = Complaint.View || {
         ,onModelDocumentsRetrievedPlainForms: function() {
         	DocTree.View.fileTypes = Complaint.View.Documents.getFileTypes();
         	DocTree.View.refreshDocTree();
+        }
+        ,onClickBtnRefreshDocs: function(event,ctrl){
+            DocTree.View.refreshTree();
         }
 
         ,uploadForm: function(type, folderId, onCloseForm) {

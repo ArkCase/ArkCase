@@ -740,6 +740,7 @@ CaseFile.Model = CaseFile.Model || {
         ,API_RETRIEVE_MY_TASKS           : "/api/latest/plugin/task/forUser/"
         ,API_COMPLETE_TASK               : "/api/latest/plugin/task/completeTask/"
         ,API_COMPLETE_TASK_WITH_OUTCOME  : "/api/latest/plugin/task/completeTask"
+        ,API_DELETE_TASK                 : "/api/latest/plugin/task/deleteTask/"
 
         ,taskListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
             var taskListData = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
@@ -833,6 +834,34 @@ CaseFile.Model = CaseFile.Model || {
                         CaseFile.Controller.modelCompletedTask(task);
                         return task;
                         //}
+                    }
+                }
+            });
+        }
+        ,deleteTask : function(taskId,cacheKey) {
+            var url = this.API_DELETE_TASK + taskId;
+            return Acm.Service.call({type: "POST"
+                ,url: url
+                ,data: "{}"
+                ,callback: function(response) {
+                    if (!response.hasError) {
+                        var task = response;
+                        var myTasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
+                        var taskList = CaseFile.Model.Tasks.cacheTaskSolr.get(cacheKey);
+                        for(var i = 0; i < myTasks.length; i++){
+                            if(task.taskId ==  myTasks[i].taskId){
+                                myTasks.splice(i,1);
+                            }
+                        }
+                        for(var i = 0; i < taskList.length; i++){
+                            if(task.taskId ==  taskList[i].id){
+                                taskList.splice(i,1);
+                            }
+                        }
+                        CaseFile.Model.Tasks.cacheMyTasks.put(App.getUserName(),myTasks);
+                        CaseFile.Model.Tasks.cacheTaskSolr.put(cacheKey,taskList);
+                        CaseFile.Controller.modelDeletedTask(task);
+                        return task;
                     }
                 }
             });

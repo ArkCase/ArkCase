@@ -332,7 +332,7 @@ class ActivitiTaskDao implements TaskDao
             retval.setTaskFinishedDate(hti.getEndTime());
             retval.setTaskDurationInMillis(hti.getDurationInMillis());
             retval.setCompleted(true);
-            String status = findTaskStatus(hti);
+            String status = findTaskStatus(hti, true);
             retval.setStatus(status);
 
             return retval;
@@ -628,6 +628,11 @@ class ActivitiTaskDao implements TaskDao
     private String findTaskStatus(HistoricTaskInstance historicTaskInstance)
     {
         return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_CLOSED;
+    }
+
+    private String findTaskStatus(HistoricTaskInstance historicTaskInstance, Boolean deleted)
+    {
+        return historicTaskInstance.getEndTime() == null ? TaskConstants.STATE_ACTIVE : TaskConstants.STATE_DELETED;
     }
 
     private String findTaskStatus(Task task)

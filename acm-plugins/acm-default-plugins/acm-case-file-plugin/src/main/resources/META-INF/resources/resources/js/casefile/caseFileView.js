@@ -1087,7 +1087,7 @@ CaseFile.View = CaseFile.View || {
                 rc.Record.type = Acm.goodValue(record.type);
                 rc.Record.value = Acm.goodValue(record.value);
                 rc.Record.created = Acm.getCurrentDay(); //record.created;
-                rc.Record.creator = App.getUserName();   //record.creator;
+                rc.Record.creator = App.Model.Users.getUserFullName(App.getUserName());   //record.creator;
             }
             return rc;
         }
@@ -1156,7 +1156,7 @@ CaseFile.View = CaseFile.View || {
                                                 ,type    : Acm.goodValue(contactMethods[i].type)
                                                 ,value   : Acm.goodValue(contactMethods[i].value)
                                                 ,created : Acm.getDateFromDatetime(contactMethods[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(contactMethods[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(contactMethods[i].creator))
                                             });
                                         }
                                     }
@@ -1219,7 +1219,7 @@ CaseFile.View = CaseFile.View || {
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
                         contactMethod.created = Acm.getCurrentDayInternal();
-                        contactMethod.creator = Acm.goodValue(record.creator);
+                        contactMethod.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedContactMethod(caseFileId, assocId, contactMethod);
@@ -1237,7 +1237,7 @@ CaseFile.View = CaseFile.View || {
                         contactMethod.type  = Acm.goodValue(record.type);
                         contactMethod.value = Acm.goodValue(record.value);
                         contactMethod.created = Acm.getCurrentDayInternal();
-                        contactMethod.creator = Acm.goodValue(record.creator);
+                        contactMethod.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < contactMethod.id) {
                             CaseFile.Controller.viewUpdatedContactMethod(caseFileId, assocId, contactMethod);
@@ -1321,7 +1321,7 @@ CaseFile.View = CaseFile.View || {
                                                 ,type    : Acm.goodValue(securityTags[i].type)
                                                 ,value   : Acm.goodValue(securityTags[i].value)
                                                 ,created : Acm.getDateFromDatetime(securityTags[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(securityTags[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(securityTags[i].creator))
                                             });
                                         }
                                     }
@@ -1381,7 +1381,7 @@ CaseFile.View = CaseFile.View || {
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
                         securityTag.created = Acm.getCurrentDayInternal();
-                        securityTag.creator = Acm.goodValue(record.creator);
+                        securityTag.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedSecurityTag(caseFileId, assocId, securityTag);
@@ -1395,7 +1395,7 @@ CaseFile.View = CaseFile.View || {
                         securityTag.type  = Acm.goodValue(record.type);
                         securityTag.value = Acm.goodValue(record.value);
                         securityTag.created = Acm.getCurrentDayInternal();
-                        securityTag.creator = Acm.goodValue(record.creator);
+                        securityTag.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < securityTag.id) {
                             CaseFile.Controller.viewUpdatedSecurityTag(caseFileId, assocId, securityTag);
@@ -1478,7 +1478,7 @@ CaseFile.View = CaseFile.View || {
                                                 ,type    : Acm.goodValue(organizations[i].organizationType)
                                                 ,value   : Acm.goodValue(organizations[i].organizationValue)
                                                 ,created : Acm.getDateFromDatetime(organizations[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(organizations[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(organizations[i].creator))
                                             });
                                         }
                                     }
@@ -1536,7 +1536,7 @@ CaseFile.View = CaseFile.View || {
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
                         organization.created = Acm.getCurrentDayInternal();
-                        organization.creator = Acm.goodValue(record.creator);
+                        organization.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedOrganization(caseFileId, assocId, organization);
@@ -1550,7 +1550,7 @@ CaseFile.View = CaseFile.View || {
                         organization.organizationType  = Acm.goodValue(record.type);
                         organization.organizationValue = Acm.goodValue(record.value);
                         organization.created = Acm.getCurrentDayInternal();
-                        organization.creator = Acm.goodValue(record.creator);
+                        organization.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < organization.organizationId) {
                             CaseFile.Controller.viewUpdatedOrganization(caseFileId, assocId, organization);
@@ -1637,7 +1637,7 @@ CaseFile.View = CaseFile.View || {
                                                 ,zip           : Acm.goodValue(addresses[i].zip)
                                                 ,country       : Acm.goodValue(addresses[i].country)
                                                 ,created       : Acm.getDateFromDatetime(addresses[i].created,$.t("common:date.short"))
-                                                ,creator       : Acm.goodValue(addresses[i].creator)
+                                                ,creator       : App.Model.Users.getUserFullName(Acm.goodValue(addresses[i].creator))
                                             });
                                         }
                                     }
@@ -1659,7 +1659,7 @@ CaseFile.View = CaseFile.View || {
                                 rc.Record.zip           = Acm.goodValue(record.zip);
                                 rc.Record.country       = Acm.goodValue(record.country);
                                 rc.Record.created       = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator       = App.getUserName();   //record.creator;
+                                rc.Record.creator       = App.Model.Users.getUserFullName(App.getUserName());   //record.creator;
                             }
                             return rc;
                         }
@@ -1677,7 +1677,7 @@ CaseFile.View = CaseFile.View || {
                                 rc.Record.zip           = Acm.goodValue(record.zip);
                                 rc.Record.country       = Acm.goodValue(record.country);
                                 rc.Record.created       = Acm.getCurrentDay(); //record.created;
-                                rc.Record.creator       = App.getUserName();   //record.creator;
+                                rc.Record.creator       = App.Model.Users.getUserFullName(App.getUserName());   //record.creator;
                             }
                             return rc;
                         }
@@ -1746,7 +1746,7 @@ CaseFile.View = CaseFile.View || {
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
                         address.created = Acm.getCurrentDayInternal();
-                        address.creator = Acm.goodValue(record.creator);
+                        address.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedAddress(caseFileId, assocId, address);
@@ -1764,7 +1764,7 @@ CaseFile.View = CaseFile.View || {
                         address.zip           = Acm.goodValue(record.zip);
                         address.country       = Acm.goodValue(record.country);
                         address.created = Acm.getCurrentDayInternal();
-                        address.creator = Acm.goodValue(record.creator);
+                        address.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < address.id) {
                             CaseFile.Controller.viewUpdatedAddress(caseFileId, assocId, address);
@@ -1847,7 +1847,7 @@ CaseFile.View = CaseFile.View || {
                                                 ,type    : Acm.goodValue(personAliases[i].aliasType)
                                                 ,value   : Acm.goodValue(personAliases[i].aliasValue)
                                                 ,created : Acm.getDateFromDatetime(personAliases[i].created,$.t("common:date.short"))
-                                                ,creator : Acm.goodValue(personAliases[i].creator)
+                                                ,creator : App.Model.Users.getUserFullName(Acm.goodValue(personAliases[i].creator))
                                             });
                                         }
                                     }
@@ -1907,7 +1907,7 @@ CaseFile.View = CaseFile.View || {
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
                         personAlias.created = Acm.getCurrentDayInternal();
-                        personAlias.creator = Acm.goodValue(record.creator);
+                        personAlias.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId) {
                             CaseFile.Controller.viewAddedPersonAlias(caseFileId, assocId, personAlias);
@@ -1921,7 +1921,7 @@ CaseFile.View = CaseFile.View || {
                         personAlias.aliasType  = Acm.goodValue(record.type);
                         personAlias.aliasValue = Acm.goodValue(record.value);
                         personAlias.created = Acm.getCurrentDayInternal();
-                        personAlias.creator = Acm.goodValue(record.creator);
+                        personAlias.creator = App.getUserName();
                         var caseFileId = CaseFile.View.getActiveCaseFileId();
                         if (0 < caseFileId && 0 < assocId && 0 < personAlias.id) {
                             CaseFile.Controller.viewUpdatedPersonAlias(caseFileId, assocId, personAlias);
@@ -2509,10 +2509,17 @@ CaseFile.View = CaseFile.View || {
                 App.gotoPage(url);
             }
         }
-        ,onClickBtnCompleteTask : function(taskId) {
-            CaseFile.Model.Tasks.completeTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
-                AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
-            });
+        ,onClickBtnAdHocTaskAction: function(action, taskId){
+            if("COMPLETE" == action){
+                CaseFile.Model.Tasks.completeTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
+                    AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+                });
+            }
+            else if("DELETE" == action){
+                CaseFile.Model.Tasks.deleteTask(taskId, CaseFile.View.Tasks.currentKey).done(function(task){
+                    AcmEx.Object.JTable.load(CaseFile.View.Tasks.$divTasks);
+                });
+            }
         }
         ,onClickBtnTaskWithOutcome : function(outcome,taskId) {
             var tasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
@@ -2531,32 +2538,28 @@ CaseFile.View = CaseFile.View || {
             if(task.taskOutcome){
                 CaseFile.Model.Tasks.completeTaskWithOutcome(task, CaseFile.View.Tasks.currentKey);
             }
-
-            //alert("task with outcome");
-
         }
         ,retrieveTaskOutcome : function(taskId){
             var myTasks = CaseFile.Model.Tasks.cacheMyTasks.get(App.getUserName());
-            var $a = $("");
+            var html = "";
             if(myTasks){
                 for(var i = 0; i < myTasks.length; i++){
                     if(myTasks[i].taskId == taskId){
                         var task = myTasks[i];
                         if(task.adhocTask == true && task.completed == false){
-                            $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>");
+                            html = "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task") + "'>"+ $.t("casefile:tasks.buttons.complete") +"</button></div>";
+                            html += "<div class='btn-group-task'><button class='btn btn-default btn-sm adhoc' id='DELETE' title='" + $.t("casefile:tasks.buttons.delete-task") + "'>"+ $.t("casefile:tasks.buttons.delete") +"</button></div>";
                         }
                         else if(task.adhocTask == false && task.completed == false && task.availableOutcomes != null){
                             var availableOutcomes = task.availableOutcomes;
                             for(var j = 0; j < availableOutcomes.length; j++ ){
-                                if(availableOutcomes[j].name == 'COMPLETE'){
-                                    $a = $("<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='COMPLETE' title='" + $.t("casefile:tasks.buttons.complete-task-outcome") + "'>" + $.t("casefile:tasks.buttons.complete") + "</button></div>");
-                                }
+                                html += "<div class='btn-group-task'><button class='btn btn-default btn-sm businessProcess' id='" + availableOutcomes[j].name + "' title='" + availableOutcomes[j].description + "'>" + availableOutcomes[j].description + "</button></div>";
                             }
                         }
                     }
                 }
             }
-            return $a;
+            return html;
         }
 
         ,createJTableTasks: function($jt) {
@@ -2673,9 +2676,9 @@ CaseFile.View = CaseFile.View || {
                         ,create: false
                         ,sorting: false
                         ,display: function (commData) {
-                            var $a = CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id);
+                            var $a = $(CaseFile.View.Tasks.retrieveTaskOutcome(commData.record.id));
                             $a.on("click", ".businessProcess", function(e) {CaseFile.View.Tasks.onClickBtnTaskWithOutcome(e.target.id,commData.record.id);$a.hide();});
-                            $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnCompleteTask(commData.record.id);$a.hide();});
+                            $a.on("click", ".adhoc", function(e) {CaseFile.View.Tasks.onClickBtnAdHocTaskAction(e.target.id,commData.record.id);$a.hide();});
                             return $a;
                         }
                     }
