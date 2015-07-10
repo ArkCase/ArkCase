@@ -36,7 +36,7 @@
         <easymock.version>3.3.1</easymock.version>
         <easymock-extension.version>3.2</easymock-extension.version>
         <freemarker.version>2.3.22</freemarker.version>
-        <eclipselink-jpa.version>2.5.2</eclipselink-jpa.version>
+        <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0-SNAPSHOT</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
