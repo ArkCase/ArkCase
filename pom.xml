@@ -54,7 +54,7 @@
         <json-schema-validator.version>2.2.6</json-schema-validator.version>
 
         <jstl.version>1.2</jstl.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.12</junit.version>
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
 
