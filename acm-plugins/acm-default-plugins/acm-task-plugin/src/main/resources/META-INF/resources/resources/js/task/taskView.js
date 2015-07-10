@@ -702,7 +702,7 @@ Task.View = Task.View || {
                     if(Acm.isNotEmpty(reworkInstructions)){
                         var task = Task.View.getActiveTask();
                         task.reworkInstructions = reworkInstructions;
-                        //Task.View.Detail.onClickBtnTaskWithOutcome(clicked);
+                        Task.View.Detail.onClickBtnTaskWithOutcome(clicked);
                     }
                 }
             }
