@@ -21,14 +21,13 @@ import java.util.List;
  */
 public class SendDocumentsToSolr
 {
-    private SpringContextHolder contextHolder;
-
     private MuleClient muleClient;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final ObjectMapper mapper = new ObjectMapperFactory().createObjectMapper();
 
+    // this method is used from Mule, do not delete it!
     public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
     {
         log.debug("Converting a document to a JSON array");
@@ -42,8 +41,6 @@ public class SendDocumentsToSolr
     {
         sendToJmsQueue(solrDocuments, "jms://solrAdvancedSearch.in");
     }
-
-
 
     public void sendSolrQuickSearchDocuments(List<SolrDocument> solrDocuments)
     {
@@ -152,25 +149,13 @@ public class SendDocumentsToSolr
         }
     }
 
-    public synchronized MuleClient getMuleClient()
+    public MuleClient getMuleClient()
     {
-        if ( muleClient == null )
-        {
-            muleClient = getContextHolder().getAllBeansOfType(MuleClient.class).values().iterator().next();
-        }
-
         return muleClient;
     }
 
-
-    public SpringContextHolder getContextHolder()
+    public void setMuleClient(MuleClient muleClient)
     {
-        return contextHolder;
+        this.muleClient = muleClient;
     }
-
-    public void setContextHolder(SpringContextHolder contextHolder)
-    {
-        this.contextHolder = contextHolder;
-    }
-
 }
