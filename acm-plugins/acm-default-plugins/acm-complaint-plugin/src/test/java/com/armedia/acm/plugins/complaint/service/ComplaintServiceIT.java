@@ -55,7 +55,6 @@ import static org.junit.Assert.assertTrue;
                         "/spring/spring-library-search.xml",
                         "/spring/spring-library-ecm-file.xml",
                         "/spring/spring-library-particpants.xml",
-                        "/spring/spring-library-activemq.xml",
                         "/spring/spring-library-property-file-manager.xml",
                         "/spring/spring-library-person.xml",
                         "/spring/spring-library-case-file.xml",
