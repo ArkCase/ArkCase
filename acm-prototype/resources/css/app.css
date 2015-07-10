@@ -39,6 +39,9 @@ a:focus {
   color: #181a1c;
   text-decoration: none;
 }
+
+
+
 label {
   font-weight: normal;
 }
@@ -158,6 +161,7 @@ a:hover .caret-white {
 }
 .form-control:focus {
   border-color: #177bbb;
+  outline: 1px solid #eee;
 }
 .input-s-sm {
   width: 120px;
@@ -260,6 +264,10 @@ a.list-group-item:focus {
 }
 .panel.panel-default {
   border-color: #eaeef1;
+}
+
+#wizardform div.panel.panel-default {
+	border: none;
 }
 .panel.panel-default > .panel-heading,
 .panel.panel-default > .panel-footer {
@@ -1010,7 +1018,11 @@ body.container {
 }
 
 
-
+#content section.vbox section.scrollable section.hbox.stretch aside.aside-lg.bg-light.lt section.vbox.animated.fadeInLeft section.scrollable header.dk.header h3.m-b-xs.text-black.pull-left {
+	width: 185px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
 
 ul.fancytree-container {
@@ -1606,8 +1618,7 @@ ul.nav.nav-main li.active {
     display: none !important;
   }
   .nav-xs .scrollable {
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow: scroll;
   }
   .nav-xs .nav-primary > ul > li > a {
     position: relative;
@@ -1623,7 +1634,6 @@ ul.nav.nav-main li.active {
     vertical-align: middle;
     height: 50px;
     width: 70px;
-    display:none;
   }
   .nav-xs .nav-primary > ul > li > a span.pull-right {
     display: none !important;
@@ -1631,7 +1641,7 @@ ul.nav.nav-main li.active {
   .nav-xs .nav-primary > ul > li > a i {
     width: auto;
     float: none;
-    display: inline;
+    display: block;
     font-size: 16px;
     margin: 0;
     line-height: 50px;
@@ -3988,6 +3998,10 @@ div.panel-body.no-padder table {
 .m-b-sm {
   margin-bottom: 10px;
 }
+
+#wizardform div.panel.panel-default div.panel-body.no-padder div.tab-content ul.pager.wizard.m-b-sm {
+	padding: 10px;
+}
 .m-b {
   margin-bottom: 15px;
 }
@@ -4385,4 +4399,16 @@ tr.dragover {
 .acm-DocDetailTitleText{
   font-weight: bold;
   color: #fff;
+}
+
+input.fancycheckbox {
+  margin-left: 4px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: left;
+  background-position: 0px 0px;
+
 }

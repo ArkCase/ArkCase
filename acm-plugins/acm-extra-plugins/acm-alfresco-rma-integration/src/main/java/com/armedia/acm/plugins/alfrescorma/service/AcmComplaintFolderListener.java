@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecordFolder;
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
 import org.mule.api.MuleException;
 import org.mule.api.client.MuleClient;
@@ -8,19 +9,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.Map;
+
 /**
  * Created by armdev on 5/1/14.
  */
 public class AcmComplaintFolderListener implements ApplicationListener<ComplaintCreatedEvent>
 {
     private transient Logger log = LoggerFactory.getLogger(getClass());
+    private AlfrescoRecordsService alfrescoRecordsService;
+    private MuleClient muleClient;
 
     @Override
     public void onApplicationEvent(ComplaintCreatedEvent complaintCreatedEvent)
     {
-        if ( log.isTraceEnabled() )
+        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY);
+
+        if ( !proceed )
         {
-            log.trace("Got a complaint created event; complaint id: '" + complaintCreatedEvent.getObjectId() + "'");
+            return;
         }
 
         if ( ! complaintCreatedEvent.isSucceeded() )
@@ -37,13 +44,15 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
         folder.setFolderType("COMPLAINT");
         folder.setFolderName(complaintCreatedEvent.getComplaintNumber());
 
+        Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
+
         try
         {
             if ( log.isTraceEnabled() )
             {
                 log.trace("sending JMS message.");
             }
-            getMuleClient().dispatch("jms://rmaFolder.in", folder, null);
+            getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
@@ -58,8 +67,25 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 
     public MuleClient getMuleClient()
     {
-        return null;  // this method should be overridden by Spring method injection
+        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
+        // when this class is used as a Spring bean.  But, when used as a non-Spring POJO, i.e. in unit tests,
+        // then this is how the test gets to inject a mock client.
+        return muleClient;
     }
 
+    // this method used for unit testing.
+    protected void setMuleClient(MuleClient muleClient)
+    {
+        this.muleClient = muleClient;
+    }
 
+    public AlfrescoRecordsService getAlfrescoRecordsService()
+    {
+        return alfrescoRecordsService;
+    }
+
+    public void setAlfrescoRecordsService(AlfrescoRecordsService alfrescoRecordsService)
+    {
+        this.alfrescoRecordsService = alfrescoRecordsService;
+    }
 }

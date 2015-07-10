@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import org.slf4j.Logger;
@@ -16,7 +17,14 @@ public class AcmCaseFileStatusChangedListener implements ApplicationListener<Cas
     @Override
     public void onApplicationEvent(CaseEvent event)
     {
-        if ("com.armedia.acm.casefile.event.closed".equals(event.getEventType().toLowerCase()))
+        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.CASE_CLOSE_INTEGRATION_KEY);
+
+        if ( !proceed )
+        {
+            return;
+        }
+
+        if ( AlfrescoRmaPluginConstants.CASE_CLOSED_EVENT.equals(event.getEventType().toLowerCase()))
         {
             CaseFile caseFile = event.getCaseFile();
 

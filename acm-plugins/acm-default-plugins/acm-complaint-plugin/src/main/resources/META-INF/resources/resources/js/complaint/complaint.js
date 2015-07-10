@@ -42,7 +42,7 @@ var Complaint = Complaint || {
         if (Calendar.create) {
             Calendar.create({name: "complaint",
                 objectType: Complaint.Model.DOC_TYPE_COMPLAINT
-                ,displayError: Complaint.View.Calendar.displayError()
+                ,displayError: Complaint.View.Calendar.displayError
             });
         }
 

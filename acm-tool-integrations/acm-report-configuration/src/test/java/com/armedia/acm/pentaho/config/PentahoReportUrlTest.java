@@ -5,12 +5,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class PentahoReportUrlTest {
     private Map<String, Object> reportsProperties;
+    private Properties reportServerConfigurationProperties;
     private String PENTAHO_SERVER_URL="http://localhost:";
     private String PENTAHO_SERVER_PORT="8080";
     private String COMPLAINT_REPORT="/pentaho/api/repos/:public:opm-ecms:ComplaintReport.prpt/viewer";
@@ -21,12 +23,16 @@ public class PentahoReportUrlTest {
     public void setUp() throws Exception
     {    	
     	reportsProperties = new HashMap<String, Object>();
-    	reportsProperties.put("PENTAHO_SERVER_URL", PENTAHO_SERVER_URL);
-    	reportsProperties.put("PENTAHO_SERVER_PORT", PENTAHO_SERVER_PORT);
+    	reportServerConfigurationProperties = new Properties();
+    	
+    	reportServerConfigurationProperties.put("PENTAHO_SERVER_URL", PENTAHO_SERVER_URL);
+    	reportServerConfigurationProperties.put("PENTAHO_SERVER_PORT", PENTAHO_SERVER_PORT);
     	reportsProperties.put("COMPLAINT_REPORT", COMPLAINT_REPORT);
     	reportsProperties.put("BILLING_REPORT", BILLING_REPORT);
+    	
     	reportUrl = new PentahoReportUrl();
     	reportUrl.setReportsProperties(reportsProperties);
+    	reportUrl.setReportServerConfigurationProperties(reportServerConfigurationProperties);
     }
 
     @Test

@@ -1,8 +1,12 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
@@ -15,10 +19,12 @@ import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
+import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -42,6 +48,7 @@ public class AcmTaskServiceImpl implements AcmTaskService {
     private SearchResults searchResults = new SearchResults();
     private AcmFolderService acmFolderService;
 
+    private MuleClient muleClient;
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void copyTasks(Long fromObjectId,
@@ -148,6 +155,38 @@ public class AcmTaskServiceImpl implements AcmTaskService {
         return tasksIds;
     }
 
+    @Override
+    public void copyTaskFilesAndFoldersToParent(AcmTask task) {
+    	try {
+
+			if(null != task.getParentObjectType() && null != task.getParentObjectId()){
+				log.debug("Task event raised. Start coppieng folder to the parent folder ...");
+
+				
+				AcmContainer container = task.getContainer() != null ? task.getContainer() : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
+				
+				AcmFolder folderToBeCoppied = container.getFolder();
+				
+				AcmContainer targetContainer = getAcmContainerDao().findFolderByObjectTypeAndId(task.getParentObjectType(), task.getParentObjectId());
+
+				AcmFolder targetFolder = getAcmFolderService().addNewFolderByPath(task.getParentObjectType(), 
+						task.getParentObjectId(), 
+						"/" + String.format("Task %d%n %s", task.getId(), task.getTitle()));
+				
+				getAcmFolderService().copyFolderStructure(folderToBeCoppied.getId(), targetContainer, targetFolder);
+				
+
+			
+			}
+			
+		} catch (AcmFolderException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e) {
+			
+			log.error("Could not coppy folder for task id = " + task.getId(), e);
+			
+		} 
+    	
+    }
+    
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher) {
         this.taskEventPublisher = taskEventPublisher;
     }
@@ -164,11 +203,30 @@ public class AcmTaskServiceImpl implements AcmTaskService {
         this.acmContainerDao = acmContainerDao;
     }
 
-    public void setAcmFolderService(AcmFolderService acmFolderService) {
+    public AcmContainerDao getAcmContainerDao() {
+		return acmContainerDao;
+	}
+
+	public void setAcmFolderService(AcmFolderService acmFolderService) {
         this.acmFolderService = acmFolderService;
     }
 
-    public void setNoteDao(NoteDao noteDao) {
+    public AcmFolderService getAcmFolderService() {
+		return acmFolderService;
+	}
+
+	public void setNoteDao(NoteDao noteDao) {
         this.noteDao = noteDao;
     }
+
+	public MuleClient getMuleClient() {
+		return muleClient;
+	}
+
+	public void setMuleClient(MuleClient muleClient) {
+		this.muleClient = muleClient;
+	}
+
+    
+    
 }

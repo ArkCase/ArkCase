@@ -20,26 +20,6 @@ var Acm = Acm || {
         if (Acm.Model.onInitialized) {Acm.Model.onInitialized();}
     }
 
-    ,__FixMe__getUserFullName: function(user) {
-        var fullName;
-        if ("albert-acm" == user) {
-            fullName = "Albert Analyst";
-        } else if ("ann-acm" == user || "Ann-acm" == user) {
-            fullName = "Ann Administrator";
-        } else if ("charles-acm" == user) {
-            fullName = "Charles Call Center";
-        } else if ("ian-acm" == user) {
-            fullName = "Ian Investigator";
-        } else if ("samuel-acm" == user) {
-            fullName = "Samuel Supervisor";
-        } else if ("sally-acm" == user) {
-            fullName = "Sally Supervisor";
-        } else {
-            fullName = user;
-        }
-        return fullName;
-    }
-
 	,isEmpty: function (val) {
 //        if (typeof val == "undefined") {
 //            return true;
@@ -87,6 +67,18 @@ var Acm = Acm || {
         }
         return false;
     }
+    ,findIndexInArray: function(arr, attr, value) {
+        var found = -1;
+        if (Acm.isArray(arr)) {
+            for (var i = 0; i < arr.length; i++) {
+                if (value == arr[i][attr]) {
+                    found = i;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
     ,compare: function(left, right) {  //equals() name is taken, so use compare()
         if (Acm.isEmpty(left)) {
             return Acm.isEmpty(right);
@@ -94,22 +86,26 @@ var Acm = Acm || {
         return left == right;
     }
 
-    //val can be a simple value or an array.
-    //Usage ex)   To get good value of grandParent.parent.node.name
-    //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
     ,goodValue: function (val, replacement)  {
         var replacedWith = (undefined === replacement) ? "" : replacement;
-        if (Acm.isArray(val)) {
-            if (0 >= val.length) {
+        return this.isEmpty(val) ? replacedWith : val;
+    }
+
+    //Usage ex)   To get good value of grandParent.parent.node.name
+    //   Acm.goodValue([grandParent, "parent", "node", "name"], "N/A");
+    ,goodValue2: function (arr, replacement)  {
+        var replacedWith = (undefined === replacement) ? "" : replacement;
+        if (Acm.isArray(arr)) {
+            if (0 >= arr.length) {
                 return replacedWith;
             }
 
             var v = replacedWith;
-            for (var i = 0; i < val.length; i++) {
+            for (var i = 0; i < arr.length; i++) {
                 if (0 == i) {
-                    v = val[0];
+                    v = arr[0];
                 } else {
-                    var k = val[i];
+                    var k = arr[i];
                     v = v[k];
                 }
 
@@ -120,7 +116,7 @@ var Acm = Acm || {
             return v;
 
         } else {
-            return this.isEmpty(val) ? replacedWith : val;
+            return replacedWith;
         }
     }
 
@@ -135,43 +131,40 @@ var Acm = Acm || {
         return json;
     }
 
-    //append random parameter after a url to avoid undesired cached session variables
-    //This function handles input url in following sample cases:
-    //  some.com/some/path
-    //  some.com/some/path/
-    //  some.com/some/path?var=abc
-    ,makeNoneCacheUrl: function(url) {
-        var lastChar = url.slice(-1);
-        var hasQmark = (-1 !== url.indexOf('?'));
+    ,Url: {
+        //append random parameter after a url to avoid undesired cached session variables
+        //This function handles input url in following sample cases:
+        //  some.com/some/path
+        //  some.com/some/path/
+        //  some.com/some/path?var=abc
+        makeNoneCacheUrl: function(url) {
+            var lastChar = url.slice(-1);
+            var hasQmark = (-1 !== url.indexOf('?'));
 
-        if (hasQmark) {
-            url += '&'
-        } else {
-            url += '?';
-        }
-        url += 'rand=' + Math.floor((Math.random()*10000000000));
-        return url;
-    }
-
-    ,getUrlParameter : function(param) {
-        var url = window.location.search.substring(1);
-        var urlVariables = url.split('&');
-        for (var i = 0; i < urlVariables.length; i++)
-        {
-            var paramName = urlVariables[i].split('=');
-            if (paramName[0] == param)
-            {
-                return paramName[1];
+            if (hasQmark) {
+                url += '&'
+            } else {
+                url += '?';
             }
+            url += 'rand=' + Math.floor((Math.random()*10000000000));
+            return url;
+        }
+
+        ,getUrlParameter: function(url, name){
+            //var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+            //var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(url); //do not know why not working when value include 'a'
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url); //do not know why not working when value include 'a'
+            if (!Acm.isArrayEmpty(results)) {
+                if (1 < results.length) {
+                    return results[1];
+                }
+            }
+            return "";
         }
     }
 
-    ,getUrlParameter2: function(name){
-        var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
-        return results[1] || 0;
-    }
 
-
+    //todo: only jTable is using this, move to AcmEx.JTable
     //convert URL parameters to JSON
     //ex) "abc=foo&def=%5Basf%5D&xyz=5&foo=b%3Dar" to {abc: "foo", def: "[asf]", xyz: "5", foo: "b=ar"}
     ,urlToJson: function(param) {
@@ -286,50 +279,38 @@ var Acm = Acm || {
     }
 
     //Get date part from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateFromDatetime2: function(dt, format) {
-        Acm.log("Acm.getDateFromDatetime() is phasing out.Using Acm.getDateFromDatetime2() for now till the transition is complete");
-        var d = "";
-        if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format(format)
-        }
-        return d;
-    }
     ,getDateFromDatetime: function(dt, format) {
         var d = "";
+//        if (Acm.isEmpty(format)) {           //remove this if block after
+//            format = $.t("common:date.short");
+//        }
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format($.t("common:date.short"))
+            d = moment(dt).format(format);
         }
         return d;
     }
     //Get date and time from format: "2014-04-30T16:51:33.914+0000"
-    ,getDateTimeFromDatetime2: function(dt, format) {
-        Acm.log("Acm.getDateTimeFromDatetime() is phasing out.Using Acm.getDateTimeFromDatetime2() for now till the transition is complete");
+    ,getDateTimeFromDatetime: function(dt, format) {
         var d = "";
         if (Acm.isNotEmpty(dt) && Acm.isNotEmpty(format)) {
-            d = moment(dt).format(format)
+            d = moment(dt).format(format);
         }
         return d;
     }
-    ,getDateTimeFromDatetime: function(dt) {
-        var d = "";
-        if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.full"));
-        }
-        return d;
-    }
+
 
     //////////////////////////////////////////
     ,getFrevvoDateFromDateTime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.frevvo"))
+            d = moment(dt).format($.t("common:date.frevvo"));
         }
         return d;
     }
     ,getPentahoDateFromDateTime: function(dt) {
         var d = "";
         if (Acm.isNotEmpty(dt)) {
-            d = moment(dt).format($.t("common:date.pentaho"))
+            d = moment(dt).format($.t("common:date.pentaho"));
         }
         return d;
     }
