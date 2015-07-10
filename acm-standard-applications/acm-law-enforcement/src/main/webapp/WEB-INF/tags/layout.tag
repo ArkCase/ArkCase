@@ -25,6 +25,9 @@
 </head>
 <body class="">
 <a href="#skipnav" style="display:none;">Skip Navigation</a>
+
+<noscript>Use of this application requires a web browser that utilizes JavaScript. If you're reading this message, your web browser has limited JavaScript capabilities. Please use one of our supported web browsers instead.</noscript>
+
 <section class="vbox">
     <%--<%@include file="/WEB-INF/tagf/topbar.tagf"%>--%>
     <%@include file="/resources/include/topbar.jspf" %>

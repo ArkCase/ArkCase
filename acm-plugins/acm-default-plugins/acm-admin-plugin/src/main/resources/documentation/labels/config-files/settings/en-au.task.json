@@ -1221,9 +1221,9 @@
             "defaultValue": "High",
             "description": ""
         },
-        "expedited": {
-            "value": "Expedited",
-            "defaultValue": "Expedited",
+        "expedite": {
+            "value": "Expedite",
+            "defaultValue": "Expedite",
             "description": ""
         },
         "complete-percents": {

@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import org.slf4j.Logger;
@@ -21,10 +22,12 @@ public class AcmComplaintClosedListener implements ApplicationListener<Complaint
 
 	@Override
 	public void onApplicationEvent(ComplaintClosedEvent event) {
-		
-		if ( LOG.isTraceEnabled() )
+
+        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_CLOSE_INTEGRATION_KEY);
+
+        if ( !proceed )
         {
-			LOG.trace("Got a complaint closed event; complaint id: '" + event.getObjectId() + "'");
+            return;
         }
 
         if ( ! event.isSucceeded() )

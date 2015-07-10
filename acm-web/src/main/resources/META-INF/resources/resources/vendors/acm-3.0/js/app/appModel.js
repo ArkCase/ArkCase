@@ -82,7 +82,7 @@ App.Model = {
                     ,function() {
                         var isLogin = App.Model.Login.isLogin();
                         var sinceIdle = App.Model.Login.getSinceIdle();
-                        var errorCount = App.Model.Login.getErrorCount();
+                        //var errorCount = App.Model.Login.getErrorCount();
                         //if (!isLogin || (autoLogoutIdleLimit < sinceIdle) || (autoLogoutErrorLimit < errorCount)) {
                         if (!isLogin || (autoLogoutIdleLimit < sinceIdle)) {
                             App.Controller.Login.modelDetectedIdle();
@@ -460,7 +460,7 @@ App.Model = {
             var v = "";
             var data = this.users.get();
             if (Acm.isNotEmpty(data)) {
-                v = Acm.goodValue(data[k]);
+                v = Acm.goodValue(data[k], []);
             }
             return v;
         }
@@ -490,7 +490,6 @@ App.Model = {
         }
 
         ,getUserFullName: function(userId){
-            Acm.log("Acm.__FixMe__getUserFullName() is phasing out.Using App.Model.Users.getUserFullName() for now till the transition is complete");
             var fullname = userId;
             var user = App.Model.Users.getUser(userId);
             if(App.Model.Users.validateUser(user)){

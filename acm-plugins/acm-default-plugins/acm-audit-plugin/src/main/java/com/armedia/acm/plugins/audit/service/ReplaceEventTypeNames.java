@@ -10,7 +10,13 @@ public class ReplaceEventTypeNames {
     private AcmPlugin pluginEventType;
 
     public AuditEvent replaceNameInAcmEvent(AuditEvent event){
-        event.setFullEventType((String) getPluginEventType().getPluginProperties().get(AuditConstants.EVENT_TYPE+event.getFullEventType()));
+        String replacementName = (String) getPluginEventType().getPluginProperties().get(AuditConstants.EVENT_TYPE+event.getFullEventType());
+        if(replacementName == null ){
+            event.setFullEventType(event.getFullEventType());
+        }
+        else{
+            event.setFullEventType(replacementName);
+        }
         return event;
     }
     public AcmPlugin getPluginEventType() {

@@ -115,7 +115,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
 
         Map<String, Object> messageProps = new HashMap<>();
-        messageProps.put("ecmFileId", getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile));
+        messageProps.put("ecmFileId", ecmFile.getVersionSeriesId());
         messageProps.put("fileName", ecmFile.getFileName());
         messageProps.put("mimeType", ecmFile.getFileMimeType());
         messageProps.put("inputStream", fileInputStream);
