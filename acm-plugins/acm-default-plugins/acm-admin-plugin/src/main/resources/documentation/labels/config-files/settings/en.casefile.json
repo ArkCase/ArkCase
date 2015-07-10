@@ -1035,10 +1035,20 @@
                 "description": "",
                 "value": "Complete Task Outcome"
             },
+            "delete-task": {
+                "defaultValue": "Delete Task",
+                "description": "",
+                "value": "Delete Task"
+            },
             "complete": {
                 "defaultValue": "Complete",
                 "description": "",
                 "value": "Complete"
+            },
+            "delete": {
+                "defaultValue": "Delete",
+                "description": "",
+                "value": "Delete"
             },
             "complete-task": {
                 "defaultValue": "Complete Task",
