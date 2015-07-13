@@ -76,7 +76,7 @@
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.7</slf4j.version>
-        <sonar.version>2.3.1</sonar.version>
+        <sonar.version>2.6</sonar.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
@@ -88,6 +88,8 @@
         <frevvo.forms.version>6.1</frevvo.forms.version>
         <java.mail.version>1.5.4</java.mail.version>
         <spring.integration.version>2.2.3.RELEASE</spring.integration.version>
+        <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <puppycrawl.version>6.8.1</puppycrawl.version>
     </properties>
 
     <organization>
@@ -195,6 +197,17 @@
                 <role>Java Developer</role>
             </roles>
             <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Petar Ilin</name>
+            <email>petar.ilin@armedia.com</email>
+            <id>ilinpetar</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>+1</timezone>
         </developer>
 
 
@@ -548,6 +561,33 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- code quality section -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>acm-checkstyle-checks.xml</configLocation>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${puppycrawl.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
 
