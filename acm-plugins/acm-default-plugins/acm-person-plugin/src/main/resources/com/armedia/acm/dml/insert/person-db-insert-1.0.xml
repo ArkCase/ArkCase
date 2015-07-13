@@ -1,0 +1,150 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
+    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="upperFunctionName" value="UPPER" dbms="oracle"/>
+    <property name="upperFunctionName" value="upper" dbms="postgresql"/>
+
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+    
+    <changeSet id="07-add-person-type-tables" author="tsedalu">
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Subject"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Witness"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>        
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Others"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="09-add-person-alias-type-tables" author="tsedalu">
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Nick Name"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>        
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Others"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="21-update-person-type-lookup-table" author="dmiller">
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Initiator"/>
+            <column name="cm_order" valueNumeric="10"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Wrongdoer"/>
+            <column name="cm_order" valueNumeric="20"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="22-update-person-alias-lookup-table" author="dmiller">
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="FKA"/>
+            <column name="cm_order" valueNumeric="10"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_person_alias_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Married"/>
+            <column name="cm_order" valueNumeric="20"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+    
+    <changeSet id="26-add-person-association-type-defendant" author="riste.tutureski" failOnError="false">
+        <insert tableName="acm_person_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Defendant"/>
+            <column name="cm_order" valueNumeric="101"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>        
+    </changeSet>
+</databaseChangeLog>
+

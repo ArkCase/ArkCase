@@ -4,9 +4,43 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
+    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="upperFunctionName" value="UPPER" dbms="oracle"/>
+    <property name="upperFunctionName" value="upper" dbms="postgresql"/>
+
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+
+    <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
+    <property name="cmValueLength" value="255" dbms="mysql"/>
+
+    <property name="cmTagLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmTagLength" value="255" dbms="mysql"/>
+
     <changeSet id="01-create-person-table" author="dmiller">
         <createTable tableName="acm_person">
-            <column name="cm_person_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+            <column name="cm_person_id" type="${idType}" autoIncrement="${autoIncrement}" >
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_person"/>
@@ -14,13 +48,13 @@
             <column name="cm_person_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_modifier" type="VARCHAR(1024)">
@@ -33,18 +67,20 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
+    </changeSet>
 
+    <changeSet id="01-create-person-table-indexes" author="nebojsha.davidovikj" dbms="oracle,postgresql">
         <createIndex tableName="acm_person" indexName="idx_person_family_name">
-            <column name="UPPER(cm_family_name)"/>
+            <column name="${upperFunctionName}(cm_family_name)"/>
         </createIndex>
         <createIndex tableName="acm_person" indexName="idx_person_given_name">
-            <column name="UPPER(cm_given_name)"/>
+            <column name="${upperFunctionName}(cm_given_name)"/>
         </createIndex>
     </changeSet>
 
     <changeSet id="02-person-switch-to-sequence-pk" author="dmiller">
         <dropDefaultValue tableName="acm_person" columnName="cm_person_id"/>
-        <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="${idType}"/>
     </changeSet>
 
     <changeSet id="03-add-title-and-company-columns" author="dmiller">
@@ -58,7 +94,7 @@
 
     <changeSet id="04-add-security-tags" author="dmiller">
         <createTable tableName="acm_person_security_tag">
-            <column name="cm_person_id" type="NUMBER(32,0)">
+            <column name="cm_person_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_security_tag" type="VARCHAR(1024)">
@@ -74,10 +110,10 @@
 
     <changeSet id="05-add-person-address-table" author="dmiller">
         <createTable tableName="acm_person_postal_address">
-            <column name="cm_person_id" type="NUMBER(32,0)">
+            <column name="cm_person_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_address_id" type="NUMBER(32,0)">
+            <column name="cm_address_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -91,10 +127,10 @@
 
     <changeSet id="06-add-person-contact-method-table" author="dmiller">
         <createTable tableName="acm_person_contact_method">
-            <column name="cm_person_id" type="NUMBER(32,0)">
+            <column name="cm_person_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_contact_method_id" type="NUMBER(32,0)">
+            <column name="cm_contact_method_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -108,13 +144,13 @@
     
     <changeSet id="07-add-person-type-tables" author="tsedalu">
         <createTable tableName="acm_person_type_lu">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
                     primaryKeyName="pk_person_type"/>
             </column>
-            <column name="cm_value" type="VARCHAR(4000)">
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_type"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
@@ -123,56 +159,24 @@
             <column name="cm_status" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Subject"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Witness"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>        
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Others"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        
     </changeSet>
      
     <changeSet id="08-add-cm-person-type-id" author="tsedalu">
         <addColumn tableName="acm_person">
-            <column name="cm_person_type_id" type="VARCHAR(1024)"/>
+            <column name="cm_person_type_id" type="VARCHAR(${cmValueLength})"/>
         </addColumn>
         <createIndex tableName="acm_person" indexName="idx_person_type_id">
             <column name="cm_person_type_id"/>
@@ -180,13 +184,13 @@
     </changeSet>
     <changeSet id="09-add-person-alias-type-tables" author="tsedalu">     
         <createTable tableName="acm_person_alias_type_lu">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
                     primaryKeyName="pk_person_alias_type"/>
             </column>
-            <column name="cm_value" type="VARCHAR(4000)">
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_person_alias_type"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
@@ -195,67 +199,45 @@
             <column name="cm_status" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            
         </createTable>
-            
-        <insert tableName="acm_person_alias_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Nick Name"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>        
-        <insert tableName="acm_person_alias_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Others"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
     </changeSet>
      
     <changeSet id="10-add-person-alias-tables" author="tsedalu">
         <createTable tableName="acm_person_alias">
-            <column name="cm_person_alias_id" type="NUMBER(32,0)">
+            <column name="cm_person_alias_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
                     primaryKeyName="pk_person_alias"/>
             </column>
-            <column name="cm_person_id" type="RAW(16)" >
+            <column name="cm_person_id" type="${idType}" >
                 <constraints nullable="false" unique="true" />
             </column>
-            <column name="cm_person_alias_type_id" type="VARCHAR(4000)">
+            <column name="cm_person_alias_type_id" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" />
             </column>                                     
             <column name="cm_person_alias_value" type="VARCHAR(1024)">
                 <constraints nullable="false"/>   
             </column>
-            <column name="cm_person_alias_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_alias_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_alias_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_alias_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_alias_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_alias_modifier" type="VARCHAR(1024)">
@@ -266,12 +248,12 @@
     </changeSet>
      
     <changeSet id="11-modify-datatype-person-id" author="tsedalu">
-        <modifyDataType tableName="acm_person_alias" columnName="cm_person_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_person_alias" columnName="cm_person_id" newDataType="${idType}"/>
     </changeSet>
       
     <changeSet id="12-modify-datatype-person-alias-type" author="tsedalu">
-        <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_type_id" newDataType="VARCHAR(4000)"/>
-        <renameColumn tableName="acm_person_alias" oldColumnName="cm_person_alias_type_id" newColumnName="cm_person_alias_type"/>
+        <modifyDataType tableName="acm_person_alias" columnName="cm_person_alias_type_id" newDataType="VARCHAR(${cmValueLength})"/>
+        <renameColumn tableName="acm_person_alias" oldColumnName="cm_person_alias_type_id" newColumnName="cm_person_alias_type" columnDataType="VARCHAR(${cmValueLength})"/>
     </changeSet>
       
     <!-- drop columns with a unique constraints in acm_person_alias table and add them again without a unique constraint-->
@@ -284,7 +266,7 @@
     <changeSet id="14-add-columns-without-unique-key" author="tsedalu">
         <addColumn tableName="acm_person_alias">
              
-            <column name="cm_person_id" type="NUMBER(32,0)">
+            <column name="cm_person_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
              
@@ -297,16 +279,16 @@
      
     <changeSet id="15-add-person-association-table" author="tsedalu"> 
         <createTable tableName="acm_person_assoc">
-            <column name="cm_person_associ_id" type="NUMBER(32,0)">
+            <column name="cm_person_associ_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
                     primaryKeyName="pk_person_assoc"/>
             </column>
-            <column name="cm_person_assoc_person_id" type="NUMBER(32,0)">
+            <column name="cm_person_assoc_person_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_assoc_parent_id" type="NUMBER(32,0)">
+            <column name="cm_person_assoc_parent_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_assoc_person_type" type="VARCHAR(1024)">
@@ -318,13 +300,13 @@
             <column name="cm_person_assoc_person_desc" type ="VARCHAR(4000)">
                 <constraints nullable= "false"/>
             </column>
-            <column name="cm_person_assoc_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_assoc_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_assoc_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_assoc_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_assoc_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_assoc_modifier" type="VARCHAR(1024)">
@@ -350,13 +332,13 @@
     </changeSet>
     
     <changeSet id="17-rename-and-change-constraints-personAssoc-table" author="tsedalu">
-        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id"/>
-        <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc"/>
+        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id" columnDataType="${idType}"/>
+        <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc" columnDataType="VARCHAR(4000)"/>
     </changeSet>
     
     <!--<changeSet id="18-insert-in-to-person-type_lu-table" author="tsedalu">-->
         <!--<insert tableName="acm_person_type_lu">-->
-            <!--<column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>-->
+            <!--<column name="cm_id" valueComputed="${nextValFromSequence}"/>-->
             <!--<column name="cm_value" value="Complainant"/>-->
             <!--<column name="cm_order" valueNumeric="4"/>-->
             <!--<column name="cm_status" value="ACTIVE"/>-->
@@ -370,7 +352,7 @@
     <changeSet id="19-create-organization-table" author="tsedalu">
         <createTable tableName="acm_organization">
 
-            <column name="cm_organization_id" type="NUMBER(32,0)">
+            <column name="cm_organization_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -383,13 +365,13 @@
                 <constraints nullable="false"/>
             </column>
             
-            <column name="cm_organization_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_organization_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_organization_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_organization_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_organization_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_organization_modifier" type="VARCHAR(1024)">
@@ -401,10 +383,10 @@
     
     <changeSet id="20-add-person-organization-table" author="tsedalu">
         <createTable tableName="acm_person_organization">
-            <column name="cm_person_id" type="NUMBER(32,0)">
+            <column name="cm_person_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_organization_id" type="NUMBER(32,0)">
+            <column name="cm_organization_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -415,67 +397,6 @@
             <column name="cm_organization_id"/>
         </createIndex>
     </changeSet>
-
-    <changeSet id="21-update-person-type-lookup-table" author="dmiller">
-        <update tableName="acm_person">
-            <column name="cm_person_type_id"/>
-            <where>cm_person_type_id is not null</where>
-        </update>
-        <update tableName="acm_person_assoc">
-            <column name="cm_person_assoc_person_type" value="Complaintant"/>
-            <where>cm_person_assoc_person_type = 'Complainant'</where>
-        </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_value" value="Complaintant"/>
-            <where>cm_value = 'Complainant'</where>
-        </update>
-        <delete tableName="acm_person_type_lu">
-            <where>cm_value = 'Others'</where>
-        </delete>
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Initiator"/>
-            <column name="cm_order" valueNumeric="10"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Wrongdoer"/>
-            <column name="cm_order" valueNumeric="20"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
-
-    <changeSet id="22-update-person-alias-lookup-table" author="dmiller">
-        <insert tableName="acm_person_alias_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="FKA"/>
-            <column name="cm_order" valueNumeric="10"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_person_alias_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Married"/>
-            <column name="cm_order" valueNumeric="20"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
     
     <changeSet id="23-add-column-into-personAssoc-table" author="tsedalu">
         <addColumn tableName="acm_person_assoc">
@@ -485,10 +406,10 @@
 
     <changeSet id="acm-person-24-add-person-assoc-tag" author="dmiller">
         <createTable tableName="acm_person_assoc_tag">
-            <column name="cm_person_assoc_id" type="NUMBER(32,0)">
+            <column name="cm_person_assoc_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_tag" type="VARCHAR(1024)">
+            <column name="cm_tag" type="VARCHAR(${cmTagLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -497,21 +418,18 @@
                                  constraintName="fk_person_assoc_tag_assoc_id"
                                  referencedTableName="acm_person_assoc"
                                  referencedColumnNames="cm_person_assoc_id"
-                                 deferrable="true" initiallyDeferred="true" />
-
-
+                                 deferrable="${deferrable}" initiallyDeferred="${initially.deferred}" />
     </changeSet>
     
     <changeSet id="25-add-new-table-acm_person_identification" author="marst">
-
         <createTable tableName="acm_person_identification" >
-            <column name="cm_person_identification_id"  type="NUMBER(32,0)">
+            <column name="cm_person_identification_id"  type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_person_identification"
                  />
             </column>
-            <column name="cm_person" type="NUMBER(32,0)">
+            <column name="cm_person" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_id_type" type="VARCHAR(1024)">
@@ -520,15 +438,15 @@
 
             <column name="cm_id_number" type="VARCHAR(1024)"/>
             <column name="cm_id_issuer" type="VARCHAR(1024)"/>
-            <column name="cm_year_issued" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="cm_year_issued" type="${timestampType}"/>
 
-            <column name="cm_person_id_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_id_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_id_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_id_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_person_id_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_id_modifier" type="VARCHAR(1024)">
@@ -541,22 +459,8 @@
                                  constraintName="fk_person_person_id"
                                  referencedTableName="acm_person"
                                  referencedColumnNames="cm_person_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true" />
-
-    </changeSet>
-    
-    <changeSet id="26-add-person-association-type-defendant" author="riste.tutureski" failOnError="false">
-        <insert tableName="acm_person_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Defendant"/>
-            <column name="cm_order" valueNumeric="101"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>        
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}" />
     </changeSet>
 </databaseChangeLog>
 

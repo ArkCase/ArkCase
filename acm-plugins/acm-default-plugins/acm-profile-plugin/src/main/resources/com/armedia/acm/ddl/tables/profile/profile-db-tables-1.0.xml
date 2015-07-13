@@ -4,12 +4,17 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-   <!-- NOTE, changesets 1 and 2 removed on purpose -->
+        <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+        <property name="idType" value="BIGINT" dbms="mysql"/>
+        <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+        <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
+        <property name="cmUserIdLength" value="255" dbms="mysql"/>
 
     <changeSet id="03-profile-tables" author="marst" failOnError="false">
 
         <createTable tableName="acm_user_org">
-                <column name="cm_user_org_id" type="NUMBER(32,0)">
+                <column name="cm_user_org_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_user_org"/>
@@ -41,7 +46,7 @@
                 <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_organization" type="NUMBER(32,0)">
+            <column name="cm_organization" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_location" type="VARCHAR(512)" defaultValue="ACTIVE">
@@ -59,7 +64,7 @@
             <column name="cm_mobile_phone" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_user" type="VARCHAR(1024)">
+            <column name="cm_user" type="VARCHAR(${cmUserIdLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -88,13 +93,13 @@
 
     <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
         <!--<addNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>-->
-        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>
-        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization"/>
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location" columnDataType="VARCHAR(512)"/>
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization" columnDataType="${idType}"/>
     </changeSet>
 
     <changeSet id="05-add-fileId-creator-modifier-and-date-fields" author="marst">
         <addColumn tableName="acm_user_org">
-            <column name="cm_ecm_fileId"  type="NUMBER(32,0)" defaultValue="-1"></column>
+            <column name="cm_ecm_fileId"  type="${idType}" defaultValue="-1"></column>
         </addColumn>
     </changeSet>
 
@@ -106,21 +111,20 @@
 
     <changeSet id="userorg-07-add-container-folder-id" author="dmiller">
         <addColumn tableName="acm_user_org">
-            <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
+            <column name="cm_container_folder_id" type="${idType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="userorg-08-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+        <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${idType}"/>
     </changeSet>
 
     <changeSet id="userorg-09-add-column-cm-object-type" author="nebojsha.davidovikj">
         <addColumn tableName="acm_user_org">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="USER_ORG"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="USER_ORG">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="USER_ORG"
-                              tableName="acm_user_org"/>
     </changeSet>
 
     <changeSet id="userorg-10-add-outlook-password" author="dmiller">

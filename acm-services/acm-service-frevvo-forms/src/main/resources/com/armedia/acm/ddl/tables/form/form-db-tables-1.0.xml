@@ -4,15 +4,32 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
+    <property name="cmValueLength" value="255" dbms="mysql"/>
+
+    <property name="cmDescriptionLength" value="4000" dbms="postgresql,oracle"/>
+    <property name="cmDescriptionLength" value="255" dbms="mysql"/>
+
+    <property name="cmApproverUserIdLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmApproverUserIdLength" value="255" dbms="mysql"/>
+
+
     <changeSet id="01-create-form-table" author="tsedalu">
         <createTable tableName="acm_form_type_lu">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
                         primaryKeyName="pk_form_type"/>
             </column>
-            <column name="cm_value" type="VARCHAR(4000)">
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
@@ -24,13 +41,13 @@
             <column name="cm_status" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">
@@ -43,8 +60,8 @@
 
     <changeSet id="forms-02-form-approvers-table" author="dmiller">
         <createTable tableName="acm_form_approver">
-            <column name="cm_parent_id" type="NUMBER(32,0)"/>
-            <column name="cm_approver_user_id" type="VARCHAR(1024)">
+            <column name="cm_parent_id" type="${idType}"/>
+            <column name="cm_approver_user_id" type="VARCHAR(${cmApproverUserIdLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>

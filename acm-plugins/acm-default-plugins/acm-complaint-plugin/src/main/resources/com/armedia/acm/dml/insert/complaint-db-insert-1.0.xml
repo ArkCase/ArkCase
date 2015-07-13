@@ -1,0 +1,278 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="complaintNumberLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="complaintNumberLength" value="255" dbms="mysql"/>
+
+    <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
+    <property name="cmValueLength" value="255" dbms="mysql"/>
+
+    <property name="cmOrderLength" value="NUMBER(32,0)" dbms="postgresql,oracle"/>
+    <property name="cmOrderLength" value="BIGINT" dbms="mysql"/>
+
+
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+
+    <property name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+    <property name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <!--01-insert-default-values  modified for oracle,postgresql - if there is some change update changeset for mysql as well-->
+    <changeSet id="01-insert-default-values" author="nebojsha.davidovikj" dbms="oracle,postgresql">
+        <preConditions onError="WARN" onFail="WARN">
+            <tableExists tableName="acm_complaint_priority_lu"/>
+        </preConditions>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Low"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Medium"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="High"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Expedite"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Agricultural"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Arson"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Better Business Dispute"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Domestic Dispute"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Government"/>
+            <column name="cm_order" valueNumeric="4"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Local"/>
+            <column name="cm_order" valueNumeric="5"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_value" value="Pollution"/>
+            <column name="cm_order" valueNumeric="6"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
+
+    <!--01-insert-default-values  modified for mysql - if there is some change update changeset for oracle,postgresql as well-->
+    <changeSet id="01-insert-default-values" author="nebojsha.davidovikj" dbms="mysql">
+        <preConditions onError="WARN" onFail="WARN">
+            <tableExists tableName="acm_complaint_priority_lu"/>
+        </preConditions>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_value" value="Low"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_value" value="Medium"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_value" value="High"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+        <insert tableName="acm_complaint_priority_lu">
+            <column name="cm_value" value="Expedite"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Agricultural"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Arson"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Better Business Dispute"/>
+            <column name="cm_order" valueNumeric="2"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Domestic Dispute"/>
+            <column name="cm_order" valueNumeric="3"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Government"/>
+            <column name="cm_order" valueNumeric="4"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Local"/>
+            <column name="cm_order" valueNumeric="5"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+
+        <insert tableName="acm_complaint_type_lu">
+            <column name="cm_value" value="Pollution"/>
+            <column name="cm_order" valueNumeric="6"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER()"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER()"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
+

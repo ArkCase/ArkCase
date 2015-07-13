@@ -4,9 +4,42 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="complaintNumberLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="complaintNumberLength" value="255" dbms="mysql"/>
+
+    <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
+    <property name="cmValueLength" value="255" dbms="mysql"/>
+
+    <property name="cmOrderLength" value="NUMBER(32,0)" dbms="postgresql,oracle"/>
+    <property name="cmOrderLength" value="BIGINT" dbms="mysql"/>
+
+
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+
+    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+    <property  name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
     <changeSet id="01-create-complaint-table" author="dmiller">
         <createTable tableName="acm_complaint">
-            <column name="cm_complaint_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+            <column name="cm_complaint_id" type="${idType}" autoIncrement="${autoIncrement}" >
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_complaint"/>
@@ -14,16 +47,16 @@
             <column name="cm_complaint_status" type="VARCHAR(128)" defaultValue="DRAFT">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_complaint_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_complaint_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_complaint_number" type="VARCHAR(1024)">
+            <column name="cm_complaint_number" type="VARCHAR(${complaintNumberLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_complaint_number"/>
             </column>
             <column name="cm_complaint_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_complaint_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_complaint_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_complaint_modifier" type="VARCHAR(1024)">
@@ -38,13 +71,13 @@
             <column name="cm_complaint_details" type="CLOB">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_originator_id" type="RAW(16)">
+            <column name="cm_originator_id" type="${idType}">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_target_name" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_complaint_incident_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_complaint_incident_date" type="${timestampType}">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_complaint_priority" type="VARCHAR(128)">
@@ -57,13 +90,14 @@
         </createIndex>
 
     </changeSet>
+
     <changeSet id="02-complaint-switch-to-sequence-pk" author="dmiller">
         <dropDefaultValue tableName="acm_complaint" columnName="cm_complaint_id"/>
-        <modifyDataType tableName="acm_complaint" columnName="cm_complaint_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_complaint" columnName="cm_complaint_id" newDataType="${idType}"/>
     </changeSet>
 
     <changeSet id="04-fix-originator-id-type" author="dmiller">
-        <modifyDataType tableName="acm_complaint" columnName="cm_originator_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_complaint" columnName="cm_originator_id" newDataType="${idType}"/>
     </changeSet>
 
     <changeSet id="05-drop-target-name-column" author="dmiller">
@@ -71,7 +105,7 @@
     </changeSet>
 
     <changeSet id="06-make-details-nullable" author="dmiller">
-        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_details"/>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_details" columnDataType="CLOB"/>
     </changeSet>
 
     <changeSet id="07-add-ecm-folder-id" author="dmiller">
@@ -85,20 +119,20 @@
 
     <changeSet id="08-drop-not-null-on-priority-type-title" author="dmiller">
         <comment>Allow creating complaint with minimal data.  These columns must be populated before it can be approved.</comment>
-        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_type"/>
-        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_priority"/>
-        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_title"/>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_type" columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_priority" columnDataType="VARCHAR(128)"/>
+        <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_title" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
     <changeSet id="09-add-priority-and-type-tables" author="dmiller">
         <createTable tableName="acm_complaint_type_lu">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
                     primaryKeyName="pk_complaint_type"/>
             </column>
-            <column name="cm_value" type="VARCHAR(4000)">
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_complaint_type"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
@@ -107,13 +141,13 @@
             <column name="cm_status" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">
@@ -122,13 +156,13 @@
         </createTable>
 
         <createTable tableName="acm_complaint_priority_lu">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
                     primaryKeyName="pk_complaint_priority"/>
             </column>
-            <column name="cm_value" type="VARCHAR(4000)" >
+            <column name="cm_value" type="VARCHAR(${cmValueLength})" >
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_priority_type"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
@@ -137,137 +171,19 @@
             <column name="cm_status" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <insert tableName="acm_complaint_priority_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Low"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_complaint_priority_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Medium"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_complaint_priority_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="High"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_complaint_priority_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Expedite"/>
-            <column name="cm_order" valueNumeric="3"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Agricultural"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Arson"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Better Business Dispute"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Domestic Dispute"/>
-            <column name="cm_order" valueNumeric="3"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Government"/>
-            <column name="cm_order" valueNumeric="4"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Local"/>
-            <column name="cm_order" valueNumeric="5"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_complaint_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
-            <column name="cm_value" value="Pollution"/>
-            <column name="cm_order" valueNumeric="6"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
     </changeSet>
 
     <changeSet id="10-index-complaint-last-updated" author="dmiller">
@@ -278,7 +194,7 @@
     
     <changeSet id="11-insert-dueDate-in-complaint" author="tsedalu">
         <addColumn tableName="acm_complaint"> 
-            <column name="cm_due_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="cm_due_date" type="${timestampType}"/>
         </addColumn>     
     </changeSet>
 
@@ -292,31 +208,31 @@
 
     <changeSet id="complaint-13-add-disposition-column" author="dmiller">
         <addColumn tableName="acm_complaint">
-            <column name="cm_disposition_id" type="NUMBER(32,0)"/>
+            <column name="cm_disposition_id" type="${idType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller">
         <createTable tableName="acm_close_complaint_request">
-            <column name="cm_close_complaint_id" type="NUMBER(32,0)">
+            <column name="cm_close_complaint_id" type="${idType}">
                 <constraints primaryKeyName="pk_close_complaint_request" primaryKey="true"/>
             </column>
-            <column name="cm_complaint_id" type="NUMBER(32,0)">
+            <column name="cm_complaint_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_disposition_id" type="NUMBER(32,0)">
+            <column name="cm_disposition_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_status" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_close_complaint_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_close_complaint_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_close_complaint_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_close_complaint_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_modifier" type="VARCHAR(1024)">
@@ -327,14 +243,14 @@
                                  constraintName="fk_close_complaint_cmplnt_id"
                                  referencedTableName="acm_complaint"
                                  referencedColumnNames="cm_complaint_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     
     <changeSet id="complaint-15-change-location-to-address-id" author="riste.tutureski">
     	<dropColumn tableName="acm_complaint" columnName="cm_location"/>
     	<addColumn tableName="acm_complaint">
-    		<column name="cm_address_id" type="NUMBER(32,0)"/>
+    		<column name="cm_address_id" type="${idType}"/>
     	</addColumn>
     </changeSet>
 
@@ -348,30 +264,28 @@
 
     <changeSet id="complaint-17-add-container-folder-id" author="dmiller">
         <addColumn tableName="acm_complaint">
-            <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
+            <column name="cm_container_folder_id" type="${idType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="complaint-18-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${idType}"/>
     </changeSet>
 
     <changeSet id="19-object-type-in-acm-complaint-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_complaint">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COMPLAINT"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COMPLAINT">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="COMPLAINT"
-                              tableName="acm_complaint"/>
     </changeSet>
 
     <changeSet id="20-object-type-in-acm-close-complaint-request-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_close_complaint_request">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CLOSE_COMPLAINT_REQUEST"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CLOSE_COMPLAINT_REQUEST">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="CLOSE_COMPLAINT_REQUEST"
-                              tableName="acm_close_complaint_request"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -4,20 +4,45 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
+    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="cmAuditActivityLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmAuditActivityLength" value="255" dbms="mysql"/>
+
+    <property name="cmKeyLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmKeyLength" value="255" dbms="mysql"/>
+
+    <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
+
+    <property name="cmAuditPropertyNameLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmAuditPropertyNameLength" value="255" dbms="mysql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+
     <changeSet id="01-create-audit-table" author="dmiller">
         <createTable tableName="acm_audit_log">
-            <column name="cm_audit_id" type="RAW(16)" valueComputed="SYS_GUID()" >
+            <column name="cm_audit_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_audit_log"/>
             </column>
-            <column name="cm_audit_datetime" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_audit_datetime" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_audit_user" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_audit_activity" type="VARCHAR(1024)">
+            <column name="cm_audit_activity" type="VARCHAR(${cmAuditActivityLength})">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_audit_activity_result" type="VARCHAR(256)">
@@ -26,10 +51,10 @@
             <column name="cm_audit_ip_address" type="VARCHAR(256)"/>
         </createTable>
         <createTable tableName="acm_audit_log_property">
-            <column name="cm_audit_id" type="RAW(16)">
+            <column name="cm_audit_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_audit_property_name" type="VARCHAR(1024)">
+            <column name="cm_audit_property_name" type="VARCHAR(${cmAuditPropertyNameLength})">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_audit_property_value" type="VARCHAR(4000)"/>
@@ -58,14 +83,14 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="03-fix-audit-id-default-value" author="dmiller">
-        <addDefaultValue tableName="acm_audit_log" columnName="cm_audit_id" defaultValueComputed="SYS_GUID()"/>
+    <changeSet id="03-fix-audit-id-default-value" author="dmiller" dbms="oracle,postgresql">
+        <addDefaultValue tableName="acm_audit_log" columnName="cm_audit_id" defaultValueComputed="${defaultValueComputedFunction}"/>
     </changeSet>
 
     <changeSet id="04-add-object-type-columns" author="dmiller">
         <addColumn tableName="acm_audit_log">
-            <column name="cm_object_type" type="VARCHAR(1024)"/>
-            <column name="cm_object_id" type="NUMBER(32,0)"/>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})"/>
+            <column name="cm_object_id" type="${idType}"/>
         </addColumn>
         <createIndex tableName="acm_audit_log" indexName="idx_audit_log_object_id">
             <column name="cm_object_id"/>
@@ -80,13 +105,13 @@
 
     <changeSet id="06-create-audit-event-type-lookup-table" author="marst">
         <createTable tableName="acm_audit_event_type_lu">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
                         primaryKeyName="pk_audit_event_type"/>
             </column>
-            <column name="cm_key" type="VARCHAR(1024)">
+            <column name="cm_key" type="VARCHAR(${cmKeyLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_audit_event_type_key"/>
             </column>
             <column name="cm_value" type="VARCHAR(4000)">
@@ -98,13 +123,13 @@
             <column name="cm_status" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">

@@ -3,37 +3,50 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    
-    <changeSet id="01-create-object-history-table" author="riste.tutureski" failOnError="false">
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql"/>
+
+    <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <changeSet id="01-create-object-history-table" author="riste.tutureski" failOnError="true" dbms="oracle">
         <createTable tableName="acm_object_history">
-            <column name="cm_id" type="NUMBER(32,0)">
+            <column name="cm_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
             </column>
-            <column name="cm_object_id" type="NUMBER(32,0)">
+            <column name="cm_object_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_object_type" type="VARCHAR(1024)">
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_string" type="CLOB">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_user_id" type="VARCHAR(1024)">
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_date" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_type" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">
@@ -45,15 +58,53 @@
                                  referencedTableName="acm_user"
                                  referencedColumnNames="cm_user_id"
                                  deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 initiallyDeferred="true" />
+    </changeSet>
+
+    <changeSet id="01-create-object-history-table-fix" author="nebojsha.davidovikj" failOnError="true"  dbms="postgresql,mysql">
+        <createTable tableName="acm_object_history">
+            <column name="cm_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
+            </column>
+            <column name="cm_object_id" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_string" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_date" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_type" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
     <changeSet id="06-create-assignment-table" author="riste.tutureski">
         <createTable tableName="acm_assignment">
-            <column name="cm_assignment_id" type="NUMBER(32,0)">
+            <column name="cm_assignment_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_assignment_id"/>
             </column>
-            <column name="cm_assignment_object_id" type="NUMBER(32,0)">
+            <column name="cm_assignment_object_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_assignment_object_type" type="VARCHAR(1024)">
@@ -71,13 +122,13 @@
             <column name="cm_assignment_old_assignee" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_assignment_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_assignment_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_assignment_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_assignment_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_assignment_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_assignment_modifier" type="VARCHAR(1024)">

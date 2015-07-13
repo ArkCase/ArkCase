@@ -4,9 +4,23 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
+    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+    <property name="defaultValueComputedFunction" value="" dbms="mysql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+
     <changeSet id="01-create-addressable-tables" author="dmiller">
         <createTable tableName="acm_postal_address">
-            <column name="cm_address_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+            <column name="cm_address_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_postal_address"/>
@@ -14,13 +28,13 @@
             <column name="cm_address_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_address_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_address_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_address_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_address_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_address_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_address_modifier" type="VARCHAR(1024)">
@@ -50,7 +64,7 @@
         </createTable>
 
         <createTable tableName="acm_contact_method">
-            <column name="cm_contact_method_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+            <column name="cm_contact_method_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_contact_method"/>
@@ -58,13 +72,13 @@
             <column name="cm_contact_method_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_contact_method_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_contact_method_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_contact_method_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_contact_method_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_contact_method_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_contact_method_modifier" type="VARCHAR(1024)">
@@ -81,14 +95,6 @@
             </column>
         </createTable>
 
-    </changeSet>
-
-    <changeSet id="02-addr-switch-to-sequence-pk" author="dmiller">
-        <dropDefaultValue tableName="acm_postal_address" columnName="cm_address_id"/>
-        <modifyDataType tableName="acm_postal_address" columnName="cm_address_id" newDataType="NUMBER(32,0)"/>
-
-        <dropDefaultValue tableName="acm_contact_method" columnName="cm_contact_method_id"/>
-        <modifyDataType tableName="acm_contact_method" columnName="cm_contact_method_id" newDataType="NUMBER(32,0)"/>
     </changeSet>
 
 </databaseChangeLog>
