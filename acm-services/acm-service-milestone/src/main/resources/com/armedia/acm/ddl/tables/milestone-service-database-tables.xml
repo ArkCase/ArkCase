@@ -4,6 +4,9 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
     <changeSet id="milestone-01-tables" author="dmiller">
         <createTable tableName="acm_milestone">
             <column name="cm_milestone_id" type="NUMBER(32,0)">
@@ -15,19 +18,19 @@
             <column name="cm_milestone_object_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_milestone_achieved_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_milestone_achieved_date" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_milestone_name" type="VARCHAR(512)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_milestone_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_milestone_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_milestone_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_milestone_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_milestone_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_milestone_modifier" type="VARCHAR(1024)">

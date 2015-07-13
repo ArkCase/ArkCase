@@ -4,9 +4,19 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+
+    <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql"/>
+
+    <property name="cmRoleNameLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmRoleNameLength" value="255" dbms="mysql"/>
+
     <changeSet id="01-create-dashboard-table" author="marst">
         <createTable tableName="acm_dashboard">
-            <column name="cm_dashboard_id" type="NUMBER(32,0)"  >
+            <column name="cm_dashboard_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_dashboard"/>
@@ -14,7 +24,7 @@
             <column name="cm_dashboard_config" type="VARCHAR(3900)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-                <column name="cm_dashboard_owner" type="VARCHAR(1024)">
+                <column name="cm_dashboard_owner" type="VARCHAR(${cmUserIdLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -27,7 +37,7 @@
 
     <changeSet id="02-create-widget-tables" author="marst">
         <createTable tableName="acm_widget">
-            <column name="cm_widget_id" type="NUMBER(32,0)"  >
+            <column name="cm_widget_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_widget"/>
@@ -38,10 +48,10 @@
         </createTable>
 
         <createTable tableName="acm_widget_role">
-            <column name="cm_widget_id" type="NUMBER(32,0)">
+            <column name="cm_widget_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_role_name" type="VARCHAR(1024)">
+            <column name="cm_role_name" type="VARCHAR(${cmRoleNameLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>

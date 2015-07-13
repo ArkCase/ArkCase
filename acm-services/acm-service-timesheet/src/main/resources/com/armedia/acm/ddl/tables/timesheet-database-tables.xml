@@ -4,6 +4,15 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
 	<changeSet id="01-create-timesheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_timesheet">
 	         <column name="cm_timesheet_id" type="NUMBER(32,0)">
@@ -12,22 +21,22 @@
 	         <column name="cm_timesheet_user_id" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_start_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_start_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_end_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_end_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_timesheet_status" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_created" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_created" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_timesheet_creator" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_timesheet_modified" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_timesheet_modified" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_timesheet_modifier" type="VARCHAR(1024)">
@@ -50,19 +59,19 @@
 	         <column name="cm_time_type" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_time_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_value" type="NUMBER(32,0)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_created" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_time_created" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_creator" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_time_modified" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_time_modified" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_modifier" type="VARCHAR(1024)">
@@ -73,8 +82,8 @@
                                  constraintName="fk_time_timesheet_id"
                                  referencedTableName="acm_timesheet"
                                  referencedColumnNames="cm_timesheet_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 	 </changeSet>
 	 
 	 <changeSet id="03-change-time-value-type-precision" author="riste.tutureski">
@@ -112,11 +121,10 @@
 
     <changeSet id="07-object-type-in-acm-timesheet-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_timesheet">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="TIMESHEET"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="TIMESHEET">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="TIMESHEET"
-                              tableName="acm_timesheet"/>
     </changeSet>
 
 </databaseChangeLog>

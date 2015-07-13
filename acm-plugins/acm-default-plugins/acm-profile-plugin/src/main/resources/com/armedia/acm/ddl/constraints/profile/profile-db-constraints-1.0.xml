@@ -4,6 +4,12 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
     <changeSet id="02-create-new-foreign-key-constraints" author="marst">
 
         <addForeignKeyConstraint baseTableName="acm_user_org"
@@ -11,20 +17,20 @@
                                  constraintName="fk_user"
                                  referencedTableName="acm_user"
                                  referencedColumnNames="cm_user_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_user_org"
                                  baseColumnNames="cm_organization"
                                  constraintName="fk_organization"
                                  referencedTableName="acm_organization"
                                  referencedColumnNames="cm_organization_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
 
-    <changeSet id="profile-constraints-02-enforce-valid-profile-id" author="dmiller">
+    <changeSet id="profile-constraints-02-enforce-valid-profile-id" author="dmiller" dbms="oracle">
         <preConditions>
             <and>
                 <tableExists tableName="acm_file"/>
@@ -40,8 +46,8 @@
                                  constraintName="fk_user_org_fileid"
                                  referencedTableName="acm_file"
                                  referencedColumnNames="cm_file_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="profile-constraints-03-container-foreign-key" author="dmiller">
@@ -56,7 +62,7 @@
                                  constraintName="fk_user_org_container"
                                  referencedTableName="acm_container"
                                  referencedColumnNames="cm_container_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>

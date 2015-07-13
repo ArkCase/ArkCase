@@ -3,18 +3,23 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    
-    
+
+    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
     <changeSet id="01-insert-data-on-form-lookup-table" author="tsedalu">
         <insert tableName="acm_form_type_lu">
-            <column name="cm_id" valueComputed="SEQ_GEN_IDENTITY.NEXTVAL"/>
+            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
             <column name="cm_value" value="ROI"/>
             <column name="cm_order" valueNumeric="100"/>
             <column name="cm_description" value="Report of Investigation"/>
             <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
             <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="SYSTIMESTAMP"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
             <column name="cm_modifier" valueComputed="USER"/>
         </insert>
     </changeSet>

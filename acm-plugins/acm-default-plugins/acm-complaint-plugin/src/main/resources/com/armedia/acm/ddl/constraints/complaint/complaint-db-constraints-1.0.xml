@@ -4,13 +4,19 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="02-complaint-type-foreign-key" author="dmiller">
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <changeSet id="02-complaint-type-foreign-key" author="dmiller" failOnError="false">
         <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_complaint_type"
                                  constraintName="fk_cmpl_type"
                                  referencedTableName="acm_complaint_type_lu"
                                  referencedColumnNames="cm_value"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="03-complaint-priority-foreign-key" author="dmiller">
@@ -18,8 +24,8 @@
                                  constraintName="fk_cmpl_priority"
                                  referencedTableName="acm_complaint_priority_lu"
                                  referencedColumnNames="cm_value"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="04-drop-fk-cmpl-person-id-and-add-new-fk" author="tsedalu" failOnError="false"> 
@@ -31,8 +37,8 @@
                                  constraintName="fk_cmpl_personAssoc_id" 
                                  referencedTableName="acm_person_assoc" 
                                  referencedColumnNames="cm_person_assoc_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>                  
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-05-disposition-id" author="dmiller">
@@ -40,8 +46,8 @@
                                  constraintName="fk_complaint_disp_id"
                                  referencedTableName="acm_disposition"
                                  referencedColumnNames="cm_disposition_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-06-close-complaint-disposition-id" author="dmiller">
@@ -50,8 +56,8 @@
                                  constraintName="fk_close_complaint_disp_id"
                                  referencedTableName="acm_disposition"
                                  referencedColumnNames="cm_disposition_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     
     <changeSet id="complaint-constraint-07-address-id" author="riste.tutureski">
@@ -60,8 +66,8 @@
     	                         constraintName="fk_complaint_address_id" 
     							 referencedTableName="acm_postal_address"
     							 referencedColumnNames="cm_address_id"
-    							 deferrable="true"
-    							 initiallyDeferred="true" />
+    							 deferrable="${deferrable}"
+    							 initiallyDeferred="${initially.deferred}" />
     </changeSet>
 
     <changeSet id="complaint-constraint-08-restricted-flag" author="dmiller">
@@ -71,8 +77,8 @@
                 constraintName="fk_complaint_restricted_flag"
                 referencedTableName="acm_boolean_lu"
                 referencedColumnNames="cm_value"
-                deferrable="true"
-                initiallyDeferred="true"/>
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-09-container-id" author="dmiller">
@@ -86,8 +92,8 @@
                                  constraintName="fk_cmpl_container_id"
                                  referencedTableName="acm_container"
                                  referencedColumnNames="cm_container_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     
     

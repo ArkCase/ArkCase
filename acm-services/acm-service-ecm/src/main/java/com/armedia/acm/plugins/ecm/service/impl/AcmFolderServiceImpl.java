@@ -770,8 +770,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 }
             }
         } else {
-            if (folderForCopying.getParentFolderId() == null)
-                return;
             //just copy the folder to new parent
             AcmFolder parentInSource = findById(folderForCopying.getParentFolderId());
             String folderPathParentInSource = getFolderPath(parentInSource);
@@ -798,7 +796,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if (documentFolder.getParentFolderId() == null) {
             //recreate folder structure as on source
             //document is under root folder, no need to create additional folders
-            fileService.copyFile(documentId, rootFolderOfCopy, containerOfCopy);
+                fileService.copyFile(documentId, rootFolderOfCopy, containerOfCopy);
         } else {
             //create folder structure in saved case file same as in source for the document
             String folderPath = getFolderPath(fileForCopying.getFolder());

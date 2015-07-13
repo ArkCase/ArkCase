@@ -4,6 +4,15 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
 	<changeSet id="01-create-costsheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_costsheet">
 	         <column name="cm_costsheet_id" type="NUMBER(32,0)">
@@ -24,13 +33,13 @@
 	         <column name="cm_costsheet_status" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_costsheet_created" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_costsheet_created" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_costsheet_creator" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_costsheet_modified" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_costsheet_modified" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_costsheet_modifier" type="VARCHAR(1024)">
@@ -47,7 +56,7 @@
 	         <column name="cm_cost_costsheet_id" type="NUMBER(32,0))">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_cost_date" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_cost_date" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_cost_value" type="NUMBER(32,0)">
@@ -59,13 +68,13 @@
 	         <column name="cm_cost_description" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_cost_created" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_cost_created" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_cost_creator" type="VARCHAR(1024)">
 	             <constraints nullable="false"/>
 	         </column>
-	         <column name="cm_cost_modified" type="TIMESTAMP WITH TIME ZONE">
+	         <column name="cm_cost_modified" type="${timestampType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_cost_modifier" type="VARCHAR(1024)">
@@ -76,8 +85,8 @@
                                  constraintName="fk_cost_costsheet_id"
                                  referencedTableName="acm_costsheet"
                                  referencedColumnNames="cm_costsheet_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 	 </changeSet>
 	 
 	 <changeSet id="03-change-cost-value-type-precision" author="riste.tutureski">
@@ -90,7 +99,7 @@
 	 </changeSet>
 	 
 	 <changeSet id="04-remove-nullable-constraint-for-description-in-cost-table" author="riste.tutureski">
-	 	<dropNotNullConstraint tableName="acm_cost" columnName="cm_cost_description"/>
+	 	<dropNotNullConstraint tableName="acm_cost" columnName="cm_cost_description" columnDataType="VARCHAR(1024)"/>
 	 </changeSet>
 	 
 	 <changeSet id="05-add-details-column-in-acm-costsheet-table" author="riste.tutureski">
@@ -109,11 +118,10 @@
 
     <changeSet id="07-object-type-in-acm-costsheet-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_costsheet">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COSTSHEET"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="COSTSHEET">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="COSTSHEET"
-                              tableName="acm_costsheet"/>
     </changeSet>
 
 </databaseChangeLog>

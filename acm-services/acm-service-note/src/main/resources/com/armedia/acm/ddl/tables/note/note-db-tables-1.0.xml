@@ -4,6 +4,9 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
     <changeSet id="01-create-note-table" author="manoj">
         <createTable tableName="acm_note">
 
@@ -19,7 +22,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="cm_note_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_note_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
 

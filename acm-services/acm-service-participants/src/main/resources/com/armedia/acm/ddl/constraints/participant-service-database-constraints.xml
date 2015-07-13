@@ -4,6 +4,12 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
     <!-- copied this change set from the users service when we moved participants from user into its own module -->
     <changeSet id="04-user-service-participant-rule" author="dmiller" logicalFilePath="/com/armedia/acm/ddl/constraints/user-service-database-constraints.xml">
         <comment>Only one unique participant per id.</comment>
@@ -19,7 +25,7 @@
                 constraintName="fk_part_priv_participant_id"
                 referencedTableName="acm_participant"
                 referencedColumnNames="cm_participant_id"
-                deferrable="true"
-                initiallyDeferred="true"/>
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>
