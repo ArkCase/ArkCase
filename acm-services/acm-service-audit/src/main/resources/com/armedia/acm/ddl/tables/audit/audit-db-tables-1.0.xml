@@ -4,16 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
-    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <property name="cmAuditActivityLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmAuditActivityLength" value="255" dbms="mysql"/>
 
@@ -25,9 +15,6 @@
 
     <property name="cmAuditPropertyNameLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmAuditPropertyNameLength" value="255" dbms="mysql"/>
-
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
-    <property name="autoIncrement" value="true" dbms="mysql"/>
 
     <changeSet id="01-create-audit-table" author="dmiller">
         <createTable tableName="acm_audit_log">
@@ -51,7 +38,7 @@
             <column name="cm_audit_ip_address" type="VARCHAR(256)"/>
         </createTable>
         <createTable tableName="acm_audit_log_property">
-            <column name="cm_audit_id" type="${idType}">
+            <column name="cm_audit_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_audit_property_name" type="VARCHAR(${cmAuditPropertyNameLength})">
@@ -83,14 +70,10 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="03-fix-audit-id-default-value" author="dmiller" dbms="oracle,postgresql">
-        <addDefaultValue tableName="acm_audit_log" columnName="cm_audit_id" defaultValueComputed="${defaultValueComputedFunction}"/>
-    </changeSet>
-
     <changeSet id="04-add-object-type-columns" author="dmiller">
         <addColumn tableName="acm_audit_log">
             <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})"/>
-            <column name="cm_object_id" type="${idType}"/>
+            <column name="cm_object_id" type="${fkIdType}"/>
         </addColumn>
         <createIndex tableName="acm_audit_log" indexName="idx_audit_log_object_id">
             <column name="cm_object_id"/>
@@ -137,9 +120,6 @@
             </column>
         </createTable>
     </changeSet>
-
-
-
 </databaseChangeLog>
     
 

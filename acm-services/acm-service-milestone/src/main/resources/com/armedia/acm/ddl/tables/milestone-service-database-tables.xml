@@ -4,15 +4,12 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <changeSet id="milestone-01-tables" author="dmiller">
         <createTable tableName="acm_milestone">
-            <column name="cm_milestone_id" type="NUMBER(32,0)">
+            <column name="cm_milestone_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_acm_milestone"/>
             </column>
-            <column name="cm_milestone_object_id" type="NUMBER(32,0)">
+            <column name="cm_milestone_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_milestone_object_type" type="VARCHAR(1024)">

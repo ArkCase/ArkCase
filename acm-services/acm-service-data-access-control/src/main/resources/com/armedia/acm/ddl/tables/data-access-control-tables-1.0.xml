@@ -4,19 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
-    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
-
-    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
-    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
     <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
     <property name="cmValueLength" value="255" dbms="mysql"/>
 
@@ -41,13 +28,13 @@
 
     <changeSet id="01-data-access-acl-table" author="dmiller">
         <createTable tableName="acm_access_control_entry">
-            <column name="cm_access_control_entry_id" type="${idType}">
+            <column name="cm_access_control_entry_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKeyName="pk_acm_access_control_entry" primaryKey="true"/>
             </column>
             <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_object_id" type="${idType}">
+            <column name="cm_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_state" type="VARCHAR(${cmObjectStateLength})">
@@ -74,7 +61,7 @@
         </createTable>
 
         <createTable tableName="acm_access_control_decision_lu">
-            <column name="cm_id" type="${idType}">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -104,7 +91,7 @@
         </createTable>
 
         <createTable tableName="acm_access_control_reason_lu">
-            <column name="cm_id" type="${idType}">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -134,7 +121,7 @@
         </createTable>
 
         <createTable tableName="acm_boolean_lu">
-            <column name="cm_id" type="${idType}">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -188,7 +175,7 @@
 
     <changeSet id="03-data-access-default-data-access-table" author="dmiller">
         <createTable tableName="acm_access_control_default">
-            <column name="cm_access_control_default_id" type="${idType}">
+            <column name="cm_access_control_default_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKeyName="pk_acm_access_control_default" primaryKey="true"/>
             </column>
             <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">

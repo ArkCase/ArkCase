@@ -4,20 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
-    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
-    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-    <property name="defaultValueComputedFunction" value="" dbms="mysql"/>
-
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
-    <property name="autoIncrement" value="true" dbms="mysql"/>
-
     <changeSet id="01-create-addressable-tables" author="dmiller">
         <createTable tableName="acm_postal_address">
             <column name="cm_address_id" type="${idType}" autoIncrement="${autoIncrement}">

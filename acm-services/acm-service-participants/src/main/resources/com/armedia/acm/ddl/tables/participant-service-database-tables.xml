@@ -7,13 +7,6 @@
     <property name="createColumnNameForIndex07" value="UPPER(cm_participant_id)" dbms="oracle"/>
     <property name="createColumnNameForIndex07" value="cm_participant_id" dbms="postgresql,mysql"/>
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
 
@@ -26,13 +19,13 @@
     <!-- copied this change set from the users service when we moved participants from user into its own module -->
     <changeSet id="07-users-add-participant-table" author="dmiller" logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml">
         <createTable tableName="acm_participant">
-            <column name="cm_participant_id" type="${idType}">
+            <column name="cm_participant_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_participant"/>
             </column>
             <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_object_id" type="${idType}">
+            <column name="cm_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_participant_type" type="VARCHAR(${cmParticipantTypeLength})">
@@ -65,7 +58,7 @@
 
     <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="">
         <createTable tableName="acm_participant_privilege">
-            <column name="cm_privilege_id" type="${idType}">
+            <column name="cm_privilege_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_acm_participant_privilege"/>
             </column>
             <column name="cm_privilege_created" type="${timestampType}">
@@ -80,7 +73,7 @@
             <column name="cm_privilege_modifier" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_participant_id" type="${idType}">
+            <column name="cm_participant_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_action" type="VARCHAR(128)">

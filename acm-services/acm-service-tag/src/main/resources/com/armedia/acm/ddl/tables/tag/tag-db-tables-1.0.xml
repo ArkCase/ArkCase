@@ -4,16 +4,16 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+    <property name="cmParentObjectTypeLength" value="1024" dbms="oracle,postgresql"/>
+    <property name="cmParentObjectTypeLength" value="255" dbms="mysql"/>
 
     <changeSet id="01-tag-tables" author="marst">
         <createTable tableName="acm_tag">
-            <column name="cm_tag_id" type="NUMBER(32,0)">
+            <column name="cm_tag_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_tag_id"/>
             </column>
 
-            <column name="cm_file_id" type="NUMBER(32,0)"/>
+            <column name="cm_file_id" type="${fkIdType}"/>
 
             <column name="cm_tag_text" type="VARCHAR(256)">
                 <constraints nullable="false"/>
@@ -35,7 +35,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="cm_parent_object_id" type="NUMBER(32,0)">
+            <column name="cm_parent_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
 
@@ -65,11 +65,11 @@
         </addColumn>
 
         <createTable tableName="acm_associated_tag">
-            <column name="cm_associated_tag_id" type="NUMBER(32,0)">
+            <column name="cm_associated_tag_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id"/>
             </column>
 
-            <column name="cm_tag_id" type="NUMBER(32,0)"/>
+            <column name="cm_tag_id" type="${fkIdType}"/>
 
             <column name="cm_associated_tag_creator" type="VARCHAR(128)">
                 <constraints nullable="false"/>
@@ -79,7 +79,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="cm_parent_object_id" type="NUMBER(32,0)">
+            <column name="cm_parent_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
 
@@ -89,9 +89,9 @@
         </createTable>
 
         <createIndex tableName="acm_associated_tag" unique="true" indexName="idx_tag_object_type">
-            <column name="cm_tag_id" type="NUMBER(32,0)"/>
-            <column name="cm_parent_object_id" type="NUMBER(32,0)"/>
-            <column name="cm_parent_object_type" type="VARCHAR(1024)"/>
+            <column name="cm_tag_id" type="${fkIdType}"/>
+            <column name="cm_parent_object_id" type="${fkIdType}"/>
+            <column name="cm_parent_object_type" type="VARCHAR(${cmParentObjectTypeLength})"/>
         </createIndex>
 
     </changeSet>

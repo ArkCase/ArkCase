@@ -139,7 +139,7 @@
                         </goals>
                         <configuration>
                             <overWrite>true</overWrite>
-                            <sourceFile>${user.home}/.acm/datasource_descriptors/datasource-${dbms.name}.properties</sourceFile>
+                            <sourceFile>src/main/resources/documentation/config-files/datasource-${dbms.name}.properties</sourceFile>
                             <destinationFile>${user.home}/.acm/datasource.properties</destinationFile>
                         </configuration>
                     </execution>

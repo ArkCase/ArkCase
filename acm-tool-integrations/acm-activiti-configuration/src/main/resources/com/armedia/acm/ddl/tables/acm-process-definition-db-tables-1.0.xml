@@ -4,12 +4,9 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <changeSet id="01-create-process-definitions-table" author="nebojsha.davidovikj">
         <createTable tableName="acm_process_definition">
-            <column name="cm_pd_id" type="NUMBER(32,0)" >
+            <column name="cm_pd_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_process_definition"/>

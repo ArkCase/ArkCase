@@ -76,7 +76,7 @@
         <!--<property name="test" value="${acm.idleConnectionTestPeriodInSeconds}"/>-->
         <property name="validationQuery" value="${acm.validationQuery}"/>
         <property name="loginTimeout" value="${acm.maxWait}"/>
-        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultAutoCommit" value="${acm.autoCommit}"/>
         <property name="logAbandoned" value="true"/>
         <property name="minEvictableIdleTimeMillis" value="1000"/>
         <property name="removeAbandoned" value="true"/>

@@ -4,13 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
     <property name="cmValueLength" value="255" dbms="mysql"/>
 
@@ -23,7 +16,7 @@
 
     <changeSet id="01-create-form-table" author="tsedalu">
         <createTable tableName="acm_form_type_lu">
-            <column name="cm_id" type="${idType}">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -60,7 +53,7 @@
 
     <changeSet id="forms-02-form-approvers-table" author="dmiller">
         <createTable tableName="acm_form_approver">
-            <column name="cm_parent_id" type="${idType}"/>
+            <column name="cm_parent_id" type="${fkIdType}"/>
             <column name="cm_approver_user_id" type="VARCHAR(${cmApproverUserIdLength})">
                 <constraints nullable="false"/>
             </column>
