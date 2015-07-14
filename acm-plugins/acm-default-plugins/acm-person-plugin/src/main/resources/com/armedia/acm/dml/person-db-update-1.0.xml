@@ -13,10 +13,6 @@
             <column name="cm_person_assoc_person_type" value="Complaintant"/>
             <where>cm_person_assoc_person_type = 'Complainant'</where>
         </update>
-        <update tableName="acm_person_type_lu">
-            <column name="cm_value" value="Complaintant"/>
-            <where>cm_value = 'Complainant'</where>
-        </update>
     </changeSet>
 </databaseChangeLog>
 

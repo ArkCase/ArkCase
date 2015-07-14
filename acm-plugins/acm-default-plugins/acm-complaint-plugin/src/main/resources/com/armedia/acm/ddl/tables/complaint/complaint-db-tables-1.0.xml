@@ -100,68 +100,6 @@
         <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_title" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
-    <changeSet id="09-add-priority-and-type-tables" author="dmiller">
-        <createTable tableName="acm_complaint_type_lu">
-            <column name="cm_id" type="${idType}"  autoIncrement="${autoIncrement}">
-                <constraints
-                    nullable="false"
-                    primaryKey="true"
-                    primaryKeyName="pk_complaint_type"/>
-            </column>
-            <column name="cm_value" type="VARCHAR(${cmValueLength})">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_complaint_type"/>
-            </column>
-            <column name="cm_order" type="NUMBER(32,0)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_complaint_type_order"/>
-            </column>
-            <column name="cm_status" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modified" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="acm_complaint_priority_lu">
-            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
-                <constraints
-                    nullable="false"
-                    primaryKey="true"
-                    primaryKeyName="pk_complaint_priority"/>
-            </column>
-            <column name="cm_value" type="VARCHAR(${cmValueLength})" >
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_priority_type"/>
-            </column>
-            <column name="cm_order" type="NUMBER(32,0)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="uk_priority_type_order"/>
-            </column>
-            <column name="cm_status" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modified" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-
     <changeSet id="10-index-complaint-last-updated" author="dmiller">
         <createIndex tableName="acm_complaint" indexName="idx_complaint_modified">
             <column name="cm_complaint_modified"/>

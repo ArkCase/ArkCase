@@ -4,92 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="oracle,postgresql">
-        <preConditions onFail="CONTINUE">
-            <tableExists tableName="acm_access_control_decision_lu"/>
-        </preConditions>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="GRANT"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="DENY"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="MANDATORY_GRANT"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="MANDATORY_DENY"/>
-            <column name="cm_order" valueNumeric="3"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="Default"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="Discretionary"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="Inherited"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="Business Rule"/>
-            <column name="cm_order" valueNumeric="3"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-
+    <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="oracle">
         <insert tableName="acm_boolean_lu">
             <column name="cm_id" valueComputed="${nextValFromSequence}"/>
             <column name="cm_value" value="Y"/>
@@ -110,87 +25,28 @@
             <column name="cm_modified" valueComputed="${timestampFunction}"/>
             <column name="cm_modifier" valueComputed="USER"/>
         </insert>
-
     </changeSet>
-
+    <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="postgresql">
+        <insert tableName="acm_boolean_lu">
+            <column name="cm_value" value="Y"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_boolean_lu">
+            <column name="cm_value" value="N"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
     <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="mysql">
-        <preConditions onFail="CONTINUE">
-            <tableExists tableName="acm_access_control_decision_lu"/>
-        </preConditions>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_value" value="GRANT"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_value" value="DENY"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_value" value="MANDATORY_GRANT"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_access_control_decision_lu">
-            <column name="cm_value" value="MANDATORY_DENY"/>
-            <column name="cm_order" valueNumeric="3"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_value" value="Default"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_value" value="Discretionary"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_value" value="Inherited"/>
-            <column name="cm_order" valueNumeric="2"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_access_control_reason_lu">
-            <column name="cm_value" value="Business Rule"/>
-            <column name="cm_order" valueNumeric="3"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-
         <insert tableName="acm_boolean_lu">
             <column name="cm_value" value="Y"/>
             <column name="cm_order" valueNumeric="0"/>
@@ -213,7 +69,7 @@
     </changeSet>
 
 
-    <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="oracle,postgresql">
+    <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="oracle">
         <delete tableName="acm_boolean_lu"/>
         <insert tableName="acm_boolean_lu">
             <column name="cm_id" valueComputed="${nextValFromSequence}"/>
@@ -236,7 +92,27 @@
             <column name="cm_modifier" valueComputed="USER"/>
         </insert>
     </changeSet>
-
+    <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="postgresql">
+        <delete tableName="acm_boolean_lu"/>
+        <insert tableName="acm_boolean_lu">
+            <column name="cm_value" value="true"/>
+            <column name="cm_order" valueNumeric="0"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+        <insert tableName="acm_boolean_lu">
+            <column name="cm_value" value="false"/>
+            <column name="cm_order" valueNumeric="1"/>
+            <column name="cm_status" value="ACTIVE"/>
+            <column name="cm_created" valueComputed="${timestampFunction}"/>
+            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_modified" valueComputed="${timestampFunction}"/>
+            <column name="cm_modifier" valueComputed="USER"/>
+        </insert>
+    </changeSet>
     <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="mysql">
         <delete tableName="acm_boolean_lu"/>
         <insert tableName="acm_boolean_lu">
