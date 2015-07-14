@@ -64,6 +64,12 @@
         <property name="parameters">
             <list/>
         </property>
+        <property name="flowBeans">
+            <map>
+                <entry key="auditPropertyEntityAdapter" value-ref="auditPropertyEntityAdapter"/>
+                <entry key="acmTaskDao" value-ref="acmTaskDao"/>
+            </map>
+        </property>
 
     </bean>
 
