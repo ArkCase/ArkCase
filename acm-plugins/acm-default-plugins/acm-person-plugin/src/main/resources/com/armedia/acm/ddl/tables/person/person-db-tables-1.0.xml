@@ -4,33 +4,8 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
-    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
-
-    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
-    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
-    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
     <property name="upperFunctionName" value="UPPER" dbms="oracle"/>
     <property name="upperFunctionName" value="upper" dbms="postgresql"/>
-
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
-    <property name="autoIncrement" value="true" dbms="mysql"/>
 
     <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
     <property name="cmValueLength" value="255" dbms="mysql"/>
@@ -80,7 +55,7 @@
 
     <changeSet id="02-person-switch-to-sequence-pk" author="dmiller">
         <dropDefaultValue tableName="acm_person" columnName="cm_person_id"/>
-        <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="${idType}"/>
+        <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="03-add-title-and-company-columns" author="dmiller">
@@ -94,7 +69,7 @@
 
     <changeSet id="04-add-security-tags" author="dmiller">
         <createTable tableName="acm_person_security_tag">
-            <column name="cm_person_id" type="${idType}">
+            <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_security_tag" type="VARCHAR(1024)">
@@ -104,16 +79,14 @@
         <createIndex tableName="acm_person_security_tag" indexName="idx_person_sec_tag_person_id">
             <column name="cm_person_id"/>
         </createIndex>
-
-
     </changeSet>
 
     <changeSet id="05-add-person-address-table" author="dmiller">
         <createTable tableName="acm_person_postal_address">
-            <column name="cm_person_id" type="${idType}">
+            <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_address_id" type="${idType}">
+            <column name="cm_address_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -127,10 +100,10 @@
 
     <changeSet id="06-add-person-contact-method-table" author="dmiller">
         <createTable tableName="acm_person_contact_method">
-            <column name="cm_person_id" type="${idType}">
+            <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_contact_method_id" type="${idType}">
+            <column name="cm_contact_method_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -222,7 +195,7 @@
                     primaryKey="true"
                     primaryKeyName="pk_person_alias"/>
             </column>
-            <column name="cm_person_id" type="${idType}" >
+            <column name="cm_person_id" type="${fkIdType}" >
                 <constraints nullable="false" unique="true" />
             </column>
             <column name="cm_person_alias_type_id" type="VARCHAR(${cmValueLength})">
@@ -248,7 +221,7 @@
     </changeSet>
      
     <changeSet id="11-modify-datatype-person-id" author="tsedalu">
-        <modifyDataType tableName="acm_person_alias" columnName="cm_person_id" newDataType="${idType}"/>
+        <modifyDataType tableName="acm_person_alias" columnName="cm_person_id" newDataType="${fkIdType}"/>
     </changeSet>
       
     <changeSet id="12-modify-datatype-person-alias-type" author="tsedalu">
@@ -266,7 +239,7 @@
     <changeSet id="14-add-columns-without-unique-key" author="tsedalu">
         <addColumn tableName="acm_person_alias">
              
-            <column name="cm_person_id" type="${idType}">
+            <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
              
@@ -285,10 +258,10 @@
                     primaryKey="true"
                     primaryKeyName="pk_person_assoc"/>
             </column>
-            <column name="cm_person_assoc_person_id" type="${idType}">
+            <column name="cm_person_assoc_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_person_assoc_parent_id" type="${idType}">
+            <column name="cm_person_assoc_parent_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_person_assoc_person_type" type="VARCHAR(1024)">
@@ -332,7 +305,7 @@
     </changeSet>
     
     <changeSet id="17-rename-and-change-constraints-personAssoc-table" author="tsedalu">
-        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id" columnDataType="${idType}"/>
+        <renameColumn tableName="acm_person_assoc" oldColumnName="cm_person_associ_id" newColumnName="cm_person_assoc_id" columnDataType="${fkIdType}"/>
         <dropNotNullConstraint tableName="acm_person_assoc" columnName="cm_person_assoc_person_desc" columnDataType="VARCHAR(4000)"/>
     </changeSet>
     
@@ -383,10 +356,10 @@
     
     <changeSet id="20-add-person-organization-table" author="tsedalu">
         <createTable tableName="acm_person_organization">
-            <column name="cm_person_id" type="${idType}">
+            <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_organization_id" type="${idType}">
+            <column name="cm_organization_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -429,7 +402,7 @@
                         primaryKeyName="pk_person_identification"
                  />
             </column>
-            <column name="cm_person" type="${idType}">
+            <column name="cm_person" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_id_type" type="VARCHAR(1024)">

@@ -4,18 +4,10 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
 
 	<changeSet id="01-create-timesheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_timesheet">
-	         <column name="cm_timesheet_id" type="NUMBER(32,0)">
+	         <column name="cm_timesheet_id" type="${idType}" autoIncrement="${autoIncrement}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_timesheet_id"/>
 	         </column>
 	         <column name="cm_timesheet_user_id" type="VARCHAR(1024)">
@@ -47,10 +39,10 @@
 
 	 <changeSet id="02-create-time-table" author="riste.tutureski">
 	     <createTable tableName="acm_time">
-	         <column name="cm_time_id" type="NUMBER(32,0)">
+	         <column name="cm_time_id" type="${idType}" autoIncrement="${autoIncrement}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_time_id"/>
 	         </column>
-	         <column name="cm_time_timesheet_id" type="NUMBER(32,0))">
+	         <column name="cm_time_timesheet_id" type="${fkIdType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_time_code" type="VARCHAR(1024)">
@@ -105,7 +97,7 @@
 	 
 	 <changeSet id="05-add-object_id-column-in-acm-time-table" author="riste.tutureski">
 	 	<addColumn tableName="acm_time">
-	 		<column name="cm_time_object_id" type="NUMBER(32,0)">
+	 		<column name="cm_time_object_id" type="${fkIdType}">
 	 			<!-- Set nullable to true because other that Complaint and Case, we have Other types 
 	 			which don't have any ID in database -->
 	 			<constraints nullable="true"/>
@@ -115,7 +107,7 @@
 	 
 	 <changeSet id="06-add-container-id-in-acm-timesheet-table" author="riste.tutureski">
         <addColumn tableName="acm_timesheet">
-            <column name="cm_container_id" type="NUMBER(32,0)"/>
+            <column name="cm_container_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 

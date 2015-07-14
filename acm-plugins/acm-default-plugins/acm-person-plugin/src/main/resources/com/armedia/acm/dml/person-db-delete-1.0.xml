@@ -4,8 +4,11 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-jpa-sequence" author="dmiller" dbms="oracle">
-        <createSequence sequenceName="SEQ_GEN_IDENTITY"/>
+    <changeSet id="21-update-person-type-lookup-table" author="dmiller">
+        <delete tableName="acm_person_type_lu">
+            <where>cm_value = 'Others'</where>
+        </delete>
     </changeSet>
 
 </databaseChangeLog>
+

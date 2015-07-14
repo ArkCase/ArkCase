@@ -4,17 +4,14 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <changeSet id="01-create-signature-table" author="jhsu">
         <createTable tableName="acm_signature">
-            <column name="cm_signature_id" type="NUMBER(32,0)" valueComputed="SYS_GUID()" >
+            <column name="cm_signature_id" type="${idType}">
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_signature"/>
             </column>
-            <column name="cm_object_id" type="NUMBER(32,0)" valueComputed="SYS_GUID()" >
+            <column name="cm_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_type" type="VARCHAR(1024)">

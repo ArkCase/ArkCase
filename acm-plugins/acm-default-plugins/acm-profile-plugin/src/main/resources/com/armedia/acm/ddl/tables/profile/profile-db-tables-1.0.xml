@@ -1,20 +1,16 @@
-    <databaseChangeLog
+<databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-        <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-        <property name="idType" value="BIGINT" dbms="mysql"/>
-        <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
+    <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql"/>
 
-        <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
-        <property name="cmUserIdLength" value="255" dbms="mysql"/>
-
-    <changeSet id="03-profile-tables" author="marst" failOnError="false">
+    <changeSet id="03-profile-tables" author="marst">
 
         <createTable tableName="acm_user_org">
-                <column name="cm_user_org_id" type="${idType}">
+            <column name="cm_user_org_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_user_org"/>
@@ -43,10 +39,10 @@
             <column name="cm_zip" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
-                <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
+            <column name="cm_website" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="true"/>
             </column>
-            <column name="cm_organization" type="${idType}">
+            <column name="cm_organization" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_location" type="VARCHAR(512)" defaultValue="ACTIVE">
@@ -94,29 +90,30 @@
     <changeSet id="04-edit-cm-location-and-cm-organization-column" author="marst">
         <!--<addNotNullConstraint tableName="acm_user_org" columnName="cm_location"/>-->
         <dropNotNullConstraint tableName="acm_user_org" columnName="cm_location" columnDataType="VARCHAR(512)"/>
-        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization" columnDataType="${idType}"/>
+        <dropNotNullConstraint tableName="acm_user_org" columnName="cm_organization" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="05-add-fileId-creator-modifier-and-date-fields" author="marst">
         <addColumn tableName="acm_user_org">
-            <column name="cm_ecm_fileId"  type="${idType}" defaultValue="-1"></column>
+            <column name="cm_ecm_fileId" type="${fkIdType}" defaultValue="-1"></column>
         </addColumn>
     </changeSet>
 
     <changeSet id="06-add-title-field" author="marst">
         <addColumn tableName="acm_user_org">
-            <column name="cm_title"  type="VARCHAR(1024)"></column>
+            <column name="cm_title" type="VARCHAR(1024)"></column>
         </addColumn>
     </changeSet>
 
     <changeSet id="userorg-07-add-container-folder-id" author="dmiller">
         <addColumn tableName="acm_user_org">
-            <column name="cm_container_folder_id" type="${idType}"/>
+            <column name="cm_container_folder_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="userorg-08-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${idType}"/>
+        <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
+                      columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="userorg-09-add-column-cm-object-type" author="nebojsha.davidovikj">

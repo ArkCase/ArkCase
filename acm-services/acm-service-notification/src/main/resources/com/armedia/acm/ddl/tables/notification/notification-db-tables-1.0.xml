@@ -4,19 +4,9 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
-    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
-    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <changeSet id="01-create-notification-table" author="manojd">
         <createTable tableName="acm_notification">
-            <column name="cm_notification_id" type="${idType}">
+            <column name="cm_notification_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_notification"/>
@@ -45,7 +35,7 @@
 
     <changeSet id="02-change-ID-type" author="manojd">
         <dropDefaultValue tableName="acm_notification" columnName="cm_notification_id"/>
-        <modifyDataType tableName="acm_notification" columnName="cm_notification_id" newDataType="${idType}"/>
+        <modifyDataType tableName="acm_notification" columnName="cm_notification_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="03-add-modify-params" author="manojd">
@@ -111,7 +101,7 @@
     
     <changeSet id="11-add-parent-columns-notification-table" author="riste.tutureski">
     	<addColumn tableName="acm_notification">
-    		<column name="cm_notification_parent_id" type="${idType}">
+    		<column name="cm_notification_parent_id" type="${fkIdType}">
     			<constraints nullable="true"/>
     		</column>
     		<column name="cm_notification_parent_type" type="VARCHAR(1024)">

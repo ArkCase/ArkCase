@@ -4,31 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
-    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
-
-    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
-    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
-    <property name="nextValFromSequence" value="seq_gen_identity.nextval" dbms="oracle"/>
-    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
-
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
-    <property name="autoIncrement" value="true" dbms="mysql"/>
-
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
 
@@ -40,12 +15,6 @@
 
     <property name="cmVersionSeriesIdLength" value="4000" dbms="postgresql,oracle"/>
     <property name="cmVersionSeriesIdLength" value="255" dbms="mysql"/>
-
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
 
     <changeSet id="01-create-file-table" author="dmiller">
         <createTable tableName="acm_file">
@@ -84,7 +53,7 @@
 
     <changeSet id="02-file-switch-to-sequence-pk" author="dmiller">
         <dropDefaultValue tableName="acm_file" columnName="cm_file_id"/>
-        <modifyDataType tableName="acm_file" columnName="cm_file_id" newDataType="${idType}"/>
+        <modifyDataType tableName="acm_file" columnName="cm_file_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="files-03-add-file-type-column" author="dmiller">
@@ -95,7 +64,7 @@
 
     <changeSet id="files-05-container-folder-table" author="dmiller">
         <createTable tableName="acm_container_folder">
-            <column name="cm_container_folder_id" type="${idType}">
+            <column name="cm_container_folder_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_container_folder"/>
             </column>
             <column name="cm_container_folder_created" type="${timestampType}">
@@ -113,7 +82,7 @@
             <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_object_id" type="${idType}">
+            <column name="cm_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_cmis_folder_id" type="VARCHAR(${cmCmisFolderIdLength})">
@@ -130,7 +99,7 @@
     
     <changeSet id="files-10-add-acm-folder-table" author="dmiller">
         <createTable tableName="acm_folder">
-            <column name="cm_folder_id" type="${idType}">
+            <column name="cm_folder_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_folder"/>
             </column>
             <column name="cm_folder_created" type="${timestampType}">
@@ -151,7 +120,7 @@
             <column name="cm_folder_name" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_parent_folder_id" type="${idType}">
+            <column name="cm_parent_folder_id" type="${fkIdType}">
                 <constraints nullable="true"
                              foreignKeyName="fk_folder_parent_id"
                              referencedTableName="acm_folder"
@@ -164,7 +133,7 @@
 
     <changeSet id="files-12-update-acm-container-structure" author="dmiller">
         <addColumn tableName="acm_container">
-            <column name="cm_folder_id" type="${idType}">
+            <column name="cm_folder_id" type="${fkIdType}">
                 <constraints
                     foreignKeyName="fk_container_folder_id"
                     referencedTableName="acm_folder"
@@ -173,7 +142,7 @@
                     initiallyDeferred="${initially.deferred}"/>
             </column>
         </addColumn>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${idType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${fkIdType}"/>
         <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_created" newColumnName="cm_container_created" columnDataType="${timestampType}"/>
         <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator" newColumnName="cm_container_creator" columnDataType="VARCHAR(1024)"/>
         <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modified" newColumnName="cm_container_modified" columnDataType="${timestampType}"/>
@@ -183,15 +152,15 @@
     </changeSet>
 
     <changeSet id="files-14-make-container-folder-id-required" author="dmiller">
-        <addNotNullConstraint tableName="acm_container" columnName="cm_folder_id" columnDataType="${idType}"/>
+        <addNotNullConstraint tableName="acm_container" columnName="cm_folder_id" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="files-15-add-acm-file-version" author="dmiller">
         <createTable tableName="acm_file_version">
-            <column name="cm_file_version_id" type="${idType}">
+            <column name="cm_file_version_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" primaryKeyName="pk_file_version"/>
             </column>
-            <column name="cm_file_id" type="${idType}">
+            <column name="cm_file_id" type="${fkIdType}">
                 <constraints nullable="false"
                              foreignKeyName="fk_file_version_file_id"
                              referencedTableName="acm_file"
@@ -223,7 +192,7 @@
     <changeSet id="files-17-update-acm-file-structure" author="dmiller">
         <renameColumn tableName="acm_file" oldColumnName="cm_file_ecm_id" newColumnName="cm_version_series_id" columnDataType="VARCHAR(${cmVersionSeriesIdLength})"/>
         <addColumn tableName="acm_file">
-            <column name="cm_folder_id" type="${idType}">
+            <column name="cm_folder_id" type="${fkIdType}">
                 <constraints foreignKeyName="fk_file_folder_id"
                              referencedTableName="acm_folder"
                              referencedColumnNames="cm_folder_id"
@@ -250,7 +219,7 @@
 
     <!-- finally time to make cm_folder_id required -->
     <changeSet id="files-26-make-folder-id-required" author="dmiller">
-        <addNotNullConstraint tableName="acm_file" columnName="cm_folder_id" columnDataType="${idType}"/>
+        <addNotNullConstraint tableName="acm_file" columnName="cm_folder_id" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="files-27-make-folder-id-unique" author="dmiller">
@@ -259,7 +228,7 @@
 
     <changeSet id="files-28-add-container-id-to-file" author="dmiller">
         <addColumn tableName="acm_file">
-            <column name="cm_container_id" type="${idType}">
+            <column name="cm_container_id" type="${fkIdType}">
                 <constraints foreignKeyName="fk_file_container_id"
                              referencedTableName="acm_container"
                              referencedColumnNames="cm_container_id"
@@ -270,7 +239,7 @@
     </changeSet>
 
     <changeSet id="files-30-make-file-container-id-required" author="dmiller">
-        <addNotNullConstraint tableName="acm_file" columnName="cm_container_id" columnDataType="${idType}"/>
+        <addNotNullConstraint tableName="acm_file" columnName="cm_container_id" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="files-31-add-container-title" author="dmiller">

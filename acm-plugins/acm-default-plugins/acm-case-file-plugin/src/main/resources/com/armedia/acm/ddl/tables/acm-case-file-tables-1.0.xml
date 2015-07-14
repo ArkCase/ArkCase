@@ -4,24 +4,8 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
     <property name="caseNumberLength" value="1024" dbms="postgresql,oracle"/>
     <property name="caseNumberLength" value="255" dbms="mysql"/>
-
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
-    <property name="autoIncrement" value="true" dbms="mysql"/>
 
     <changeSet id="case-file-01-acm-case-file-table" author="dmiller">
         <createTable tableName="acm_case_file">
@@ -76,7 +60,7 @@
             </column>
             <column name="cm_refer_ext_org_name" type="VARCHAR(4000)"/>
             <column name="cm_refer_ext_person_name" type="VARCHAR(4000)"/>
-            <column name="cm_refer_ext_contact_method_id" type="${idType}"/>
+            <column name="cm_refer_ext_contact_method_id" type="${fkIdType}"/>
             <column name="cm_existing_case_number" type="VARCHAR(${caseNumberLength})"/>
             <column name="cm_disposition_created" type="${timestampType}">
                 <constraints nullable="false"/>
@@ -114,7 +98,7 @@
 
     <changeSet id="06-add-originator-to-acm-case-file-table" author="marst">
         <addColumn tableName="acm_case_file">
-            <column name="cm_originator_id" type="${idType}">
+            <column name="cm_originator_id" type="${fkIdType}">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
@@ -126,19 +110,19 @@
 
     <changeSet id="case-file-08-add-number-originator-id" author="dmiller">
         <addColumn tableName="acm_case_file">
-            <column name="cm_originator_id" type="${idType}"/>
+            <column name="cm_originator_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski">
         <createTable tableName="acm_close_case_request">
-            <column name="cm_close_case_id" type="NUMBER(32,0)">
+            <column name="cm_close_case_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
             </column>
-            <column name="cm_case_id" type="${idType}">
+            <column name="cm_case_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_disposition_id" type="${idType}">
+            <column name="cm_disposition_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_case_status" type="VARCHAR(1024)">
@@ -171,24 +155,15 @@
     </changeSet>
 
     <changeSet id="case-file-11-drop-close-case-request-table" author="riste.tutureski">
-        <dropPrimaryKey tableName="acm_close_case_request" constraintName="pk_close_case_request"/>
-        <dropForeignKeyConstraint baseTableName="acm_close_case_request" constraintName="fk_close_case_cmplnt_id"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_case_id" columnDataType="${idType}"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_disposition_id" columnDataType="NUMBER(32,0)"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_status" columnDataType="VARCHAR(1024)"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_created" columnDataType="${timestampType}"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_creator" columnDataType="VARCHAR(1024)"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_modified" columnDataType="${timestampType}"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_modifier" columnDataType="VARCHAR(1024)"/>
-        <dropTable tableName="acm_close_case_request"/>
+        <dropTable tableName="acm_close_case_request" cascadeConstraints="true"/>
     </changeSet>
 
     <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski">
         <createTable tableName="acm_change_case_status">
-            <column name="cm_change_case_status_id" type="${idType}">
+            <column name="cm_change_case_status_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKeyName="pk_change_case_status" primaryKey="true"/>
             </column>
-            <column name="cm_case_id" type="${idType}">
+            <column name="cm_case_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_status" type="VARCHAR(1024)">
@@ -225,12 +200,12 @@
 
     <changeSet id="case-file-14-add-container-folder-id" author="dmiller">
         <addColumn tableName="acm_case_file">
-            <column name="cm_container_folder_id" type="${idType}"/>
+            <column name="cm_container_folder_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="case-file-15-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${idType}"/>
+        <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="change-case-status-16-add-object-type-in-acm-change-case-status-table" author="nebojsha.davidovikj">

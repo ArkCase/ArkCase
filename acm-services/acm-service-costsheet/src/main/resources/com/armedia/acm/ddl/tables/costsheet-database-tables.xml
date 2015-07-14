@@ -4,15 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
 	<changeSet id="01-create-costsheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_costsheet">
 	         <column name="cm_costsheet_id" type="NUMBER(32,0)">

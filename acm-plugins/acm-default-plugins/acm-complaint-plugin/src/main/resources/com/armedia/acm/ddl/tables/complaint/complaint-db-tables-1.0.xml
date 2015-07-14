@@ -4,10 +4,6 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
-    <property name="idType" value="BIGINT" dbms="mysql"/>
-    <property name="idType" value="BIGSERIAL" dbms="postgresql"/>
-
     <property name="complaintNumberLength" value="1024" dbms="postgresql,oracle"/>
     <property name="complaintNumberLength" value="255" dbms="mysql"/>
 
@@ -16,26 +12,6 @@
 
     <property name="cmOrderLength" value="NUMBER(32,0)" dbms="postgresql,oracle"/>
     <property name="cmOrderLength" value="BIGINT" dbms="mysql"/>
-
-
-    <property name="initially.deferred" value="true" dbms="postgresql,oracle"/>
-    <property name="initially.deferred" value="false" dbms="mysql"/>
-
-    <property name="deferrable" value="true" dbms="postgresql,oracle"/>
-    <property name="deferrable" value="false" dbms="mysql"/>
-
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
-    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
-    <property name="autoIncrement" value="true" dbms="mysql"/>
-
-    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
-    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
-    <property  name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql"/>
-
-    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
-    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
 
     <changeSet id="01-create-complaint-table" author="dmiller">
         <createTable tableName="acm_complaint">
@@ -71,7 +47,7 @@
             <column name="cm_complaint_details" type="CLOB">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_originator_id" type="${idType}">
+            <column name="cm_originator_id" type="${fkIdType}">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_target_name" type="VARCHAR(1024)">
@@ -93,11 +69,11 @@
 
     <changeSet id="02-complaint-switch-to-sequence-pk" author="dmiller">
         <dropDefaultValue tableName="acm_complaint" columnName="cm_complaint_id"/>
-        <modifyDataType tableName="acm_complaint" columnName="cm_complaint_id" newDataType="${idType}"/>
+        <modifyDataType tableName="acm_complaint" columnName="cm_complaint_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="04-fix-originator-id-type" author="dmiller">
-        <modifyDataType tableName="acm_complaint" columnName="cm_originator_id" newDataType="${idType}"/>
+        <modifyDataType tableName="acm_complaint" columnName="cm_originator_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="05-drop-target-name-column" author="dmiller">
@@ -126,7 +102,7 @@
 
     <changeSet id="09-add-priority-and-type-tables" author="dmiller">
         <createTable tableName="acm_complaint_type_lu">
-            <column name="cm_id" type="${idType}">
+            <column name="cm_id" type="${idType}"  autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -156,7 +132,7 @@
         </createTable>
 
         <createTable tableName="acm_complaint_priority_lu">
-            <column name="cm_id" type="${idType}">
+            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -208,19 +184,19 @@
 
     <changeSet id="complaint-13-add-disposition-column" author="dmiller">
         <addColumn tableName="acm_complaint">
-            <column name="cm_disposition_id" type="${idType}"/>
+            <column name="cm_disposition_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller">
         <createTable tableName="acm_close_complaint_request">
-            <column name="cm_close_complaint_id" type="${idType}">
+            <column name="cm_close_complaint_id" type="${idType}" autoIncrement="${autoIncrement}">
                 <constraints primaryKeyName="pk_close_complaint_request" primaryKey="true"/>
             </column>
-            <column name="cm_complaint_id" type="${idType}">
+            <column name="cm_complaint_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_disposition_id" type="${idType}">
+            <column name="cm_disposition_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_status" type="VARCHAR(1024)">
@@ -250,7 +226,7 @@
     <changeSet id="complaint-15-change-location-to-address-id" author="riste.tutureski">
     	<dropColumn tableName="acm_complaint" columnName="cm_location"/>
     	<addColumn tableName="acm_complaint">
-    		<column name="cm_address_id" type="${idType}"/>
+    		<column name="cm_address_id" type="${fkIdType}"/>
     	</addColumn>
     </changeSet>
 
@@ -264,12 +240,12 @@
 
     <changeSet id="complaint-17-add-container-folder-id" author="dmiller">
         <addColumn tableName="acm_complaint">
-            <column name="cm_container_folder_id" type="${idType}"/>
+            <column name="cm_container_folder_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="complaint-18-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${idType}"/>
+        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="19-object-type-in-acm-complaint-table" author="nebojsha.davidovikj">

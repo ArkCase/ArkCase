@@ -4,9 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
-    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
-
     <changeSet id="01-create-object-association-table" author="dmiller" dbms="oracle">
         <createTable tableName="acm_object_association">
             <column name="cm_association_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
