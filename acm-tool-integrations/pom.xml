@@ -32,7 +32,7 @@
         <module>acm-object-change-status</module>
         <module>acm-encryption</module>
         <module>acm-email</module>
-    <module>acm-reload-properties</module>
+        <module>acm-reload-properties</module>
   </modules>
 
 </project>

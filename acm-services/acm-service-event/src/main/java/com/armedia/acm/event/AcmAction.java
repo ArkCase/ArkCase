@@ -1,6 +1,7 @@
 package com.armedia.acm.event;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * An action that could be triggered in response to an AcmEvent.  Actions could include: start an Activiti workflow,
@@ -17,6 +18,7 @@ public class AcmAction
     private String actionId;
     private List<String> parameters;
     private String targetMuleEndpoint;
+    private Map<String, Object> flowBeans;
 
     public String getActionName()
     {
@@ -56,5 +58,15 @@ public class AcmAction
     public void setTargetMuleEndpoint(String targetMuleEndpoint)
     {
         this.targetMuleEndpoint = targetMuleEndpoint;
+    }
+
+    public Map<String, Object> getFlowBeans()
+    {
+        return flowBeans;
+    }
+
+    public void setFlowBeans(Map<String, Object> flowBeans)
+    {
+        this.flowBeans = flowBeans;
     }
 }

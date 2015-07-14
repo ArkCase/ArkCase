@@ -26,6 +26,13 @@
         <property name="parameters">
             <list/>
         </property>
+        <property name="flowBeans">
+            <map>
+                <entry key="extractAcmTaskFromEvent" value-ref="extractAcmTaskFromEvent"/>
+                <entry key="taskToSolrTransformer" value-ref="taskToSolrTransformer"/>
+                <entry key="sendDocumentsToSolr" value-ref="sendDocumentsToSolr"/>
+            </map>
+        </property>
 
     </bean>
     <bean id="sendActivitiTasksToSolrAction" class="com.armedia.acm.event.AcmAction">
@@ -34,6 +41,18 @@
         <property name="targetMuleEndpoint" value="jms://activitiTaskToSolr.in"/>
         <property name="parameters">
             <list/>
+        </property>
+        <property name="flowBeans">
+            <map>
+                <entry key="extractAcmTaskFromEvent" value-ref="extractAcmTaskFromEvent"/>
+                <entry key="taskToSolrTransformer" value-ref="taskToSolrTransformer"/>
+                <entry key="sendDocumentsToSolr" value-ref="sendDocumentsToSolr"/>
+                <entry key="auditPropertyEntityAdapter" value-ref="auditPropertyEntityAdapter"/>
+                <entry key="acmTaskDao" value-ref="acmTaskDao"/>
+                <entry key="dataAccessPrivilegeListener" value-ref="dataAccessPrivilegeListener"/>
+                <entry key="acmParticipantDao" value-ref="acmParticipantDao"/>
+
+            </map>
         </property>
 
     </bean>
