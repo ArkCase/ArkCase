@@ -471,26 +471,4 @@ describe("Acm.Model", function()
         expect(cache.get("k7")).toEqual({name:"n7",age:7});
     });
 
-
-    it("Acm.Model.CacheFifo: evict", function() {
-        var cache = new Acm.Model.CacheFifo({maxSize: 3});
-        cache.put("k1", {name:"n1",age:1});
-        cache.put("k2", {name:"n2",age:2});
-        cache.put("k3", {name:"n3",age:3});
-        expect(cache.get("k1")).toEqual({name:"n1",age:1});
-        expect(cache.get("k2")).toEqual({name:"n2",age:2});
-        expect(cache.get("k3")).toEqual({name:"n3",age:3});
-
-        var keys = cache.keys;
-        var len = keys.length;
-        for (var i = 0; i < cache.size; i++) {
-            var key = keys[i];
-            var item = cache.cache[key];
-            var tick = cache.timeStamp[key];
-            var now = new Date().getTime();
-            var diff = now - tick;
-            var z = 1;
-        }
-        var z = 2;
-    });
 });
