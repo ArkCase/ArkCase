@@ -4,9 +4,6 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="createColumnNameForIndex07" value="UPPER(cm_participant_id)" dbms="oracle"/>
-    <property name="createColumnNameForIndex07" value="cm_participant_id" dbms="postgresql,mysql"/>
-
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmObjectTypeLength" value="255" dbms="mysql"/>
 
@@ -51,9 +48,6 @@
             <column name="cm_object_id"/>
             <column name="cm_object_type"/>
         </createIndex>
-        <createIndex tableName="acm_participant" indexName="idx_acm_participant_user">
-            <column name="${createColumnNameForIndex07}"/>
-        </createIndex>
     </changeSet>
 
     <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="">
@@ -90,6 +84,4 @@
             <column name="cm_participant_id"/>
         </createIndex>
     </changeSet>
-
-
 </databaseChangeLog>
