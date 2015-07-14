@@ -161,20 +161,20 @@
                                         <div class="wrapper">
                                             <div class="row">
                                                 <div class="col-xs-12">
-                                                    <div class="col-xs-3 b-r"><label>Choose Application Role</label>
+                                                    <div class="col-xs-3 b-r"><label for="selectRoles">Choose Application Role</label>
                                                         <select id="selectRoles" size="10" class="form-control">
                                                         </select>
                                                     </div>
                                                     <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnGo" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                    <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                    <div class="col-xs-3 b-r"><label for="selectNotAuthorized">Not Authorized</label>
                                                         <select id="selectNotAuthorized" size="10" multiple class="form-control">
                                                         </select>
                                                     </div>
                                                     <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
-                                                        <button id="btnMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                        <button id="btnMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                        <button id="btnMoveRight" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" title="Move Right"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                        <button id="btnMoveLeft" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" title="Move Left"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
                                                     </div>
-                                                    <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                    <div class="col-xs-4 b-r"><label for="selectAuthorized">Authorized</label>
                                                         <select id="selectAuthorized" size="10" multiple  class="form-control">
                                                         </select>
                                                     </div>
@@ -319,9 +319,9 @@
 
                                     <table id="treeOrganization">
                                         <thead>
-                                        <tr>  <th></th> <th></th><th>Name </th> <th> Type </th> <th>Supervisor Name</th> <th></th><th>   Actions </th></tr>
+                                        <tr>  <th></th> <th></th><th id="nameAdHocGroups">Name </th> <th id="typeAdHocGroups"> Type </th> <th id="supervisorsNameAdHocGroups">Supervisor Name</th> <th></th><th id="actionsadHocGroups">   Actions </th></tr>
 
-                                        <tr> <th> </th> <th></th> <th></th> <th></th> <th></th> <th></th><th>  </th></tr>
+                                        <tr> <th> </th> <th></th> <th headers="nameAdHocGroups"></th> <th headers="typeAdHocGroups"></th> <th headers="supervisorsNameAdHocGroups"></th> <th></th><th headers="actionsadHocGroups">  </th></tr>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -341,16 +341,16 @@
                                             <div ng-controller="DemoCtrl">
                                                 <div class="row">
                                                     <div class="col-xs-12">
-                                                        <div class="col-xs-3 b-r"><label>Choose Dashboard Widgets</label>
+                                                        <div class="col-xs-3 b-r"><label for="selectedWidget">Choose Dashboard Widgets</label>
                                                             <select ng-model="selectedWidget" ng-change="indexSelections()" ng-options="w as w.name for w in allWidgets track by w.name" name="" size="10" class="form-control">
                                                             </select></div>
                                                         <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection" ng-click="select()"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                        <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                        <div class="col-xs-3 b-r"><label for="selectedNotAuthorized">Not Authorized</label>
                                                             <select ng-model="selectedNotAuthorized" ng-options="na as na.name for na in notAuthorized"  name="" size="10" multiple class="form-control">
                                                             </select></div>
-                                                        <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" ng-click="moveRight()"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                            <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" ng-click="moveLeft()"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/></div>
-                                                        <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                        <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move Right" title="Move Right" ng-click="moveRight()"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                            <button class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move Left" title="Move Left" ng-click="moveLeft()"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/></div>
+                                                        <div class="col-xs-4 b-r"><label for="selectedAuthorized">Authorized</label>
                                                             <select ng-model="selectedAuthorized" ng-options="a as a.name for a in authorized" size="10" multiple  class="form-control">
                                                             </select></div>
                                                         </div>
@@ -372,20 +372,20 @@
                                             <div class="wrapper">
                                                 <div class="row">
                                                     <div class="col-xs-12">
-                                                        <div class="col-xs-3 b-r"><label>Choose Report</label>
+                                                        <div class="col-xs-3 b-r"><label for="selectReport">Choose Report</label>
                                                             <select id="selectReport" size="10" class="form-control">
                                                             </select>
                                                         </div>
                                                         <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/><button type="submit" id="btnSelectReport" class="btn btn-primary btn-sm" data-toggle="tooltip" data-title="Load selection"> Go <i class="fa fa-chevron-right"></i></button><br/><br/><br/><br/><br/><br/></div>
-                                                        <div class="col-xs-3 b-r"><label>Not Authorized</label>
+                                                        <div class="col-xs-3 b-r"><label for="selectNotAuthorizedReport">Not Authorized</label>
                                                             <select id="selectNotAuthorizedReport" size="10" multiple class="form-control">
                                                             </select>
                                                         </div>
                                                         <div class="col-xs-1 b-r"><br/><br/><br/><br/><br/>
-                                                            <button id="btnAuthorize" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Authorize"> <i class="fa fa-angle-double-right"></i></button> <br/>
-                                                            <button id="btnUnauthorize" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Unauthorize"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
+                                                            <button id="btnAuthorize" class="btn btn-rounded btn-sm" data-toggle="tooltip" data-title="Move to Authorized" title="Move to Authorized"> <i class="fa fa-angle-double-right"></i></button> <br/>
+                                                            <button id="btnUnauthorize" class="btn btn-rounded tn-sm" data-toggle="tooltip" data-title="Move to Unauthorized" title="Move to Unauthorized"> <i class="fa fa-angle-double-left"></i></button><br/><br/><br/><br/>
                                                         </div>
-                                                        <div class="col-xs-4 b-r"><label>Authorized</label>
+                                                        <div class="col-xs-4 b-r"><label for="selectAuthorizedReport">Authorized</label>
                                                             <select id="selectAuthorizedReport" size="10" multiple  class="form-control">
                                                             </select>
                                                         </div>
@@ -562,7 +562,8 @@
                                             <h3>Correspondence Templates </h3>
                                             <section class="panel panel-default">
                                                 <div id="divCorrespondenceTemplates" style="width:100%">
-                                                    <form id="formAddNewTemplate" style="display:none;">
+                                                    <form id="formAddNewTemplate" style="display:none;">                                                        
+                                                        <label for="addNewTemplate">Choose File:</label>
                                                         <input id="addNewTemplate" type="file" name="files[]"/>
                                                     </form>
                                                 </div>
@@ -623,6 +624,7 @@
             </div>
             <div class="modal-body"> Upload your BPMN file using the form below.<br/><br/>
                 <form id="formUploadBPMN" method="post">
+                <label for="filesSelection">Choose File:</label>
                     <input id="filesSelection" type="file" name="files[]" multiple/>
                 </form>
             </div>
@@ -674,12 +676,12 @@
                 <section class="panel panel-default">
                     <div class="row wrapper">
                         <div class="col-sm-12">
-                            <label>Name</label>
+                            <label for="groupName">Name</label>
                             <input type="text" class="input-sm form-control" id="groupName" placeholder="Enter group name">
                         </div>
 
                         <div class="col-sm-12">
-                            <label>Description</label>
+                            <label for="groupDescription">Description</label>
                             <textarea class="form-control" id='groupDescription' placeholder="Enter description"></textarea>
                         </div>
                     </div>

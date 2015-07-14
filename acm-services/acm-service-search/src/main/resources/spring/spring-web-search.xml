@@ -51,6 +51,7 @@
     <bean id="facetedSearchAPIController" class="com.armedia.acm.services.search.web.api.FacetedSearchAPIController">
         <property name="pluginSearch" ref="pluginSearch"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="pluginEventType" ref="pluginEventType"/>
     </bean>
     <bean id="advancedSearchAPIController" class="com.armedia.acm.services.search.web.api.AdvancedSearchAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>

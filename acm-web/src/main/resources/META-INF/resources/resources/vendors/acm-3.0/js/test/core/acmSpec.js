@@ -75,6 +75,26 @@ describe("Acm", function()
         expect(Acm.isNotEmpty(varJQuery)).toBe(true);
     });
 
+    it("Test Acm.findIndexInArray() function", function() {
+        var arr = [{key: "first"}, {key: "second"}, {key: "third"}];
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(0);
+        expect(Acm.findIndexInArray(arr, "key", "second")) .toBe(1);
+        expect(Acm.findIndexInArray(arr, "key", "third"))  .toBe(2);
+        expect(Acm.findIndexInArray(arr, "key", "fourth")) .toBe(-1);
+
+        arr = [{key: "first"}, {id: "second"}, {key: "third"}];
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(0);
+        expect(Acm.findIndexInArray(arr, "key", "second")) .toBe(-1);
+        expect(Acm.findIndexInArray(arr, "key", "third"))  .toBe(2);
+
+        arr = [];
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(-1);
+
+        arr = null;
+        expect(Acm.findIndexInArray(arr, "key", "first"))  .toBe(-1);
+
+    });
+
     it("Test Acm.goodValue() function", function() {
         var varNotInitialized;
         expect(Acm.goodValue("some value")).toBe("some value");
@@ -92,7 +112,7 @@ describe("Acm", function()
         expect(Acm.goodValue(0,    123))     .toBe(0);      //0 is a valid number
     });
 
-    it("Test Acm.goodValue() with array", function() {
+    it("Test Acm.goodValue2() with array", function() {
         var good = {name:"John", child:{name:"Charlie"}};
         var bad1 = {name:"John", child:{}};
         var bad2 = {name:"John"};
@@ -100,15 +120,15 @@ describe("Acm", function()
         var bad4 = null;
 
         expect(good.child.name).toBe("Charlie");
-        expect(Acm.goodValue([good, "child", "name"])).toBe(good.child.name);
-        expect(Acm.goodValue([bad1, "child", "name"])).toBe("");
-        expect(Acm.goodValue([bad2, "child", "name"], "BadValue")).toBe("BadValue");
-        expect(Acm.goodValue([bad3, "child", "name"], "BadValue")).toBe("BadValue");
-        expect(Acm.goodValue([bad4, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue2([good, "child", "name"])).toBe(good.child.name);
+        expect(Acm.goodValue2([bad1, "child", "name"])).toBe("");
+        expect(Acm.goodValue2([bad2, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue2([bad3, "child", "name"], "BadValue")).toBe("BadValue");
+        expect(Acm.goodValue2([bad4, "child", "name"], "BadValue")).toBe("BadValue");
 
-        expect(Acm.goodValue([good.child, "name"])  ,"if no need to check null good").toBe(good.child.name);
-        expect(Acm.goodValue([good.child.name])     ,"if no need to check null good and null child").toBe(good.child.name);
-        expect(Acm.goodValue(["hello"])             ,"why used this way? but still work").toBe("hello");
+        expect(Acm.goodValue2([good.child, "name"])  ,"if no need to check null good").toBe(good.child.name);
+        expect(Acm.goodValue2([good.child.name])     ,"if no need to check null good and null child").toBe(good.child.name);
+        expect(Acm.goodValue2(["hello"])             ,"why used this way? but still work").toBe("hello");
     });
 
     it("Test Acm.parseJson() function", function() {
@@ -141,19 +161,25 @@ describe("Acm", function()
         expect(Acm.parseJson(badMissingBracket, [])).toEqual([]); //but want to default to a blank array
     });
 
-    it("Test Acm.makeNoneCacheUrl() function", function() {
-        expect(Acm.makeNoneCacheUrl("some.com/some/path")).toBeginWith("some.com/some/path?rand=");
-        expect(Acm.makeNoneCacheUrl("some.com/some/path/")).toBeginWith("some.com/some/path/?rand=");
-        expect(Acm.makeNoneCacheUrl("some.com/some/path?var=abc")).toBeginWith("some.com/some/path?var=abc&rand=");
+    it("Test Acm.Url.makeNoneCacheUrl() function", function() {
+        expect(Acm.Url.makeNoneCacheUrl("some.com/some/path")).toBeginWith("some.com/some/path?rand=");
+        expect(Acm.Url.makeNoneCacheUrl("some.com/some/path/")).toBeginWith("some.com/some/path/?rand=");
+        expect(Acm.Url.makeNoneCacheUrl("some.com/some/path?var=abc")).toBeginWith("some.com/some/path?var=abc&rand=");
 
-        var first  = Acm.makeNoneCacheUrl("some.com/some/path");
-        var second = Acm.makeNoneCacheUrl("some.com/some/path");
+        var first  = Acm.Url.makeNoneCacheUrl("some.com/some/path");
+        var second = Acm.Url.makeNoneCacheUrl("some.com/some/path");
         expect(second).not.toBe(first);
     });
 
-//    it("Test Acm.getUrlParameter() function", function() {
-//        //don't have a good way to test
-//    });
+    it("Test Acm.Url.getUrlParameter() function", function() {
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this", "abc")).toEqual("this");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that", "abc")).toEqual("this");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123", "xyz")).toEqual("that");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123", "name")).toEqual("123");
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123", "nosuch")).toEqual("");
+
+        expect(Acm.Url.getUrlParameter("some.com/some/path?abc=this&xyz=that&name=123#", "name")).toEqual("123");
+    });
 
     it("Test Acm.urlToJson() function", function() {
         expect(Acm.urlToJson("abc=foo&xyz=5&foo=bar&yes=true"))

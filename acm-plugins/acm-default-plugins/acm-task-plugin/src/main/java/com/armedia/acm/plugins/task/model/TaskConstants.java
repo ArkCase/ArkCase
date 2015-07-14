@@ -8,6 +8,7 @@ public interface TaskConstants
     String OBJECT_TYPE = "TASK";
     String STATE_ACTIVE = "ACTIVE";
     String STATE_CLOSED = "CLOSED";
+    String STATE_DELETED = "DELETED";
     Integer DEFAULT_PRIORITY = 50;
     String DEFAULT_PRIORITY_WORD = "Medium";
 
