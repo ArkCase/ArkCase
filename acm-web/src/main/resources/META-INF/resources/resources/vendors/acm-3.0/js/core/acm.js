@@ -488,7 +488,8 @@ var Acm = Acm || {
 
         ,_listeners: []
         ,_listenerCount: 0
-        ,registerListener: function(name, count, callback) {
+        ,registerListener: function(name, interval, callback) { //interval in milliseconds
+            var count = interval / 100;                          //timer pulse is 100 ms
             var i = this._findListener(name);
             if (0 > i) {    //not found; create new entry
                 this._listeners.push({name: name, callback: callback, count: count, countDown: count});
@@ -534,9 +535,9 @@ var Acm = Acm || {
             } //for i
         }
 
-        ,useTimer: function(name, count, callback) {
+        ,useTimer: function(name, interval, callback) {
             Acm.Timer.startWorker(App.getContextPath() + "/resources/js/acmTimer.js");
-            Acm.Timer.registerListener(name, count, callback);
+            Acm.Timer.registerListener(name, interval, callback);
         }
     }
 

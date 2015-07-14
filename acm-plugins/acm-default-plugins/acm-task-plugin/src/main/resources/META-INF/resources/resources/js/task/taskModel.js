@@ -619,7 +619,7 @@ Task.Model = Task.Model || {
 
     ,Attachments: {
         create : function() {
-            this.cacheAttachments = new Acm.Model.CacheFifo(2);      //todo: remove this cache, use task cache instead
+            this.cacheAttachments = new Acm.Model.CacheFifo();      //todo: remove this cache, use task cache instead
         }
         ,onInitialized: function() {
         }

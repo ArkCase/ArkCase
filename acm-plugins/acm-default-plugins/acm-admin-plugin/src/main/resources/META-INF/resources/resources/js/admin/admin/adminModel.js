@@ -30,12 +30,12 @@ Admin.Model = Admin.Model || {
         create : function() {
             if (Admin.Model.Organization.Tree.create)           {Admin.Model.Organization.Tree.create();}
 
-            this.cacheGroups = new Acm.Model.CacheFifo(4);
-            this.cacheSubgroups = new Acm.Model.CacheFifo(4);
-            this.cacheTreeSource = new Acm.Model.CacheFifo(4);
-            this.cacheMembersForTree = new Acm.Model.CacheFifo(4);
-            this.cacheAcmUsersFromSolr = new Acm.Model.CacheFifo(4);
-            this.cacheResult = new Acm.Model.CacheFifo(4);
+            this.cacheGroups = new Acm.Model.CacheFifo();
+            this.cacheSubgroups = new Acm.Model.CacheFifo();
+            this.cacheTreeSource = new Acm.Model.CacheFifo();
+            this.cacheMembersForTree = new Acm.Model.CacheFifo();
+            this.cacheAcmUsersFromSolr = new Acm.Model.CacheFifo();
+            this.cacheResult = new Acm.Model.CacheFifo();
 
             Admin.Service.Organization.retrieveGroups();
 
@@ -194,7 +194,7 @@ Admin.Model = Admin.Model || {
 
     ,Correspondence:{
         create : function() {
-            this.cacheTemplatesList = new Acm.Model.CacheFifo(4);
+            this.cacheTemplatesList = new Acm.Model.CacheFifo();
             Admin.Service.Correspondence.retrieveTemplatesList();
 
         }
@@ -238,9 +238,9 @@ Admin.Model = Admin.Model || {
 
     ,FunctionalAccessControl:{
         create : function() {
-            this.cacheApplicationRoles = new Acm.Model.CacheFifo(1);
-            this.cacheGroups = new Acm.Model.CacheFifo(1);
-            this.cacheApplicationRolesToGroups = new Acm.Model.CacheFifo(1);
+            this.cacheApplicationRoles = new Acm.Model.CacheFifo({maxSize: 1});
+            this.cacheGroups = new Acm.Model.CacheFifo({maxSize: 1});
+            this.cacheApplicationRolesToGroups = new Acm.Model.CacheFifo({maxSize: 1});
 
             Admin.Service.FunctionalAccessControl.retrieveApplicationRoles();
             Admin.Service.FunctionalAccessControl.retrieveGroups();
@@ -278,9 +278,9 @@ Admin.Model = Admin.Model || {
     }
     ,ReportsConfiguration:{
         create : function() {
-            this.cacheReports = new Acm.Model.CacheFifo(1);
-            this.cacheGroups = new Acm.Model.CacheFifo(1);
-            this.cacheReportToGroupsMap = new Acm.Model.CacheFifo(1);
+            this.cacheReports = new Acm.Model.CacheFifo({maxSize: 1});
+            this.cacheGroups = new Acm.Model.CacheFifo({maxSize: 1});
+            this.cacheReportToGroupsMap = new Acm.Model.CacheFifo({maxSize: 1});
 
 
             Acm.Dispatcher.addEventListener(Admin.Controller.MODEL_REPORT_CONFIGURATION_RETRIEVED_REPORTS, this.onModelReportConfigRetrievedReports);
@@ -346,8 +346,8 @@ Admin.Model = Admin.Model || {
         }
         ,PlainForms:{
         	create: function () {
-        		this.cachePlainForms = new Acm.Model.CacheFifo(1);
-        		this.cachePlainFormTargets = new Acm.Model.CacheFifo(1);
+        		this.cachePlainForms = new Acm.Model.CacheFifo({maxSize: 1});
+        		this.cachePlainFormTargets = new Acm.Model.CacheFifo({maxSize: 1});
             }
             , onInitialized: function () {
             	 Admin.Service.Forms.PlainForms.retrievePlainForms();
