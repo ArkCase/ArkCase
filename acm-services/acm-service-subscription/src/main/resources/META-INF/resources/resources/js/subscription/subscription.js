@@ -12,7 +12,7 @@ var Subscription = Subscription || {
         if (SearchBase.create) {
             SearchBase.create({name: Subscription.Model.MicroData.searchName
                 ,jtArgs     : Subscription.View.getJtArgs()
-                ,jtDataMaker: Subscription.View.jtDataMaker
+                //,jtDataMaker: Subscription.View.jtDataMaker
                 ,filters    : Subscription.Model.MicroData.getSearchFilters()
             });
         }

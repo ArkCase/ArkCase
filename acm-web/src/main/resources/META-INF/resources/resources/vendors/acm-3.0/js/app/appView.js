@@ -241,7 +241,25 @@ App.View = {
             App.Model.Login.setLastIdle();
         }
         ,onModelDetectedIdle: function() {
-            App.View.gotoPage("/logout");
+            Acm.Timer.useTimer("AboutToLogout"
+                ,15
+                ,function() {
+                    App.View.gotoPage("/logout");
+                    return false;
+                }
+            );
+
+            Acm.Dialog.confirm("For your protection, application is about to logout. Press Cancel to stay log in"
+                 ,function(result) {
+                     if (result == true) {
+                         App.View.gotoPage("/logout");
+                     } else {
+                         Acm.Timer.removeListener("AboutToLogout");
+                         App.Model.Login.setLastIdle();
+                     }
+                 }
+                 ,"Auto Logout Reminder"
+            );
         }
 
     }

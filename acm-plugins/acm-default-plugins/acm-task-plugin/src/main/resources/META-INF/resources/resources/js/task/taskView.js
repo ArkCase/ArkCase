@@ -110,7 +110,7 @@ Task.View = Task.View || {
             var title;
             if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s) && Acm.isNotEmpty(objSolr.due_tdt)){
                 //title = Acm.getDateFromDatetime(objSolr.due_tdt) + ", " + objSolr.priority_s +", "+ objSolr.name;
-                title = Acm.getDateFromDatetime2(objSolr.due_tdt,$.t("common:date.short")) + ", " + objSolr.priority_s +", "+ objSolr.name;
+                title = Acm.getDateFromDatetime(objSolr.due_tdt,$.t("common:date.short")) + ", " + objSolr.priority_s +", "+ objSolr.name;
             }
             else if(Acm.isNotEmpty(objSolr.name) && Acm.isNotEmpty(objSolr.priority_s)){
                 title = objSolr.priority_s +", "+ objSolr.name;
@@ -361,10 +361,8 @@ Task.View = Task.View || {
                     var parentObjData = Task.Model.ParentDetail.cacheParentObject.get(task.parentObjectId);
                     if (Task.Model.ParentDetail.validateUnifiedData(parentObjData)) {
                         this.setTextParentObjTitle(Acm.goodValue(parentObjData.title));
-                        //this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate));
-                        this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime2(parentObjData.incidentDate,$.t("common:date.short")));
+                        this.setTextLnkParentObjIncidentDate(Acm.getDateFromDatetime(parentObjData.incidentDate,$.t("common:date.short")));
                         this.setTextLnkParentObjPriority(Acm.goodValue(parentObjData.priority));
-                        //this.setTextLnkParentObjAssigned(Acm.__FixMe__getUserFullName(parentObjData.assignee));
                         this.setTextLnkParentObjAssigned(App.Model.Users.getUserFullName(Acm.goodValue(parentObjData.assignee)));
                         this.setTextLnkParentObjStatus("  (" + Acm.goodValue(parentObjData.status) +")");
                         this.setTextLnkParentObjSubjectType(Acm.goodValue(parentObjData.subjectType));
@@ -695,14 +693,17 @@ Task.View = Task.View || {
         ,onClickBtnOutcome : function(event,ctrl) {
             var clicked = event.target.id;
             if (clicked == "SEND_FOR_REWORK") {
-                var reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
-                if (reworkInstructions == null || reworkInstructions == "") {
+                var reworkInstructions = AcmEx.Object.SummerNote.getText(Task.View.Detail.$divReworkDetails);
+                if (Acm.isEmpty(reworkInstructions.trim())) {
                     Acm.Dialog.info($.t("task:task-details.label.must-enter-details"));
                 }
                 else {
-                    var task = Task.View.getActiveTask();
-                    task.reworkInstructions = reworkInstructions;
-                    Task.View.Detail.onClickBtnTaskWithOutcome(clicked);
+                    reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
+                    if(Acm.isNotEmpty(reworkInstructions)){
+                        var task = Task.View.getActiveTask();
+                        task.reworkInstructions = reworkInstructions;
+                        Task.View.Detail.onClickBtnTaskWithOutcome(clicked);
+                    }
                 }
             }
             else
@@ -840,12 +841,9 @@ Task.View = Task.View || {
         ,populateTaskDetails : function(task){
             this.setTextLnkTaskTitle(Acm.goodValue(task.title));
             this.setTextLnkPercentComplete(Acm.goodValue(task.percentComplete, 0));
-            //this.setTextLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate));
-            this.setTextLnkStartDate(Acm.getDateFromDatetime2(task.taskStartDate,$.t("common:date.short")));
-            //this.setTextLnkDueDate(Acm.getDateFromDatetime(task.dueDate));
-            this.setTextLnkDueDate(Acm.getDateFromDatetime2(task.dueDate,$.t("common:date.short")));
+            this.setTextLnkStartDate(Acm.getDateFromDatetime(task.taskStartDate,$.t("common:date.short")));
+            this.setTextLnkDueDate(Acm.getDateFromDatetime(task.dueDate,$.t("common:date.short")));
             this.setTextLnkPriority(Acm.goodValue(task.priority));
-            //this.setTextLnkTaskOwner(Acm.__FixMe__getUserFullName(task.assignee));
             this.setTextLnkTaskOwner(Acm.goodValue(task.assignee));
             this.setTextLnkStatus(Acm.goodValue(task.status));
             this.setHtmlDivDetail(Acm.goodValue(task.details));
@@ -1034,7 +1032,9 @@ Task.View = Task.View || {
                     element.append(tr);
                 }
 
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);});
+                $('input[name=returnToUser]:radio').change(function(e) {
+                    Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);
+                });
             }
         }
         ,buildDlgRejectTaskUsers: function(element, results) {
@@ -1061,7 +1061,9 @@ Task.View = Task.View || {
                     element.append(tr);
                 }
 
-                $('input[name=returnToUser]:radio').change(function(e) {Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);});
+                $('input[name=returnToUser]:radio').change(function(e) {
+                    Task.View.RejectTask.onChangeDlgRejectTaskSelected(e,this);
+                });
             }
         }
         ,buildDlgRejectTaskMutedText: function(element, from, to, total) {
@@ -1272,7 +1274,14 @@ Task.View = Task.View || {
                         Task.Controller.viewAddedNote(noteToSave);
                     }
                 }
+                Task.View.Detail.hideAllWorkflowButtons();
+                Task.View.Detail.hideDynamicWorkflowButtons();
+                location.reload(true);
             });
+        }
+        ,onSaveAssignee : function(value) {
+            var task = Task.View.getActiveTask();
+            Task.Controller.viewChangedAssignee(ObjNav.View.Navigator.getActiveObjType(), task.taskId, value);
         }
         ,onClickDlgRejectTaskSortableColumn: function(event,ctrl) {
             var sortDirection = Task.View.RejectTask.getDlgRejectTaskSortDirection();
@@ -1353,6 +1362,11 @@ Task.View = Task.View || {
         }
         ,onChangeDlgRejectTaskSelected: function(event,ctrl) {
             Task.View.RejectTask.setDlgRejectTaskSelected($(event.target).val());
+            if (Task.View.RejectTask.getDlgRejectTaskSelected() == null) {
+                Task.View.RejectTask.$btnSubmitRejectTask.addClass('disabled');
+            } else {
+                Task.View.RejectTask.$btnSubmitRejectTask.removeClass('disabled');
+            }
         }
         // end of Reject ------------------------------------------
 
@@ -1408,12 +1422,8 @@ Task.View = Task.View || {
                         var Record = {};
                         Record.id         = Acm.goodValue(notes[i].id, 0);
                         Record.note       = Acm.goodValue(notes[i].note);
-                        //Record.created    = Acm.getDateFromDatetime(notes[i].created);
-                        Record.created    = Acm.getDateFromDatetime2(notes[i].created,$.t("common:date.short"));
-                        //Record.creator    = Acm.__FixMe__getUserFullName(Acm.goodValue(notes[i].creator));
+                        Record.created    = Acm.getDateFromDatetime(notes[i].created,$.t("common:date.short"));
                         Record.creator  = App.Model.Users.getUserFullName(Acm.goodValue(notes[i].creator));
-                        //Record.parentId   = Acm.goodValue(noteList[i].parentId);
-                        //Record.parentType = Acm.goodValue(noteList[i].parentType);
                         jtData.Records.push(Record);
                     }
                 }
@@ -1602,9 +1612,7 @@ Task.View = Task.View || {
                     if(Task.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        //Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate);
-                        Record.eventDate    = Acm.getDateFromDatetime2(events[i].eventDate,$.t("common:date.short"));
-                        //Record.userId = Acm.__FixMe__getUserFullName(events[i].userId);
+                        Record.eventDate    = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.short"));
                         Record.user  = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                         jtData.Records.push(Record);
                     }
@@ -1715,10 +1723,8 @@ Task.View = Task.View || {
                     if(Task.Model.WorkflowOverview.validateWorkflowOverviewRecord(workflowOverview[i])){
                         var Record = {};
                         Record.participant = Acm.goodValue(workflowOverview[i].participant);
-                        //Record.startDateTime = Acm.getDateFromDatetime(workflowOverview[i].startDate);
-                        Record.startDateTime   = Acm.getDateFromDatetime2(workflowOverview[i].startDate,$.t("common:date.short"));
-                        //Record.endDateTime = Acm.getDateFromDatetime(workflowOverview[i].endDate);
-                        Record.endDateTime   = Acm.getDateFromDatetime2(workflowOverview[i].endDate,$.t("common:date.short"));
+                        Record.startDateTime   = Acm.getDateFromDatetime(workflowOverview[i].startDate,$.t("common:date.short"));
+                        Record.endDateTime   = Acm.getDateFromDatetime(workflowOverview[i].endDate,$.t("common:date.short"));
                         Record.role = Acm.goodValue(workflowOverview[i].role);
                         Record.status = Acm.goodValue(workflowOverview[i].status);
                         jtData.Records.push(Record);
@@ -1869,9 +1875,7 @@ Task.View = Task.View || {
                         var Record = {};
                         Record.id = Acm.goodValue(documents[i].objectId)
                         Record.title = Acm.goodValue(documents[i].name);
-                        //Record.created = Acm.getDateFromDatetime(documents[i].created);
-                        Record.created   = Acm.getDateFromDatetime2(documents[i].created,$.t("common:date.short"));
-                        //Record.creator = Acm.__FixMe__getUserFullName(documents[i].creator);
+                        Record.created   = Acm.getDateFromDatetime(documents[i].created,$.t("common:date.short"));
                         Record.creator  = App.Model.Users.getUserFullName(Acm.goodValue(documents[i].creator));
                         jtData.Records.push(Record);
                     }
@@ -2099,9 +2103,7 @@ Task.View = Task.View || {
                     var record = {};
                     record.id = Acm.goodValue(documentsUnderReview.fileId, 0);
                     record.title = Acm.goodValue(documentsUnderReview.fileName);
-                    //record.created = Acm.getDateFromDatetime(documentsUnderReview.created);
-                    record.created   = Acm.getDateFromDatetime2(documentsUnderReview.created,$.t("common:date.short"));
-                    //record.author = Acm.__FixMe__getUserFullName((Acm.goodValue(documentsUnderReview.creator)));
+                    record.created   = Acm.getDateFromDatetime(documentsUnderReview.created,$.t("common:date.short"));
                     record.author = App.Model.Users.getUserFullName(Acm.goodValue(documentsUnderReview.creator));
                     record.status = Acm.goodValue(documentsUnderReview.status);
                     jtData.Records.push(record);
@@ -2217,9 +2219,7 @@ Task.View = Task.View || {
                             var record = {};
                             record.id = Acm.goodValue(rejectComments[i].id);
                             record.comment = rejectComments[i].note;
-                            //record.created = Acm.getDateFromDatetime(rejectComments[i].created);
-                            record.created = Acm.getDateFromDatetime2(rejectComments[i].created,$.t("common:date.short"));
-                            //record.creator = Acm.__FixMe__getUserFullName(rejectComments[i].creator);
+                            record.created = Acm.getDateFromDatetime(rejectComments[i].created,$.t("common:date.short"));
                             record.creator = App.Model.Users.getUserFullName(Acm.goodValue(rejectComments[i].creator));
                             record.parentId = Acm.goodValue(rejectComments[i].parentId);
                             record.parentType = rejectComments[i].parentType;
@@ -2343,9 +2343,7 @@ Task.View = Task.View || {
                     for (var i = 0; i < electronicSignatures.length; i++) {
                         if(Task.Model.ElectronicSignature.validateElectronicSignature(electronicSignatures[i])){
                             var Record = {};
-                            //Record.signedDate = Acm.getDateFromDatetime(electronicSignatures[i].signedDate)
-                            Record.signedDate = Acm.getDateFromDatetime2(electronicSignatures[i].signedDate,$.t("common:date.short"));
-                            //Record.user = Acm.__FixMe__getUserFullName(electronicSignatures[i].signedBy);
+                            Record.signedDate = Acm.getDateFromDatetime(electronicSignatures[i].signedDate,$.t("common:date.short"));
                             Record.user = App.Model.Users.getUserFullName(Acm.goodValue(electronicSignatures[i].signedBy));
                             jtData.Records.push(Record);
                         }

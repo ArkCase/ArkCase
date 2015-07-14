@@ -106,7 +106,7 @@ Topbar.View = {
                             + '<div class="identifier">' + Acm.goodValue(ctr.name) + ' ('+ Acm.goodValue(ctr.object_type_s) + ')' + '</div>'
                             + '<div class="author">By ' + ctr.author_s  + ' on '
                             //+ Acm.getDateTimeFromDatetime(ctr.last_modified_tdt) + '</div>'
-                            + Acm.getDateTimeFromDatetime2(ctr.last_modified_tdt,$.t("common:date.full")) + '</div>'
+                            + Acm.getDateTimeFromDatetime(ctr.last_modified_tdt,$.t("common:date.full")) + '</div>'
                         html += '</div>';
                     }
                     return html;
@@ -576,8 +576,7 @@ Topbar.View = {
                             + "<span class='media-body block m-b-none'>"
                             + Acm.goodValue(asn.title_parseable)
                             + "<br><small class='text-muted'>"
-                            //+ Acm.getDateFromDatetime(asn.create_tdt)
-                            + Acm.getDateFromDatetime2(asn.create_tdt,$.t("common:date.short"))
+                            + Acm.getDateFromDatetime(asn.create_tdt,$.t("common:date.short"))
                             + "</small></span></a><input type='hidden' name='asnId' value='"
                             + Acm.goodValue(asn.id)
                             + "' />"
