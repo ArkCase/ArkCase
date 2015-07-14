@@ -8,10 +8,6 @@ DocTree.Model = DocTree.Model || {
         this.cacheTree = new Acm.Model.CacheFifo();
         this.cacheFolderList = new Acm.Model.CacheFifo();
 
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_PARENT          ,this.onViewChangedParent);
-        //Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_CHANGED_VERSION         ,this.onViewChangedVersion);
-        Acm.Dispatcher.addEventListener(DocTree.Controller.VIEW_SENT_EMAIL              ,this.onViewSentEmail);
-
         if (DocTree.Model.Config.create)           {DocTree.Model.Config.create(args);}
         if (DocTree.Model.Key.create)              {DocTree.Model.Key.create(args);}
         if (DocTree.Service.create)                {DocTree.Service.create(args);}
@@ -39,16 +35,6 @@ DocTree.Model = DocTree.Model || {
     ,API_SEND_EMAIL_                  : "/api/latest/service/notification/email"
     ,API_LODGE_DOCUMENT               : "/api/latest/service/ecm/createFolderByPath?isCopy=true&"   // targetObjectType={objType}&targetObjectId={objId}&newPath={fullPath}
 
-    ,onViewChangedParent: function(objType, objId) {
-        //if not in cache
-        //DocTree.Service.retrieveTopFolder(parentType, parentId);
-        //
-        var z = 1;
-    }
-
-    ,onViewSentEmail: function(emailData){
-        DocTree.Model.sendEmail(emailData);
-    }
 
     ,NODE_TYPE_PREV: "prev"
     ,NODE_TYPE_NEXT: "next"

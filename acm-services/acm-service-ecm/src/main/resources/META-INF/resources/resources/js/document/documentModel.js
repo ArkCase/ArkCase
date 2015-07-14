@@ -47,6 +47,13 @@ AcmDocument.Model = AcmDocument.Model || {
         }
         ,onInitialized: function() {
             AcmDocument.Service.Detail.retrieveDocumentDetail(AcmDocument.Model.MicroData.documentId);
+            Acm.Timer.useTimer("RefetchDocDetails"
+                ,100  //every 100 seconds
+                ,function() {
+                    AcmDocument.Service.Detail.retrieveDocumentDetail(AcmDocument.Model.MicroData.documentId);
+                    return true;
+                }
+            );
         }
         ,validateDocumentDetail: function(data){
             if (Acm.isEmpty(data)) {

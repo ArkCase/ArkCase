@@ -28,6 +28,8 @@ public class SearchChildrenAPIController
             @RequestParam(value = "parentType", required = true) String parentType,
             @RequestParam(value = "parentId", required = true) Long parentId,
             @RequestParam(value = "childType", required = false, defaultValue = "") String childType,
+            @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
+            @RequestParam(value = "exceptDeletedOnly", required = false, defaultValue = "true") boolean exceptDeletedOnly,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
@@ -39,8 +41,15 @@ public class SearchChildrenAPIController
          if (!"".equals(childType))
         {
          query = query + " AND object_type_s:" + childType;
-        }   
-        
+        }
+        if (activeOnly) {
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+        }
+        if (exceptDeletedOnly) {
+            if(!activeOnly){
+                query += " AND -status_s:DELETED";
+            }
+        }
         
         if ( log.isDebugEnabled() )
         {

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="resources/css/icon.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/font.css" type="text/css" />
 <link rel="stylesheet" href="resources/css/app.css" type="text/css" />
-<!--[if lt IE 9]>
+<link rel="stylesheet" href="resources/css/custom.css" type="text/css" /><!--[if lt IE 9]>
     <script src="js/ie/html5shiv.js"></script>
     <script src="js/ie/respond.min.js"></script>
     <script src="js/ie/excanvas.js"></script>
@@ -93,9 +93,9 @@
                   <li class=""> <a href="cases.html" class="auto"> <i class="i i-folder icon"> </i> <span class="font-bold">Cases</span></a></li>
                   <li class=""> <a href="tasks.html" class="auto"> <i class="i i-checkmark icon"> </i> <span class="font-bold">Tasks</span></a></li>
                   <li class=""> <a href="documents.html" class="auto"> <i class="i i-file icon"> </i> <span class="font-bold">Documents</span></a></li>
-                  <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li>
-                  <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
-<li class=""> <a href="contacts.html" class="auto"> <i class="fa fa-users icon"> </i> <span class="font-bold">Contacts</span> </a> </li>
+                  <li class=""> <a href="audit.html" class="auto"> <i class="fa fa-bolt icon"> </i> <span class="font-bold">Audit</span> </a> </li> <li class=""> <a href="reports.html" class="auto"> <i class="i i-stats icon"> </i> <span class="font-bold">Reports</span> </a> </li>
+<li class=""> <a href="socialmedia.html" class="auto"> <i class="fa fa-link icon"> </i> <span class="font-bold">Social Media</span> </a> </li>
+<li class=""> <a href="contacts.html" class="auto"> <i class="fa fa-users icon"> </i> <span class="font-bold">Directory</span> </a> </li>
                   <li class=""> <a href="search.html" class="auto"> <i class="i i-search2 icon"> </i> <span class="font-bold">Search</span> </a> </li><li class="active"> <a href="admin.html"> <i class="fa fa-wrench icon"> </i> <span class="font-bold">Administration</span></a></li>
                 </ul>
                 <div class="line dk hidden-nav-xs"></div>
@@ -263,6 +263,17 @@ expanded: "fancytree-expanded",
 					href: "labels.html"
                 }]
             }, {
+                title: "Branding",
+                folder: true,
+expanded: "fancytree-expanded",
+                 children: [{
+                    title: "Logo", 
+					href: "logo.html"
+                }, {
+                    title: "Custom CSS", 
+					href: "css.html"
+                }]
+            }, {
                 title: "Security",
                 folder: true,
 				expanded: "fancytree-expanded",
@@ -272,6 +283,9 @@ expanded: "fancytree-expanded",
                 }, {
                     title: "Functional Access Controls", 
 					href: "facconfig.html"
+                }, {
+                    title: "Create Role/Select Privileges", 
+					href: "rolepriv.html"
                 }, {
                     title: "Role/Group Mapping", 
 					href: "roleconfig.html"

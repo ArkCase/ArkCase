@@ -622,9 +622,9 @@
                 }
             },
             "title": {
-                "defaultValue": "People ",
+                "defaultValue": "Case Participants ",
                 "description": "",
-                "value": "People "
+                "value": "Case Participants "
             },
             "contact-methods": {
                 "msg": {"add-new-record": {
@@ -656,9 +656,9 @@
                         }
                     },
                     "title": {
-                        "defaultValue": "Communication Devices",
+                        "defaultValue": "Contact Information",
                         "description": "",
-                        "value": "Communication Devices"
+                        "value": "Contact Information"
                     }
                 }
             }
@@ -719,9 +719,9 @@
                 "value": "Time"
             },
             "people": {
-                "defaultValue": "People",
+                "defaultValue": "Case Participants",
                 "description": "",
-                "value": "People"
+                "value": "Case Participants"
             },
             "tasks": {
                 "defaultValue": "Tasks",
@@ -1035,10 +1035,20 @@
                 "description": "",
                 "value": "Complete Task Outcome"
             },
+            "delete-task": {
+                "defaultValue": "Delete Task",
+                "description": "",
+                "value": "Delete Task"
+            },
             "complete": {
                 "defaultValue": "Complete",
                 "description": "",
                 "value": "Complete"
+            },
+            "delete": {
+                "defaultValue": "Delete",
+                "description": "",
+                "value": "Delete"
             },
             "complete-task": {
                 "defaultValue": "Complete Task",
