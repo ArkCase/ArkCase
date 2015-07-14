@@ -78,6 +78,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
     private ExchangeVersion exchangeVersion = ExchangeVersion.Exchange2007_SP1;
     private Map<String, PropertyDefinition> sortFields;
     private Cache outlookUserConnectionCache;
+    private String defaultAccess;
 
     private final PropertySet standardProperties = new PropertySet(
             BasePropertySet.IdOnly,
@@ -363,7 +364,12 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
             folder.setDisplayName(newFolder.getDisplayName());
             //add default permissions
             folder.getPermissions().add(new FolderPermission(StandardUser.Anonymous, FolderPermissionLevel.None));
-            folder.getPermissions().add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.None));
+            if(getDefaultAccess() != null){
+                folder.getPermissions().add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.valueOf(getDefaultAccess())));
+            }
+            else{
+                folder.getPermissions().add(new FolderPermission(StandardUser.Default, FolderPermissionLevel.None));
+            }
             folder.getPermissions().add(new FolderPermission(owner, FolderPermissionLevel.Owner));
 
             Set<String> addedAlready = new HashSet<>();
@@ -594,5 +600,13 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao {
 
     public void setOutlookUserConnectionCache(Cache outlookUserConnectionCache) {
         this.outlookUserConnectionCache = outlookUserConnectionCache;
+    }
+
+    public String getDefaultAccess() {
+        return defaultAccess;
+    }
+
+    public void setDefaultAccess(String defaultAccess) {
+        this.defaultAccess = defaultAccess;
     }
 }

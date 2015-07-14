@@ -1022,8 +1022,8 @@
     }
 }, "reject-dialog": {
     "title": {
-        "value": "Rejet Task",
-        "defaultValue": "Rejet Task",
+        "value": "Reject Task",
+        "defaultValue": "Reject Task",
         "description": ""
     },
     "label": {
@@ -1222,9 +1222,9 @@
             "defaultValue": "High",
             "description": ""
         },
-        "expedited": {
-            "value": "Expedited",
-            "defaultValue": "Expedited",
+        "expedite": {
+            "value": "Expedite",
+            "defaultValue": "Expedite",
             "description": ""
         },
         "complete-percents": {

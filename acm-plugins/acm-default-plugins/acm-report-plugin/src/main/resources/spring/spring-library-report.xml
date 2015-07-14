@@ -7,7 +7,7 @@
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
     <bean id="reportPluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean" >
+          class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -33,6 +33,20 @@
             </props>
         </property>
     </bean>
+    
+    <bean id="reportServerConfigurationProperties" class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
+
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.acm/acm-reports-server-config.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <property name="properties">
+            <props>
+            </props>
+        </property>
+    </bean>
 
     
     <bean id="reportPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
@@ -48,8 +62,13 @@
         </property>
         <property name="reportsPropertiesFileLocation" value="${user.home}/.acm/acm-reports.properties"/>
         <property name="reportToGroupsMapPropertiesFileLocation" value="${user.home}/.acm/reportToGroupsMap.properties"/>
+        <property name="reportServerConfigPropertiesFileLocation" value="${user.home}/.acm/acm-reports-server-config.properties"/>
         <property name="reportPluginProperties" ref="reportPluginProperties"/>
         <property name="reportToGroupsMapProperties" ref="reportToGroupsMapProperties"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery" />
+        <property name="searchResults">
+        	<bean class="com.armedia.acm.services.search.service.SearchResults" />
+        </property>
     </bean>
 
 </beans>

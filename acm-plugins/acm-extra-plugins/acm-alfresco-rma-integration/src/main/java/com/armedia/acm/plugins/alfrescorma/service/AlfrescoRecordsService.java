@@ -13,7 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -29,6 +31,8 @@ public class AlfrescoRecordsService
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate,
                                                   String recordFolderName)
     {
+        Map<String, Object> messageProperties = getRmaMessageProperties();
+
         try
         {
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
@@ -69,7 +73,7 @@ public class AlfrescoRecordsService
                         log.trace("Sending JMS message.");
                     }
 
-                    getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, null);
+                    getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
 
                     if ( log.isTraceEnabled() )
                     {
@@ -90,6 +94,22 @@ public class AlfrescoRecordsService
         }
     }
 
+    public Map<String, Object> getRmaMessageProperties()
+    {
+        String rmaModuleVersion = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.RMA_MODULE_VERSION_KEY);
+        return Collections.singletonMap("alfresco_rma_module_version", rmaModuleVersion);
+    }
+
+    public boolean checkIntegrationEnabled(String integrationPointKey)
+    {
+        String integrationEnabledKey = "alfresco.rma.integration.enabled";
+
+        Properties rmaProps = getAlfrescoRmaProperties();
+
+        return "true".equals(rmaProps.getProperty(integrationEnabledKey, "true")) &&
+                "true".equals(rmaProps.getProperty(integrationPointKey, "true"));
+    }
+
     public EcmFileService getEcmFileService()
     {
         return ecmFileService;
@@ -102,7 +122,8 @@ public class AlfrescoRecordsService
 
     public MuleClient getMuleClient()
     {
-        // implemented in Spring config as a method injection
+        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
+        // when this class is used as a Spring bean
         return null;
     }
 

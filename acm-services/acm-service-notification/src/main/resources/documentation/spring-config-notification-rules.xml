@@ -5,6 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
 
+	<import resource="file:${user.home}/.acm/app-config.xml"/>
+
 	<!-- Rules definitions -->
     <bean id="assignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
@@ -69,6 +71,278 @@
 			</value>
 		</property>
     </bean>
+
+	<bean id="lodgeRuleUser" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT
+					  a.userId AS user,
+					  CONCAT('Document(s) lodged in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) lodged in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  cf.caseNumber AS objectName,
+					  cf.title AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, CaseFile cf, AcmUser u
+					WHERE
+						a.userId = u.userId
+					AND
+					    a.fullEventType = 'com.armedia.acm.casefile.file.lodged'
+					AND
+						a.objectType = 'CASE_FILE'
+					AND
+						a.objectId = cf.id
+					AND
+						a.eventDate >= :lastRunDate
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="lodgeRuleUserCaseParticipants" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT
+					  u.userId AS user,
+					  CONCAT('Document(s) lodged in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) lodged in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  cf.caseNumber AS objectName,
+					  cf.title AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, CaseFile cf, AcmUser u, AcmParticipant ap
+					WHERE
+						a.eventDate >= :lastRunDate
+					AND
+						a.fullEventType = 'com.armedia.acm.casefile.file.lodged'
+					AND
+						a.objectType = 'CASE_FILE'
+					AND
+						a.objectId = cf.id
+					AND
+					    a.objectType = ap.objectType
+					AND
+					    a.objectId = ap.objectId
+					AND
+						ap.participantLdapId <> a.userId
+					AND
+						ap.participantLdapId <> '*'
+					AND
+						ap.participantType <> 'No Access'
+					AND
+						ap.participantLdapId = u.userId
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="lodgeRuleGroupCaseParticipants" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT DISTINCT
+					  u.userId AS user,
+					  CONCAT('Document(s) lodged in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) lodged in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  cf.caseNumber AS objectName,
+					  cf.title AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, CaseFile cf, AcmUser u, AcmParticipant ap, AcmGroup ag
+					WHERE
+						a.eventDate >= :lastRunDate
+					AND
+						a.fullEventType = 'com.armedia.acm.casefile.file.lodged'
+					AND
+						a.objectType = 'CASE_FILE'
+					AND
+						a.objectId = cf.id
+					AND
+					    a.objectType = ap.objectType
+					AND
+					    a.objectId = ap.objectId
+					AND
+						ap.participantLdapId <> '*'
+					AND
+						ap.participantType <> 'No Access'
+					AND
+						ap.participantLdapId = ag.name
+					AND
+						u MEMBER OF ag.members
+					AND
+					    u.userId <> a.userId
+					AND
+					    u.userId NOT IN (
+					      SELECT iap.participantLdapId
+					      FROM   AcmParticipant iap
+					      WHERE  iap.objectType = a.objectType
+					      AND    iap.objectId = a.objectId )
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="rejectRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT
+					  a.userId AS user,
+					  CONCAT('Document(s) rejected in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) rejected in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  cf.caseNumber AS objectName,
+					  cf.title AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, CaseFile cf, AcmUser u
+					WHERE
+						a.userId = u.userId
+					AND
+					    a.fullEventType = 'com.armedia.acm.casefile.file.rejected'
+					AND
+						a.objectType = 'CASE_FILE'
+					AND
+						a.objectId = cf.id
+					AND
+						a.eventDate >= :lastRunDate
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="rejectRuleUserCaseParticipants" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT
+					  u.userId AS user,
+					  CONCAT('Document(s) rejected in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) rejected in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  cf.caseNumber AS objectName,
+					  cf.title AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, CaseFile cf, AcmUser u, AcmParticipant ap
+					WHERE
+						a.eventDate >= :lastRunDate
+					AND
+						a.fullEventType = 'com.armedia.acm.casefile.file.rejected'
+					AND
+						a.objectType = 'CASE_FILE'
+					AND
+						a.objectId = cf.id
+					AND
+					    a.objectType = ap.objectType
+					AND
+					    a.objectId = ap.objectId
+					AND
+						ap.participantLdapId <> a.userId
+					AND
+						ap.participantLdapId <> '*'
+					AND
+						ap.participantType <> 'No Access'
+					AND
+						ap.participantLdapId = u.userId
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="rejectRuleGroupCaseParticipants" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+		<property name="globalRule" value="true"/>
+		<property name="queryType" value="CREATE"/>
+		<property name="executor" ref="noopExecutor"/>
+		<property name="jpaQuery">
+			<value>
+				<![CDATA[
+					SELECT DISTINCT
+					  u.userId AS user,
+					  CONCAT('Document(s) rejected in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate) AS title,
+					  CONCAT('Document(s) rejected in ${objectTypeLabel} ', cf.caseNumber, ' on ', a.eventDate, '.  Link: ${urlanchor}') AS note,
+					  'user' AS notificationType,
+					  a.objectId AS objectId,
+					  a.objectType AS objectType,
+					  cf.caseNumber AS objectName,
+					  cf.title AS objectTitle,
+					  u.mail as mail
+					FROM
+						AuditEvent a, CaseFile cf, AcmUser u, AcmParticipant ap, AcmGroup ag
+					WHERE
+						a.eventDate >= :lastRunDate
+					AND
+						a.fullEventType = 'com.armedia.acm.casefile.file.rejected'
+					AND
+						a.objectType = 'CASE_FILE'
+					AND
+						a.objectId = cf.id
+					AND
+					    a.objectType = ap.objectType
+					AND
+					    a.objectId = ap.objectId
+					AND
+						ap.participantLdapId <> '*'
+					AND
+						ap.participantType <> 'No Access'
+					AND
+						ap.participantLdapId = ag.name
+					AND
+						u MEMBER OF ag.members
+					AND
+					    u.userId <> a.userId
+					AND
+					    u.userId NOT IN (
+					      SELECT iap.participantLdapId
+					      FROM   AcmParticipant iap
+					      WHERE  iap.objectType = a.objectType
+					      AND    iap.objectId = a.objectId )
+					ORDER BY
+						a.eventDate
+				]]>
+			</value>
+		</property>
+	</bean>
     
     <bean id="purgeRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
 		<property name="globalRule" value="true"/>	
@@ -110,6 +384,10 @@
     </task:scheduled-tasks>
     
 	<!-- Service Definition -->
+	<bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
+		<property name="notificationProperties" ref="notificationProperties"/>
+		<property name="acmAppConfiguration" ref="acmApplication"/>
+	</bean>
     <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
     	<property name="batchRun" ref="notificationUserBatchRun" />
     	<property name="batchSize" ref="notificationUserBatchSize" />
@@ -121,7 +399,9 @@
         <property name="notificationDao" ref="notificationDao" />
         <property name="muleClient" ref="muleClient" />
 		<property name="notificationEventPublisher" ref="notificationEventPublisher" />
-		<property name="springContextHolder" ref="acmContextHolder"/> 
+		<property name="springContextHolder" ref="acmContextHolder"/>
+		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+		<property name="notificationFormatter" ref="notificationFormatter"/>
     </bean>
 
 </beans>

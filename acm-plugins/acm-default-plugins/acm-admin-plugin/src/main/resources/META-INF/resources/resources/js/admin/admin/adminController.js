@@ -278,6 +278,9 @@ Admin.Controller = Admin.Controller || {
     ,modelReportConfigSavedReportToGroupsMap: function(success){
         Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_SAVED_REPORT_TO_GROUPS_MAP, success);
     }
+    ,modelReportConfigSavedReports: function(success){
+        Acm.Dispatcher.fireEvent(this.MODEL_REPORT_CONFIGURATION_SAVED_REPORTS, success);
+    }
     ,modelFormsConfigRetrievedPlainForms: function(plainForms){
         Acm.Dispatcher.fireEvent(this.MODEL_FORMS_CONFIGURATION_RETRIEVED_PLAIN_FORMS, plainForms);
     }

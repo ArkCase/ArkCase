@@ -32,7 +32,7 @@
             <section class="scrollable">
                 <div class="wrapper b-b header" data-i18n="report:navigation.title">Report</div>
                 <div class="wrapper">
-                    <label for="selectReport"  class="label" data-i18n="report:navigation.label.report">Report</label>
+                    <label for="selectReport"  class="label" data-i18n="report:navigation.label.report">Choose Report</label>
                     <select name="priority" class="form-control" id ="selectReport">
                         <option data-i18n="report:navigation.label.choose-report">Choose Report</option>
                         <c:forEach items="${reportUrlsMap}" var="entry">
@@ -92,7 +92,7 @@
         </aside>
         <aside>
             <label for="Report message" id="ReportMeassge" class="class="m-b-xs text-black pull-left" data-i18n="report:navigation.label.report-message">To run a report, select a report name, enter criteria, and click Generate Report</label>
-            <iframe src="" name="report_iframe" style="width:100%; height:100%;" frameborder="0"></iframe>
+            <iframe src="" name="report_iframe" style="width:100%; height:100%;" frameborder="0">ArkCase requires you use a browser that supports iFrames.</iframe>
         </aside>
     </section>
 </jsp:body>

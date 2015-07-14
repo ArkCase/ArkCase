@@ -29,6 +29,7 @@ Acm.Service = {
         if (!arg.cache) {
             arg.cache = false;
         }
+        //arg.url = Acm.Url.makeNoneCacheUrl(arg.url);
 
         if (!arg.nonAcmUrl) {
             var contextPath = this.getContextPath();

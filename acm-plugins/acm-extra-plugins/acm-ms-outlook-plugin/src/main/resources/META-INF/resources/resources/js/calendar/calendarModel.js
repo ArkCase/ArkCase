@@ -19,11 +19,16 @@ Calendar.Model = Calendar.Model || {
             this.cacheOutlookCalendarItems = new Acm.Model.CacheFifo();
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT   ,this.onModelRetrievedObject);
-            //Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
             Acm.Dispatcher.addEventListener(Calendar.Controller.VIEW_REFRESHED_OUTLOOK_CALENDAR          ,this.onViewRefreshedOutlookCalendar);
 
         }
         ,onInitialized: function(args) {
+        }
+        ,getParentObject: function(nodeType,objId) {
+            if(Acm.isNotEmpty(objId) && Acm.isNotEmpty(nodeType)){
+                return ObjNav.Model.Detail.getCacheObject(Acm.goodValue(nodeType), Acm.goodValue(objId));
+            }
         }
         ,onModelRetrievedObject: function(objData) {
             if(Acm.isNotEmpty(objData)){
@@ -34,10 +39,16 @@ Calendar.Model = Calendar.Model || {
             }
         }
         ,onViewSelectedObject: function(nodeType,objId){
-            var parentObject = Calendar.Model.OutlookCalendar.cacheParentObject.get(objId);
-            if(Acm.isNotEmpty(parentObject)){
-                if(Acm.isNotEmpty(parentObject.container) && Acm.isNotEmpty(parentObject.container.calendarFolderId)){
-                    Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(parentObject.container.calendarFolderId,objId);
+            var outlookCalendarItems = Calendar.Model.OutlookCalendar.cacheOutlookCalendarItems.get(objId);
+            if(Calendar.Model.OutlookCalendar.validateOutlookCalendarItems(outlookCalendarItems)){
+                return;
+            }
+            else{
+                var parentObject = Calendar.Model.OutlookCalendar.getParentObject(nodeType,objId);
+                if(Acm.isNotEmpty(parentObject)){
+                    if(Acm.isNotEmpty(parentObject.container) && Acm.isNotEmpty(parentObject.container.calendarFolderId)){
+                        Calendar.Service.OutlookCalendar.retrieveOutlookOutlookCalendarItems(parentObject.container.calendarFolderId,objId);
+                    }
                 }
             }
         }

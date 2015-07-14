@@ -6,6 +6,7 @@ import java.util.Date;
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
+import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -44,6 +45,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest extends EasyMockSu
 
     private AuditDao mockAuditDao;
     private Authentication mockAuthentication;
+    private ReplaceEventTypeNames mockReplaceEventTypeNames;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -56,10 +58,11 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest extends EasyMockSu
         mockAuditDao = createMock(AuditDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-
+        mockReplaceEventTypeNames = createMock(ReplaceEventTypeNames.class);
         unit = new GetAuditByObjectTypeAndObjectIdAPIController();
 
         unit.setAuditDao(mockAuditDao);
+        unit.setReplaceEventTypeNames(mockReplaceEventTypeNames);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -93,7 +96,7 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest extends EasyMockSu
 
         expect(mockAuditDao.findPagedResults(objectId, objectType, 0, 10)).andReturn(Arrays.asList(auditEvent));
         expect(mockAuditDao.countAll(objectId, objectType)).andReturn(1);
-
+        expect(mockReplaceEventTypeNames.replaceNameInAcmEvent(auditEvent)).andReturn(auditEvent).anyTimes();
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
 
