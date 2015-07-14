@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <timer-interceptor/>
 
         <expression-component>
-            app.registry.acmComplaintDao.updateComplaintStatus(
+            message.getInboundProperty("acmComplaintDao").updateComplaintStatus(
                 message.inboundProperties["COMPLAINT"],
                 message.inboundProperties["newStatus"],
                 message.inboundProperties["ACM_USER"]);

@@ -95,6 +95,11 @@
                 <value>newStatus</value>
             </list>
         </property>
+        <property name="flowBeans">
+            <map>
+                <entry key="acmComplaintDao" value-ref="acmComplaintDao"/>
+            </map>
+        </property>
 
     </bean>
     <!-- end of action handlers -->
