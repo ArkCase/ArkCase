@@ -693,14 +693,17 @@ Task.View = Task.View || {
         ,onClickBtnOutcome : function(event,ctrl) {
             var clicked = event.target.id;
             if (clicked == "SEND_FOR_REWORK") {
-                var reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
-                if (reworkInstructions == null || reworkInstructions == "") {
+                var reworkInstructions = AcmEx.Object.SummerNote.getText(Task.View.Detail.$divReworkDetails);
+                if (Acm.isEmpty(reworkInstructions.trim())) {
                     Acm.Dialog.info($.t("task:task-details.label.must-enter-details"));
                 }
                 else {
-                    var task = Task.View.getActiveTask();
-                    task.reworkInstructions = reworkInstructions;
-                    Task.View.Detail.onClickBtnTaskWithOutcome(clicked);
+                    reworkInstructions = AcmEx.Object.SummerNote.get(Task.View.Detail.$divReworkDetails);
+                    if(Acm.isNotEmpty(reworkInstructions)){
+                        var task = Task.View.getActiveTask();
+                        task.reworkInstructions = reworkInstructions;
+                        Task.View.Detail.onClickBtnTaskWithOutcome(clicked);
+                    }
                 }
             }
             else

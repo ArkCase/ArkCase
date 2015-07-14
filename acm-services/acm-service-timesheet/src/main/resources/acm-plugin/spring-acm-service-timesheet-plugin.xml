@@ -8,6 +8,7 @@
         <property name="pluginName" value="Time Tracking Service Plugin"/>
         <property name="privileges">
             <list>
+                <ref bean="acmTimeModulePrivilege"/>
                 <ref bean="timesheetPrivilege"/>
                 <ref bean="timesheetCreatePrivilege"/>
                 <ref bean="timesheetApprovePrivilege"/>

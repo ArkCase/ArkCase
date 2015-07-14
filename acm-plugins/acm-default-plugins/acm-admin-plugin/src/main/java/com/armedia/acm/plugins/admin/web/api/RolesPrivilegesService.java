@@ -52,6 +52,39 @@ public class RolesPrivilegesService implements RolePrivilegesConstants{
     }
 
     /**
+     * Retrieve roles of privilege
+     * @param privilegeName
+     * @return
+     */
+    public List<String> retrieveRolesByPrivilege(String privilegeName) throws AcmRolesPrivilegesException {
+        try {
+            List<String> roles = new ArrayList();
+            Properties props = new Properties();
+            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+
+            // Search privilegeName in role-privileges maps
+            for (Object roleNameIter: props.keySet()) {
+                String roleName = (String) roleNameIter;
+                String propPrivileges = props.getProperty(roleName, "");
+                if (!propPrivileges.isEmpty()) {
+                    List<String> privileges = Arrays.asList(propPrivileges.split(","));
+
+                    if (privileges.contains(privilegeName)) {
+                        roles.add(roleName);
+                    }
+                }
+            }
+            return roles;
+
+        } catch (Exception e){
+            if (log.isErrorEnabled()) {
+                log.error(String.format("Can't load privilege's '%s' roles", privilegeName), e);
+            }
+            throw new AcmRolesPrivilegesException(String.format("Can't load privilege's '%s' roles", privilegeName), e);
+        }
+    }
+
+    /**
      * Update Role Privileges
      * @param roleName Updated role name
      * @param privileges List of role's privileges
@@ -75,9 +108,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants{
 
         // Re-generate Roles Privileges XML file
         updateRolesPrivilegesConfig();
-
     }
-
 
     /**
      * Create new role
@@ -126,6 +157,75 @@ public class RolesPrivilegesService implements RolePrivilegesConstants{
                 rolesPrivileges.put(newRoleName, value);
                 saveRolesPrivileges(rolesPrivileges);
             }
+        }
+    }
+
+    /**
+     * Add privileges to list of roles
+     * @param roles
+     * @param newPrivileges
+     */
+    public void addRolesPrivileges(List<String> roles, List<String> newPrivileges) throws AcmRolesPrivilegesException {
+        try {
+            Map<String, String> rolesPrivileges = loadRolesPrivileges();
+            for (String role : roles) {
+                // Search role name in role-privileges maps
+                String propPrivileges = rolesPrivileges.get(role);
+                List<String> privileges = new LinkedList();
+                if (propPrivileges != null && !propPrivileges.isEmpty()) {
+                    privileges.addAll(Arrays.asList(propPrivileges.split(",")));
+                }
+
+                for (String newPrivilege: newPrivileges) {
+                    if (!privileges.contains(newPrivilege)) {
+                        privileges.add(newPrivilege);
+                    }
+                }
+                rolesPrivileges.put(role, String.join(",", privileges));
+            }
+            saveRolesPrivileges(rolesPrivileges);
+            updateRolesPrivilegesConfig();
+        } catch (Exception e){
+            if (log.isErrorEnabled()) {
+                log.error("Can't add roles to privileges", e);
+            }
+            throw new AcmRolesPrivilegesException("Can't add roles to privileges", e);
+        }
+    }
+
+
+    /**
+     * Remove privileges form list of roles
+     * @param roles
+     * @param removedPrivileges
+     */
+    public void removeRolesPrivileges(List<String> roles, List<String> removedPrivileges) throws AcmRolesPrivilegesException {
+        try {
+            Map<String, String> rolesPrivileges = loadRolesPrivileges();
+
+            for (String role : roles) {
+                // Search role name in role-privileges maps
+                String propPrivileges = rolesPrivileges.get(role);
+                List<String> privileges =  new LinkedList();
+                if (propPrivileges != null && !propPrivileges.isEmpty()) {
+                    privileges.addAll(Arrays.asList(propPrivileges.split(",")));
+                }
+
+                for (String removedPrivilege: removedPrivileges) {
+                    int foundIndex = privileges.indexOf(removedPrivilege);
+                    if (foundIndex != -1) {
+                        privileges.remove(foundIndex);
+                    }
+                }
+                rolesPrivileges.put(role, String.join(",", privileges));
+            }
+            saveRolesPrivileges(rolesPrivileges);
+            updateRolesPrivilegesConfig();
+        } catch (Exception e){
+            if (log.isErrorEnabled()) {
+                log.error("Can't remove privileges from roles", e);
+            }
+            throw new AcmRolesPrivilegesException("Can't remove privileges from roles", e);
         }
     }
 
@@ -219,7 +319,7 @@ public class RolesPrivilegesService implements RolePrivilegesConstants{
 
         } catch(Exception e) {
             if (log.isErrorEnabled()) {
-                log.error("Can't save info into the roles file", e);
+                log.error("Can't load roles privileges file", e);
             }
             throw new AcmRolesPrivilegesException("Can't load roles privileges file", e);
         }

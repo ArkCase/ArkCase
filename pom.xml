@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.0.32-SNAPSHOT</version>
+    <version>3.0.33-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -40,6 +40,7 @@
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0-SNAPSHOT</exchange-web-services.version>
         <fasterxml-jackson-core.version>2.4.0</fasterxml-jackson-core.version>
+        <google-collections.version>1.0</google-collections.version>
         <gson.version>1.7.1</gson.version>
         <h2.version>1.3.169</h2.version>
         <hibernate-validator.version>5.1.1.Final</hibernate-validator.version>
@@ -75,7 +76,7 @@
         <org.mvel.version>2.2.1.Final</org.mvel.version>
         <rome.version>1.0</rome.version>
         <slf4j.version>1.7.7</slf4j.version>
-        <sonar.version>2.3.1</sonar.version>
+        <sonar.version>2.6</sonar.version>
         <spring.ldap.version>1.3.2.RELEASE</spring.ldap.version>
         <spring-retry-version>1.1.2.RELEASE</spring-retry-version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
@@ -88,6 +89,8 @@
         <java.mail.version>1.5.4</java.mail.version>
         <spring.integration.version>2.2.3.RELEASE</spring.integration.version>
         <com.google.guava.version>18.0</com.google.guava.version>
+        <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
+        <puppycrawl.version>6.8.1</puppycrawl.version>
     </properties>
 
     <organization>
@@ -195,6 +198,17 @@
                 <role>Java Developer</role>
             </roles>
             <timezone>-5</timezone>
+        </developer>
+        <developer>
+            <name>Petar Ilin</name>
+            <email>petar.ilin@armedia.com</email>
+            <id>ilinpetar</id>
+            <organization>Armedia LLC</organization>
+            <organizationUrl>http://www.armedia.com</organizationUrl>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+            <timezone>+1</timezone>
         </developer>
 
 
@@ -318,8 +332,12 @@
             <url>https://repository.jboss.org/nexus/content/groups/public</url>
         </repository>
         <repository>
-            <id>codehaus</id>
+            <id>mulesoft-master</id>
             <url>https://repository-master.mulesoft.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>codehaus</id>
+            <url>http://repository.codehaus.org</url>
         </repository>
 
         <!-- The Activiti repository -->
@@ -548,6 +566,33 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- code quality section -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven.checkstyle.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <configLocation>acm-checkstyle-checks.xml</configLocation>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${puppycrawl.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -1110,6 +1155,13 @@
                 <artifactId>mvel2</artifactId>
                 <version>${org.mvel.version}</version>
                 <scope>runtime</scope>
+            </dependency>
+
+            <!-- preconditions -->
+            <dependency>
+                <groupId>com.google.collections</groupId>
+                <artifactId>google-collections</artifactId>
+                <version>${google-collections.version}</version>
             </dependency>
 
             <!-- caching -->

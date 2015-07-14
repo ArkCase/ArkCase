@@ -9,6 +9,7 @@
          <property name="pluginName" value="Report Plugin"/>
         <property name="privileges">
             <list>
+                <ref bean="acmReportModulePrivilege" />
                 <ref bean="reportPrivilege"/>
             </list>
         </property>
