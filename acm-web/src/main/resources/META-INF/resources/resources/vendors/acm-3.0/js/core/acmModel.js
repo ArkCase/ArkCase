@@ -187,7 +187,7 @@ Acm.Model.CacheFifo.prototype = {
         if (0 < expiration) {
             var that = this;
             Acm.Timer.useTimer(name
-                ,600000     //every 5 minutes = 10 * 60 * 1000 milliseconds
+                ,300000     //every 5 minutes = 5 * 60 * 1000 milliseconds
                 ,function() {
                     var keys = that.keys;
                     var len = keys.length;
