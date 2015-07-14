@@ -49,29 +49,23 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                       propertyName="PersonAssociationAdded" value="#[payload.Id == null]"/>
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
-        <!-- Tell mule to call the save method ( DAO ). The property must go in the inbound scope.  The only way to do it is to set an outbound
-             property, then call an outbound endpoint (thereby starting a new flow).
-        -->
-        <set-property propertyName="daoMethod" value="save"/>
-        <vm:outbound-endpoint address="vm://personAssociationDao.in" exchange-pattern="request-response"/>
+        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
+        <scripting:transformer name="savePersonAssociationDaoTransformer">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    payload = message.getInboundProperty("acmPersonAssociationDao").save(payload);
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
 
+        </scripting:transformer>
 
         <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.plugins.person" message="Exception saving: #[exception.message]"/>
             <set-property propertyName="saveException" value="#[exception]"/>
         </catch-exception-strategy>
 
-    </flow>
-
-    <flow name="personAssociationDao" processingStrategy="synchronous">
-        <vm:inbound-endpoint address="vm://personAssociationDao.in" exchange-pattern="request-response"/>
-
-        <logger level="TRACE" category="com.armedia.acm.plugins.person" message="Calling PersonAssociation DAO"/>
-
-        <component doc:name="PersonAssociation DAO">
-            <property-entry-point-resolver property="daoMethod"/>
-            <spring-object bean="acmPersonAssociationDao"/>
-        </component>
     </flow>
 
 </mule>
