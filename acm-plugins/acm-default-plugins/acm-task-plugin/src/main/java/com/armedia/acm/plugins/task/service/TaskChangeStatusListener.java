@@ -1,110 +1,104 @@
 package com.armedia.acm.plugins.task.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
-import com.armedia.acm.plugins.task.model.AcmTask;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 
  * @author nikolche
- *
  */
-public class TaskChangeStatusListener implements ApplicationListener<AcmApplicationTaskEvent> {
+public class TaskChangeStatusListener implements ApplicationListener<AcmApplicationTaskEvent>
+{
 
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
-	
-	private AcmFolderService acmFolderService;
-	private AcmContainerDao acmContainerDao;
-	private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-	private MuleClient muleClient;
-	
-	
-	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
-		return auditPropertyEntityAdapter;
-	}
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-	public void setAuditPropertyEntityAdapter(
-			AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
-		this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-	}
-
-	@Override
-	public void onApplicationEvent(AcmApplicationTaskEvent event) {
-		
-		if (event != null){
-			
-			boolean execute = checkExecution(event.getEventType());
-			
-			if (execute){
-				
-				
-				
-				try {
-					// call Mule flow to create the Alfresco folder
-					LOG.debug("Calling to use app registry");
-					MuleMessage msg = getMuleClient().send("jms://copyTaskFilesAndFoldersToParent.in", event, null);
-					
-					MuleException e = msg.getInboundProperty("executionException");
-
-					if ( e != null )
-					{
-						throw e;
-					}
-
-				} catch (MuleException e) {
-					throw new RuntimeException("Error while copying Task documents.", e);
-				}
-				
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private MuleContextManager muleContextManager;
+    private AcmTaskService acmTaskService;
 
 
-			}
-		}
-	}
-	
-	private boolean checkExecution(String eventType)
-	{		
-		
-		return "com.armedia.acm.app.task.complete".equals(eventType) || "com.armedia.acm.activiti.task.complete".equals(eventType);
-	}
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
 
-	public AcmFolderService getAcmFolderService() {
-		return acmFolderService;
-	}
+    public void setAuditPropertyEntityAdapter(
+            AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
 
-	public void setAcmFolderService(AcmFolderService acmFolderService) {
-		this.acmFolderService = acmFolderService;
-	}
+    @Override
+    public void onApplicationEvent(AcmApplicationTaskEvent event)
+    {
 
-	public AcmContainerDao getAcmContainerDao() {
-		return acmContainerDao;
-	}
+        if (event != null)
+        {
 
-	public void setAcmContainerDao(AcmContainerDao acmContainerDao) {
-		this.acmContainerDao = acmContainerDao;
-	}
+            boolean execute = checkExecution(event.getEventType());
 
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
+            if (execute)
+            {
+                try
+                {
+                    // call Mule flow to create the Alfresco folder
+                    Map<String, Object> messageProps = new HashMap<>();
+                    messageProps.put("auditPropertyEntityAdapter", getAuditPropertyEntityAdapter());
+                    messageProps.put("acmTaskService", getAcmTaskService());
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
-	
+                    MuleMessage request = new DefaultMuleMessage(event, messageProps, getMuleContextManager().getMuleContext());
 
-	
+                    MuleMessage msg = getMuleContextManager().getMuleClient().send("jms://copyTaskFilesAndFoldersToParent.in", request);
 
+                    MuleException e = msg.getInboundProperty("executionException");
+
+                    if (e != null)
+                    {
+                        throw e;
+                    }
+
+                } catch (MuleException e)
+                {
+                    throw new RuntimeException("Error while copying Task documents.", e);
+                }
+
+
+            }
+        }
+    }
+
+    private boolean checkExecution(String eventType)
+    {
+
+        return "com.armedia.acm.app.task.complete".equals(eventType) || "com.armedia.acm.activiti.task.complete".equals(eventType);
+    }
+
+    public MuleContextManager getMuleContextManager()
+    {
+        return muleContextManager;
+    }
+
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
+    }
+
+    public AcmTaskService getAcmTaskService()
+    {
+        return acmTaskService;
+    }
+
+    public void setAcmTaskService(AcmTaskService acmTaskService)
+    {
+        this.acmTaskService = acmTaskService;
+    }
 }

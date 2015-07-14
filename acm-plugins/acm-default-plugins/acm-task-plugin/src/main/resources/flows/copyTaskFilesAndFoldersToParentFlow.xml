@@ -23,9 +23,9 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <scripting:text><![CDATA[
 
                         // ensure we set the right modifier and creator for any objects we end up inserting or updating
-                        registry.auditPropertyEntityAdapter.setUserId(message.payload.getUserId());
+                        message.getInboundProperty("auditPropertyEntityAdapter").setUserId(message.payload.getUserId());
 
-                        registry.acmTaskService.copyTaskFilesAndFoldersToParent(message.payload.getAcmTask());
+                        message.getInboundProperty("acmTaskService").copyTaskFilesAndFoldersToParent(message.payload.getAcmTask());
 
                         return payload;
                         ]]>
