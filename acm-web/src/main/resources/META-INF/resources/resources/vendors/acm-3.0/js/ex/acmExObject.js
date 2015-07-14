@@ -34,6 +34,9 @@ AcmEx.Object = {
         ,get: function($s) {
             return $s.code();
         }
+        ,getText: function($s) {
+            return $s.text();
+        }
         ,set: function($s, value) {
             $s.summernote();
             $s.code(value);
