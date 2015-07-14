@@ -17,6 +17,8 @@ describe("Acm.Model", function()
                 }; //outer return
             }
         });
+
+        Acm.Model.CacheFifo.prototype.evict = function() {}; //cannot test cache eviction
     });
 
     it("Acm.Model.Variable: get/set", function() {
@@ -95,7 +97,7 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: maxSize", function() {
-        var cache = new Acm.Model.CacheFifo(4);
+        var cache = new Acm.Model.CacheFifo({maxSize: 4});
         expect(cache.getMaxSize()).toEqual(4);
 
         cache.setMaxSize(1);
@@ -103,7 +105,7 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: put/get", function() {
-        var cache = new Acm.Model.CacheFifo(3);
+        var cache = new Acm.Model.CacheFifo({maxSize: 3});
         expect(cache.getMaxSize()).toEqual(3);
 
         expect(cache.get("k1")).toEqual(null);
@@ -171,7 +173,7 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: put as update", function() {
-        var cache = new Acm.Model.CacheFifo(3);
+        var cache = new Acm.Model.CacheFifo({maxSize: 3});
         expect(cache.getMaxSize()).toEqual(3);
 
         expect(cache.get("k1")).toEqual(null);
@@ -232,7 +234,7 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: cache size 1 = assignment", function() {
-        var cache = new Acm.Model.CacheFifo(1);
+        var cache = new Acm.Model.CacheFifo({maxSize: 1});
         expect(cache.getMaxSize()).toEqual(1);
 
         expect(cache.get(1)).toEqual(null);
@@ -249,7 +251,7 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: cache size 0, no exception", function() {
-        var cache = new Acm.Model.CacheFifo(0);
+        var cache = new Acm.Model.CacheFifo({maxSize: 0});
         expect(cache.getMaxSize()).toEqual(0);
 
         expect(cache.get(1)).toEqual(null);
@@ -263,12 +265,12 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: remove", function() {
-        var cache1 = new Acm.Model.CacheFifo(0);
+        var cache1 = new Acm.Model.CacheFifo({maxSize: 0});
         cache1.remove("nosuch");
         //no exception thrown
 
 
-        var cache2 = new Acm.Model.CacheFifo(1);
+        var cache2 = new Acm.Model.CacheFifo({maxSize: 1});
         cache2.remove("nosuch");                //no exception thrown
         cache2.put("k1", {name:"n1",age:1});
         expect(cache2.get("k1")).toEqual({name:"n1",age:1});
@@ -280,7 +282,7 @@ describe("Acm.Model", function()
         expect(cache2.get("k1")).toEqual({name:"n1",age:1});
 
 
-        var cache3 = new Acm.Model.CacheFifo(3);
+        var cache3 = new Acm.Model.CacheFifo({maxSize: 3});
         cache3.put("k1", {name:"n1",age:1});
         expect(cache3.get("k1")).toEqual({name:"n1",age:1});
 
@@ -341,8 +343,8 @@ describe("Acm.Model", function()
     });
 
     it("Acm.Model.CacheFifo: no interference", function() {
-        var cache = new Acm.Model.CacheFifo(2);
-        var cache2 = new Acm.Model.CacheFifo(3);
+        var cache = new Acm.Model.CacheFifo({maxSize: 2});
+        var cache2 = new Acm.Model.CacheFifo({maxSize: 3});
         expect(cache.getMaxSize()).toEqual(2);
         expect(cache2.getMaxSize()).toEqual(3);
 
@@ -428,7 +430,7 @@ describe("Acm.Model", function()
 
 
     it("Acm.Model.CacheFifo: lock", function() {
-        var cache = new Acm.Model.CacheFifo(3);
+        var cache = new Acm.Model.CacheFifo({maxSize: 3});
         cache.put("k1", {name:"n1",age:1});
         cache.put("k2", {name:"n2",age:2});
         cache.put("k3", {name:"n3",age:3});
@@ -467,5 +469,28 @@ describe("Acm.Model", function()
         expect(cache.get("k5")).toEqual({name:"n5",age:5});
         expect(cache.get("k6")).toEqual({name:"n6",age:6});
         expect(cache.get("k7")).toEqual({name:"n7",age:7});
+    });
+
+
+    it("Acm.Model.CacheFifo: evict", function() {
+        var cache = new Acm.Model.CacheFifo({maxSize: 3});
+        cache.put("k1", {name:"n1",age:1});
+        cache.put("k2", {name:"n2",age:2});
+        cache.put("k3", {name:"n3",age:3});
+        expect(cache.get("k1")).toEqual({name:"n1",age:1});
+        expect(cache.get("k2")).toEqual({name:"n2",age:2});
+        expect(cache.get("k3")).toEqual({name:"n3",age:3});
+
+        var keys = cache.keys;
+        var len = keys.length;
+        for (var i = 0; i < cache.size; i++) {
+            var key = keys[i];
+            var item = cache.cache[key];
+            var tick = cache.timeStamp[key];
+            var now = new Date().getTime();
+            var diff = now - tick;
+            var z = 1;
+        }
+        var z = 2;
     });
 });

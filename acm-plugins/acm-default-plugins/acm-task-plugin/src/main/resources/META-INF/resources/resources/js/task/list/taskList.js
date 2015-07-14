@@ -7,14 +7,14 @@ var TaskList = TaskList || {
     create: function() {
         return;
 
-        TaskList.cachePage = new Acm.Model.CacheFifo(2);
-        TaskList.cacheTask = new Acm.Model.CacheFifo(3);
-        TaskList.cacheParentObject = new Acm.Model.CacheFifo(3);
-        TaskList.cacheNoteList = new Acm.Model.CacheFifo(3);
-        TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo(3);
-        TaskList.cacheTaskEvents = new Acm.Model.CacheFifo(3);
-        TaskList.cacheAttachments = new Acm.Model.CacheFifo(3);
-        TaskList.cacheRejectComments = new Acm.Model.CacheFifo(3);
+        TaskList.cachePage = new Acm.Model.CacheFifo();
+        TaskList.cacheTask = new Acm.Model.CacheFifo();
+        TaskList.cacheParentObject = new Acm.Model.CacheFifo();
+        TaskList.cacheNoteList = new Acm.Model.CacheFifo();
+        TaskList.cacheWorkflowHistory = new Acm.Model.CacheFifo();
+        TaskList.cacheTaskEvents = new Acm.Model.CacheFifo();
+        TaskList.cacheAttachments = new Acm.Model.CacheFifo();
+        TaskList.cacheRejectComments = new Acm.Model.CacheFifo();
 
 
 
