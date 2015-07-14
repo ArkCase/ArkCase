@@ -11,6 +11,7 @@ Admin.View = Admin.View || {
         if (Admin.View.Organization.create)         	{Admin.View.Organization.create();}
         if (Admin.View.FunctionalAccessControl.create)  {Admin.View.FunctionalAccessControl.create();}
         if (Admin.View.RolesPrivileges.create)          {Admin.View.RolesPrivileges.create();}
+        if (Admin.View.ModuleConfiguration.create)      {Admin.View.ModuleConfiguration.create();}
         if (Admin.View.ReportsConfiguration.create)     {Admin.View.ReportsConfiguration.create();}
         if (Admin.View.WorkflowConfiguration.create)    {Admin.View.WorkflowConfiguration.create();}
         if (Admin.View.Forms.create)    				{Admin.View.Forms.create();}
@@ -28,6 +29,7 @@ Admin.View = Admin.View || {
         if (Admin.View.Organization.onInitialized)         		{Admin.View.Organization.onInitialized();}
         if (Admin.View.FunctionalAccessControl.onInitialized)   {Admin.View.FunctionalAccessControl.onInitialized();}
         if (Admin.View.RolesPrivileges.onInitialized)           {Admin.View.RolesPrivileges.onInitialized();}
+        if (Admin.View.ModuleConfiguration.onInitialized)       {Admin.View.ModuleConfiguration.onInitialized();}
         if (Admin.View.ReportsConfiguration.onInitialized)      {Admin.View.ReportsConfiguration.onInitialized();}
         if (Admin.View.LinkFormsWorkflows.onInitialized)        {Admin.View.LinkFormsWorkflows.onInitialized();}
         if (Admin.View.Logo.onInitialized)                      {Admin.View.Logo.onInitialized();}
@@ -1317,7 +1319,6 @@ Admin.View = Admin.View || {
                         Acm.Dialog.error(errorMsg);
                     });
             }
-
         }
 
         ,loadRoles: function (){
@@ -1340,6 +1341,138 @@ Admin.View = Admin.View || {
                     context.privileges = privileges;
                 })
                 .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+    }
+
+    ,ModuleConfiguration: {
+        create: function() {
+            this.$selectModule = $("#selectApplicationModule");
+            this.$selectAvailableRoles = $("#selectAvailableRoles");
+            this.$selectAuthorizedRoles = $("#selectAuthorizedRoles");
+
+            this.$btnModuleConfigurationGo = $("#btnModuleConfigurationGo")
+            this.$btnModuleConfigurationMoveRight = $("#btnModuleConfigurationMoveRight");
+            this.$btnModuleConfigurationMoveLeft = $("#btnModuleConfigurationMoveLeft");
+
+            this.$btnModuleConfigurationMoveRight.click($.proxy(Admin.View.ModuleConfiguration.onClickBtnMoveRight, this));
+            this.$btnModuleConfigurationMoveLeft.click($.proxy(Admin.View.ModuleConfiguration.onClickBtnMoveLeft, this));
+            this.$selectModule.change($.proxy(Admin.View.ModuleConfiguration.onChangeSelectModule, this));
+            this.$btnModuleConfigurationGo.click($.proxy(Admin.View.ModuleConfiguration.onClickBtnGo, this));
+
+
+
+
+        }
+        ,onInitialized: function() {
+            Admin.View.ModuleConfiguration.loadModules();
+            Admin.View.ModuleConfiguration.loadRoles();
+        }
+
+        ,onClickBtnGo: function(event){
+            Admin.View.ModuleConfiguration.updateRolesLists();
+        }
+
+        ,onClickBtnMoveRight: function(event) {
+            var selectedModulePrivelege = this.$selectModule.val();
+
+            // Move Roles from all roles to authorized roles
+            var selectedRolesIds = this.$selectAvailableRoles.val();
+            $('option', this.$selectAvailableRoles).each(function(){
+                if (_.contains(selectedRolesIds, $(this).val())) {
+                    $(this).remove();
+                }
+            });
+
+            // Add options to the Authorized Roles
+            if (selectedRolesIds) {
+                for (var i = 0; i < selectedRolesIds.length; i++) {
+                    var roleId = selectedRolesIds[i];
+                    if (roleId) {
+                        this.$selectAuthorizedRoles.append('<option value="{0}">{1}</option>'.format(roleId, roleId));
+                    }
+                }
+                Admin.Service.RolesPrivileges.addRolesPrivileges(selectedRolesIds, [selectedModulePrivelege ]);
+            }
+        }
+        ,onClickBtnMoveLeft: function(event) {
+           var selectedModulePrivelege = this.$selectModule.val();
+
+            // Move Roles from authorized roles to available roles list
+            var selectedRolesIds = this.$selectAuthorizedRoles.val();
+            $('option', this.$selectAuthorizedRoles).each(function(){
+                if (_.contains(selectedRolesIds, $(this).val())) {
+                    $(this).remove();
+                }
+            });
+
+            // Add options to the Available Privileges
+            var selectedOptions = _.pick(this.allRoles, selectedRolesIds);
+
+            if (selectedRolesIds) {
+                for (var i = 0; i < selectedRolesIds.length; i++) {
+                    var roleId = selectedRolesIds[i];
+                    if (roleId) {
+                        this.$selectAvailableRoles.append('<option value="{0}">{1}</option>'.format(roleId, roleId));
+                    }
+                }
+                Admin.Service.RolesPrivileges.removeRolesPrivileges(selectedRolesIds, [selectedModulePrivelege]);
+            }
+        }
+
+        ,clearRolesLists: function(e) {
+            this.$selectAvailableRoles.children().remove('option');
+            this.$selectAuthorizedRoles.children().remove('option');
+        }
+
+        ,updateRolesLists: function(e){
+            var context = this;
+            var selectedModulePrivilege = this.$selectModule.val();
+            if (selectedModulePrivilege) {
+                // Get Role's privileges
+                Admin.Service.RolesPrivileges.retrieveApplicationRolesByPrivilege(selectedModulePrivilege)
+                    .done(function(roles){
+                        // Fill Role Privileges list by retrivied data
+                        Acm.Object.createOptions(context.$selectAuthorizedRoles, roles);
+
+                        // Create available privileges list
+                        var availableRoles = _.difference(context.allRoles, roles);
+                        Acm.Object.createOptions(context.$selectAvailableRoles, availableRoles);
+
+                    })
+                    .fail(function(errorMsg){
+                        Acm.Dialog.error(errorMsg);
+                    });
+            }
+
+        }
+
+        ,onChangeSelectModule: function(e) {
+            Admin.View.ModuleConfiguration.clearRolesLists();
+        }
+
+        ,loadModules: function() {
+            var context = this;
+            Admin.Service.ModuleConfiguration.retrieveApplicationModules()
+                .done(function(modules){
+                    var options = [];
+                    for(var i = 0; i < modules.length; i++) {
+                        options.push('<option value="{0}">{1}</option>'.format(modules[i].privilege, modules[i].name));
+                    }
+                    context.$selectModule.html(options.join(''));
+                })
+                .fail(function(errorMsg){
+                    Acm.Dialog.error(errorMsg);
+                });
+        }
+        ,loadRoles: function () {
+            var context = this;
+            Admin.Service.RolesPrivileges.retrieveApplicationRoles()
+                .done(function (roles) {
+                    context.allRoles = roles;
+                })
+                .fail(function (errorMsg) {
                     Acm.Dialog.error(errorMsg);
                 });
         }
@@ -2291,10 +2424,15 @@ Admin.View = Admin.View || {
                     ,title: "Organizational Hierarchy"
                     ,tooltip: "Organizational Hierarchy"
                 })
-                .addLeafLast({key: "rp"                                                         //level 1.3: /Security/Organization Hierarchy
+                .addLeaf({key: "rp"                                                         //level 1.3: /Security/Organization Hierarchy
                     ,title: "Create Role/Select Privileges"
                     ,tooltip: "Create Role/Select Privileges"
                 })
+                .addLeafLast({key: "mc"                                                         //level 1.3: /Security/Organization Hierarchy
+                    ,title: "Module Configuration"
+                    ,tooltip: "Module Configuration"
+                })
+
 
             builder.addBranch({key: "dsh"                                                       //level 2: /Dashboard
                 ,title: "Dashboard"
