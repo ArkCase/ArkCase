@@ -17,9 +17,14 @@ Acm.Model = {
         this.name = name;
     }
 
-    ,CacheFifo: function(maxSize) {
-        this.maxSize = (Acm.isNotEmpty(maxSize))? maxSize : this.DEFAULT_MAX_CACHE_SIZE;
+    ,CacheFifo: function(arg) {
+        this.maxSize = Acm.goodValue2([arg, "maxSize"], this.DEFAULT_MAX_CACHE_SIZE);
         this.reset();
+
+        this.name = Acm.goodValue2([arg, "name"], "Cache" + Math.floor((Math.random()*1000000000)));
+        this.expiration = Acm.goodValue2([arg, "expiration"] , this.DEFAULT_EXPIRATION);   //arg.expiration in milliseconds; -1 if never expired
+        this.evict(this.name, this.expiration);
+
     }
 }
 
@@ -76,6 +81,9 @@ Acm.Model.LocalData.prototype = {
 //
 Acm.Model.CacheFifo.prototype = {
     DEFAULT_MAX_CACHE_SIZE: 8
+
+    ,DEFAULT_EXPIRATION: 7200000           //2 hours = 2 * 3600 * 1000 milliseconds
+
     ,get: function(key) {
         for (var i = 0; i < this.size; i++) {
             if (this.keys[i] == key) {
@@ -99,6 +107,7 @@ Acm.Model.CacheFifo.prototype = {
         }
 
         this.cache[key] = item;
+        this.timeStamp[key] = new Date().getTime();
         this.keys[putAt] = key;
     }
     ,_getNext: function() {
@@ -160,17 +169,42 @@ Acm.Model.CacheFifo.prototype = {
 
             this.keys = newKeys;
             delete this.cache[key];
+            delete this.timeStamp[key];
         } //end if (0 <= delAt) {
     }
     ,reset: function() {
         this.next = 0;
         this.size = 0;
         this.cache = {};
+        this.timeStamp = {};
         this.keys = [];
         for (var i = 0; i < this.maxSize; i++) {
             this.keys.push(null);
         }
         this.locks = [];
+    }
+    ,evict: function(name, expiration) {
+        if (0 < expiration) {
+            var that = this;
+            Acm.Timer.useTimer(name
+                ,300000     //every 5 minutes = 5 * 60 * 1000 milliseconds
+                ,function() {
+                    var keys = that.keys;
+                    var len = keys.length;
+                    for (var i = 0; i < that.size; i++) {
+                        var key = keys[i];
+                        var ts = that.timeStamp[key];
+                        var now = new Date().getTime();
+                        if (expiration < now - ts) {
+                            that.remove(key);
+                        }
+                        var z = 1;
+                    }
+                    return true;
+                }
+            );
+        }
+
     }
     ,lock: function(key) {
         this.locks.push(key);
@@ -197,4 +231,11 @@ Acm.Model.CacheFifo.prototype = {
     ,setMaxSize: function(maxSize) {
         this.maxSize = maxSize;
     }
+    ,getExpiration: function() {
+        return this.expiration;
+    }
+    ,setExpiration: function(expiration) {
+        this.expiration = expiration;
+    }
+
 };

@@ -90,8 +90,8 @@ Topbar.Model = {
             }
         }
 
-        ,_pullInterval: 16
-        ,_pullIntervalMax: 1024
+        ,_pullInterval: 16000
+        ,_pullIntervalMax: 1024000
         ,_rows: 5
         ,_pull: function(interval) {
             Acm.Timer.useTimer("AsnWatch"
