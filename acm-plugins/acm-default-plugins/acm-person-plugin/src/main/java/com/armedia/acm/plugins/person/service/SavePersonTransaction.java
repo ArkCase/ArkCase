@@ -1,19 +1,23 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
-import java.util.HashMap;
-import java.util.Map;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SavePersonTransaction
 {
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private PersonDao personDao;
 
     @Transactional
     public Person savePerson(
@@ -24,7 +28,12 @@ public class SavePersonTransaction
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        MuleMessage received = getMuleClient().send("vm://savePerson.in", person, messageProps);
+        messageProps.put("acmPersonDao", getMuleContextManager());
+
+        MuleMessage request = new DefaultMuleMessage(person, messageProps, getMuleContextManager().getMuleContext());
+
+        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://savePerson.in", request);
+
         Person saved = received.getPayload(Person.class);
         MuleException e = received.getInboundProperty("saveException");
 
@@ -47,13 +56,23 @@ public class SavePersonTransaction
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
+    }
+
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
     }
 }

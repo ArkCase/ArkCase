@@ -33,7 +33,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
         <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
-        <scripting:transformer name="savePersonCreatorModifierTransformer">
+        <scripting:transformer name="savePersonTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
                     String user = message.getInboundProperty("acmUser") == null ? null :
@@ -42,23 +42,14 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     {
                         message.getInboundProperty("auditAdapter").setUserId(user);
                     }
+
+                    payload = message.getInboundProperty("acmPersonDao").save(message.payload);
+
                     return payload;
                     ]]>
                 </scripting:text>
             </scripting:script>
 
-        </scripting:transformer>
-
-        <scripting:transformer name="savePerson_savePersonFlowTransformer">
-            <scripting:script engine="groovy">
-                <scripting:text><![CDATA[
-
-                        registry.acmPersonDao.save(message.payload);
-
-                        return payload;
-                        ]]>
-                </scripting:text>
-            </scripting:script>
         </scripting:transformer>
 
 
