@@ -9,6 +9,7 @@
         <property name="pluginName" value="Cost Tracking Service Plugin"/>
         <property name="privileges">
             <list>
+                <ref bean="acmCostModulePrivilege"/>
                 <ref bean="costsheetPrivilege"/>
                 <ref bean="costsheetCreatePrivilege"/>
                 <ref bean="costsheetApprovePrivilege"/>
