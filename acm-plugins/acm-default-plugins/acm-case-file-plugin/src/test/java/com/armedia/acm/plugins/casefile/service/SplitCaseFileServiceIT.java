@@ -52,7 +52,7 @@ import static org.junit.Assert.*;
                 locations = {
                         "/spring/spring-library-activiti-configuration.xml",
                         "/spring/spring-library-activiti-actions.xml",
-                        "/spring/spring-library-activemq.xml",
+                        "/spring/spring-mule-activemq.xml",
                         "/spring/spring-library-case-file.xml",
                         "/spring/spring-library-data-source.xml",
                         "/spring/spring-library-ecm-file.xml",

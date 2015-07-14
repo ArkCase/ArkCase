@@ -10,7 +10,7 @@
       version="CE-3.7.0">
 
     <spring:beans>
-        <spring:import resource="classpath:/spring/spring-library-activemq.xml"/>
+        <spring:import resource="classpath:/spring/spring-mule-activemq.xml"/>
     </spring:beans>
 
     <jms:activemq-connector
