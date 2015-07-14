@@ -4,11 +4,5 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="21-update-person-type-lookup-table" author="dmiller">
-        <delete tableName="acm_person_type_lu">
-            <where>cm_value = 'Others'</where>
-        </delete>
-    </changeSet>
-
 </databaseChangeLog>
 
