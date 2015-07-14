@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-search-service-test-content-file-mule.xml",
-        "/spring/spring-library-activemq.xml",
+        "/spring/spring-mule-activemq.xml",
         "/spring/spring-library-cmis-configuration.xml"
 })
 public class ContentFileToSolrFlowIT

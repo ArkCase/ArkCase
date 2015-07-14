@@ -45,9 +45,6 @@ public class MuleContextManager implements ApplicationContextAware
         ConfigResource[] configs = findConfigResources();
         SpringXmlConfigurationBuilder springXmlConfigurationBuilder = new SpringXmlConfigurationBuilder(configs);
 
-        // allow Mule flows to see Spring beans defined in the main Spring application context
-//        springXmlConfigurationBuilder.setParentContext(applicationContext);
-
         // ensure Mule processes Mule annotations in Spring beans
         AnnotationsConfigurationBuilder annotationsConfigurationBuilder = new AnnotationsConfigurationBuilder();
 
