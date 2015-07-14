@@ -46,9 +46,9 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <scripting:text><![CDATA[
 
                     // ensure we set the right modifier and creator for any objects we end up inserting or updating
-                    registry.auditPropertyEntityAdapter.setUserId(message.getInboundProperty("ACM_USER"));
+                    message.getInboundProperty("auditPropertyEntityAdapter").setUserId(message.getInboundProperty("ACM_USER"));
 
-                    registry.acmTaskDao.createFolderForTaskEvent(message.payload);
+                    message.getInboundProperty("acmTaskDao").createFolderForTaskEvent(message.payload);
 
                     return payload;
                     ]]>
