@@ -24,7 +24,7 @@
 <noscript>Use of this application requires a web browser that utilizes JavaScript. If you're reading this message, your web browser has limited JavaScript capabilities. Please use one of our supported web browsers instead.</noscript>
 <section id="content" class="m-t-lg wrapper-md animated fadeInUp">
     <div class="container aside-xl ">
-        <a class="navbar-brand block" href="portal.html"><img alt="Welcome to ArkCase." src="<c:url value='/branding/loginlogo'/>" /></a>
+        <a class="navbar-brand block" href="portal.html"><img alt="Welcome to ArkCase." src="<c:url value='/branding/loginlogo.png'/>" /></a>
         <section class="m-b-lg">
             <header class="wrapper text-center">
                 <strong data-i18n="login:instruction">Enter your username and password.</strong>
