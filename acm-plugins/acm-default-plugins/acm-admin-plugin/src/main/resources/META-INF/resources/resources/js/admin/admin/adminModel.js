@@ -417,6 +417,7 @@ Admin.Model = Admin.Model || {
             ,NODE_TYPE_PART_BRANCH_MAIN_PAGE                    :          "mp"
             ,NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL      :          "fac"
             ,NODE_TYPE_PART_LEAF_ROLE_PRIVILEGES                :          "rp"
+            ,NODE_TYPE_PART_LEAF_MODULE_CONFIGURATION           :          "mc"
             ,NODE_TYPE_PART_LEAF_LDAP_CONFIGURATION             :          "ldap"
             ,NODE_TYPE_PART_LEAF_ORGANIZATION                   :          "og"
             ,NODE_TYPE_PART_BRANCH_DASHBOARD                    :          "dsh"
@@ -455,6 +456,7 @@ Admin.Model = Admin.Model || {
                 ,{nodeType: "og"       ,icon: "",tabIds: ["tOrganization"]}
                 ,{nodeType: "fac"      ,icon: "",tabIds: ["tabFunctionalAccessControl"]}
                 ,{nodeType: "rp"       ,icon: "",tabIds: ["tabRolePrivileges"]}
+                ,{nodeType: "mc"       ,icon: "",tabIds: ["tabModuleConfiguration"]}
                 ,{nodeType: "ldap"     ,icon: "",tabIds: ["tabLDAPConfiguration"]}
                 ,{nodeType: "wfc"      ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
                 ,{nodeType: "wf"       ,icon: "",tabIds: ["tabWorkflowConfiguration"]}
@@ -502,6 +504,8 @@ Admin.Model = Admin.Model || {
                     return this.NODE_TYPE_PART_LEAF_FUNCTIONAL_ACCESS_CONTROL;
                 } else if (key == this.NODE_TYPE_PART_LEAF_ROLE_PRIVILEGES) {
                     return this.NODE_TYPE_PART_LEAF_ROLE_PRIVILEGES;
+                } else if (key == this.NODE_TYPE_PART_LEAF_MODULE_CONFIGURATION) {
+                    return this.NODE_TYPE_PART_LEAF_MODULE_CONFIGURATION;
                 } else if (key == this.NODE_TYPE_PART_LEAF_DASHBOARD) {
                     return this.NODE_TYPE_PART_LEAF_DASHBOARD;
                 } else if (key == this.NODE_TYPE_PART_BRANCH_DASHBOARD) {

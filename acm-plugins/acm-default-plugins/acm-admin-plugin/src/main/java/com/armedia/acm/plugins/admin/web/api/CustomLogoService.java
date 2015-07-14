@@ -1,8 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 
-import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
-import com.armedia.acm.plugins.admin.exception.CustomLogoException;
+import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +23,9 @@ public class CustomLogoService {
     /**
      * Return Header logo
      * @return
-     * @throws CustomLogoException
+     * @throws AcmCustomLogoException
      */
-    public byte[] getHeaderLogo() throws CustomLogoException {
+    public byte[] getHeaderLogo() throws AcmCustomLogoException {
         try {
             File headerLogo = new File(brandingFilesLocation + headerLogoFile);
             byte[] result =  FileUtils.readFileToByteArray(headerLogo);
@@ -35,16 +34,16 @@ public class CustomLogoService {
             if (log.isErrorEnabled()){
                 log.error("Can't get custom Header Logo file", e);
             }
-            throw new CustomLogoException("Can't get custom Header Logo file", e);
+            throw new AcmCustomLogoException("Can't get custom Header Logo file", e);
         }
     }
 
     /**
      * Return Login logo
      * @return
-     * @throws CustomLogoException
+     * @throws AcmCustomLogoException
      */
-    public byte[] getLoginLogo() throws CustomLogoException {
+    public byte[] getLoginLogo() throws AcmCustomLogoException {
         try {
             File headerLogo = new File(brandingFilesLocation + loginLogoFile);
             byte[] result =  FileUtils.readFileToByteArray(headerLogo);
@@ -53,16 +52,16 @@ public class CustomLogoService {
             if (log.isErrorEnabled()){
                 log.error("Can't get custom Login Logo file", e);
             }
-            throw new CustomLogoException("Can't get custom Login Logo file", e);
+            throw new AcmCustomLogoException("Can't get custom Login Logo file", e);
         }
     }
 
     /**
      * Update Login logo
      * @param logoStream
-     * @throws CustomLogoException
+     * @throws AcmCustomLogoException
      */
-    public void updateLoginLogo(InputStream logoStream) throws CustomLogoException {
+    public void updateLoginLogo(InputStream logoStream) throws AcmCustomLogoException {
         File logoFile = null;
         try {
             try {
@@ -72,16 +71,16 @@ public class CustomLogoService {
                 logoStream.close();
             }
         } catch (Exception e) {
-            throw new CustomLogoException("Can't update logo file");
+            throw new AcmCustomLogoException("Can't update logo file");
         }
     }
 
     /**
      * Update Header Logo
      * @param logoStream
-     * @throws CustomLogoException
+     * @throws AcmCustomLogoException
      */
-    public void updateHeaderLogo(InputStream logoStream) throws CustomLogoException {
+    public void updateHeaderLogo(InputStream logoStream) throws AcmCustomLogoException {
         File logoFile = null;
         try {
             try {
@@ -91,7 +90,7 @@ public class CustomLogoService {
                 logoStream.close();
             }
         } catch (Exception e) {
-            throw new CustomLogoException("Can't update logo file");
+            throw new AcmCustomLogoException("Can't update logo file");
         }
     }
 
