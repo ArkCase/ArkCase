@@ -9,6 +9,7 @@
         <property name="pluginName" value="Save Notification Service Plugin"/>
         <property name="privileges">
             <list>
+                <ref bean="acmNotificationModulePrivilege"/>
                 <ref bean="acmNotificationPrivilege"/>
             </list>
         </property>

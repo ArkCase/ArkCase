@@ -10,6 +10,7 @@
         <property name="pluginName" value="Complaint Plugin"/>
         <property name="privileges">
             <list>
+                <ref bean="acmComplaintModulePrivilege" />
                 <ref bean="acmComplaintCreatePrivilege"/>
                 <ref bean="acmComplaintSavePrivilege"/>
                 <ref bean="acmComplaintListPrivilege"/>

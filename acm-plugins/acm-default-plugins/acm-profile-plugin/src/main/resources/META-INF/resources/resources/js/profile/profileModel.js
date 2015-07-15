@@ -153,7 +153,7 @@ Profile.Model = {
 
     ,Subscription: {
         create: function () {
-            this.cacheSubscription = new Acm.Model.CacheFifo(3);
+            this.cacheSubscription = new Acm.Model.CacheFifo();
             Acm.Dispatcher.addEventListener(Profile.Controller.VIEW_DELETED_SUBSCRIPTION , this.onViewDeletedSubscription);
 
         }

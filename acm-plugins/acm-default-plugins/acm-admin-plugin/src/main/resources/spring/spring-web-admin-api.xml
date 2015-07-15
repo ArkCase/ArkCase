@@ -97,6 +97,14 @@
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
+    <bean id="rolesPrivilegesAddRolesPrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesAddRolesPrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRemoveRolesPrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRemoveRolesPrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
     <bean id="rolesPrivilegesRetrieveRoles" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRoles">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
@@ -106,6 +114,10 @@
     </bean>
 
     <bean id="rolesPrivilegesRetrieveRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolePrivileges">
+        <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
+    </bean>
+
+    <bean id="rolesPrivilegesRetrieveRolesByPrivilege" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
@@ -184,6 +196,15 @@
 
     <bean id="customLogoUploadFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoUploadFile">
         <property name="customLogoService" ref="customLogoService"/>
+    </bean>
+
+    <!-- Module Configuration -->
+    <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.web.api.ModuleConfigurationService">
+        <property name="appConfigPropertiesFile" value="#{ systemProperties ['user.home'] }/.acm/app-config.properties/"/>
+    </bean>
+
+    <bean id="moduleConfigurationRetrieveModules" class="com.armedia.acm.plugins.admin.web.api.ModuleConfigurationRetrieveModules">
+        <property name="moduleConfigurationService" ref="moduleConfigurationService"/>
     </bean>
 
 
