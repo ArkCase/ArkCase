@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +22,6 @@ import javax.persistence.PersistenceContext;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextHierarchy({
-        @ContextConfiguration(
-                name = "mule",
-                locations = {"/spring/spring-library-complaint-plugin-test-mule.xml",}
-        ),
         @ContextConfiguration(name = "spring",
                 locations = {
                         "/spring/spring-library-object-history.xml",
@@ -54,8 +48,8 @@ import static org.junit.Assert.*;
                         "/spring/spring-library-acm-encryption.xml",
                         "/spring/spring-library-task.xml",
                         "/spring/spring-library-note.xml",
-                        "/spring/spring-library-event.xml"
-                })
+                        "/spring/spring-library-event.xml",
+                        "/spring/spring-library-complaint-plugin-test-mule.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
