@@ -4,11 +4,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.UserOrg;
-import org.mule.DefaultMuleMessage;
-import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +29,8 @@ public class SaveUserOrgTransaction {
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
         messageProps.put("userOrgDao", getUserOrgDao());
 
-        MuleMessage request = new DefaultMuleMessage(userOrgInfo, messageProps, getMuleContextManager().getMuleContext());
+        MuleMessage received = getMuleContextManager().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
 
-        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://saveUserOrg.in", request);
         UserOrg saved = received.getPayload(UserOrg.class);
         MuleException e = received.getInboundProperty("saveException");
 

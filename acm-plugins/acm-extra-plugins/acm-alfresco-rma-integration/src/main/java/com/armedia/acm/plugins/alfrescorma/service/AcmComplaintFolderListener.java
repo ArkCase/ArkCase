@@ -4,9 +4,7 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecordFolder;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -54,8 +52,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
             {
                 log.trace("sending JMS message.");
             }
-            MuleMessage request = new DefaultMuleMessage(folder, messageProperties, getMuleContextManager().getMuleContext());
-            getMuleContextManager().getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, request);
+            getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");

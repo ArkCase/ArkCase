@@ -26,7 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -178,8 +177,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String, Object> findFolderProperties = new HashMap<>();
         findFolderProperties.put("parentFolderId", cmisFolderObjectId);
-        MuleMessage request = new DefaultMuleMessage(null, findFolderProperties, getMuleContextManager().getMuleContext());
-        MuleMessage findFolderMessage = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, request);
+        MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null, findFolderProperties);
         if ( findFolderMessage.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
             MuleException muleException = findFolderMessage.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
             if (log.isErrorEnabled())
@@ -264,8 +262,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
         try {
-            MuleMessage request = new DefaultMuleMessage(folderForMoving, properties, getMuleContextManager().getMuleContext());
-            MuleMessage message = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, request);
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
 
             if ( message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
@@ -317,8 +314,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
         try {
-            MuleMessage request = new DefaultMuleMessage(folderForMoving, properties, getMuleContextManager().getMuleContext());
-            MuleMessage message = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, request);
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
 
             if ( message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
@@ -380,8 +376,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder copiedFolder = null;
         boolean isFirstFolderFetched = false;
         try {
-            MuleMessage request = new DefaultMuleMessage(toBeCopied, toBeCopiedFolderProperties, getMuleContextManager().getMuleContext());
-            MuleMessage message = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, request);
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, toBeCopied, toBeCopiedFolderProperties);
 
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
@@ -396,8 +391,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             isFirstFolderFetched = true;
 
-            MuleMessage getFolderRequest = new DefaultMuleMessage(dstFolder, parentFolderProperties, getMuleContextManager().getMuleContext());
-            MuleMessage msg = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, getFolderRequest);
+            MuleMessage msg = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, dstFolder, parentFolderProperties);
 
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
@@ -436,8 +430,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         AcmFolder copiedFolder = null;
         AcmFolder acmNewFolder = new AcmFolder();
         try {
-            MuleMessage request = new DefaultMuleMessage(null, newFolderProperties, getMuleContextManager().getMuleContext());
-            MuleMessage message = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER, request);
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER, null, newFolderProperties);
 
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
@@ -506,18 +499,22 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
         try {
 
-            MuleMessage request = new DefaultMuleMessage(folder, properties, getMuleContextManager().getMuleContext());
-            MuleMessage message = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, request);
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_EMPTY_FOLDER, folder, properties);
 
-                if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY)) {
-                    MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                    if (log.isErrorEnabled()) {
-                        log.error("Folder not deleted successfully " + muleException.getMessage(), muleException);
-                    }
-                    throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                            "Folder " + folder.getName() + "not deleted successfully", muleException);
-            } else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY)) {
-                if (log.isErrorEnabled()) {
+            if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
+            {
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
+                if (log.isErrorEnabled())
+                {
+                    log.error("Folder not deleted successfully " + muleException.getMessage(), muleException);
+                }
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
+                        "Folder " + folder.getName() + "not deleted successfully", muleException);
+            }
+            else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY))
+            {
+                if (log.isErrorEnabled())
+                {
                     log.error("Folder "+folder.getName()+" is not empty and is not deleted!");
                 }
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
@@ -569,10 +566,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     private String createNewFolderAndReturnCmisID(AcmFolder folder, Map<String,Object> properties) throws MuleException, AcmUserActionFailedException {
 
-        String cmisFolderId = null;
+        String cmisFolderId;
 
-        MuleMessage request = new DefaultMuleMessage(folder, properties, getMuleContextManager().getMuleContext());
-        MuleMessage message = getMuleContextManager().getMuleClient().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER, request);
+        MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_ADD_NEW_FOLDER, folder, properties);
 
         if ( message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY)){
             MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);

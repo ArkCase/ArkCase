@@ -2,7 +2,6 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.SolrCore;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -40,8 +39,7 @@ public class ExecuteSolrQuery {
         headers.put("acmUser", auth);
         headers.put("rowQueryParametars", rowQueryParameters);
 
-        MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
-        MuleMessage response = getMuleContextManager().getMuleClient().send(core.getMuleEndpointUrl(), request);
+        MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
 
         log.debug("Response type: " + response.getPayload().getClass());
 

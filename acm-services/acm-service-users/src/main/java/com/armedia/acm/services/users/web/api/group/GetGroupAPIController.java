@@ -7,7 +7,6 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -65,8 +64,7 @@ public class GetGroupAPIController {
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
 
-		MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
-        MuleMessage response = getMuleContextManager().getMuleClient().send("vm://advancedSearchQuery.in", request);
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -109,8 +107,7 @@ public class GetGroupAPIController {
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
 
-		MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
-        MuleMessage response = getMuleContextManager().getMuleClient().send("vm://advancedSearchQuery.in", request);
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -197,8 +194,7 @@ public class GetGroupAPIController {
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
 
-		MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
-        MuleMessage response = getMuleContextManager().getMuleClient().send("vm://advancedSearchQuery.in", request);
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -229,8 +225,7 @@ public class GetGroupAPIController {
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
 
-		MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
-        MuleMessage response = getMuleContextManager().getMuleClient().send("vm://advancedSearchQuery.in", request);
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -276,8 +271,7 @@ public class GetGroupAPIController {
 	        headers.put("sort", sort);
 			headers.put("acmUser", auth);
 
-			MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
-	        MuleMessage response = getMuleContextManager().getMuleClient().send("vm://advancedSearchQuery.in", request);
+	        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 	
 	        LOG.debug("Response type: " + response.getPayload().getClass());
 	

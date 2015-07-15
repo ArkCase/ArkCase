@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -55,9 +54,7 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
                     messageProps.put("auditPropertyEntityAdapter", getAuditPropertyEntityAdapter());
                     messageProps.put("acmTaskService", getAcmTaskService());
 
-                    MuleMessage request = new DefaultMuleMessage(event, messageProps, getMuleContextManager().getMuleContext());
-
-                    MuleMessage msg = getMuleContextManager().getMuleClient().send("jms://copyTaskFilesAndFoldersToParent.in", request);
+                    MuleMessage msg = getMuleContextManager().send("jms://copyTaskFilesAndFoldersToParent.in", event, messageProps);
 
                     MuleException e = msg.getInboundProperty("executionException");
 

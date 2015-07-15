@@ -1,7 +1,9 @@
 package com.armedia.acm.muletools.mulecontextmanager;
 
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
 import org.mule.api.client.MuleClient;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.context.MuleContextFactory;
@@ -21,6 +23,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MuleContextManager implements ApplicationContextAware
 {
@@ -30,7 +33,37 @@ public class MuleContextManager implements ApplicationContextAware
     private String muleConfigFilePattern;
     private List<String> specificConfigFiles;
 
-    public MuleClient getMuleClient()
+    public void dispatch(String endpoint, Object payload, Map<String, Object> messageProperties) throws MuleException
+    {
+        MuleMessage request = new DefaultMuleMessage(payload, messageProperties, getMuleContext());
+        getMuleClient().dispatch(endpoint, request);
+    }
+
+    public void dispatch(String endpoint, Object payload) throws MuleException
+    {
+        MuleMessage request = new DefaultMuleMessage(payload, getMuleContext());
+        getMuleClient().dispatch(endpoint, request);
+    }
+
+    public MuleMessage send(String endpoint, Object payload, Map<String, Object> messageProperties) throws MuleException
+    {
+        MuleMessage request = new DefaultMuleMessage(payload, messageProperties, getMuleContext());
+
+        MuleMessage received = getMuleClient().send(endpoint, request);
+
+        return received;
+    }
+
+    public MuleMessage send(String endpoint, Object payload) throws MuleException
+    {
+        MuleMessage request = new DefaultMuleMessage(payload, getMuleContext());
+
+        MuleMessage received = getMuleClient().send(endpoint, request);
+
+        return received;
+    }
+
+    protected MuleClient getMuleClient()
     {
         return getMuleContext().getClient();
     }

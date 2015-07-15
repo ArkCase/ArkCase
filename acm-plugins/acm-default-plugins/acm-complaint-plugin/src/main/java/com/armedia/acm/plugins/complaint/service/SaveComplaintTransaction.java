@@ -4,7 +4,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
@@ -44,9 +43,8 @@ public class SaveComplaintTransaction
         messageProps.put("saveComplaintBusinessRule", getSaveComplaintBusinessRule());
         messageProps.put("acmComplaintDao", getAcmComplaintDao());
 
-        MuleMessage request = new DefaultMuleMessage(complaint, messageProps, getMuleContextManager().getMuleContext());
+        MuleMessage received = getMuleContextManager().send("vm://saveComplaint.in", complaint, messageProps);
 
-        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://saveComplaint.in", request);
         Complaint saved = received.getPayload(Complaint.class);
         MuleException e = received.getInboundProperty("saveException");
 
