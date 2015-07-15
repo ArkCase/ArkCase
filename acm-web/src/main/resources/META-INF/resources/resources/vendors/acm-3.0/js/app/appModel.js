@@ -78,7 +78,7 @@ App.Model = {
                 var autoLogoutIdleLimit  = myCfg.settings.autoLogoutIdleLimit;
                 var autoLogoutErrorLimit = myCfg.settings.autoLogoutErrorLimit;
                 Acm.Timer.useTimer("AutoLogout"
-                    ,20  //every twenty seconds
+                    ,20000  //every twenty seconds
                     ,function() {
                         var isLogin = App.Model.Login.isLogin();
                         var sinceIdle = App.Model.Login.getSinceIdle();
