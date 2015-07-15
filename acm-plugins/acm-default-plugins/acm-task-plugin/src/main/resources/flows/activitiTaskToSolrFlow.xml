@@ -68,7 +68,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     // gotta check the assignee again to be sure the assignment rules didn't mess with it
                     muleContext.registry.get("arkContext").getBean("acmTaskDao").ensureCorrectAssigneeInParticipants(payload);
 
-                    muleContext.registry.get("arkContext").getBean("acmParticipantDao").removeAllOtherParticipantsForObject("TASK", message.payload.getTaskId(), payload.getParticipants());
+                    muleContext.registry.get("arkContext").getBean("acmParticipantDao").removeAllOtherParticipantsForObject("TASK", payload.getTaskId(), payload.getParticipants());
 
                     payload.setParticipants(muleContext.registry.get("arkContext").getBean("acmParticipantDao").saveParticipants(payload.getParticipants()));
 
