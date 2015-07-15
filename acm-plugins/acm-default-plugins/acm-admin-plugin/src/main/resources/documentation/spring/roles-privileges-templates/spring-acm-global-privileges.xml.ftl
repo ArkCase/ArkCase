@@ -18,6 +18,19 @@
 </bean>
 
 <!--Audit Plugin-->
+<bean id="acmAuditModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-audit-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmAuditModulePrivilege?? >
+            <#list acmAuditModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="auditPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-audit"/>
     <property name="applicationRolesWithPrivilege">
@@ -58,6 +71,19 @@
 </bean>
 
 <!--Dashboard Plugin-->
+<bean id="acmDashboardModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-dashboard-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmDashboardModulePrivilege?? >
+            <#list acmDashboardModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="dashboardPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-dashboard"/>
     <property name="applicationRolesWithPrivilege">
@@ -143,6 +169,19 @@
 </bean>
 
 <!--Report Plugin-->
+<bean id="acmReportModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-report-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmReportModulePrivilege?? >
+            <#list acmReportModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="reportPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-report"/>
     <property name="applicationRolesWithPrivilege">
@@ -157,6 +196,19 @@
 </bean>
 
 <!--Cost Tracking Service Plugin-->
+<bean id="acmCostModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-cost-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmCostModulePrivilege?? >
+            <#list acmCostModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="costsheetCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-costsheet-create"/>
     <property name="applicationRolesWithPrivilege">
@@ -195,6 +247,19 @@
 </bean>
 
 <!--Time Tracking Service Plugin-->
+<bean id="acmTimeModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-time-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmTimeModulePrivilege?? >
+            <#list acmTimeModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="timesheetCreatePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-timesheet-create"/>
     <property name="applicationRolesWithPrivilege">
@@ -233,6 +298,19 @@
 </bean>
 
 <!--Tag Plugin-->
+<bean id="acmTagModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-tag-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmTagModulePrivilege?? >
+            <#list acmTagModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="tagPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-tag"/>
     <property name="applicationRolesWithPrivilege">
@@ -247,6 +325,19 @@
 </bean>
 
 <!--Task Plugin-->
+<bean id="acmTaskModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-task-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmTaskModulePrivilege?? >
+            <#list acmTaskModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="acmTaskListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-task-list"/>
     <property name="applicationRolesWithPrivilege">
@@ -309,6 +400,19 @@
 </bean>
 
 <!--Save Notification Service Plugin-->
+<bean id="acmNotificationModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-notification-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmNotificationModulePrivilege?? >
+            <#list acmNotificationModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="acmNotificationPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-notification"/>
     <property name="applicationRolesWithPrivilege">
@@ -323,6 +427,19 @@
 </bean>
 
 <!--Subscription Plugin-->
+<bean id="acmSubscriptionModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-subscription-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmSubscriptionModulePrivilege?? >
+            <#list acmSubscriptionModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="subscribePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-subscription"/>
     <property name="applicationRolesWithPrivilege">
@@ -337,6 +454,19 @@
 </bean>
 
 <!--Complaint Plugin-->
+<bean id="acmComplaintModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-complaint-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmComplaintModulePrivilege?? >
+            <#list acmComplaintModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="acmComplaintListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-complaint-list"/>
     <property name="applicationRolesWithPrivilege">
@@ -399,6 +529,19 @@
 </bean>
 
 <!--Search Plugin-->
+<bean id="acmSearchModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-search-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmSearchModulePrivilege?? >
+            <#list acmSearchModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="searchPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-search"/>
     <property name="applicationRolesWithPrivilege">
@@ -413,6 +556,20 @@
 </bean>
 
 <!--ACM Case Files-->
+<bean id="acmCaseModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-case-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmCaseModulePrivilege?? >
+            <#list acmCaseModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
+
 <bean id="acmCaseApprovePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-case-approve"/>
     <property name="applicationRolesWithPrivilege">
@@ -589,6 +746,19 @@
 </bean>
 
 <!--Admin Plugin-->
+<bean id="acmAdminModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <property name="privilegeName" value="acm-admin-module"/>
+    <property name="applicationRolesWithPrivilege">
+        <list>
+        <#if acmAdminModulePrivilege?? >
+            <#list acmAdminModulePrivilege as role>
+                <value>${role}</value>
+            </#list>
+        </#if>
+        </list>
+    </property>
+</bean>
+
 <bean id="adminPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
     <property name="privilegeName" value="acm-admin"/>
     <property name="applicationRolesWithPrivilege">

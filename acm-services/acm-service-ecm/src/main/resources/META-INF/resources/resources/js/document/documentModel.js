@@ -48,7 +48,7 @@ AcmDocument.Model = AcmDocument.Model || {
         ,onInitialized: function() {
             AcmDocument.Service.Detail.retrieveDocumentDetail(AcmDocument.Model.MicroData.documentId);
             Acm.Timer.useTimer("RefetchDocDetails"
-                ,100  //every 100 seconds
+                ,100000  //every 100 seconds
                 ,function() {
                     AcmDocument.Service.Detail.retrieveDocumentDetail(AcmDocument.Model.MicroData.documentId);
                     return true;
@@ -91,7 +91,7 @@ AcmDocument.Model = AcmDocument.Model || {
 
     ,Notes: {
         create : function() {
-            this.cacheNoteList = new Acm.Model.CacheFifo(4);
+            this.cacheNoteList = new Acm.Model.CacheFifo();
 
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_ADDED_NOTE     , this.onViewAddedNote);
             Acm.Dispatcher.addEventListener(AcmDocument.Controller.VIEW_UPDATED_NOTE   , this.onViewUpdatedNote);

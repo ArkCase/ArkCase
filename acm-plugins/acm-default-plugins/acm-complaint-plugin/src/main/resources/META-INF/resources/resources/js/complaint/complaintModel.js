@@ -522,7 +522,7 @@ Complaint.Model = Complaint.Model || {
     
     ,Documents: {
         create : function() {
-            this.cachePlainForms = new Acm.Model.CacheFifo(1);
+            this.cachePlainForms = new Acm.Model.CacheFifo({maxSize: 1});
         }
         ,onInitialized: function() {
         	Complaint.Service.Documents.retrievePlainForms();

@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.plugins.admin.exception.CustomCssException;
+import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,10 +21,10 @@ public class CustomLogoRetrieveFile {
     private Logger log = LoggerFactory.getLogger(getClass());
     private CustomLogoService customLogoService;
 
-    @RequestMapping(value = "/headerlogo", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    @RequestMapping(value = "/headerlogo.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public byte[] retrieveHeaderLogo(
-            HttpServletResponse response) throws IOException, CustomCssException {
+            HttpServletResponse response) throws IOException, AcmCustomCssException {
 
         try {
             byte[] logo = customLogoService.getHeaderLogo();
@@ -33,14 +33,14 @@ public class CustomLogoRetrieveFile {
             if (log.isErrorEnabled()){
                 log.error("Can't header logo", e);
             }
-            throw new CustomCssException("Can't get header logo", e);
+            throw new AcmCustomCssException("Can't get header logo", e);
         }
     }
 
-    @RequestMapping(value = "/loginlogo", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    @RequestMapping(value = "/loginlogo.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public byte[] retrieveLoginLogo(
-            HttpServletResponse response) throws IOException, CustomCssException {
+            HttpServletResponse response) throws IOException, AcmCustomCssException {
 
         try {
             byte[] logo = customLogoService.getLoginLogo();
@@ -49,7 +49,7 @@ public class CustomLogoRetrieveFile {
             if (log.isErrorEnabled()){
                 log.error("Can't header logo", e);
             }
-            throw new CustomCssException("Can't get header logo", e);
+            throw new AcmCustomCssException("Can't get header logo", e);
         }
     }
 
