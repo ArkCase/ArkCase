@@ -12,11 +12,6 @@
                 <value>processDefinitionKey</value>
             </list>
         </property>
-        <property name="flowBeans">
-            <map>
-                <entry key="runtimeService" value-ref="activitiRuntimeService"/>
-            </map>
-        </property>
     </bean>
 
 

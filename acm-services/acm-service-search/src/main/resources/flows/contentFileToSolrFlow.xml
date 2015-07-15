@@ -37,6 +37,12 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <timer-interceptor/>
 
         <logger category="com.armedia.acm.services.search.service" level="DEBUG"/>
+
+        <!-- Starting with Mule 3.7 we need to specifically set the Content-Type in Mule to be able to
+             index content files -->
+        <message-properties-transformer name="arkContentTypeTransformer">
+            <add-message-property key="Content-Type" value="#[message.payload.content_type]" />
+        </message-properties-transformer>
         
         <set-variable variableName="docId" value="#[message.payload.id]"/>
         <set-variable variableName="contentType" value="#[message.payload.content_type]"/>

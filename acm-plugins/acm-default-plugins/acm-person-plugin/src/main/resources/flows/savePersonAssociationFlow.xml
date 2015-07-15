@@ -36,7 +36,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
-                        message.getInboundProperty("auditAdapter").setUserId(user);
+                        muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(user);
                     }
                     return payload;
                     ]]>
@@ -53,7 +53,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="savePersonAssociationDaoTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    payload = message.getInboundProperty("acmPersonAssociationDao").save(payload);
+                    payload = muleContext.registry.get("arkContext").getBean("acmPersonAssociationDao").save(payload);
                     return payload;
                     ]]>
                 </scripting:text>

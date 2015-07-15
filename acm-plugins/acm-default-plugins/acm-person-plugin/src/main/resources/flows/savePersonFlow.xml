@@ -40,10 +40,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         message.getInboundProperty("acmUser").name;
                     if ( user != null )
                     {
-                        message.getInboundProperty("auditAdapter").setUserId(user);
+                        muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(user);
                     }
 
-                    payload = message.getInboundProperty("acmPersonDao").save(message.payload);
+                    payload = muleContext.registry.get("arkContext").getBean("acmPersonDao").save(message.payload);
 
                     return payload;
                     ]]>

@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/
         <timer-interceptor/>
 
         <expression-component>
-            message.getInboundProperty("acmComplaintDao").updateComplaintStatus(
+            muleContext.registry.get("arkContext").getBean("acmComplaintDao").updateComplaintStatus(
                 message.inboundProperties["COMPLAINT"],
                 message.inboundProperties["newStatus"],
                 message.inboundProperties["ACM_USER"]);

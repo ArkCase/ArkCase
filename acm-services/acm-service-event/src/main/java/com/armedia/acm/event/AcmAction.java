@@ -18,7 +18,6 @@ public class AcmAction
     private String actionId;
     private List<String> parameters;
     private String targetMuleEndpoint;
-    private Map<String, Object> flowBeans;
 
     public String getActionName()
     {
@@ -58,15 +57,5 @@ public class AcmAction
     public void setTargetMuleEndpoint(String targetMuleEndpoint)
     {
         this.targetMuleEndpoint = targetMuleEndpoint;
-    }
-
-    public Map<String, Object> getFlowBeans()
-    {
-        return flowBeans;
-    }
-
-    public void setFlowBeans(Map<String, Object> flowBeans)
-    {
-        this.flowBeans = flowBeans;
     }
 }

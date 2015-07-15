@@ -88,6 +88,8 @@ public class MuleContextManager implements ApplicationContextAware
         MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
         MuleContext muleContext = muleContextFactory.createMuleContext(builders, new DefaultMuleContextBuilder());
 
+        muleContext.getRegistry().registerObject("arkContext", applicationContext);
+
         if ( log.isDebugEnabled() )
         {
             log.debug("Starting mule context");

@@ -95,11 +95,6 @@
                 <value>newStatus</value>
             </list>
         </property>
-        <property name="flowBeans">
-            <map>
-                <entry key="acmComplaintDao" value-ref="acmComplaintDao"/>
-            </map>
-        </property>
 
     </bean>
     <!-- end of action handlers -->
@@ -119,9 +114,6 @@
 
     <bean id="saveComplaintTransaction" class="com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="acmComplaintDao" ref="acmComplaintDao"/>
-        <property name="saveComplaintBusinessRule" ref="saveComplaintBusinessRule"/>
     </bean>
 
     <bean id="complaintToSolrTransformer" class="com.armedia.acm.plugins.complaint.service.ComplaintToSolrTransformer">

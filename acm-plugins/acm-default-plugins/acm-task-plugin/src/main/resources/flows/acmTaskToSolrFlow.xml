@@ -31,12 +31,12 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="extractAcmTaskTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    payload = message.getInboundProperty("extractAcmTaskFromEvent").fromEvent(payload);
+                    payload = muleContext.registry.get("arkContext").getBean("extractAcmTaskFromEvent").fromEvent(payload);
 
-                    message.setInvocationProperty("advancedSearchDoc", message.getInboundProperty("taskToSolrTransformer").toSolrAdvancedSearch(payload));
-                    message.setInvocationProperty("quickSearchDoc", message.getInboundProperty("taskToSolrTransformer").toSolrQuickSearch(payload));
-                    message.setInvocationProperty("advancedSearchJson", message.getInboundProperty("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("advancedSearchDoc")));
-                    message.setInvocationProperty("quickSearchJson", message.getInboundProperty("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("quickSearchDoc")));
+                    message.setInvocationProperty("advancedSearchDoc", muleContext.registry.get("arkContext").getBean("taskToSolrTransformer").toSolrAdvancedSearch(payload));
+                    message.setInvocationProperty("quickSearchDoc", muleContext.registry.get("arkContext").getBean("taskToSolrTransformer").toSolrQuickSearch(payload));
+                    message.setInvocationProperty("advancedSearchJson", muleContext.registry.get("arkContext").getBean("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("advancedSearchDoc")));
+                    message.setInvocationProperty("quickSearchJson", muleContext.registry.get("arkContext").getBean("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("quickSearchDoc")));
 
                     return payload;
                     ]]>

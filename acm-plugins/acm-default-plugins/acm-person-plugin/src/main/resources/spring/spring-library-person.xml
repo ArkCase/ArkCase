@@ -15,16 +15,12 @@
     
     <bean id="savePersonTransaction" class="com.armedia.acm.plugins.person.service.SavePersonTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="personDao" ref="acmPersonDao"/>
     </bean>
     
     <bean id="personEventPublisher" class="com.armedia.acm.plugins.person.service.PersonEventPublisher"/>
     
     <bean id="savePersonAssociationTransaction" class="com.armedia.acm.plugins.person.service.SavePersonAssociationTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
     </bean>
     
     <bean id="personAssociationEventPublisher" class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>

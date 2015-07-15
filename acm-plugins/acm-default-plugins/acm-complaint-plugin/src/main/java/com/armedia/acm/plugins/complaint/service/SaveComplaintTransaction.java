@@ -24,9 +24,6 @@ import java.util.Map;
 public class SaveComplaintTransaction
 {
     private MuleContextManager muleContextManager;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private SaveComplaintBusinessRule saveComplaintBusinessRule;
-    private ComplaintDao acmComplaintDao;
 
     @Transactional
     public Complaint saveComplaint(
@@ -39,9 +36,6 @@ public class SaveComplaintTransaction
 
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        messageProps.put("saveComplaintBusinessRule", getSaveComplaintBusinessRule());
-        messageProps.put("acmComplaintDao", getAcmComplaintDao());
 
         MuleMessage received = getMuleContextManager().send("vm://saveComplaint.in", complaint, messageProps);
 
@@ -68,33 +62,4 @@ public class SaveComplaintTransaction
         this.muleContextManager = muleContextManager;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
-    public SaveComplaintBusinessRule getSaveComplaintBusinessRule()
-    {
-        return saveComplaintBusinessRule;
-    }
-
-    public void setSaveComplaintBusinessRule(SaveComplaintBusinessRule saveComplaintBusinessRule)
-    {
-        this.saveComplaintBusinessRule = saveComplaintBusinessRule;
-    }
-
-    public ComplaintDao getAcmComplaintDao()
-    {
-        return acmComplaintDao;
-    }
-
-    public void setAcmComplaintDao(ComplaintDao acmComplaintDao)
-    {
-        this.acmComplaintDao = acmComplaintDao;
-    }
 }

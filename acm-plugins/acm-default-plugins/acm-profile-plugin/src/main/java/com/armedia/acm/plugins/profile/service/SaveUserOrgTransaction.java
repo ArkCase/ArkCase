@@ -18,16 +18,12 @@ import java.util.Map;
 public class SaveUserOrgTransaction {
 
     private MuleContextManager muleContextManager;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private UserOrgDao userOrgDao;
 
     @Transactional
     public UserOrg saveUserOrg(UserOrg userOrgInfo, Authentication authentication) throws MuleException {
 
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        messageProps.put("userOrgDao", getUserOrgDao());
 
         MuleMessage received = getMuleContextManager().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
 
@@ -38,24 +34,6 @@ public class SaveUserOrgTransaction {
             throw e;
         }
         return saved;
-    }
-
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
-    public UserOrgDao getUserOrgDao()
-    {
-        return userOrgDao;
-    }
-
-    public void setUserOrgDao(UserOrgDao userOrgDao)
-    {
-        this.userOrgDao = userOrgDao;
     }
 
     public MuleContextManager getMuleContextManager()
