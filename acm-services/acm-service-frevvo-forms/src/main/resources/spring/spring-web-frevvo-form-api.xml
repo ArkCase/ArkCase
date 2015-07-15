@@ -18,7 +18,7 @@
         <property name="changeCaseStatusDao" ref="changeCaseStatusDao"/>
         <property name="personDao" ref="acmPersonDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="muleClient" ref="muleClient"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="saveCaseService" ref="saveCaseService"/>
         <property name="acmHistoryDao" ref="acmHistoryDao"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>

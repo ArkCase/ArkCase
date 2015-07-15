@@ -1,17 +1,15 @@
 package com.armedia.acm.services.search.service;
 
-import org.apache.commons.lang.StringUtils;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,7 +28,7 @@ import static org.junit.Assert.*;
 public class AdvancedSearchQueryFlowIT
 {
     @Autowired
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -79,7 +77,7 @@ public class AdvancedSearchQueryFlowIT
         headers.put("sort", "object_type_s asc");
         headers.put("acmUser", authentication);
 
-        MuleMessage response = muleClient.send("vm://advancedSearchQuery.in", "", headers);
+        MuleMessage response = muleContextManager.send("vm://advancedSearchQuery.in", "", headers);
 
         assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
 
