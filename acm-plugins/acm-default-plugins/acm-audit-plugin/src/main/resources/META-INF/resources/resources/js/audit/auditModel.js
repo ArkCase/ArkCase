@@ -5,7 +5,7 @@
  */
 Audit.Model = Audit.Model || {
     create : function() {
-        this.cacheAuditList = new Acm.Model.CacheFifo(4);
+        this.cacheAuditList = new Acm.Model.CacheFifo({maxSize: 4});
     }
     ,onInitialized: function() {
     }
