@@ -65,7 +65,6 @@
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="outlookService" ref="outlookService"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
         <property name="userDao" ref="userJpaDao"/>

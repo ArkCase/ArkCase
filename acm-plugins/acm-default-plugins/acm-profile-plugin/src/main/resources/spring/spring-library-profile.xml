@@ -34,8 +34,6 @@
 
     <bean id="saveUserOrgTransaction" class="com.armedia.acm.plugins.profile.service.SaveUserOrgTransaction">
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="userOrgDao" ref="acmUserOrgDao"/>
     </bean>
 
     <bean id="profilePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

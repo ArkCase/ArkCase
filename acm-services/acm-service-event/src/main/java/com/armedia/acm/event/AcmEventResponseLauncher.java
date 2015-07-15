@@ -55,11 +55,6 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 addExtraMessageProperties(acmEvent, messageProperties);
                 messageProperties.putAll(response.getParameters());
 
-                if ( response.getAction().getFlowBeans() != null )
-                {
-                    messageProperties.putAll(response.getAction().getFlowBeans());
-                }
-
                 try
                 {
                     getMuleContextManager().dispatch(response.getAction().getTargetMuleEndpoint(), acmEvent, messageProperties);

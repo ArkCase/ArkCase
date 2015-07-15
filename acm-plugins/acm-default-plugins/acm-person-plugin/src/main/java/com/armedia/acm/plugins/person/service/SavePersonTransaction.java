@@ -15,8 +15,6 @@ import java.util.Map;
 public class SavePersonTransaction
 {
     private MuleContextManager muleContextManager;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private PersonDao personDao;
 
     @Transactional
     public Person savePerson(
@@ -26,8 +24,6 @@ public class SavePersonTransaction
     {
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        messageProps.put("acmPersonDao", getMuleContextManager());
 
         MuleMessage received = getMuleContextManager().send("vm://savePerson.in", person, messageProps);
 
@@ -43,16 +39,6 @@ public class SavePersonTransaction
 
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-
     public MuleContextManager getMuleContextManager()
     {
         return muleContextManager;
@@ -63,13 +49,4 @@ public class SavePersonTransaction
         this.muleContextManager = muleContextManager;
     }
 
-    public PersonDao getPersonDao()
-    {
-        return personDao;
-    }
-
-    public void setPersonDao(PersonDao personDao)
-    {
-        this.personDao = personDao;
-    }
 }

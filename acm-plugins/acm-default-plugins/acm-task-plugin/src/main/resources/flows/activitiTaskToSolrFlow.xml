@@ -56,26 +56,26 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="extractAcmTaskAndApplyDACFromActivitiTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    payload = message.getInboundProperty("extractAcmTaskFromEvent").fromEvent(payload);
+                    payload = muleContext.registry.get("arkContext").getBean("extractAcmTaskFromEvent").fromEvent(payload);
 
                     // ensure we set the right modifier and creator for any objects we end up inserting or updating
-                    message.getInboundProperty("auditPropertyEntityAdapter").setUserId(message.getInboundProperty("ACM_USER"));
+                    muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(message.getInboundProperty("ACM_USER"));
 
-                    message.getInboundProperty("acmTaskDao").ensureCorrectAssigneeInParticipants(message.payload);
+                    muleContext.registry.get("arkContext").getBean("acmTaskDao").ensureCorrectAssigneeInParticipants(payload);
 
-                    message.getInboundProperty("dataAccessPrivilegeListener").applyAssignmentAndAccessRules(message.payload);
+                    muleContext.registry.get("arkContext").getBean("dataAccessPrivilegeListener").applyAssignmentAndAccessRules(payload);
 
                     // gotta check the assignee again to be sure the assignment rules didn't mess with it
-                    message.getInboundProperty("acmTaskDao").ensureCorrectAssigneeInParticipants(message.payload);
+                    muleContext.registry.get("arkContext").getBean("acmTaskDao").ensureCorrectAssigneeInParticipants(payload);
 
-                    message.getInboundProperty("acmParticipantDao").removeAllOtherParticipantsForObject("TASK", message.payload.getTaskId(), message.payload.getParticipants());
+                    muleContext.registry.get("arkContext").getBean("acmParticipantDao").removeAllOtherParticipantsForObject("TASK", message.payload.getTaskId(), payload.getParticipants());
 
-                    payload.setParticipants(message.getInboundProperty("acmParticipantDao").saveParticipants(message.payload.getParticipants()));
+                    payload.setParticipants(muleContext.registry.get("arkContext").getBean("acmParticipantDao").saveParticipants(payload.getParticipants()));
 
-                    message.setInvocationProperty("advancedSearchDoc", message.getInboundProperty("taskToSolrTransformer").toSolrAdvancedSearch(payload));
-                    message.setInvocationProperty("quickSearchDoc", message.getInboundProperty("taskToSolrTransformer").toSolrQuickSearch(payload));
-                    message.setInvocationProperty("advancedSearchJson", message.getInboundProperty("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("advancedSearchDoc")));
-                    message.setInvocationProperty("quickSearchJson", message.getInboundProperty("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("quickSearchDoc")));
+                    message.setInvocationProperty("advancedSearchDoc", muleContext.registry.get("arkContext").getBean("taskToSolrTransformer").toSolrAdvancedSearch(payload));
+                    message.setInvocationProperty("quickSearchDoc", muleContext.registry.get("arkContext").getBean("taskToSolrTransformer").toSolrQuickSearch(payload));
+                    message.setInvocationProperty("advancedSearchJson", muleContext.registry.get("arkContext").getBean("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("advancedSearchDoc")));
+                    message.setInvocationProperty("quickSearchJson", muleContext.registry.get("arkContext").getBean("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("quickSearchDoc")));
 
                     return payload;
                     ]]>

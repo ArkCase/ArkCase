@@ -3,8 +3,10 @@ package com.armedia.acm.activiti;
 import com.armedia.acm.event.AcmEvent;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.mule.api.annotations.expressions.Lookup;
 import org.mule.api.annotations.param.InboundHeaders;
 import org.mule.api.annotations.param.Payload;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -22,7 +24,7 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
     public void startBusinessProcess(
             @Payload AcmEvent acmEvent,
             @InboundHeaders("*") Map<String, Object> muleHeaders,
-            @InboundHeaders("activitiRuntimeService") RuntimeService runtimeService)
+            @Lookup("arkContext") ApplicationContext arkContext)
     {
 
         Boolean eventWasSuccessful = (Boolean) muleHeaders.get("EVENT_SUCCEEDED");
@@ -40,6 +42,8 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
         }
 
         Map<String, Object> messageHeaders = filterMuleAndJmsHeaders(muleHeaders);
+
+        RuntimeService runtimeService = arkContext.getBean("activitiRuntimeService", RuntimeService.class);
 
         ProcessInstance pi = runtimeService.startProcessInstanceByKey(businessProcessKey, messageHeaders);
 

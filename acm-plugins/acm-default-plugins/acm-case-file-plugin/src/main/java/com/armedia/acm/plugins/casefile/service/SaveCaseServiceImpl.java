@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -46,7 +45,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private SaveCaseFileBusinessRule saveRule;
     private CaseFileEventUtility caseFileEventUtility;
     private MuleContextManager muleContextManager;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private OutlookService outlookService;
     private OutlookContainerCalendarService outlookContainerCalendarService;
     private UserDao userDao;
@@ -84,7 +82,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         // call Mule flow to create the Alfresco folder
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", auth);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
 
         MuleMessage received = getMuleContextManager().send("vm://saveCaseFile.in", retval, messageProps);
 
@@ -258,16 +255,6 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.muleContextManager = muleContextManager;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-    
     public OutlookService getOutlookService() {
 		return outlookService;
 	}

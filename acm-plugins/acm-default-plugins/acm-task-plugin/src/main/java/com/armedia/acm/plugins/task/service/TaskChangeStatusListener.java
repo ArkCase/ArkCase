@@ -20,21 +20,7 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private MuleContextManager muleContextManager;
-    private AcmTaskService acmTaskService;
-
-
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(
-            AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
 
     @Override
     public void onApplicationEvent(AcmApplicationTaskEvent event)
@@ -50,11 +36,7 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
                 try
                 {
                     // call Mule flow to create the Alfresco folder
-                    Map<String, Object> messageProps = new HashMap<>();
-                    messageProps.put("auditPropertyEntityAdapter", getAuditPropertyEntityAdapter());
-                    messageProps.put("acmTaskService", getAcmTaskService());
-
-                    MuleMessage msg = getMuleContextManager().send("jms://copyTaskFilesAndFoldersToParent.in", event, messageProps);
+                    MuleMessage msg = getMuleContextManager().send("jms://copyTaskFilesAndFoldersToParent.in", event);
 
                     MuleException e = msg.getInboundProperty("executionException");
 
@@ -89,13 +71,4 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
         this.muleContextManager = muleContextManager;
     }
 
-    public AcmTaskService getAcmTaskService()
-    {
-        return acmTaskService;
-    }
-
-    public void setAcmTaskService(AcmTaskService acmTaskService)
-    {
-        this.acmTaskService = acmTaskService;
-    }
 }
