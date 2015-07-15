@@ -4,9 +4,7 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -74,8 +72,8 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
             {
                 log.trace("sending JMS message.");
             }
-            MuleMessage request = new DefaultMuleMessage(record, messageProperties, getMuleContextManager().getMuleContext());
-            getMuleContextManager().getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, request);
+
+            getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");

@@ -12,7 +12,6 @@ import com.armedia.acm.services.search.service.SearchResults;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -77,9 +76,7 @@ public class ReportServiceImpl implements ReportService{
 				? "vm://getPentahoReports.in"
 				: "vm://getPentahoReportsSecure.in";
 
-		MuleMessage request = new DefaultMuleMessage(reportListUrl, getMuleContextManager().getMuleContext());
-
-		MuleMessage received = getMuleContextManager().getMuleClient().send(muleEndPoint, request);
+		MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl);
 
 		String xml = received.getPayload(String.class);
 		

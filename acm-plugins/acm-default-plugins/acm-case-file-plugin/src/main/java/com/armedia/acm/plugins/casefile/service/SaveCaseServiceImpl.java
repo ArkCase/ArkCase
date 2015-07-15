@@ -26,7 +26,6 @@ import microsoft.exchange.webservices.data.enumeration.MapiPropertyType;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -87,9 +86,8 @@ public class SaveCaseServiceImpl implements SaveCaseService
         messageProps.put("acmUser", auth);
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
 
-        MuleMessage request = new DefaultMuleMessage(retval, messageProps, getMuleContextManager().getMuleContext());
+        MuleMessage received = getMuleContextManager().send("vm://saveCaseFile.in", retval, messageProps);
 
-        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://saveCaseFile.in", request);
         CaseFile saved = received.getPayload(CaseFile.class);
         MuleException e = received.getInboundProperty("saveException");
 

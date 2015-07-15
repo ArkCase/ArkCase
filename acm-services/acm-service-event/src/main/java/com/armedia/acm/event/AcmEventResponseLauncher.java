@@ -2,9 +2,7 @@ package com.armedia.acm.event;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.spring.SpringContextHolder;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -64,8 +62,7 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
 
                 try
                 {
-                    MuleMessage request = new DefaultMuleMessage(acmEvent, messageProperties, getMuleContextManager().getMuleContext());
-                    getMuleContextManager().getMuleClient().dispatch(response.getAction().getTargetMuleEndpoint(), request);
+                    getMuleContextManager().dispatch(response.getAction().getTargetMuleEndpoint(), acmEvent, messageProperties);
                 } catch (MuleException e)
                 {
                     log.error("Could not dispatch Mule event: " + e.getMessage(), e);

@@ -4,7 +4,6 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
@@ -30,9 +29,7 @@ public class SavePersonTransaction
         messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
         messageProps.put("acmPersonDao", getMuleContextManager());
 
-        MuleMessage request = new DefaultMuleMessage(person, messageProps, getMuleContextManager().getMuleContext());
-
-        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://savePerson.in", request);
+        MuleMessage received = getMuleContextManager().send("vm://savePerson.in", person, messageProps);
 
         Person saved = received.getPayload(Person.class);
         MuleException e = received.getInboundProperty("saveException");

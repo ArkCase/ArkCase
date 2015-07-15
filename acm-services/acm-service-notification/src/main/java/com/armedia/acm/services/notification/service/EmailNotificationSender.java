@@ -8,7 +8,6 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -48,8 +47,7 @@ public class EmailNotificationSender implements NotificationSender {
 			messageProps.put("to", notification.getUserEmail());
 			messageProps.put("subject", notification.getTitle());
 
-			MuleMessage request = new DefaultMuleMessage(notification.getNote(), messageProps, getMuleContextManager().getMuleContext());
-			MuleMessage received = getMuleContextManager().getMuleClient().send("vm://sendEmail.in", request);
+			MuleMessage received = getMuleContextManager().send("vm://sendEmail.in", notification.getNote(), messageProps);
 			
 			exception = received.getInboundProperty("sendEmailException");
 		} 

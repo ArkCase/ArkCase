@@ -12,7 +12,6 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
-import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -81,8 +80,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         messageProps.put("cmisFolderId", cmisFolderId);
         messageProps.put("inputStream", fileInputStream);
 
-        MuleMessage request = new DefaultMuleMessage(toAdd, messageProps, getMuleContextManager().getMuleContext());
-        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://addFile.in", request);
+        MuleMessage received = getMuleContextManager().send("vm://addFile.in", toAdd, messageProps);
 
         MuleException e = received.getInboundProperty("saveException");
         if ( e != null )
@@ -123,8 +121,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         messageProps.put("mimeType", ecmFile.getFileMimeType());
         messageProps.put("inputStream", fileInputStream);
 
-        MuleMessage request = new DefaultMuleMessage(ecmFile, messageProps, getMuleContextManager().getMuleContext());
-        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://updateFile.in", request);
+        MuleMessage received = getMuleContextManager().send("vm://updateFile.in", ecmFile, messageProps);
 
         MuleException e = received.getInboundProperty("updateException");
         if ( e != null )
@@ -149,8 +146,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public String downloadFileTransaction(EcmFile ecmFile) throws MuleException {
     	try 
 		{
-            MuleMessage request = new DefaultMuleMessage(ecmFile.getVersionSeriesId(), getMuleContextManager().getMuleContext());
-			MuleMessage message = getMuleContextManager().getMuleClient().send("vm://downloadFileFlow.in", request);
+			MuleMessage message = getMuleContextManager().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId());
 			
 			String result = getContent((ContentStream) message.getPayload());
 			
