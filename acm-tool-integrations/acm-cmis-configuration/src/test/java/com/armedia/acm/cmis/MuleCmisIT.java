@@ -1,9 +1,9 @@
 package com.armedia.acm.cmis;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class MuleCmisIT
 {
     @Autowired
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -28,7 +28,7 @@ public class MuleCmisIT
     {
         String path = "/Sites/acm/documentLibrary/Complaints/testComplaint";
 
-        MuleMessage reply = muleClient.send("vm://createFolder.in", path, null);
+        MuleMessage reply = muleContextManager.send("vm://createFolder.in", path, null);
 
         log.info("Reply payload of type: " + reply.getPayload().getClass().getName());
 

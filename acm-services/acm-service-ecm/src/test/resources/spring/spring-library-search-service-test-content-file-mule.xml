@@ -15,6 +15,4 @@
         </property>
     </bean>
 
-    <bean id="muleClient" factory-bean="muleContextManager" factory-method="getMuleClient" scope="prototype"/>
-
 </beans>

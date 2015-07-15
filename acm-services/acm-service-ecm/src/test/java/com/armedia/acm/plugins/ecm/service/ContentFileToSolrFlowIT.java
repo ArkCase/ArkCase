@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 public class ContentFileToSolrFlowIT
 {
     @Autowired
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -59,7 +59,7 @@ public class ContentFileToSolrFlowIT
 
         Map<String, Object> headers = new HashMap<>();
 
-        MuleMessage response = muleClient.send("jms://solrContentFile.in", testFile, headers);
+        MuleMessage response = muleContextManager.send("jms://solrContentFile.in", testFile, headers);
 
         assertTrue(response.getPayload() != null && response.getPayload() instanceof String);
 
