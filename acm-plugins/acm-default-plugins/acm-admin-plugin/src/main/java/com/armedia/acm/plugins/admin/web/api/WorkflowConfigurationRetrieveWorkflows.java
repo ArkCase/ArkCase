@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by sergey.kolomiets  on 6/9/15.
@@ -32,8 +32,7 @@ public class WorkflowConfigurationRetrieveWorkflows {
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "length", required = false, defaultValue = "10") int length,
             @RequestParam(value = "orderBy", required = false, defaultValue = WorkflowConfigurationService.PROP_CREATED) String orderBy,
-            @RequestParam(value = "isAsc", required = false, defaultValue = "true") boolean isAsc,
-            HttpServletResponse response) throws IOException, AcmWorkflowConfigurationException {
+            @RequestParam(value = "isAsc", required = false, defaultValue = "true") boolean isAsc) throws IOException, AcmWorkflowConfigurationException {
 
         try {
             List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveWorkflows(start, length, orderBy, isAsc);
