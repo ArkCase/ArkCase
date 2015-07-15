@@ -1021,12 +1021,12 @@ CaseFile.View = CaseFile.View || {
                         title: $.t("casefile:people.table.field.type")
                         ,options: CaseFile.Model.Lookup.getPersonTypes
                     }
-                    ,familyName: {
-                        title: $.t("casefile:people.table.field.last-name")
-                        ,width: '15%'
-                    }
                     ,givenName: {
                         title: $.t("casefile:people.table.field.first-name")
+                        ,width: '15%'
+                    }
+                    ,familyName: {
+                        title: $.t("casefile:people.table.field.last-name")
                         ,width: '15%'
                     }
                 }
