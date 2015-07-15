@@ -47,7 +47,7 @@ public class CustomLogoUploadFile {
             }
 
             if (loginLogoFile != null &&  !loginLogoFile.isEmpty()) {
-                if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
+                if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
                     InputStream loginLogoStream = loginLogoFile.getInputStream();
                     customLogoService.updateLoginLogo(loginLogoStream);
                 } else {
