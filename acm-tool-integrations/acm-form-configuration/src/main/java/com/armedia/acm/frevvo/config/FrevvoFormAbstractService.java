@@ -21,6 +21,7 @@ import com.armedia.acm.frevvo.model.FrevvoForm;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.frevvo.model.Strings;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.DateFormats;
@@ -77,7 +78,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
     private String userIpAddress;
     private EcmFileDao ecmFileDao;
     private AcmUserActionExecutor userActionExecutor;
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
     private ObjectAssociationDao objectAssociationDao;
     private FunctionalAccessService functionalAccessService;
     private SearchResults searchResults;
@@ -569,13 +570,13 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
                 true);
 
             EcmFile uploaded = getEcmFileService().upload(
-				attachment.getOriginalFilename(),
-				fileType,
-                file,
-                getAuthentication(),
-                targetCmisFolderId,
-                parentObjectType,
-                parentObjectId);
+					attachment.getOriginalFilename(),
+					fileType,
+					file,
+					getAuthentication(),
+					targetCmisFolderId,
+					parentObjectType,
+					parentObjectId);
 
             return uploaded;
         }
@@ -861,14 +862,16 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService{
 		this.userActionExecutor = userActionExecutor;
 	}
 
-	public MuleClient getMuleClient() {
-		return muleClient;
+	public MuleContextManager getMuleContextManager()
+	{
+		return muleContextManager;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}	
-	
+	public void setMuleContextManager(MuleContextManager muleContextManager)
+	{
+		this.muleContextManager = muleContextManager;
+	}
+
 	public ObjectAssociationDao getObjectAssociationDao() {
 		return objectAssociationDao;
 	}

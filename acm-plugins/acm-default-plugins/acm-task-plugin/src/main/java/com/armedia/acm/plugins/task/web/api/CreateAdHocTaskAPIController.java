@@ -39,7 +39,6 @@ public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
-    private MuleClient muleClient;
     private ExecuteSolrQuery executeSolrQuery;
 
 
@@ -165,14 +164,6 @@ public class CreateAdHocTaskAPIController
     {
         this.taskEventPublisher = taskEventPublisher;
     }
-
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
 
     public ExecuteSolrQuery getExecuteSolrQuery() {
         return executeSolrQuery;

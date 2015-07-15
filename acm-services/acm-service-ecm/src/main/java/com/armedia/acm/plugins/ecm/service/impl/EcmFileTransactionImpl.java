@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -11,9 +12,9 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -29,7 +30,7 @@ import java.util.Map;
  */
 public class EcmFileTransactionImpl implements EcmFileTransaction
 {
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
     private EcmFileDao ecmFileDao;
     private AcmFolderDao folderDao;
     private FolderAndFilesUtils folderAndFilesUtils;
@@ -79,7 +80,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("cmisFolderId", cmisFolderId);
         messageProps.put("inputStream", fileInputStream);
-        MuleMessage received = getMuleClient().send("vm://addFile.in", toAdd, messageProps);
+
+        MuleMessage request = new DefaultMuleMessage(toAdd, messageProps, getMuleContextManager().getMuleContext());
+        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://addFile.in", request);
 
         MuleException e = received.getInboundProperty("saveException");
         if ( e != null )
@@ -120,7 +123,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         messageProps.put("mimeType", ecmFile.getFileMimeType());
         messageProps.put("inputStream", fileInputStream);
 
-        MuleMessage received = getMuleClient().send("vm://updateFile.in", ecmFile, messageProps);
+        MuleMessage request = new DefaultMuleMessage(ecmFile, messageProps, getMuleContextManager().getMuleContext());
+        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://updateFile.in", request);
 
         MuleException e = received.getInboundProperty("updateException");
         if ( e != null )
@@ -144,8 +148,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     public String downloadFileTransaction(EcmFile ecmFile) throws MuleException {
     	try 
-		{			
-			MuleMessage message = getMuleClient().send("vm://downloadFileFlow.in", ecmFile.getVersionSeriesId(), null);
+		{
+            MuleMessage request = new DefaultMuleMessage(ecmFile.getVersionSeriesId(), getMuleContextManager().getMuleContext());
+			MuleMessage message = getMuleContextManager().getMuleClient().send("vm://downloadFileFlow.in", request);
 			
 			String result = getContent((ContentStream) message.getPayload());
 			
@@ -192,14 +197,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 		return content;
 	}
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
     public EcmFileDao getEcmFileDao()

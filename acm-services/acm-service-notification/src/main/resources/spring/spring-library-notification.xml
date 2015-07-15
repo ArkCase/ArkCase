@@ -73,7 +73,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-        <property name="muleClient" ref="muleClient" />
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
 </beans>

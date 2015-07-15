@@ -64,8 +64,7 @@
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="saveRule" ref="saveCaseFileBusinessRule"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
-        <lookup-method name="getMuleClient" bean="muleClient"/>
-        <!--<property name="muleClient" ref="muleClient"/>-->
+        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="outlookService" ref="outlookService"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>

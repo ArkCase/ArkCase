@@ -63,7 +63,7 @@
     </bean>
 
     <bean id="sendDocumentsToSolr" class="com.armedia.acm.services.search.service.SendDocumentsToSolr">
-        <property name="muleClient" ref="muleClient"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
     <bean id="searchResults" class="com.armedia.acm.services.search.service.SearchResults"/>
     <bean id="jpaObjectsToSearchService" class="com.armedia.acm.services.search.service.JpaObjectsToSearchService">
@@ -93,7 +93,7 @@
     </bean>
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
-        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
     <!-- event publishers -->

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
@@ -102,7 +103,7 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
     
     private SaveCaseService saveCaseService;
     
@@ -420,12 +421,14 @@ public class FrevvoFormController implements ApplicationEventPublisherAware {
 		this.caseFilePSFactory = caseFilePSFactory;
 	}
 
-	public MuleClient getMuleClient() {
-		return muleClient;
+	public MuleContextManager getMuleContextManager()
+	{
+		return muleContextManager;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
+	public void setMuleContextManager(MuleContextManager muleContextManager)
+	{
+		this.muleContextManager = muleContextManager;
 	}
 
 	public AcmUserActionExecutor getUserActionExecutor() {
