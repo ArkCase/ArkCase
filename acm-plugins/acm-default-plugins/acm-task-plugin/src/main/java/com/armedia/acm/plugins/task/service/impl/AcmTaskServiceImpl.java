@@ -48,7 +48,6 @@ public class AcmTaskServiceImpl implements AcmTaskService {
     private SearchResults searchResults = new SearchResults();
     private AcmFolderService acmFolderService;
 
-    private MuleClient muleClient;
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void copyTasks(Long fromObjectId,
@@ -219,14 +218,6 @@ public class AcmTaskServiceImpl implements AcmTaskService {
         this.noteDao = noteDao;
     }
 
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
-
-    
     
 }

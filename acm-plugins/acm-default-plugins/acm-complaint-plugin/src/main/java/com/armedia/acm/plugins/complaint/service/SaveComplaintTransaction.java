@@ -1,11 +1,12 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ import java.util.Map;
  */
 public class SaveComplaintTransaction
 {
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private SaveComplaintBusinessRule saveComplaintBusinessRule;
     private ComplaintDao acmComplaintDao;
@@ -43,7 +44,9 @@ public class SaveComplaintTransaction
         messageProps.put("saveComplaintBusinessRule", getSaveComplaintBusinessRule());
         messageProps.put("acmComplaintDao", getAcmComplaintDao());
 
-        MuleMessage received = getMuleClient().send("vm://saveComplaint.in", complaint, messageProps);
+        MuleMessage request = new DefaultMuleMessage(complaint, messageProps, getMuleContextManager().getMuleContext());
+
+        MuleMessage received = getMuleContextManager().getMuleClient().send("vm://saveComplaint.in", request);
         Complaint saved = received.getPayload(Complaint.class);
         MuleException e = received.getInboundProperty("saveException");
 
@@ -57,15 +60,14 @@ public class SaveComplaintTransaction
     }
 
 
-
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()

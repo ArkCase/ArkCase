@@ -1,10 +1,12 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecordFolder;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.ComplaintCreatedEvent;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
+import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -18,7 +20,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 {
     private transient Logger log = LoggerFactory.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     @Override
     public void onApplicationEvent(ComplaintCreatedEvent complaintCreatedEvent)
@@ -52,7 +54,8 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
             {
                 log.trace("sending JMS message.");
             }
-            getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
+            MuleMessage request = new DefaultMuleMessage(folder, messageProperties, getMuleContextManager().getMuleContext());
+            getMuleContextManager().getMuleClient().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, request);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
@@ -65,18 +68,14 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
         }
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
-        // when this class is used as a Spring bean.  But, when used as a non-Spring POJO, i.e. in unit tests,
-        // then this is how the test gets to inject a mock client.
-        return muleClient;
+        return muleContextManager;
     }
 
-    // this method used for unit testing.
-    protected void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
     public AlfrescoRecordsService getAlfrescoRecordsService()

@@ -1,15 +1,15 @@
 package com.armedia.acm.services.search.service;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
-import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
+import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class SendDocumentsToSolr
 {
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -108,7 +108,8 @@ public class SendDocumentsToSolr
                 log.debug("Sending JSON to SOLR: " + json);
             }
 
-            getMuleClient().dispatch(queueName, json, null);
+            MuleMessage request = new DefaultMuleMessage(json, getMuleContextManager().getMuleContext());
+            getMuleContextManager().getMuleClient().dispatch(queueName, request);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Returning JSON: " + json);
@@ -125,7 +126,8 @@ public class SendDocumentsToSolr
             if ( log.isDebugEnabled() ) {
                 log.debug("Sending POJO to SOLR: " + solrDocument);
             }
-            getMuleClient().dispatch(queueName, solrDocument, null);
+            MuleMessage request = new DefaultMuleMessage(solrDocument, getMuleContextManager().getMuleContext());
+            getMuleContextManager().getMuleClient().dispatch(queueName, request);
         }
         catch ( MuleException e ) {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
@@ -137,7 +139,9 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocuments);
-            getMuleClient().dispatch(queueName, json, null);
+
+            MuleMessage request = new DefaultMuleMessage(json, getMuleContextManager().getMuleContext());
+            getMuleContextManager().getMuleClient().dispatch(queueName, request);
             if ( log.isDebugEnabled() )
             {
                 log.debug("Returning JSON: " + json);
@@ -149,13 +153,13 @@ public class SendDocumentsToSolr
         }
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 }

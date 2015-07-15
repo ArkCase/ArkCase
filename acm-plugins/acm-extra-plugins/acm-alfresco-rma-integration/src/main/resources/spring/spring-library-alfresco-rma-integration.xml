@@ -15,19 +15,19 @@
     </bean>
 
     <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
-        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
     <bean id="acmFileListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFileListener">
-        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
     <bean id="alfrescoRecordsService" class="com.armedia.acm.plugins.alfrescorma.service.AlfrescoRecordsService">
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="alfrescoRmaProperties" ref="alfrescoRmaPluginPropertiesForSpring"/>
-        <lookup-method name="getMuleClient" bean="muleClient"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
     
     <bean id="acmComplaintCloseListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintClosedListener">

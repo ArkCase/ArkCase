@@ -371,7 +371,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
                 <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-                <property name="muleClient" ref="muleClient" />
+                <property name="muleContextManager" ref="muleContextManager" />
         </bean>
 	
 	<!-- Task Scheduler -->
@@ -397,7 +397,6 @@
         </property>
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
         <property name="notificationDao" ref="notificationDao" />
-        <property name="muleClient" ref="muleClient" />
 		<property name="notificationEventPublisher" ref="notificationEventPublisher" />
 		<property name="springContextHolder" ref="acmContextHolder"/>
 		<property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>

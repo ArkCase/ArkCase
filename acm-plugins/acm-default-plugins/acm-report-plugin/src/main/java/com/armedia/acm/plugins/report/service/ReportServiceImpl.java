@@ -1,32 +1,7 @@
 package com.armedia.acm.plugins.report.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.pentaho.config.PentahoReportUrl;
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.model.Reports;
@@ -34,6 +9,35 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.mule.DefaultMuleMessage;
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ReportServiceImpl implements ReportService{
 
@@ -44,7 +48,7 @@ public class ReportServiceImpl implements ReportService{
     private String reportServerConfigPropertiesFileLocation;
     private Map<String, String> reportToGroupsMapProperties;
     private Map<String, String> reportPluginProperties;
-	private MuleClient muleClient;
+	private MuleContextManager muleContextManager;
 	private PropertyFileManager propertyFileManager;
 	private PentahoReportUrl reportUrl;
 	private ExecuteSolrQuery executeSolrQuery;
@@ -73,10 +77,10 @@ public class ReportServiceImpl implements ReportService{
 				? "vm://getPentahoReports.in"
 				: "vm://getPentahoReportsSecure.in";
 
-		MuleMessage received = getMuleClient().send(
-				muleEndPoint,
-				reportListUrl,
-				null);
+		MuleMessage request = new DefaultMuleMessage(reportListUrl, getMuleContextManager().getMuleContext());
+
+		MuleMessage received = getMuleContextManager().getMuleClient().send(muleEndPoint, request);
+
 		String xml = received.getPayload(String.class);
 		
 		MuleException e = received.getInboundProperty("getPantehoReportsException");
@@ -363,12 +367,14 @@ public class ReportServiceImpl implements ReportService{
     }
 
 
-	public MuleClient getMuleClient() {
-		return muleClient;
+	public MuleContextManager getMuleContextManager()
+	{
+		return muleContextManager;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
+	public void setMuleContextManager(MuleContextManager muleContextManager)
+	{
+		this.muleContextManager = muleContextManager;
 	}
 
 	public PropertyFileManager getPropertyFileManager() {

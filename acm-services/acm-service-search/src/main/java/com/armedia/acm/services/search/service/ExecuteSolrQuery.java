@@ -1,10 +1,10 @@
 package com.armedia.acm.services.search.service;
 
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.SolrCore;
+import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,7 @@ public class ExecuteSolrQuery {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     public String getResultsByPredefinedQuery( Authentication auth, SolrCore core, String solrQuery, int firstRow,
                                                int maxRows, String sort ) throws MuleException
@@ -40,7 +40,8 @@ public class ExecuteSolrQuery {
         headers.put("acmUser", auth);
         headers.put("rowQueryParametars", rowQueryParameters);
 
-        MuleMessage response = getMuleClient().send(core.getMuleEndpointUrl(), "", headers);
+        MuleMessage request = new DefaultMuleMessage("", headers, getMuleContextManager().getMuleContext());
+        MuleMessage response = getMuleContextManager().getMuleClient().send(core.getMuleEndpointUrl(), request);
 
         log.debug("Response type: " + response.getPayload().getClass());
 
@@ -52,11 +53,13 @@ public class ExecuteSolrQuery {
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    public MuleClient getMuleClient() {
-        return muleClient;
+    public MuleContextManager getMuleContextManager()
+    {
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient) {
-        this.muleClient = muleClient;
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
     }
 }

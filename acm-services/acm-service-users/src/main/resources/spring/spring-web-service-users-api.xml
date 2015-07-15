@@ -15,17 +15,17 @@
     
     <bean id="getGroupAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupAPIController">
     	<property name="groupDao" ref="groupDao" />
-    	<property name="muleClient" ref="muleClient" />
+    	<property name="muleContextManager" ref="muleContextManager" />
     </bean>
     
     <bean id="getGroupSupervisorAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupSupervisorAPIController">
     	<property name="groupDao" ref="groupDao" />
-    	<property name="muleClient" ref="muleClient" />
+    	<property name="muleContextManager" ref="muleContextManager" />
     </bean>
     
     <bean id="getGroupMembersAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupMembersAPIController">
     	<property name="groupDao" ref="groupDao" />
-    	<property name="muleClient" ref="muleClient" />
+    	<property name="muleContextManager" ref="muleContextManager" />
     </bean>
 
     <bean id="saveGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveGroupAPIController">
