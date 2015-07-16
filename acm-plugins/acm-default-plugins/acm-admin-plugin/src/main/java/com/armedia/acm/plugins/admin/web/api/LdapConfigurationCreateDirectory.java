@@ -1,25 +1,18 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import java.io.IOException;
+import java.util.HashMap;
 
 
 /**
@@ -38,8 +31,7 @@ public class LdapConfigurationCreateDirectory {
 
     @ResponseBody
     public String createDirectory(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmLdapConfigurationException {
+            @RequestBody String resource) throws IOException, AcmLdapConfigurationException {
 
         try {
             JSONObject newLdapObject = new JSONObject(resource);

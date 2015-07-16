@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecordFolder;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -9,7 +10,6 @@ import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.client.MuleClient;
 
 import java.util.Collections;
 
@@ -20,17 +20,17 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
 {
     private AcmComplaintFolderListener unit;
     private AlfrescoRecordsService mockService;
-    private MuleClient mockMuleClient;
+    private MuleContextManager mockMuleContextManager;
 
     @Before
     public void setUp()
     {
         unit = new AcmComplaintFolderListener();
         mockService = createMock(AlfrescoRecordsService.class);
-        mockMuleClient = createMock(MuleClient.class);
+        mockMuleContextManager = createMock(MuleContextManager.class);
 
         unit.setAlfrescoRecordsService(mockService);
-        unit.setMuleClient(mockMuleClient);
+        unit.setMuleContextManager(mockMuleContextManager);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
 
         expect(mockService.getRmaMessageProperties()).andReturn(Collections.emptyMap());
 
-        mockMuleClient.dispatch(
+        mockMuleContextManager.dispatch(
                 eq(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT),
                 capture(captureFolder),
                 eq(Collections.emptyMap()));

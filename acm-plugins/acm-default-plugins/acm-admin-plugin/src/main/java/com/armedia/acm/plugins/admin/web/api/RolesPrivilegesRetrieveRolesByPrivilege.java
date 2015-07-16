@@ -1,17 +1,17 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sergey.kolomiets  on 7/8/15.
@@ -29,9 +29,7 @@ public class RolesPrivilegesRetrieveRolesByPrivilege  implements RolePrivilegesC
 
     @ResponseBody
     public List<String> retrieveRoles(
-            @RequestBody String resource,
-            @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName,
-            HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
+            @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName) throws IOException, AcmRolesPrivilegesException{
 
         try {
             return rolesPrivilegesService.retrieveRolesByPrivilege(privilegeName);

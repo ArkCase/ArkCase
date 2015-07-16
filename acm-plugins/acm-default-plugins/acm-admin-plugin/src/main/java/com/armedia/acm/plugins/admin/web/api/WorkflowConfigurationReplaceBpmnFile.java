@@ -4,12 +4,14 @@ import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by sergey.kolomiets  on 6/9/15.
@@ -27,8 +29,7 @@ public class WorkflowConfigurationReplaceBpmnFile {
     )
     @ResponseBody
     public String replaceFile(
-            @RequestParam("file") MultipartFile file,
-            HttpServletResponse response) throws IOException, AcmWorkflowConfigurationException
+            @RequestParam("file") MultipartFile file) throws IOException, AcmWorkflowConfigurationException
     {
 
         try {

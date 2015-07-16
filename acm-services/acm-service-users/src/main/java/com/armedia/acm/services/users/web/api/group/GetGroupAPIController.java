@@ -3,16 +3,12 @@
  */
 package com.armedia.acm.services.users.web.api.group;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -24,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -37,7 +35,7 @@ public class GetGroupAPIController {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 	
 	private AcmGroupDao groupDao;
-	private MuleClient muleClient;
+	private MuleContextManager muleContextManager;
 	
 	@RequestMapping(value="/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -65,8 +63,8 @@ public class GetGroupAPIController {
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -108,8 +106,8 @@ public class GetGroupAPIController {
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -195,8 +193,8 @@ public class GetGroupAPIController {
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -226,8 +224,8 @@ public class GetGroupAPIController {
         headers.put("maxRows", maxRows);
         headers.put("sort", sort);
 		headers.put("acmUser", auth);
-        
-        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+
+        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
         LOG.debug("Response type: " + response.getPayload().getClass());
 
@@ -272,8 +270,8 @@ public class GetGroupAPIController {
 	        headers.put("maxRows", maxRows);
 	        headers.put("sort", sort);
 			headers.put("acmUser", auth);
-	        
-	        MuleMessage response = getMuleClient().send("vm://advancedSearchQuery.in", "", headers);
+
+	        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 	
 	        LOG.debug("Response type: " + response.getPayload().getClass());
 	
@@ -298,12 +296,13 @@ public class GetGroupAPIController {
 		this.groupDao = groupDao;
 	}
 
-	public MuleClient getMuleClient() {
-		return muleClient;
+	public MuleContextManager getMuleContextManager()
+	{
+		return muleContextManager;
 	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
+	public void setMuleContextManager(MuleContextManager muleContextManager)
+	{
+		this.muleContextManager = muleContextManager;
 	}
-	
 }
