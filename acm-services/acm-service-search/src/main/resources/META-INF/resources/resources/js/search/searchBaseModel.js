@@ -505,8 +505,11 @@ SearchBase.Model = {
     ,API_FACET_SEARCH       : "/api/v1/plugin/search/facetedSearch?q="
 
     ,facetSearchListAction : function(searchInfo, postData, jtParams, sortMap, dataMaker, cacheKey) {
-        var searchResult = SearchBase.Model.cacheResult.get(cacheKey);
-        if (searchResult) {
+        var data = SearchBase.Model.cacheResult.get(cacheKey);
+        if (data) {
+            SearchBase.Controller.modelChangedResult(data);
+            var searchResult = data.response;
+            searchInfo.total = searchResult.numFound;
             return Acm.Promise.donePromise(dataMaker(searchResult)).promise();
         }
 
@@ -532,7 +535,7 @@ SearchBase.Model = {
 
                             //var page = Acm.goodValue(jtParams.jtStartIndex, 0);
                             //SearchBase.Model.cacheResult.put(page, searchResult);
-                            SearchBase.Model.cacheResult.put(cacheKey, searchResult);
+                            SearchBase.Model.cacheResult.put(cacheKey, data);
                             SearchBase.Controller.modelChangedResult(data);
                             return dataMaker(searchResult);
 
