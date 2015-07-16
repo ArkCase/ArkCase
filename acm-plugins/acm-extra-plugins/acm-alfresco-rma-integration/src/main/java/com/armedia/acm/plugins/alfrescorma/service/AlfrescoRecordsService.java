@@ -57,51 +57,53 @@ public class AlfrescoRecordsService
 
         for ( AcmCmisObject file : files.getChildren() )
         {
-            AcmRecord record = new AcmRecord();
+            if (!((EcmFileConstants.RECORD).equals(file.getStatus()))) {
+                AcmRecord record = new AcmRecord();
 
-            String objectType = container.getContainerObjectType();
-            String propertyKey = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + objectType;
+                String objectType = container.getContainerObjectType();
+                String propertyKey = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + objectType;
 
-            String categoryFolder = getAlfrescoRmaProperties().getProperty(propertyKey);
+                String categoryFolder = getAlfrescoRmaProperties().getProperty(propertyKey);
 
-            if ( categoryFolder == null || categoryFolder.trim().isEmpty() )
-            {
-                log.error("Unknown category folder for object type: " + objectType + "; will not declare any records");
-                return;
-            }
-
-            String originatorOrg = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG);
-            if ( originatorOrg == null || originatorOrg.trim().isEmpty() )
-            {
-                originatorOrg = AlfrescoRmaPluginConstants.DEFAULT_ORIGINATOR_ORG;
-            }
-
-            record.setEcmFileId(file.getCmisObjectId());
-            record.setCategoryFolder(categoryFolder);
-            record.setOriginatorOrg(originatorOrg);
-            record.setOriginator(file.getModifier());
-            record.setPublishedDate(new Date());
-            record.setReceivedDate(receiveDate);
-            record.setRecordFolder(recordFolderName);
-
-            try
-            {
-                if ( log.isTraceEnabled() )
+                if ( categoryFolder == null || categoryFolder.trim().isEmpty() )
                 {
-                    log.trace("Sending JMS message.");
+                    log.error("Unknown category folder for object type: " + objectType + "; will not declare any records");
+                    return;
                 }
 
-                getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
-                setFileStatusAsRecord(file.getObjectId());
-                if ( log.isTraceEnabled() )
+                String originatorOrg = getAlfrescoRmaProperties().getProperty(AlfrescoRmaPluginConstants.PROPERTY_ORIGINATOR_ORG);
+                if ( originatorOrg == null || originatorOrg.trim().isEmpty() )
                 {
-                    log.trace("Done");
+                    originatorOrg = AlfrescoRmaPluginConstants.DEFAULT_ORIGINATOR_ORG;
                 }
 
-            }
-            catch (MuleException e)
-            {
-                log.error("Could not create RMA folder: " + e.getMessage(), e);
+                record.setEcmFileId(file.getCmisObjectId());
+                record.setCategoryFolder(categoryFolder);
+                record.setOriginatorOrg(originatorOrg);
+                record.setOriginator(file.getModifier());
+                record.setPublishedDate(new Date());
+                record.setReceivedDate(receiveDate);
+                record.setRecordFolder(recordFolderName);
+
+                try
+                {
+                    if ( log.isTraceEnabled() )
+                    {
+                        log.trace("Sending JMS message.");
+                    }
+
+                    getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
+                    setFileStatusAsRecord(file.getObjectId());
+                    if ( log.isTraceEnabled() )
+                    {
+                        log.trace("Done");
+                    }
+
+                }
+                catch (MuleException e)
+                {
+                    log.error("Could not create RMA folder: " + e.getMessage(), e);
+                }
             }
         }
     }

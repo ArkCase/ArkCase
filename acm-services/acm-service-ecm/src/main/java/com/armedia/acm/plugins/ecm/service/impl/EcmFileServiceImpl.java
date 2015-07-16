@@ -449,28 +449,32 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
             }
             else{
-                EcmFileDeclareRequestEvent event = new EcmFileDeclareRequestEvent(ecmFile, authentication);
-                event.setSucceeded(true);
-                getApplicationEventPublisher().publishEvent(event);
+                if (!((EcmFileConstants.RECORD).equals(ecmFile.getStatus()))) {
+                    EcmFileDeclareRequestEvent event = new EcmFileDeclareRequestEvent(ecmFile, authentication);
+                    event.setSucceeded(true);
+                    getApplicationEventPublisher().publishEvent(event);
+                }
             }
         }
     }
 
     @Override
     public void declareFolderAsRecord(Long folderId, Authentication authentication,String parentObjectType, Long parentObjectId)
-            throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
-        if(null != folderId){
+            throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException {
+        if (null != folderId) {
             AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
             AcmCmisObjectList folder = allFilesForFolder(authentication, container, folderId);
-            if(folder == null){
-                log.error("Folder with id: "+ folderId + " does not exists");
-                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
-            }
-            else{
-                EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(folder,container,authentication);
-                event.setSucceeded(true);
-                getApplicationEventPublisher().publishEvent(event);
+            if (folder == null) {
+                log.error("Folder with id: " + folderId + " does not exists");
+                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
+            } else {
+                for (AcmCmisObject file : folder.getChildren()) {
+                    if (!((EcmFileConstants.RECORD).equals(file.getStatus()))) {
+                        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(folder, container, authentication);
+                        event.setSucceeded(true);
+                        getApplicationEventPublisher().publishEvent(event);
+                    }
+                }
             }
         }
     }
