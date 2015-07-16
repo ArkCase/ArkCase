@@ -22,4 +22,7 @@ public interface AlfrescoRmaPluginConstants
     String COMPLAINT_CLOSE_INTEGRATION_KEY = "alfresco.rma.declare-records-on-complaint-close";
     String COMPLAINT_FOLDER_INTEGRATION_KEY = "alfresco.rma.create-record-folder-on-complaint-create";
     String FILE_INTEGRATION_KEY = "alfresco.rma.declare-record-folder-on-file-upload";
+    String FILE_DECLARE_REQUEST_INTEGRATION_KEY = "alfresco.rma.declare-file-record-on-declare-request";
+    String FOLDER_DECLARE_REQUEST_INTEGRATION_KEY = "alfresco.rma.declare-folder-record-on-declare-request";
+
 }
