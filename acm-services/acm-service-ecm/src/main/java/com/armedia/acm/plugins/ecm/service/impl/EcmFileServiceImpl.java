@@ -7,15 +7,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -23,6 +15,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.json.JSONArray;
@@ -440,6 +433,46 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
 
 
+    }
+
+    @Override
+    public void declareFileAsRecord(Long fileId, Authentication authentication)
+            throws AcmObjectNotFoundException
+    {
+
+        if(null != fileId){
+            EcmFile ecmFile = findById(fileId);
+            if (ecmFile == null ){
+                if(log.isErrorEnabled()){
+                    log.error("File with id: "+ fileId + " does not exists");
+                }
+                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE,fileId,"File not found",null);
+            }
+            else{
+                EcmFileDeclareRequestEvent event = new EcmFileDeclareRequestEvent(ecmFile, authentication);
+                event.setSucceeded(true);
+                getApplicationEventPublisher().publishEvent(event);
+            }
+        }
+    }
+
+    @Override
+    public void declareFolderAsRecord(Long folderId, Authentication authentication,String parentObjectType, Long parentObjectId)
+            throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        if(null != folderId){
+            AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId);
+            AcmCmisObjectList folder = allFilesForFolder(authentication, container, folderId);
+            if(folder == null){
+                log.error("Folder with id: "+ folderId + " does not exists");
+                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE,folderId,"Folder not found",null);
+            }
+            else{
+                EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(folder,container,authentication);
+                event.setSucceeded(true);
+                getApplicationEventPublisher().publishEvent(event);
+            }
+        }
     }
 
     private AcmCmisObjectList findObjects(Authentication auth, AcmContainer container, Long folderId, String category, String query,
