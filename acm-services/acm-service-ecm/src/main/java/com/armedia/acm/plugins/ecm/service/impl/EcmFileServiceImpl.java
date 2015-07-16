@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -22,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -66,7 +66,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     private Properties ecmFileServiceProperties;
 
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     private ExecuteSolrQuery solrQuery;
     private Map<String, String> categoryMap;
@@ -212,7 +212,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         try
         {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_CREATE_FOLDER, folderPath, null);
+            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_CREATE_FOLDER, folderPath);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String cmisId = cmisObject.getId();
             return cmisId;
@@ -637,7 +637,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFile result;
 
         try {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
+            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_COPY_FILE, file, props);
 
             if ( message.getInboundPropertyNames().contains(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY)) {
                 MuleException muleException = message.getInboundProperty(EcmFileConstants.COPY_FILE_EXCEPTION_INBOUND_PROPERTY);
@@ -723,7 +723,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFile movedFile;
 
         try {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
+            MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String cmisObjectId = cmisObject.getId();
 
@@ -755,7 +755,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.ECM_FILE_ID, file.getVersionSeriesId());
 
         try {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, file, props);
 
             getEcmFileDao().deleteFile(objectId);
         } catch ( MuleException e ) {
@@ -786,7 +786,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         EcmFile renamedFile;
         try {
-            MuleMessage message = getMuleClient().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_RENAME_FILE, file, props);
             file.setFileName(newFileName);
             renamedFile = getEcmFileDao().save(file);
             return renamedFile;
@@ -828,14 +828,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
     public Map<String, String> getSortParameterNameToCmisFieldName()

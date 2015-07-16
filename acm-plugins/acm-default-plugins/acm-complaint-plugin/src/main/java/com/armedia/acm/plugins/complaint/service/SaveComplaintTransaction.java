@@ -1,10 +1,11 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +23,7 @@ import java.util.Map;
  */
 public class SaveComplaintTransaction
 {
-    private MuleClient muleClient;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private MuleContextManager muleContextManager;
 
     @Transactional
     public Complaint saveComplaint(
@@ -36,8 +36,9 @@ public class SaveComplaintTransaction
 
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        MuleMessage received = getMuleClient().send("vm://saveComplaint.in", complaint, messageProps);
+
+        MuleMessage received = getMuleContextManager().send("vm://saveComplaint.in", complaint, messageProps);
+
         Complaint saved = received.getPayload(Complaint.class);
         MuleException e = received.getInboundProperty("saveException");
 
@@ -51,24 +52,14 @@ public class SaveComplaintTransaction
     }
 
 
-
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
 }

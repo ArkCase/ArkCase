@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
@@ -8,7 +9,6 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -27,6 +27,7 @@ public class AlfrescoRecordsService
 
     private EcmFileService ecmFileService;
     private Properties alfrescoRmaProperties;
+    private MuleContextManager muleContextManager;
     private EcmFileDao ecmFileDao;
 
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate,
@@ -92,7 +93,7 @@ public class AlfrescoRecordsService
                         log.trace("Sending JMS message.");
                     }
 
-                    getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
+                    getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
                     setFileStatusAsRecord(file.getObjectId());
                     if ( log.isTraceEnabled() )
                     {
@@ -155,11 +156,14 @@ public class AlfrescoRecordsService
         this.ecmFileService = ecmFileService;
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
-        // when this class is used as a Spring bean
-        return null;
+        return muleContextManager;
+    }
+
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
     }
 
     public void setAlfrescoRmaProperties(Properties alfrescoRmaProperties)

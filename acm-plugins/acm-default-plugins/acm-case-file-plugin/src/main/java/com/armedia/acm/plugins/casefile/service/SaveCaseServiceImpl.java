@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
@@ -17,22 +17,16 @@ import com.armedia.acm.service.outlook.exception.AcmOutlookCreateItemFailedExcep
 import com.armedia.acm.service.outlook.exception.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
-import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import microsoft.exchange.webservices.data.enumeration.DefaultExtendedPropertySet;
-import microsoft.exchange.webservices.data.enumeration.DeleteMode;
 import microsoft.exchange.webservices.data.enumeration.MapiPropertyType;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
-import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -40,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,8 +44,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
     private CaseFileDao caseFileDao;
     private SaveCaseFileBusinessRule saveRule;
     private CaseFileEventUtility caseFileEventUtility;
-    private MuleClient muleClient;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private MuleContextManager muleContextManager;
     private OutlookService outlookService;
     private OutlookContainerCalendarService outlookContainerCalendarService;
     private UserDao userDao;
@@ -90,8 +82,9 @@ public class SaveCaseServiceImpl implements SaveCaseService
         // call Mule flow to create the Alfresco folder
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", auth);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        MuleMessage received = getMuleClient().send("vm://saveCaseFile.in", retval, messageProps);
+
+        MuleMessage received = getMuleContextManager().send("vm://saveCaseFile.in", retval, messageProps);
+
         CaseFile saved = received.getPayload(CaseFile.class);
         MuleException e = received.getInboundProperty("saveException");
 
@@ -252,26 +245,16 @@ public class SaveCaseServiceImpl implements SaveCaseService
         this.caseFileEventUtility = caseFileEventUtility;
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
-    {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
-    {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-    }
-    
     public OutlookService getOutlookService() {
 		return outlookService;
 	}
