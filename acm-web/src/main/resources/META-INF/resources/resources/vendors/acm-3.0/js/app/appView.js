@@ -242,7 +242,7 @@ App.View = {
         }
         ,onModelDetectedIdle: function() {
             Acm.Timer.useTimer("AboutToLogout"
-                ,15
+                ,15000
                 ,function() {
                     App.View.gotoPage("/logout");
                     return false;
