@@ -342,6 +342,50 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public AcmCmisObjectList allFilesForFolder(Authentication auth,
+                                                  AcmContainer container, Long folderId)
+            throws AcmListObjectsFailedException
+    {
+
+        log.debug("All files for folder with ID " + folderId + "container " + container.getContainerObjectType() + "with ID " + container.getContainerObjectId());
+
+        String query = "(object_type_s:FILE OR object_type_s:FOLDER) AND parent_folder_id_i:" + folderId;
+
+        String filterQuery = "fq=object_type_s:FILE";
+
+        // search for 50 records at a time until we find them all
+        int start = 0;
+        int max = 50;
+        String sortBy = "created";
+        String sortDirection = "ASC";
+
+        AcmCmisObjectList retval = findObjects(auth, container, folderId, EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                start, max, sortBy, sortDirection);
+
+        int totalFiles = retval.getTotalChildren();
+        int foundSoFar = retval.getChildren().size();
+
+        log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+
+        while ( foundSoFar < totalFiles )
+        {
+            start += max;
+
+            AcmCmisObjectList more = findObjects(auth, container, container.getFolder().getId(), EcmFileConstants.CATEGORY_ALL, query, filterQuery,
+                    start, max, sortBy, sortDirection);
+            retval.getChildren().addAll(more.getChildren());
+
+            foundSoFar += more.getChildren().size();
+
+            log.debug("Got files " + start + " to " + foundSoFar + " of a total of " + totalFiles);
+        }
+
+        retval.setMaxRows(totalFiles);
+
+        return retval;
+    }
+
+    @Override
     public EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws  PersistenceException {
 
         EcmFile file = getEcmFileDao().find(fileId);
