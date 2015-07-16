@@ -99,6 +99,9 @@ public interface EcmFileService
                                          String category, String sortBy,
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
+    AcmCmisObjectList allFilesForFolder(Authentication auth,
+                                        AcmContainer container, Long folderId)
+            throws AcmListObjectsFailedException;
 
     EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 

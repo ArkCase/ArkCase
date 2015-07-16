@@ -892,7 +892,7 @@ DocTree.View = DocTree.View || {
         $treeHead.find("input:checkbox").on("click", function(e) {DocTree.View.onClickBtnChkAllDocument(e, this);});
 
     }
-    
+
     ,refreshDocTree: function() {
     	var $tree = this.$tree;
     	var $treeBody = $tree.find("tbody");
@@ -1008,6 +1008,12 @@ DocTree.View = DocTree.View || {
                     }
 
                     var node = $.ui.fancytree.getNode(ui.target);
+                    if ("RECORD" == Acm.goodValue(node.data.status)) {
+                        $s.contextmenu("replaceMenu", DocTree.View.Menu.getMenuForRecords(node));
+                        return true;
+                    }
+
+                    var node = $.ui.fancytree.getNode(ui.target);
                     if (DocTree.View.isSpecialNode(node)) {
                         return false;
                     }
@@ -1046,16 +1052,49 @@ DocTree.View = DocTree.View || {
                         ,{title: $.t("doctree:menu.title-cut"),       cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
                         ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+                        ,{title: $.t("doctree:menu.title-declare"),   cmd: "declare", uiIcon: "ui-icon-locked" }
                     ];
                 } else if (0 >= countFile || 0 < countFolder) {       //folder only menu
                     menu = [{title: $.t("doctree:menu.title-cut"),    cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
                         ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+                        ,{title: $.t("doctree:menu.title-declare"),   cmd: "declare", uiIcon: "ui-icon-locked" }
                     ];
                 } else if (0 < countFile || 0 < countFolder) {        //mix file and folder menu
                     menu = [{title: $.t("doctree:menu.title-cut"),    cmd: "cut", uiIcon: "ui-icon-scissors" }
                         ,{title: $.t("doctree:menu.title-copy"),      cmd: "copy", uiIcon: "ui-icon-copy" }
                         ,{title: $.t("doctree:menu.title-delete"),    cmd: "remove", uiIcon: "ui-icon-trash" }
+                        ,{title: $.t("doctree:menu.title-declare"),   cmd: "declare", uiIcon: "ui-icon-locked" }
+                    ];
+                }
+            }
+            return menu;
+        }
+        ,getMenuForRecords: function(node){
+            var menu = [{title: $.t("doctree:menu.title-no-op"), cmd: "noop", uiIcon: "" }];
+            if (node) {
+                if (DocTree.View.isTopNode(node)) {
+                    menu = [{title: $.t("doctree:menu.title-new-folder"), cmd: "newFolder", uiIcon: "ui-icon-plus" }
+                        ,{title: $.t("doctree:menu.title-new-file"),      children: DocTree.View.Menu.docSubMenu}
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-paste"),         cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+                    ];
+                } else if (DocTree.View.isFolderNode(node)) {
+                    menu = [{title: $.t("doctree:menu.title-new-folder"), cmd: "newFolder", uiIcon: "ui-icon-plus" }
+                        ,{title: $.t("doctree:menu.title-new-file"),      children: DocTree.View.Menu.docSubMenu}
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-copy"),          cmd: "copy", uiIcon: "ui-icon-copy" }
+                        ,{title: $.t("doctree:menu.title-paste"),         cmd: "paste", uiIcon: "ui-icon-clipboard", disabled: true }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                    ];
+                } else if (DocTree.View.isFileNode(node)) {
+                    menu = [{title: $.t("doctree:menu.title-open"),       cmd: "open", uiIcon: "ui-icon-folder-open" }
+                        ,{title: $.t("doctree:menu.title-email"),         cmd: "email", uiIcon: "ui-icon-mail-closed" }
+                        ,{title: $.t("doctree:menu.title-print"),         cmd: "print", uiIcon: "ui-icon-print" }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-copy"),          cmd: "copy", uiIcon: "ui-icon-copy" },{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-separator") }
+                        ,{title: $.t("doctree:menu.title-download"),      cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
                     ];
                 }
             }
@@ -1080,6 +1119,7 @@ DocTree.View = DocTree.View || {
                         ,{title: $.t("doctree:menu.title-separator") }
                         ,{title: $.t("doctree:menu.title-rename"),        cmd: "rename", uiIcon: "ui-icon-pencil" }
                         ,{title: $.t("doctree:menu.title-delete"),        cmd: "remove", uiIcon: "ui-icon-trash" }
+                        ,{title: $.t("doctree:menu.title-declare"),       cmd: "declare", uiIcon: "ui-icon-locked" }
                     ];
                 } else if (DocTree.View.isFileNode(node)) {
                     menu = [{title: $.t("doctree:menu.title-open"),       cmd: "open", uiIcon: "ui-icon-folder-open" }
@@ -1096,6 +1136,7 @@ DocTree.View = DocTree.View || {
                         ,{title: $.t("doctree:menu.title-separator") }
                         ,{title: $.t("doctree:menu.title-download"),      cmd: "download", uiIcon: "ui-icon-arrowthickstop-1-s" }
                         ,{title: $.t("doctree:menu.title-replace"),       cmd: "replace", uiIcon: "" }
+                        ,{title: $.t("doctree:menu.title-declare"),       cmd: "declare", uiIcon: "ui-icon-locked" }
                     ];
                 }
             }
@@ -1470,6 +1511,26 @@ DocTree.View = DocTree.View || {
                     }
                     else{
                         DocTree.View.Email.showEmailDialog(node);
+                    }
+                    break;
+                case "declare":
+                    var declareAsRecordData = [];
+                    if(batch){
+                        for(var i = 0; i < selNodes.length; i++){
+                            var declareAsRecord = {};
+                            declareAsRecord.id = Acm.goodValue(selNodes[i].data.objectId);
+                            declareAsRecord.type = Acm.goodValue(selNodes[i].data.objectType.toUpperCase());
+                            declareAsRecordData.push(declareAsRecord);
+                        }
+                    }
+                    else{
+                        var declareAsRecord = {};
+                        declareAsRecord.id = Acm.goodValue(node.data.objectId);
+                        declareAsRecord.type = Acm.goodValue(node.data.objectType.toUpperCase());
+                        declareAsRecordData.push(declareAsRecord);
+                    }
+                    if(!Acm.isArrayEmpty(declareAsRecordData)){
+                        DocTree.View.Op.declareAsRecord(declareAsRecordData)
                     }
                     break;
                 case "print":
@@ -2197,8 +2258,20 @@ DocTree.View = DocTree.View || {
             return $dfd.promise();
         }
 
+        ,declareAsRecord: function(declareAsRecordData){
+            DocTree.Model.declareAsRecord(declareAsRecordData)
+                .done(function() {
+                    App.View.MessageBoard.show($.t("doctree:error.declare-successful"));
+                    DocTree.View.refreshTree();
+                })
+                .fail(function(response) {
+                    App.View.MessageBoard.show($.t("doctree:error.declare-record"));
+                });
+        }
 
     }
+
+
 
     ,getNodePathNames: function(node) {
         var names = [];

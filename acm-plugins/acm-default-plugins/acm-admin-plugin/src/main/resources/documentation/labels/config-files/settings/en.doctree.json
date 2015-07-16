@@ -16,6 +16,10 @@
         ,"defaultValue": "Are you sure to set back to older version?"
         ,"description": ""
     }
+    ,"declare-successful": {"value": "Declare successful. Refreshing Document Tree..."
+        ,"defaultValue": "Declare successful. Refreshing Document Tree..."
+        ,"description": ""
+    }
     ,"error": {
         "retrieve-folder-list": {"value": "Error occurred when retrieving folder list "
             ,"defaultValue": "Error occurred when retrieving folder list "
@@ -83,6 +87,10 @@
         }
         ,"email-retry": {"value": "Please check provided email addresses and try again"
             ,"defaultValue": "Please check provided email addresses and try again"
+            ,"description": ""
+        }
+        ,"declare-record": {"value": "Error occured when declaring record. Please try again."
+            ,"defaultValue": "Error occured when declaring record. Please try again."
             ,"description": ""
         }
 
