@@ -140,6 +140,8 @@
     </bean>
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+    <bean id="parentIdEntityAdapter" class="com.armedia.acm.data.ParentIdEntityAdapter"/>
+
 
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
         <property name="springContextHolder" ref="acmContextHolder"/>
@@ -149,6 +151,7 @@
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
                 <ref bean="auditPropertyEntityAdapter"/>
+                <ref bean="parentIdEntityAdapter"/>
             </list>
         </property>
     </bean>

@@ -53,11 +53,6 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="02-person-switch-to-sequence-pk" author="dmiller">
-        <dropDefaultValue tableName="acm_person" columnName="cm_person_id"/>
-        <modifyDataType tableName="acm_person" columnName="cm_person_id" newDataType="${fkIdType}"/>
-    </changeSet>
-
     <changeSet id="03-add-title-and-company-columns" author="dmiller">
         <addColumn tableName="acm_person">
             <column name="cm_person_company_name" type="VARCHAR(1024)"/>

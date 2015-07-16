@@ -6,7 +6,7 @@
 
 	<changeSet id="01-create-costsheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_costsheet">
-	         <column name="cm_costsheet_id" type="NUMBER(32,0)">
+	         <column name="cm_costsheet_id" type="${idType}" autoIncrement="${autoIncrement}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
 	         </column>
 	         <column name="cm_costsheet_user_id" type="VARCHAR(1024)">
@@ -41,10 +41,10 @@
 
 	 <changeSet id="02-create-cost-table" author="riste.tutureski">
 	     <createTable tableName="acm_cost">
-	         <column name="cm_cost_id" type="NUMBER(32,0)">
+	         <column name="cm_cost_id" type="${idType}" autoIncrement="${autoIncrement}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
 	         </column>
-	         <column name="cm_cost_costsheet_id" type="NUMBER(32,0))">
+	         <column name="cm_cost_costsheet_id" type="${fkIdType}">
 	             <constraints nullable="false"/>
 	         </column>
 	         <column name="cm_cost_date" type="${timestampType}">
@@ -103,7 +103,7 @@
      
      <changeSet id="06-add-container-id-in-acm-costsheet-table" author="riste.tutureski">
         <addColumn tableName="acm_costsheet">
-            <column name="cm_container_id" type="NUMBER(32,0)"/>
+            <column name="cm_container_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
