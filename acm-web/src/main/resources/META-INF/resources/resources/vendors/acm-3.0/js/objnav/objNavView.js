@@ -64,7 +64,7 @@ ObjNav.View = {
             ObjNav.View.Navigator.refreshTree(key);
         }
         ,onModelRetrievedObjectListError: function(error) {
-            Acm.Dialog.error(error.errMsg);
+            Acm.Dialog.error(error.errorMsg);
             //ObjNav.View.Navigator.refreshTree(null);
         }
         ,onTopbarViewSetAsnData: function(asnData) {
