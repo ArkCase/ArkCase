@@ -64,7 +64,7 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
     }
 
     @Test
-    public void successfulFolderDeclareRequest_shouldNotDeclareRecords()
+    public void successfulFolderDeclareRequest_shouldDeclareRecords()
     {
         AcmCmisObjectList acmCmisObjectList = new AcmCmisObjectList();
         acmCmisObjectList.setContainerObjectId(123L);
