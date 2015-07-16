@@ -603,7 +603,6 @@ DocTree.Model = DocTree.Model || {
             ,url: url
             ,data: JSON.stringify(data)
             ,callback: function(response) {
-                var z = 1;
                 return true;
             }
         })

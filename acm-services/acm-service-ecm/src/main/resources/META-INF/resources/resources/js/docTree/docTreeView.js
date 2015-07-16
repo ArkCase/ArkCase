@@ -1530,7 +1530,13 @@ DocTree.View = DocTree.View || {
                         declareAsRecordData.push(declareAsRecord);
                     }
                     if(!Acm.isArrayEmpty(declareAsRecordData)){
-                        DocTree.View.Op.declareAsRecord(declareAsRecordData)
+                        if(batch){
+                            DocTree.View.Op.declareAsRecord(batch,selNodes,declareAsRecordData);
+                        }
+                        else{
+                            DocTree.View.Op.declareAsRecord(batch,node,declareAsRecordData);
+                        }
+
                     }
                     break;
                 case "print":
@@ -2258,15 +2264,35 @@ DocTree.View = DocTree.View || {
             return $dfd.promise();
         }
 
-        ,declareAsRecord: function(declareAsRecordData){
+        ,declareAsRecord: function(batch, node, declareAsRecordData){
             DocTree.Model.declareAsRecord(declareAsRecordData)
-                .done(function() {
-                    App.View.MessageBoard.show($.t("doctree:error.declare-successful"));
-                    DocTree.View.refreshTree();
-                })
-                .fail(function(response) {
-                    App.View.MessageBoard.show($.t("doctree:error.declare-record"));
-                });
+            .done(function() {
+                if(batch){
+                    for(var j = 0; j < node.length; j++){
+                        if (DocTree.View.isFolderNode(node[j])) {
+                            for(var i = 0; i < node[j].children.length; i++){
+                                if(DocTree.View.validateNode(node[j].children[i])){
+                                    node[j].children[i].data.status = "RECORD";
+                                    node[j].children[i].renderTitle();
+                                }
+                            }
+                        }
+                        else if (DocTree.View.isFileNode(node[j])) {
+                            node[j].data.status = "RECORD";
+                            node[j].renderTitle();
+                        }
+                    }
+                }
+                else{
+                    if (DocTree.View.isFileNode(node)) {
+                        node.data.status = "RECORD";
+                        node.renderTitle();
+                    }
+                }
+            })
+            .fail(function(response) {
+                App.View.MessageBoard.show($.t("doctree:error.declare-record"));
+            });
         }
 
     }
