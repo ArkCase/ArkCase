@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
-import com.armedia.acm.plugins.admin.exception.CustomLogoException;
+import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -41,16 +41,16 @@ public class CustomLogoUploadFile {
                     InputStream headerLogoStream = headerLogoFile.getInputStream();
                     customLogoService.updateHeaderLogo(headerLogoStream);
                 } else {
-                    throw new CustomLogoException("Only PNG files are supported for logo");
+                    throw new AcmCustomLogoException("Only PNG files are supported for logo");
                 }
             }
 
             if (loginLogoFile != null &&  !loginLogoFile.isEmpty()) {
-                if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
+                if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
                     InputStream loginLogoStream = loginLogoFile.getInputStream();
                     customLogoService.updateLoginLogo(loginLogoStream);
                 } else {
-                    throw new CustomLogoException("Only PNG files are supported for logo");
+                    throw new AcmCustomLogoException("Only PNG files are supported for logo");
                 }
             }
 
