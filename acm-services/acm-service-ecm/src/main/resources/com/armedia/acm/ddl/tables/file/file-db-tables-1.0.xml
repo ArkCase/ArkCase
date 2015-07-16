@@ -19,9 +19,7 @@
     <changeSet id="01-create-file-table" author="dmiller">
         <createTable tableName="acm_file">
             <column name="cm_file_id" type="${idType}" autoIncrement="${autoIncrement}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_file"/>
+                <constraints primaryKey="true" primaryKeyName="pk_file" nullable="false"/>
             </column>
             <column name="cm_file_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -48,12 +46,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-    </changeSet>
-
-    <changeSet id="02-file-switch-to-sequence-pk" author="dmiller">
-        <dropDefaultValue tableName="acm_file" columnName="cm_file_id"/>
-        <modifyDataType tableName="acm_file" columnName="cm_file_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="files-03-add-file-type-column" author="dmiller">

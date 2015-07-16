@@ -101,7 +101,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Column(name = "cm_case_priority")
     private String priority;
 
-    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    @Column(name = "cm_object_type", insertable = false, updatable = false)
     private String objectType = CaseFileConstants.OBJECT_TYPE;
 
     @OneToMany (cascade = CascadeType.ALL, orphanRemoval=true)
@@ -165,7 +165,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
      * Container folder where the case file's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumn(name = "cm_container_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
+    })
     private AcmContainer container = new AcmContainer();
 
     @Column(name = "cm_courtroom_name")

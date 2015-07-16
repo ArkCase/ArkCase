@@ -109,18 +109,27 @@
             <properties>
                 <dbms.name>postgresql</dbms.name>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>oracle</id>
             <properties>
                 <dbms.name>oracle</dbms.name>
             </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <id>mysql</id>
             <properties>
                 <dbms.name>mysql</dbms.name>
             </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
         </profile>
     </profiles>
 
@@ -139,7 +148,7 @@
                         </goals>
                         <configuration>
                             <overWrite>true</overWrite>
-                            <sourceFile>src/main/resources/documentation/config-files/datasource-${dbms.name}.properties</sourceFile>
+                            <sourceFile>${user.home}/.acm/datasource-config/datasource-${dbms.name}.properties</sourceFile>
                             <destinationFile>${user.home}/.acm/datasource.properties</destinationFile>
                         </configuration>
                     </execution>
