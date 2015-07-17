@@ -37,6 +37,12 @@ public class AdvancedSearchAPIController {
             log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
         }
 
+        // if the query ends in a *, it has to be quoted, or Solr will not find anything somehow.
+        if ( query.endsWith("*") )
+        {
+            query = "\"" + query + "\"";
+        }
+
         return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort);
     }
 

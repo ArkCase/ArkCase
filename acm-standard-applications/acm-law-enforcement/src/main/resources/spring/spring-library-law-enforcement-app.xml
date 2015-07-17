@@ -3,9 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
-                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
     <task:annotation-driven />
 
@@ -35,9 +35,9 @@
     <import resource="file:${user.home}/.acm/app-config.xml"/>
     
     <!-- Reload .properties files -->
-    <bean id="reloadPropertiesFiles" class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
-			<bean id="reloadProperties" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+    <bean id="reloadPropertiesFiles" class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
+			<bean id="reloadProperties" class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 				<property name="period" value="1000"/>
 				<property name="runnable">
 					<bean class="net.unicon.springframework.addons.properties.ReloadConfiguration">
