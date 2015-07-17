@@ -191,8 +191,8 @@ ObjNav.View = {
                         var obj = objList[i];
                         var nodeId      = ObjNav.Model.interface.nodeId(obj);
                         var nodeType    = ObjNav.Model.interface.nodeType(obj);
-                        var nodeTitle   = ObjNav.View.interface.nodeTitle(obj);
-                        var nodeToolTip = ObjNav.View.interface.nodeToolTip(obj);
+                        var nodeTitle   = ObjNav.Model.interface.nodeTitle(obj);
+                        var nodeToolTip = ObjNav.Model.interface.nodeToolTip(obj);
                         if (nodeId && nodeType) {
                             var objKey = ObjNav.Model.Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                             builder.addLeaf({key: objKey
@@ -364,7 +364,7 @@ ObjNav.View = {
         ,updateObjNode: function(nodeType, nodeId) {
             var objSolr = ObjNav.Model.List.getSolrObject(nodeType, nodeId);
             if (ObjNav.Model.List.validateObjSolr(objSolr)) {
-                var nodeTitle = ObjNav.View.interface.nodeTitle(objSolr);
+                var nodeTitle = ObjNav.Model.interface.nodeTitle(objSolr);
                 var key = ObjNav.Model.Tree.Key.getKeyByObj(nodeType, nodeId);
                 ObjNav.View.Navigator.setTitle(key, nodeTitle);
             }
