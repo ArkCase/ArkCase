@@ -3,27 +3,9 @@
  */
 package com.armedia.acm.services.notification.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.capture;
-import static org.junit.Assert.assertEquals;
-
-import org.easymock.Capture;
-import org.easymock.EasyMockSupport;
-import org.junit.Before;
-import org.junit.Test;
-import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.BasicNotificationRule;
@@ -31,6 +13,20 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.easymock.Capture;
+import org.easymock.EasyMockSupport;
+import org.junit.Before;
+import org.junit.Test;
+import org.mule.api.MuleException;
+import org.mule.api.MuleMessage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 /**
  * @author riste.tutureski
@@ -41,7 +37,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 	private NotificationServiceImpl notificationService;
 	private NotificationDao mockNotificationDao;
 	private PropertyFileManager mockPropertyFileManager;
-	private MuleClient mockMuleClient;
+	private MuleContextManager mockMuleContextManager;
 	private NotificationEventPublisher mockNotificationEventPublisher;
 	private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
 	private MuleMessage mockMuleMessage;
@@ -57,7 +53,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 		
 		mockNotificationDao = createMock(NotificationDao.class);
 		mockPropertyFileManager = createMock(PropertyFileManager.class);
-		mockMuleClient = createMock(MuleClient.class);
+		mockMuleContextManager = createMock(MuleContextManager.class);
 		mockNotificationEventPublisher = createMock(NotificationEventPublisher.class);
 		mockAuditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
 		mockMuleMessage = createMock(MuleMessage.class);
@@ -73,7 +69,6 @@ public class NotificationServiceTest extends EasyMockSupport {
 		
 		notificationService.setNotificationDao(mockNotificationDao);
 		notificationService.setPropertyFileManager(mockPropertyFileManager);
-		notificationService.setMuleClient(mockMuleClient);
 		notificationService.setNotificationEventPublisher(mockNotificationEventPublisher);
 		notificationService.setSpringContextHolder(mockSpringContextHolder);
 		notificationService.setBatchRun(true);
@@ -150,7 +145,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 		
 		EmailNotificationSender emailNotificationSender = new EmailNotificationSender();
 		emailNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-		emailNotificationSender.setMuleClient(mockMuleClient);
+		emailNotificationSender.setMuleContextManager(mockMuleContextManager);
 		emailNotificationSender.setPropertyFileManager(mockPropertyFileManager);
 		
 		Map<String, NotificationSender> senders = new HashMap<>();
@@ -176,7 +171,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 		expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture))).andReturn("from").anyTimes();
 		try 
 		{
-			expect(mockMuleClient.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
+			expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
 		} catch (MuleException e) 
 		{
 			
@@ -269,7 +264,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 		
 		EmailNotificationSender emailNotificationSender = new EmailNotificationSender();
 		emailNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-		emailNotificationSender.setMuleClient(mockMuleClient);
+		emailNotificationSender.setMuleContextManager(mockMuleContextManager);
 		emailNotificationSender.setPropertyFileManager(mockPropertyFileManager);
 		
 		Map<String, NotificationSender> senders = new HashMap<>();
@@ -298,7 +293,7 @@ public class NotificationServiceTest extends EasyMockSupport {
 		expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
 		try 
 		{
-			expect(mockMuleClient.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
+			expect(mockMuleContextManager.send(eq("vm://sendEmail.in"), eq("note"), eq(messageProps))).andReturn(mockMuleMessage).anyTimes();
 		} catch (MuleException e) 
 		{
 			

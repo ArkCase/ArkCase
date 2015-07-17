@@ -39,9 +39,10 @@
         </dependency>
         
         <dependency>
-			<groupId>net.unicon.springframework</groupId>
-			<artifactId>springframework-addons</artifactId>
-		</dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-reload-properties</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         
     </dependencies>
 

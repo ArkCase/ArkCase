@@ -28,9 +28,7 @@ public class RolesPrivilegesRetrievePrivileges  {
     })
 
     @ResponseBody
-    public String retrievePrivileges(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
+    public String retrievePrivileges() throws IOException, AcmRolesPrivilegesException{
 
         try {
             JSONObject jsonPrivileges = new JSONObject(rolesPrivilegesService.retrievePrivileges());

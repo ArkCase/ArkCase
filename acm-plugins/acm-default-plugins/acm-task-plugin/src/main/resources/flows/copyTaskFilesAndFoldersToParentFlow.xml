@@ -3,7 +3,7 @@
       xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
-      version="CE-3.5.0"
+      version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
@@ -23,9 +23,9 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <scripting:text><![CDATA[
 
                         // ensure we set the right modifier and creator for any objects we end up inserting or updating
-                        registry.auditPropertyEntityAdapter.setUserId(message.payload.getUserId());
+                        muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(message.payload.getUserId());
 
-                        registry.acmTaskService.copyTaskFilesAndFoldersToParent(message.payload.getAcmTask());
+                        muleContext.registry.get("arkContext").getBean("acmTaskService").copyTaskFilesAndFoldersToParent(message.payload.getAcmTask());
 
                         return payload;
                         ]]>

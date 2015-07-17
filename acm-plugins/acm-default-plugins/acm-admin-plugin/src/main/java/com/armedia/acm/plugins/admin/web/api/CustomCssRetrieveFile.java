@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -22,8 +21,7 @@ public class CustomCssRetrieveFile {
 
     @RequestMapping(value = "/customcss", method = RequestMethod.GET, produces = "text/css")
     @ResponseBody
-    public String retrieveFile(
-            HttpServletResponse response) throws IOException, AcmCustomCssException {
+    public String retrieveFile() throws IOException, AcmCustomCssException {
 
         try {
             String customCSSFileContent = customCssService.getFile();

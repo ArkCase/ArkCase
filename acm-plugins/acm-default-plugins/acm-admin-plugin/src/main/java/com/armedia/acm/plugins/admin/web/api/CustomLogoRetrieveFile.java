@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -23,8 +22,7 @@ public class CustomLogoRetrieveFile {
 
     @RequestMapping(value = "/headerlogo.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public byte[] retrieveHeaderLogo(
-            HttpServletResponse response) throws IOException, AcmCustomCssException {
+    public byte[] retrieveHeaderLogo() throws IOException, AcmCustomCssException {
 
         try {
             byte[] logo = customLogoService.getHeaderLogo();
@@ -39,8 +37,7 @@ public class CustomLogoRetrieveFile {
 
     @RequestMapping(value = "/loginlogo.png", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
-    public byte[] retrieveLoginLogo(
-            HttpServletResponse response) throws IOException, AcmCustomCssException {
+    public byte[] retrieveLoginLogo() throws IOException, AcmCustomCssException {
 
         try {
             byte[] logo = customLogoService.getLoginLogo();
