@@ -1,10 +1,11 @@
 package com.armedia.acm.plugins.profile.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,16 +17,16 @@ import java.util.Map;
  */
 public class SaveUserOrgTransaction {
 
-    private MuleClient muleClient;
-    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private MuleContextManager muleContextManager;
 
     @Transactional
     public UserOrg saveUserOrg(UserOrg userOrgInfo, Authentication authentication) throws MuleException {
 
         Map<String, Object> messageProps = new HashMap<>();
         messageProps.put("acmUser", authentication);
-        messageProps.put("auditAdapter", getAuditPropertyEntityAdapter());
-        MuleMessage received = getMuleClient().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
+
+        MuleMessage received = getMuleContextManager().send("vm://saveUserOrg.in", userOrgInfo, messageProps);
+
         UserOrg saved = received.getPayload(UserOrg.class);
         MuleException e = received.getInboundProperty("saveException");
 
@@ -35,19 +36,13 @@ public class SaveUserOrgTransaction {
         return saved;
     }
 
-    public MuleClient getMuleClient() {
-        return muleClient;
+    public MuleContextManager getMuleContextManager()
+    {
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient) {
-        this.muleClient = muleClient;
-    }
-
-    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
-        return auditPropertyEntityAdapter;
-    }
-
-    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
-        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
     }
 }

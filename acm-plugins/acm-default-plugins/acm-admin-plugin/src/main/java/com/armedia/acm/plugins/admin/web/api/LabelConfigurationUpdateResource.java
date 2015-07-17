@@ -1,20 +1,20 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.admin.exception.AcmLabelConfigurationException;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.zip.JSONzip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URLDecoder;
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 /**
@@ -34,8 +34,7 @@ public class LabelConfigurationUpdateResource {
     public void updateResource(
             @RequestParam("lang") String lang,
             @RequestParam("ns") String ns,
-            @RequestBody String resource,
-            HttpServletResponse response, boolean isInline) throws IOException, AcmLabelConfigurationException {
+            @RequestBody String resource) throws IOException, AcmLabelConfigurationException {
 
         String fileName = String.format(adminResourcesFilesLocation, lang, ns);
 

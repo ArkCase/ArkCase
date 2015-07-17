@@ -1,18 +1,18 @@
 package com.armedia.acm.plugins.task.web.api;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.plugins.task.exception.AcmTaskException;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
+import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.service.TaskDao;
+import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,16 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.SolrResponse;
-import com.armedia.acm.plugins.task.service.TaskDao;
-import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import javax.servlet.http.HttpSession;
 
 
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
@@ -39,7 +30,6 @@ public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
-    private MuleClient muleClient;
     private ExecuteSolrQuery executeSolrQuery;
 
 
@@ -165,14 +155,6 @@ public class CreateAdHocTaskAPIController
     {
         this.taskEventPublisher = taskEventPublisher;
     }
-
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
 
     public ExecuteSolrQuery getExecuteSolrQuery() {
         return executeSolrQuery;

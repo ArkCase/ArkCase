@@ -11,20 +11,18 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
-import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -48,7 +46,6 @@ public class AcmTaskServiceImpl implements AcmTaskService {
     private SearchResults searchResults = new SearchResults();
     private AcmFolderService acmFolderService;
 
-    private MuleClient muleClient;
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void copyTasks(Long fromObjectId,
@@ -219,14 +216,6 @@ public class AcmTaskServiceImpl implements AcmTaskService {
         this.noteDao = noteDao;
     }
 
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
 
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
-
-    
     
 }

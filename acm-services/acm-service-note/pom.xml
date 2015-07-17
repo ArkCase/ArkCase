@@ -99,10 +99,9 @@
 
         <!-- preconditions -->
         <dependency>
-            <groupId>com.google.collections</groupId>
-            <artifactId>google-collections</artifactId>
-            <version>${google-collections.version}</version>
-        </dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
 
 
         <!-- logging -->

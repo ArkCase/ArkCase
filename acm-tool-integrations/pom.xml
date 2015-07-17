@@ -17,7 +17,6 @@
         <module>acm-activemq-configuration</module>
         <module>acm-activiti-actions</module>
         <module>acm-activiti-configuration</module>
-        <module>acm-activiti-mule-listener</module>
         <module>acm-cmis-configuration</module>
         <module>acm-drools-rule-monitor</module>
         <module>acm-files-folder-watcher</module>
@@ -32,6 +31,7 @@
         <module>acm-object-change-status</module>
         <module>acm-encryption</module>
         <module>acm-email</module>
-    </modules>
+        <module>acm-reload-properties</module>
+  </modules>
 
 </project>

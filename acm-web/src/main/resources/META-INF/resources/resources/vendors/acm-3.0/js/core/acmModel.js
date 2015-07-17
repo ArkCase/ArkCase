@@ -198,7 +198,6 @@ Acm.Model.CacheFifo.prototype = {
                         if (expiration < now - ts) {
                             that.remove(key);
                         }
-                        var z = 1;
                     }
                     return true;
                 }

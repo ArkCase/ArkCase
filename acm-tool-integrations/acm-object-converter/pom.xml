@@ -45,5 +45,10 @@
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
     </dependencies>
 </project>
