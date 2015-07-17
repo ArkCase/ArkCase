@@ -156,8 +156,13 @@
         ,"title-print": {"value": "Print <kbd>Ctrl+P</kbd>"
             ,"defaultValue":    "Print <kbd>Ctrl+P</kbd>"
             ,"description": ""
+        },
+        "title-declare": {"value": "Declare as Record(s)"
+            ,"defaultValue":    "Declare as Record(s)"
+            ,"description": ""
         }
-    }
+
+}
     ,"tree": {
         "tooltip-prev-items": {"value": "Review previous items"
             ,"defaultValue": "Review previous items"
