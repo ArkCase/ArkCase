@@ -121,7 +121,7 @@ ObjNav.View = {
 
 
         ,getTabIdsByKey: function(key) {
-            var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+            var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
             var tabIds = [];
             //var tabIds = ["tabBlank"];
             if (Acm.isNotEmpty(key)) {
@@ -136,7 +136,7 @@ ObjNav.View = {
             return tabIds;
         }
         ,getIconByKey: function(key) {
-            var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+            var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
             var icon = null;
             if (Acm.isNotEmpty(key)) {
                 var nodeType = ObjNav.Model.Tree.Key.getNodeTypeByKey(key);
@@ -150,7 +150,7 @@ ObjNav.View = {
             return icon;
         }
         ,getTabIds: function() {
-            var nodeTypeMap = ObjNav.View.interface.nodeTypeMap();
+            var nodeTypeMap = ObjNav.Model.interface.nodeTypeMap();
             var tabIds = [];
             for (var i = 0; i < nodeTypeMap.length; i++) {
                 var tabIdsThis = nodeTypeMap[i].tabIds;
