@@ -1,18 +1,17 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,10 +29,8 @@ public class RolesPrivilegesAddRolesPrivileges implements RolePrivilegesConstant
 
     @ResponseBody
     public String addRolesPrivileges(
-            @RequestBody String resource,
             @PathVariable(PROP_ROLES_NAMES) String rolesNames,
-            @PathVariable(PROP_PRIVILEGES_NAMES) String privilegesNames,
-            HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
+            @PathVariable(PROP_PRIVILEGES_NAMES) String privilegesNames) throws IOException, AcmRolesPrivilegesException{
 
         try {
             List<String> roles = Arrays.asList(rolesNames.split(","));

@@ -3,19 +3,7 @@
  */
 package com.armedia.acm.services.notification.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import org.mule.api.client.MuleClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
@@ -23,6 +11,16 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -38,7 +36,6 @@ public class NotificationServiceImpl implements NotificationService {
     private PropertyFileManager propertyFileManager;
     private String notificationPropertyFileLocation;
     private NotificationDao notificationDao;
-    private MuleClient muleClient;
     private NotificationEventPublisher notificationEventPublisher;
     private SpringContextHolder springContextHolder;
 	private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
@@ -235,13 +232,6 @@ public class NotificationServiceImpl implements NotificationService {
 		this.notificationDao = notificationDao;
 	}
 
-	public MuleClient getMuleClient() {
-		return muleClient;
-	}
-
-	public void setMuleClient(MuleClient muleClient) {
-		this.muleClient = muleClient;
-	}
 
 	public NotificationEventPublisher getNotificationEventPublisher() {
 		return notificationEventPublisher;
