@@ -39,12 +39,6 @@ Timesheet.Model = {
         ,nodeType: function(objSolr) {
             return Timesheet.Model.DOC_TYPE_TIMESHEET;
         }
-        ,nodeTitle: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
-        }
-        ,nodeToolTip: function(objSolr) {
-            return Acm.goodValue(objSolr.name);
-        }
         ,objToSolr: function(objData) {
             var solr = {};
             solr.create_tdt = objData.created;
@@ -58,9 +52,6 @@ Timesheet.Model = {
         }
         ,validateObjData: function(data) {
             return Timesheet.Model.Detail.validateTimesheet(data);
-        }
-        ,nodeTypeMap: function() {
-            return Timesheet.Model.Tree.Key.nodeTypeMap;
         }
     }
 
@@ -94,21 +85,6 @@ Timesheet.Model = {
             ,NODE_TYPE_PART_PERSON          : "person"
             ,NODE_TYPE_PART_HOURS_SUMMARY   : "timeSummary"
 
-
-
-            ,nodeTypeMap: [
-                {nodeType: "prevPage"            ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
-                ,{nodeType: "nextPage"           ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p"                  ,icon: ""                 ,tabIds: ["tabBlank"]}
-                ,{nodeType: "p/TIMESHEET"        ,icon: "i i-alarm icon"
-                    ,tabIds: ["tabDetail"
-                        ,"tabPerson"
-                        ,"tabTimeSummary"
-                    ]}
-                ,{nodeType: "p/TIMESHEET/detail"            ,icon: "",tabIds: ["tabDetail"]}
-                ,{nodeType: "p/TIMESHEET/person"            ,icon: "",tabIds: ["tabPerson"]}
-                ,{nodeType: "p/TIMESHEET/timeSummary"       ,icon: "",tabIds: ["tabTimeSummary"]}
-            ]
         }
     }
 
