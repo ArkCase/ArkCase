@@ -42,11 +42,12 @@ public class SearchUsersAPIController {
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "searchKeyword", required = false, defaultValue = "") String searchKeyword,
             @RequestParam(value = "exclude", required = false) String exclude,
+            @RequestParam(value = "userId", required = false) String userId,
             Authentication authentication
     ) throws MuleException,UnsupportedEncodingException
     {
 		
-		String response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, authentication);
+		String response = getUsers(startRow, maxRows, searchKeyword, sortDirection, exclude, userId, authentication);
         JSONObject responseObject = new JSONObject(response);
         	
         if ( exclude != null && !exclude.trim().isEmpty() && responseObject != null && responseObject.has("response") )
@@ -75,7 +76,7 @@ public class SearchUsersAPIController {
         return results;
 	}
 	
-	private String getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude,
+	private String getUsers(int startRow, int maxRows, String searchKeyword, String sortDirection, String exclude, String userId,
 								 Authentication authentication) throws MuleException, UnsupportedEncodingException
 	{
 		String searchQuery = "object_type_s:USER AND status_lcs:VALID";
@@ -90,6 +91,12 @@ public class SearchUsersAPIController {
         {
             exclude = URLEncoder.encode(exclude, StandardCharsets.UTF_8.displayName());
             searchQuery += " AND -object_id_s:" + exclude;
+        }
+
+        if ( StringUtils.isNotEmpty(userId) && StringUtils.isNotBlank(userId) )
+        {
+            userId = URLEncoder.encode(userId, StandardCharsets.UTF_8.displayName());
+            searchQuery += " AND object_id_s:" + userId;
         }
 
 		String sort = "first_name_lcs " + sortDirection + ", last_name_lcs " + sortDirection;
