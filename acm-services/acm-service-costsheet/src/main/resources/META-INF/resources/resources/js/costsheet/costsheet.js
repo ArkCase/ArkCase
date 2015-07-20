@@ -17,6 +17,7 @@ var Costsheet = Costsheet || {
                 ,$ulSort           : Costsheet.View.Navigator.$ulSort
                 ,treeSort          : Costsheet.View.MicroData.treeSort
                 ,modelInterface    : Costsheet.Model.interface
+                ,viewInterface     : Costsheet.View.interface
             });
         }
     }
