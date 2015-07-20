@@ -35,6 +35,18 @@ Costsheet.View = {
         return costsheet;
     }
 
+    ,interface: {
+        nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeTypeMap: function() {
+            return Costsheet.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,MicroData:{
         create : function() {
             this.formUrls = {};
@@ -95,6 +107,21 @@ Costsheet.View = {
                     break;
             }
         }
+
+
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"            ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"           ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"                  ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/COSTSHEET"        ,icon: "fa fa-money icon"
+                ,tabIds: ["tabDetail"
+                    ,"tabPerson"
+                    ,"tabCostSummary"
+                ]}
+            ,{nodeType: "p/COSTSHEET/detail"            ,icon: "",tabIds: ["tabDetail"]}
+            ,{nodeType: "p/COSTSHEET/person"            ,icon: "",tabIds: ["tabPerson"]}
+            ,{nodeType: "p/COSTSHEET/costSummary"       ,icon: "",tabIds: ["tabCostSummary"]}
+        ]
 
         ,getContextMenu: function(node) {
             var key = node.key;
