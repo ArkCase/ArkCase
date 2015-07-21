@@ -89,7 +89,7 @@ ObjNav.Service = {
                             
                             ObjNav.Controller.modelRetrievedObjectList(key);
                         }
-                        return key;
+                        return response;
                     }
                 }
             });
