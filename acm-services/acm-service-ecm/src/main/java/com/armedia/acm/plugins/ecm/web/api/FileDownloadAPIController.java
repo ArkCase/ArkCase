@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
@@ -8,13 +9,16 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -24,7 +28,7 @@ import java.io.InputStream;
 @RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
-    private MuleClient muleClient;
+    private MuleContextManager muleContextManager;
 
     private EcmFileDao fileDao;
 
@@ -71,7 +75,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     protected void download(String fileId, HttpServletResponse response,boolean isInline) throws IOException, MuleException, AcmObjectNotFoundException
     {
 
-        MuleMessage downloadedFile = getMuleClient().send("vm://downloadFileFlow.in", fileId, null);
+        MuleMessage downloadedFile = getMuleContextManager().send("vm://downloadFileFlow.in", fileId);
 
         if ( downloadedFile.getPayload() instanceof ContentStream )
         {
@@ -134,14 +138,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         throw new AcmObjectNotFoundException(null, null, "File not found", null);
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        return muleClient;
+        return muleContextManager;
     }
 
-    public void setMuleClient(MuleClient muleClient)
+    public void setMuleContextManager(MuleContextManager muleContextManager)
     {
-        this.muleClient = muleClient;
+        this.muleContextManager = muleContextManager;
     }
 
     public EcmFileDao getFileDao()

@@ -136,21 +136,7 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
 
-        <!--&lt;!&ndash; testing &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>junit</groupId>-->
-            <!--<artifactId>junit</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-test</artifactId>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; jdbc drivers  &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.oracle</groupId>-->
-            <!--<artifactId>jdbc</artifactId>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>

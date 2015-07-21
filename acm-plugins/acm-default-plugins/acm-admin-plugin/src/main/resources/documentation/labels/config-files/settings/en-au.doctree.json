@@ -16,6 +16,10 @@
         ,"defaultValue": "Are you sure to set back to older version?"
         ,"description": ""
     }
+    ,"declare-successful": {"value": "Declare successful. Refreshing Document Tree..."
+        ,"defaultValue": "Declare successful. Refreshing Document Tree..."
+        ,"description": ""
+    }
     ,"error": {
         "retrieve-folder-list": {"value": "Error occurred when retrieving folder list "
             ,"defaultValue": "Error occurred when retrieving folder list "
@@ -85,6 +89,10 @@
             ,"defaultValue": "Please check provided email addresses and try again"
             ,"description": ""
         }
+        ,"declare-record": {"value": "Error occured when declaring record. Please try again."
+            ,"defaultValue": "Error occured when declaring record. Please try again."
+            ,"description": ""
+        }
     }
 
     ,"menu": {
@@ -147,8 +155,13 @@
         ,"title-print": {"value": "Print <kbd>Ctrl+P</kbd>"
             ,"defaultValue":    "Print <kbd>Ctrl+P</kbd>"
             ,"description": ""
+        },
+        "title-declare": {"value": "Declare as Record(s)"
+            ,"defaultValue":    "Declare as Record(s)"
+            ,"description": ""
         }
-    }
+
+}
     ,"tree": {
         "tooltip-prev-items": {"value": "Review previous items"
             ,"defaultValue": "Review previous items"

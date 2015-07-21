@@ -19,10 +19,9 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.security.core.Authentication;
 
 
 /**
@@ -128,7 +127,7 @@ public class FrevvoFormServiceFactory {
 	            service.setChangeCaseStatusDao(frevvoFormController.getChangeCaseStatusDao());
 	            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
 	            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-	            service.setMuleClient(frevvoFormController.getMuleClient());
+	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
 	            
 	            return service;
 			}
@@ -153,7 +152,7 @@ public class FrevvoFormServiceFactory {
 	            service.setCloseComplaintRequestDao(frevvoFormController.getCloseComplaintRequestDao());
 	            service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
 	            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-	            service.setMuleClient(frevvoFormController.getMuleClient());
+	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
 	            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
 	            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
 	            
@@ -178,7 +177,7 @@ public class FrevvoFormServiceFactory {
 	            service.setSaveCaseService(frevvoFormController.getSaveCaseService());
 	            service.setAcmHistoryDao(frevvoFormController.getAcmHistoryDao());
 	            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-	            service.setMuleClient(frevvoFormController.getMuleClient());
+	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
 	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
 	            service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
 	            service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
@@ -210,7 +209,7 @@ public class FrevvoFormServiceFactory {
 	            service.setSaveCaseService(frevvoFormController.getSaveCaseService());
 	            service.setAcmHistoryDao(frevvoFormController.getAcmHistoryDao());
 	            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-	            service.setMuleClient(frevvoFormController.getMuleClient());
+	            service.setMuleContextManager(frevvoFormController.getMuleContextManager());
 	            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
 	            service.setObjectAssociationDao(frevvoFormController.getObjectAssociationDao());
 	            service.setPersonIdentificationDao(frevvoFormController.getPersonIdentificationDao());
