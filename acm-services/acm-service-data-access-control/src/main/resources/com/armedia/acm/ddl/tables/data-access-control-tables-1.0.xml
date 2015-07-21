@@ -28,7 +28,7 @@
 
     <changeSet id="01-data-access-acl-table" author="dmiller">
         <createTable tableName="acm_boolean_lu">
-            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_id" type="${idType}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -58,4 +58,14 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="02-acm_boolean_lu-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_boolean_lu_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_boolean_lu_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_boolean_lu"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

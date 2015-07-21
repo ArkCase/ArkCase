@@ -4,9 +4,9 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-object-association-table" author="dmiller" dbms="oracle">
+    <changeSet id="01-create-object-association-table" author="dmiller">
         <createTable tableName="acm_object_association">
-            <column name="cm_association_id" type="RAW(16)" defaultValueComputed="SYS_GUID()" >
+            <column name="cm_association_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_object_association"/>
@@ -29,7 +29,7 @@
             <column name="cm_parent_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_parent_id" type="RAW(16)">
+            <column name="cm_parent_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_parent_name" type="VARCHAR(1024)">
@@ -38,57 +38,7 @@
             <column name="cm_target_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_target_id" type="RAW(16)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_target_name" type="VARCHAR(1024)">
-                <constraints nullable="true"/>
-            </column>
-        </createTable>
-
-        <createIndex tableName="acm_object_association" indexName="idx_object_assn_parent_id">
-            <column name="cm_parent_id"/>
-        </createIndex>
-        <createIndex tableName="acm_object_association" indexName="idx_object_assn_target_id">
-            <column name="cm_target_id"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet id="01-create-object-association-table" author="dmiller" dbms="postgresql,mysql">
-        <createTable tableName="acm_object_association">
-            <column name="cm_association_id" type="NUMBER(32,0)">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_object_association"/>
-            </column>
-            <column name="cm_association_status" type="VARCHAR(128)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_object_assn_created" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_object_assn_creator" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_object_assn_modified" type="${timestampType}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_object_assn_modifier" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_parent_type" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_parent_id" type="NUMBER(32,0)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_parent_name" type="VARCHAR(1024)">
-                <constraints nullable="true"/>
-            </column>
-            <column name="cm_target_type" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_target_id" type="NUMBER(32,0)">
+            <column name="cm_target_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_target_name" type="VARCHAR(1024)">
@@ -111,12 +61,12 @@
 
     <changeSet id="03-object-assn-switch-to-sequence-pk" author="dmiller">
         <dropDefaultValue tableName="acm_object_association" columnName="cm_association_id"/>
-        <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="04-fix-object-id-type" author="dmiller">
-        <modifyDataType tableName="acm_object_association" columnName="cm_parent_id" newDataType="NUMBER(32,0)"/>
-        <modifyDataType tableName="acm_object_association" columnName="cm_target_id" newDataType="NUMBER(32,0)"/>
+        <modifyDataType tableName="acm_object_association" columnName="cm_parent_id" newDataType="${fkIdType}"/>
+        <modifyDataType tableName="acm_object_association" columnName="cm_target_id" newDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="object-association-05-add-category-and-subtype" author="dmiller">
@@ -145,5 +95,15 @@
         </update>
     </changeSet>
 
+    <changeSet id="08-acm_object_association-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_object_association_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_object_association_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_object_association"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 

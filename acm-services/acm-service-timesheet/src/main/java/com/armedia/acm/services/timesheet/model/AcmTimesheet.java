@@ -29,8 +29,15 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
 	private static final long serialVersionUID = 3346214028142786165L;
 
 	@Id
+    @TableGenerator(name = "acm_timesheet_gen",
+            table = "acm_timesheet_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_timesheet",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_timesheet_gen")
     @Column(name = "cm_timesheet_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@ManyToOne(cascade = CascadeType.ALL)

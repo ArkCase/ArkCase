@@ -65,7 +65,7 @@
         </addColumn>
 
         <createTable tableName="acm_associated_tag">
-            <column name="cm_associated_tag_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_associated_tag_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id"/>
             </column>
 
@@ -102,4 +102,14 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="09-acm_associated_tag-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_associated_tag_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_associated_tag_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_associated_tag"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -15,7 +15,7 @@
 
     <changeSet id="01-create-person-table" author="dmiller">
         <createTable tableName="acm_person">
-            <column name="cm_person_id" type="${idType}" autoIncrement="${autoIncrement}" >
+            <column name="cm_person_id" type="${idType}">
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_person"/>
@@ -120,7 +120,7 @@
     </changeSet>
     <changeSet id="09-add-person-alias-type-tables" author="tsedalu">     
         <createTable tableName="acm_person_alias_type_lu">
-            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_id" type="${idType}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -152,7 +152,7 @@
      
     <changeSet id="10-add-person-alias-tables" author="tsedalu">
         <createTable tableName="acm_person_alias">
-            <column name="cm_person_alias_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_person_alias_id" type="${idType}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -215,7 +215,7 @@
      
     <changeSet id="15-add-person-association-table" author="tsedalu"> 
         <createTable tableName="acm_person_assoc">
-            <column name="cm_person_associ_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_person_associ_id" type="${idType}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -274,8 +274,7 @@
 
     <changeSet id="19-create-organization-table" author="tsedalu">
         <createTable tableName="acm_organization">
-
-            <column name="cm_organization_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_organization_id" type="${idType}">
                 <constraints
                     nullable="false"
                     primaryKey="true"
@@ -346,7 +345,7 @@
     
     <changeSet id="25-add-new-table-acm_person_identification" author="marst">
         <createTable tableName="acm_person_identification" >
-            <column name="cm_person_identification_id"  type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_person_identification_id"  type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_person_identification"
@@ -384,6 +383,68 @@
                                  referencedColumnNames="cm_person_id"
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}" />
+    </changeSet>
+
+
+    <changeSet id="26-acm_person-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_person_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_person_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_person"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="27-acm_person_alias_type_lu-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_person_alias_type_lu_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_person_alias_type_lu_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_person_alias_type_lu"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="28-acm_person_alias-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_person_alias_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_person_alias_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_person_alias"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="29-acm_person_assoc-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_person_assoc_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_person_assoc_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_person_assoc"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="29-acm_organization-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_organization_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_organization"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="29-acm_person_identification-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_person_identification_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_person_identification_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_person_identification"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>
 

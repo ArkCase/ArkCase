@@ -6,7 +6,7 @@
 
 	<changeSet id="01-create-costsheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_costsheet">
-	         <column name="cm_costsheet_id" type="${idType}" autoIncrement="${autoIncrement}">
+	         <column name="cm_costsheet_id" type="${idType}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
 	         </column>
 	         <column name="cm_costsheet_user_id" type="VARCHAR(1024)">
@@ -41,7 +41,7 @@
 
 	 <changeSet id="02-create-cost-table" author="riste.tutureski">
 	     <createTable tableName="acm_cost">
-	         <column name="cm_cost_id" type="${idType}" autoIncrement="${autoIncrement}">
+	         <column name="cm_cost_id" type="${idType}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
 	         </column>
 	         <column name="cm_cost_costsheet_id" type="${fkIdType}">
@@ -115,4 +115,24 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="08-acm_costsheet-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_costsheet_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_costsheet_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_costsheet"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="09-acm_cost-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_cost_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_cost_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_cost"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

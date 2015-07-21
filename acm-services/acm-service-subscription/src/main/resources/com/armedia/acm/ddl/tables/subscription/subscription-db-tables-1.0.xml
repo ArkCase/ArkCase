@@ -12,7 +12,7 @@
 
     <changeSet id="01-subscription-tables" author="marst">
         <createTable tableName="acm_subscription">
-            <column name="cm_subscription_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_subscription_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_subscription_id"/>
             </column>
             <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
@@ -45,7 +45,7 @@
         </createTable>
 
         <createTable tableName="acm_subscription_event">
-            <column name="cm_event_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_event_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_subscription_event"/>
             </column>
             <column name="cm_event_object_type" type="VARCHAR(${cmObjectTypeLength})">
@@ -105,6 +105,28 @@
         <createIndex tableName="acm_subscription_event" indexName="idx_event_modified">
             <column name="cm_event_modified" type="${timestampType}"/>
         </createIndex>
+    </changeSet>
+
+    <changeSet id="17-acm_subscription-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_subscription_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_subscription_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_subscription"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="18-acm_subscription_event-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_subscription_event_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_subscription_event_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_subscription_event"></column>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

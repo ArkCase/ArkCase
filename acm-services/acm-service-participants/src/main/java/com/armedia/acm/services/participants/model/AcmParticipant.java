@@ -20,8 +20,15 @@ public class AcmParticipant implements Serializable, AcmEntity
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_participant_gen",
+            table = "acm_participant_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_participant",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_participant_gen")
     @Column(name = "cm_participant_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
