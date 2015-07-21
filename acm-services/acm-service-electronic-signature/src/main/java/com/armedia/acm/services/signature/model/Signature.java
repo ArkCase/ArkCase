@@ -2,24 +2,23 @@ package com.armedia.acm.services.signature.model;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "acm_signature")
 public class Signature {
     @Id
+    @TableGenerator(name = "acm_signature_gen",
+            table = "acm_signature_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_signature",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_signature_gen")
     @Column(name = "cm_signature_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long signatureId;
-    
+
     @Column(name = "cm_object_id", nullable = false, insertable = true, updatable = false)
     private Long objectId;
     

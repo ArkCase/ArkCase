@@ -15,7 +15,7 @@
 
     <changeSet id="01-create-complaint-table" author="dmiller">
         <createTable tableName="acm_complaint">
-            <column name="cm_complaint_id" type="${idType}" autoIncrement="${autoIncrement}" >
+            <column name="cm_complaint_id" type="${idType}">
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_complaint"/>
@@ -128,7 +128,7 @@
 
     <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller">
         <createTable tableName="acm_close_complaint_request">
-            <column name="cm_close_complaint_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_close_complaint_id" type="${idType}">
                 <constraints primaryKeyName="pk_close_complaint_request" primaryKey="true"/>
             </column>
             <column name="cm_complaint_id" type="${fkIdType}">
@@ -202,5 +202,25 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="21-acm_complaint-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_complaint_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_complaint_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_complaint"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="22-acm_close_complaint_request-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_close_complaint_request_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_close_complaint_request_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_close_complaint_request"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 

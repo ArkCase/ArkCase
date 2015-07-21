@@ -12,7 +12,7 @@
 
     <changeSet id="01-create-object-history-table-fix" author="nebojsha.davidovikj">
         <createTable tableName="acm_object_history">
-            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_object_history_id"/>
             </column>
             <column name="cm_object_id" type="${fkIdType}">
@@ -50,7 +50,7 @@
 
     <changeSet id="06-create-assignment-table" author="riste.tutureski">
         <createTable tableName="acm_assignment">
-            <column name="cm_assignment_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_assignment_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_assignment_id"/>
             </column>
             <column name="cm_assignment_object_id" type="${fkIdType}">
@@ -86,4 +86,25 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="07-acm_object_history-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_object_history_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_object_history_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_object_history"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="08-acm_assignment-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_assignment_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_assignment_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_assignment"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

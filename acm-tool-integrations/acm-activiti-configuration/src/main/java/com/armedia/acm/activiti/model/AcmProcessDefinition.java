@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
@@ -19,9 +20,16 @@ import java.util.Date;
 @Entity
 @Table(name = "acm_process_definition")
 public class AcmProcessDefinition implements AcmEntity {
-    @Id
     @Column(name = "cm_pd_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @TableGenerator(name = "pd_gen",
+            table = "acm_process_definition_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_process_definition",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pd_gen")
     private Long id;
 
     @Column(name = "cm_pd_description")

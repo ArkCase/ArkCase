@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -28,8 +29,15 @@ public class AcmUserAction implements Serializable, AcmEntity{
 	private static final long serialVersionUID = -8595025198378154826L;
 
 	@Id
+    @TableGenerator(name = "acm_user_action_gen",
+            table = "acm_user_action_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_user_action",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_user_action_gen")
     @Column(name = "cm_user_action_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "cm_user_action_user_id")

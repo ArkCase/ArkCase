@@ -6,8 +6,7 @@
 
     <changeSet id="01-create-note-table" author="manoj">
         <createTable tableName="acm_note">
-
-            <column name="cm_note_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_note_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_note"/>
             </column>
 
@@ -30,7 +29,6 @@
             <column name="cm_parent_object_type" type="VARCHAR(128)">
                 <constraints nullable = "false"/>
             </column>
-
         </createTable>
 
         <createIndex tableName="acm_note" indexName="idx_parent_object_id">
@@ -45,5 +43,16 @@
     			<constraints nullable = "false"/>
     		</column>
     	</addColumn>
+    </changeSet>
+
+    <changeSet id="03-acm_note-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_note_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_note_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_note"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>

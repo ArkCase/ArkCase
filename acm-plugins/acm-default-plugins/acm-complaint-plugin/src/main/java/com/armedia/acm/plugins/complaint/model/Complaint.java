@@ -37,8 +37,15 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "complaint_gen",
+            table = "acm_complaint_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_complaint",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "complaint_gen")
     @Column(name = "cm_complaint_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long complaintId;
 
     @Column(name = "cm_complaint_number", insertable = true, updatable = false)
