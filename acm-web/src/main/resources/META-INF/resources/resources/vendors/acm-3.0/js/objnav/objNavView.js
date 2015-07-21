@@ -60,11 +60,14 @@ ObjNav.View = {
         }
 
 
+        /*,onModelRetrievedObjectList: function(arg) {
+            ObjNav.View.Navigator.refreshTree(arg.key);
+        }*/
         ,onModelRetrievedObjectList: function(key) {
             ObjNav.View.Navigator.refreshTree(key);
         }
         ,onModelRetrievedObjectListError: function(error) {
-            Acm.Dialog.error(error.errorMsg);
+            App.View.MessageBoard.show("Failed to retrieve object(s)" , error.errorMsg);
             //ObjNav.View.Navigator.refreshTree(null);
         }
         ,onTopbarViewSetAsnData: function(asnData) {
@@ -534,6 +537,7 @@ ObjNav.View = {
 
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_TREE_NODE       ,this.onViewSelectedTreeNode);
             Acm.Dispatcher.addEventListener(ObjNav.Controller.VIEW_SELECTED_OBJECT          ,this.onViewSelectedObject);
+            Acm.Dispatcher.addEventListener(ObjNav.Controller.MODEL_RETRIEVED_OBJECT_LIST   ,this.onModelRetrievedObjectList);
         }
         ,onInitialized: function() {
         }
@@ -544,6 +548,12 @@ ObjNav.View = {
         }
         ,onViewSelectedObject: function(objType, objId) {
             ObjNav.View.Content.showTopPanel(0 < objId);
+        }
+        ,onModelRetrievedObjectList: function(key){
+            if(Acm.isEmpty(key)){
+                ObjNav.View.Content.showTopPanel(false);
+                ObjNav.View.Content.showPanel(key);
+            }
         }
 
         ,showTopPanel: function(show) {
