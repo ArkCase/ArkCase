@@ -23,7 +23,7 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
             pkColumnValue = "acm_disposition",
             initialValue = 100,
             allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_disposition_id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "disposition_gen")
     @Column(name = "cm_disposition_id")
     private Long id;
 
