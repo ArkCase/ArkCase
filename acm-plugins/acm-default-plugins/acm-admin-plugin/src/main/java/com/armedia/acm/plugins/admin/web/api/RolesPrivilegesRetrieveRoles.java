@@ -25,11 +25,8 @@ public class RolesPrivilegesRetrieveRoles  {
     @RequestMapping(value = "/rolesprivileges/roles", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
-    public String retrieveRoles(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
+    public String retrieveRoles() throws IOException, AcmRolesPrivilegesException{
 
         try {
             JSONArray jsonRoles = new JSONArray(rolesPrivilegesService.retrieveRoles());

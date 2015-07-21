@@ -224,4 +224,48 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
 
 
     }
+
+    @Test
+    public void search_userId() throws Exception
+    {
+
+        String jsonResponse = "{\"response\": {\"start\": 0, \"rows\": 10, \"numFound\": 0} }";
+
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
+
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication,
+                SolrCore.ADVANCED_SEARCH,
+                "object_type_s:USER AND status_lcs:VALID AND (first_name_lcs:keyword OR last_name_lcs:keyword)  AND -object_id_s:task-owner AND object_id_s:test-user",
+                0,
+                10,
+                "first_name_lcs DESC, last_name_lcs DESC")).andReturn(jsonResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication,
+                SolrCore.ADVANCED_SEARCH,
+                "object_type_s:USER AND object_id_s:task-owner AND status_lcs:VALID",
+                0,
+                1,
+                "first_name_lcs ASC")).andReturn(jsonResponse);
+
+        replayAll();
+
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/search/usersSearch?start=0&n=10&sortDirection=DESC&searchKeyword=keyword&exclude=task-owner&userId=test-user")
+                        .principal(mockAuthentication))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        verifyAll();
+
+        String jsonString = result.getResponse().getContentAsString();
+
+        log.debug("Got JSON: " + jsonString);
+
+        JSONObject response = new JSONObject(jsonString);
+
+        assertTrue(response.getJSONObject("response").has("owner"));
+
+
+    }
 }

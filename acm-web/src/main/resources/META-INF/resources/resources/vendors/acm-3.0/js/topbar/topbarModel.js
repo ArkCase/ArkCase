@@ -114,7 +114,7 @@ Topbar.Model = {
                     Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
                 }
             } else {
-                Topbar.Model.Asn._pullInterval = 16;
+                Topbar.Model.Asn._pullInterval = 16000;
                 Topbar.Model.Asn._pull(Topbar.Model.Asn._pullInterval);
             }
         }

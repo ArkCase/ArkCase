@@ -32,9 +32,7 @@ public class ModuleConfigurationRetrieveModules  {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public List<Map<String, String>> retrieveModules(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmModuleConfigurationException {
+    public List<Map<String, String>> retrieveModules() throws IOException, AcmModuleConfigurationException {
 
         try {
             return moduleConfigurationService.retrieveModules();

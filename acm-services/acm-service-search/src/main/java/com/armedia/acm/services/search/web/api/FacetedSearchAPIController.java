@@ -32,6 +32,7 @@ import java.util.Map;
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
 public class FacetedSearchAPIController {
 
+    public static final String DESIRED_ENCODING = "UTF-8";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private ExecuteSolrQuery executeSolrQuery;
@@ -55,10 +56,18 @@ public class FacetedSearchAPIController {
 
         String rowQueryParametars = buildSolrQuery(filters);
         String sort= sortSpec == null ? "" : sortSpec.trim();
+
+        // if the query ends in a *, it has to be quoted, or Solr will not find anything somehow.
+        if ( q.endsWith("*") )
+        {
+            q = "\"" + q + "\"";
+        }
+
         String query = SearchConstants.CATCH_ALL_QUERY + q;
+
         query = updateQueryWithExcludedObjects(query, rowQueryParametars);
         query += buildHiddenDocumentsFilter();
-        query = URLEncoder.encode(query, "UTF-8");
+        query = URLEncoder.encode(query, DESIRED_ENCODING);
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                 query, startRow, maxRows, sort, rowQueryParametars);
@@ -89,8 +98,8 @@ public class FacetedSearchAPIController {
                         {
                             String timePeriod = URLEncoder.encode(
                                     "{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + ", " +
-                                            timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_DESCRIPTION) + "'}", "UTF-8");
-                            String timePeriodValue = URLEncoder.encode(timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_VALUE), "UTF-8");
+                                            timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_DESCRIPTION) + "'}", DESIRED_ENCODING);
+                            String timePeriodValue = URLEncoder.encode(timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_VALUE), DESIRED_ENCODING);
                             if( queryBuilder.length()>0 ) {
                                 queryBuilder.append(SearchConstants.FACET_QUERY_WITH_AND_AS_A_PREFIX + timePeriod +
                                         facetKey + SearchConstants.DOTS_SPLITTER + timePeriodValue);
@@ -108,7 +117,7 @@ public class FacetedSearchAPIController {
                     String encoded = null;
                     try
                     {
-                        encoded = URLEncoder.encode("{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + "'}", "UTF-8");
+                        encoded = URLEncoder.encode("{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + "'}", DESIRED_ENCODING);
                         if(queryBuilder.length()>0) {
                             queryBuilder.append(SearchConstants.FACET_FILED_WITH_AND_AS_A_PREFIX+ encoded + facetKey);
                         } else {
@@ -125,7 +134,7 @@ public class FacetedSearchAPIController {
 
         if( !StringUtils.isBlank(filters) ) {
             try {
-                filters = URLDecoder.decode(filters, "UTF-8");
+                filters = URLDecoder.decode(filters, DESIRED_ENCODING);
             } catch (UnsupportedEncodingException e) {
                 log.error("Decoding problem occur while decoding & in the filters part",e);
             }
@@ -229,12 +238,12 @@ public class FacetedSearchAPIController {
                 }
                 if( isFirst ) {
                     isFirst = false;
-                    queryBuilder.append(URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, "UTF-8") + URLEncoder.encode("("+value, "UTF-8"));
+                    queryBuilder.append(URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, DESIRED_ENCODING) + URLEncoder.encode("("+value, DESIRED_ENCODING));
                 } else {
-                    queryBuilder.append(URLEncoder.encode(" OR ", "UTF-8") + URLEncoder.encode(value, "UTF-8"));
+                    queryBuilder.append(URLEncoder.encode(" OR ", DESIRED_ENCODING) + URLEncoder.encode(value, DESIRED_ENCODING));
                 }
             }
-            queryBuilder.append(URLEncoder.encode(")","UTF-8"));
+            queryBuilder.append(URLEncoder.encode(")",DESIRED_ENCODING));
         } catch ( UnsupportedEncodingException e1 ) {
             log.error("Encoding problem occur while building date OR SOLR query sub-string", e1);
         }
@@ -251,9 +260,9 @@ public class FacetedSearchAPIController {
                 if( isFirst ) {
                     isFirst = false;
                     // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query parser.
-                    queryBuilder.append(URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(orFilter.trim()+"\"", "UTF-8"));
+                    queryBuilder.append(URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", DESIRED_ENCODING) + URLEncoder.encode(orFilter.trim()+"\"", DESIRED_ENCODING));
                 } else {
-                    queryBuilder.append(URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(orFilter.trim()+"\"", "UTF-8"));
+                    queryBuilder.append(URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", DESIRED_ENCODING) + URLEncoder.encode(orFilter.trim()+"\"", DESIRED_ENCODING));
                 }
             } catch (UnsupportedEncodingException e1) {
                 if(log.isErrorEnabled()) {
@@ -269,7 +278,7 @@ public class FacetedSearchAPIController {
         String substitutionName = filterKey.split(SearchConstants.FACET_PRE_KEY)[1];
         try {
             // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query parser.
-            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + URLEncoder.encode("{!field f=" + substitutionName + "}", "UTF-8") + URLEncoder.encode(filterValue, "UTF-8"));
+            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + URLEncoder.encode("{!field f=" + substitutionName + "}", DESIRED_ENCODING) + URLEncoder.encode(filterValue, DESIRED_ENCODING));
         } catch ( UnsupportedEncodingException e ) {
             if( log.isErrorEnabled() ) {
                 log.error("Encoding problem occur while building regular AND SOLR query sub-string", e);
@@ -287,7 +296,7 @@ public class FacetedSearchAPIController {
                 value = jsonArray.getJSONObject(i).getString(SearchConstants.TIME_PERIOD_VALUE);
         }
         try {
-            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, "UTF-8") + URLEncoder.encode(value, "UTF-8"));
+            queryBuilder.append(SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, DESIRED_ENCODING) + URLEncoder.encode(value, DESIRED_ENCODING));
         } catch (UnsupportedEncodingException e) {
             if( log.isErrorEnabled() ) {
                 log.error("Encoding problem occur while building date AND SOLR query sub-string", e);

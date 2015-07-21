@@ -18,6 +18,7 @@ var Timesheet = Timesheet || {
                 ,$ulSort           : Timesheet.View.Navigator.$ulSort
                 ,treeSort          : Timesheet.View.MicroData.treeSort
                 ,modelInterface    : Timesheet.Model.interface
+                ,viewInterface    : Timesheet.View.interface
             });
         }
     }

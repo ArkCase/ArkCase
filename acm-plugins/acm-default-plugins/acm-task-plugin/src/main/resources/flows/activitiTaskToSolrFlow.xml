@@ -5,7 +5,7 @@
       xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
       xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
       xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
-      version="CE-3.5.0"
+      version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
@@ -53,48 +53,38 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         <echo-component doc:name="Echo"/>
 
-        <component doc:name="Get an Activiti Task">
-            <spring-object bean="extractAcmTaskFromEvent"/>
-        </component>
-
-        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
-
-
-        <!-- setup the task assignees and data access rules, and save the participants to the database -->
-        <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
-        <scripting:transformer name="activitiTaskParticipantsAndAccessControls">
+        <scripting:transformer name="extractAcmTaskAndApplyDACFromActivitiTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
+                    payload = muleContext.registry.get("arkContext").getBean("extractAcmTaskFromEvent").fromEvent(payload);
 
                     // ensure we set the right modifier and creator for any objects we end up inserting or updating
-                    registry.auditPropertyEntityAdapter.setUserId(message.getInboundProperty("ACM_USER"));
+                    muleContext.registry.get("arkContext").getBean("auditPropertyEntityAdapter").setUserId(message.getInboundProperty("ACM_USER"));
 
-                    registry.acmTaskDao.ensureCorrectAssigneeInParticipants(message.payload);
+                    muleContext.registry.get("arkContext").getBean("acmTaskDao").ensureCorrectAssigneeInParticipants(payload);
 
-                    registry.dataAccessPrivilegeListener.applyAssignmentAndAccessRules(message.payload);
+                    muleContext.registry.get("arkContext").getBean("dataAccessPrivilegeListener").applyAssignmentAndAccessRules(payload);
 
                     // gotta check the assignee again to be sure the assignment rules didn't mess with it
-                    registry.acmTaskDao.ensureCorrectAssigneeInParticipants(message.payload);
+                    muleContext.registry.get("arkContext").getBean("acmTaskDao").ensureCorrectAssigneeInParticipants(payload);
 
-                    registry.acmParticipantDao.removeAllOtherParticipantsForObject("TASK", message.payload.getTaskId(), message.payload.getParticipants());
+                    muleContext.registry.get("arkContext").getBean("acmParticipantDao").removeAllOtherParticipantsForObject("TASK", payload.getTaskId(), payload.getParticipants());
 
-                    payload.setParticipants(registry.acmParticipantDao.saveParticipants(message.payload.getParticipants()));
+                    payload.setParticipants(muleContext.registry.get("arkContext").getBean("acmParticipantDao").saveParticipants(payload.getParticipants()));
+
+                    message.setInvocationProperty("advancedSearchDoc", muleContext.registry.get("arkContext").getBean("taskToSolrTransformer").toSolrAdvancedSearch(payload));
+                    message.setInvocationProperty("quickSearchDoc", muleContext.registry.get("arkContext").getBean("taskToSolrTransformer").toSolrQuickSearch(payload));
+                    message.setInvocationProperty("advancedSearchJson", muleContext.registry.get("arkContext").getBean("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("advancedSearchDoc")));
+                    message.setInvocationProperty("quickSearchJson", muleContext.registry.get("arkContext").getBean("sendDocumentsToSolr").asJsonArray(message.getInvocationProperty("quickSearchDoc")));
 
                     return payload;
                     ]]>
                 </scripting:text>
             </scripting:script>
-
         </scripting:transformer>
 
-        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Populated task assignees"/>
 
-        <set-variable variableName="advancedSearchDoc" value="#[app.registry.taskToSolrTransformer.toSolrAdvancedSearch(message.payload)]"/>
-        <set-variable variableName="quickSearchDoc" value="#[app.registry.taskToSolrTransformer.toSolrQuickSearch(message.payload)]"/>
-        <set-variable variableName="advancedSearchJson" value="#[app.registry.sendDocumentsToSolr.asJsonArray(advancedSearchDoc)]"/>
-        <set-variable variableName="quickSearchJson" value="#[app.registry.sendDocumentsToSolr.asJsonArray(quickSearchDoc)]"/>
-
-        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got quick search json"/>
+        <logger level="DEBUG" category="com.armedia.acm.plugins.task.service" message="Got ACM task"/>
 
         <set-payload value="#[advancedSearchJson]"/>
         <http:outbound-endpoint ref="submitAdvancedSearchDocuments" />
