@@ -446,7 +446,7 @@ AcmDocument.View = AcmDocument.View || {
                         var Record = {};
                         Record.id         = Acm.goodValue(noteList[i].id, 0);
                         Record.note       = Acm.goodValue(noteList[i].note);
-                        Record.created    = (Acm.getDateFromDatetime(noteList[i].created,$.t("common:date.full")));
+                        Record.created    = (Acm.getDateFromDatetime(noteList[i].created,$.t("common:date.short")));
                         Record.creator = App.Model.Users.getUserFullName(Acm.goodValue(noteList[i].creator));
 
                         jtData.Records.push(Record);
