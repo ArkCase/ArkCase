@@ -14,8 +14,6 @@
         <property name="localOverride" value="false"/>
     </bean>
 
-    <bean id="ecmFileDao" class="com.armedia.acm.plugins.ecm.dao.EcmFileDao"/>
-
     <bean id="acmComplaintFolderListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmComplaintFolderListener">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>

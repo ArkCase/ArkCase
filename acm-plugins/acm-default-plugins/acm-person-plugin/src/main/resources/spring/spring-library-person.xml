@@ -7,7 +7,7 @@
     <bean id="acmPersonAliasDao" class="com.armedia.acm.plugins.person.dao.PersonAliasDao"/>
     <bean id="acmPersonAssociationDao" class="com.armedia.acm.plugins.person.dao.PersonAssociationDao"/>
     <bean id="acmPersonIdentificationDao" class="com.armedia.acm.plugins.person.dao.PersonIdentificationDao"/>
-    <bean id ="acmOrganizationDao" class ="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
+    <bean id="acmOrganizationDao" class ="com.armedia.acm.plugins.person.dao.OrganizationDao"/>
     
     <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
     	<property name="personDao" ref="acmPersonDao" />
@@ -31,7 +31,7 @@
     <bean id="organizationToSolrTransformer" class="com.armedia.acm.plugins.person.service.OrganizationToSolrTransformer">
         <property name="organizationDao" ref="acmOrganizationDao"/>
     </bean>
-    
+
     <bean id="personAssociationToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonAssociationToSolrTransformer">
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
     </bean>

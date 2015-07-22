@@ -65,7 +65,7 @@ public class ConfigFileWatcherIT
         int originalAdded = listener.getAddedCount();
         int originalRemoved = listener.getRemovedCount();
 
-        Resource testFile = new ClassPathResource("/log4j.properties");
+        Resource testFile = new ClassPathResource("/spring-test-config-file-watcher.xml");
         assertTrue(testFile.exists());
 
 
