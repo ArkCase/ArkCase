@@ -91,7 +91,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String fileName = "fileName";
 
 
-        Resource log4j = new ClassPathResource("log4j.properties");
+        Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         long log4jsize = log4j.getFile().length();
         InputStream log4jis = log4j.getInputStream();
 
