@@ -4,9 +4,8 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n"/>
         </Console>
-        <!-- ${catalina.base} and ${sys:catalina.base} don't seem to work... so using ${sys:user.home} for now -->
-        <RollingFile name="file-log" fileName="${sys:user.home}/logs/arkcase.log"
-          filePattern="${sys:user.home}/logs/arkcase-%d{yyyy-MM-dd}.log">
+        <RollingFile name="file-log" fileName="${sys:catalina.base}/logs/arkcase.log"
+          filePattern="${sys:catalina.base}/logs/arkcase-%d{yyyy-MM-dd}.log">
           <PatternLayout>
             <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} [%-5p] [%t] %c - %m%n</pattern>
         </PatternLayout>

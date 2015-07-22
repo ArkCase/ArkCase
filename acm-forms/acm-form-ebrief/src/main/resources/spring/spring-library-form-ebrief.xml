@@ -8,7 +8,7 @@
     <bean id="ebriefFactory" class="com.armedia.acm.form.ebrief.service.EbriefFactory">
     	<property name="userDao" ref="userJpaDao" />
     	<property name="acmParticipantDao" ref="acmParticipantDao" />
-    	<property name="personAssociationDao" ref="personAssociationDao" />
+    	<property name="personAssociationDao" ref="acmPersonAssociationDao" />
     	<property name="personService" ref="personService" />
     </bean>
     
