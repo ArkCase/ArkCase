@@ -96,7 +96,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <scripting:transformer name="saveUserOrgDaoTransformer">
             <scripting:script engine="groovy">
                 <scripting:text><![CDATA[
-                    payload = muleContext.registry.get("arkContext").getBean("userOrgDao").save(payload);
+                    payload = muleContext.registry.get("arkContext").getBean("acmUserOrgDao").save(payload);
                     return payload;
                     ]]>
                 </scripting:text>
