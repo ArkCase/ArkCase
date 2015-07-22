@@ -831,7 +831,7 @@ AcmDocument.View = AcmDocument.View || {
                                     record.id = Acm.goodValue(versionHistory.id, 0);
                                     record.versionTag = Acm.goodValue(versionHistory.versionTag);
                                     record.creator = App.Model.Users.getUserFullName(Acm.goodValue(versionHistory.creator));
-                                    record.created = Acm.getDateFromDatetime(versionHistory.created,$.t("common:date.short"))
+                                    record.created = Acm.getDateFromDatetime(versionHistory.created,$.t("common:date.full"))
                                     rc.Records.push(record);
                                 }
                                 rc.TotalRecordCount = versionHistoryList.length;
@@ -894,7 +894,7 @@ AcmDocument.View = AcmDocument.View || {
                         if(AcmDocument.Model.EventHistory.validateEvent(events[i])){
                             var Record = {};
                             Record.eventType = Acm.goodValue(events[i].eventType);
-                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.short"));
+                            Record.eventDate = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.full"));
                             Record.userId = Acm.goodValue(events[i].userId);
                             jtData.Records.push(Record);
                         }
