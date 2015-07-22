@@ -46,8 +46,12 @@ public class AcmFileListener implements ApplicationListener<EcmFileAddedEvent>
         record.setEcmFileId(ecmFileAddedEvent.getEcmFileId());
 
         String containerType = ecmFileAddedEvent.getSource().getContainer().getContainerObjectType();
+        log.info("Found container type is : " + containerType);
+
         String categoryFolder = getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(
                 AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + containerType);
+
+        log.info("Found category folder is : " + categoryFolder);
         if ( categoryFolder == null )
         {
             log.error("Cannot declare record for this file since the container object type {} is unknown", containerType);
