@@ -54,12 +54,12 @@ public class AddFileFlowIT
 
         log.debug("Found folder id '" + testFolderId + "'");
 
-        Resource uploadFile = new ClassPathResource("/log4j.properties");
+        Resource uploadFile = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         InputStream is = uploadFile.getInputStream();
 
         EcmFile ecmFile = new EcmFile();
 
-        ecmFile.setFileName("log4j.properties-" + System.currentTimeMillis());
+        ecmFile.setFileName("spring-library-ecm-plugin-test-mule.xml-" + System.currentTimeMillis());
         ecmFile.setFileMimeType("text/plain");
 
         Map<String, Object> messageProperties = new HashMap<>();

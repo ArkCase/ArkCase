@@ -252,11 +252,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
-            <artifactId>acm-personnel-security-plugin</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-correspondence</artifactId>
             <version>${acm.version}</version>
@@ -333,6 +328,13 @@
             <artifactId>acm-reload-properties</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
+
+
         
         <!-- spring -->
         <dependency>

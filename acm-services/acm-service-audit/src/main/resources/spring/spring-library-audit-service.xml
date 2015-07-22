@@ -43,11 +43,6 @@
         </property>
     </bean>
 
-    <bean id="auditPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
-        <property name="pluginName" value="Audit Plugin"/>
-        <property name="pluginProperties" ref="auditPluginProperties"/>
-    </bean>
-
     <!-- Task Scheduler - once a day -->
 	<task:scheduler id="auditTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="auditTaskScheduler">
