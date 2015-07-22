@@ -55,6 +55,7 @@ public class AlfrescoRecordsService
                                  String recordFolderName){
 
         Map<String, Object> messageProperties = getRmaMessageProperties();
+        log.info("Found messageProperties : " + messageProperties);
 
         for ( AcmCmisObject file : files.getChildren() )
         {
@@ -62,9 +63,12 @@ public class AlfrescoRecordsService
                 AcmRecord record = new AcmRecord();
 
                 String objectType = container.getContainerObjectType();
+                log.info("Found object type : " + objectType);
+
                 String propertyKey = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + objectType;
 
                 String categoryFolder = getAlfrescoRmaProperties().getProperty(propertyKey);
+                log.info("Found category folder is : " + categoryFolder);
 
                 if ( categoryFolder == null || categoryFolder.trim().isEmpty() )
                 {
