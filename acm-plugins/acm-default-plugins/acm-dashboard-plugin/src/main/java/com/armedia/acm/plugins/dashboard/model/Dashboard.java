@@ -19,8 +19,15 @@ public class Dashboard implements Serializable{
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_dashboard_gen",
+            table = "acm_dashboard_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_dashboard",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_dashboard_gen")
     @Column(name = "cm_dashboard_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardId;
 
     @Column(name = "cm_dashboard_config")

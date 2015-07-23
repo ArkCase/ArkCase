@@ -4,134 +4,26 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="oracle">
+    <changeSet id="02-data-access-change-boolean-values" author="dmiller">
         <insert tableName="acm_boolean_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="Y"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
-            <column name="cm_value" value="N"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
-    <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="postgresql">
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="Y"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="N"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
-    <changeSet id="01-data-access-acl-insert" author="dmiller" dbms="mysql">
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="Y"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="N"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-
-    </changeSet>
-
-
-    <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="oracle">
-        <delete tableName="acm_boolean_lu"/>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_id" value="1"/>
             <column name="cm_value" value="true"/>
             <column name="cm_order" valueNumeric="0"/>
             <column name="cm_status" value="ACTIVE"/>
             <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_creator" valueComputed="${user}"/>
             <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
+            <column name="cm_modifier" valueComputed="${user}"/>
         </insert>
         <insert tableName="acm_boolean_lu">
-            <column name="cm_id" valueComputed="${nextValFromSequence}"/>
+            <column name="cm_id" value="2"/>
             <column name="cm_value" value="false"/>
             <column name="cm_order" valueNumeric="1"/>
             <column name="cm_status" value="ACTIVE"/>
             <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
+            <column name="cm_creator" valueComputed="${user}"/>
             <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
-    <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="postgresql">
-        <delete tableName="acm_boolean_lu"/>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="true"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="false"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER"/>
-        </insert>
-    </changeSet>
-    <changeSet id="02-data-access-change-boolean-values" author="dmiller" dbms="mysql">
-        <delete tableName="acm_boolean_lu"/>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="true"/>
-            <column name="cm_order" valueNumeric="0"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
-        </insert>
-        <insert tableName="acm_boolean_lu">
-            <column name="cm_value" value="false"/>
-            <column name="cm_order" valueNumeric="1"/>
-            <column name="cm_status" value="ACTIVE"/>
-            <column name="cm_created" valueComputed="${timestampFunction}"/>
-            <column name="cm_creator" valueComputed="USER()"/>
-            <column name="cm_modified" valueComputed="${timestampFunction}"/>
-            <column name="cm_modifier" valueComputed="USER()"/>
+            <column name="cm_modifier" valueComputed="${user}"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -7,7 +7,7 @@
 
 	<changeSet id="01-create-timesheet-table" author="riste.tutureski">
 	     <createTable tableName="acm_timesheet">
-	         <column name="cm_timesheet_id" type="${idType}" autoIncrement="${autoIncrement}">
+	         <column name="cm_timesheet_id" type="${idType}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_timesheet_id"/>
 	         </column>
 	         <column name="cm_timesheet_user_id" type="VARCHAR(1024)">
@@ -39,7 +39,7 @@
 
 	 <changeSet id="02-create-time-table" author="riste.tutureski">
 	     <createTable tableName="acm_time">
-	         <column name="cm_time_id" type="${idType}" autoIncrement="${autoIncrement}">
+	         <column name="cm_time_id" type="${idType}">
 	             <constraints primaryKey="true" primaryKeyName="pk_cm_time_id"/>
 	         </column>
 	         <column name="cm_time_timesheet_id" type="${fkIdType}">
@@ -119,4 +119,25 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="08-acm_timesheet-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_timesheet_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_timesheet_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_timesheet"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="09-acm_time-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_time_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_time_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_time"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

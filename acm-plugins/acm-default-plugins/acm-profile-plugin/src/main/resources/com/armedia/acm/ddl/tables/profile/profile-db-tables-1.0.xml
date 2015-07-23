@@ -8,9 +8,8 @@
     <property name="cmUserIdLength" value="255" dbms="mysql"/>
 
     <changeSet id="03-profile-tables" author="marst">
-
         <createTable tableName="acm_user_org">
-            <column name="cm_user_org_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_user_org_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_user_org"/>
@@ -95,7 +94,7 @@
 
     <changeSet id="05-add-fileId-creator-modifier-and-date-fields" author="marst">
         <addColumn tableName="acm_user_org">
-            <column name="cm_ecm_fileId" type="${fkIdType}" defaultValue="-1"></column>
+            <column name="cm_ecm_file_id" type="${fkIdType}" defaultValue="-1"></column>
         </addColumn>
     </changeSet>
 
@@ -130,5 +129,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="11-acm_user_org-id" author="nebojsha.davidovikj">
+    <createTable tableName="acm_user_org_id">
+        <column name="cm_seq_num" type="${idType}"/>
+        <column name="cm_seq_name" type="VARCHAR(255)"/>
+    </createTable>
+    <insert tableName="acm_user_org_id">
+        <column name="cm_seq_num" value="100"></column>
+        <column name="cm_seq_name" value="acm_user_org"></column>
+    </insert>
+</changeSet>
 </databaseChangeLog>
 

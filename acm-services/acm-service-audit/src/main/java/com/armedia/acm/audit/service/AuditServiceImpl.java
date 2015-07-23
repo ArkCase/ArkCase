@@ -6,6 +6,7 @@ package com.armedia.acm.audit.service;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.armedia.acm.audit.model.AuditEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +41,18 @@ public class AuditServiceImpl implements AuditService {
 		
 		LOG.debug(deletedAudits + " audits was deleted.");
 	}
-	
-	private Date createPurgeThreshold()
+
+    @Override
+    public void audit(AuditEvent auditEvent) {
+
+        try {
+            auditDao.save(auditEvent);
+        } catch (Throwable t) {
+            LOG.error("Error auditing event.", t);
+        }
+    }
+
+    private Date createPurgeThreshold()
 	{
 		int purgeDays = getPurgeDays();
 		

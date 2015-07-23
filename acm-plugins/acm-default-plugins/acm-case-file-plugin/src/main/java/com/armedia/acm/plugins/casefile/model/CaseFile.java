@@ -14,26 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
@@ -52,8 +33,15 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private static final long serialVersionUID = -6035628455385955008L;
 
     @Id
+    @TableGenerator(name = "case_file_gen",
+                table = "acm_case_file_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_case_file",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "case_file_gen")
     @Column(name = "cm_case_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cm_case_number", insertable = true, updatable = false)
@@ -101,7 +89,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     @Column(name = "cm_case_priority")
     private String priority;
 
-    @Column(name = "cm_object_type", insertable = false, updatable = false)
+    @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = CaseFileConstants.OBJECT_TYPE;
 
     @OneToMany (cascade = CascadeType.ALL, orphanRemoval=true)
@@ -165,10 +153,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
      * Container folder where the case file's attachments/content files are stored.
      */
     @OneToOne
-    @JoinColumns({
-            @JoinColumn(name = "cm_object_id"),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")
-    })
+    @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
     @Column(name = "cm_courtroom_name")

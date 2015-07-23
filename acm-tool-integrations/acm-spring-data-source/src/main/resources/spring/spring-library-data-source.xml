@@ -116,6 +116,7 @@
                 <prop key="eclipselink.cache.shared.default">false</prop>
                 <prop key="eclipselink.persistence-context.close-on-commit">true</prop>
                 <prop key="eclipselink.validate-existence">true</prop>
+                <prop key="eclipselink.jdbc.sequence-connection-pool">true</prop>
                 <!--<prop key="eclipselink.connection-pool.initial">5</prop>-->
                 <!--<prop key="eclipselink.connection-pool.min">5</prop>-->
                 <!--<prop key="eclipselink.connection-pool.max">10</prop>-->
@@ -140,7 +141,6 @@
     </bean>
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
-    <bean id="parentIdEntityAdapter" class="com.armedia.acm.data.ParentIdEntityAdapter"/>
 
 
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
@@ -151,7 +151,6 @@
             <list>
                 <ref bean="objectChangesBySessionAccumulator"/>
                 <ref bean="auditPropertyEntityAdapter"/>
-                <ref bean="parentIdEntityAdapter"/>
             </list>
         </property>
     </bean>

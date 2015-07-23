@@ -3,17 +3,7 @@ package com.armedia.acm.services.participants.model;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,8 +14,15 @@ public class AcmParticipantPrivilege implements Serializable, AcmEntity
     private static final long serialVersionUID = -2774839599422346798L;
 
     @Id
+    @TableGenerator(name = "acm_participant_privilege_gen",
+            table = "acm_participant_privilege_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_participant_privilege",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_participant_privilege_gen")
     @Column(name = "cm_privilege_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cm_privilege_created", nullable = false, insertable = true, updatable = false)
