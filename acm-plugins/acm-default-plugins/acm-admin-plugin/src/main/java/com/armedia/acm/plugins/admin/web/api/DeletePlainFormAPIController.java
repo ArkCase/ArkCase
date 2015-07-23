@@ -86,6 +86,7 @@ public class DeletePlainFormAPIController {
 		keys.add(formKey + ".id");
 		keys.add(formKey + ".name");
 		keys.add(formKey + ".type");
+		keys.add(formKey + ".application.id");
 		keys.add(formKey + ".mode");
 		
 		return keys;
