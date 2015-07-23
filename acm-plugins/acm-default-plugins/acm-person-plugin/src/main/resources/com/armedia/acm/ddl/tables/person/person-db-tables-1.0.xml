@@ -163,10 +163,10 @@
                     primaryKeyName="pk_person_alias"/>
             </column>
             <column name="cm_person_id" type="${fkIdType}" >
-                <constraints nullable="false" unique="true" />
+                <constraints nullable="false"/>
             </column>
             <column name="cm_person_alias_type" type="VARCHAR(${cmValueLength})">
-                <constraints nullable="false" unique="true" />
+                <constraints nullable="false"/>
             </column>                                     
             <column name="cm_person_alias_value" type="VARCHAR(1024)">
                 <constraints nullable="false"/>   
@@ -424,5 +424,6 @@
             <column name="cm_seq_name" value="acm_person_identification"></column>
         </insert>
     </changeSet>
+
 </databaseChangeLog>
 
