@@ -146,11 +146,22 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		PlainConfigurationForm form = new PlainConfigurationForm();
 		
 		LOG.debug("Start taking the application and forms from Frevvo.");
-		String applicationId = getFrevvoService().getFormUrl().getApplicationId();
-		getFrevvoService().login();
-		ApplicationEntry application = getFrevvoService().getApplication(applicationId);
-		List<FormTypeEntry> forms = getFrevvoService().getPlainForms(application);
-		getFrevvoService().logout();
+		List<String> applicationIds = getFrevvoService().getFormUrl().getPlainFormApplicationIds();
+		final List<FormTypeEntry> forms = new ArrayList<>();
+
+		if (applicationIds != null && !applicationIds.isEmpty())
+		{
+			getFrevvoService().login();
+			applicationIds.stream().forEach(applicationId -> {
+				ApplicationEntry application = getFrevvoService().getApplication(applicationId);
+				List<FormTypeEntry> _forms = getFrevvoService().getPlainForms(application);
+				if (_forms != null)
+				{
+					forms.addAll(_forms);
+				}
+			});
+			getFrevvoService().logout();
+		}
 		
 		form.setFormOptions(getKeyValuePairsForForms(forms));
 		
@@ -304,6 +315,7 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService {
 		properties.put(key + ".id", form.getFormId() == null ? "" : form.getFormId());
 		properties.put(key + ".name", form.getName() == null ? "" : form.getName());
 		properties.put(key + ".type", form.getType() == null ? "" : form.getType());
+		properties.put(key + ".application.id", form.getApplicationId() == null ? "" : form.getApplicationId());
 		properties.put(key + ".mode", form.getMode() == null ? "" : form.getMode());
 		properties.put(key + ".description." + form.getTarget(), form.getDescription() == null ? "" : form.getDescription());
 		

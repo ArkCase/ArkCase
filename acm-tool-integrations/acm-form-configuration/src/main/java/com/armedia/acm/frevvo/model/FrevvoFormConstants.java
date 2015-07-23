@@ -76,7 +76,7 @@ public interface FrevvoFormConstants {
 	public static final String ADMIN_USER = "frevvo.admin.user";
 	public static final String ADMIN_PASSWORD = "frevvo.admin.password";
 	public static final String DESIGNER_USER = "frevvo.designer.user";
-	public static final String APPLICATION_ID = "frevvo.application.id";
+	public static final String PLAIN_FORM_APPLICATION_IDS = "frevvo.plain.form.application.ids";
 	
 	/**
 	 * XML Root element
