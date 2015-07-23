@@ -30,6 +30,15 @@
             <column name="cm_object_id"/>
         </createIndex>
     </changeSet>
-    
+    <changeSet id="02-acm_signature-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_signature_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_signature_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_signature"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 

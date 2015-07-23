@@ -18,7 +18,7 @@
 
     <changeSet id="01-create-file-table" author="dmiller">
         <createTable tableName="acm_file">
-            <column name="cm_file_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_file_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_file" nullable="false"/>
             </column>
             <column name="cm_file_status" type="VARCHAR(128)" defaultValue="ACTIVE">
@@ -56,7 +56,7 @@
 
     <changeSet id="files-05-container-folder-table" author="dmiller">
         <createTable tableName="acm_container_folder">
-            <column name="cm_container_folder_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_container_folder_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_container_folder"/>
             </column>
             <column name="cm_container_folder_created" type="${timestampType}">
@@ -91,7 +91,7 @@
     
     <changeSet id="files-10-add-acm-folder-table" author="dmiller">
         <createTable tableName="acm_folder">
-            <column name="cm_folder_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_folder_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_folder"/>
             </column>
             <column name="cm_folder_created" type="${timestampType}">
@@ -149,7 +149,7 @@
 
     <changeSet id="files-15-add-acm-file-version" author="dmiller">
         <createTable tableName="acm_file_version">
-            <column name="cm_file_version_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_file_version_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_file_version"/>
             </column>
             <column name="cm_file_id" type="${fkIdType}">
@@ -281,6 +281,47 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="41-acm_file-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_file_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_file_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_file"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="42-acm_container_folder-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_container_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_container_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_container"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="43-acm_folder-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_folder_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_folder_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_folder"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="44-acm_file_version-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_file_version_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_file_version_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_file_version"></column>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

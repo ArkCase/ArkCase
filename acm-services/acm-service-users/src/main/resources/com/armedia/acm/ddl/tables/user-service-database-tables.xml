@@ -13,6 +13,11 @@
     <property name="cmGroupNameLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmGroupNameLength" value="255" dbms="mysql"/>
 
+    <property name="lowerUserId" value="LOWER(cm_user_id)" dbms="oracle"/>
+    <property name="lowerUserId" value="lower(cm_user_id)" dbms="postgresql"/>
+    <property name="lowerUserId" value="cm_user_id" dbms="mysql"/>
+
+
     <property name="cmGroupSupervisorIdLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmGroupSupervisorIdLength" value="255" dbms="mysql"/>
 
@@ -95,7 +100,7 @@
 
     <changeSet id="05-user-service-add-role-type-lookup-table" author="dmiller">
         <createTable tableName="acm_role_type_lu">
-            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_id" type="${idType}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -138,7 +143,7 @@
      
      <changeSet id="09-users-add-user-action-table" author="riste.tutureski">
         <createTable tableName="acm_user_action">
-            <column name="cm_user_action_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_user_action_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_user_action"/>
             </column>
             <column name="cm_user_action_user_id" type="VARCHAR(${cmUserIdLength})">
@@ -252,11 +257,29 @@
     </changeSet>
 
     <changeSet id="user-tables-16-add-user-id-index" author="dmiller">
-        <preConditions onFail="MARK_RAN">
-            <dbms type="oracle"/>
-        </preConditions>
         <createIndex tableName="ACM_USER" indexName="idx_lower_user_id">
-            <column name="LOWER(cm_user_id)"/>
+            <column name="${lowerUserId}"/>
         </createIndex>
+    </changeSet>
+
+    <changeSet id="17-acm_role_type_lu-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_role_type_lu_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_role_type_lu_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_role_type_lu"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="18-acm_user_action-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_user_action_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_user_action_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_user_action"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>

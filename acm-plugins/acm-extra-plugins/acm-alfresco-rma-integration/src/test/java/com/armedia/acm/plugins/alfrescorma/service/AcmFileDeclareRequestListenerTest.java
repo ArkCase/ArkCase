@@ -1,31 +1,30 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileDeclareRequestEvent;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.mule.api.client.MuleClient;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collections;
 import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
 {
     private AcmFileDeclareRequestListener unit;
     private AlfrescoRecordsService mockService;
-    private MuleClient mockMuleClient;
+    private MuleContextManager mockMuleContextManager;
     private Authentication mockAuthentication;
     private EcmFileDao mockEcmFileDao;
 
@@ -34,11 +33,11 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
     {
         unit = new AcmFileDeclareRequestListener();
         mockService = createMock(AlfrescoRecordsService.class);
-        mockMuleClient = createMock(MuleClient.class);
+        mockMuleContextManager = createMock(MuleContextManager.class);
         mockAuthentication = createMock(Authentication.class);
         mockEcmFileDao = createMock(EcmFileDao.class);
         unit.setAlfrescoRecordsService(mockService);
-        unit.setMuleClient(mockMuleClient);
+        unit.setMuleContextManager(mockMuleContextManager);
         unit.setEcmFileDao(mockEcmFileDao);
     }
 
@@ -87,7 +86,7 @@ public class AcmFileDeclareRequestListenerTest extends EasyMockSupport
 
         expect(mockEcmFileDao.save(file)).andReturn(file);
 
-        mockMuleClient.dispatch(
+        mockMuleContextManager.dispatch(
                 eq(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT),
                 capture(captureRecord),
                 eq(Collections.emptyMap()));

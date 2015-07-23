@@ -18,10 +18,10 @@
 
     <changeSet id="01-create-audit-table" author="dmiller">
         <createTable tableName="acm_audit_log">
-            <column name="cm_audit_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_audit_id" type="${idType}">
                 <constraints
-                    primaryKey="true"
-                    primaryKeyName="pk_audit_log"/>
+                        primaryKey="true"
+                        primaryKeyName="pk_audit_log"/>
             </column>
             <column name="cm_audit_datetime" type="${timestampType}">
                 <constraints nullable="false"/>
@@ -54,7 +54,7 @@
             <column name="cm_audit_user"/>
         </createIndex>
         <createIndex tableName="acm_audit_log" indexName="idx_audit_log_activity">
-            <column name="cm_audit_activity" />
+            <column name="cm_audit_activity"/>
         </createIndex>
         <createIndex tableName="acm_audit_log" indexName="idx_audit_log_date">
             <column name="cm_audit_datetime"/>
@@ -79,16 +79,16 @@
             <column name="cm_object_id"/>
         </createIndex>
     </changeSet>
-    
+
     <changeSet id="05-add-status-column-in-acm-audit-log-table" author="riste.tutureski">
-    	<addColumn tableName="acm_audit_log">
-    		<column name="cm_audit_status" type="VARCHAR(1024)" defaultValue="DRAFT" />
-    	</addColumn>
+        <addColumn tableName="acm_audit_log">
+            <column name="cm_audit_status" type="VARCHAR(1024)" defaultValue="DRAFT"/>
+        </addColumn>
     </changeSet>
 
     <changeSet id="06-create-audit-event-type-lookup-table" author="marst">
         <createTable tableName="acm_audit_event_type_lu">
-            <column name="cm_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_id" type="${idType}">
                 <constraints
                         nullable="false"
                         primaryKey="true"
@@ -120,6 +120,27 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="07-acm_audit_log-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_audit_log_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_audit_log_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_audit_log"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="08-acm_audit_event_type_lu-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_audit_event_type_lu_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_audit_event_type_lu_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_audit_event_type_lu"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
     
 

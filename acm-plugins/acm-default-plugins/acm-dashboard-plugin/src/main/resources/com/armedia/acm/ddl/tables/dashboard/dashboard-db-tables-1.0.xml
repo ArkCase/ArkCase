@@ -12,7 +12,7 @@
 
     <changeSet id="01-create-dashboard-table" author="marst">
         <createTable tableName="acm_dashboard">
-            <column name="cm_dashboard_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_dashboard_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_dashboard"/>
@@ -33,7 +33,7 @@
 
     <changeSet id="02-create-widget-tables" author="marst">
         <createTable tableName="acm_widget">
-            <column name="cm_widget_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_widget_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_widget"/>
@@ -51,6 +51,27 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="03-acm_dashboard-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_dashboard_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_dashboard_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_dashboard"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="04-acm_widget-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_widget_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_widget_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_widget"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>
 

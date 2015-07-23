@@ -9,7 +9,7 @@
 
     <changeSet id="case-file-01-acm-case-file-table" author="dmiller">
         <createTable tableName="acm_case_file">
-            <column name="cm_case_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_case_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
             </column>
             <column name="cm_case_number" type="VARCHAR(${caseNumberLength})">
@@ -51,7 +51,7 @@
 
     <changeSet id="case-file-03-add-disposition-table" author="dmiller">
         <createTable tableName="acm_disposition">
-            <column name="cm_disposition_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_disposition_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_disposition"/>
             </column>
             <column name="cm_close_date" type="DATE"/>
@@ -116,7 +116,7 @@
 
     <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski">
         <createTable tableName="acm_close_case_request">
-            <column name="cm_close_case_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_close_case_id" type="${idType}">
                 <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
             </column>
             <column name="cm_case_id" type="${fkIdType}">
@@ -160,7 +160,7 @@
 
     <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski">
         <createTable tableName="acm_change_case_status">
-            <column name="cm_change_case_status_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_change_case_status_id" type="${idType}">
                 <constraints primaryKeyName="pk_change_case_status" primaryKey="true"/>
             </column>
             <column name="cm_case_id" type="${fkIdType}">
@@ -232,4 +232,44 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="19-acm_case_file-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_case_file_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_case_file_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_case_file"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="20-acm_disposition-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_disposition_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_disposition_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_disposition"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="21-acm_close_case_request-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_close_case_request_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_close_case_request_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_close_case_request"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="22-acm_change_case_status-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_change_case_status_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_change_case_status_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_change_case_status"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

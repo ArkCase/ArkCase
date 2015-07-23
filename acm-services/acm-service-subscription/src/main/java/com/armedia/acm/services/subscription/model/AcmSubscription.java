@@ -17,8 +17,15 @@ public class AcmSubscription implements AcmObject, AcmEntity {
     public static final String OBJECT_TYPE = "SUBSCRIPTION";
 
     @Id
+    @TableGenerator(name = "acm_subscription_gen",
+            table = "acm_subscription_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_subscription",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_subscription_gen")
     @Column(name = "cm_subscription_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long subscriptionId;
 
     @Column(name = "cm_user_id", nullable = false, insertable = true, updatable = false)

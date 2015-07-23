@@ -6,7 +6,7 @@
 
     <changeSet id="milestone-01-tables" author="dmiller">
         <createTable tableName="acm_milestone">
-            <column name="cm_milestone_id" type="${idType}" autoIncrement="${autoIncrement}">
+            <column name="cm_milestone_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_acm_milestone"/>
             </column>
             <column name="cm_milestone_object_id" type="${fkIdType}">
@@ -42,5 +42,15 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="03-acm_milestone-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_milestone_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_milestone_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_milestone"></column>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>
