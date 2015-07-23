@@ -92,6 +92,7 @@
         <com.google.guava.version>18.0</com.google.guava.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
+        <log4j.version>2.2</log4j.version>
     </properties>
 
     <organization>
@@ -1204,13 +1205,13 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
-                <version>2.2</version>
+                <version>${log4j.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-web</artifactId>
-                <version>2.2</version>
+                <version>${log4j.version}</version>
                 <scope>runtime</scope>
             </dependency>
             <!-- Liquibase logging through slf4j -->
