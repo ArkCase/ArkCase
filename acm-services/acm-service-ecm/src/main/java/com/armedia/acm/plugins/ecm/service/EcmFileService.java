@@ -99,6 +99,15 @@ public interface EcmFileService
                                          String category, String sortBy,
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
+
+    AcmCmisObjectList listFileFolderByCategory(Authentication auth,
+                                                 AcmContainer container,
+                                                 String sortBy,
+                                                 String sortDirection,
+                                                 int startRow,
+                                                 int maxRows,
+                                                 String category) throws AcmListObjectsFailedException;;
+
     void declareFileAsRecord(Long fileId, Authentication authentication)
             throws AcmObjectNotFoundException;
 

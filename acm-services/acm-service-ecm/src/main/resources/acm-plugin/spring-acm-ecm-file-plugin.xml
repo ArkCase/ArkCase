@@ -96,6 +96,11 @@
                     <property name="url" value="/api/{version}/service/ecm/declare/{parentObjectType}/{parentObjectId}"/>
                     <property name="requiredPrivilege" ref="filePrivilege"/>
                 </bean>
+                <bean id="listCorrespondences" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/ecm/bycategory/{parentObjectType}/{parentObjectId}"/>
+                    <property name="requiredPrivilege" ref="filePrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>
