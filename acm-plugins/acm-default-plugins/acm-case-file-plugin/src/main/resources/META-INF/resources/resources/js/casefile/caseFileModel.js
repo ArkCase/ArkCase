@@ -974,7 +974,7 @@ CaseFile.Model = CaseFile.Model || {
 //                CaseFile.Service.Correspondence.createCorrespondence(caseFile, templateName);
 //            }
 //        }
-        ,API_RETRIEVE_CORRESPONDENCE      : "/api/latest/service/ecm/folder/"
+        ,API_RETRIEVE_CORRESPONDENCE      : "/api/latest/service/ecm/bycategory/"
         ,API_CREATE_CORRESPONDENCE        : "/api/latest/service/correspondence"
 
         ,correspondenceListAction : function(caseFileId, postData, jtParams, sortMap, dataMaker, cacheKey) {
