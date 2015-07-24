@@ -436,6 +436,25 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public AcmCmisObjectList listFileFolderByCategory(Authentication auth,
+                                                AcmContainer container,
+                                                String sortBy,
+                                                String sortDirection,
+                                                int startRow,
+                                                int maxRows,
+                                                String category)
+            throws AcmListObjectsFailedException
+    {
+        String query = "parent_object_id_i:" +
+                container.getContainerObjectId() + " AND parent_object_type_s:" +
+                container.getContainerObjectType();
+
+        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:" + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
+
+        return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy, sortDirection);
+    }
+
+    @Override
     public void declareFileAsRecord(Long fileId, Authentication authentication)
             throws AcmObjectNotFoundException
     {
