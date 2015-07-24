@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>acm-tool-integrations</artifactId>
+        <groupId>com.armedia.acm</groupId>
+        <version>3.0.33-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    <artifactId>acm-snowbound-integration</artifactId>
+    <name>Tool Integrations: Snowbound Virtual Viewer</name>
+    <description>Package all ArkCase changes to the Snowbound war file in one zip file.  To update Snowbound with the
+        ArkCase updates, expand this zip file, then add the expanded files to the Snowbound war file.  Also, be sure
+        to update the URLs and file paths embedded in the web.xml file.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.snowbound.virtual-viewer</groupId>
+            <artifactId>vv-ajax-server</artifactId>
+            <version>4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.snowbound.virtual-viewer</groupId>
+            <artifactId>Snow</artifactId>
+            <version>4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.5.5</version>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>snowbound-war-patches</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/snowbound-zip.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
