@@ -9,14 +9,14 @@
                                  constraintName="fk_user_role_user_id"
                                  referencedTableName="acm_user"
                                  referencedColumnNames="cm_user_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
         <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_role_name"
                                  constraintName="fk_user_role_role_name"
                                  referencedTableName="acm_role"
                                  referencedColumnNames="cm_role_name"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="03-user-service-role-type-constraint" author="dmiller">
@@ -24,8 +24,8 @@
                                  constraintName="fk_role_type"
                                  referencedTableName="acm_role_type_lu"
                                  referencedColumnNames="cm_value"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -4,13 +4,15 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="caseNumberLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="caseNumberLength" value="255" dbms="mysql"/>
 
     <changeSet id="case-file-01-acm-case-file-table" author="dmiller">
         <createTable tableName="acm_case_file">
-            <column name="cm_case_id" type="NUMBER(32,0)">
+            <column name="cm_case_id" type="${idType}">
                 <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
             </column>
-            <column name="cm_case_number" type="VARCHAR(1024)">
+            <column name="cm_case_number" type="VARCHAR(${caseNumberLength})">
                 <constraints unique="true" uniqueConstraintName="uk_case_file_number"
                              nullable="false"/>
             </column>
@@ -26,13 +28,13 @@
             <column name="cm_case_ecm_folder_id" type="VARCHAR(1024)"/>
             <column name="cm_case_closed" type="DATE"/>
             <column name="cm_case_disposition" type="VARCHAR(4000)"/>
-            <column name="cm_case_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_case_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_case_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_case_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_case_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_case_modifier" type="VARCHAR(1024)">
@@ -49,7 +51,7 @@
 
     <changeSet id="case-file-03-add-disposition-table" author="dmiller">
         <createTable tableName="acm_disposition">
-            <column name="cm_disposition_id" type="NUMBER(32,0)">
+            <column name="cm_disposition_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_disposition"/>
             </column>
             <column name="cm_close_date" type="DATE"/>
@@ -58,15 +60,15 @@
             </column>
             <column name="cm_refer_ext_org_name" type="VARCHAR(4000)"/>
             <column name="cm_refer_ext_person_name" type="VARCHAR(4000)"/>
-            <column name="cm_refer_ext_contact_method_id" type="NUMBER(32,0)"/>
-            <column name="cm_existing_case_number" type="VARCHAR(1024)"/>
-            <column name="cm_disposition_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_refer_ext_contact_method_id" type="${fkIdType}"/>
+            <column name="cm_existing_case_number" type="VARCHAR(${caseNumberLength})"/>
+            <column name="cm_disposition_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_disposition_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_disposition_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_disposition_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_disposition_modifier" type="VARCHAR(1024)">
@@ -77,7 +79,7 @@
 
     <changeSet id="04-add-new-columns-to-acm-case-file-table" author="marst">
         <addColumn tableName="acm_case_file">
-            <column name="cm_case_incident_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_case_incident_date" type="${timestampType}">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_case_details" type="CLOB">
@@ -88,7 +90,7 @@
 
     <changeSet id="05-add-due-date-column-to-acm-case-file-table" author="marst">
         <addColumn tableName="acm_case_file">
-            <column name="cm_due_date" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_due_date" type="${timestampType}">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
@@ -96,7 +98,7 @@
 
     <changeSet id="06-add-originator-to-acm-case-file-table" author="marst">
         <addColumn tableName="acm_case_file">
-            <column name="cm_originator_id" type="RAW(16)">
+            <column name="cm_originator_id" type="${fkIdType}">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
@@ -108,31 +110,31 @@
 
     <changeSet id="case-file-08-add-number-originator-id" author="dmiller">
         <addColumn tableName="acm_case_file">
-            <column name="cm_originator_id" type="NUMBER(32,0)"/>
+            <column name="cm_originator_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski">
         <createTable tableName="acm_close_case_request">
-            <column name="cm_close_case_id" type="NUMBER(32,0)">
+            <column name="cm_close_case_id" type="${idType}">
                 <constraints primaryKeyName="pk_close_case_request" primaryKey="true"/>
             </column>
-            <column name="cm_case_id" type="NUMBER(32,0)">
+            <column name="cm_case_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_disposition_id" type="NUMBER(32,0)">
+            <column name="cm_disposition_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_case_status" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_close_case_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_close_case_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_case_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_close_case_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_close_case_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_case_modifier" type="VARCHAR(1024)">
@@ -143,46 +145,37 @@
                                  constraintName="fk_close_case_cmplnt_id"
                                  referencedTableName="acm_case_file"
                                  referencedColumnNames="cm_case_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-10-drop-not-null-constraints" author="dmiller">
-        <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_type"/>
-        <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_title"/>
+        <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_type" columnDataType="VARCHAR(4000)"/>
+        <dropNotNullConstraint tableName="acm_case_file" columnName="cm_case_title" columnDataType="VARCHAR(4000)"/>
     </changeSet>
 
     <changeSet id="case-file-11-drop-close-case-request-table" author="riste.tutureski">
-        <dropPrimaryKey tableName="acm_close_case_request" constraintName="pk_close_case_request"/>
-        <dropForeignKeyConstraint baseTableName="acm_close_case_request" constraintName="fk_close_case_cmplnt_id"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_case_id"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_disposition_id"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_status"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_created"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_creator"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_modified"/>
-        <dropNotNullConstraint tableName="acm_close_case_request" columnName="cm_close_case_modifier"/>
-        <dropTable tableName="acm_close_case_request"/>
+        <dropTable tableName="acm_close_case_request" cascadeConstraints="true"/>
     </changeSet>
 
     <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski">
         <createTable tableName="acm_change_case_status">
-            <column name="cm_change_case_status_id" type="NUMBER(32,0)">
+            <column name="cm_change_case_status_id" type="${idType}">
                 <constraints primaryKeyName="pk_change_case_status" primaryKey="true"/>
             </column>
-            <column name="cm_case_id" type="NUMBER(32,0)">
+            <column name="cm_case_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_status" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_change_case_status_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_change_case_status_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_change_case_status_modified" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_change_case_status_modified" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_modifier" type="VARCHAR(1024)">
@@ -193,8 +186,8 @@
                                  constraintName="fk_change_case_status_case_id"
                                  referencedTableName="acm_case_file"
                                  referencedColumnNames="cm_case_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-13-add-restricted-flag" author="dmiller">
@@ -207,38 +200,76 @@
 
     <changeSet id="case-file-14-add-container-folder-id" author="dmiller">
         <addColumn tableName="acm_case_file">
-            <column name="cm_container_folder_id" type="NUMBER(32,0)"/>
+            <column name="cm_container_folder_id" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
     <changeSet id="case-file-15-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"/>
+        <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="change-case-status-16-add-object-type-in-acm-change-case-status-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_change_case_status">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CHANGE_CASE_STATUS"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CHANGE_CASE_STATUS">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="CHANGE_CASE_STATUS"
-                              tableName="acm_change_case_status"/>
     </changeSet>
 
     <changeSet id="case-file-17-add-object-type-in-acm-case-file-table" author="nebojsha.davidovikj">
         <addColumn tableName="acm_case_file">
-            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CASE_FILE"/>
+            <column name="cm_object_type" type="VARCHAR(100)" defaultValue="CASE_FILE">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
-        <addNotNullConstraint columnName="cm_object_type"
-                              defaultNullValue="CASE_FILE"
-                              tableName="acm_case_file"/>
     </changeSet>
 
     <changeSet id="case-file-18-add-courtroom-columns-AFDP-1055" author="dmiller">
         <addColumn tableName="acm_case_file">
             <column name="cm_courtroom_name" type="VARCHAR(100)"/>
-            <column name="cm_next_court_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="cm_next_court_date" type="${timestampType}"/>
             <column name="cm_responsible_organization" type="VARCHAR(100)"/>
         </addColumn>
     </changeSet>
 
+    <changeSet id="19-acm_case_file-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_case_file_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_case_file_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_case_file"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="20-acm_disposition-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_disposition_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_disposition_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_disposition"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="21-acm_close_case_request-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_close_case_request_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_close_case_request_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_close_case_request"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="22-acm_change_case_status-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_change_case_status_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_change_case_status_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_change_case_status"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

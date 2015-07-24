@@ -6,17 +6,7 @@ package com.armedia.acm.services.costsheet.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
@@ -33,10 +23,17 @@ public class AcmCost implements Serializable, AcmObject, AcmEntity {
 	private static final long serialVersionUID = 7830537295290505438L;
 
 	@Id
+    @TableGenerator(name = "acm_cost_gen",
+            table = "acm_cost_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_cost",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_cost_gen")
     @Column(name = "cm_cost_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@JsonIgnore
     @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     @JoinColumn(name="cm_cost_costsheet_id") 

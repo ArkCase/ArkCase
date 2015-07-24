@@ -11,8 +11,8 @@
                 constraintName="fk_case_file_restricted_flag"
                 referencedTableName="acm_boolean_lu"
                 referencedColumnNames="cm_value"
-                deferrable="true"
-                initiallyDeferred="true"/>
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-constraint-02-container-id" author="dmiller">
@@ -26,7 +26,7 @@
                                  constraintName="fk_case_container_id"
                                  referencedTableName="acm_container"
                                  referencedColumnNames="cm_container_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
@@ -89,8 +90,11 @@
         <java.mail.version>1.5.4</java.mail.version>
         <spring.integration.version>2.2.3.RELEASE</spring.integration.version>
         <com.google.guava.version>18.0</com.google.guava.version>
+        <postgresql.version>9.3-1100-jdbc41</postgresql.version>
+        <mysql.version>5.1.35</mysql.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
+        <log4j.version>2.2</log4j.version>
     </properties>
 
     <organization>
@@ -321,7 +325,6 @@
     </distributionManagement>
 
 
-
     <repositories>
         <repository>
             <id>central</id>
@@ -358,21 +361,29 @@
         <repository>
             <id>armedia-shared</id>
             <url>http://arm-proj-web01.armedia.com:8081/nexus/content/groups/armedia</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>false</enabled></snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
         <repository>
             <url>https://project.armedia.com/nexus/content/repositories/armedia.snapshot</url>
             <id>armedia.snapshot</id>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
-	
+
         <!-- needed for Mule since codehaus went belly-up -->
         <repository>
-          <id>Camunda</id>
-              <name>Camunda mule deps host</name>
-          <url>https://app.camunda.com/nexus/content/repositories/public/</url>
+            <id>Camunda</id>
+            <name>Camunda mule deps host</name>
+            <url>https://app.camunda.com/nexus/content/repositories/public/</url>
         </repository>
     </repositories>
 
@@ -493,11 +504,10 @@
 
             <!-- need these report plugins defined here to avoid spurious Maven warning about missing versions -->
             <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>${maven.project-info-reports.version}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven.project-info-reports.version}</version>
             </plugin>
-
 
 
             <plugin>
@@ -595,7 +605,6 @@
 
         </plugins>
     </build>
-
 
 
     <dependencyManagement>
@@ -1045,12 +1054,12 @@
                 <artifactId>jackson-annotations</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
             </dependency>
-            
-	        <dependency>
-	            <groupId>com.google.code.gson</groupId>
-	            <artifactId>gson</artifactId>
-	            <version>${gson.version}</version>
-	        </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
 
             <!-- json schema validation -->
             <dependency>
@@ -1182,7 +1191,6 @@
             </dependency>
 
 
-
             <!-- logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -1199,7 +1207,27 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j-impl</artifactId>
-                <version>2.2</version>
+                <version>${log4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-web</artifactId>
+                <version>${log4j.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- Liquibase logging through slf4j -->
+            <dependency>
+                <groupId>com.mattbertolini</groupId>
+                <artifactId>liquibase-slf4j</artifactId>
+                <version>1.2.1</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- EclipseLink logging through slf4j -->
+            <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>logging-slf4j</artifactId>
+                <version>1.0.1</version>
                 <scope>runtime</scope>
             </dependency>
 
@@ -1249,11 +1277,11 @@
 
             <!-- end of testing -->
 
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${com.google.guava.version}</version>
-			</dependency>			
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${com.google.guava.version}</version>
+            </dependency>
 
         </dependencies>
 

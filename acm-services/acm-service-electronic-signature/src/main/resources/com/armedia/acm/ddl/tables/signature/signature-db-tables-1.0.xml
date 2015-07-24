@@ -6,18 +6,18 @@
 
     <changeSet id="01-create-signature-table" author="jhsu">
         <createTable tableName="acm_signature">
-            <column name="cm_signature_id" type="NUMBER(32,0)" valueComputed="SYS_GUID()" >
+            <column name="cm_signature_id" type="${idType}">
                 <constraints
                     primaryKey="true"
                     primaryKeyName="pk_signature"/>
             </column>
-            <column name="cm_object_id" type="NUMBER(32,0)" valueComputed="SYS_GUID()" >
+            <column name="cm_object_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_object_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_signature_datetime" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_signature_datetime" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_signature_user" type="VARCHAR(1024)">
@@ -30,6 +30,15 @@
             <column name="cm_object_id"/>
         </createIndex>
     </changeSet>
-    
+    <changeSet id="02-acm_signature-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_signature_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_signature_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_signature"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 

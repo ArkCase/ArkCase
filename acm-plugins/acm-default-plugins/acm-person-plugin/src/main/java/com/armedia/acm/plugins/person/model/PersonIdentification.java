@@ -20,8 +20,15 @@ public class PersonIdentification  implements Serializable, AcmEntity {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_person_identification_gen",
+            table = "acm_person_identification_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_person_identification",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_identification_gen")
     @Column(name = "cm_person_identification_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long personIdentificationID;
 
     @JsonIgnore

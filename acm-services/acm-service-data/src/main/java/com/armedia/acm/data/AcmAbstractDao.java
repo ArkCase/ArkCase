@@ -19,7 +19,7 @@ public abstract class AcmAbstractDao<T>
     @Transactional(propagation = Propagation.REQUIRED)
     public T save(T toSave)
     {
-        T saved = em.merge(toSave);
+       T saved = em.merge(toSave);
 //        em.persist(saved);
         return saved;
     }
