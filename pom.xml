@@ -288,6 +288,7 @@
         <module>acm-services</module>
         <module>acm-tool-integrations</module>
         <module>acm-forms</module>
+        <module>acm-user-interface</module>
     </modules>
 
     <scm>
