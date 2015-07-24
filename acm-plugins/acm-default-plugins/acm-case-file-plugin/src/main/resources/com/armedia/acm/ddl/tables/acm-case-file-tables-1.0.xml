@@ -272,4 +272,11 @@
             <column name="cm_seq_name" value="acm_change_case_status"></column>
         </insert>
     </changeSet>
+    <!-- adding discriminator column, neede for extensibility -->
+    <changeSet id="23-add-discriminator-column-extensibility" author="ilinpetar">
+        <addColumn tableName="acm_case_file">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
