@@ -67,6 +67,12 @@
             <artifactId>org.eclipse.persistence.core</artifactId>
         </dependency>
 
+        <!-- EclipseLink logging through slf4j -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>logging-slf4j</artifactId>
+        </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -142,6 +142,12 @@
             <artifactId>spring-test</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <!-- h2 is the in-memory database used for Activiti tests -->
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
