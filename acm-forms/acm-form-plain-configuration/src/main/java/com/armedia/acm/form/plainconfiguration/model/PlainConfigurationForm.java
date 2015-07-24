@@ -27,6 +27,7 @@ public class PlainConfigurationForm {
 	private String name;
 	private String type;
 	private String applicationId;
+	private String applicationName;
 	private String mode;
 	private String target;
 	private List<String> targetOptions;
@@ -86,6 +87,11 @@ public class PlainConfigurationForm {
 	public String getApplicationId() { return applicationId; }
 
 	public void setApplicationId(String applicationId) { this.applicationId = applicationId; }
+
+	@XmlElement(name="applicationName")
+	public String getApplicationName() { return applicationName; }
+
+	public void setApplicationName(String applicationName) { this.applicationName = applicationName; }
 
 	@XmlElement(name="formMode")
 	public String getMode() {

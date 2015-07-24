@@ -2296,6 +2296,7 @@ Admin.View = Admin.View || {
                             		rc.Records.push({
                                         id:     i + "_" + plainForms[i].key
                                         ,name:      plainForms[i].name
+                                        ,applicationName:      plainForms[i].applicationName
                                         ,description:  plainForms[i].description
                                         ,target: plainForms[i].target
                                     });
@@ -2313,7 +2314,11 @@ Admin.View = Admin.View || {
                             , edit: false
                         }, name: {
                             title: 'Form Name'
-                            , width: '25%'
+                            , width: '30%'
+                            , edit: false
+                        }, applicationName: {
+                            title: 'Application Name'
+                            , width: '30%'
                             , edit: false
                         }, description: {
                             title: 'Description'
