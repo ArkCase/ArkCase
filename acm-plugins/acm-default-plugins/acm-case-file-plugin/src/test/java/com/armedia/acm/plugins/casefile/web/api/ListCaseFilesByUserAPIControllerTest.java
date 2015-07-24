@@ -3,12 +3,9 @@ package com.armedia.acm.plugins.casefile.web.api;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
-import com.armedia.acm.plugins.casefile.web.api.ListCaseFilesByUserAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
-import org.easymock.IAnswer;
-import org.easymock.IExpectationSetters;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +28,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 /**
  * Created by marjan.stefanoski on 10/13/2014.
@@ -74,7 +70,10 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
         unit.setCaseFileDao(mockCaseFileDao);
         unit.setCaseFileEventUtility(mockCaseFileEventUtility);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
+        mockMvc = MockMvcBuilders.
+                standaloneSetup(unit).
+                setHandlerExceptionResolvers(exceptionResolver).
+                build();
     }
 
     @Test
@@ -86,9 +85,13 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
         caseFile.setId(5L);
         caseFile.setCreator(user);
         caseFile.setCreated(new Date());
+        caseFile.setClassName(caseFile.getClass().getName());
         String ipAddress = "ipAddress";
 
 
+        ObjectMapper om = new ObjectMapper();
+        String caseFileJson = om.writeValueAsString(caseFile);
+        log.info("caseFileJson: " + caseFileJson);
 
 
         expect(mockCaseFileDao.getNotClosedCaseFilesByUser(user)).andReturn(Arrays.asList(caseFile));
