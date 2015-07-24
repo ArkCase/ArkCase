@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Properties;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
@@ -56,6 +57,8 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
         Capture<AcmRecordFolder> captureFolder = new Capture<>();
 
         expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_FOLDER_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+
+        expect(mockService.getAlfrescoRmaProperties()).andReturn(new Properties());
 
         expect(mockService.getRmaMessageProperties()).andReturn(Collections.emptyMap());
 

@@ -5,17 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
 import java.io.Serializable;
@@ -30,8 +20,15 @@ public class ContactMethod implements Serializable, AcmEntity
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "contact_method_gen",
+            table = "acm_contact_method_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_contact_method",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "contact_method_gen")
     @Column(name = "cm_contact_method_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cm_contact_method_created", nullable = false, insertable = true, updatable = false)

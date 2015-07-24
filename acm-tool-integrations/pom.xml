@@ -32,6 +32,7 @@
         <module>acm-encryption</module>
         <module>acm-email</module>
         <module>acm-reload-properties</module>
-  </modules>
+        <module>acm-snowbound-integration</module>
+    </modules>
 
 </project>

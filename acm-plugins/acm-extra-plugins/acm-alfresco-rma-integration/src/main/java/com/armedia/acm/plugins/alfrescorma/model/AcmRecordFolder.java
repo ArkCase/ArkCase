@@ -8,6 +8,7 @@ public class AcmRecordFolder implements Serializable
     private static final long serialVersionUID = -2838758910535448686L;
     private String folderType;
     private String folderName;
+    private String categoryFolder;
 
     public String getFolderType()
     {
@@ -27,5 +28,15 @@ public class AcmRecordFolder implements Serializable
     public void setFolderName(String folderName)
     {
         this.folderName = folderName;
+    }
+
+    public String getCategoryFolder()
+    {
+        return categoryFolder;
+    }
+
+    public void setCategoryFolder(String categoryFolder)
+    {
+        this.categoryFolder = categoryFolder;
     }
 }

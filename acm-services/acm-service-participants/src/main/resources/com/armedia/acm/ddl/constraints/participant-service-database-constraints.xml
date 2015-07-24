@@ -12,14 +12,14 @@
                              constraintName="uk_participant_rule"/>
     </changeSet>
 
-    <changeSet id="participant-constraint-01-privilege_participant_id" author="dmiller" failOnError="false">
+    <changeSet id="participant-constraint-01-privilege_participant_id" author="dmiller">
         <addForeignKeyConstraint
                 baseTableName="acm_participant_privilege"
                 baseColumnNames="cm_participant_id"
                 constraintName="fk_part_priv_participant_id"
                 referencedTableName="acm_participant"
                 referencedColumnNames="cm_participant_id"
-                deferrable="true"
-                initiallyDeferred="true"/>
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>
