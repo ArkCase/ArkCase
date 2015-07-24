@@ -21,8 +21,15 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     private static final String OBJECT_TYPE = "FILE";
 
     @Id
+    @TableGenerator(name = "acm_file_gen",
+            table = "acm_file_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_file",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_file_gen")
     @Column(name = "cm_file_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileId;
 
     @Column(name = "cm_file_status")

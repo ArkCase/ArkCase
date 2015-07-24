@@ -6,15 +6,7 @@ package com.armedia.acm.service.history.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.armedia.acm.data.AcmEntity;
 
@@ -29,10 +21,17 @@ public class AcmHistory implements Serializable, AcmEntity{
 	private static final long serialVersionUID = 3919545816704448776L;
 	
 	@Id
+    @TableGenerator(name = "acm_history_gen",
+            table = "acm_history_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_history",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_history_gen")
     @Column(name = "cm_history_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Column(name = "cm_history_person_id", insertable = true, updatable = false)
 	private Long personId;
 	

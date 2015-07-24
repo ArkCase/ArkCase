@@ -18,8 +18,15 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     private static final long serialVersionUID = -6389711968453289552L;
 
     @Id
+    @TableGenerator(name = "close_complaint_request_id_gen",
+            table = "acm_close_complaint_request_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_close_complaint_request",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "close_complaint_request_id_gen")
     @Column(name = "cm_close_complaint_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cm_complaint_id")

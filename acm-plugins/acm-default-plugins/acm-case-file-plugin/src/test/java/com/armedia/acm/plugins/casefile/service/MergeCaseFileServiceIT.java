@@ -208,7 +208,7 @@ public class MergeCaseFileServiceIT extends EasyMock {
         assertEquals(targetOa.getTargetId().longValue(), sourceCase.getId().longValue());
 
         assertEquals(sourceCase.getContainer().getFolder().getParentFolderId(), targetCase.getContainer().getFolder().getId());
-
+        
     }
 
     @Test

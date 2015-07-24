@@ -100,14 +100,6 @@
     <!-- end of action handlers -->
 
     <!-- lookup tables -->
-    <bean id="complaintPriorityTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
-        <property name="tableName" value="acm_complaint_priority_lu"/>
-        <property name="description" value="Valid complaint priorities."/>
-    </bean>
-    <bean id="complaintTypeTable" class="com.armedia.acm.configuration.LookupTableDescriptor">
-        <property name="tableName" value="acm_complaint_type_lu"/>
-        <property name="description" value="Valid complaint types."/>
-    </bean>
 
     <bean id="acmComplaintDao" class="com.armedia.acm.plugins.complaint.dao.ComplaintDao"/>
     <bean id="closeComplaintRequestDao" class="com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao"/>

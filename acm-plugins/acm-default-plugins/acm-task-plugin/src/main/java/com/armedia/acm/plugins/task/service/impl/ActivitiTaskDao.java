@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskEvent;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -66,6 +67,7 @@ class ActivitiTaskDao implements TaskDao
     private EcmFileService fileService;
     private EcmFileDao fileDao;
     private AcmContainerDao containerFolderDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     @Transactional
@@ -753,6 +755,8 @@ class ActivitiTaskDao implements TaskDao
     {
         log.info("Creating folder for task with ID: " + event.getObjectId());
 
+        getAuditPropertyEntityAdapter().setUserId(event.getUserId());
+
         AcmTask task = getTaskExtractor().fromEvent(event);
 
         createFolderForTaskEvent(task);
@@ -1162,5 +1166,15 @@ class ActivitiTaskDao implements TaskDao
     public void setFileDao(EcmFileDao fileDao)
     {
         this.fileDao = fileDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }

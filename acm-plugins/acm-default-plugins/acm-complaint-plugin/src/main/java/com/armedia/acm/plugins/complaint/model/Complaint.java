@@ -37,8 +37,15 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "complaint_gen",
+            table = "acm_complaint_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_complaint",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "complaint_gen")
     @Column(name = "cm_complaint_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long complaintId;
 
     @Column(name = "cm_complaint_number", insertable = true, updatable = false)
@@ -114,7 +121,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private List<String> approvers;
     
     @OneToMany (cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_person_assoc_parent_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
+    })
+    @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)

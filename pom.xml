@@ -90,6 +90,8 @@
         <java.mail.version>1.5.4</java.mail.version>
         <spring.integration.version>2.2.3.RELEASE</spring.integration.version>
         <com.google.guava.version>18.0</com.google.guava.version>
+        <postgresql.version>9.3-1100-jdbc41</postgresql.version>
+        <mysql.version>5.1.35</mysql.version>
         <maven.checkstyle.plugin.version>2.15</maven.checkstyle.plugin.version>
         <puppycrawl.version>6.8.1</puppycrawl.version>
         <log4j.version>2.2</log4j.version>

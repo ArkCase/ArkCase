@@ -72,7 +72,7 @@
         <!--<property name="test" value="${acm.idleConnectionTestPeriodInSeconds}"/>-->
         <property name="validationQuery" value="${acm.validationQuery}"/>
         <property name="loginTimeout" value="${acm.maxWait}"/>
-        <property name="defaultAutoCommit" value="false"/>
+        <property name="defaultAutoCommit" value="${acm.autoCommit}"/>
         <property name="logAbandoned" value="true"/>
         <property name="minEvictableIdleTimeMillis" value="1000"/>
         <property name="removeAbandoned" value="true"/>
@@ -114,6 +114,7 @@
                 <prop key="eclipselink.cache.shared.default">false</prop>
                 <prop key="eclipselink.persistence-context.close-on-commit">true</prop>
                 <prop key="eclipselink.validate-existence">true</prop>
+                <prop key="eclipselink.jdbc.sequence-connection-pool">true</prop>
                 <!--<prop key="eclipselink.connection-pool.initial">5</prop>-->
                 <!--<prop key="eclipselink.connection-pool.min">5</prop>-->
                 <!--<prop key="eclipselink.connection-pool.max">10</prop>-->
@@ -138,6 +139,7 @@
     </bean>
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
+
 
     <bean id="springEntityListenerConfigurer" class="com.armedia.acm.data.SpringEntityListenerConfigurer">
         <property name="springContextHolder" ref="acmContextHolder"/>

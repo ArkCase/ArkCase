@@ -44,6 +44,12 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
         folder.setFolderType("COMPLAINT");
         folder.setFolderName(complaintCreatedEvent.getComplaintNumber());
 
+        String propertyKey = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + "COMPLAINT";
+
+        String categoryFolder = getAlfrescoRecordsService().getAlfrescoRmaProperties().getProperty(propertyKey);
+
+        folder.setCategoryFolder(categoryFolder);
+
         Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
 
         try

@@ -30,8 +30,15 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
 
 
     @Id
+    @TableGenerator(name = "change_case_status_gen",
+            table = "acm_change_case_status_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_change_case_status",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "change_case_status_gen")
     @Column(name = "cm_change_case_status_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
 	@Column(name = "cm_case_id")

@@ -15,8 +15,15 @@ public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity {
     private static final long serialVersionUID = 2464137631399833851L;
 
     @Id
+    @TableGenerator(name = "audit_event_type_lu_gen",
+            table = "acm_audit_event_type_lu_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_audit_event_type_lu",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "audit_event_type_lu_gen")
     @Column(name = "cm_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long auditLookupId;
 
     @Column(name = "cm_key")

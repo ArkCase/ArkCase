@@ -18,13 +18,13 @@
             <!--<column name="cm_filter_title" type="VARCHAR(512)">-->
                 <!--<constraints nullable="false"/>-->
             <!--</column>-->
-            <!--<column name="cm_filter_created" type="TIMESTAMP WITH TIME ZONE">-->
+            <!--<column name="cm_filter_created" type="${timestampType}">-->
                 <!--<constraints nullable="false"/>-->
             <!--</column>-->
             <!--<column name="cm_filter_creator" type="VARCHAR(1024)">-->
                 <!--<constraints nullable="false"/>-->
             <!--</column>-->
-            <!--<column name="cm_filter_modified" type="TIMESTAMP WITH TIME ZONE">-->
+            <!--<column name="cm_filter_modified" type="${timestampType}">-->
                 <!--<constraints nullable="false"/>-->
             <!--</column>-->
             <!--<column name="cm_filter_modifier" type="VARCHAR(1024)">-->
