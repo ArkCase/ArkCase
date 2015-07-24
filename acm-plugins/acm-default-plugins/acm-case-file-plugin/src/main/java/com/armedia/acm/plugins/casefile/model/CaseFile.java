@@ -121,7 +121,10 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity, Acm
     private String ecmFolderPath;
 
     @OneToMany (cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_person_assoc_parent_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
+    })
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 

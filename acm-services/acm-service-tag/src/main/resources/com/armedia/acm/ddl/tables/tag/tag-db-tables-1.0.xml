@@ -112,4 +112,15 @@
             <column name="cm_seq_name" value="acm_associated_tag"></column>
         </insert>
     </changeSet>
+
+    <changeSet id="10-acm_tag-id" author="dmiller">
+        <createTable tableName="acm_tag_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_tag_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_tag"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
