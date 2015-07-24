@@ -4,43 +4,46 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-        <changeSet id="01-tag-tables" author="marst">
-            <createTable tableName="acm_tag">
-                <column name="cm_tag_id" type="NUMBER(32,0)">
-                    <constraints primaryKey="true" primaryKeyName="pk_cm_tag_id"/>
-                </column>
+    <property name="cmParentObjectTypeLength" value="1024" dbms="oracle,postgresql"/>
+    <property name="cmParentObjectTypeLength" value="255" dbms="mysql"/>
 
-                <column name="cm_file_id" type="NUMBER(32,0)"/>
+    <changeSet id="01-tag-tables" author="marst">
+        <createTable tableName="acm_tag">
+            <column name="cm_tag_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_tag_id"/>
+            </column>
 
-                <column name="cm_tag_text" type="VARCHAR(256)">
-                    <constraints nullable = "false"/>
-                </column>
+            <column name="cm_file_id" type="${fkIdType}"/>
 
-                <column name="cm_tag_creator" type="VARCHAR(128)">
-                    <constraints nullable="false"/>
-                </column>
+            <column name="cm_tag_text" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
 
-                <column name="cm_tag_modified" type="TIMESTAMP WITH TIME ZONE">
-                    <constraints nullable="false"/>
-                </column>
+            <column name="cm_tag_creator" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
 
-                <column name="cm_tag_modifier" type="VARCHAR(128)">
-                    <constraints nullable="false"/>
-                </column>
+            <column name="cm_tag_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
 
-                <column name="cm_tag_created" type="TIMESTAMP WITH TIME ZONE">
-                    <constraints nullable="false"/>
-                </column>
+            <column name="cm_tag_modifier" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
 
-                <column name="cm_parent_object_id" type="NUMBER(32,0)">
-                    <constraints nullable = "false"/>
-                </column>
+            <column name="cm_tag_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
 
-                <column name="cm_parent_object_type" type="VARCHAR(128)">
-                    <constraints nullable = "false"/>
-                </column>
-            </createTable>
-        </changeSet>
+            <column name="cm_parent_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_parent_object_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
     <changeSet id="2-tag-tables" author="marst">
 
@@ -62,33 +65,33 @@
         </addColumn>
 
         <createTable tableName="acm_associated_tag">
-            <column name="cm_associated_tag_id" type="NUMBER(32,0)">
+            <column name="cm_associated_tag_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_associated_tag_id"/>
             </column>
 
-            <column name="cm_tag_id" type="NUMBER(32,0)"/>
+            <column name="cm_tag_id" type="${fkIdType}"/>
 
             <column name="cm_associated_tag_creator" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="cm_associated_tag_created" type="TIMESTAMP WITH TIME ZONE">
+            <column name="cm_associated_tag_created" type="${timestampType}">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="cm_parent_object_id" type="NUMBER(32,0)">
-                <constraints nullable = "false"/>
+            <column name="cm_parent_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
             </column>
 
             <column name="cm_parent_object_type" type="VARCHAR(128)">
-                <constraints nullable = "false"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
         <createIndex tableName="acm_associated_tag" unique="true" indexName="idx_tag_object_type">
-            <column name="cm_tag_id" type="NUMBER(32,0)"/>
-            <column name="cm_parent_object_id" type="NUMBER(32,0)"/>
-            <column name="cm_parent_object_type" type="VARCHAR(1024)"/>
+            <column name="cm_tag_id" type="${fkIdType}"/>
+            <column name="cm_parent_object_id" type="${fkIdType}"/>
+            <column name="cm_parent_object_type" type="VARCHAR(${cmParentObjectTypeLength})"/>
         </createIndex>
 
     </changeSet>
@@ -99,4 +102,25 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="09-acm_associated_tag-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_associated_tag_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_associated_tag_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_associated_tag"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="10-acm_tag-id" author="dmiller">
+        <createTable tableName="acm_tag_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_tag_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_tag"></column>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

@@ -71,9 +71,9 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg> {
         // must use a native update, since we don't want to add a password property to an entity class; since
         // if we did that, the password would end up being passed around in POJOs and JSON objects.
 
-        String sql = "UPDATE acm_user_org uo " +
-                "SET uo.cm_ms_outlook_password = ?1 " +
-                "WHERE uo.cm_user = ?2 ";
+        String sql = "UPDATE acm_user_org " +
+                "SET cm_ms_outlook_password = ?1 " +
+                "WHERE cm_user = ?2 ";
 
         Query q = getEm().createNativeQuery(sql);
         q.setParameter(1, in.getOutlookPassword());

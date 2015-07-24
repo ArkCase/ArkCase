@@ -20,8 +20,15 @@ public class UserOrg implements Serializable{
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_user_org_gen",
+            table = "acm_user_org_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_user_org",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_user_org_gen")
     @Column(name="cm_user_org_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userOrgId;
 
     @Column(name = "cm_first_address")
@@ -80,7 +87,7 @@ public class UserOrg implements Serializable{
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @Column(name = "cm_ecm_fileId")
+    @Column(name = "cm_ecm_file_id")
     private Long ecmFileId;
 
     @Column(name = "cm_title")

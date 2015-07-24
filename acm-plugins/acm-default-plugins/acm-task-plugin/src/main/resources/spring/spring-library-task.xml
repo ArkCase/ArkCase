@@ -182,6 +182,7 @@
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="taskBusinessRule" ref="taskBusinessRule"/>
         <property name="taskExtractor" ref="extractAcmTaskFromEvent"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap">
             <map>
                 <entry key="Low" value="10"/>
@@ -214,6 +215,7 @@
     
     <bean id="extractAcmTaskFromEvent" class="com.armedia.acm.plugins.task.service.impl.ExtractAcmTaskFromEvent">
         <property name="dao" ref="acmTaskDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
     <bean id="taskToSolrTransformer" class="com.armedia.acm.plugins.task.service.impl.TaskToSolrTransformer">

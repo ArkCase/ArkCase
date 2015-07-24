@@ -15,8 +15,15 @@ public class Widget {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
+    @TableGenerator(name = "acm_widget_gen",
+            table = "acm_widget_id",
+            pkColumnName = "cm_seq_name",
+            valueColumnName = "cm_seq_num",
+            pkColumnValue = "acm_widget",
+            initialValue = 100,
+            allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_widget_gen")
     @Column(name = "cm_widget_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long widgetId;
 
     @Column(name = "cm_widget_name")

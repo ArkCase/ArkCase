@@ -106,7 +106,7 @@ public class UserOrgServiceIT extends EasyMockSupport {
         // we won't actually create a new user profile in this test.
         if ( userid == null )
         {
-            return;
+            throw new AcmEncryptionBadKeyOrDataException();
         }
 
         expect(authentication.getName()).andReturn(userid).times(2);

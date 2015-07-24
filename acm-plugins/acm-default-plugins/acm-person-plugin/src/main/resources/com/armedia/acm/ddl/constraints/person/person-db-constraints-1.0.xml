@@ -10,94 +10,64 @@
                                  constraintName="fk_person_sec_tag_person_id"
                                  referencedTableName="acm_person"
                                  referencedColumnNames="cm_person_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_postal_address" baseColumnNames="cm_person_id"
                                  constraintName="fk_person_addr_person_id"
                                  referencedTableName="acm_person"
                                  referencedColumnNames="cm_person_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_postal_address" baseColumnNames="cm_address_id"
                                  constraintName="fk_person_addr_addr_id"
                                  referencedTableName="acm_postal_address"
                                  referencedColumnNames="cm_address_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_contact_method" baseColumnNames="cm_person_id"
                                  constraintName="fk_person_cntct_person_id"
                                  referencedTableName="acm_person"
                                  referencedColumnNames="cm_person_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_contact_method" baseColumnNames="cm_contact_method_id"
                                  constraintName="fk_person_cntct_cntct_id"
                                  referencedTableName="acm_contact_method"
                                  referencedColumnNames="cm_contact_method_id"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
-    
-    <changeSet id="02-person-type-foreign-key" author="tsedalu">
-        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_person_type_id"
-                                 constraintName="fk_person_type"
-                                 referencedTableName="acm_person_type_lu"
+
+    <changeSet id="03-person-alias-type-foreign-key" author="tsedalu">
+
+        <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_id"
+                                 constraintName="fk_person_alias_person_id"
+                                 referencedTableName="acm_person"
+                                 referencedColumnNames="cm_person_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="05-add-person-alias-type-foreign-key" author="tsedalu">
+        <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_alias_type"
+                                 constraintName="fk_person_alias_type"
+                                 referencedTableName="acm_person_alias_type_lu"
                                  referencedColumnNames="cm_value"
-                                 deferrable="true"
-                                 initiallyDeferred="true"/>
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
-        <changeSet id="03-person-alias-type-foreign-key" author="tsedalu" failOnError="false">      
-
-            <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_id"
-                                     constraintName="fk_person_alias_person_id"
-                                     referencedTableName="acm_person"
-                                     referencedColumnNames="cm_person_id"
-                                     deferrable="true"
-                                     initiallyDeferred="true"/>
-
-            <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_alias_type_id"
-                                     constraintName="fk_person_alias_type_id"
-                                     referencedTableName="acm_person_alias_type_lu"
-                                     referencedColumnNames="cm_value"
-                                     deferrable="true"
-                                     initiallyDeferred="true"/>
-            
-        </changeSet>
-        
-        <changeSet id="04-drop-fk-peson-alias-type-id" author="tsedalu" failOnError="false">
-            
-            <dropForeignKeyConstraint baseTableName="acm_person_alias"
-                                      constraintName="fk_person_alias_type_id"/>
-            
-        </changeSet>
-        
-        <changeSet id="05-add-person-alias-type-foreign-key" author="tsedalu" failOnError="false">
-            <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_alias_type" 
-                                     constraintName="fk_person_alias_type" 
-                                     referencedTableName="acm_person_alias_type_lu" 
-                                     referencedColumnNames="cm_value"
-                                     deferrable="true"
-                                     initiallyDeferred="true"/>
-        </changeSet>
-        
-        <changeSet id="06-person-assoc-foreign-key" author="tsedalu" failOnError="false">
-              <addForeignKeyConstraint baseTableName="acm_person_assoc" baseColumnNames="cm_person_assoc_person_id" 
-                                       constraintName="fk_person_assoc_person_id"
-                                       referencedTableName="acm_person" 
-                                       referencedColumnNames="cm_person_id"
-                                       deferrable="true"
-                                       initiallyDeferred="true"/>
-              <addForeignKeyConstraint baseTableName="acm_person_assoc" baseColumnNames="cm_person_assoc_person_type" 
-                                       constraintName="fk_person_assoc_person_type"
-                                       referencedTableName="acm_person_type_lu" 
-                                       referencedColumnNames="cm_value"
-                                       deferrable="true"
-                                       initiallyDeferred="true"/>
-        </changeSet>
+    <changeSet id="06-person-assoc-foreign-key" author="tsedalu">
+        <addForeignKeyConstraint baseTableName="acm_person_assoc" baseColumnNames="cm_person_assoc_person_id"
+                                 constraintName="fk_person_assoc_person_id"
+                                 referencedTableName="acm_person"
+                                 referencedColumnNames="cm_person_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
 </databaseChangeLog>
