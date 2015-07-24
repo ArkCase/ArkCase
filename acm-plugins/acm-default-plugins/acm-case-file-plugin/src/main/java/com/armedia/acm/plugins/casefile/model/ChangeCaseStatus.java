@@ -37,7 +37,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity{
             pkColumnValue = "acm_change_case_status",
             initialValue = 100,
             allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_change_case_status_id")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "change_case_status_gen")
     @Column(name = "cm_change_case_status_id")
     private Long id;
 	

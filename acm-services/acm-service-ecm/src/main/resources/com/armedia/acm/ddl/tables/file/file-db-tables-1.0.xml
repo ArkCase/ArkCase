@@ -252,7 +252,7 @@
     
    	<changeSet id="files-38-add-attachment-folder-id-in-container-table" author="riste.tutureski">
         <addColumn tableName="acm_container">
-            <column name="cm_attachment_folder_id" type="VARCHAR(1024)">
+            <column name="cm_attachment_folder_id" type="${idType}">
                 <constraints nullable="true"/>
             </column>
         </addColumn>

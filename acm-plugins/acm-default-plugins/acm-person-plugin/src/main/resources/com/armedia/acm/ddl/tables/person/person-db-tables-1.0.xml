@@ -163,10 +163,10 @@
                     primaryKeyName="pk_person_alias"/>
             </column>
             <column name="cm_person_id" type="${fkIdType}" >
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="false"/>
             </column>
             <column name="cm_person_alias_type" type="VARCHAR(${cmValueLength})">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="false"/>
             </column>                                     
             <column name="cm_person_alias_value" type="VARCHAR(1024)">
                 <constraints nullable="false"/>   

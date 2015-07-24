@@ -121,7 +121,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private List<String> approvers;
     
     @OneToMany (cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_person_assoc_parent_id")
+    @JoinColumns({
+            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")
+    })
+    @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
