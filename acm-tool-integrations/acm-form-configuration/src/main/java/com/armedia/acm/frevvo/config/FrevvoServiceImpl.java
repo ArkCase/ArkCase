@@ -235,7 +235,27 @@ public class FrevvoServiceImpl implements FrevvoService {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public String getFormApplicationId(FormTypeEntry form)
+	{
+		try
+		{
+			if (form != null && form.getId() != null && !form.getId().isEmpty())
+			{
+				// Form ID is complex id constructed with pattern: <FORM_TYPE>!<APPLICATION_ID>!<USERNAME>
+				// We need only <APPLICATION_ID>
+				return form.getId().split("!")[1];
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.error("Cannot take Application id.", e);
+		}
+
+		return null;
+	}
+
 	@Override
 	public SchemaEntry getSchema(String id) 
 	{

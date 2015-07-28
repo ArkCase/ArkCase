@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Map.Entry;
 
+import com.frevvo.forms.client.ApplicationEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class PlainConfigurationFormFactory {
 	private Properties formProperties;
 	private Properties plainFormProperties;
 	
-	public PlainConfigurationForm convertFromFormTypeEntry(FormTypeEntry formEntry, SchemaEntry schemaEntry)
+	public PlainConfigurationForm convertFromFormTypeEntry(FormTypeEntry formEntry, SchemaEntry schemaEntry, ApplicationEntry applicationEntry)
 	{
 		PlainConfigurationForm form = new PlainConfigurationForm();
 		
@@ -43,6 +44,8 @@ public class PlainConfigurationFormFactory {
 				form.setFormId(formEntry.getId());
 				form.setName(formEntry.getTitle().getPlainText());
 				form.setType(getFrevvoService().getFormType(formEntry));
+				form.setApplicationId(getFrevvoService().getFormApplicationId(formEntry));
+				form.setApplicationName(applicationEntry.getTitle().getPlainText());
 				form.setUrl(getFrevvoService().getFormUrl().getNewFormUrl(form.getKey(), true));
 			}
 		}
@@ -71,7 +74,7 @@ public class PlainConfigurationFormFactory {
 				{
 					String key = (String) entry.getKey();
 					
-					if (key.endsWith(".id"))
+					if (key.endsWith(".id") && !key.endsWith("application.id"))
 					{
 						String formKey = getFormKey(key);
 						
@@ -182,6 +185,8 @@ public class PlainConfigurationFormFactory {
 		form.setFormId(getPlainFormProperties().getProperty(formKey + ".id", null));
 		form.setName(getPlainFormProperties().getProperty(formKey + ".name", null));
 		form.setType(getPlainFormProperties().getProperty(formKey + ".type", null));
+		form.setApplicationId(getPlainFormProperties().getProperty(formKey + ".application.id", null));
+		form.setApplicationName(getPlainFormProperties().getProperty(formKey + ".application.name", null));
 		form.setMode(getPlainFormProperties().getProperty(formKey + ".mode", null));
 		form.setTarget(target);
 		form.setDescription(getPlainFormProperties().getProperty(formKey + ".description." + target, null));
