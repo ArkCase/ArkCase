@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
@@ -11,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
     private EcmFileDao mockFileDao;
     private Authentication mockAuthentication;
     private ApplicationEventPublisher mockEventPublisher;
-    private MuleClient mockMuleClient;
+    private MuleContextManager mockMuleContextManager;
     private MuleMessage mockMuleMessage;
     private ContentStream mockContentStream;
     private FolderAndFilesUtils mockFolderAndFilesUtils;
@@ -66,7 +66,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockEventPublisher = createMock(ApplicationEventPublisher.class);
-        mockMuleClient = createMock(MuleClient.class);
+        mockMuleContextManager = createMock(MuleContextManager.class);
         mockMuleMessage = createMock(MuleMessage.class);
         mockContentStream = createMock(ContentStream.class);
         mockFolderAndFilesUtils = createMock(FolderAndFilesUtils.class);
@@ -75,7 +75,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         unit.setFileDao(mockFileDao);
         unit.setApplicationEventPublisher(mockEventPublisher);
-        unit.setMuleClient(mockMuleClient);
+        unit.setMuleContextManager(mockMuleContextManager);
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
@@ -91,7 +91,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         String fileName = "fileName";
 
 
-        Resource log4j = new ClassPathResource("log4j.properties");
+        Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
         long log4jsize = log4j.getFile().length();
         InputStream log4jis = log4j.getInputStream();
 
@@ -105,7 +105,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
         expect(mockFolderAndFilesUtils.getActiveVersionCmisId(fromDb)).andReturn(cmisId);
-        expect(mockMuleClient.send("vm://downloadFileFlow.in", "cmisId", null)).andReturn(mockMuleMessage);
+        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId")).andReturn(mockMuleMessage);
         expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);

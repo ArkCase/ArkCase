@@ -4,6 +4,40 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="user" value="USER" dbms="oracle,postgresql"/>
+    <property name="user" value="USER()" dbms="mysql"/>
+
+    <property name="idType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="idType" value="BIGINT" dbms="mysql"/>
+    <!--<property name="idType" value="BIGSERIAL" dbms="postgresql"/>-->
+    <property name="idType" value="BIGINT" dbms="postgresql"/>
+
+    <property name="fkIdType" value="NUMBER(32,0)" dbms="oracle"/>
+    <property name="fkIdType" value="BIGINT" dbms="mysql,postgresql"/>
+
+    <property name="autoIncrement" value="false" dbms="oracle,postgresql"/>
+    <property name="autoIncrement" value="true" dbms="mysql"/>
+
+    <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
+    <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+    <property  name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql"/>
+
+    <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
+    <property name="timestampType" value="TIMESTAMP" dbms="mysql"/>
+
+    <property name="defaultValueComputedFunction" value="SYS_GUID()" dbms="oracle"/>
+    <property name="defaultValueComputedFunction" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
+
+    <property name="deferrable" value="true" dbms="oracle,postgresql"/>
+    <property name="deferrable" value="false" dbms="mysql"/>
+
+    <property name="initially.deferred" value="true" dbms="oracle,postgresql"/>
+    <property name="initially.deferred" value="false" dbms="mysql"/>
+
+
     <!-- drop constraints need to be first of all, in case we make any structure changes involving
          foreign-key constraint related tables.
     -->
@@ -22,7 +56,7 @@
     <includeAll path="classpath*:/com/armedia/acm/ddl/constraints" relativeToChangelogFile="false"/>
     
     <!-- insertion logs: lookup table insertion logs-->
-    <includeAll path="classpath*:/com/armedia/acm/ddl/lookupTableInserts"  relativeToChangelogFile="false"/>
+    <!--<includeAll path="classpath*:/com/armedia/acm/ddl/lookupTableInserts"  relativeToChangelogFile="false"/>-->
 
     <!-- packages before triggers, since triggers can call packages. Note we have some Oracle specific
          assumptions here.  When we support other databases we will have to configure Spring to load a
@@ -44,6 +78,7 @@
          NOTE: Liquibase fails if it finds no objects.  So only add more object type patterns when
          you need to create them.
     -->
+    <includeAll path="classpath*:/com/armedia/acm/dml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
 

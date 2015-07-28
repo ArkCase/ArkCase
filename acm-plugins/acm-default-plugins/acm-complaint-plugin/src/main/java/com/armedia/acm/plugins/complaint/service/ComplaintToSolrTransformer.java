@@ -95,8 +95,11 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setDescription_no_html_tags_parseable(in.getDetails());
         solr.setStatus_s(in.getStatus());
 
-        if(in.getDisposition()!=null && in.getDisposition().getId()!=null)
-        solr.setDisposition_id_s(Long.toString(in.getDisposition().getId()));
+        if ( in.getDisposition() !=null && in.getDisposition().getId() != null )
+        {
+            solr.setDisposition_id_s(in.getDisposition().getId() + "-" + in.getDisposition().getObjectType());
+        }
+
 
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_s(assigneeUserId);

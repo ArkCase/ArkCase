@@ -149,12 +149,14 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
     {
         String notComplaintJson = "{ \"user\": \"dmiller\" }";
 
+        Capture<Complaint> found = new Capture<>();
+
+        mockComplaintService.updateXML(capture(found), eq(mockAuthentication), eq(ComplaintForm.class));
+        expectLastCall().anyTimes();
+        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
+        
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
-
-        // when the JSON can't be converted to a Complaint POJO, Spring MVC will not even call our controller method.
-        // so we can't raise a failure event.  None of our services should be called, so there are no
-        // expectations.
 
         replayAll();
 

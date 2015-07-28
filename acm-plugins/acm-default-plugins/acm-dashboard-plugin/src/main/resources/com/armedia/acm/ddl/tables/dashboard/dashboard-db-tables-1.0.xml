@@ -4,9 +4,15 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmUserIdLength" value="255" dbms="mysql"/>
+
+    <property name="cmRoleNameLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmRoleNameLength" value="255" dbms="mysql"/>
+
     <changeSet id="01-create-dashboard-table" author="marst">
         <createTable tableName="acm_dashboard">
-            <column name="cm_dashboard_id" type="NUMBER(32,0)"  >
+            <column name="cm_dashboard_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_dashboard"/>
@@ -14,7 +20,7 @@
             <column name="cm_dashboard_config" type="VARCHAR(3900)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-                <column name="cm_dashboard_owner" type="VARCHAR(1024)">
+                <column name="cm_dashboard_owner" type="VARCHAR(${cmUserIdLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -27,7 +33,7 @@
 
     <changeSet id="02-create-widget-tables" author="marst">
         <createTable tableName="acm_widget">
-            <column name="cm_widget_id" type="NUMBER(32,0)"  >
+            <column name="cm_widget_id" type="${idType}">
                 <constraints
                         primaryKey="true"
                         primaryKeyName="pk_widget"/>
@@ -38,13 +44,34 @@
         </createTable>
 
         <createTable tableName="acm_widget_role">
-            <column name="cm_widget_id" type="NUMBER(32,0)">
+            <column name="cm_widget_id" type="${idType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_role_name" type="VARCHAR(1024)">
+            <column name="cm_role_name" type="VARCHAR(${cmRoleNameLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="03-acm_dashboard-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_dashboard_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_dashboard_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_dashboard"></column>
+        </insert>
+    </changeSet>
+    <changeSet id="04-acm_widget-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_widget_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_widget_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_widget"></column>
+        </insert>
     </changeSet>
 </databaseChangeLog>
 

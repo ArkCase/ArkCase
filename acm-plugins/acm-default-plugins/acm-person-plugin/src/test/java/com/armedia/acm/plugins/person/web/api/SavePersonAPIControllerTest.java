@@ -1,18 +1,24 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonEventPublisher;
 import com.armedia.acm.plugins.person.service.SavePersonTransaction;
+
 import java.util.Date;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.easymock.Capture;
 
 import static org.easymock.EasyMock.*;
+
 import org.easymock.EasyMockSupport;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +32,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
@@ -147,15 +155,17 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
     @Test
     public void invalidInput() throws Exception
     {
+    	
         String notPersonJson = "{ \"user\": \"com\" }";
+
+        Capture<Person> found = new Capture<>();
+
+        // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
+        expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication))).andThrow(new RuntimeException());
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
-
-        // when the JSON can't be converted to a Person POJO, Spring MVC will not even call our controller method.
-        // so we can't raise a failure event.  None of our services should be called, so there are no
-        // expectations.
-
+        
         replayAll();
 
         mockMvc.perform(

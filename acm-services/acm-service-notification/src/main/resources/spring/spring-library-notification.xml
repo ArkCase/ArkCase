@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
 
     <bean id="notificationProperties"
-          class="net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryBean" >
+          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean" >
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -73,7 +73,7 @@
             <bean class="com.armedia.acm.files.propertymanager.PropertyFileManager"/>
         </property>
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation" />
-        <property name="muleClient" ref="muleClient" />
+        <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
 </beans>

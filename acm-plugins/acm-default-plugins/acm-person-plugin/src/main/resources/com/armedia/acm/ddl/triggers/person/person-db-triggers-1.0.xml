@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-person-triggers" author="dmiller" runOnChange="true">
+    <changeSet id="01-person-triggers" author="dmiller" runOnChange="true" dbms="oracle">
         <createProcedure>
             CREATE OR REPLACE TRIGGER trg_prsn_update_assn_names
             AFTER UPDATE OF cm_given_name, cm_family_name

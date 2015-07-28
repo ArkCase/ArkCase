@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-addressable-update-trigger" author="dmiller" runOnChange="true">
+    <changeSet id="01-addressable-update-trigger" author="dmiller" runOnChange="true" dbms="oracle">
         <createProcedure>
             CREATE OR REPLACE TRIGGER trg_addr_update_assn_names
             AFTER UPDATE OF cm_street_address, cm_locality, cm_region, cm_postal_code
@@ -53,7 +53,7 @@
         </rollback>
     </changeSet>
 
-    <changeSet id="02-addressable-delete-trigger" author="dmiller" runOnChange="true">
+    <changeSet id="02-addressable-delete-trigger" author="dmiller" runOnChange="true" dbms="oracle">
         <createProcedure>
             CREATE OR REPLACE TRIGGER trg_ctmd_delete
             AFTER DELETE ON acm_contact_method

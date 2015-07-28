@@ -6,9 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -27,8 +29,7 @@ public class RolesPrivilegesCreateRole implements RolePrivilegesConstants{
 
     @ResponseBody
     public String createRole(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmRolesPrivilegesException{
+            @RequestBody String resource) throws IOException, AcmRolesPrivilegesException{
 
         try {
             JSONObject newRoleObject = new JSONObject(resource);

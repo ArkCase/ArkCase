@@ -1,6 +1,7 @@
 package com.armedia.acm.event;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * An action that could be triggered in response to an AcmEvent.  Actions could include: start an Activiti workflow,

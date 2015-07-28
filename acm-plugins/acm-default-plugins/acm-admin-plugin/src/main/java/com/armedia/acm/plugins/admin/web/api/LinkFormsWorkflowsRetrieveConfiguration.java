@@ -25,9 +25,7 @@ public class LinkFormsWorkflowsRetrieveConfiguration  {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
     @ResponseBody
-    public String retrieveConfiguration(
-            @RequestBody String resource,
-            HttpServletResponse response) throws IOException, AcmLinkFormsWorkflowException {
+    public String retrieveConfiguration() throws IOException, AcmLinkFormsWorkflowException {
 
         try {
             return linkFormsWorkflowsService.retrieveConfigurationAsJson().toString();

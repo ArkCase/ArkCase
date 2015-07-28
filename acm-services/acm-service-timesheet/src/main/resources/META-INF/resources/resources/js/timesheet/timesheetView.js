@@ -33,6 +33,19 @@ Timesheet.View = {
         return timesheet;
     }
 
+
+    ,interface: {
+        nodeTitle: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeToolTip: function(objSolr) {
+            return Acm.goodValue(objSolr.name);
+        }
+        ,nodeTypeMap: function() {
+            return Timesheet.View.Navigator.nodeTypeMap;
+        }
+    }
+
     ,MicroData:{
         create : function() {
             this.formUrls = {};
@@ -92,6 +105,20 @@ Timesheet.View = {
                     break;
             }
         }
+
+        ,nodeTypeMap: [
+            {nodeType: "prevPage"            ,icon: "i i-arrow-up"     ,tabIds: ["tabBlank"]}
+            ,{nodeType: "nextPage"           ,icon: "i i-arrow-down"   ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p"                  ,icon: ""                 ,tabIds: ["tabBlank"]}
+            ,{nodeType: "p/TIMESHEET"        ,icon: "i i-alarm icon"
+                ,tabIds: ["tabDetail"
+                    ,"tabPerson"
+                    ,"tabTimeSummary"
+                ]}
+            ,{nodeType: "p/TIMESHEET/detail"            ,icon: "",tabIds: ["tabDetail"]}
+            ,{nodeType: "p/TIMESHEET/person"            ,icon: "",tabIds: ["tabPerson"]}
+            ,{nodeType: "p/TIMESHEET/timeSummary"       ,icon: "",tabIds: ["tabTimeSummary"]}
+        ]
 
         ,getContextMenu: function(node) {
             var key = node.key;

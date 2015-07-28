@@ -1612,7 +1612,7 @@ Task.View = Task.View || {
                     if(Task.Model.History.validateEvent(events[i])){
                         var Record = {};
                         Record.eventType = Acm.goodValue(events[i].eventType);
-                        Record.eventDate    = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.short"));
+                        Record.eventDate    = Acm.getDateFromDatetime(events[i].eventDate,$.t("common:date.full"));
                         Record.user  = App.Model.Users.getUserFullName(Acm.goodValue(events[i].userId));
                         jtData.Records.push(Record);
                     }

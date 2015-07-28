@@ -1,14 +1,14 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObject;
-import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.mule.api.MuleException;
-import org.mule.api.client.MuleClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -27,24 +27,48 @@ public class AlfrescoRecordsService
 
     private EcmFileService ecmFileService;
     private Properties alfrescoRmaProperties;
+    private MuleContextManager muleContextManager;
+    private EcmFileDao ecmFileDao;
 
     public void declareAllContainerFilesAsRecords(Authentication auth, AcmContainer container, Date receiveDate,
                                                   String recordFolderName)
     {
-        Map<String, Object> messageProperties = getRmaMessageProperties();
-
         try
         {
             AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
+            declareAsRecords(files,container,receiveDate,recordFolderName);
+        }
+        catch (AcmListObjectsFailedException e)
+        {
+            log.error("Cannot finish Record Management Strategy for container " + container.getContainerObjectType() +
+                    " " + container.getContainerObjectId(), e);
+        }
+    }
 
-            for ( AcmCmisObject file : files.getChildren() )
-            {
+    public void declareAllFilesInFolderAsRecords(AcmCmisObjectList folder,AcmContainer container, Date receiveDate,
+                                                  String recordFolderName)
+    {
+        declareAsRecords(folder,container,receiveDate,recordFolderName);
+    }
+
+    public void declareAsRecords(AcmCmisObjectList files,AcmContainer container, Date receiveDate,
+                                 String recordFolderName){
+
+        Map<String, Object> messageProperties = getRmaMessageProperties();
+        log.info("Found messageProperties : " + messageProperties);
+
+        for ( AcmCmisObject file : files.getChildren() )
+        {
+            if (!((EcmFileConstants.RECORD).equals(file.getStatus()))) {
                 AcmRecord record = new AcmRecord();
 
                 String objectType = container.getContainerObjectType();
+                log.info("Found object type : " + objectType);
+
                 String propertyKey = AlfrescoRmaPluginConstants.CATEGORY_FOLDER_PROPERTY_KEY_PREFIX + objectType;
 
                 String categoryFolder = getAlfrescoRmaProperties().getProperty(propertyKey);
+                log.info("Found category folder is : " + categoryFolder);
 
                 if ( categoryFolder == null || categoryFolder.trim().isEmpty() )
                 {
@@ -73,8 +97,8 @@ public class AlfrescoRecordsService
                         log.trace("Sending JMS message.");
                     }
 
-                    getMuleClient().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
-
+                    getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.RECORD_MULE_ENDPOINT, record, messageProperties);
+                    setFileStatusAsRecord(file.getObjectId());
                     if ( log.isTraceEnabled() )
                     {
                         log.trace("Done");
@@ -87,10 +111,26 @@ public class AlfrescoRecordsService
                 }
             }
         }
-        catch (AcmListObjectsFailedException e)
-        {
-            log.error("Cannot finish Record Management Strategy for container " + container.getContainerObjectType() +
-                    " " + container.getContainerObjectId(), e);
+    }
+
+    public void setFileStatusAsRecord(Long fileId){
+        try{
+            EcmFile ecmFile = getEcmFileService().findById(fileId);
+            if(null == ecmFile){
+                throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
+            }
+            else{
+                ecmFile.setStatus(EcmFileConstants.RECORD);
+                getEcmFileDao().save(ecmFile);
+                if ( log.isDebugEnabled() ) {
+                    log.debug("File with ID : " + ecmFile.getFileId() + " Status is changed to "+ EcmFileConstants.RECORD);
+                }
+            }
+        }
+        catch(AcmObjectNotFoundException e){
+            if (log.isErrorEnabled()) {
+                log.error("File with id: " + fileId + " does not exists - " + e.getMessage());
+            }
         }
     }
 
@@ -120,11 +160,14 @@ public class AlfrescoRecordsService
         this.ecmFileService = ecmFileService;
     }
 
-    public MuleClient getMuleClient()
+    public MuleContextManager getMuleContextManager()
     {
-        // Method body is overridden by Spring via 'lookup-method', so this method body is never called
-        // when this class is used as a Spring bean
-        return null;
+        return muleContextManager;
+    }
+
+    public void setMuleContextManager(MuleContextManager muleContextManager)
+    {
+        this.muleContextManager = muleContextManager;
     }
 
     public void setAlfrescoRmaProperties(Properties alfrescoRmaProperties)
@@ -136,4 +179,14 @@ public class AlfrescoRecordsService
     {
         return alfrescoRmaProperties;
     }
+
+
+    public EcmFileDao getEcmFileDao() {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao) {
+        this.ecmFileDao = ecmFileDao;
+    }
+
 }
