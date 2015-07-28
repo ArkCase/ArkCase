@@ -60,12 +60,12 @@ public class AcmComplaintFolderListenerTest extends EasyMockSupport
 
         expect(mockService.getAlfrescoRmaProperties()).andReturn(new Properties());
 
-        expect(mockService.getRmaMessageProperties()).andReturn(Collections.emptyMap());
+        expect(mockService.getAlfrescoRmaPropertiesMap()).andReturn(Collections.emptyMap());
 
-        mockMuleContextManager.dispatch(
+        expect(mockMuleContextManager.send(
                 eq(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT),
                 capture(captureFolder),
-                eq(Collections.emptyMap()));
+                eq(Collections.emptyMap()))).andReturn(null);
 
         ComplaintCreatedEvent event = new ComplaintCreatedEvent(new Complaint());
         event.setSucceeded(true);
