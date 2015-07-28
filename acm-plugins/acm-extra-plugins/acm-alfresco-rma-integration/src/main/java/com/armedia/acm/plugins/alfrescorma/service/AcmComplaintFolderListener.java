@@ -50,7 +50,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
 
         folder.setCategoryFolder(categoryFolder);
 
-        Map<String, Object> messageProperties = getAlfrescoRecordsService().getRmaMessageProperties();
+        Map<String, Object> messageProperties = getAlfrescoRecordsService().getAlfrescoRmaPropertiesMap();
 
         try
         {
@@ -58,7 +58,7 @@ public class AcmComplaintFolderListener implements ApplicationListener<Complaint
             {
                 log.trace("sending JMS message.");
             }
-            getMuleContextManager().dispatch(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
+            getMuleContextManager().send(AlfrescoRmaPluginConstants.FOLDER_MULE_ENDPOINT, folder, messageProperties);
             if ( log.isTraceEnabled() )
             {
                 log.trace("done");
