@@ -1205,6 +1205,41 @@ Admin.View = Admin.View || {
         ,onClickBtnGo: function(event){
             Admin.View.RolesPrivileges.updatePrivilegesLists();
         }
+        ,privilegeOptionComparator: function(e1, e2) { // Compares privilege options alphabetically
+    		if (e1["privilege"] < e2["privilege"]) return -1;
+    		else if (e1["privilege"] > e2["privilege"]) return 1;
+    		else return 0;
+    	}
+        ,buildPrivilegeArrayFromCollection: function($privilegeCollection) { // converts $collection of privileges to an array
+            var privilegeArray = [];
+            $('option', $privilegeCollection).each(function() {
+            	privilegeArray.push({"pid": $(this).val(), "privilege": $(this).text()});
+            });
+            return privilegeArray;
+        }
+        ,buildPrivilegeArrayFromObject: function(optionObject) { // Converts privileges options object to an array
+        	var optionArray = [];
+    		for (var id in optionObject)
+    			optionArray.push({ "pid": id, "privilege": optionObject[id] });
+    		return optionArray;
+        }
+        ,createSortedPrivilegeOptionsHtml: function($element, optionsArray) { // Generates the html menu body with the sorted options
+            var options = '';
+            for (var i = 0; i < optionsArray.length; i++) {
+            	options += '<option value="' + optionsArray[i]["pid"] + '">' + optionsArray[i]["privilege"] + '</option>';
+            }
+            $element.html(options);
+        }
+        ,sortPrivilegeArray: function($privilegeCollection) { // Generates sorted privilege options html for menu after a privilege update
+        	// Builds array representation of $collection to facilitate sorting
+            var sortedArray = this.buildPrivilegeArrayFromCollection($privilegeCollection);
+            
+            // Sorts the selected privileges alphabetically
+            if (sortedArray && !Acm.isArrayEmpty(sortedArray)) {
+            	sortedArray.sort(this.privilegeOptionComparator);
+            	this.createSortedPrivilegeOptionsHtml($privilegeCollection, sortedArray);
+            }
+        }
         ,onClickBtnMoveRight: function(event) {
             // Move Privileges from all privileges to role privileges
             var selectedPrivelegesIds = this.$selectAvailablePrivileges.val();
@@ -1223,6 +1258,9 @@ Admin.View = Admin.View || {
                 }
             }
 
+            // Re-sorts the selected privileges including the new addition
+            this.sortPrivilegeArray(this.$selectPrivileges);
+            
             Admin.View.RolesPrivileges.saveRolePrivileges();
         }
         ,onClickBtnMoveLeft: function(event) {
@@ -1242,6 +1280,9 @@ Admin.View = Admin.View || {
                     this.$selectAvailablePrivileges.append('<option value="{0}">{1}</option>'.format(privilegeId, selectedOptions[privilegeId]));
                 }
             }
+            
+            // Re-sorts the available privileges including the new addition
+            this.sortPrivilegeArray(this.$selectAvailablePrivileges);
 
             Admin.View.RolesPrivileges.saveRolePrivileges();
         },
@@ -1299,7 +1340,15 @@ Admin.View = Admin.View || {
             });
             Admin.Service.RolesPrivileges.saveApplicationRolePrivileges(selectedRole, privileges);
         }
-
+        ,updatePrivilegeOptionsHtml: function($privilegeCollection, privilegeList) {
+        	if (privilegeList && $.isPlainObject(privilegeList)) { // sorts privileges alphabetically
+        		var privilegesSorted = this.buildPrivilegeArrayFromObject(privilegeList);
+        		privilegesSorted.sort(this.privilegeOptionComparator);
+        		this.createSortedPrivilegeOptionsHtml($privilegeCollection, privilegesSorted);
+        	} else { // Fills Privileges list by retrieved data (unsorted)
+                Acm.Object.createOptions($privilegeCollection, privilegeList);
+        	}
+        }
         ,updatePrivilegesLists: function(){
             var context = this;
             var selectedRole = this.$selectRoles.val();
@@ -1307,12 +1356,15 @@ Admin.View = Admin.View || {
                 // Get Role's privileges
                 Admin.Service.RolesPrivileges.retrieveApplicationRolePrivileges(selectedRole)
                     .done(function(rolePrivileges){
-                        // Fill Role Privileges list by retrivied data
-                        Acm.Object.createOptions(context.$selectPrivileges, rolePrivileges);
+                    	
+                    	// Generates the selected privileges menu options html
+                    	context.updatePrivilegeOptionsHtml(context.$selectPrivileges, rolePrivileges);
 
                         // Create available privileges list
                         var availablePrivileges = _.omit(context.privileges ,_.keys(rolePrivileges));
-                        Acm.Object.createOptions(context.$selectAvailablePrivileges, availablePrivileges);
+                        
+                        // Generates the available privileges menu options html
+                        context.updatePrivilegeOptionsHtml(context.$selectAvailablePrivileges, availablePrivileges);
 
                     })
                     .fail(function(errorMsg){
@@ -2296,7 +2348,7 @@ Admin.View = Admin.View || {
                             		rc.Records.push({
                                         id:     i + "_" + plainForms[i].key
                                         ,name:      plainForms[i].name
-                                        ,applicationName:      plainForms[i].applicationName
+										,applicationName:      plainForms[i].applicationName
                                         ,description:  plainForms[i].description
                                         ,target: plainForms[i].target
                                     });
